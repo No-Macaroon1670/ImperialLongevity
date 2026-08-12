@@ -1,0 +1,9 @@
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 编辑器
+.vscode/
+.idea/
+*.swp

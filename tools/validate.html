@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>调色板校验</title></head>
+<!-- 本页只跑 scripts/validate_palette.js 的六项检查，不属于应用本体。
+     data-pairs 由查询串控制：?pairs=all 用于散点/气泡/分面等「任意两色可能相邻」的图形。-->
+<body>
+<h1>调色板校验</h1>
+<pre id="out">运行中…</pre>
+<script type="module">
+const p = new URLSearchParams(location.search);
+const b = document.body;
+// 本应用实际用到的分类槽位：
+//  · 二分对比（大一统/分裂、正常/非正常死亡）→ 槽 1、2
+//  · KM 三分组（政治秩序）→ 槽 1、2、3
+//  · 箱线图最多用到槽 1–6（时代分组）
+const SETS = {
+  binary:  { light: '#2a78d6,#eb6834',                                              dark: '#3987e5,#d95926' },
+  triple:  { light: '#2a78d6,#eb6834,#1baf7a',                                      dark: '#3987e5,#d95926,#199e70' },
+  six:     { light: '#2a78d6,#eb6834,#1baf7a,#eda100,#e87ba4,#008300',              dark: '#3987e5,#d95926,#199e70,#c98500,#d55181,#008300' },
+  seqBlue: { light: '#cde2fb,#86b6ef,#3987e5,#1c5cab,#0d366b',                      dark: '#0d366b,#184f95,#256abf,#5598e7,#9ec5f4' },
+  seqAlt:  { light: '#fbe0d4,#f5a682,#eb6834,#9c3d17',                              dark: '#5c2410,#9c3d17,#d95926,#f5a682' },
+};
+const set = p.get('set') || 'binary';
+const mode = p.get('mode') || 'light';
+b.dataset.palette = SETS[set][mode];
+b.dataset.mode = mode;
+b.dataset.surface = mode === 'dark' ? '#1a1a19' : '#fcfcfb';
+if (p.get('pairs')) b.dataset.pairs = p.get('pairs');
+if (p.get('ordinal') !== null && p.get('ordinal') !== undefined && p.has('ordinal')) b.dataset.ordinal = '';
+document.getElementById('out').textContent = `set=${set} mode=${mode} pairs=${b.dataset.pairs || 'adjacent'} ordinal=${b.dataset.ordinal !== undefined}\n${b.dataset.palette}`;
+await import('./validate_palette.js');
+</script>
+</body>
+</html>
