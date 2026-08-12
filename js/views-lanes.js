@@ -14,7 +14,7 @@
 //      因此任何时刻都能读出正在看的是哪一朝。
 import { el, h, linear, ticks, hoverable, legend, tableView, showTip, hideTip, fmtYearAxis, fmt1 } from './charts.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
-import { ERAS, SUCCESSION } from './dynasties.js';
+import { ERAS, SUCCESSION, ORTHODOX } from './dynasties.js';
 import { fmtDate } from './schema.js';
 
 const SLOT_VARS = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6', '--s7', '--s8'];
@@ -138,23 +138,87 @@ export function renderLaneTimeline(host, list, opts) {
   //    使前蜀→后蜀、西魏→北周、五代中原正统线等继承关系横向连成一条。
   //    相邻政权多半首尾紧接（后梁止于 923、后唐即立于 923），故同泳道只留 4px 间隙；
   //    已声明的接续关系允许完全紧邻（间隙 0），两带之间靠 2px 底色缝分隔。
+  //    最上一行为正统序列专用（见 ORTHODOX）：不参与回收，任何割据政权都不会挤进来，
+  //    于是第一行自成一条贯通两千年的主线，其余政权一律平等地排在下方。
+  const orthSet = new Set(ORTHODOX);
+  const orth = bands.filter((b) => orthSet.has(b.d.key));
+  const useTop = orth.length > 0;
   const GAP = 4;
   const laneEnd = [];
   const laneOf = new Map();
+  const laneLast = [];                         // 每条泳道当前最后一个政权的 key
+  // 无接续关系的政权若抢先落进某行，会把该行原本要留给后继者的位置占掉
+  // （闽 926 年入场，前蜀那一行就再也容不下 934 年的后蜀）。故先记下谁在等谁。
+  const successorOf = new Map();
+  for (const b of bands) { const p = SUCCESSION[b.d.key]; if (p) successorOf.set(p, b); }
+  if (useTop) { laneEnd.push(Infinity); laneLast.push(null); }   // 占位：禁止其他政权回落到第一行
   for (const b of bands) {
+    if (useTop && orthSet.has(b.d.key)) { b.lane = 0; laneOf.set(b.d.key, 0); continue; }
     const startPx = b.s * pxYear;
     const need = Math.max(b.e * pxYear, startPx + textW(b.d.name, LABEL_FS) + 14);
     const fits = (k, gap) => laneEnd[k] === undefined || laneEnd[k] <= startPx - gap;
+    // 占了这一行会不会挡住该行占位者的后继？只有「尚未落座」的后继才需要留位——
+    // 北周的后继是隋，而隋早已入座正统行，再为它把第三行空着纯属浪费。
+    const blocks = (k) => {
+      const s = successorOf.get(laneLast[k]);
+      return !!s && s !== b && !laneOf.has(s.d.key) && s.s < b.e;
+    };
     let k = -1;
     const prev = SUCCESSION[b.d.key];
-    if (prev !== undefined && laneOf.has(prev) && fits(laneOf.get(prev), 0)) k = laneOf.get(prev);
-    if (k < 0) { k = 0; while (k < laneEnd.length && !fits(k, GAP)) k++; }
-    if (k === laneEnd.length) laneEnd.push(-Infinity);
+    const pl = laneOf.get(prev);
+    if (prev !== undefined && pl !== undefined && pl > 0 && fits(pl, 0)) k = pl;
+    const first = useTop ? 1 : 0;
+    if (k < 0) { k = first; while (k < laneEnd.length && (!fits(k, GAP) || blocks(k))) k++; }
+    if (k === laneEnd.length) {                // 无「既空闲又不挡后继」之行，退而求其次
+      let j = first; while (j < laneEnd.length && !fits(j, GAP)) j++;
+      if (j < laneEnd.length) k = j;
+    }
+    if (k === laneEnd.length) { laneEnd.push(-Infinity); laneLast.push(null); }
     laneEnd[k] = Math.max(laneEnd[k], need);
+    laneLast[k] = b.d.key;
     b.lane = k;
     laneOf.set(b.d.key, k);
   }
   const nLanes = laneEnd.length;
+
+  // 2b) 正统交替期：最多两朝并存（实测峰值为 2），上一朝居上半、下一朝居下半，
+  //     其余时段仍占满整条轨道。切分点即并存区间的首尾，底带与皇帝分段一并按段绘制。
+  const contests = [];
+  if (useTop) {
+    const line = orth.slice().sort((a, b) => a.s - b.s);
+    for (let i = 0; i + 1 < line.length; i++) {
+      const a = line[i], c = line[i + 1];
+      const from = Math.max(a.s, c.s), to = Math.min(a.e, c.e);
+      if (to - from > 0.02) contests.push({ from, to, top: a, bottom: c });
+    }
+    for (const b of orth) {
+      const cuts = new Set([b.s, b.e]);
+      for (const c of contests) {
+        if (c.from > b.s && c.from < b.e) cuts.add(c.from);
+        if (c.to > b.s && c.to < b.e) cuts.add(c.to);
+      }
+      const xs = [...cuts].sort((p, q) => p - q);
+      b.pieces = [];
+      for (let i = 0; i + 1 < xs.length; i++) {
+        const mid = (xs[i] + xs[i + 1]) / 2;
+        const c = contests.find((k) => k.from <= mid && mid <= k.to && (k.top === b || k.bottom === b));
+        b.pieces.push({ x0: xs[i], x1: xs[i + 1], slot: c ? (c.top === b ? 0 : 1) : null });
+      }
+    }
+  }
+  /** 把 [from,to] 按该带的分段切开，回调拿到每一小段的横向范围与纵向几何 */
+  const spanParts = (b, from, to) => {
+    const pieces = b.pieces || [{ x0: b.s, x1: b.e, slot: null }];
+    const out = [];
+    for (const p of pieces) {
+      const a = Math.max(from, p.x0), c = Math.min(to, p.x1);
+      if (c > a) out.push({ x0: a, x1: c, slot: p.slot });
+    }
+    return out.length ? out : [{ x0: from, x1: to, slot: null }];
+  };
+  const slotGeom = (slot) => (slot === null
+    ? { y: TRACK_Y, h: TRACK_H }
+    : { y: TRACK_Y + slot * (TRACK_H / 2 + 1), h: TRACK_H / 2 - 1 });
 
   // 3) 带内排布。
   //    实测 100 处「同朝代内在位重叠」中有 95 处不足 0.25 年（康熙/雍正 0.01 年、
@@ -227,6 +291,30 @@ export function renderLaneTimeline(host, list, opts) {
     if (bx > PAD_L && bx < W - PAD_L) body.appendChild(el('line', { x1: bx, x2: bx, y1: 0, y2: BODY_H, class: 'ref-line' }));
   }
 
+  if (useTop) {
+    // 第一行整行淡底，标出「这一行与其余行性质不同」
+    body.appendChild(el('rect', { x: 0, y: 0, width: W, height: LANE_H, fill: 'var(--text-1)', opacity: 0.035 }));
+    // 正统未定期：45° 斜纹底衬。此处纹理承载的是「并立」这一状态，非装饰
+    const defs = el('defs');
+    defs.appendChild(el('pattern', {
+      id: 'contest-hatch', width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)',
+    }, [el('line', { x1: 0, y1: 0, x2: 0, y2: 6, stroke: 'var(--text-2)', 'stroke-width': 1.1, opacity: 0.34 })]));
+    body.appendChild(defs);
+    for (const c of contests) {
+      const cx0 = x(c.from), cx1 = x(c.to);
+      const rect = el('rect', {
+        x: cx0, y: 2, width: Math.max(2, cx1 - cx0), height: LANE_H - 6, fill: 'url(#contest-hatch)', class: 'mark',
+      });
+      hoverable(rect, () => [
+        { value: `${fmtYearAxis(c.from)}–${fmtYearAxis(c.to)}`, label: '正统未定' },
+        { label: '历时', value: `${(c.to - c.from).toFixed(1)} 年` },
+        { label: '并立', value: `${c.top.d.name} · ${c.bottom.d.name}` },
+        '两朝同时自居正朔：上半轨为前朝，下半轨为后朝。后世追认的正统归属要到此段结束才定下来。',
+      ], () => '正统交替期');
+      body.appendChild(rect);
+    }
+  }
+
   const labelNodes = [];
   for (const b of bands) {
     const y0 = b.lane * LANE_H + 4;
@@ -234,75 +322,90 @@ export function renderLaneTimeline(host, list, opts) {
     const col = `var(${cvar})`;
     const bx0 = x(b.s), bx1 = x(b.e);
 
-    // 底带：朝代存续期的浅色轨道
+    // 底带：朝代存续期的浅色轨道。正统交替期按上/下半分段绘制，其余时段占满整轨。
     // 左右各内缩 1px：紧邻的两朝之间因此留出 2px 底色缝，靠留白分隔而非描边
-    const track = el('rect', {
-      x: bx0 + 1, y: y0 + TRACK_Y, width: Math.max(2, bx1 - bx0 - 2), height: TRACK_H, rx: 4,
-      fill: col, opacity: 0.14, class: 'mark',
-    });
     const st = DYN_STATS.get(b.d.key);
-    hoverable(track, () => [
+    const trackTip = () => [
       { color: col, value: `${b.d.s <= 0 ? `前${-b.d.s + 1}` : b.d.s}–${b.d.e}`, label: '国祚' },
       { label: '历时', value: `${st.span} 年` },
       { label: '皇帝', value: `${st.n} 位（当前筛选 ${b.n} 位）` },
       { label: 'DSI', value: st.dsi === null ? '—' : `${fmt1(st.dsi)} 年/帝` },
+      ...(b.lane === 0 ? ['位于正统序列行；与前后朝并存的那一段以上下半轨表示正统未定。'] : []),
       ...(b.d.note ? [b.d.note] : []),
-    ], () => b.d.name);
-    body.appendChild(track);
-
-    // 称帝前的掌权期：半高、低透明度，贴在正式在位段之下
-    for (const g of b.preRule) {
-      const px0 = x(g.s), px1 = x(g.x);
-      const pw = Math.max(2, px1 - px0 - 2);
-      const node = el('rect', {
-        x: px0 + 1, y: y0 + TRACK_Y + TRACK_H - 8, width: pw, height: 7, rx: 2,
-        fill: col, opacity: 0.5, class: 'mark',
+    ];
+    for (const p of spanParts(b, b.s, b.e)) {
+      const g = slotGeom(p.slot);
+      const px0 = x(p.x0), px1 = x(p.x1);
+      const track = el('rect', {
+        x: px0 + 1, y: y0 + g.y, width: Math.max(2, px1 - px0 - 2), height: g.h, rx: 4,
+        fill: col, opacity: 0.14, class: 'mark',
       });
-      hoverable(node, () => [
-        { color: col, value: `${fmtDate(g.e.accRule, { yearOnly: true })}–${fmtDate(g.e.acc, { yearOnly: true })}`, label: '掌权（未称帝）' },
-        { label: '称帝', value: fmtDate(g.e.acc) },
-        '此段为该君主实际掌握政权最高权力、但尚未即皇帝位的时期，不计入「在位年数」。',
-      ], () => `${b.d.name}·${g.e.temple}`);
-      body.appendChild(node);
+      hoverable(track, trackTip, () => b.d.name);
+      body.appendChild(track);
+    }
+
+    // 称帝前的掌权期：贴在所在轨道底部的半高浅段
+    for (const g of b.preRule) {
+      for (const p of spanParts(b, g.s, g.x)) {
+        const gm = slotGeom(p.slot);
+        const px0 = x(p.x0), px1 = x(p.x1);
+        const hh = Math.min(7, gm.h - 2);
+        const node = el('rect', {
+          x: px0 + 1, y: y0 + gm.y + gm.h - hh, width: Math.max(2, px1 - px0 - 2), height: hh, rx: 2,
+          fill: col, opacity: 0.5, class: 'mark',
+        });
+        hoverable(node, () => [
+          { color: col, value: `${fmtDate(g.e.accRule, { yearOnly: true })}–${fmtDate(g.e.acc, { yearOnly: true })}`, label: '掌权（未称帝）' },
+          { label: '称帝', value: fmtDate(g.e.acc) },
+          '此段为该君主实际掌握政权最高权力、但尚未即皇帝位的时期，不计入「在位年数」。',
+        ], () => `${b.d.name}·${g.e.temple}`);
+        body.appendChild(node);
+      }
     }
 
     // 皇帝分段
-    const segH = (TRACK_H - (b.subs - 1) * 2) / b.subs;
     for (const g of b.segs) {
-      const sy = y0 + TRACK_Y + g.sub * (segH + 2);
-      const sx0 = x(g.ds), sx1 = x(g.dx);
-      const wSeg = Math.max(1.5, sx1 - sx0 - 2);   // −2 ＝ 段间以底色留缝，而不是描边分隔
-      const rect = el('rect', {
-        x: sx0 + 1, y: sy, width: wSeg, height: segH, rx: Math.min(3, segH / 2), fill: col, class: 'mark',
-      });
-      body.appendChild(rect);
-
-      // 非正常死亡：段末的小三角（状态色 + 图例说明，不单靠颜色表意）
-      if (markViolent && g.e.violent === 1 && g.e.reignEnd && Math.abs(g.x - g.e.reignEnd.t) < 0.01) {
-        const tipX = sx0 + 1 + wSeg;
-        body.appendChild(el('path', {
-          d: `M${tipX - 3.5},${sy - 1.5}L${tipX + 3.5},${sy - 1.5}L${tipX},${sy + 4}Z`,
-          fill: 'var(--critical)',
-        }));
-      }
-      // 段内简称：放得下才写，放不下留给悬停与数据表
-      const nm = shortName(g.e);
-      if (segH >= 9 && wSeg > textW(nm, SEG_FS) + 8) {
-        body.appendChild(el('text', {
-          x: sx0 + 5, y: sy + segH / 2 + SEG_FS * 0.36, 'font-size': SEG_FS,
-          fill: ink[cvar] === 'dark' ? 'var(--text-1)' : 'var(--surface-1)',
-        }, nm));
-      }
-      const hit = el('rect', { x: sx0, y: sy - 2, width: Math.max(10, sx1 - sx0), height: segH + 4, fill: 'transparent', class: 'mark' });
-      hoverable(hit, () => [
+      const segTip = () => [
         { color: col, value: `${fmtDate(g.e.acc, { yearOnly: true })}–${g.e.reignEnd ? fmtDate(g.e.reignEnd, { yearOnly: true }) : '？'}`, label: '在位' },
         { label: '在位年数', value: g.e.reignYears === null ? '—' : `${g.e.reignYears.toFixed(1)} 年` },
         { label: '享年', value: g.e.lifespan === null ? '不详' : `${Math.floor(g.e.lifespan)} 岁` },
         { label: '登基年龄', value: g.e.accAge === null ? '不详' : `${Math.floor(g.e.accAge)} 岁` },
         { label: '死因', value: g.e.causeLabel },
         ...(g.e.note ? [g.e.note] : []),
-      ], () => `${b.d.name}·${g.e.temple}`);
-      body.appendChild(hit);
+      ];
+      const parts = spanParts(b, g.ds, g.dx);
+      let widest = null;
+      for (const p of parts) {
+        const gm = slotGeom(p.slot);
+        const segH = (gm.h - (b.subs - 1) * 2) / b.subs;
+        const sy = y0 + gm.y + g.sub * (segH + 2);
+        const sx0 = x(p.x0), sx1 = x(p.x1);
+        const wSeg = Math.max(1.5, sx1 - sx0 - 2);   // −2 ＝ 段间以底色留缝，而不是描边分隔
+        body.appendChild(el('rect', {
+          x: sx0 + 1, y: sy, width: wSeg, height: segH, rx: Math.min(3, segH / 2), fill: col, class: 'mark',
+        }));
+        const hit = el('rect', { x: sx0, y: sy - 2, width: Math.max(10, sx1 - sx0), height: segH + 4, fill: 'transparent', class: 'mark' });
+        hoverable(hit, segTip, () => `${b.d.name}·${g.e.temple}`);
+        body.appendChild(hit);
+        if (!widest || wSeg > widest.w) widest = { w: wSeg, x: sx0, y: sy, h: segH };
+        // 非正常死亡：段末的小三角（状态色 + 图例说明，不单靠颜色表意）
+        if (markViolent && g.e.violent === 1 && g.e.reignEnd
+            && Math.abs(g.x - g.e.reignEnd.t) < 0.01 && Math.abs(p.x1 - g.dx) < 1e-9) {
+          const tipX = sx0 + 1 + wSeg;
+          body.appendChild(el('path', {
+            d: `M${tipX - 3.5},${sy - 1.5}L${tipX + 3.5},${sy - 1.5}L${tipX},${sy + 4}Z`,
+            fill: 'var(--critical)',
+          }));
+        }
+      }
+      // 段内简称：写在最宽的那一小段上，放不下就留给悬停与数据表
+      const nm = shortName(g.e);
+      if (widest && widest.h >= 9 && widest.w > textW(nm, SEG_FS) + 8) {
+        body.appendChild(el('text', {
+          x: widest.x + 5, y: widest.y + widest.h / 2 + SEG_FS * 0.36, 'font-size': SEG_FS,
+          fill: ink[cvar] === 'dark' ? 'var(--text-1)' : 'var(--surface-1)',
+        }, nm));
+      }
     }
 
     // 朝代名（带首；滚动时吸附于视口左缘，但不越出本带）
@@ -329,6 +432,16 @@ export function renderLaneTimeline(host, list, opts) {
   host.appendChild(legendHost);
   const staticLegend = h('div');
   host.appendChild(staticLegend);
+  if (useTop) {
+    staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text:
+      `第一行为正统序列专用（${orth.length} 朝），不参与泳道回收，任何割据政权都不会挤进来，`
+      + `于是它自成一条贯通两千年的主线；其余政权一律平等地排在下方，不含褒贬。`
+      + `斜纹段为正统交替期——两朝同时自居正朔，上半轨为前朝、下半轨为后朝：`
+      + `陈与隋并立八年、南宋与元并立七十三年、明与清并立二十八年，`
+      + `正统归属要到那一段结束才由后世定下来。`
+      + `采用《资治通鉴》以降的传统正统观（三国承曹魏、南北朝承南朝、五代承中原五朝），`
+      + `这是史观选择而非史实：北魏、辽、金、西夏在各自时代同样自居正统。` }));
+  }
   if (markViolent) {
     staticLegend.appendChild(legend([{ color: 'var(--critical)', label: '▲ 段末三角＝该帝非正常死亡（被杀/战死/自杀）' }]));
   }

@@ -129,5 +129,24 @@ export const SUCCESSION = {
   ming: 'yuan', nming: 'ming',
 };
 
+/**
+ * 正统序列：横向泳道最上一行专用。
+ *
+ * 取《资治通鉴》以降的传统正统观：三国承曹魏、南北朝承南朝、五代承中原五朝。
+ * **这是一种史观选择，不是史实**——司马光以曹魏承汉、以南朝为正朔，而北魏、
+ * 辽、金、西夏在各自时代同样自居正统；今人亦多有以北朝为隋唐所自出者。
+ * 本库把这一序列单独占一行，只为让「谁在什么时候被后世追认为正朔」有一条可读的主线，
+ * 其余政权一律平等地排在下方，不含褒贬。
+ *
+ * 交替处若两朝并存（陈与隋并立八年、南宋与元并立七十三年、明与清并立二十八年），
+ * 上一朝居上半、下一朝居下半，并加斜纹底衬标出「正统未定」的那一段。
+ */
+export const ORTHODOX = [
+  'qin', 'xhan', 'xin', 'ehan', 'wei', 'xjin', 'ejin',
+  'song_l', 'nanqi', 'liang', 'chen', 'sui', 'tang',
+  'hliang', 'htang', 'hjin', 'hhan', 'hzhou',
+  'nsong', 'ssong', 'yuan', 'ming', 'qing',
+];
+
 export const DYN_MAP = new Map(DYNASTIES.map((d) => [d.key, d]));
 export const ERA_MAP = new Map(ERAS.map((e) => [e.key, e]));
