@@ -4,6 +4,7 @@ import { EMPERORS, DYNASTIES, DYN_STATS, GROUPINGS, COVARIATES } from './data.js
 import { ERAS } from './dynasties.js';
 import { describe, fmtP } from './stats.js';
 import { renderTimeline, renderHistoryScatter, renderHeatmap } from './views-time.js';
+import { renderLaneTimeline } from './views-lanes.js';
 import { renderKM, renderCIF, renderCox } from './views-survival.js';
 import { renderBox, renderDSI, renderHypotheses, renderDatabase, renderAudit } from './views-compare.js';
 
@@ -130,14 +131,23 @@ const tog = (key, label, when) => ({ type: 'toggle', key, label, when });
 
 const SECTIONS = [
   {
-    id: 'timeline', title: '时间轴：寿命与统治期（两种读法）',
-    desc: '纵向：每行一位皇帝，细线＝出生到死亡的完整寿命，粗块＝在位期间，一眼读出登基年龄、在位长短、是否早逝；颜色沿用全局语义（蓝＝大一统，橙＝分裂）。横向泳道：把朝代做成横向长带、皇帝做成带内分段，横向滚动即为时间流逝；泳道可回收——某朝终结后该行即被后来的政权接管，于是同一时刻占用的行数就是当时并存的政权数，最适合看五代十国、十六国这类多朝并立的年代，并可按具体朝代配色。',
+    // 全景图放在最前：先建立「谁在什么时候统治、天下有多分裂」的历史坐标，
+    // 后面的生存曲线与回归才有可解读的背景。
+    id: 'panorama', title: '王朝全景：横向泳道时间轴',
+    desc: '把朝代做成横向长带、皇帝做成带内分段，横向滚动即为时间流逝。泳道可回收——某朝终结后该行即被后来的政权接管，于是同一时刻占用的行数就是当时并存的政权数：大一统年代只有一两行有色块，五代十国、十六国则行行占满。第一行为正统序列专用，第二行是与之并行的北方政权主线。',
     controls: [
-      sel('timelineMode', '显示', [['dual', '纵向 · 双层（寿命＋统治）'], ['life', '纵向 · 仅寿命时间轴'], ['reign', '纵向 · 仅统治时间轴'], ['lanes', '横向泳道（按朝代）']]),
-      sel('timelineSort', '排序', [['birth', '按出生年'], ['life', '按寿命降序'], ['reign', '按在位年数降序']], (s) => s.timelineMode !== 'lanes'),
-      sel('lanePx', '时间缩放', [[10, '标准 10 px/年'], [6, '紧凑 6 px/年'], [14, '舒展 14 px/年']], (s) => s.timelineMode === 'lanes'),
-      sel('laneColor', '配色', [['dynasty', '按具体朝代'], ['unified', '按大一统 / 分裂']], (s) => s.timelineMode === 'lanes'),
-      tog('laneViolent', '标记非正常死亡', (s) => s.timelineMode === 'lanes'),
+      sel('lanePx', '时间缩放', [[10, '标准 10 px/年'], [6, '紧凑 6 px/年'], [14, '舒展 14 px/年']]),
+      sel('laneColor', '配色', [['dynasty', '按具体朝代'], ['unified', '按大一统 / 分裂']]),
+      tog('laneViolent', '标记非正常死亡'),
+    ],
+    render: renderLaneTimeline,
+  },
+  {
+    id: 'timeline', title: '时间轴：每位皇帝的寿命与统治期',
+    desc: '上一节看政权，这一节看个人：每行一位皇帝，细线＝出生到死亡的完整寿命，粗块＝在位期间，一眼读出登基年龄、在位长短、是否早逝。颜色沿用全局语义：蓝＝大一统，橙＝分裂。',
+    controls: [
+      sel('timelineMode', '显示', [['dual', '双层（寿命＋统治）'], ['life', '仅寿命时间轴'], ['reign', '仅统治时间轴']]),
+      sel('timelineSort', '排序', [['birth', '按出生年'], ['life', '按寿命降序'], ['reign', '按在位年数降序']]),
     ],
     render: renderTimeline,
   },

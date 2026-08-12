@@ -205,19 +205,21 @@ export function renderLaneTimeline(host, list, opts) {
   }
   const nLanes = lanes.length;
 
-  // 2b) 正统交替期：最多两朝并存（实测峰值为 2），上一朝居上半、下一朝居下半，
-  //     其余时段仍占满整条轨道。切分点即并存区间的首尾，底带与皇帝分段一并按段绘制。
+  // 2b) 主线交替期：线内相邻两朝若并存（实测峰值恰为 2），上一朝居上半轨、下一朝居下半轨，
+  //     其余时段仍占满整条轨道。正统行与北方线共用这一套画法，全图只有一种视觉语法。
+  //     切分点即并存区间的首尾，底带、掌权期与皇帝分段一并按段绘制。
   const contests = [];
-  if (useTop) {
-    const line = orth.slice().sort((a, b) => a.s - b.s);
+  const layoutLine = (members) => {
+    const line = members.slice().sort((a, b) => a.s - b.s);
+    const local = [];
     for (let i = 0; i + 1 < line.length; i++) {
       const a = line[i], c = line[i + 1];
       const from = Math.max(a.s, c.s), to = Math.min(a.e, c.e);
-      if (to - from > 0.02) contests.push({ from, to, top: a, bottom: c });
+      if (to - from > 0.02) local.push({ from, to, top: a, bottom: c, lane: a.lane });
     }
-    for (const b of orth) {
+    for (const b of members) {
       const cuts = new Set([b.s, b.e]);
-      for (const c of contests) {
+      for (const c of local) {
         if (c.from > b.s && c.from < b.e) cuts.add(c.from);
         if (c.to > b.s && c.to < b.e) cuts.add(c.to);
       }
@@ -225,11 +227,14 @@ export function renderLaneTimeline(host, list, opts) {
       b.pieces = [];
       for (let i = 0; i + 1 < xs.length; i++) {
         const mid = (xs[i] + xs[i + 1]) / 2;
-        const c = contests.find((k) => k.from <= mid && mid <= k.to && (k.top === b || k.bottom === b));
+        const c = local.find((k) => k.from <= mid && mid <= k.to && (k.top === b || k.bottom === b));
         b.pieces.push({ x0: xs[i], x1: xs[i + 1], slot: c ? (c.top === b ? 0 : 1) : null });
       }
     }
-  }
+    contests.push(...local);
+  };
+  if (useTop) layoutLine(orth);
+  if (useSecond) layoutLine(sec);
   /** 把 [from,to] 按该带的分段切开，回调拿到每一小段的横向范围与纵向几何 */
   const spanParts = (b, from, to) => {
     const pieces = b.pieces || [{ x0: b.s, x1: b.e, slot: null }];
@@ -315,26 +320,34 @@ export function renderLaneTimeline(host, list, opts) {
     if (bx > PAD_L && bx < W - PAD_L) body.appendChild(el('line', { x1: bx, x2: bx, y1: 0, y2: BODY_H, class: 'ref-line' }));
   }
 
-  if (useTop) {
-    // 第一行整行淡底，标出「这一行与其余行性质不同」
-    body.appendChild(el('rect', { x: 0, y: 0, width: W, height: LANE_H, fill: 'var(--text-1)', opacity: 0.035 }));
-    // 正统未定期：45° 斜纹底衬。此处纹理承载的是「并立」这一状态，非装饰
+  // 第一行整行淡底，标出「这一行与其余行性质不同」。第二行不加底色——
+  // 北方线只覆盖其中约 500 年，整行涂色会误示为该行全归北方线所有。
+  if (useTop) body.appendChild(el('rect', { x: 0, y: 0, width: W, height: LANE_H, fill: 'var(--text-1)', opacity: 0.035 }));
+  if (contests.length) {
+    // 交替并立期：45° 斜纹底衬。此处纹理承载的是「并立」这一状态，非装饰
     const defs = el('defs');
     defs.appendChild(el('pattern', {
       id: 'contest-hatch', width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)',
     }, [el('line', { x1: 0, y1: 0, x2: 0, y2: 6, stroke: 'var(--text-2)', 'stroke-width': 1.1, opacity: 0.34 })]));
     body.appendChild(defs);
     for (const c of contests) {
+      // 上下半轨的切分照做（否则两带会真的重叠），但不足半年的交接不再加斜纹：
+      // 那只是月度精度造成的数日重叠，画出来是一道看不见的窄条，徒增噪音
+      if (c.to - c.from < 0.5) continue;
       const cx0 = x(c.from), cx1 = x(c.to);
+      const orthodox = c.lane === 0;
       const rect = el('rect', {
-        x: cx0, y: 2, width: Math.max(2, cx1 - cx0), height: LANE_H - 6, fill: 'url(#contest-hatch)', class: 'mark',
+        x: cx0, y: c.lane * LANE_H + 2, width: Math.max(2, cx1 - cx0), height: LANE_H - 6,
+        fill: 'url(#contest-hatch)', class: 'mark',
       });
       hoverable(rect, () => [
-        { value: `${fmtYearAxis(c.from)}–${fmtYearAxis(c.to)}`, label: '正统未定' },
+        { value: `${fmtYearAxis(c.from)}–${fmtYearAxis(c.to)}`, label: orthodox ? '正统未定' : '南北并立' },
         { label: '历时', value: `${(c.to - c.from).toFixed(1)} 年` },
         { label: '并立', value: `${c.top.d.name} · ${c.bottom.d.name}` },
-        '两朝同时自居正朔：上半轨为前朝，下半轨为后朝。后世追认的正统归属要到此段结束才定下来。',
-      ], () => '正统交替期');
+        orthodox
+          ? '两朝同时自居正朔：上半轨为前朝，下半轨为后朝。后世追认的正统归属要到此段结束才定下来。'
+          : '北方主线的新旧交替：上半轨为前朝，下半轨为后朝，两者在此段内并存。',
+      ], () => (orthodox ? '正统交替期' : '主线交替期'));
       body.appendChild(rect);
     }
   }
@@ -458,8 +471,9 @@ export function renderLaneTimeline(host, list, opts) {
   host.appendChild(staticLegend);
   // 读图必需的视觉语法留在图旁，一行说完；来龙去脉收进折叠块
   const key = [];
-  if (useTop) key.push('淡底首行＝正统序列', '斜纹＝正统未定（上半轨为前朝、下半轨为后朝）');
-  if (useSecond) key.push('次行＝北朝线');
+  if (useTop) key.push('淡底首行＝正统序列');
+  if (useSecond) key.push('次行＝北方政权主线');
+  if (contests.length) key.push('斜纹＝新旧并立（上半轨前朝、下半轨后朝）');
   key.push('浅色半高段＝称帝前掌权期');
   if (markViolent) key.push('▲＝该帝非正常死亡');
   staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text: key.join(' · ') }));
@@ -526,9 +540,12 @@ export function renderLaneTimeline(host, list, opts) {
       + `正统归属要到那一段结束才由后世定下来。采用《资治通鉴》以降的传统正统观`
       + `（三国承曹魏、南北朝承南朝、五代承中原五朝），这是史观选择而非史实：`
       + `北魏、辽、金、西夏在各自时代同样自居正统。`,
-    useSecond && `第二行优先安排北朝线（北魏→西魏→北周，386–581 年）：南北朝本是两条并存的法统，`
-      + `正统行取南朝为正朔，北朝线便紧贴其下；581 年北周禅隋，这条线即并入第一行。`
-      + `该行并不独占——北朝线之外的时段照常参与回收，不会为一条两百年的线空出两千年的行。`,
+    useSecond && `第二行优先安排「北方政权主线」：386–581 年的北魏→西魏→北周，与 916–1234 年的辽→金。`
+      + `中国史上这两段都是南北法统长期并行，而正统行都取南方为正朔，北方政权便会被挤到下方各行，`
+      + `对峙关系反倒读不出来。两次都以「并入第一行」收束——581 年北周禅隋、元既已入正统行——`
+      + `恰好呈现北方政权最终统合天下的节奏。线内交替（辽金并立十年）沿用与正统行相同的上下半轨画法。`
+      + `该行并不独占：两段线合计约 500 年，其余时段照常参与回收。`
+      + `西夏与辽、金三方并立，不入此线，平等排在下方。`,
     `共 ${bands.length} 个政权装入 ${nLanes} 条泳道。泳道不归属任何朝代：某朝终结后该行即被后来的政权接管，`
       + `因此同一时刻占用的行数就是当时并存的政权数（最挤的 937 年有十一个政权）。`,
     `同朝代内前帝崩与后帝即位常落在同一个月，史料精确到月即产生名义上的重叠——这类不足半年的重叠一律`
