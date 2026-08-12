@@ -99,5 +99,35 @@ export const DYNASTIES = [
   D('hongxian','中华帝国',1916,1916,0,'ymq', { note: '袁世凯洪宪帝制，83 天' }),
 ];
 
+/**
+ * 泳道接续关系：`后继政权 → 前身政权`。
+ *
+ * 横向泳道默认按「首次适配」装箱，谁先空出来就给谁，结果是前蜀与后蜀分处两行、
+ * 西魏与北周各据一方、五代的中原正统线被打散到五条泳道上——同一条法统在图上读不出来。
+ * 声明接续关系后，后继政权优先落在前身那一行，继承线于是横向连成一条。
+ * 仅是排版偏好：若前身那一行在该时点已被占用（如后晋 936 年立国时后唐尚存至 937），
+ * 自动退回首次适配，不会为了对齐而制造重叠。
+ */
+export const SUCCESSION = {
+  // 秦汉—魏晋—南朝：一条法统贯穿到陈
+  // 东汉直接续新而非玄汉：更始政权与王莽实际并存过八个月（更始二月称帝、王莽十月被杀），
+  // 挂在玄汉后面会因重叠而退回首次适配，反倒把汉家法统打散
+  xhan: 'qin', xin: 'xhan', xuanhan: 'xin', ehan: 'xin',
+  wei: 'ehan', xjin: 'wei', ejin: 'xjin',
+  song_l: 'ejin', nanqi: 'song_l', liang: 'nanqi', chen: 'liang',
+  // 北朝东西两支各自成线
+  dwei: 'bwei', bqi: 'dwei',
+  bzhou: 'xwei', sui: 'bzhou', tang: 'sui',
+  // 五代中原正统线 → 两宋
+  hliang: 'tang', htang: 'hliang', hjin: 'htang', hhan: 'hjin', hzhou: 'hhan',
+  nsong: 'hzhou', ssong: 'nsong',
+  // 割据区域内部的前后相承
+  hshu: 'qshu',        // 前蜀 → 后蜀，同据巴蜀
+  ntang: 'wuten',      // 吴 → 南唐，同据江淮
+  houyan: 'qianyan', beiyan: 'houyan',
+  houliang: 'qianliang',
+  ming: 'yuan', nming: 'ming',
+};
+
 export const DYN_MAP = new Map(DYNASTIES.map((d) => [d.key, d]));
 export const ERA_MAP = new Map(ERAS.map((e) => [e.key, e]));

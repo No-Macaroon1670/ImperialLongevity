@@ -14,7 +14,7 @@
 //      因此任何时刻都能读出正在看的是哪一朝。
 import { el, h, linear, ticks, hoverable, legend, tableView, showTip, hideTip, fmtYearAxis, fmt1 } from './charts.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
-import { ERAS } from './dynasties.js';
+import { ERAS, SUCCESSION } from './dynasties.js';
 import { fmtDate } from './schema.js';
 
 const SLOT_VARS = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6', '--s7', '--s8'];
@@ -121,24 +121,38 @@ export function renderLaneTimeline(host, list, opts) {
     if (!segs.length) continue;
     segs.sort((a, b) => a.s - b.s);
     for (const g of segs) { g.ds = g.s; g.dx = g.x; }   // ds/dx＝绘图坐标，s/x 始终保留真实日期
-    // 带的跨度取「朝代元数据」与「实际在位区间」的并集
-    const s = Math.min(d.s, ...segs.map((g) => g.s), ...preRule.map((g) => g.s));
-    const e2 = Math.max(d.e, ...segs.map((g) => g.x));
+    // 带的跨度由「实际有君主在位（含称帝前掌权期）」决定，不回退到朝代元数据的年份。
+    // 元数据只精确到年：曹魏记作「220」即 220 年 1 月，而汉献帝实际禅位在 220 年 11 月，
+    // 若以元数据取值，两朝会凭空重叠十一个月，接续关系便无法落在同一条泳道上。
+    // 头尾若真有一年以上无主，空档审计一节会单独列出，不靠这里的底带掩盖。
+    const s = Math.min(...segs.map((g) => g.s), ...preRule.map((g) => g.s));
+    const e2 = Math.max(...segs.map((g) => g.x));
     bands.push({ d, s, e: e2, segs, preRule, n: emps.length });
   }
   if (!bands.length) { host.appendChild(h('p', { class: 'muted', text: '当前筛选无数据。' })); return; }
   bands.sort((a, b) => a.s - b.s || a.e - b.e);
 
-  // 2) 泳道装箱：首次适配。带的横向足迹取「带宽」与「名称宽度」的较大者，
+  // 2) 泳道装箱。带的横向足迹取「带宽」与「名称宽度」的较大者，
   //    因此带首的名称永远不会压到上一条政权的尾部。
+  //    在首次适配之上加一层偏好：后继政权优先落在前身那一行（见 SUCCESSION），
+  //    使前蜀→后蜀、西魏→北周、五代中原正统线等继承关系横向连成一条。
+  //    相邻政权多半首尾紧接（后梁止于 923、后唐即立于 923），故同泳道只留 4px 间隙；
+  //    已声明的接续关系允许完全紧邻（间隙 0），两带之间靠 2px 底色缝分隔。
+  const GAP = 4;
   const laneEnd = [];
+  const laneOf = new Map();
   for (const b of bands) {
-    const need = Math.max(b.e * pxYear, b.s * pxYear + textW(b.d.name, LABEL_FS) + 14);
-    let k = 0;
-    while (k < laneEnd.length && laneEnd[k] > b.s * pxYear - 10) k++;
+    const startPx = b.s * pxYear;
+    const need = Math.max(b.e * pxYear, startPx + textW(b.d.name, LABEL_FS) + 14);
+    const fits = (k, gap) => laneEnd[k] === undefined || laneEnd[k] <= startPx - gap;
+    let k = -1;
+    const prev = SUCCESSION[b.d.key];
+    if (prev !== undefined && laneOf.has(prev) && fits(laneOf.get(prev), 0)) k = laneOf.get(prev);
+    if (k < 0) { k = 0; while (k < laneEnd.length && !fits(k, GAP)) k++; }
     if (k === laneEnd.length) laneEnd.push(-Infinity);
-    laneEnd[k] = need;
+    laneEnd[k] = Math.max(laneEnd[k], need);
     b.lane = k;
+    laneOf.set(b.d.key, k);
   }
   const nLanes = laneEnd.length;
 
@@ -221,8 +235,9 @@ export function renderLaneTimeline(host, list, opts) {
     const bx0 = x(b.s), bx1 = x(b.e);
 
     // 底带：朝代存续期的浅色轨道
+    // 左右各内缩 1px：紧邻的两朝之间因此留出 2px 底色缝，靠留白分隔而非描边
     const track = el('rect', {
-      x: bx0, y: y0 + TRACK_Y, width: Math.max(2, bx1 - bx0), height: TRACK_H, rx: 4,
+      x: bx0 + 1, y: y0 + TRACK_Y, width: Math.max(2, bx1 - bx0 - 2), height: TRACK_H, rx: 4,
       fill: col, opacity: 0.14, class: 'mark',
     });
     const st = DYN_STATS.get(b.d.key);
