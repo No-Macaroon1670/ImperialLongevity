@@ -198,7 +198,11 @@ text.direct.sub { fill: var(--text-2); font-weight: 400; }
 
 /* ── 表格 ─────────────────────────────────────────────────────────────── */
 .table-view { margin-top: 12px; }
-.table-view summary { cursor: pointer; color: var(--text-2); font-size: .82rem; }
+.table-view summary, .notes summary { cursor: pointer; color: var(--text-2); font-size: .82rem; }
+.notes { margin-top: 10px; }
+.notes summary { color: var(--muted); }
+.notes[open] summary { color: var(--text-2); margin-bottom: 4px; }
+.notes > p { margin: 0 0 .5em; max-width: 78ch; }
 .table-scroll { overflow-x: auto; max-height: 420px; overflow-y: auto; margin-top: 8px;
   border: 1px solid var(--border); border-radius: 8px; }
 table { border-collapse: collapse; width: 100%; font-size: .8rem; }

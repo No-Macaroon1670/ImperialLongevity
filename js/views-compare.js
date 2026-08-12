@@ -1,5 +1,5 @@
 // views-compare.js — 箱线图、DSI 散点、假说检验面板、数据库表
-import { el, h, linear, band, ticks, Frame, hoverable, legend, tableView, fmt1, fmt2 } from './charts.js';
+import { el, h, linear, band, ticks, Frame, hoverable, legend, tableView, notes, fmt1, fmt2 } from './charts.js';
 import { GROUPINGS, DYN_STATS, survivalInput, EMPERORS, DYNASTIES } from './data.js';
 import { describe, welch, mannWhitney, spearman, linreg, bootstrapMeanCI, kaplanMeier, logRank, coxPH, fmtP } from './stats.js';
 import { fmtDate, FLAG_LABEL } from './schema.js';
@@ -92,7 +92,7 @@ export function renderBox(host, list, opts) {
       ` Mann–Whitney U 检验 ${fmtP(mw.p)}。`));
     host.appendChild(box);
   }
-  host.appendChild(h('p', { class: 'muted small', text: '注意：本图为「死亡年龄的横截面分布」，不处理左截断与删失；正式推断请以生存曲线与 Cox 模型为准。' }));
+  host.appendChild(notes(['本图为「死亡年龄的横截面分布」，不处理左截断与删失；正式推断请以生存曲线与 Cox 模型为准。']));
 }
 
 // ── 8. DSI 散点图 ────────────────────────────────────────────────────────
@@ -167,7 +167,7 @@ export function renderDSI(host, list, opts) {
     ` Spearman ρ = ${fmt2(sp.rho)}（n = ${sp.n}，${fmtP(sp.p)}）；` +
     ` 线性回归斜率 = ${fmt2(reg.slope)} 岁 / 每增加 1 年·帝⁻¹ 的稳定度，R² = ${fmt2(reg.r2)}，${fmtP(reg.p)}。`));
   host.appendChild(res);
-  host.appendChild(h('p', { class: 'muted small', text: note }));
+  host.appendChild(notes([note]));
   host.appendChild(tableView(
     level === 'dynasty' ? ['王朝', 'DSI（年/帝）', '国祚（年）', '皇帝人数', '有生卒记录', '平均享年'] : ['庙号', '朝代', 'DSI', '享年'],
     (level === 'dynasty'
@@ -249,8 +249,8 @@ export function renderHypotheses(host, list, opts) {
           document.createTextNode(`。控制登基年龄是必要的：大一统皇帝平均 ${fmt1(accU.mean)} 岁即位，分裂时期为 ${fmt1(accS.mean)} 岁。`),
         ]) : null,
         h('p', { text: lr ? `年龄尺度（登基年龄处左截断，满 15 岁为条件起点）作为参照：Log-rank χ² = ${fmt2(lr.chi2)}，${fmtP(lr.p)}。该尺度的绝对水平受进入结构影响（见生存曲线一节的说明），只宜作组间比较。` : '' }),
-        (!sig && adjTerm && adjTerm.p < 0.05) ? h('p', { class: 'muted small', text:
-          '两种口径给出不同答案，这本身是结果的一部分：平均享年几乎没有差别，登基后的死亡风险却相差显著。原因在于「平均享年」把两件事混在一起——何时登上皇位，和登上之后面对多大风险。大一统皇帝即位更早（多为太子顺位继承），观察起点更靠前；分裂时期不少割据之主是中年武将出身，即位时已过半生，慕容垂、钱镠、马殷等更把均值拉高。剔除起点差异后，分裂时期的风险劣势才显露出来。此外，分裂时期生年失载的比例更高，而失载者多为短命幼主，均值因此被系统性抬高。' }) : null,
+        (!sig && adjTerm && adjTerm.p < 0.05) ? notes([
+          '两种口径给出不同答案，这本身是结果的一部分：平均享年几乎没有差别，登基后的死亡风险却相差显著。原因在于「平均享年」把两件事混在一起——何时登上皇位，和登上之后面对多大风险。大一统皇帝即位更早（多为太子顺位继承），观察起点更靠前；分裂时期不少割据之主是中年武将出身，即位时已过半生，慕容垂、钱镠、马殷等更把均值拉高。剔除起点差异后，分裂时期的风险劣势才显露出来。此外，分裂时期生年失载的比例更高，而失载者多为短命幼主，均值因此被系统性抬高。'], { label: '为何两种口径不一致' }) : null,
       ].filter(Boolean),
       (() => {
         const primary = adjTerm && adjTerm.p < 0.05 ? (adjTerm.hr < 1 ? 'support' : 'reject') : null;
@@ -297,7 +297,7 @@ export function renderHypotheses(host, list, opts) {
         tableView(['单变量 Cox 因素（年龄尺度）', 'HR', '95% CI', 'p'],
           uniFits.map((t) => [t.name, fmt2(t.hr), `${fmt2(t.lo)} – ${fmt2(t.hi)}`, fmtP(t.p).replace(/^p [=<] /, '')]),
           { caption: '各风险因素效应量排序（按 |log HR| 降序）' }),
-        h('p', { class: 'muted small', text: '说明：把「是否非正常死亡」放进以死亡为终点的生存模型，本质上是用结局解释结局，HR 必然偏大，故此处仅作效应量的量级参照，不构成因果推断。真正可检验的形式见 H5 的分因分析。' }),
+        notes(['把「是否非正常死亡」放进以死亡为终点的生存模型，本质上是用结局解释结局，HR 必然偏大，故此处仅作效应量的量级参照，不构成因果推断。真正可检验的形式见 H5 的分因分析。']),
       ],
       verdict(top && top.key === 'violent' ? 'support' : 'mixed',
         top && top.key === 'violent' ? '在本组因素中效应量最大' : `效应量最大者为「${top ? top.name : '—'}」`)));
@@ -317,7 +317,7 @@ export function renderHypotheses(host, list, opts) {
     host.appendChild(hypCard('H3', '王朝稳定度（DSI）与寿命正相关。',
       [
         h('p', { text: sp ? `王朝层面（n = ${sp.n} 个政权）：Spearman ρ = ${fmt2(sp.rho)}，${fmtP(sp.p)}；每提高 10 年/帝 的稳定度，平均享年变化 ${fmt1(rg.slope * 10)} 岁（R² = ${fmt2(rg.r2)}）。` : '可用王朝数不足。' }),
-        h('p', { class: 'muted small', text: 'DSI 与寿命互为因果的风险很高：皇帝越短命，同一时段内更替越快，DSI 就越低。这一相关性不能直接读作「稳定的王朝让皇帝更长寿」。' }),
+        notes(['DSI 与寿命互为因果的风险很高：皇帝越短命，同一时段内更替越快，DSI 就越低。这一相关性不能直接读作「稳定的王朝让皇帝更长寿」。']),
       ],
       verdict(sig && sp.rho > 0 ? 'support' : sig ? 'reject' : 'mixed',
         sig && sp.rho > 0 ? '数据支持（但存在内生性）' : sig ? '与假说相反' : '证据不充分')));
@@ -340,7 +340,7 @@ export function renderHypotheses(host, list, opts) {
       [
         h('p', { text: w ? `有服丹药记载者 ${w.A.n} 位，平均享年 ${fmt1(w.A.mean)} 岁；无记载者 ${w.B.n} 位，平均 ${fmt1(w.B.mean)} 岁，差 ${fmt1(w.diff)} 岁（${fmtP(w.p)}）。` : '丹药组样本不足。' }),
         h('p', { text: term ? `控制大一统与登基年龄后的 Cox 模型：服丹药 HR = ${fmt2(term.hr)}（95% CI ${fmt2(term.lo)}–${fmt2(term.hi)}，${fmtP(term.p)}）。` : '调整模型样本不足。' }),
-        h('p', { class: 'muted small', text: '关键偏倚：丹药服食多见于长期在位、活到中老年的皇帝（唐宪宗、明世宗、清世宗等），且「服丹」本身常因暴卒才被史官记录——存在反向因果与记录偏倚。0 值应读作「无明确记载」，而非「确未服食」。' }),
+        notes(['丹药服食多见于长期在位、活到中老年的皇帝（唐宪宗、明世宗、清世宗等），且「服丹」本身常因暴卒才被史官记录——存在反向因果与记录偏倚。0 值应读作「无明确记载」，而非「确未服食」。']),
       ],
       verdict(sig && term.hr > 1 ? 'support' : sig ? 'reject' : 'mixed',
         sig && term.hr > 1 ? '调整后仍显著' : sig ? '与假说相反' : '证据不充分')));
@@ -385,7 +385,7 @@ export function renderHypotheses(host, list, opts) {
           ? `分因风险模型（登基后尺度，控制登基年龄，竞争事件按删失处理）：大一统皇帝的「非正常死亡」风险 HR = ${fmt2(hv.hr)}（${fmt2(hv.lo)}–${fmt2(hv.hi)}，${fmtP(hv.p)}）；「正常死亡」风险 HR = ${fmt2(hn.hr)}（${fmt2(hn.lo)}–${fmt2(hn.hi)}，${fmtP(hn.p)}）。`
           : '分因模型样本不足。' }),
         h('p', { text: nat ? `另以描述统计佐证：仅比较正常死亡者的享年，大一统 ${fmt1(nat.A.mean)} 岁 vs 分裂 ${fmt1(nat.B.mean)} 岁，差 ${fmt1(nat.diff)} 岁（${fmtP(nat.p)}）。` : '' }),
-        h('p', { class: 'muted small', text: '判读逻辑：若统一的生存优势来自「更少被杀」，则非正常死亡的 HR 应显著小于 1，而正常死亡（病死）的 HR 应接近 1——因为统一并不会让人更不容易生病。反之，若病死风险也显著降低，才提示医疗、营养、居住条件等非暴力机制在起作用。原因别风险模型假定两类死亡在给定协变量下相互独立，这一假定不可检验，结论应与竞争风险累积发生率图相互参照。' }),
+        notes(['判读逻辑：若统一的生存优势来自「更少被杀」，则非正常死亡的 HR 应显著小于 1，而正常死亡（病死）的 HR 应接近 1——因为统一并不会让人更不容易生病。反之，若病死风险也显著降低，才提示医疗、营养、居住条件等非暴力机制在起作用。原因别风险模型假定两类死亡在给定协变量下相互独立，这一假定不可检验，结论应与竞争风险累积发生率图相互参照。']),
       ],
       verdict(kind,
         kind === 'support' ? '支持：优势集中在暴力死亡一侧'

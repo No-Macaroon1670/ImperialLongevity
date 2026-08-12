@@ -1,6 +1,8 @@
 # 中国帝王寿命数据库 · China Imperial Longevity Database
 
-对标欧洲研究 *Survival and longevity of European rulers* 的中国版本。收录秦至清共 **350 位**君主
+**▶ 在线访问：<https://no-macaroon1670.github.io/ImperialLongevity/>**
+
+对标欧洲研究 *Survival and longevity of European rulers* 的中国版本。收录秦至清共 **360 位**君主
 （含三国、十六国、南北朝、五代十国、辽金夏元等并立政权），以生存分析回答：
 
 > 帝王的寿命，主要由医疗水平决定，还是由政治制度与权力风险决定？

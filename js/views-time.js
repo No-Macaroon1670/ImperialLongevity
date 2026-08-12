@@ -1,5 +1,5 @@
 // views-time.js — 时间轴类视图：双层寿命/统治时间轴、历史总散点、寿命热力图
-import { el, h, linear, ticks, Frame, hoverable, legend, tableView, fmt1, fmtYearAxis } from './charts.js';
+import { el, h, linear, ticks, Frame, hoverable, legend, tableView, notes, fmt1, fmtYearAxis } from './charts.js';
 import { ERAS } from './dynasties.js';
 import { fmtDate } from './schema.js';
 import { renderLaneTimeline } from './views-lanes.js';
@@ -188,7 +188,7 @@ export function renderHistoryScatter(host, list, opts) {
     { color: UNI, label: '大一统 ±50 年移动平均', shape: 'line' },
     { color: SPL, label: '分裂 ±50 年移动平均', shape: 'line' },
   ]));
-  host.appendChild(h('p', { class: 'muted small', text: '点的大小固定：纵轴已编码寿命，再以半径重复编码同一变量属于双重编码，会掩盖真实差异。' }));
+  host.appendChild(notes(['点的大小固定：纵轴已编码寿命，再以半径重复编码同一变量属于双重编码，会掩盖真实差异。']));
   host.appendChild(tableView(
     ['庙号', '朝代', xKey === 'birth' ? '出生年' : '登基年', '享年', '死因', '是否非正常'],
     pts.slice().sort((a, b) => (xKey === 'birth' ? a.birth.t - b.birth.t : a.reigns[0].s.t - b.reigns[0].s.t))

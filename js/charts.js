@@ -164,6 +164,26 @@ export function legend(items, { shape = 'rect' } = {}) {
   return wrap;
 }
 
+/**
+ * 折叠的方法说明。
+ *
+ * 图下方原本堆着四五段口径与偏倚的长文，读者要越过一堵字墙才看得到下一张图。
+ * 但这些内容不能删——它们正是「这张图能说什么、不能说什么」的边界。
+ * 故一律收进折叠块：图旁只留读图必需的图例与结论数字，长论证一键可展开，
+ * 完整版本则见 README。summary 写明内容性质（而非笼统的「更多」），
+ * 使读者能判断是否需要展开。
+ */
+export function notes(items, { label = '口径与已知偏倚' } = {}) {
+  const list = [].concat(items).filter(Boolean);
+  if (!list.length) return null;
+  const det = h('details', { class: 'notes' });
+  det.appendChild(h('summary', { text: label }));
+  for (const it of list) {
+    det.appendChild(typeof it === 'string' ? h('p', { class: 'muted small', text: it }) : it);
+  }
+  return det;
+}
+
 // ── 表格视图（每张图的无障碍孪生） ────────────────────────────────────────
 export function tableView(headers, rows, { caption = '数据表', max = 0 } = {}) {
   const det = h('details', { class: 'table-view' });

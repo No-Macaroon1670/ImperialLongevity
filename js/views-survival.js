@@ -1,5 +1,5 @@
 // views-survival.js — 生存分析视图：Kaplan–Meier、竞争风险累积发生率、Cox 森林图
-import { el, h, linear, ticks, Frame, hoverable, legend, tableView, fmt1, fmt2, showTip, hideTip } from './charts.js';
+import { el, h, linear, ticks, Frame, hoverable, legend, tableView, notes, fmt1, fmt2, showTip, hideTip } from './charts.js';
 import { survivalInput, GROUPINGS, COVARIATES } from './data.js';
 import { kaplanMeier, logRank, coxPH, cumulativeIncidence, fmtP, rmst, riskSetDiagnostics } from './stats.js';
 
@@ -158,23 +158,21 @@ export function renderKM(host, list, opts) {
   }
   const tau = scale === 'age' ? 70 : 30;
   const rm = groups.map((g) => `${g.label} ${fmt1(rmst(g.km, tau))}`).join(' · ');
-  box.appendChild(h('p', { class: 'muted small', text: `限制平均生存时间 RMST（截至 ${tau}${scale === 'age' ? ' 岁' : ' 年'}）：${rm}。RMST 在存在删失时比「平均寿命」更稳健。` }));
+  box.appendChild(h('p', { class: 'muted small', text: `限制平均生存时间 RMST（截至 ${tau}${scale === 'age' ? ' 岁' : ' 年'}）：${rm}。` }));
   const dropped = groups.reduce((s, g) => s + g.dropped, 0);
-  if (dropped) box.appendChild(h('p', { class: 'muted small', text: `因生卒/登基日期不全被排除：${dropped} 位（已在上表中剔除，未作插补）。` }));
-  if (scale === 'age') {
-    box.appendChild(h('p', { class: 'muted small', text:
-      `年龄尺度采用左截断（延迟进入）：每位皇帝自其登基年龄进入风险集，校正「必须活到即位才会进入样本」的选择偏倚。` +
-      (fromAge > 0
-        ? ` 并以满 ${fromAge} 岁为条件起点——襁褓即位者（如汉殇帝、周静帝）会使低龄段的风险集只剩一两人，一次死亡即把曲线打掉一半，那里的估计没有意义。设为「不设条件（0 岁）」可查看未加条件的原始曲线，但请勿解读其低龄段。`
-        : ' 当前未设条件起点：低龄段风险集极小，曲线在那里不可解读。')
-    }));
-    box.appendChild(h('p', { class: 'muted small', text:
-      '年龄尺度的边际解释还有一个前提：进入时间（登基年龄）需与其后的死亡时间「拟独立」（quasi-independent）。本样本并不满足——幼年即位者多出于外戚、宦官擅权之局，其后被弑概率本就更高，故 20–35 岁区间的风险集偏向高危人群，会把该段的生存曲线压低。因此本项目以「登基后年数」为主分析，年龄尺度作为参照。' }));
-  } else {
-    box.appendChild(h('p', { class: 'muted small', text: censorAtAbd
-      ? '在位尺度：退位者在退位时刻删失，估计的是「在皇位上」的死亡风险。'
-      : '在位尺度：退位后继续随访至死亡，估计的是自登基起的总生存。' }));
-  }
+  box.appendChild(notes([
+    'RMST（限制平均生存时间）在存在删失时比「平均寿命」更稳健：它只统计截尾点之前的存活年数，不依赖尾部外推。',
+    dropped && `因生卒/登基日期不全被排除：${dropped} 位（已剔除，未作插补）。`,
+    scale === 'age'
+      ? `年龄尺度采用左截断（延迟进入）：每位皇帝自其登基年龄进入风险集，校正「必须活到即位才会进入样本」的选择偏倚。`
+        + (fromAge > 0
+          ? ` 并以满 ${fromAge} 岁为条件起点——襁褓即位者（如汉殇帝、周静帝）会使低龄段的风险集只剩一两人，一次死亡即把曲线打掉一半，那里的估计没有意义。`
+          : ' 当前未设条件起点：低龄段风险集极小，曲线在那里不可解读。')
+      : (censorAtAbd
+        ? '在位尺度：退位者在退位时刻删失，估计的是「在皇位上」的死亡风险。'
+        : '在位尺度：退位后继续随访至死亡，估计的是自登基起的总生存。'),
+    scale === 'age' && '年龄尺度的边际解释还有一个前提：进入时间（登基年龄）需与其后的死亡时间「拟独立」（quasi-independent）。本样本并不满足——幼年即位者多出于外戚、宦官擅权之局，其后被弑概率本就更高，故 20–35 岁区间的风险集偏向高危人群，会把该段的生存曲线压低。因此本项目以「登基后年数」为主分析，年龄尺度作为参照。',
+  ]));
   host.appendChild(box);
 }
 
@@ -233,7 +231,7 @@ export function renderCIF(host, list, opts) {
   }
   host.appendChild(wrap);
   host.appendChild(legend(causeDefs.map((c) => ({ color: c.color, label: c.label, shape: 'line' }))));
-  host.appendChild(h('p', { class: 'muted small', text: '两条曲线在同一分面内相加即为总死亡累积发生率。Aalen–Johansen 估计量正确处理竞争风险：把「被杀」当作删失会高估自然死亡风险。' }));
+  host.appendChild(notes(['两条曲线在同一分面内相加即为总死亡累积发生率。Aalen–Johansen 估计量正确处理竞争风险：把「被杀」当作删失会高估自然死亡风险。']));
   host.appendChild(tableView(['分组', '死亡方式', '终点累积发生率'], tableRows, { caption: '竞争风险终点值' }));
 }
 
@@ -314,10 +312,12 @@ export function renderCox(host, list, opts) {
       r.p !== null && r.p < 0.05 ? '⚠ 可能违反' : '未见违反']),
     { caption: '比例风险假定诊断（Schoenfeld 残差近似检验）' },
   ));
-  if (excluded) note.appendChild(h('p', { class: 'muted small', text: `因协变量缺失被排除：${excluded} 位。缺失以「整行剔除」处理，未作插补。` }));
   note.appendChild(h('p', { class: 'muted small', text: 'HR＞1 表示该因素提高死亡风险，＜1 表示具有保护作用；✱ 标记 p＜0.05。连续变量已按注明的单位缩放。' }));
-  note.appendChild(h('p', { class: 'muted small', text:
-    '两处必须提防的偏倚：（1）不朽时间偏倚——「亲历战争」「遭遇政变」「首都陷落」都发生在在位途中，本库按「一生中是否发生过」编码为时间固定变量，而必须先活得够久才有机会经历它们，因此这类变量的 HR 会被系统性拉低（甚至出现 HR＜1 的「保护作用」假象）。严格做法是改写为时变协变量，需要逐位皇帝的事件发生时点，本库尚未采集。（2）DSI 内生——DSI＝国祚÷皇帝人数，与在位时长在算术上同源，其 HR 不能读作独立的因果效应。' }));
+  note.appendChild(notes([
+    excluded && `因协变量缺失被排除：${excluded} 位。缺失以「整行剔除」处理，未作插补。`,
+    '不朽时间偏倚：「亲历战争」「遭遇政变」「首都陷落」都发生在在位途中，本库按「一生中是否发生过」编码为时间固定变量，而必须先活得够久才有机会经历它们，因此这类变量的 HR 会被系统性拉低，甚至出现 HR＜1 的「保护作用」假象。严格做法是改写为时变协变量，需要逐位皇帝的事件发生时点，本库尚未采集。',
+    'DSI 内生：DSI＝国祚÷皇帝人数，与在位时长在算术上同源，其 HR 不能读作独立的因果效应。',
+  ]));
   host.appendChild(note);
   host.appendChild(legend([
     { color: 'var(--critical)', label: '显著升高风险（p<0.05）', shape: 'dot' },

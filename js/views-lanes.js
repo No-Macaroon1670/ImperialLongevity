@@ -12,7 +12,7 @@
 //      改为朝代长带后只需 9 条，且长带本身有足够宽度容纳名称。
 //   3. 朝代名在带首，并在横向滚动时吸附于视口左缘（不越出本带范围），
 //      因此任何时刻都能读出正在看的是哪一朝。
-import { el, h, linear, ticks, hoverable, legend, tableView, showTip, hideTip, fmtYearAxis, fmt1 } from './charts.js';
+import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hideTip, fmtYearAxis, fmt1 } from './charts.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, ORTHODOX, SECONDARY } from './dynasties.js';
 import { fmtDate } from './schema.js';
@@ -456,26 +456,13 @@ export function renderLaneTimeline(host, list, opts) {
   host.appendChild(legendHost);
   const staticLegend = h('div');
   host.appendChild(staticLegend);
-  if (useSecond) {
-    staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text:
-      `第二行优先安排北朝线（北魏→西魏→北周，386–581 年），与正统行并行：`
-      + `南北朝本是两条并存的法统，正统行取南朝为正朔，北朝线便紧贴其下，两线的并行关系一目了然；`
-      + `581 年北周禅隋，这条线即并入第一行。该行并不独占——北朝线之外的时段照常参与回收，`
-      + `不会为一条两百年的线空出两千年的行。` }));
-  }
-  if (useTop) {
-    staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text:
-      `第一行为正统序列专用（${orth.length} 朝），不参与泳道回收，任何割据政权都不会挤进来，`
-      + `于是它自成一条贯通两千年的主线；其余政权一律平等地排在下方，不含褒贬。`
-      + `斜纹段为正统交替期——两朝同时自居正朔，上半轨为前朝、下半轨为后朝：`
-      + `陈与隋并立八年、南宋与元并立七十三年、明与清并立二十八年，`
-      + `正统归属要到那一段结束才由后世定下来。`
-      + `采用《资治通鉴》以降的传统正统观（三国承曹魏、南北朝承南朝、五代承中原五朝），`
-      + `这是史观选择而非史实：北魏、辽、金、西夏在各自时代同样自居正统。` }));
-  }
-  if (markViolent) {
-    staticLegend.appendChild(legend([{ color: 'var(--critical)', label: '▲ 段末三角＝该帝非正常死亡（被杀/战死/自杀）' }]));
-  }
+  // 读图必需的视觉语法留在图旁，一行说完；来龙去脉收进折叠块
+  const key = [];
+  if (useTop) key.push('淡底首行＝正统序列', '斜纹＝正统未定（上半轨为前朝、下半轨为后朝）');
+  if (useSecond) key.push('次行＝北朝线');
+  key.push('浅色半高段＝称帝前掌权期');
+  if (markViolent) key.push('▲＝该帝非正常死亡');
+  staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text: key.join(' · ') }));
 
   let raf = null;
   const sync = () => {
@@ -530,21 +517,30 @@ export function renderLaneTimeline(host, list, opts) {
   scroller.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(sync); });
   requestAnimationFrame(sync);
 
-  // 说明 + 数据表
   const greyN = [...slots.values()].filter((v) => v < 0).length;
   const stacked = bands.filter((b) => b.subs > 1);
-  host.appendChild(h('p', { class: 'muted small', text:
-    `同朝代内前帝崩与后帝即位常落在同一个月，史料精确到月即产生名义上的重叠——这类不足半年的重叠一律`
-    + `就地挤压（交界取中点、两段各退一半），仍并排在同一行；只有真正并立称帝者才分层错开，`
-    + `当前有 ${stacked.length} 例${stacked.length ? `（${stacked.map((b) => b.d.name).join('、')}）` : ''}。`
-    + `分段的绘图宽度因此可能比真实在位期短几个月，悬停与数据表给出的始终是真实日期。` }));
-  host.appendChild(h('p', { class: 'muted small', text:
+  host.appendChild(notes([
+    useTop && `第一行为正统序列专用（${orth.length} 朝），不参与泳道回收，任何割据政权都不会挤进来，`
+      + `于是它自成一条贯通两千年的主线；其余政权一律平等地排在下方，不含褒贬。`
+      + `斜纹段为正统交替期——陈与隋并立八年、南宋与元并立七十三年、明与清并立二十八年，`
+      + `正统归属要到那一段结束才由后世定下来。采用《资治通鉴》以降的传统正统观`
+      + `（三国承曹魏、南北朝承南朝、五代承中原五朝），这是史观选择而非史实：`
+      + `北魏、辽、金、西夏在各自时代同样自居正统。`,
+    useSecond && `第二行优先安排北朝线（北魏→西魏→北周，386–581 年）：南北朝本是两条并存的法统，`
+      + `正统行取南朝为正朔，北朝线便紧贴其下；581 年北周禅隋，这条线即并入第一行。`
+      + `该行并不独占——北朝线之外的时段照常参与回收，不会为一条两百年的线空出两千年的行。`,
     `共 ${bands.length} 个政权装入 ${nLanes} 条泳道。泳道不归属任何朝代：某朝终结后该行即被后来的政权接管，`
-    + `因此同一时刻占用的行数就是当时并存的政权数（最挤的 937 年有十一个政权）。`
-    + (byDynasty
+      + `因此同一时刻占用的行数就是当时并存的政权数（最挤的 937 年有十一个政权）。`,
+    `同朝代内前帝崩与后帝即位常落在同一个月，史料精确到月即产生名义上的重叠——这类不足半年的重叠一律`
+      + `就地挤压（交界取中点、两段各退一半），仍并排在同一行；只有真正并立称帝者才分层错开，`
+      + `当前有 ${stacked.length} 例${stacked.length ? `（${stacked.map((b) => b.d.name).join('、')}）` : ''}。`
+      + `分段的绘图宽度因此可能比真实在位期短几个月，悬停与数据表给出的始终是真实日期。`,
+    byDynasty
       ? `配色按具体朝代，时间上重叠者必为异色，不重叠者复用槽位（唐与明同色不会造成混淆）；`
-        + `并存政权最多达 11 个而分类色板仅 8 槽，故有 ${greyN} 个边缘割据政权折入中性灰——每条带都直接标注朝代名，颜色只是辅助。`
-      : '配色沿用全局语义：蓝＝大一统，橙＝分裂。') }));
+        + `并存政权最多达 11 个而分类色板仅 8 槽，故有 ${greyN} 个边缘割据政权折入中性灰——`
+        + `每条带都直接标注朝代名，颜色只是辅助。`
+      : '配色沿用全局语义：蓝＝大一统，橙＝分裂。',
+  ], { label: '排布规则与史观说明' }));
 
   host.appendChild(tableView(
     ['泳道', '朝代', '起讫', '历时(年)', '皇帝数', 'DSI', '大一统'],
