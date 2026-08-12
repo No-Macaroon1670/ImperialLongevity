@@ -148,5 +148,17 @@ export const ORTHODOX = [
   'nsong', 'ssong', 'yuan', 'ming', 'qing',
 ];
 
+/**
+ * 次线：横向泳道第二行优先安排的一条接续线。
+ *
+ * 南北朝本是两条并行的法统，而上面的 ORTHODOX 取南朝为正朔，北朝便被挤到下方各行，
+ * 「北魏—西魏—北周」这条最终通向隋唐的线索反而读不出来。故把它预先放在第二行，
+ * 紧贴正统行之下，两条线的并行关系一目了然；到 581 年北周禅隋，这条线即并入第一行。
+ *
+ * 第二行并非独占：北朝线只覆盖 386–581 年，其余时段该行照常参与泳道回收，
+ * 由别的政权填补，不会为一条两百年的线空出两千年的行。
+ */
+export const SECONDARY = ['bwei', 'xwei', 'bzhou'];
+
 export const DYN_MAP = new Map(DYNASTIES.map((d) => [d.key, d]));
 export const ERA_MAP = new Map(ERAS.map((e) => [e.key, e]));

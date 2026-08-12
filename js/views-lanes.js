@@ -14,7 +14,7 @@
 //      因此任何时刻都能读出正在看的是哪一朝。
 import { el, h, linear, ticks, hoverable, legend, tableView, showTip, hideTip, fmtYearAxis, fmt1 } from './charts.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
-import { ERAS, SUCCESSION, ORTHODOX } from './dynasties.js';
+import { ERAS, SUCCESSION, ORTHODOX, SECONDARY } from './dynasties.js';
 import { fmtDate } from './schema.js';
 
 const SLOT_VARS = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6', '--s7', '--s8'];
@@ -140,46 +140,70 @@ export function renderLaneTimeline(host, list, opts) {
   //    已声明的接续关系允许完全紧邻（间隙 0），两带之间靠 2px 底色缝分隔。
   //    最上一行为正统序列专用（见 ORTHODOX）：不参与回收，任何割据政权都不会挤进来，
   //    于是第一行自成一条贯通两千年的主线，其余政权一律平等地排在下方。
+  //    第二行优先安排北朝线（见 SECONDARY），与正统行并行；该行并不独占，
+  //    北朝线只覆盖 386–581 年，其余时段照常参与回收。
+  //    因此泳道占用记为「区间表」而非单一末端值：正统行与北朝线要先于其余政权落座，
+  //    落座顺序不再与时间顺序一致，只有区间表才能让后来者准确填进它们之间的空当。
   const orthSet = new Set(ORTHODOX);
+  const secSet = new Set(SECONDARY);
   const orth = bands.filter((b) => orthSet.has(b.d.key));
+  const sec = bands.filter((b) => secSet.has(b.d.key) && !orthSet.has(b.d.key));
   const useTop = orth.length > 0;
+  const useSecond = sec.length > 0;
+  const ROW_SEC = useTop ? 1 : 0;
   const GAP = 4;
-  const laneEnd = [];
+  const lanes = [];                            // lanes[k] = [{a, z, key}]，均为像素区间
   const laneOf = new Map();
-  const laneLast = [];                         // 每条泳道当前最后一个政权的 key
-  // 无接续关系的政权若抢先落进某行，会把该行原本要留给后继者的位置占掉
-  // （闽 926 年入场，前蜀那一行就再也容不下 934 年的后蜀）。故先记下谁在等谁。
   const successorOf = new Map();
   for (const b of bands) { const p = SUCCESSION[b.d.key]; if (p) successorOf.set(p, b); }
-  if (useTop) { laneEnd.push(Infinity); laneLast.push(null); }   // 占位：禁止其他政权回落到第一行
+
+  const spanOf = (b) => {
+    const a = b.s * pxYear;
+    return { a, z: Math.max(b.e * pxYear, a + textW(b.d.name, LABEL_FS) + 14) };
+  };
+  const ensure = (k) => { while (lanes.length <= k) lanes.push([]); return lanes[k]; };
+  const place = (b, k) => {
+    const s = spanOf(b);
+    ensure(k).push({ ...s, key: b.d.key });
+    b.lane = k; laneOf.set(b.d.key, k);
+  };
+  const freeIn = (k, b, gap) => {
+    if (k < 0 || k >= lanes.length) return true;
+    const { a, z } = spanOf(b);
+    return !lanes[k].some((iv) => iv.a < z + gap && a - gap < iv.z);
+  };
+  /** 该行中紧邻 b 之前的那个政权——用于判断会不会挤掉它的后继 */
+  const prevOwner = (k, b) => {
+    const { a } = spanOf(b);
+    let best = null;
+    for (const iv of (lanes[k] || [])) if (iv.z <= a && (!best || iv.z > best.z)) best = iv;
+    return best ? best.key : null;
+  };
+
+  // 先让两条主线落座
+  if (useTop) { ensure(0); for (const b of orth) place(b, 0); }
+  if (useSecond) { ensure(ROW_SEC); for (const b of sec) place(b, ROW_SEC); }
+
+  const firstFree = useTop ? 1 : 0;             // 第一行独占；第二行只是优先，不独占
   for (const b of bands) {
-    if (useTop && orthSet.has(b.d.key)) { b.lane = 0; laneOf.set(b.d.key, 0); continue; }
-    const startPx = b.s * pxYear;
-    const need = Math.max(b.e * pxYear, startPx + textW(b.d.name, LABEL_FS) + 14);
-    const fits = (k, gap) => laneEnd[k] === undefined || laneEnd[k] <= startPx - gap;
-    // 占了这一行会不会挡住该行占位者的后继？只有「尚未落座」的后继才需要留位——
-    // 北周的后继是隋，而隋早已入座正统行，再为它把第三行空着纯属浪费。
+    if (laneOf.has(b.d.key)) continue;          // 两条主线已就位
+    // 占了这一行会不会挡住该行前一位的后继？只有「尚未落座」的后继才需要留位——
+    // 北周的后继是隋，而隋早已入座正统行，再为它把某一行空着纯属浪费。
     const blocks = (k) => {
-      const s = successorOf.get(laneLast[k]);
+      const s = successorOf.get(prevOwner(k, b));
       return !!s && s !== b && !laneOf.has(s.d.key) && s.s < b.e;
     };
     let k = -1;
-    const prev = SUCCESSION[b.d.key];
-    const pl = laneOf.get(prev);
-    if (prev !== undefined && pl !== undefined && pl > 0 && fits(pl, 0)) k = pl;
-    const first = useTop ? 1 : 0;
-    if (k < 0) { k = first; while (k < laneEnd.length && (!fits(k, GAP) || blocks(k))) k++; }
-    if (k === laneEnd.length) {                // 无「既空闲又不挡后继」之行，退而求其次
-      let j = first; while (j < laneEnd.length && !fits(j, GAP)) j++;
-      if (j < laneEnd.length) k = j;
+    const pl = laneOf.get(SUCCESSION[b.d.key]);
+    if (pl !== undefined && pl >= firstFree && freeIn(pl, b, 0)) k = pl;   // 紧随前身
+    if (k < 0) { k = firstFree; while (k < lanes.length && (!freeIn(k, b, GAP) || blocks(k))) k++; }
+    if (k >= lanes.length) {                    // 无「既空闲又不挡后继」之行，退而求其次
+      let j = firstFree; while (j < lanes.length && !freeIn(j, b, GAP)) j++;
+      k = j;
     }
-    if (k === laneEnd.length) { laneEnd.push(-Infinity); laneLast.push(null); }
-    laneEnd[k] = Math.max(laneEnd[k], need);
-    laneLast[k] = b.d.key;
-    b.lane = k;
-    laneOf.set(b.d.key, k);
+    place(b, k);
   }
-  const nLanes = laneEnd.length;
+  const nLanes = lanes.length;
 
   // 2b) 正统交替期：最多两朝并存（实测峰值为 2），上一朝居上半、下一朝居下半，
   //     其余时段仍占满整条轨道。切分点即并存区间的首尾，底带与皇帝分段一并按段绘制。
@@ -432,6 +456,13 @@ export function renderLaneTimeline(host, list, opts) {
   host.appendChild(legendHost);
   const staticLegend = h('div');
   host.appendChild(staticLegend);
+  if (useSecond) {
+    staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text:
+      `第二行优先安排北朝线（北魏→西魏→北周，386–581 年），与正统行并行：`
+      + `南北朝本是两条并存的法统，正统行取南朝为正朔，北朝线便紧贴其下，两线的并行关系一目了然；`
+      + `581 年北周禅隋，这条线即并入第一行。该行并不独占——北朝线之外的时段照常参与回收，`
+      + `不会为一条两百年的线空出两千年的行。` }));
+  }
   if (useTop) {
     staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text:
       `第一行为正统序列专用（${orth.length} 朝），不参与泳道回收，任何割据政权都不会挤进来，`
