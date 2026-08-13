@@ -25,9 +25,11 @@ DATA, JS = ROOT / "data", ROOT / "js"
 REALMS = [
     ("ottoman",   "奥斯曼"),
     ("byzantine", "拜占庭"),
-    ("japan",     "日本"),
+    ("japan",     "日本天皇"),
+    ("shogun",    "日本幕府"),
 ]
-VIOLENT_WORDS = ("homicide", "murder", "suicide", "battle", "capital punishment", "execution")
+VIOLENT_WORDS = ("homicide", "murder", "killing", "assassination", "suicide", "battle",
+                 "capital punishment", "execution")
 
 
 def load(p):
@@ -39,6 +41,30 @@ def year(s):
         return None
     body = s.lstrip("-")
     return int(body.split("-")[0]) * (-1 if s.startswith("-") else 1)
+
+
+def _parts(s):
+    neg = s.startswith("-")
+    b = s.lstrip("-").split("-")
+    return [int(b[0]) * (-1 if neg else 1)] + [int(x) for x in b[1:]]
+
+
+def lost_throne(end, death):
+    """
+    在位是否终于身死之前。
+
+    不能直接比字符串：两端精度常不一致（退位只知年、卒日精确到日），
+    而 "1616" < "1616-06-01" 在字典序下恒真——德川家康等一大批人会被误判为失位，
+    结果整个幕府 39/39 都成了「生前失位」。故按两者**较粗**的精度逐段比较，
+    在可比精度内相同即保守记 0（年精度同年者无法区分「死于任上」与「当年退位后卒」）。
+    """
+    if not end or not death:
+        return 0
+    a, b = _parts(end), _parts(death)
+    for i in range(min(len(a), len(b))):
+        if a[i] != b[i]:
+            return 1 if a[i] < b[i] else 0
+    return 0
 
 
 def build(key, realm):
@@ -79,12 +105,7 @@ def build(key, realm):
             "name": r.get("name_zh") or r["name_en"],
             "birth": r["birth"], "death": r["death"], "acc": acc, "end": end,
             "violent": violent,
-            # 生前失位：王位终于身死之前。用日期串直接比较而非「相差满一年」——
-            # 后者会把「被废后数日即遇害」（易卜拉欣一世 1648-08-12 废、08-18 死；
-            # 塞利姆三世、穆斯塔法四世同类）误判成死于任上，而那恰是最典型的失位。
-            # 代价是：仅精确到年且同年者无法区分「死于任上」与「当年被废后卒」，
-            # 此时保守记 0，故本指标是下界。
-            "lost": 1 if (end and r["death"] and end < r["death"]) else 0,
+            "lost": lost_throne(end, r["death"]),
             "disputed": j.get("disputed", 0),
             "manner": r.get("manner"),
         })

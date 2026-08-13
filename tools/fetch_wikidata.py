@@ -34,7 +34,10 @@ OUT = pathlib.Path(__file__).resolve().parent.parent / "data"
 REALMS = {
     "ottoman":   {"pos": "Q15315411", "name": "奥斯曼", "end_year": 1922},
     "byzantine": {"pos": "Q18577504", "name": "拜占庭", "end_year": 1453},
-    "japan":     {"pos": "Q208233",   "name": "日本",   "start_year": 507, "end_year": 1912},
+    "japan":     {"pos": "Q208233",   "name": "日本天皇", "start_year": 507, "end_year": 1912},
+    # 幕府将军：天皇长期不掌实权，以其代表「日本君主的风险」有失真之虞；
+    # 将军才是 1185–1868 年间实际执政者，收入后可直接检验「傀儡才安全」这一解释。
+    "shogun":    {"pos": "Q131767",   "name": "日本幕府", "start_year": 1185, "end_year": 1868},
 }
 
 # 取到值节点以读出时间精度：9=年 10=月 11=日。

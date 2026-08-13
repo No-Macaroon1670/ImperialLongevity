@@ -3,7 +3,8 @@ import { el, h, linear, band, ticks, Frame, hoverable, legend, tableView, notes,
 import { civRows, REALMS, reignSurvival, wilson } from './civ.js';
 import { kaplanMeier, logRank, coxPH, fmtP, describe, erf } from './stats.js';
 
-const SLOT = { 中国: 'var(--s1)', 拜占庭: 'var(--s2)', 奥斯曼: 'var(--s3)', 日本: 'var(--s4)' };
+const SLOT = { 中国: 'var(--s1)', 拜占庭: 'var(--s2)', 奥斯曼: 'var(--s3)',
+               日本幕府: 'var(--s4)', 日本天皇: 'var(--s5)' };
 const MEASURES = [
   { key: 'violent', label: '非正常死亡', color: 'var(--s2)' },
   { key: 'lost', label: '生前失位', color: 'var(--s1)' },
@@ -113,7 +114,7 @@ export function renderCiv(host, list, opts) {
         h('strong', { text: `${REF} vs ${g.realm}　非正常死亡：` }),
         document.createTextNode(
           `全时段 ${(t.p1 * 100).toFixed(0)}% vs ${(t.p2 * 100).toFixed(0)}%，${fmtP(t.pv)}`
-          + (t2 ? `；同期对照（${Math.round(lo)}–${Math.round(hi)} 年，${REF} n=${a2.n}）`
+          + (t2 ? `；同期对照（${Math.floor(lo)}–${Math.ceil(hi)} 年，${REF} n=${a2.n}）`
                  + ` ${(t2.p1 * 100).toFixed(0)}% vs ${(t2.p2 * 100).toFixed(0)}%，${fmtP(t2.pv)}`
                  + (flip ? '　← 结论在同期对照下翻转' : '') : '')
           + '。'),
@@ -126,6 +127,39 @@ export function renderCiv(host, list, opts) {
           + '中国自身的非正常死亡率也随时代显著下降。凡标注「翻转」者，应以同期对照为准——'
           + '全时段的差距很大程度上是「近世普遍比上古安全」，而非政治结构之别。'),
       ]));
+    }
+  }
+
+  // ── 3b) 同国对照：虚位的天皇 vs 掌权的将军 ──────────────────────────────
+  // 跨文明比较最难摆脱的两个干扰是年代与文化。日本这一对把两者都摁住了：
+  // 同一国家、同一段世纪，差别只在有无实权——本节最接近自然实验的一组。
+  const shg = groups.find((g) => g.realm === '日本幕府');
+  const ten = groups.find((g) => g.realm === '日本天皇');
+  if (shg && ten && shg.rows.length && ten.rows.length) {
+    const accs = shg.rows.map((r) => r.acc);
+    const lo = Math.min(...accs), hi = Math.max(...accs);
+    const a = share(shg.rows, 'violent'), b = share(ten.rows.filter((r) => r.acc >= lo && r.acc <= hi), 'violent');
+    if (a.n && b.n) {
+      const t = propTest(a, b);
+      host.appendChild(h('div', { class: `result ${t.pv < 0.05 ? 'sig-up' : ''}` }, [
+        h('strong', { text: '同国同代对照　掌权的将军 vs 虚位的天皇（非正常死亡）：' }),
+        document.createTextNode(
+          `${(t.p1 * 100).toFixed(0)}%（${a.k}/${a.n}） vs ${(t.p2 * 100).toFixed(0)}%（${b.k}/${b.n}），`
+          + `限于幕府存续期 ${Math.floor(lo)}–${Math.ceil(hi)} 年，${fmtP(t.pv)}。`),
+      ]));
+      host.appendChild(notes([
+        '这组比较的价值在于它把年代与文化都固定住了：同一个国家、同一段世纪，'
+        + '只有「谁真正掌权」在变。日本天皇非正常死亡率之低（全时段 4%），'
+        + '因此更像是「不掌权者不被杀」，而非「日本文化不弑君」——'
+        + '风险并未消失，只是随实权一起转移到了将军身上。',
+        '但权力与风险并非单调关系。按家系分段：源氏将军（真正掌权，与御家人及北条氏角力）2/3 死于非命；'
+        + '摂家・宮将军（自身也是北条执权的傀儡）1/6；足利 2/15；德川 0/15。'
+        + '权力最大的德川反而最安全。可见致命的不是权力本身，而是「权力有争议」——'
+        + '这与本库中国一侧的发现同调：非正常死亡集中在分裂期与继承规则失效之时，而非皇权最盛之时。',
+        '口径提示：将军名册含建武政权的护良亲王（征夷大将军，1335 年被杀）；'
+        + '天皇一侧四位非正常死亡者（崇峻 592、弘文 672、淳仁 765、安德 1185）全部早于 1192 年，'
+        + '故同期窗口内为 0/41——这个 0 使 Wilson 区间偏窄，比例检验在此类零计数格下偏乐观，宜作方向性证据读。',
+      ], { label: '为什么这组对照最干净' }));
     }
   }
 

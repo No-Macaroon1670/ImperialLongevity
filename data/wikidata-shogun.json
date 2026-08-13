@@ -1,0 +1,606 @@
+{
+ "realm": "日本幕府",
+ "realm_key": "shogun",
+ "position": "Q131767",
+ "source": "Wikidata (CC0)",
+ "fetched_utc": "2026-08-13T15:35:13Z",
+ "note": "骨架数据；violent 一栏须人工判定，Wikidata 的死亡方式覆盖率仅约 40%",
+ "curation": {
+  "start_year": 1185,
+  "end_year": 1868,
+  "dropped": [
+   "Sakanoue no Tamuramaro(797)"
+  ]
+ },
+ "rulers": [
+  {
+   "qid": "Q242800",
+   "name_en": "Minamoto no Yoritomo",
+   "name_zh": "源赖朝",
+   "birth": "1147-05-16",
+   "death": "1199-02-09",
+   "manner": null,
+   "cause": "horse fall",
+   "reigns": [
+    [
+     "1192",
+     "1199"
+    ]
+   ]
+  },
+  {
+   "qid": "Q431052",
+   "name_en": "Minamoto no Yoriie",
+   "name_zh": "源賴家",
+   "birth": "1182-09-18",
+   "death": "1204-08-21",
+   "manner": "homicide",
+   "cause": null,
+   "reigns": [
+    [
+     "1202",
+     "1203"
+    ]
+   ]
+  },
+  {
+   "qid": "Q174249",
+   "name_en": "Minamoto no Sanetomo",
+   "name_zh": "源實朝",
+   "birth": "1192-09-24",
+   "death": "1219-02-20",
+   "manner": "homicide",
+   "cause": null,
+   "reigns": [
+    [
+     "1203",
+     "1219"
+    ]
+   ]
+  },
+  {
+   "qid": "Q471780",
+   "name_en": "Kujō Yoritsune",
+   "name_zh": "藤原賴經",
+   "birth": "1218-02-19",
+   "death": "1256-09-08",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1226",
+     "1244"
+    ]
+   ]
+  },
+  {
+   "qid": "Q608193",
+   "name_en": "Kujō Yoritsugu",
+   "name_zh": "藤原賴嗣",
+   "birth": "1239-12-24",
+   "death": "1256-10-21",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1244",
+     "1252"
+    ]
+   ]
+  },
+  {
+   "qid": "Q708897",
+   "name_en": "Munetaka-shinnō",
+   "name_zh": "宗尊親王",
+   "birth": "1242-12-22",
+   "death": "1274-09-09",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1252",
+     "1266"
+    ]
+   ]
+  },
+  {
+   "qid": "Q715826",
+   "name_en": "Hisaaki-shinnō",
+   "name_zh": "久明親王",
+   "birth": "1276-10-26",
+   "death": "1328-11-24",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1289",
+     "1308"
+    ]
+   ]
+  },
+  {
+   "qid": "Q552852",
+   "name_en": "Prince Morikuni",
+   "name_zh": "守邦親王",
+   "birth": "1301-06-27",
+   "death": "1333-10-03",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1308",
+     "1333"
+    ]
+   ]
+  },
+  {
+   "qid": "Q2288858",
+   "name_en": "Moriyoshi-shinnō",
+   "name_zh": "護良親王",
+   "birth": "1308-08-12",
+   "death": "1335-08-20",
+   "manner": "extra-judicial killing",
+   "cause": "decapitation",
+   "reigns": [
+    [
+     "1333",
+     "1333"
+    ]
+   ]
+  },
+  {
+   "qid": "Q297107",
+   "name_en": "Q297107",
+   "name_zh": "足利尊氏",
+   "birth": "1305",
+   "death": "1358-06-15",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1338",
+     "1358"
+    ]
+   ]
+  },
+  {
+   "qid": "Q466321",
+   "name_en": "Ashikaga Yoshiakira",
+   "name_zh": "足利义诠",
+   "birth": "1330-07-12",
+   "death": "1368-01-05",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1358",
+     "1367"
+    ]
+   ]
+  },
+  {
+   "qid": "Q248381",
+   "name_en": "Ashikaga Yoshimitsu",
+   "name_zh": "足利義滿",
+   "birth": "1358-10-03",
+   "death": "1408-06-09",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1369",
+     "1395"
+    ]
+   ]
+  },
+  {
+   "qid": "Q466287",
+   "name_en": "Ashikaga Yoshimochi",
+   "name_zh": "足利义持",
+   "birth": "1386-03-20",
+   "death": "1428-02-12",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1395",
+     "1423"
+    ]
+   ]
+  },
+  {
+   "qid": "Q465901",
+   "name_en": "Ashikaga Yoshikazu",
+   "name_zh": "足利义量",
+   "birth": "1407-09-05",
+   "death": "1425-03-26",
+   "manner": "natural causes",
+   "cause": "smallpox",
+   "reigns": [
+    [
+     "1423",
+     "1425"
+    ]
+   ]
+  },
+  {
+   "qid": "Q239170",
+   "name_en": "Ashikaga Yoshinori",
+   "name_zh": "足利义教",
+   "birth": "1394-07-20",
+   "death": "1441-07-21",
+   "manner": "homicide",
+   "cause": "assassination",
+   "reigns": [
+    [
+     "1429",
+     "1441"
+    ]
+   ]
+  },
+  {
+   "qid": "Q455351",
+   "name_en": "Ashikaga Yoshikatsu",
+   "name_zh": "足利義勝",
+   "birth": "1434-03-28",
+   "death": "1443-08-25",
+   "manner": "accidental death",
+   "cause": "horse fall",
+   "reigns": [
+    [
+     "1442",
+     "1443"
+    ]
+   ]
+  },
+  {
+   "qid": "Q447034",
+   "name_en": "Ashikaga Yoshimasa",
+   "name_zh": "足利义政",
+   "birth": "1435-01-29",
+   "death": "1490-02-05",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1449",
+     "1474"
+    ]
+   ]
+  },
+  {
+   "qid": "Q447639",
+   "name_en": "Ashikaga Yoshihisa",
+   "name_zh": "足利義尚",
+   "birth": "1465-12-20",
+   "death": "1489-05-05",
+   "manner": "natural causes",
+   "cause": "cerebral hemorrhage",
+   "reigns": [
+    [
+     "1474",
+     "1489"
+    ]
+   ]
+  },
+  {
+   "qid": "Q708527",
+   "name_en": "Ashikaga Yoshitane",
+   "name_zh": "足利義稙",
+   "birth": "1466-09-18",
+   "death": "1523-06-02",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1490",
+     "1493"
+    ],
+    [
+     "1508",
+     "1522"
+    ]
+   ]
+  },
+  {
+   "qid": "Q466281",
+   "name_en": "Ashikaga Yoshizumi",
+   "name_zh": "足利義澄",
+   "birth": "1481-01-24",
+   "death": "1511-09-16",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1495",
+     "1508"
+    ]
+   ]
+  },
+  {
+   "qid": "Q536313",
+   "name_en": "Ashikaga Yoshiharu",
+   "name_zh": "足利义晴",
+   "birth": "1511-04-12",
+   "death": "1550-05-30",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1522",
+     "1547"
+    ]
+   ]
+  },
+  {
+   "qid": "Q447066",
+   "name_en": "Ashikaga Yoshiteru",
+   "name_zh": "足利義輝",
+   "birth": "1536-04-10",
+   "death": "1565-06-27",
+   "manner": "death in battle",
+   "cause": null,
+   "reigns": [
+    [
+     "1547",
+     "1565"
+    ]
+   ]
+  },
+  {
+   "qid": "Q434415",
+   "name_en": "Ashikaga Yoshiaki",
+   "name_zh": "足利義昭",
+   "birth": "1537-12-25",
+   "death": "1597-10-09",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1568",
+     "1588"
+    ]
+   ]
+  },
+  {
+   "qid": "Q541037",
+   "name_en": "Ashikaga Yoshihide",
+   "name_zh": "足利義榮",
+   "birth": "1538",
+   "death": "1568-11-05",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1568",
+     "1568"
+    ]
+   ]
+  },
+  {
+   "qid": "Q171977",
+   "name_en": "Tokugawa Ieyasu",
+   "name_zh": "德川家康",
+   "birth": "1543-02-10",
+   "death": "1616-06-01",
+   "manner": "natural causes",
+   "cause": "stomach cancer",
+   "reigns": [
+    [
+     "1603",
+     "1605"
+    ]
+   ]
+  },
+  {
+   "qid": "Q314464",
+   "name_en": "Tokugawa Hidetada",
+   "name_zh": "德川秀忠",
+   "birth": "1579-05-12",
+   "death": "1632-03-14",
+   "manner": "natural causes",
+   "cause": "stomach cancer",
+   "reigns": [
+    [
+     "1605-06-02",
+     "1623-08-23"
+    ]
+   ]
+  },
+  {
+   "qid": "Q314481",
+   "name_en": "Tokugawa Iemitsu",
+   "name_zh": "德川家光",
+   "birth": "1604-08-12",
+   "death": "1651-06-08",
+   "manner": "natural causes",
+   "cause": "stroke",
+   "reigns": [
+    [
+     "1623",
+     "1651"
+    ]
+   ]
+  },
+  {
+   "qid": "Q323422",
+   "name_en": "Tokugawa Ietsuna",
+   "name_zh": "德川家綱",
+   "birth": "1641-09-07",
+   "death": "1680-06-04",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1651",
+     "1680"
+    ]
+   ]
+  },
+  {
+   "qid": "Q313745",
+   "name_en": "Tokugawa Tsunayoshi",
+   "name_zh": "德川綱吉",
+   "birth": "1646-02-23",
+   "death": "1709-02-19",
+   "manner": "natural causes",
+   "cause": "measles",
+   "reigns": [
+    [
+     "1680",
+     "1709"
+    ]
+   ]
+  },
+  {
+   "qid": "Q366734",
+   "name_en": "Tokugawa Ienobu",
+   "name_zh": "德川家宣",
+   "birth": "1662-06-11",
+   "death": "1712-11-12",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1709",
+     "1712"
+    ]
+   ]
+  },
+  {
+   "qid": "Q366722",
+   "name_en": "Tokugawa Ietsugu",
+   "name_zh": "德川家繼",
+   "birth": "1709-08-08",
+   "death": "1716-06-19",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1713",
+     "1716"
+    ]
+   ]
+  },
+  {
+   "qid": "Q319664",
+   "name_en": "Tokugawa Yoshimune",
+   "name_zh": "德川吉宗",
+   "birth": "1684-11-27",
+   "death": "1751-07-12",
+   "manner": "natural causes",
+   "cause": "stroke",
+   "reigns": [
+    [
+     "1716",
+     "1745"
+    ]
+   ]
+  },
+  {
+   "qid": "Q323443",
+   "name_en": "Tokugawa Ieshige",
+   "name_zh": "德川家重",
+   "birth": "1712-01-28",
+   "death": "1761-07-13",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1745",
+     "1760"
+    ]
+   ]
+  },
+  {
+   "qid": "Q437518",
+   "name_en": "Tokugawa Ieharu",
+   "name_zh": "德川家治",
+   "birth": "1737-06-20",
+   "death": "1786-09-17",
+   "manner": "natural causes",
+   "cause": "shoshin beriberi",
+   "reigns": [
+    [
+     "1760",
+     "1786"
+    ]
+   ]
+  },
+  {
+   "qid": "Q439717",
+   "name_en": "Tokugawa Ienari",
+   "name_zh": "德川家齊",
+   "birth": "1773-11-18",
+   "death": "1841-02-27",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1787",
+     "1837"
+    ]
+   ]
+  },
+  {
+   "qid": "Q439675",
+   "name_en": "Tokugawa Ieyoshi",
+   "name_zh": "德川家慶",
+   "birth": "1793-06-22",
+   "death": "1853-07-27",
+   "manner": "natural causes",
+   "cause": "heart failure",
+   "reigns": [
+    [
+     "1837",
+     "1853"
+    ]
+   ]
+  },
+  {
+   "qid": "Q336383",
+   "name_en": "Tokugawa Iesada",
+   "name_zh": "德川家定",
+   "birth": "1824-05-06",
+   "death": "1858-08-14",
+   "manner": "natural causes",
+   "cause": "beriberi",
+   "reigns": [
+    [
+     "1853",
+     "1858"
+    ]
+   ]
+  },
+  {
+   "qid": "Q348466",
+   "name_en": "Tokugawa Iemochi",
+   "name_zh": "德川家茂",
+   "birth": "1846-07-17",
+   "death": "1866-08-29",
+   "manner": "natural causes",
+   "cause": "shoshin beriberi",
+   "reigns": [
+    [
+     "1858",
+     "1866"
+    ]
+   ]
+  },
+  {
+   "qid": "Q287657",
+   "name_en": "Tokugawa Yoshinobu",
+   "name_zh": "德川庆喜",
+   "birth": "1837-10-28",
+   "death": "1913-11-22",
+   "manner": "natural causes",
+   "cause": "pneumonia",
+   "reigns": [
+    [
+     "1866",
+     "1868"
+    ]
+   ]
+  }
+ ]
+}

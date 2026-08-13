@@ -24,8 +24,10 @@ export function civRows(chineseList) {
       acc: acc.t, end, death,
       birth: e.birth ? e.birth.t : null,
       violent: e.violent,
-      // 与其余文明同口径：王位终于身死之前即为「生前失位」，不问自愿与否
-      lost: (end !== null && death !== null && death - end > 0.02) ? 1 : 0,
+      // 中国库直接有退位日字段（z→abd），有值即为生前失位，无须做日期算术——
+      // 后者在「退位只知年、卒日精确到日」时会误判（其余文明只能靠日期比较，
+      // 见 tools/build_civ.py 的 lost_throne）
+      lost: e.abd ? 1 : 0,
       ref: null,
     });
   }
@@ -44,7 +46,7 @@ export function civRows(chineseList) {
 }
 
 // 顺序即叙事顺序：本库主角在前，其余按「暴力—失位」谱系排开
-export const REALMS = ['中国', '拜占庭', '奥斯曼', '日本'];
+export const REALMS = ['中国', '拜占庭', '奥斯曼', '日本幕府', '日本天皇'];
 
 /** 登基后生存：自即位随访至死亡，与本项目主分析同口径（不在退位处删失） */
 export function reignSurvival(rows) {

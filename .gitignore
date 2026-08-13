@@ -7,3 +7,6 @@ desktop.ini
 .vscode/
 .idea/
 *.swp
+
+# 本机预览配置（含绝对路径，不可移植）
+.claude/
