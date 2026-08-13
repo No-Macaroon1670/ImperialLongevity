@@ -217,20 +217,20 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
     for (const k of A.at.keys()) {
       if (B.at.has(k)) continue;
       const tgt = MERGED_INTO[k];
-      if (tgt && B.at.has(tgt)) {
-        const st = bankStem(B, rank, k, tgt);
-        if (st) to.set(k, st);
-        else flows.push({ key: k, tgt, c, h: hb, stem: to.get(k), dir: 'merge' });
-      }
+      if (!tgt) continue;
+      const st = B.at.has(tgt) ? bankStem(B, rank, k, tgt) : null;
+      if (st) to.set(k, st);
+      // 目标不相邻、或已先亡／尚未生（北魏亡后半年西魏方立）：转穿流带，
+      // 绘制端用 edge() 在带长范围内找目标，找不到才作罢
+      else flows.push({ key: k, tgt, c, h: hb, stem: to.get(k), dir: 'merge' });
     }
     for (const k of B.at.keys()) {
       if (A.at.has(k)) continue;
       const src = SPRANG_FROM[k];
-      if (src && A.at.has(src)) {
-        const st = bankStem(A, rank, k, src);
-        if (st) from.set(k, st);
-        else flows.push({ key: k, tgt: src, c, h: ha, stem: from.get(k), dir: 'spring' });
-      }
+      if (!src) continue;
+      const st = A.at.has(src) ? bankStem(A, rank, k, src) : null;
+      if (st) from.set(k, st);
+      else flows.push({ key: k, tgt: src, c, h: ha, stem: from.get(k), dir: 'spring' });
     }
     // 法统相承且在同一切点交棒者（汉→新、唐→后梁…），前后两河共用一个「颈缩」盒：
     // 前朝收进它、新朝从它张开，于是交替处是一段变色的窄颈，而不是两个背对背的尖——
@@ -495,7 +495,7 @@ export function renderRiver(host, list, opts) {
       stroke: 'var(--page)', 'stroke-width': 3, 'paint-order': 'stroke',
     }, b.d.name);
     gLabels.appendChild(dot); gLabels.appendChild(label);
-    labelNodes.push({ dot, label, y0: y(b.s), y1: y(b.e), lw, cx });
+    labelNodes.push({ dot, label, y0: y(b.s), y1: y(b.e), lw, key: b.d.key });
   }
 
   const wrap = h('div', { class: 'river-wrap' }, [svg]);
@@ -564,6 +564,15 @@ export function renderRiver(host, list, opts) {
       const stick = (n.y0 <= top && top < n.y1) ? Math.min(top + 12, Math.max(n.y0 + 10, n.y1 - 6)) : n.y0 + 10;
       n.label.setAttribute('y', stick);
       n.dot.setAttribute('cy', stick - 4);
+      // 横向也要跟随：河道随世事左右迁移，圆点若钉在建国时的 x，
+      // 吸附滚动后就会浮在别家的河床上（北魏分裂处的西魏圆点即此症）
+      const tAt = y.invert(stick);
+      const boxNow = edge(n.key, Math.min(Math.max(tAt, t0), t1));
+      if (boxNow) {
+        const cxNow = (boxNow[0] + boxNow[1]) / 2;
+        n.label.setAttribute('x', Math.max(GUTTER + 2, Math.min(W - n.lw - 2, cxNow - n.lw / 2)));
+        n.dot.setAttribute('cx', boxNow[0] + 5);
+      }
     }
   };
   const onScroll = () => { if (!raf) raf = requestAnimationFrame(sync); };
