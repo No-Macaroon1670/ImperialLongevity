@@ -1,0 +1,573 @@
+{
+ "realm": "奥斯曼",
+ "realm_key": "ottoman",
+ "position": "Q15315411",
+ "source": "Wikidata (CC0)",
+ "fetched_utc": "2026-08-13T09:07:49Z",
+ "note": "骨架数据；violent 一栏须人工判定，Wikidata 的死亡方式覆盖率仅约 40%",
+ "rulers": [
+  {
+   "qid": "Q83100",
+   "name_en": "Osman I",
+   "name_zh": "奥斯曼一世",
+   "birth": "1258-08-30",
+   "death": "1326-08-09",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1299-10-04",
+     "1324-08-29"
+    ]
+   ]
+  },
+  {
+   "qid": "Q133168",
+   "name_en": "Orhan",
+   "name_zh": "奥尔汗一世",
+   "birth": "1281-02-13",
+   "death": "1362-03",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1326",
+     "1362"
+    ]
+   ]
+  },
+  {
+   "qid": "Q96261",
+   "name_en": "Murad I",
+   "name_zh": "穆拉德一世",
+   "birth": "1326-06-29",
+   "death": "1389-07-06",
+   "manner": "homicide",
+   "cause": "stabbing",
+   "reigns": [
+    [
+     "1362",
+     "1389"
+    ]
+   ]
+  },
+  {
+   "qid": "Q128358",
+   "name_en": "Bayezid I",
+   "name_zh": "巴耶济德一世",
+   "birth": "1354-03-08",
+   "death": "1403-03-17",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1389",
+     "1402"
+    ]
+   ]
+  },
+  {
+   "qid": "Q168769",
+   "name_en": "Mehmed I",
+   "name_zh": "穆罕默德一世",
+   "birth": "1386",
+   "death": "1421-05-26",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1413-07-14",
+     "1421-06-13"
+    ]
+   ]
+  },
+  {
+   "qid": "Q131394",
+   "name_en": "Murad II",
+   "name_zh": "穆拉德二世",
+   "birth": "1404-06",
+   "death": "1451-02-12",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1421-06-13",
+     "1444-08-10"
+    ],
+    [
+     "1446-09-10",
+     "1451-02-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q34503",
+   "name_en": "Mehmed II",
+   "name_zh": "穆罕默德二世",
+   "birth": "1432-04-08",
+   "death": "1481-05-12",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1444",
+     "1446"
+    ],
+    [
+     "1451-02-21",
+     "1481-05-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q165983",
+   "name_en": "Selim i",
+   "name_zh": "巴耶济德二世",
+   "birth": "1447-12-12",
+   "death": "1512-06-05",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1481",
+     "1512"
+    ]
+   ]
+  },
+  {
+   "qid": "Q494660",
+   "name_en": "Selim I",
+   "name_zh": "塞利姆一世",
+   "birth": "1470-10-19",
+   "death": "1520-10-02",
+   "manner": "natural causes",
+   "cause": "anthrax",
+   "reigns": [
+    [
+     "1512-05-15",
+     "1520-10-02"
+    ]
+   ]
+  },
+  {
+   "qid": "Q8474",
+   "name_en": "Suleiman the Magnificent",
+   "name_zh": "苏莱曼一世",
+   "birth": "1494-11-15",
+   "death": "1566-09-06",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1520-10-20",
+     "1566-09-27"
+    ]
+   ]
+  },
+  {
+   "qid": "Q161872",
+   "name_en": "Selim II",
+   "name_zh": "塞利姆二世",
+   "birth": "1524-06-09",
+   "death": "1574-12-23",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1566",
+     "1574"
+    ]
+   ]
+  },
+  {
+   "qid": "Q159934",
+   "name_en": "Murad III",
+   "name_zh": "穆拉德三世",
+   "birth": "1546-07-14",
+   "death": "1595-01-16",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1574",
+     "1595"
+    ]
+   ]
+  },
+  {
+   "qid": "Q171465",
+   "name_en": "Mehmed III",
+   "name_zh": "穆罕默德三世",
+   "birth": "1566-06-05",
+   "death": "1603-12-22",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1595-01-15",
+     "1603-12-22"
+    ]
+   ]
+  },
+  {
+   "qid": "Q114749",
+   "name_en": "Ahmed I",
+   "name_zh": "艾哈迈德一世",
+   "birth": "1590-04-18",
+   "death": "1617-11-22",
+   "manner": "natural causes",
+   "cause": "typhus",
+   "reigns": [
+    [
+     "1603",
+     "1617"
+    ]
+   ]
+  },
+  {
+   "qid": "Q174798",
+   "name_en": "Mustafa I",
+   "name_zh": "穆斯塔法一世",
+   "birth": "1591-06-24",
+   "death": "1639-01-20",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1617-11-22",
+     "1618-02-26"
+    ],
+    [
+     "1622-05-20",
+     "1623-09-10"
+    ]
+   ]
+  },
+  {
+   "qid": "Q172056",
+   "name_en": "Osman II",
+   "name_zh": "奥斯曼二世",
+   "birth": "1604-11-03",
+   "death": "1622-05-20",
+   "manner": "homicide",
+   "cause": null,
+   "reigns": [
+    [
+     "1618-02-26",
+     "1622-03-20"
+    ]
+   ]
+  },
+  {
+   "qid": "Q174762",
+   "name_en": "Murad IV",
+   "name_zh": "穆拉德四世",
+   "birth": "1612-07-27",
+   "death": "1640-02-18",
+   "manner": "natural causes",
+   "cause": "cirrosis",
+   "reigns": [
+    [
+     "1623-09-10",
+     "1640-02-09"
+    ]
+   ]
+  },
+  {
+   "qid": "Q168776",
+   "name_en": "Ibrahim I",
+   "name_zh": "易卜拉欣一世",
+   "birth": "1615-11-05",
+   "death": "1648-08-18",
+   "manner": "homicide",
+   "cause": null,
+   "reigns": [
+    [
+     "1640-02-09",
+     "1648-08-12"
+    ]
+   ]
+  },
+  {
+   "qid": "Q170514",
+   "name_en": "Mehmed IV",
+   "name_zh": "穆罕默德四世",
+   "birth": "1642-01-02",
+   "death": "1693-01-06",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1648-08-12",
+     "1687-11-08"
+    ]
+   ]
+  },
+  {
+   "qid": "Q172061",
+   "name_en": "Suleiman II",
+   "name_zh": "苏莱曼二世",
+   "birth": "1642-04-15",
+   "death": "1691-06-22",
+   "manner": "disease",
+   "cause": null,
+   "reigns": [
+    [
+     "1687-11-08",
+     "1691-06-22"
+    ]
+   ]
+  },
+  {
+   "qid": "Q199660",
+   "name_en": "Ahmed II",
+   "name_zh": "艾哈迈德二世",
+   "birth": "1643-02-25",
+   "death": "1695-02-06",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1691-06-22",
+     "1695-02-06"
+    ]
+   ]
+  },
+  {
+   "qid": "Q199659",
+   "name_en": "Mustafa II",
+   "name_zh": "穆斯塔法二世",
+   "birth": "1664-06-05",
+   "death": "1703-12-28",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1695-02-06",
+     "1703-12-28"
+    ]
+   ]
+  },
+  {
+   "qid": "Q199482",
+   "name_en": "Ahmed III",
+   "name_zh": "艾哈迈德三世",
+   "birth": "1673-12-30",
+   "death": "1736-07-01",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1703-12-28",
+     "1730-09-20"
+    ]
+   ]
+  },
+  {
+   "qid": "Q199481",
+   "name_en": "Mahmud I",
+   "name_zh": "马哈茂德一世",
+   "birth": "1696-08-02",
+   "death": "1754-12-13",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1730-09-20",
+     "1754-12-13"
+    ]
+   ]
+  },
+  {
+   "qid": "Q199825",
+   "name_en": "Osman III",
+   "name_zh": "奥斯曼三世",
+   "birth": "1699-01-02",
+   "death": "1757-10-30",
+   "manner": "natural causes",
+   "cause": "myocardial infarction",
+   "reigns": [
+    [
+     "1754-12-13",
+     "1757-10-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q199484",
+   "name_en": "Mustafa III",
+   "name_zh": "穆斯塔法三世",
+   "birth": "1717-01-28",
+   "death": "1774-01-21",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1757-10-30",
+     "1774-01-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q170707",
+   "name_en": "Abdul Hamid I",
+   "name_zh": "阿卜杜勒-哈米德一世",
+   "birth": "1725-03-20",
+   "death": "1789-04-07",
+   "manner": "natural causes",
+   "cause": "heart failure",
+   "reigns": [
+    [
+     "1774-01-21",
+     "1789-04-07"
+    ]
+   ]
+  },
+  {
+   "qid": "Q199633",
+   "name_en": "Selim III",
+   "name_zh": "塞利姆三世",
+   "birth": "1761-12-24",
+   "death": "1808-07-29",
+   "manner": "homicide",
+   "cause": "stab wound",
+   "reigns": [
+    [
+     "1789-04-07",
+     "1807-05-29"
+    ]
+   ]
+  },
+  {
+   "qid": "Q199830",
+   "name_en": "Mustafa IV",
+   "name_zh": "穆斯塔法四世",
+   "birth": "1779-09-08",
+   "death": "1808-11-17",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1807-05-29",
+     "1808-11-15"
+    ]
+   ]
+  },
+  {
+   "qid": "Q174791",
+   "name_en": "Mahmud II",
+   "name_zh": "馬哈茂德二世",
+   "birth": "1785-07-20",
+   "death": "1839-07-01",
+   "manner": "natural causes",
+   "cause": "tuberculosis",
+   "reigns": [
+    [
+     "1808-11-15",
+     "1839-07-01"
+    ]
+   ]
+  },
+  {
+   "qid": "Q174772",
+   "name_en": "Abdülmecid I",
+   "name_zh": "阿卜杜勒-邁吉德一世",
+   "birth": "1823-04-25",
+   "death": "1861-06-25",
+   "manner": "natural causes",
+   "cause": "tuberculosis",
+   "reigns": [
+    [
+     "1839-07-02",
+     "1861-06-25"
+    ]
+   ]
+  },
+  {
+   "qid": "Q151500",
+   "name_en": "Abdülaziz",
+   "name_zh": "阿卜杜勒-阿齊茲一世",
+   "birth": "1830-02-08",
+   "death": "1876-06-04",
+   "manner": "homicide",
+   "cause": null,
+   "reigns": [
+    [
+     "1861-06-25",
+     "1876-05-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q199827",
+   "name_en": "Murad V",
+   "name_zh": "穆拉德五世",
+   "birth": "1840-09-21",
+   "death": "1904-08-29",
+   "manner": "natural causes",
+   "cause": "diabetes",
+   "reigns": [
+    [
+     "1876-05-30",
+     "1876-08-31"
+    ]
+   ]
+  },
+  {
+   "qid": "Q134817",
+   "name_en": "Abdul Hamid II",
+   "name_zh": "阿卜杜勒-哈米德二世",
+   "birth": "1842-09-21",
+   "death": "1918-02-10",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1876-08-31",
+     "1909-04-27"
+    ]
+   ]
+  },
+  {
+   "qid": "Q151494",
+   "name_en": "Mehmed V",
+   "name_zh": "穆罕默德五世",
+   "birth": "1844-11-02",
+   "death": "1918-07-03",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1909-04-27",
+     "1918-07-03"
+    ]
+   ]
+  },
+  {
+   "qid": "Q162543",
+   "name_en": "Mehmed VI",
+   "name_zh": "穆罕默德六世",
+   "birth": "1861-01-14",
+   "death": "1926-05-16",
+   "manner": "natural causes",
+   "cause": "stroke",
+   "reigns": [
+    [
+     "1918-07-03",
+     "1922-11-19"
+    ]
+   ]
+  }
+ ],
+ "curation": {
+  "end_year": 1922,
+  "dropped": [
+   "Mehmed Abdülaziz Efendi",
+   "Şehzade Ali Vâsib"
+  ]
+ },
+ "known_issues": [
+  "Q165983 的英文标签误作 'Selim i'，其中文标签「巴耶济德二世」与生卒(1447-12-12/1512-06-05)、在位(1481–1512)均正确，故仅英文标签有误；可向上游修正。",
+  "死亡方式仅 15/36 有记载，其余须人工判定。"
+ ]
+}
