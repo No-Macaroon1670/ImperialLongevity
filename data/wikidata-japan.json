@@ -1,0 +1,1454 @@
+{
+ "realm": "日本",
+ "realm_key": "japan",
+ "position": "Q208233",
+ "source": "Wikidata (CC0)",
+ "fetched_utc": "2026-08-13T09:36:55Z",
+ "note": "骨架数据；violent 一栏须人工判定，Wikidata 的死亡方式覆盖率仅约 40%",
+ "curation": {
+  "start_year": 507,
+  "end_year": 1912,
+  "dropped": [
+   "Jimmu(-659)",
+   "Emperor Suizei(-579)",
+   "Emperor Annei(-547)",
+   "Emperor Itoku(-508)",
+   "Emperor Kōshō(-473)",
+   "Emperor Kōan(-390)",
+   "Kōrei(-288)",
+   "Emperor Kōgen(-212)",
+   "Emperor Kaika(-155)",
+   "Sujin(-95)",
+   "Suinin(-27)",
+   "Keikō(71)",
+   "Emperor Seimu(131)",
+   "Chūai(192)",
+   "Ōjin(270)",
+   "Nintoku(313)",
+   "Richū(400)",
+   "Emperor Hanzei(406)",
+   "Ingyō(412)",
+   "Emperor Ankō(454)",
+   "Yūryaku(457)",
+   "Seinei(480)",
+   "Emperor Kenzō(485)",
+   "Emperor Ninken(488)",
+   "Buretsu(499)",
+   "Hirohito(1926)",
+   "Akihito(1989)",
+   "Naruhito(2019)"
+  ]
+ },
+ "rulers": [
+  {
+   "qid": "Q349277",
+   "name_en": "Keitai",
+   "name_zh": "継体",
+   "birth": "450",
+   "death": "527-05-28",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "507",
+     "531"
+    ]
+   ]
+  },
+  {
+   "qid": "Q241765",
+   "name_en": "Ankan",
+   "name_zh": "安闲天皇",
+   "birth": "466",
+   "death": "536-01-27",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "531",
+     "535"
+    ]
+   ]
+  },
+  {
+   "qid": "Q329728",
+   "name_en": "Senka",
+   "name_zh": "宣化天皇",
+   "birth": "467",
+   "death": "539-03-17",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "536",
+     "539"
+    ]
+   ]
+  },
+  {
+   "qid": "Q329792",
+   "name_en": "Kinmei",
+   "name_zh": "钦明天皇",
+   "birth": "509",
+   "death": "571-05-26",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "539-12-09",
+     "571-04-19"
+    ]
+   ]
+  },
+  {
+   "qid": "Q316637",
+   "name_en": "Bidatsu",
+   "name_zh": "敏达天皇",
+   "birth": "538",
+   "death": "585-09-16",
+   "manner": "natural causes",
+   "cause": "smallpox",
+   "reigns": [
+    [
+     "572-05-04",
+     "585-09-18"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349281",
+   "name_en": "Yōmei",
+   "name_zh": "橘豊日",
+   "birth": "600",
+   "death": "587-05-23",
+   "manner": "natural causes",
+   "cause": "smallpox",
+   "reigns": [
+    [
+     "585-09-09",
+     "587-04-13"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349238",
+   "name_en": "Sushun",
+   "name_zh": "崇峻天皇",
+   "birth": "600",
+   "death": "592-12-14",
+   "manner": "murder",
+   "cause": "stabbing",
+   "reigns": [
+    [
+     "587-09-13",
+     "592-12-16"
+    ]
+   ]
+  },
+  {
+   "qid": "Q298057",
+   "name_en": "Suiko",
+   "name_zh": "推古天皇",
+   "birth": "554-05-23",
+   "death": "628-04-18",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "593-01-19",
+     "628-04-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q329761",
+   "name_en": "Jomei",
+   "name_zh": "舒明天皇",
+   "birth": "593",
+   "death": "641-11-20",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "629-02-08",
+     "641-11-23"
+    ]
+   ]
+  },
+  {
+   "qid": "Q317980",
+   "name_en": "Kōtoku",
+   "name_zh": "孝德天皇",
+   "birth": "596",
+   "death": "654-11-27",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "645-07-18",
+     "654-11-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q314802",
+   "name_en": "Tenji",
+   "name_zh": "天智天皇",
+   "birth": "626",
+   "death": "672-01-10",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "661",
+     "672"
+    ]
+   ]
+  },
+  {
+   "qid": "Q335181",
+   "name_en": "Tenmu",
+   "name_zh": "天武天皇",
+   "birth": "631",
+   "death": "686-10-04",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "672",
+     "686-10-07"
+    ]
+   ]
+  },
+  {
+   "qid": "Q357242",
+   "name_en": "Kōbun",
+   "name_zh": "弘文天皇",
+   "birth": "648",
+   "death": "672-08-24",
+   "manner": "suicide",
+   "cause": "hanging to death",
+   "reigns": [
+    [
+     "672",
+     "672-08-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q232026",
+   "name_en": "Jitō",
+   "name_zh": "持统天皇",
+   "birth": "645",
+   "death": "703-01-17",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "686",
+     "697"
+    ]
+   ]
+  },
+  {
+   "qid": "Q357246",
+   "name_en": "Monmu",
+   "name_zh": "文武天皇",
+   "birth": "683",
+   "death": "707-07-22",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "697",
+     "707"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349263",
+   "name_en": "Shōmu",
+   "name_zh": "聖武",
+   "birth": "701-09-22",
+   "death": "756-06-08",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "724",
+     "749"
+    ]
+   ]
+  },
+  {
+   "qid": "Q329713",
+   "name_en": "Junnin",
+   "name_zh": "淳仁天皇",
+   "birth": "733",
+   "death": "765-11-14",
+   "manner": "murder",
+   "cause": null,
+   "reigns": [
+    [
+     "758",
+     "764"
+    ]
+   ]
+  },
+  {
+   "qid": "Q958662",
+   "name_en": "Kōnin",
+   "name_zh": "光仁天皇",
+   "birth": "709-11-22",
+   "death": "782-01-15",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "770",
+     "781"
+    ]
+   ]
+  },
+  {
+   "qid": "Q314846",
+   "name_en": "Emperor Kanmu",
+   "name_zh": "桓武天皇",
+   "birth": "737",
+   "death": "806",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "781",
+     "806"
+    ]
+   ]
+  },
+  {
+   "qid": "Q353558",
+   "name_en": "Emperor Heizei",
+   "name_zh": "平城天皇",
+   "birth": "774-09-29",
+   "death": "824-08-09",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "806",
+     "809"
+    ]
+   ]
+  },
+  {
+   "qid": "Q316654",
+   "name_en": "Emperor Saga",
+   "name_zh": "嵯峨天皇",
+   "birth": "786",
+   "death": "842-08-28",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "809-05-22",
+     "823-06-02"
+    ]
+   ]
+  },
+  {
+   "qid": "Q374136",
+   "name_en": "Emperor Junna",
+   "name_zh": "淳和",
+   "birth": "786",
+   "death": "840-06-15",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "823-06-02",
+     "833-03-26"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349271",
+   "name_en": "Ninmyō",
+   "name_zh": "仁明天皇",
+   "birth": "810-10-29",
+   "death": "850-05-10",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "833-03-26",
+     "850-05-08"
+    ]
+   ]
+  },
+  {
+   "qid": "Q357225",
+   "name_en": "Montoku",
+   "name_zh": "文徳",
+   "birth": "827-08",
+   "death": "858-10-11",
+   "manner": "natural causes",
+   "cause": "stroke",
+   "reigns": [
+    [
+     "850-05-08",
+     "858-10-11"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349243",
+   "name_en": "Seiwa",
+   "name_zh": "清和",
+   "birth": "850-05-14",
+   "death": "881-01-11",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "858-10-11",
+     "876-12-22"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349280",
+   "name_en": "Yōzei",
+   "name_zh": "陽成天皇",
+   "birth": "869-01-06",
+   "death": "949-10-28",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "876-12-22",
+     "884-03-08"
+    ]
+   ]
+  },
+  {
+   "qid": "Q440518",
+   "name_en": "Kōkō",
+   "name_zh": "光孝天皇",
+   "birth": "830",
+   "death": "887-09-21",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "884-03-09",
+     "887-09-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349267",
+   "name_en": "Uda",
+   "name_zh": "宇多天皇",
+   "birth": "867-06-14",
+   "death": "931-09-08",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "887-09-21",
+     "897-08-08"
+    ]
+   ]
+  },
+  {
+   "qid": "Q329753",
+   "name_en": "Daigo",
+   "name_zh": "醍醐天皇",
+   "birth": "885-02-10",
+   "death": "930-10-28",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "897-08-08",
+     "930-10-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q361019",
+   "name_en": "Suzaku",
+   "name_zh": "朱雀天皇",
+   "birth": "923-09-12",
+   "death": "952-09-11",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "930-10-21",
+     "946-05-28"
+    ]
+   ]
+  },
+  {
+   "qid": "Q374015",
+   "name_en": "Murakami",
+   "name_zh": "村上",
+   "birth": "926-07-19",
+   "death": "967-07-10",
+   "manner": "natural causes",
+   "cause": "skin cancer",
+   "reigns": [
+    [
+     "946-05-28",
+     "967-07-10"
+    ]
+   ]
+  },
+  {
+   "qid": "Q374125",
+   "name_en": "Emperor Reizei",
+   "name_zh": "冷泉",
+   "birth": "950-06-17",
+   "death": "1011-11-27",
+   "manner": "natural causes",
+   "cause": "dysentery",
+   "reigns": [
+    [
+     "967-07-10",
+     "969-10-02"
+    ]
+   ]
+  },
+  {
+   "qid": "Q374104",
+   "name_en": "En'yū",
+   "name_zh": "円融",
+   "birth": "959",
+   "death": "991",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "969-10-02",
+     "984-09-29"
+    ]
+   ]
+  },
+  {
+   "qid": "Q361000",
+   "name_en": "Emperor Kazan",
+   "name_zh": "花山天皇",
+   "birth": "968-12-04",
+   "death": "1008-03-23",
+   "manner": "natural causes",
+   "cause": "cancer",
+   "reigns": [
+    [
+     "984-09-29",
+     "986-08-06"
+    ]
+   ]
+  },
+  {
+   "qid": "Q449540",
+   "name_en": "Ichijō",
+   "name_zh": "一条",
+   "birth": "980",
+   "death": "1011",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "986-08-06",
+     "1011-07-22"
+    ]
+   ]
+  },
+  {
+   "qid": "Q357231",
+   "name_en": "Sanjō",
+   "name_zh": "三條天皇",
+   "birth": "976-02-10",
+   "death": "1017-06-11",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1011-07-22",
+     "1016-03-16"
+    ]
+   ]
+  },
+  {
+   "qid": "Q374087",
+   "name_en": "Go-Ichijō",
+   "name_zh": "後一条",
+   "birth": "1008-10-18",
+   "death": "1036-05-21",
+   "manner": "natural causes",
+   "cause": "diabetes",
+   "reigns": [
+    [
+     "1016-03-16",
+     "1036-05-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349296",
+   "name_en": "Go-Suzaku",
+   "name_zh": "後朱雀天皇",
+   "birth": "1009-12-20",
+   "death": "1045-02-13",
+   "manner": "natural causes",
+   "cause": "cancer",
+   "reigns": [
+    [
+     "1036-05-21",
+     "1045-02-11"
+    ]
+   ]
+  },
+  {
+   "qid": "Q356060",
+   "name_en": "Go-Reizei",
+   "name_zh": "後冷泉天皇",
+   "birth": "1025-09-03",
+   "death": "1068-05-28",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1045-02-11",
+     "1068-05-28"
+    ]
+   ]
+  },
+  {
+   "qid": "Q45844",
+   "name_en": "Go-Sanjō",
+   "name_zh": "後三條天皇",
+   "birth": "1034-09-09",
+   "death": "1073-06-21",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "1068-05-28",
+     "1073-01-24"
+    ]
+   ]
+  },
+  {
+   "qid": "Q60949",
+   "name_en": "Emperor Shirakawa",
+   "name_zh": "白河天皇",
+   "birth": "1053",
+   "death": "1129",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1073-01-24",
+     "1087-01-09"
+    ]
+   ]
+  },
+  {
+   "qid": "Q464267",
+   "name_en": "Emperor Horikawa",
+   "name_zh": "堀河天皇",
+   "birth": "1079-08-14",
+   "death": "1107-08-16",
+   "manner": "natural causes",
+   "cause": "malaria",
+   "reigns": [
+    [
+     "1087-01-09",
+     "1107-08-16"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349284",
+   "name_en": "Emperor Toba",
+   "name_zh": "鳥羽天皇",
+   "birth": "1103-03-03",
+   "death": "1156-07-27",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "1107-08-16",
+     "1123-03-04"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349287",
+   "name_en": "Emperor Sutoku",
+   "name_zh": "崇德天皇",
+   "birth": "1119-07-14",
+   "death": "1164-09-21",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1123-03-04",
+     "1142-01-12"
+    ]
+   ]
+  },
+  {
+   "qid": "Q373997",
+   "name_en": "Emperor Konoe",
+   "name_zh": "近衛天皇",
+   "birth": "1139-06-23",
+   "death": "1155-08-29",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "1142-01-12",
+     "1155-08-29"
+    ]
+   ]
+  },
+  {
+   "qid": "Q317984",
+   "name_en": "Emperor Go-Shirakawa",
+   "name_zh": "後白河天皇",
+   "birth": "1127-10-25",
+   "death": "1192-05-03",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "1155-08-30",
+     "1158-09-12"
+    ]
+   ]
+  },
+  {
+   "qid": "Q440149",
+   "name_en": "Nijō",
+   "name_zh": "二條天皇",
+   "birth": "1143-08-07",
+   "death": "1165-09-12",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1158-09-12",
+     "1165-08-10"
+    ]
+   ]
+  },
+  {
+   "qid": "Q357046",
+   "name_en": "Rokujō",
+   "name_zh": "六條天皇",
+   "birth": "1165-01-04",
+   "death": "1176-08-30",
+   "manner": "natural causes",
+   "cause": "dysentery",
+   "reigns": [
+    [
+     "1165-08-10",
+     "1168-04-16"
+    ]
+   ]
+  },
+  {
+   "qid": "Q357261",
+   "name_en": "Takakura",
+   "name_zh": "高倉天皇",
+   "birth": "1161-09-30",
+   "death": "1181-02-06",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "1168-04-16",
+     "1180-03-25"
+    ]
+   ]
+  },
+  {
+   "qid": "Q316651",
+   "name_en": "Antoku",
+   "name_zh": "安德天皇",
+   "birth": "1178-12-29",
+   "death": "1185-05-02",
+   "manner": "assisted suicide",
+   "cause": "drowning",
+   "reigns": [
+    [
+     "1180-03-25",
+     "1185-05-02"
+    ]
+   ]
+  },
+  {
+   "qid": "Q316658",
+   "name_en": "Go-Toba",
+   "name_zh": "後鳥羽天皇",
+   "birth": "1180-08-13",
+   "death": "1239-04-04",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1183-09-15",
+     "1198-02-25"
+    ]
+   ]
+  },
+  {
+   "qid": "Q357269",
+   "name_en": "Tsuchimikado",
+   "name_zh": "土御門天皇",
+   "birth": "1196-01-10",
+   "death": "1231-11-13",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1198-02-18",
+     "1210-12-12"
+    ]
+   ]
+  },
+  {
+   "qid": "Q357249",
+   "name_en": "Juntoku",
+   "name_zh": "順德天皇",
+   "birth": "1197-10-29",
+   "death": "1242-10-14",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1210-12-12",
+     "1221-05-13"
+    ]
+   ]
+  },
+  {
+   "qid": "Q357253",
+   "name_en": "Emperor Chūkyō",
+   "name_zh": "仲恭天皇",
+   "birth": "1218-11-06",
+   "death": "1234-06-25",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1221-05-13",
+     "1221-07-29"
+    ]
+   ]
+  },
+  {
+   "qid": "Q357221",
+   "name_en": "Go-Horikawa",
+   "name_zh": "后堀河天皇",
+   "birth": "1212-03-29",
+   "death": "1234-09-07",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1221-07-29",
+     "1232-11-17"
+    ]
+   ]
+  },
+  {
+   "qid": "Q374020",
+   "name_en": "Emperor Shijō",
+   "name_zh": "四条天皇",
+   "birth": "1231-03-24",
+   "death": "1242-02-17",
+   "manner": "accidental death",
+   "cause": "falling",
+   "reigns": [
+    [
+     "1232-11-17",
+     "1242-02-10"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349259",
+   "name_en": "Emperor Go-Saga",
+   "name_zh": "後嵯峨天皇",
+   "birth": "1220-04-08",
+   "death": "1272-03-24",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1242-02-21",
+     "1246-02-16"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349246",
+   "name_en": "Emperor Go-Fukakusa",
+   "name_zh": "後深草",
+   "birth": "1243-07-05",
+   "death": "1304-08-25",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1246-02-16",
+     "1260-01-09"
+    ]
+   ]
+  },
+  {
+   "qid": "Q360972",
+   "name_en": "Emperor Kameyama",
+   "name_zh": "龟山天皇",
+   "birth": "1249-07-16",
+   "death": "1305-10-12",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1260-01-16",
+     "1274-03-13"
+    ]
+   ]
+  },
+  {
+   "qid": "Q440538",
+   "name_en": "Go-Uda",
+   "name_zh": "後宇多",
+   "birth": "1267-12-24",
+   "death": "1324-07-24",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1274-03-06",
+     "1287-11-27"
+    ]
+   ]
+  },
+  {
+   "qid": "Q373949",
+   "name_en": "Fushimi",
+   "name_zh": "伏見",
+   "birth": "1265-05-17",
+   "death": "1317-10-16",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1287-11-27",
+     "1298-08-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q440454",
+   "name_en": "Go-Fushimi",
+   "name_zh": "後伏見",
+   "birth": "1288-04-12",
+   "death": "1336-05-25",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1298-08-30",
+     "1301-03-02"
+    ]
+   ]
+  },
+  {
+   "qid": "Q374075",
+   "name_en": "Go-Nijō",
+   "name_zh": "後二条,",
+   "birth": "1285-03-16",
+   "death": "1308-09-18",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "1301-03-03",
+     "1308-09-10"
+    ]
+   ]
+  },
+  {
+   "qid": "Q440503",
+   "name_en": "Emperor Hanazono",
+   "name_zh": "花園天皇",
+   "birth": "1297-08-21",
+   "death": "1348-12-10",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1308-12-28",
+     "1318-03-29"
+    ]
+   ]
+  },
+  {
+   "qid": "Q313942",
+   "name_en": "Go-Daigo",
+   "name_zh": "後醍醐天皇",
+   "birth": "1288-12-03",
+   "death": "1339-09-27",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "1318-03-29",
+     "1339-09-18"
+    ]
+   ]
+  },
+  {
+   "qid": "Q440447",
+   "name_en": "Go-Murakami",
+   "name_zh": "後村上",
+   "birth": "1328",
+   "death": "1368-04-06",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "1339-09-26",
+     "1368-03-29"
+    ]
+   ]
+  },
+  {
+   "qid": "Q555465",
+   "name_en": "Go-Kōgon",
+   "name_zh": "後光嚴天皇",
+   "birth": "1338-03-31",
+   "death": "1374-03-20",
+   "manner": "natural causes",
+   "cause": "smallpox",
+   "reigns": [
+    [
+     "1352-09-25",
+     "1371-04-09"
+    ]
+   ]
+  },
+  {
+   "qid": "Q464039",
+   "name_en": "Chōkei",
+   "name_zh": "長慶",
+   "birth": "1343",
+   "death": "1394-09-04",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1368-03-29",
+     "1383"
+    ]
+   ]
+  },
+  {
+   "qid": "Q471799",
+   "name_en": "Go-En'yū",
+   "name_zh": "後圓融天皇",
+   "birth": "1359-01-19",
+   "death": "1393-06-14",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1371-04-09",
+     "1382-05-24"
+    ]
+   ]
+  },
+  {
+   "qid": "Q451864",
+   "name_en": "Go-Kameyama",
+   "name_zh": "後亀山",
+   "birth": "1347",
+   "death": "1424-05-19",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1383",
+     "1392-10-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q123052",
+   "name_en": "Go-Komatsu",
+   "name_zh": "後小松天皇",
+   "birth": "1377-08-09",
+   "death": "1433-12-10",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1392-10-21",
+     "1412-10-05"
+    ]
+   ]
+  },
+  {
+   "qid": "Q451827",
+   "name_en": "Shōkō",
+   "name_zh": "称光",
+   "birth": "1401-05-21",
+   "death": "1428-09-08",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1412-10-05",
+     "1428-08-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q451926",
+   "name_en": "Go-Hanazono",
+   "name_zh": "後花園",
+   "birth": "1419-07-19",
+   "death": "1471-01-27",
+   "manner": "natural causes",
+   "cause": "Cerebral apoplexy",
+   "reigns": [
+    [
+     "1428-09-07",
+     "1464-08-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q380623",
+   "name_en": "Go-Tsuchimikado",
+   "name_zh": "後土御門",
+   "birth": "1442-07-12",
+   "death": "1500-10-31",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1464-08-21",
+     "1500-10-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349452",
+   "name_en": "Go-Kashiwabara",
+   "name_zh": "後柏原天皇",
+   "birth": "1464-11-28",
+   "death": "1526-05-28",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1500-11-16",
+     "1526-05-19"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349467",
+   "name_en": "Go-Nara",
+   "name_zh": "後奈良天皇",
+   "birth": "1495-02-04",
+   "death": "1557-10-07",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1526-06-09",
+     "1557-09-27"
+    ]
+   ]
+  },
+  {
+   "qid": "Q334076",
+   "name_en": "Ōgimachi",
+   "name_zh": "正親町",
+   "birth": "1517-06-28",
+   "death": "1593-02-06",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1557-10-27",
+     "1586-12-17"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349440",
+   "name_en": "Go-Yōzei",
+   "name_zh": "後陽成",
+   "birth": "1572-01-10",
+   "death": "1617-09-25",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1586-12-17",
+     "1611-05-09"
+    ]
+   ]
+  },
+  {
+   "qid": "Q320229",
+   "name_en": "Emperor Go-Mizunoo",
+   "name_zh": "後水尾天皇",
+   "birth": "1596-06-29",
+   "death": "1680-09-11",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1611-05-09",
+     "1629-12-22"
+    ]
+   ]
+  },
+  {
+   "qid": "Q120564",
+   "name_en": "Empress Meishō",
+   "name_zh": "明正天皇",
+   "birth": "1624-01-09",
+   "death": "1696-12-04",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1629-12-22",
+     "1643-11-14"
+    ]
+   ]
+  },
+  {
+   "qid": "Q329765",
+   "name_en": "Go-Kōmyō",
+   "name_zh": "後光明",
+   "birth": "1633-04-20",
+   "death": "1654-10-30",
+   "manner": "natural causes",
+   "cause": "smallpox",
+   "reigns": [
+    [
+     "1643-11-14",
+     "1654-10-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q349414",
+   "name_en": "Go-Sai",
+   "name_zh": "後西",
+   "birth": "1638-01-01",
+   "death": "1685-03-22",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1655-01-05",
+     "1663-03-05"
+    ]
+   ]
+  },
+  {
+   "qid": "Q313808",
+   "name_en": "Emperor Reigen",
+   "name_zh": "靈元天皇",
+   "birth": "1654-07-09",
+   "death": "1732-09-24",
+   "manner": "natural causes",
+   "cause": "death from laughter",
+   "reigns": [
+    [
+     "1663-05-05",
+     "1687-05-02"
+    ]
+   ]
+  },
+  {
+   "qid": "Q313801",
+   "name_en": "Higashiyama",
+   "name_zh": "東山天皇",
+   "birth": "1675-10-21",
+   "death": "1710-01-16",
+   "manner": "natural causes",
+   "cause": "smallpox",
+   "reigns": [
+    [
+     "1687-05-06",
+     "1709-07-27"
+    ]
+   ]
+  },
+  {
+   "qid": "Q314817",
+   "name_en": "Nakamikado",
+   "name_zh": "中御門天皇",
+   "birth": "1702-01-14",
+   "death": "1737-05-10",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1709-07-27",
+     "1735-04-13"
+    ]
+   ]
+  },
+  {
+   "qid": "Q313870",
+   "name_en": "Sakuramachi",
+   "name_zh": "櫻町天皇",
+   "birth": "1720-02-08",
+   "death": "1750-05-28",
+   "manner": "natural causes",
+   "cause": "shoshin beriberi",
+   "reigns": [
+    [
+     "1735-04-13",
+     "1747-06-09"
+    ]
+   ]
+  },
+  {
+   "qid": "Q313864",
+   "name_en": "Momozono",
+   "name_zh": "桃園天皇",
+   "birth": "1741-04-14",
+   "death": "1762-08-31",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1747-06-09",
+     "1762-08-31"
+    ]
+   ]
+  },
+  {
+   "qid": "Q230525",
+   "name_en": "Go-Sakuramachi",
+   "name_zh": "後櫻町天皇",
+   "birth": "1740-09-23",
+   "death": "1813-12-24",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1762-09-15",
+     "1771-01-09"
+    ]
+   ]
+  },
+  {
+   "qid": "Q314063",
+   "name_en": "Go-Momozono",
+   "name_zh": "後桃園天皇",
+   "birth": "1758-08-05",
+   "death": "1779-12-16",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1771-05-23",
+     "1779-12-16"
+    ]
+   ]
+  },
+  {
+   "qid": "Q313806",
+   "name_en": "Emperor Kōkaku",
+   "name_zh": "光格天皇",
+   "birth": "1771-09-23",
+   "death": "1840-12-11",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1779-12-16",
+     "1817-05-07"
+    ]
+   ]
+  },
+  {
+   "qid": "Q312351",
+   "name_en": "Emperor Ninkō",
+   "name_zh": "仁孝天皇",
+   "birth": "1800-03-16",
+   "death": "1846-02-21",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1817-10-31",
+     "1846-02-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q299179",
+   "name_en": "Emperor Kōmei",
+   "name_zh": "孝明天皇",
+   "birth": "1831-07-22",
+   "death": "1867-01-30",
+   "manner": "natural causes",
+   "cause": "smallpox",
+   "reigns": [
+    [
+     "1846-03-10",
+     "1867-01-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q174231",
+   "name_en": "Emperor Meiji",
+   "name_zh": "明治天皇",
+   "birth": "1852-11-03",
+   "death": "1912-07-30",
+   "manner": "natural causes",
+   "cause": "uremia",
+   "reigns": [
+    [
+     "1867-02-03",
+     "1912-07-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q157052",
+   "name_en": "Emperor Taishō",
+   "name_zh": "大正天皇",
+   "birth": "1879-08-31",
+   "death": "1926-12-25",
+   "manner": "natural causes",
+   "cause": "pneumonia",
+   "reigns": [
+    [
+     "1912-07-30",
+     "1926-12-25"
+    ]
+   ]
+  }
+ ]
+}

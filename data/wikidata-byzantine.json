@@ -1,0 +1,1621 @@
+{
+ "realm": "拜占庭",
+ "realm_key": "byzantine",
+ "position": "Q18577504",
+ "source": "Wikidata (CC0)",
+ "fetched_utc": "2026-08-13T09:35:33Z",
+ "note": "骨架数据；violent 一栏须人工判定，Wikidata 的死亡方式覆盖率仅约 40%",
+ "curation": {
+  "start_year": 395,
+  "end_year": 1453,
+  "dropped_pre_395": [
+   "Constans",
+   "Constantius II",
+   "Jovian",
+   "Valens",
+   "Theodosius I"
+  ],
+  "_note": "起点取 395 年东西罗马永久分治；Wikidata 自 337 年起算，会纳入仍统治全罗马者"
+ },
+ "rulers": [
+  {
+   "qid": "Q232981",
+   "name_en": "Aelia Eudoxia",
+   "name_zh": "欧多克西亚",
+   "birth": "301",
+   "death": "404",
+   "manner": "natural causes",
+   "cause": "puerperal disorders",
+   "reigns": [
+    [
+     "395",
+     "404"
+    ]
+   ]
+  },
+  {
+   "qid": "Q159369",
+   "name_en": "Arcadius",
+   "name_zh": "阿卡狄奧斯",
+   "birth": "377-01-02",
+   "death": "408-05-02",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "395-01-18",
+     "408-05-02"
+    ]
+   ]
+  },
+  {
+   "qid": "Q160353",
+   "name_en": "Theodosius II",
+   "name_zh": "狄奧多西二世",
+   "birth": "401-04-11",
+   "death": "450-07-29",
+   "manner": "accidental death",
+   "cause": "horse fall",
+   "reigns": [
+    [
+     "408-05-02",
+     "450-07-29"
+    ]
+   ]
+  },
+  {
+   "qid": "Q229307",
+   "name_en": "Aelia Eudocia",
+   "name_zh": "欧多西亚",
+   "birth": "401",
+   "death": "460-10-22",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "421",
+     "450"
+    ]
+   ]
+  },
+  {
+   "qid": "Q178004",
+   "name_en": "Marcian",
+   "name_zh": "马尔西安",
+   "birth": "392",
+   "death": "457-01-27",
+   "manner": "natural causes",
+   "cause": "disease",
+   "reigns": [
+    [
+     "450",
+     "457-01"
+    ]
+   ]
+  },
+  {
+   "qid": "Q231919",
+   "name_en": "Pulcheria",
+   "name_zh": "普爾喀麗亞",
+   "birth": "399-01-20",
+   "death": "453-07",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "450",
+     "453"
+    ]
+   ]
+  },
+  {
+   "qid": "Q258150",
+   "name_en": "Verina",
+   "name_zh": "維里娜",
+   "birth": null,
+   "death": "484",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "457",
+     "474"
+    ]
+   ]
+  },
+  {
+   "qid": "Q183776",
+   "name_en": "Leo I",
+   "name_zh": "利奥一世",
+   "birth": "401",
+   "death": "474-01-20",
+   "manner": "natural causes",
+   "cause": "dysentery",
+   "reigns": [
+    [
+     "457-02-08",
+     "474-01-19"
+    ]
+   ]
+  },
+  {
+   "qid": "Q291756",
+   "name_en": "Ariadne",
+   "name_zh": "阿丽亚德内",
+   "birth": "452",
+   "death": "515",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "474",
+     "475"
+    ],
+    [
+     "476",
+     "515"
+    ]
+   ]
+  },
+  {
+   "qid": "Q191707",
+   "name_en": "Leo II",
+   "name_zh": "利奥二世",
+   "birth": "467",
+   "death": "474-11-17",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "474-01-19",
+     "474-11-18"
+    ]
+   ]
+  },
+  {
+   "qid": "Q183452",
+   "name_en": "Zeno",
+   "name_zh": "芝諾",
+   "birth": "425",
+   "death": "491",
+   "manner": "natural causes",
+   "cause": "dysentery",
+   "reigns": [
+    [
+     "474-02-10",
+     "475-01-10"
+    ],
+    [
+     "476-08",
+     "491-04-10"
+    ]
+   ]
+  },
+  {
+   "qid": "Q2316077",
+   "name_en": "Zenonis",
+   "name_zh": "芝诺妮丝",
+   "birth": "500",
+   "death": "470",
+   "manner": "capital punishment",
+   "cause": "starvation",
+   "reigns": [
+    [
+     "475",
+     "476"
+    ]
+   ]
+  },
+  {
+   "qid": "Q193056",
+   "name_en": "Basiliscus",
+   "name_zh": "巴西利斯库斯",
+   "birth": "500",
+   "death": "476",
+   "manner": "capital punishment",
+   "cause": "starvation",
+   "reigns": [
+    [
+     "475-01-10",
+     "476-08"
+    ]
+   ]
+  },
+  {
+   "qid": "Q173470",
+   "name_en": "Anastasius I",
+   "name_zh": "阿纳斯塔修斯一世",
+   "birth": "430",
+   "death": "518-07-09",
+   "manner": "natural causes",
+   "cause": null,
+   "reigns": [
+    [
+     "491-04-12",
+     "518-07-11"
+    ]
+   ]
+  },
+  {
+   "qid": "Q183445",
+   "name_en": "Justin I",
+   "name_zh": "查士丁一世",
+   "birth": "450",
+   "death": "527-08-03",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "518",
+     "527-08-03"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41866",
+   "name_en": "Justinian I",
+   "name_zh": "查士丁尼一世",
+   "birth": "483-05-12",
+   "death": "565-11-16",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "527-04-03",
+     "565-11-16"
+    ]
+   ]
+  },
+  {
+   "qid": "Q204843",
+   "name_en": "Theodora",
+   "name_zh": "狄奥多拉皇后",
+   "birth": "500",
+   "death": "548",
+   "manner": "natural causes",
+   "cause": "breast cancer",
+   "reigns": [
+    [
+     "527-08-11",
+     "548-06-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q271671",
+   "name_en": "Sophia",
+   "name_zh": "索菲亚",
+   "birth": "530",
+   "death": "600",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "565",
+     "578"
+    ]
+   ]
+  },
+  {
+   "qid": "Q183813",
+   "name_en": "Justin II",
+   "name_zh": "查士丁二世",
+   "birth": "520",
+   "death": "578-10-06",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "565-11-17",
+     "574"
+    ]
+   ]
+  },
+  {
+   "qid": "Q31491",
+   "name_en": "Tiberius II Constantine",
+   "name_zh": "提比略二世",
+   "birth": "520",
+   "death": "582-08-16",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "574",
+     "582"
+    ]
+   ]
+  },
+  {
+   "qid": "Q125493963",
+   "name_en": "Ino Anastasia",
+   "name_zh": "伊诺·阿纳斯塔西娅",
+   "birth": "600",
+   "death": "593",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "578",
+     "582"
+    ]
+   ]
+  },
+  {
+   "qid": "Q3695445",
+   "name_en": "Constantina",
+   "name_zh": "君士坦丁娜",
+   "birth": "560",
+   "death": "605",
+   "manner": "homicide",
+   "cause": "decapitation",
+   "reigns": [
+    [
+     "582",
+     "602"
+    ]
+   ]
+  },
+  {
+   "qid": "Q181764",
+   "name_en": "Maurice",
+   "name_zh": "莫里斯",
+   "birth": "539",
+   "death": "602-11-30",
+   "manner": "homicide",
+   "cause": "decapitation",
+   "reigns": [
+    [
+     "582-08-16",
+     "602-11-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q31556",
+   "name_en": "Phocas",
+   "name_zh": "福卡斯",
+   "birth": "547",
+   "death": "610",
+   "manner": null,
+   "cause": "decapitation",
+   "reigns": [
+    [
+     "602",
+     "610"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41852",
+   "name_en": "Heraclius",
+   "name_zh": "希拉克略",
+   "birth": "575",
+   "death": "641-02-11",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "610-10-08",
+     "641-02-14"
+    ]
+   ]
+  },
+  {
+   "qid": "Q273871",
+   "name_en": "Gregoria",
+   "name_zh": "格雷戈里亞",
+   "birth": "700",
+   "death": "700",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "641",
+     "642"
+    ]
+   ]
+  },
+  {
+   "qid": "Q31513",
+   "name_en": "Heraklonas",
+   "name_zh": "赫拉克洛纳斯",
+   "birth": "618",
+   "death": "641",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "641-02",
+     "641-09"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41615",
+   "name_en": "Heraclius Constantine",
+   "name_zh": "君士坦丁三世",
+   "birth": "612-05-06",
+   "death": "641-05-27",
+   "manner": "natural causes",
+   "cause": "tuberculosis",
+   "reigns": [
+    [
+     "641-02",
+     "641-05"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41613",
+   "name_en": "Constans II",
+   "name_zh": "君士坦斯二世",
+   "birth": "630-11-07",
+   "death": "668-09-15",
+   "manner": null,
+   "cause": "execution by drowning",
+   "reigns": [
+    [
+     "641-09",
+     "668-09-18"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41605",
+   "name_en": "Constantine IV",
+   "name_zh": "君士坦丁四世",
+   "birth": "652",
+   "death": "685-07-13",
+   "manner": "natural causes",
+   "cause": "dysentery",
+   "reigns": [
+    [
+     "654",
+     "685-09-17"
+    ]
+   ]
+  },
+  {
+   "qid": "Q12729945",
+   "name_en": "Heraclius",
+   "name_zh": "希拉克略",
+   "birth": "650",
+   "death": null,
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "659",
+     "681"
+    ]
+   ]
+  },
+  {
+   "qid": "Q4751845",
+   "name_en": "Anastasia",
+   "name_zh": "阿纳斯塔西娅",
+   "birth": "650",
+   "death": null,
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "668",
+     "685"
+    ]
+   ]
+  },
+  {
+   "qid": "Q42021",
+   "name_en": "Justinian II",
+   "name_zh": "查士丁尼二世",
+   "birth": "669",
+   "death": "711-12-11",
+   "manner": "homicide",
+   "cause": "decapitation",
+   "reigns": [
+    [
+     "685-09-17",
+     "695"
+    ],
+    [
+     "705",
+     "711-12-15"
+    ]
+   ]
+  },
+  {
+   "qid": "Q44386",
+   "name_en": "Leontius",
+   "name_zh": "利昂提奥斯",
+   "birth": "660",
+   "death": "706-02-19",
+   "manner": "capital punishment",
+   "cause": "decapitation",
+   "reigns": [
+    [
+     "695",
+     "698"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41637",
+   "name_en": "Tiberios III",
+   "name_zh": "提比略三世",
+   "birth": "700",
+   "death": "706-02-19",
+   "manner": null,
+   "cause": "decapitation",
+   "reigns": [
+    [
+     "698",
+     "705"
+    ]
+   ]
+  },
+  {
+   "qid": "Q44560",
+   "name_en": "Philippikos Bardanes",
+   "name_zh": "菲利皮科斯",
+   "birth": "700",
+   "death": "714-01-24",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "711-12-19",
+     "713-06-11"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41620",
+   "name_en": "Anastasios II",
+   "name_zh": "阿纳斯塔修斯二世",
+   "birth": "700",
+   "death": "719-06-05",
+   "manner": null,
+   "cause": "decapitation",
+   "reigns": [
+    [
+     "713-06",
+     "715-11"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41836",
+   "name_en": "Theodosios III",
+   "name_zh": "狄奧多西三世",
+   "birth": "700",
+   "death": "722",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "715-05",
+     "717-03-29"
+    ]
+   ]
+  },
+  {
+   "qid": "Q31755",
+   "name_en": "Leo III the Syrian",
+   "name_zh": "利奥三世",
+   "birth": "675",
+   "death": "741-06-22",
+   "manner": "natural causes",
+   "cause": "edema",
+   "reigns": [
+    [
+     "717-03-29",
+     "741-06-22"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41635",
+   "name_en": "Konstantinos V",
+   "name_zh": "君士坦丁五世",
+   "birth": "718",
+   "death": "775-09-18",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "741-06-22",
+     "775-09-18"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41645",
+   "name_en": "Leo IV the Khazar",
+   "name_zh": "利奧四世",
+   "birth": "750-01-25",
+   "death": "780-09-08",
+   "manner": "natural causes",
+   "cause": "tuberculosis",
+   "reigns": [
+    [
+     "775-09-18",
+     "780-06-22"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41661",
+   "name_en": "Konstantinos VI",
+   "name_zh": "君士坦丁六世",
+   "birth": "771-01-18",
+   "death": "798",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "780-09-12",
+     "797-08-05"
+    ]
+   ]
+  },
+  {
+   "qid": "Q206737",
+   "name_en": "Irene of Athens",
+   "name_zh": "伊琳娜女皇",
+   "birth": "752",
+   "death": "803-08-09",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "797",
+     "802-11-04"
+    ]
+   ]
+  },
+  {
+   "qid": "Q208754",
+   "name_en": "Nikephoros I",
+   "name_zh": "尼基弗鲁斯一世",
+   "birth": "750",
+   "death": "811-07-30",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "802-11-04",
+     "811-07-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q237587",
+   "name_en": "Stauracius",
+   "name_zh": "斯陶拉基奥斯",
+   "birth": "775",
+   "death": "812-01-15",
+   "manner": "natural causes",
+   "cause": "gangrene",
+   "reigns": [
+    [
+     "811-07-30",
+     "811-10-06"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41652",
+   "name_en": "Michael I Rangabe",
+   "name_zh": "米海尔一世",
+   "birth": "770",
+   "death": "844-01-11",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "811-10-06",
+     "813-06-26"
+    ]
+   ]
+  },
+  {
+   "qid": "Q134078998",
+   "name_en": "Staurakios",
+   "name_zh": null,
+   "birth": "800",
+   "death": "813",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "811-12-29",
+     "813"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41641",
+   "name_en": "Leo V the Armenian",
+   "name_zh": "利奥五世",
+   "birth": "775",
+   "death": "821-01-02",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "813-06-26",
+     "820-12-29"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41640",
+   "name_en": "Michael II",
+   "name_zh": "米海尔二世",
+   "birth": "770",
+   "death": "829-10-06",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "820-12-29",
+     "829-10-06"
+    ]
+   ]
+  },
+  {
+   "qid": "Q60199",
+   "name_en": "Theophilos",
+   "name_zh": "狄奥斐卢斯",
+   "birth": "813",
+   "death": "842-01-24",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "829-10-06",
+     "842-01-24"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41622",
+   "name_en": "Michael III",
+   "name_zh": "米海尔三世",
+   "birth": "840-01-13",
+   "death": "867-09-25",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "842",
+     "867"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41592",
+   "name_en": "Basil I",
+   "name_zh": "巴西尔一世",
+   "birth": "811",
+   "death": "886-09-02",
+   "manner": "accidental death",
+   "cause": "hunting accident",
+   "reigns": [
+    [
+     "867",
+     "886"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41618",
+   "name_en": "Leo VI the Wise",
+   "name_zh": "利奥六世",
+   "birth": "866-09-23",
+   "death": "912-05-16",
+   "manner": "natural causes",
+   "cause": "disease",
+   "reigns": [
+    [
+     "886-09-02",
+     "912-05-16"
+    ]
+   ]
+  },
+  {
+   "qid": "Q294425",
+   "name_en": "Alexander",
+   "name_zh": "亞歷山大",
+   "birth": "872-11-23",
+   "death": "913-06-06",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "912-05-16",
+     "913-06-11"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41608",
+   "name_en": "Konstantinos VII",
+   "name_zh": "君士坦丁七世",
+   "birth": "905-05-23",
+   "death": "959-11-14",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "913-06-11",
+     "959-11-14"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41646",
+   "name_en": "Romanos I Lekapenos",
+   "name_zh": "羅曼努斯一世",
+   "birth": "870",
+   "death": "948-03-15",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "920",
+     "944"
+    ]
+   ]
+  },
+  {
+   "qid": "Q2191351",
+   "name_en": "Christopher Lekapenos",
+   "name_zh": "赫里斯托弗·利卡潘努斯",
+   "birth": "890",
+   "death": "931",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "921",
+     "931"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41847",
+   "name_en": "Romanos II",
+   "name_zh": "羅曼努斯二世",
+   "birth": "938",
+   "death": "963-03-15",
+   "manner": "accidental death",
+   "cause": "horse fall",
+   "reigns": [
+    [
+     "959-11-14",
+     "963-03-20"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41625",
+   "name_en": "Nikephoros II Phokas",
+   "name_zh": "尼基弗鲁斯二世",
+   "birth": "912",
+   "death": "969-12",
+   "manner": "homicide",
+   "cause": "decapitation",
+   "reigns": [
+    [
+     "963-08-21",
+     "969-12-16"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41603",
+   "name_en": "John I Tzimiskes",
+   "name_zh": "约翰一世",
+   "birth": "925",
+   "death": "976-01-10",
+   "manner": "natural causes",
+   "cause": "disease",
+   "reigns": [
+    [
+     "969-12-16",
+     "976-01-15"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41833",
+   "name_en": "Basil II",
+   "name_zh": "巴西尔二世",
+   "birth": "958",
+   "death": "1025-12-21",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "976-01-15",
+     "1025-12-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41663",
+   "name_en": "Konstantinos VIII",
+   "name_zh": "君士坦丁八世",
+   "birth": "960",
+   "death": "1028-11-21",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1025-12-21",
+     "1028-11-21"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41657",
+   "name_en": "Romanos III Argyros",
+   "name_zh": "羅曼努斯三世",
+   "birth": "968",
+   "death": "1034-04-17",
+   "manner": "homicide",
+   "cause": "intoxication",
+   "reigns": [
+    [
+     "1028-11-21",
+     "1034-04-17"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41654",
+   "name_en": "Michael IV the Paphlagonian",
+   "name_zh": "米海爾四世",
+   "birth": "1010",
+   "death": "1041-12-16",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1034-04-17",
+     "1041-12-16"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41838",
+   "name_en": "Michael V Kalaphates",
+   "name_zh": "米海尔五世",
+   "birth": "1015",
+   "death": "1042-08-30",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1041-12-16",
+     "1042-04-26"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41659",
+   "name_en": "Zoe Porphyrogenita",
+   "name_zh": "佐伊女皇",
+   "birth": "978",
+   "death": "1050-06",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1042",
+     "1055"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41666",
+   "name_en": "Theodora Porphyrogenita",
+   "name_zh": "狄奥多拉女皇",
+   "birth": "984",
+   "death": "1056-09-06",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1042-04-25",
+     "1056-09-06"
+    ]
+   ]
+  },
+  {
+   "qid": "Q30594",
+   "name_en": "Konstantinos IX Monomachos",
+   "name_zh": "君士坦丁九世",
+   "birth": "1000",
+   "death": "1055-01-17",
+   "manner": "natural causes",
+   "cause": "plague",
+   "reigns": [
+    [
+     "1042-06-17",
+     "1055-01-17"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41681",
+   "name_en": "Michael VI Bringas",
+   "name_zh": "米海爾六世",
+   "birth": "995",
+   "death": "1059",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1056-09",
+     "1057-09-06"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41643",
+   "name_en": "Isaac I Komnenos",
+   "name_zh": "伊萨克一世",
+   "birth": "1007",
+   "death": "1061",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1057-06-11",
+     "1059-11-28"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41660",
+   "name_en": "Konstantinos X Doukas",
+   "name_zh": "君士坦丁十世",
+   "birth": "1006",
+   "death": "1067-05-28",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1059-11-30",
+     "1067-05-28"
+    ]
+   ]
+  },
+  {
+   "qid": "Q514180",
+   "name_en": "Konstantios Doukas",
+   "name_zh": "康斯坦丁斯·杜卡斯",
+   "birth": "1060",
+   "death": "1081-10-24",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1060",
+     "1078"
+    ]
+   ]
+  },
+  {
+   "qid": "Q210564",
+   "name_en": "Michael VII Doukas",
+   "name_zh": "米海尔七世",
+   "birth": "1059",
+   "death": "1090",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1067-05-28",
+     "1078-03-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41834",
+   "name_en": "Romanos IV Diogenes",
+   "name_zh": "罗曼努斯四世",
+   "birth": "1030",
+   "death": "1072-08-10",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1068",
+     "1071"
+    ]
+   ]
+  },
+  {
+   "qid": "Q4759496",
+   "name_en": "Andronikos Doukas",
+   "name_zh": "安德羅尼科斯·杜卡斯_(共治皇帝)",
+   "birth": "1058",
+   "death": null,
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1068",
+     "1070"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41689",
+   "name_en": "Nikephoros III Botaneiates",
+   "name_zh": "尼基弗鲁斯三世",
+   "birth": "1001",
+   "death": "1081-12-16",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1078-04-06",
+     "1081-04-10"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41600",
+   "name_en": "Alexios I Komnenos",
+   "name_zh": "阿历克塞一世",
+   "birth": "1048",
+   "death": "1118-08-15",
+   "manner": "natural causes",
+   "cause": "disease",
+   "reigns": [
+    [
+     "1081-04-10",
+     "1118-08-22"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41628",
+   "name_en": "John II Komnenos",
+   "name_zh": "约翰二世",
+   "birth": "1088",
+   "death": "1143",
+   "manner": "accidental death",
+   "cause": "hunting accident",
+   "reigns": [
+    [
+     "1118-08-22",
+     "1143-04-15"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41610",
+   "name_en": "Manuel I Komnenos",
+   "name_zh": "曼努埃爾一世",
+   "birth": "1118-12-05",
+   "death": "1180-10-01",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1143-04-15",
+     "1180-10-01"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41849",
+   "name_en": "Alexios II Komnenos",
+   "name_zh": "阿历克塞二世",
+   "birth": "1169-09-10",
+   "death": "1183-09-24",
+   "manner": "homicide",
+   "cause": "political murder",
+   "reigns": [
+    [
+     "1180-10-01",
+     "1183-10"
+    ]
+   ]
+  },
+  {
+   "qid": "Q41830",
+   "name_en": "Andronikos I Komnenos",
+   "name_zh": "安德洛尼卡一世",
+   "birth": "1118",
+   "death": "1185-09-12",
+   "manner": "homicide",
+   "cause": "torture",
+   "reigns": [
+    [
+     "1183",
+     "1185-09-18"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37135",
+   "name_en": "Isaac II Angelos",
+   "name_zh": "伊萨克二世·安格洛斯",
+   "birth": "1155",
+   "death": "1204-02-04",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1185",
+     "1195"
+    ],
+    [
+     "1203",
+     "1204"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37065",
+   "name_en": "Alexios III Angelos",
+   "name_zh": "阿历克塞三世",
+   "birth": "1153",
+   "death": "1211",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1195-03",
+     "1203-07-24"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37069",
+   "name_en": "Alexios IV Angelos",
+   "name_zh": "阿历克塞四世·安格洛斯",
+   "birth": "1182",
+   "death": "1204-02-15",
+   "manner": null,
+   "cause": "drowning",
+   "reigns": [
+    [
+     "1203-07-26",
+     "1204-02-03"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37092",
+   "name_en": "Konstantinos Laskaris",
+   "name_zh": "君士坦丁·拉斯卡利斯",
+   "birth": "1170",
+   "death": "1205-03-26",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1204",
+     "1205"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37076",
+   "name_en": "Alexios V Doukas",
+   "name_zh": "阿历克塞五世",
+   "birth": "1140",
+   "death": "1204-12",
+   "manner": null,
+   "cause": "falling from height",
+   "reigns": [
+    [
+     "1204-02-12",
+     "1204-04-20"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37086",
+   "name_en": "Theodore I Laskaris",
+   "name_zh": "狄奧多一世",
+   "birth": "1174",
+   "death": "1221",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1205",
+     "1222"
+    ]
+   ]
+  },
+  {
+   "qid": "Q22343002",
+   "name_en": "Nicholas Laskaris",
+   "name_zh": "尼可拉斯·拉斯卡里斯 (狄奧多一世之子)",
+   "birth": "1200",
+   "death": "1210",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1208",
+     "1210"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37072",
+   "name_en": "John III Doukas Vatatzes",
+   "name_zh": "约翰三世",
+   "birth": "1192",
+   "death": "1254",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1221-12-22",
+     "1254-11-10"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37082",
+   "name_en": "Theodore II Laskaris",
+   "name_zh": "卡姆·克拉克",
+   "birth": "1221-12",
+   "death": "1258",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1254-11-10",
+     "1258-08-25"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37088",
+   "name_en": "John IV Laskaris",
+   "name_zh": "约翰四世·拉斯卡里斯",
+   "birth": "1251-01-01",
+   "death": "1305",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1259-01-08",
+     "1262-01-01"
+    ]
+   ]
+  },
+  {
+   "qid": "Q200033",
+   "name_en": "Michael VIII Palaiologos",
+   "name_zh": "米海尔八世",
+   "birth": "1224",
+   "death": "1282-12-18",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1261-08-22",
+     "1282-12-18"
+    ]
+   ]
+  },
+  {
+   "qid": "Q2774126",
+   "name_en": "Anna of Hungary",
+   "name_zh": "匈牙利的安娜",
+   "birth": "1260",
+   "death": "1281",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1273",
+     "1281"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37067",
+   "name_en": "Andronikos II Palaiologos",
+   "name_zh": "安德洛尼卡二世",
+   "birth": "1259-03-25",
+   "death": "1332-02-13",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1282-12-18",
+     "1328-06-01"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37063",
+   "name_en": "Andronikos III Palaiologos",
+   "name_zh": "安德洛尼卡三世",
+   "birth": "1297-03-25",
+   "death": "1341-06-15",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1328-06-01",
+     "1341-06-23"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37070",
+   "name_en": "John V Palaiologos",
+   "name_zh": "约翰五世",
+   "birth": "1332-06-26",
+   "death": "1391-02-24",
+   "manner": "natural causes",
+   "cause": "disease",
+   "reigns": [
+    [
+     "1341-06-23",
+     "1376-08-20"
+    ],
+    [
+     "1379-07-09",
+     "1390-04-22"
+    ],
+    [
+     "1390-09-25",
+     "1391-02-24"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37084",
+   "name_en": "John VI Kantakouzenos",
+   "name_zh": "约翰六世",
+   "birth": "1292",
+   "death": "1383-06-23",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1347-04-08",
+     "1354-12-18"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37078",
+   "name_en": "Andronikos IV Palaiologos",
+   "name_zh": "安德洛尼卡四世",
+   "birth": "1348-04-19",
+   "death": "1385-07-06",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1376-08-20",
+     "1379-07-09"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37074",
+   "name_en": "John VII Palaiologos",
+   "name_zh": "约翰七世",
+   "birth": "1370",
+   "death": "1408-10-01",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1390-04-22",
+     "1390-09"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37097",
+   "name_en": "Manuel II Palaiologos",
+   "name_zh": "曼努埃尔二世",
+   "birth": "1350-07-05",
+   "death": "1425-07-30",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1391-02-24",
+     "1425-07-30"
+    ]
+   ]
+  },
+  {
+   "qid": "Q3657814",
+   "name_en": "Irene Gattilusio",
+   "name_zh": "厄瑞涅·伽忒卢组",
+   "birth": "1301",
+   "death": "1440-01-10",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1399",
+     "1408"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37089",
+   "name_en": "Andronikos V Palaiologos",
+   "name_zh": "安德洛尼卡五世",
+   "birth": "1400",
+   "death": "1407",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1403",
+     "1407"
+    ]
+   ]
+  },
+  {
+   "qid": "Q2028843",
+   "name_en": "Anna of Moscow",
+   "name_zh": "安娜·瓦西里耶芙娜",
+   "birth": "1393",
+   "death": "1417",
+   "manner": "natural causes",
+   "cause": "plague",
+   "reigns": [
+    [
+     "1416",
+     "1417"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37062",
+   "name_en": "John VIII Palaiologos",
+   "name_zh": "约翰八世",
+   "birth": "1392-12-26",
+   "death": "1448-11-09",
+   "manner": null,
+   "cause": null,
+   "reigns": [
+    [
+     "1425",
+     "1448"
+    ]
+   ]
+  },
+  {
+   "qid": "Q37142",
+   "name_en": "Konstantinos XI Palaiologos",
+   "name_zh": "君士坦丁十一世",
+   "birth": "1404-02-17",
+   "death": "1453-06-07",
+   "manner": "death in battle",
+   "cause": null,
+   "reigns": [
+    [
+     "1449-01-15",
+     "1453-06-07"
+    ]
+   ]
+  }
+ ]
+}

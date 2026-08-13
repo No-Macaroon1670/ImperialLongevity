@@ -1,0 +1,321 @@
+{
+ "_about": "拜占庭人工判定层：Wikidata 死亡方式覆盖 38/110，其余人工补齐；另标注需排除者（皇后配偶、共治幼帝、重复条目）——Wikidata 的 P39「拜占庭皇帝」把他们一并收入。",
+ "exclude": {
+  "Q232981": {
+   "name": "Aelia Eudoxia",
+   "reason": "皇后（阿卡狄乌斯之妻）"
+  },
+  "Q229307": {
+   "name": "Aelia Eudocia",
+   "reason": "皇后（狄奥多西二世之妻），非临朝君主"
+  },
+  "Q231919": {
+   "name": "Pulcheria",
+   "reason": "奥古斯塔／摄政，非临朝君主"
+  },
+  "Q258150": {
+   "name": "Verina",
+   "reason": "皇后（利奥一世之妻）"
+  },
+  "Q291756": {
+   "name": "Ariadne",
+   "reason": "皇后（芝诺、阿纳斯塔修斯之妻）"
+  },
+  "Q2316077": {
+   "name": "Zenonis",
+   "reason": "皇后（巴西利斯库斯之妻）"
+  },
+  "Q204843": {
+   "name": "Theodora",
+   "reason": "皇后（查士丁尼一世之妻）"
+  },
+  "Q271671": {
+   "name": "Sophia",
+   "reason": "皇后（查士丁二世之妻）"
+  },
+  "Q125493963": {
+   "name": "Ino Anastasia",
+   "reason": "皇后（提比略二世之妻）"
+  },
+  "Q3695445": {
+   "name": "Constantina",
+   "reason": "皇后（莫里斯之妻）"
+  },
+  "Q41852": {
+   "name": "Heraclius",
+   "reason": "共治帝（康斯坦斯二世之子）"
+  },
+  "Q273871": {
+   "name": "Gregoria",
+   "reason": "皇后（康斯坦斯二世之妻）"
+  },
+  "Q12729945": {
+   "name": "Heraclius",
+   "reason": "共治帝（康斯坦斯二世之子）"
+  },
+  "Q4751845": {
+   "name": "Anastasia",
+   "reason": "皇后"
+  },
+  "Q134078998": {
+   "name": "Staurakios",
+   "reason": "与 Stauracius 为同一人的重复条目"
+  },
+  "Q2191351": {
+   "name": "Christopher Lekapenos",
+   "reason": "共治帝，先其父而卒"
+  },
+  "Q514180": {
+   "name": "Konstantios Doukas",
+   "reason": "共治幼帝，未尝独统"
+  },
+  "Q4759496": {
+   "name": "Andronikos Doukas",
+   "reason": "共治帝"
+  },
+  "Q22343002": {
+   "name": "Nicholas Laskaris",
+   "reason": "共治幼帝"
+  },
+  "Q2774126": {
+   "name": "Anna of Hungary",
+   "reason": "皇后（安德罗尼卡二世之妻）"
+  },
+  "Q3657814": {
+   "name": "Irene Gattilusio",
+   "reason": "皇后（约翰七世之妻）"
+  },
+  "Q37089": {
+   "name": "Andronikos V Palaiologos",
+   "reason": "共治幼帝"
+  },
+  "Q2028843": {
+   "name": "Anna of Moscow",
+   "reason": "皇后（约翰八世之妻）"
+  }
+ },
+ "rulers": {
+  "Q191707": {
+   "violent": 0,
+   "name": "Leo II"
+  },
+  "Q183445": {
+   "violent": 0,
+   "name": "Justin I"
+  },
+  "Q41866": {
+   "violent": 0,
+   "name": "Justinian I"
+  },
+  "Q183813": {
+   "violent": 0,
+   "name": "Justin II"
+  },
+  "Q31491": {
+   "violent": 0,
+   "name": "Tiberius II Constantine",
+   "disputed": 1
+  },
+  "Q31556": {
+   "violent": 1,
+   "name": "Phocas"
+  },
+  "Q31513": {
+   "violent": 0,
+   "name": "Heraklonas",
+   "disputed": 1
+  },
+  "Q41613": {
+   "violent": 1,
+   "name": "Constans II"
+  },
+  "Q41637": {
+   "violent": 1,
+   "name": "Tiberios III"
+  },
+  "Q44560": {
+   "violent": 0,
+   "name": "Philippikos Bardanes",
+   "disputed": 1
+  },
+  "Q41620": {
+   "violent": 1,
+   "name": "Anastasios II"
+  },
+  "Q41836": {
+   "violent": 0,
+   "name": "Theodosios III"
+  },
+  "Q41635": {
+   "violent": 0,
+   "name": "Konstantinos V"
+  },
+  "Q41661": {
+   "violent": 1,
+   "name": "Konstantinos VI"
+  },
+  "Q206737": {
+   "violent": 0,
+   "name": "Irene of Athens"
+  },
+  "Q208754": {
+   "violent": 1,
+   "name": "Nikephoros I"
+  },
+  "Q41652": {
+   "violent": 0,
+   "name": "Michael I Rangabe"
+  },
+  "Q41641": {
+   "violent": 1,
+   "name": "Leo V the Armenian"
+  },
+  "Q41640": {
+   "violent": 0,
+   "name": "Michael II"
+  },
+  "Q60199": {
+   "violent": 0,
+   "name": "Theophilos"
+  },
+  "Q41622": {
+   "violent": 1,
+   "name": "Michael III"
+  },
+  "Q294425": {
+   "violent": 0,
+   "name": "Alexander"
+  },
+  "Q41608": {
+   "violent": 0,
+   "name": "Konstantinos VII",
+   "disputed": 1
+  },
+  "Q41646": {
+   "violent": 0,
+   "name": "Romanos I Lekapenos"
+  },
+  "Q41833": {
+   "violent": 0,
+   "name": "Basil II"
+  },
+  "Q41663": {
+   "violent": 0,
+   "name": "Konstantinos VIII"
+  },
+  "Q41654": {
+   "violent": 0,
+   "name": "Michael IV the Paphlagonian"
+  },
+  "Q41838": {
+   "violent": 1,
+   "name": "Michael V Kalaphates"
+  },
+  "Q41659": {
+   "violent": 0,
+   "name": "Zoe Porphyrogenita"
+  },
+  "Q41666": {
+   "violent": 0,
+   "name": "Theodora Porphyrogenita"
+  },
+  "Q41681": {
+   "violent": 0,
+   "name": "Michael VI Bringas"
+  },
+  "Q41643": {
+   "violent": 0,
+   "name": "Isaac I Komnenos"
+  },
+  "Q41660": {
+   "violent": 0,
+   "name": "Konstantinos X Doukas"
+  },
+  "Q210564": {
+   "violent": 0,
+   "name": "Michael VII Doukas"
+  },
+  "Q41834": {
+   "violent": 1,
+   "name": "Romanos IV Diogenes"
+  },
+  "Q41689": {
+   "violent": 0,
+   "name": "Nikephoros III Botaneiates"
+  },
+  "Q41610": {
+   "violent": 0,
+   "name": "Manuel I Komnenos"
+  },
+  "Q37135": {
+   "violent": 0,
+   "name": "Isaac II Angelos",
+   "disputed": 1
+  },
+  "Q37065": {
+   "violent": 0,
+   "name": "Alexios III Angelos"
+  },
+  "Q37069": {
+   "violent": 1,
+   "name": "Alexios IV Angelos"
+  },
+  "Q37092": {
+   "violent": 0,
+   "name": "Konstantinos Laskaris",
+   "disputed": 1
+  },
+  "Q37076": {
+   "violent": 1,
+   "name": "Alexios V Doukas"
+  },
+  "Q37086": {
+   "violent": 0,
+   "name": "Theodore I Laskaris"
+  },
+  "Q37072": {
+   "violent": 0,
+   "name": "John III Doukas Vatatzes"
+  },
+  "Q37082": {
+   "violent": 0,
+   "name": "Theodore II Laskaris"
+  },
+  "Q37088": {
+   "violent": 0,
+   "name": "John IV Laskaris"
+  },
+  "Q200033": {
+   "violent": 0,
+   "name": "Michael VIII Palaiologos"
+  },
+  "Q37067": {
+   "violent": 0,
+   "name": "Andronikos II Palaiologos"
+  },
+  "Q37063": {
+   "violent": 0,
+   "name": "Andronikos III Palaiologos"
+  },
+  "Q37084": {
+   "violent": 0,
+   "name": "John VI Kantakouzenos"
+  },
+  "Q37078": {
+   "violent": 0,
+   "name": "Andronikos IV Palaiologos"
+  },
+  "Q37074": {
+   "violent": 0,
+   "name": "John VII Palaiologos"
+  },
+  "Q37097": {
+   "violent": 0,
+   "name": "Manuel II Palaiologos"
+  },
+  "Q37062": {
+   "violent": 0,
+   "name": "John VIII Palaiologos"
+  }
+ }
+}

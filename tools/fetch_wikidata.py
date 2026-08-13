@@ -28,8 +28,13 @@ OUT = pathlib.Path(__file__).resolve().parent.parent / "data"
 # position QID → 该职位对应的君主名册
 # end_year：政体终结之年。Wikidata 的 P39 名册把「王朝覆灭后的家族名誉族长」也算作在位
 # （奥斯曼多出 1973–1983 两位），须按此裁掉，否则名册与传世谱系对不上。
+# start_year：早于此年即位者剔除。日本传统皇统上溯神武天皇（前 660 年），
+# 前二十余代年代属传说，若照收会把「在位八十年、享年百余岁」的神话数据混进统计。
+# 取继体天皇（507）为界，是史学界公认「纪年可信」的起点。
 REALMS = {
-    "ottoman": {"pos": "Q15315411", "name": "奥斯曼", "end_year": 1922},
+    "ottoman":   {"pos": "Q15315411", "name": "奥斯曼", "end_year": 1922},
+    "byzantine": {"pos": "Q18577504", "name": "拜占庭", "end_year": 1453},
+    "japan":     {"pos": "Q208233",   "name": "日本",   "start_year": 507, "end_year": 1912},
 }
 
 # 取到值节点以读出时间精度：9=年 10=月 11=日。
@@ -119,16 +124,17 @@ def fetch(realm_key):
     for rec in people.values():
         rec["reigns"].sort(key=lambda s: s[0] or "")
 
-    # 策展：裁掉政体终结之后才「即位」的名誉族长
-    cutoff = cfg.get("end_year")
+    # 策展：裁掉政体存续期之外者（覆灭后的名誉族长、传说时代的君主）
+    lo, hi = cfg.get("start_year"), cfg.get("end_year")
     dropped = []
-    if cutoff:
-        for qid, rec in list(people.items()):
-            first = (rec["reigns"][0][0] or "9999").lstrip("-")
-            if int(first[:4]) > cutoff:
-                dropped.append(rec["name_en"]); people.pop(qid)
-        if dropped:
-            print(f"  按 end_year={cutoff} 裁去 {len(dropped)} 位：{', '.join(dropped)}", file=sys.stderr)
+    for qid, rec in list(people.items()):
+        raw = rec["reigns"][0][0] or "9999"
+        # 日期串形如 "337"/"337-05"/"337-05-12"，公元前带前导减号；不能按定长切片取年
+        yr0 = int(raw.lstrip("-").split("-")[0]) * (-1 if raw.startswith("-") else 1)
+        if (hi is not None and yr0 > hi) or (lo is not None and yr0 < lo):
+            dropped.append(f"{rec['name_en']}({yr0})"); people.pop(qid)
+    if dropped:
+        print(f"  按 [{lo}, {hi}] 裁去 {len(dropped)} 位", file=sys.stderr)
 
     out = {
         "realm": cfg["name"],
@@ -137,7 +143,7 @@ def fetch(realm_key):
         "source": "Wikidata (CC0)",
         "fetched_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "note": "骨架数据；violent 一栏须人工判定，Wikidata 的死亡方式覆盖率仅约 40%",
-        "curation": {"end_year": cfg.get("end_year"), "dropped": dropped},
+        "curation": {"start_year": cfg.get("start_year"), "end_year": cfg.get("end_year"), "dropped": dropped},
         "rulers": list(people.values()),
     }
     # 零行多半是查询写错（如误用 psv: 抓限定词），而不是「这个名册真的没人」。

@@ -17,13 +17,16 @@ export function civRows(chineseList) {
   for (const e of chineseList) {
     const acc = e.reigns[0].s;
     if (!acc) continue;
+    const end = e.reignEnd ? e.reignEnd.t : null;
+    const death = e.death ? e.death.t : null;
     rows.push({
       realm: '中国', name: e.temple, sub: e.dynasty,
-      acc: acc.t,
-      end: e.reignEnd ? e.reignEnd.t : null,
-      death: e.death ? e.death.t : null,
+      acc: acc.t, end, death,
       birth: e.birth ? e.birth.t : null,
-      violent: e.violent, deposed: e.deposed, ref: null,
+      violent: e.violent,
+      // 与其余文明同口径：王位终于身死之前即为「生前失位」，不问自愿与否
+      lost: (end !== null && death !== null && death - end > 0.02) ? 1 : 0,
+      ref: null,
     });
   }
 
@@ -33,14 +36,15 @@ export function civRows(chineseList) {
     rows.push({
       realm: r.realm, name: r.name, sub: null,
       acc, end: yr(r.end), death: yr(r.death), birth: yr(r.birth),
-      violent: r.violent, deposed: r.deposed,
+      violent: r.violent, lost: r.lost,
       ref: `https://www.wikidata.org/wiki/${r.qid}`,
     });
   }
   return rows;
 }
 
-export const REALMS = ['中国', '奥斯曼'];
+// 顺序即叙事顺序：本库主角在前，其余按「暴力—失位」谱系排开
+export const REALMS = ['中国', '拜占庭', '奥斯曼', '日本'];
 
 /** 登基后生存：自即位随访至死亡，与本项目主分析同口径（不在退位处删失） */
 export function reignSurvival(rows) {
