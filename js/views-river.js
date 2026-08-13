@@ -32,7 +32,7 @@
 //      与「安全起滑区」。触屏没有悬停，点中君主即高亮、详情进底部固定卡片。
 import { el, h, linear, hoverable, legend, tableView, notes, fmtYearAxis, fmt1, textWidth } from './charts.js';
 import { DYN_STATS } from './data.js';
-import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORTHODOX, SECONDARY } from './dynasties.js';
+import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP } from './dynasties.js';
 import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName } from './views-lanes.js';
 
@@ -54,21 +54,46 @@ function lineageRoot(key) {
 }
 
 /**
+ * 谱系家长：tier-2 政权沿「排序改判 → 法统相承 → 裂土分出」逐级上溯，
+ * 直到父级是正统／北方主线（不再进堆）或无父可寻，返回最后一个 tier-2 祖先。
+ * 于是冉魏归后赵、后赵归汉赵，赵家（汉赵→后赵→冉魏→前秦→后秦→胡夏）连成
+ * 一个相邻块，家族内按各自起年排——初版让无 SUCCESSION 者自成一根，
+ * 冉魏（350 年立）被排到最右，横插进十六国中央，整片河面为它挪位。
+ */
+function familyHead(key, orth, sec) {
+  let k = key;
+  const seen = new Set();
+  while (!seen.has(k)) {
+    seen.add(k);
+    const p = ORDER_HINT[k] || SUCCESSION[k] || SPRANG_FROM[k];
+    if (!p || !DYN_MAP.has(p) || orth.has(p) || sec.has(p)) return k;
+    k = p;
+  }
+  return k;
+}
+
+/**
  * 全局总序。返回的比较键在整张图中固定不变，这正是「河道不交叉」的保证：
  * 两个政权只要共存，左右关系在每一段里都一样。
+ * 正统与北方主线沿用法统链；其余政权按谱系家长归堆（见 familyHead）。
  */
 function orderKeys(bands) {
   const orth = new Set(ORTHODOX), sec = new Set(SECONDARY);
-  const rootStart = new Map();
+  const bandOf = new Map(bands.map((b) => [b.d.key, b]));
+  const groupKey = new Map();
+  const groupStart = new Map();
   for (const b of bands) {
-    const r = lineageRoot(b.d.key);
-    const rb = bands.find((x) => x.d.key === r);
-    rootStart.set(b.d.key, rb ? rb.s : b.s);
+    const t = orth.has(b.d.key) ? 0 : sec.has(b.d.key) ? 1 : 2;
+    const g = t === 2 ? familyHead(b.d.key, orth, sec) : lineageRoot(b.d.key);
+    groupKey.set(b.d.key, g);
+    const gb = bandOf.get(g);
+    groupStart.set(b.d.key, gb ? gb.s : (DYN_MAP.get(g) ? DYN_MAP.get(g).s : b.s));
   }
   const tier = (b) => (orth.has(b.d.key) ? 0 : sec.has(b.d.key) ? 1 : 2);
   return bands.slice().sort((a, b) =>
     tier(a) - tier(b)
-    || rootStart.get(a.d.key) - rootStart.get(b.d.key)
+    || groupStart.get(a.d.key) - groupStart.get(b.d.key)
+    || groupKey.get(a.d.key).localeCompare(groupKey.get(b.d.key))
     || a.s - b.s
     || a.d.key.localeCompare(b.d.key));
 }
@@ -286,7 +311,13 @@ function polyPath(samples, y, inset = 0) {
 // ── 主渲染 ───────────────────────────────────────────────────────────────
 export function renderRiver(host, list, opts) {
   host.innerHTML = '';
-  const bands = buildBands(list);
+  // 槽位只从首位君主**实际在位**起算。buildBands 的带首含称帝前掌权期（泳道的
+  // 半高段需要它），照搬到河流会让孙权自 200 年就占满一个槽——东汉最后二十年被
+  // 挤出满宽、曹魏蜀汉的分叉凭空悬置。掌权期本就不计入任何统计，也不该占河面。
+  const bands = buildBands(list).map((b) => {
+    const s2 = Math.min(...b.segs.map((g) => g.s));
+    return s2 > b.s ? { ...b, s: s2 } : b;
+  });
   if (!bands.length) { host.appendChild(h('p', { class: 'muted', text: '当前筛选无数据。' })); return; }
 
   const pxYear = opts.riverPx || 7;
@@ -565,6 +596,12 @@ export function renderRiver(host, list, opts) {
     `河宽**不编码疆域或人口**——本库没有这两项数据，若让分叉的宽窄去表示「谁更大」，`
     + `那是在画我们并不掌握的东西。故河宽恒定、按政权数均分，唯一的视觉变量「分叉数」`
     + `正好等于那一刻并存的政权数。代价是三年的割据小国与盛唐同宽，真实规模见点按详情与数据表。`,
+    `**左右次序按谱系归堆**：正统序列与北方主线各按法统连线，其余政权沿`
+    + `「排序改判 → 法统相承 → 裂土分出」上溯到谱系家长归堆——赵家`
+    + `（汉赵→后赵→冉魏→前秦→后秦→胡夏）、燕家、凉家各自连成相邻块，`
+    + `家族内按起年排。个别政权疆土与血统不一致（西燕裂自前秦而血统属燕），`
+    + `由 dynasties.js 的 ORDER_HINT 手工改判。`
+    + `称帝前掌权期不占槽位：孙权 200 年已掌江东，但吴的河道自其首位皇帝在位起才张开。`,
     `河道之间**永不交叉**：左右次序由一个全局排序键决定（正统序列 → 北方主线 → 其余，`
     + `同一法统按其源头的起始年归堆），因此任意两个政权只要共存，次序在每一段里都相同。`
     + `政权消失时右邻左移即为「合流」，新政权插入时右邻右让即为「分叉」——`
