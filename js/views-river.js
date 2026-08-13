@@ -101,12 +101,16 @@ function layoutChannels(bands, x0, x1, pxYear) {
   const slices = [];
   for (const r of raw) {
     if (!r.n) { slices.push({ a: r.a, z: r.z, live: [], n: 0, cap: 0, at: new Map() }); continue; }
-    const cap = r.n <= 2 ? r.n
+    // 豁免只留 n=1：大一统满河是不可让的语法。此前 n≤2 也豁免，结果金一亡
+    // 南宋与元立刻胀成两半——河流「骤然增流」却没有任何属于它自己的事件。
+    // 收紧后，对峙双雄只在窗口内确无第三者时才自然分得半河（容量本身=2），
+    // 统一时刻（280/589/1279…）成为全图唯一的满幅暴涨——涨在该涨的地方。
+    const cap = r.n === 1 ? 1
       : Math.max(...raw.filter((o) => o.z >= r.mid - Wyr && o.a <= r.mid + Wyr).map((o) => o.n));
     const g0 = gapFor(x1 - x0);
     const at = new Map();
     if (cap <= 2) {
-      // 满河语法：一统占满、对峙半分，无边缘留白
+      // 满河语法：一统占满；窗口内确无第三者的对峙半分。无边缘留白
       const w = ((x1 - x0) - (r.n - 1) * g0) / r.n;
       r.live.forEach((b, k) => at.set(b.d.key, [x0 + k * (w + g0), x0 + k * (w + g0) + w]));
     } else {
@@ -172,6 +176,7 @@ function bankStem(slice, rank, key, tgt) {
 function buildTransitions(slices, rank, pxYear, x0, x1) {
   const tau = TRANS_PX / pxYear;
   const trans = [];
+  const flows = [];
   for (let i = 1; i < slices.length; i++) {
     const A = slices[i - 1], B = slices[i];
     const c = B.a;
@@ -180,17 +185,27 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
     const from = new Map(A.at), to = new Map(B.at);
     for (const k of B.at.keys()) if (!from.has(k)) from.set(k, degenerate(A, rank, k, x0, x1));
     for (const k of A.at.keys()) if (!to.has(k)) to.set(k, degenerate(B, rank, k, x0, x1));
-    // 亡入／分出：有吞并者（母体）且其正好相邻时，细流改放到对方河岸上——
-    // 支流汇入干流、干流分出支流，取代消失在缝隙里的尖角
+    // 亡入／分出：吞并者（母体）相邻时，细流直接放到对方河岸上——支流汇入
+    // 干流、干流分出支流。中间隔着第三条河道时不能弯（河道永不交叉是硬约束），
+    // 改记一条「穿流带」：半透明的细带穿过去，压在途经河道的君主色块之下、
+    // 只在河床与缝隙间隐约可见，点选该政权时点亮——sankey 图的半透明 ribbon 同理
     for (const k of A.at.keys()) {
       if (B.at.has(k)) continue;
       const tgt = MERGED_INTO[k];
-      if (tgt && B.at.has(tgt)) { const st = bankStem(B, rank, k, tgt); if (st) to.set(k, st); }
+      if (tgt && B.at.has(tgt)) {
+        const st = bankStem(B, rank, k, tgt);
+        if (st) to.set(k, st);
+        else flows.push({ key: k, tgt, c, h: hb, stem: to.get(k), dir: 'merge' });
+      }
     }
     for (const k of B.at.keys()) {
       if (A.at.has(k)) continue;
       const src = SPRANG_FROM[k];
-      if (src && A.at.has(src)) { const st = bankStem(A, rank, k, src); if (st) from.set(k, st); }
+      if (src && A.at.has(src)) {
+        const st = bankStem(A, rank, k, src);
+        if (st) from.set(k, st);
+        else flows.push({ key: k, tgt: src, c, h: ha, stem: from.get(k), dir: 'spring' });
+      }
     }
     // 法统相承且在同一切点交棒者（汉→新、唐→后梁…），前后两河共用一个「颈缩」盒：
     // 前朝收进它、新朝从它张开，于是交替处是一段变色的窄颈，而不是两个背对背的尖——
@@ -202,14 +217,17 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
       if (!xk || !dying.includes(xk)) continue;
       const XA = A.at.get(xk), YB = B.at.get(yk);
       const cx = ((XA[0] + XA[1]) / 2 + (YB[0] + YB[1]) / 2) / 2;
-      const w = Math.max(2 * STEM, Math.min(Math.min(XA[1] - XA[0], YB[1] - YB[0]) * 0.2, 24));
+      // 颈宽取六成而非两成：同切点的禅让（汉→新、宋→齐、五代五朝…）本是同一
+      // 政权换了家姓，深掐成细颈会把「延续」错画成「崩解」。真正的崩解式收束
+      // 属于有空窗的更迭（秦亡至汉兴隔着楚汉之争），那由细流＋空档自然呈现
+      const w = Math.max(2 * STEM, Math.min(XA[1] - XA[0], YB[1] - YB[0]) * 0.6);
       const waist = [cx - w / 2, cx + w / 2];
       to.set(xk, waist);
       from.set(yk, waist);
     }
     trans.push({ c, ha, hb, from, to });
   }
-  return trans;
+  return { trans, flows };
 }
 
 const smoothstep = (u) => u * u * (3 - 2 * u);
@@ -286,7 +304,10 @@ export function renderRiver(host, list, opts) {
   const tau = TRANS_PX / pxYear;
 
   const { slices, ordered, rank } = layoutChannels(bands, RX0, RX1, pxYear);
-  const trans = buildTransitions(slices, rank, pxYear, RX0, RX1);
+  const { trans, flows } = buildTransitions(slices, rank, pxYear, RX0, RX1);
+  window.__RIVER__ = { slices, trans, flows, rank };   // 调试钩子：布局自检用
+  const flowsBy = new Map();
+  for (const f of flows) { if (!flowsBy.has(f.key)) flowsBy.set(f.key, []); flowsBy.get(f.key).push(f); }
   const edge = (key, t) => edgeAt(key, t, slices, trans);
   const sample = (key, ta, tb) => sampleEdges(key, ta, tb, slices, trans);
 
@@ -335,6 +356,33 @@ export function renderRiver(host, list, opts) {
       ...(b.d.note ? [b.d.note] : []),
     ], () => b.d.name);
     gBeds.appendChild(bed);
+
+    // 穿流带：亡入（或分出）对象不相邻时的半透明细带。画在河床层，
+    // 于是途经河道的君主色块天然盖在它上面——主河在上，穿流只在底色间可见
+    for (const f of (flowsBy.get(b.d.key) || [])) {
+      const RIB = 84 / pxYear;                       // 带长（年）
+      const sx = (f.stem[0] + f.stem[1]) / 2;
+      const tv = f.dir === 'merge' ? f.c + f.h + RIB : f.c - f.h - RIB;
+      const tb = edge(f.tgt, tv) || edge(f.tgt, f.c + (f.dir === 'merge' ? f.h : -f.h)) || edge(f.tgt, f.c);
+      if (!tb) continue;
+      const bx = sx < (tb[0] + tb[1]) / 2 ? tb[0] + STEM : tb[1] - STEM;
+      const [ya, yb2] = f.dir === 'merge'
+        ? [y(f.c + f.h), y(Math.min(tv, t1))]
+        : [y(Math.max(tv, t0)), y(f.c - f.h)];
+      const [xa, xb2] = f.dir === 'merge' ? [sx, bx] : [bx, sx];
+      const my = (ya + yb2) / 2;
+      const d = `M${(xa - STEM).toFixed(1)},${ya.toFixed(1)}`
+        + `C${(xa - STEM).toFixed(1)},${my.toFixed(1)} ${(xb2 - STEM).toFixed(1)},${my.toFixed(1)} ${(xb2 - STEM).toFixed(1)},${yb2.toFixed(1)}`
+        + `L${(xb2 + STEM).toFixed(1)},${yb2.toFixed(1)}`
+        + `C${(xb2 + STEM).toFixed(1)},${my.toFixed(1)} ${(xa + STEM).toFixed(1)},${my.toFixed(1)} ${(xa + STEM).toFixed(1)},${ya.toFixed(1)}Z`;
+      const rib = el('path', { d, fill: col, opacity: .22, class: 'mark river-flow', 'data-dyn': b.d.key });
+      hoverable(rib, () => [
+        f.dir === 'merge'
+          ? `${b.d.name}亡入${(bands.find((x) => x.d.key === f.tgt) || { d: { name: f.tgt } }).d.name}（${fmtYearAxis(f.c)}）——中间隔着别的河道，故以穿流带示意，点选可点亮。`
+          : `${b.d.name}裂出自${(bands.find((x) => x.d.key === f.tgt) || { d: { name: f.tgt } }).d.name}（${fmtYearAxis(f.c)}）——中间隔着别的河道，故以穿流带示意，点选可点亮。`,
+      ], () => (f.dir === 'merge' ? '亡入' : '分出'));
+      gBeds.appendChild(rib);
+    }
 
     // 称帝前掌权期：贴河道左缘的窄条。不是正式在位期，视觉上必须与君主段可区分
     for (const g of b.preRule) {
@@ -427,16 +475,26 @@ export function renderRiver(host, list, opts) {
   const card = h('div', { class: 'river-card' });
   document.body.appendChild(card);
   let selected = null;
+  let litEls = [];
   const clearSel = () => {
     selected = null;
     card.classList.remove('on');
     for (const n of empNodes) n.node.classList.remove('dim', 'sel');
+    for (const e2 of litEls) e2.setAttribute('opacity', e2.dataset.o0);
+    litEls = [];
   };
   const select = (item) => {
     selected = item;
     for (const n of empNodes) {
       n.node.classList.toggle('dim', n !== item);
       n.node.classList.toggle('sel', n === item);
+    }
+    // 点亮该政权的河床与穿流带：被压在君主色块下的汇流去向由此显形
+    for (const e2 of litEls) e2.setAttribute('opacity', e2.dataset.o0);
+    litEls = [...svg.querySelectorAll(`path[data-dyn="${item.band.d.key}"]`)];
+    for (const e2 of litEls) {
+      e2.dataset.o0 = e2.getAttribute('opacity');
+      e2.setAttribute('opacity', e2.classList.contains('river-flow') ? '0.55' : '0.34');
     }
     card.innerHTML = '';
     card.appendChild(h('div', { class: 'rc-title' }, [
@@ -523,8 +581,10 @@ export function renderRiver(host, list, opts) {
     + `都是已知的史实（见 dynasties.js 的 MERGED_INTO / SPRANG_FROM 及逐条依据）。`
     + `河道收束时弯向吞并者的河岸并没入其下（陈并于隋、北齐亡于北周、南宋亡于元…），`
     + `新河道的细流自母体的河岸涌出（清起于叛明的后金、金起于叛辽的完颜部…）。`
-    + `吞并者与亡者之间隔着第三条河道时不弯——河道永不交叉是硬约束，此时退回缝隙细流。`
-    + `禅让式的法统相承另有画法（变色窄颈），两者都成立时窄颈优先。`,
+    + `吞并者与亡者之间隔着第三条河道时不弯——河道永不交叉是硬约束，此时改画一条`
+    + `半透明的**穿流带**：压在途经河道的君主色块之下、只在底色间隐约可见，`
+    + `点选该政权即点亮（sankey 图的半透明 ribbon 同理）。`
+    + `禅让式的法统相承另有画法（变色微腰），两者都成立时微腰优先。`,
     `**改道摊开成长弯，交替处不断流**：每次政权更替的河宽重分摊在一段约 ±${TRANS_PX}px 的`
     + `过渡区里（不超过邻段一半，以免过渡区互相穿透），用 smoothstep 缓动。新河道自一线细流张开、`
     + `亡者收束成细流而**不掐断成零宽的尖**（d3-sankey 的 linkMinWidth 同理）；`
