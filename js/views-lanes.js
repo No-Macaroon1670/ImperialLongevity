@@ -48,10 +48,10 @@ export function dynastyColorSlots() {
   COLOR_CACHE = slot;
   return slot;
 }
-const slotVar = (s) => (s < 0 ? OTHER_VAR : SLOT_VARS[s]);
+export const slotVar = (s) => (s < 0 ? OTHER_VAR : SLOT_VARS[s]);
 
 // 读出当前主题下解析后的真实色值，用于判断段内文字该用白还是墨色
-function resolveInk(host) {
+export function resolveInk(host) {
   const probe = document.createElement('span');
   probe.style.display = 'none';
   host.appendChild(probe);
@@ -77,12 +77,52 @@ const textW = (s, fs) => [...s].reduce((a, c) => a + (/[一-鿿＀-￯（）]/.t
  * 先去掉括注（「元太祖（成吉思汗）」→「元太祖」），再剥掉与朝代重复的前缀；
  * 朝代全名对不上时退一步剥其末字，使「东汉·汉光武帝」在带内只写「光武帝」。
  */
-function shortName(e) {
+export function shortName(e) {
   const t = e.temple.replace(/（[^）]*）$/, '');
   const tail = e.dynasty.slice(-1);
   const stripped = t.startsWith(e.dynasty) ? t.slice(e.dynasty.length)
     : (t.length > 2 && t.startsWith(tail)) ? t.slice(1) : t;
   return stripped || t;
+}
+
+/**
+ * 把筛选后的皇帝名单组装成「朝代带」——横向泳道与竖向河流两个视图共用同一套口径。
+ *
+ * 带的跨度由「实际有君主在位（含称帝前掌权期）」决定，不回退到朝代元数据的年份：
+ * 元数据只精确到年，曹魏记作「220」即 220 年 1 月，而汉献帝实际禅位在 220 年 11 月；
+ * 若以元数据取值，两朝会凭空重叠十一个月，接续关系便无法落在同一条泳道／河道上。
+ * 头尾若真有一年以上无主，由「空档审计」一节单独列出，不靠底带掩盖。
+ */
+export function buildBands(list) {
+  const bands = [];
+  for (const d of DYNASTIES) {
+    const emps = list.filter((e) => e.dynKey === d.key);
+    if (!emps.length) continue;
+    const segs = [];
+    const preRule = [];
+    for (const e of emps) {
+      for (const rg of e.reigns) {
+        const s = rg.s, en = rg.e || e.death || e.censor;
+        if (!s || !en) continue;
+        segs.push({ e, s: s.t, x: Math.max(en.t, s.t + 0.08) });
+      }
+      // 称帝前已实际掌握该政权最高权力的一段（石勒 319 称赵王、330 才称帝；
+      // 忽必烈 1260 即汗位、1271 才建国号元）。不画出来，带首就会凭空空一大截，
+      // 看上去像缺数据。以半高／半宽浅段区别于正式在位期。
+      const first = e.reigns[0].s;
+      if (e.accRule && first && first.t - e.accRule.t > 0.9) {
+        preRule.push({ e, s: e.accRule.t, x: first.t });
+      }
+    }
+    if (!segs.length) continue;
+    segs.sort((a, b) => a.s - b.s);
+    for (const g of segs) { g.ds = g.s; g.dx = g.x; }   // ds/dx＝绘图坐标，s/x 始终保留真实日期
+    const s = Math.min(...segs.map((g) => g.s), ...preRule.map((g) => g.s));
+    const e2 = Math.max(...segs.map((g) => g.x));
+    bands.push({ d, s, e: e2, segs, preRule, n: emps.length });
+  }
+  bands.sort((a, b) => a.s - b.s || a.e - b.e);
+  return bands;
 }
 
 // ── 主渲染 ───────────────────────────────────────────────────────────────
@@ -98,39 +138,8 @@ export function renderLaneTimeline(host, list, opts) {
   const LABEL_FS = 12.5, SEG_FS = 10;
 
   // 1) 组装朝代带
-  const bands = [];
-  for (const d of DYNASTIES) {
-    const emps = list.filter((e) => e.dynKey === d.key);
-    if (!emps.length) continue;
-    const segs = [];
-    const preRule = [];
-    for (const e of emps) {
-      for (const rg of e.reigns) {
-        const s = rg.s, en = rg.e || e.death || e.censor;
-        if (!s || !en) continue;
-        segs.push({ e, s: s.t, x: Math.max(en.t, s.t + 0.08) });
-      }
-      // 称帝前已实际掌握该政权最高权力的一段（石勒 319 称赵王、330 才称帝；
-      // 忽必烈 1260 即汗位、1271 才建国号元）。不画出来，带首就会凭空空一大截，
-      // 看上去像缺数据。以半高虚段区别于正式在位期。
-      const first = e.reigns[0].s;
-      if (e.accRule && first && first.t - e.accRule.t > 0.9) {
-        preRule.push({ e, s: e.accRule.t, x: first.t });
-      }
-    }
-    if (!segs.length) continue;
-    segs.sort((a, b) => a.s - b.s);
-    for (const g of segs) { g.ds = g.s; g.dx = g.x; }   // ds/dx＝绘图坐标，s/x 始终保留真实日期
-    // 带的跨度由「实际有君主在位（含称帝前掌权期）」决定，不回退到朝代元数据的年份。
-    // 元数据只精确到年：曹魏记作「220」即 220 年 1 月，而汉献帝实际禅位在 220 年 11 月，
-    // 若以元数据取值，两朝会凭空重叠十一个月，接续关系便无法落在同一条泳道上。
-    // 头尾若真有一年以上无主，空档审计一节会单独列出，不靠这里的底带掩盖。
-    const s = Math.min(...segs.map((g) => g.s), ...preRule.map((g) => g.s));
-    const e2 = Math.max(...segs.map((g) => g.x));
-    bands.push({ d, s, e: e2, segs, preRule, n: emps.length });
-  }
+  const bands = buildBands(list);
   if (!bands.length) { host.appendChild(h('p', { class: 'muted', text: '当前筛选无数据。' })); return; }
-  bands.sort((a, b) => a.s - b.s || a.e - b.e);
 
   // 2) 泳道装箱。带的横向足迹取「带宽」与「名称宽度」的较大者，
   //    因此带首的名称永远不会压到上一条政权的尾部。

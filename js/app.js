@@ -5,6 +5,7 @@ import { ERAS } from './dynasties.js';
 import { describe, fmtP } from './stats.js';
 import { renderTimeline, renderHistoryScatter, renderHeatmap } from './views-time.js';
 import { renderLaneTimeline } from './views-lanes.js';
+import { renderRiver } from './views-river.js';
 import { renderKM, renderCIF, renderCox } from './views-survival.js';
 import { renderBox, renderDSI, renderHypotheses, renderDatabase, renderAudit } from './views-compare.js';
 import { renderCiv } from './views-civ.js';
@@ -21,6 +22,10 @@ const S = {
   yearFrom: null, yearTo: null,
 
   timelineMode: 'dual', timelineSort: 'birth',
+  // 全景视图的两种读法：竖向河流（顺着页面滚，看分裂的形状）与横向泳道（看谁在何时统治）。
+  // 默认按屏宽选：手机竖屏顺着拇指的方向读河流；宽屏一屏并列看得到更多政权，泳道更强。
+  panoramaMode: matchMedia('(max-width: 720px)').matches ? 'river' : 'lanes',
+  riverPx: 7,
   lanePx: 10, laneColor: 'dynasty', laneViolent: true,
   scatterX: 'birth',
   kmGroup: 'unified', kmScale: 'reign', kmCensorAbd: true, kmCI: true, kmFromAge: 15,
@@ -179,14 +184,24 @@ const SECTIONS = [
   {
     // 全景图放在最前：先建立「谁在什么时候统治、天下有多分裂」的历史坐标，
     // 后面的生存曲线与回归才有可解读的背景。
-    id: 'panorama', title: '王朝全景：横向泳道时间轴',
-    desc: '把朝代做成横向长带、皇帝做成带内分段，横向滚动即为时间流逝。泳道可回收——某朝终结后该行即被后来的政权接管，于是同一时刻占用的行数就是当时并存的政权数：大一统年代只有一两行有色块，五代十国、十六国则行行占满。第一行为正统序列专用，第二行是与之并行的北方政权主线。',
+    id: 'panorama', title: '王朝全景：分裂的形状',
+    desc: '同一份数据的两种读法。竖向河流：时间自上而下流，河宽恒定、按当时并存的政权数均分——一股是天下一统，数股是分裂割据，重新统一时几股再合为一体；它顺着页面滚动，不套滚动容器。横向泳道：朝代做成横向长带、皇帝做成带内分段，泳道可回收，第一行为正统序列专用、第二行是与之并行的北方政权主线。',
     controls: [
-      sel('lanePx', '时间缩放', [[10, '标准 10 px/年'], [6, '紧凑 6 px/年'], [14, '舒展 14 px/年']]),
+      sel('panoramaMode', '视图', [['river', '竖向河流'], ['lanes', '横向泳道']]),
+      sel('riverPx', '时间缩放', [[7, '标准 7 px/年'], [4, '紧凑 4 px/年'], [11, '舒展 11 px/年']],
+        (st) => st.panoramaMode === 'river'),
+      sel('lanePx', '时间缩放', [[10, '标准 10 px/年'], [6, '紧凑 6 px/年'], [14, '舒展 14 px/年']],
+        (st) => st.panoramaMode !== 'river'),
       sel('laneColor', '配色', [['dynasty', '按具体朝代'], ['unified', '按大一统 / 分裂']]),
       tog('laneViolent', '标记非正常死亡'),
     ],
-    render: renderLaneTimeline,
+    render: (host, l, o) => {
+      // 切换视图时先撤掉河流留在 body 上的固定卡片，否则它会挂在泳道图上
+      if (host.__riverCleanup) { host.__riverCleanup(); host.__riverCleanup = null; }
+      const river = o.panoramaMode === 'river';
+      host.classList.toggle('full-bleed', river);
+      (river ? renderRiver : renderLaneTimeline)(host, l, o);
+    },
   },
   {
     id: 'timeline', title: '时间轴：每位皇帝的寿命与统治期',
@@ -354,29 +369,45 @@ function renderHero(host, list) {
   }
 }
 
-// ── 跳到下一节 ───────────────────────────────────────────────────────────
+// ── 上下节导航条 ─────────────────────────────────────────────────────────
 /**
- * 窄屏上的「跳过本节」浮动按钮。
+ * 窄屏上的顶／底两条固定条。它们身兼二职：
  *
- * 手机一屏只有 812px，而跨文明比较一节 2.8 屏、H1–H5 2.4 屏——读者若对当前一节
- * 不感兴趣，只能一路划过去。目录能跳，但要先滑回页首才够得着。
+ *   1. **上下节跳转。** 手机一屏只有 812px，而竖向河流整节上万像素、跨文明比较 2.8 屏。
+ *      读者若对当前一节不感兴趣，不该只能一路划过去；目录能跳，但要先滑回页首才够得着。
+ *   2. **保证能起滑的安全区。** 河流铺满整屏，屏上到处都是可点的君主段，
+ *      手指没有一处「一定不会点中什么」的地方可落。这两条固定区就是那块地方——
+ *      除箭头外一律留空，不放任何其他功能，正是为了让它们始终可以安全地起滑。
  *
- * 只在「本节确实长（>1.5 屏）且还剩不止一屏没读」时出现：否则它就是块常驻的挡板。
- * 不出现的时候连 DOM 都在，但 display:none——按钮文案要随目标节变化，
- * 每次重建反而更贵。
+ * 只在「本节超过 1.5 屏、且还剩不止一屏没读」时出现，否则就是两块常驻挡板。
+ * 首节没有「上一节」，此时上行退回页首。
  */
-function setupSectionSkip() {
-  const btn = h('button', { class: 'skip-next', type: 'button' });
-  document.body.appendChild(btn);
+function setupSectionNav() {
+  const mk = (cls) => {
+    const btn = h('button', { class: 'sn-btn', type: 'button' });
+    const bar = h('div', { class: `sec-nav ${cls}` }, [btn]);
+    document.body.appendChild(bar);
+    return { bar, btn, label: null };
+  };
+  const up = mk('up'), down = mk('down');
   const ids = SECTIONS.map((s) => s.id);
-  let raf = null, shownFor = null;
-
   const narrow = matchMedia('(max-width: 720px)');
+  let raf = null;
+
+  const set = (o, text, go) => {
+    if (o.label !== text) { o.label = text; o.btn.textContent = text; o.btn.onclick = go; }
+    o.bar.classList.add('on');
+  };
+  const hide = (o) => { o.bar.classList.remove('on'); o.label = null; };
+  const jump = (id) => () => (id
+    ? document.getElementById(id).scrollIntoView({ block: 'start' })
+    : scrollTo({ top: 0, behavior: 'smooth' }));
+
   const update = () => {
     raf = null;
     // 宽屏直接退出：这个判定要对每一节做 getBoundingClientRect，
     // 挂在滚动上逐帧跑会白白引发布局计算，而按钮在宽屏本来就被 CSS 隐藏
-    if (!narrow.matches) { btn.classList.remove('on'); shownFor = null; return; }
+    if (!narrow.matches) { hide(up); hide(down); return; }
     const vh = window.innerHeight;
     let idx = -1;
     // 「当前这一节」＝跨过视口中线的那一节，比用 top 判断稳定得多
@@ -384,16 +415,16 @@ function setupSectionSkip() {
       const r = document.getElementById(ids[i]).getBoundingClientRect();
       if (r.top < vh * 0.5 && r.bottom > vh * 0.5) { idx = i; break; }
     }
-    const next = idx >= 0 ? ids[idx + 1] : null;
     const r = idx >= 0 ? document.getElementById(ids[idx]).getBoundingClientRect() : null;
-    const worth = next && r && r.height > vh * 1.5 && r.bottom > vh * 1.4;
-    if (!worth) { btn.classList.remove('on'); shownFor = null; return; }
-    if (shownFor !== next) {
-      shownFor = next;
-      btn.textContent = `跳过本节 · ${SECTIONS[idx + 1].title.split('：')[0]} ↓`;
-      btn.onclick = () => document.getElementById(next).scrollIntoView({ block: 'start' });
-    }
-    btn.classList.add('on');
+    if (!r || r.height <= vh * 1.5) { hide(up); hide(down); return; }
+
+    const short = (i) => SECTIONS[i].title.split('：')[0];
+    if (r.top < -vh * 0.4) {
+      set(up, idx > 0 ? `↑ 上一节 · ${short(idx - 1)}` : '↑ 回到页首', jump(idx > 0 ? ids[idx - 1] : null));
+    } else hide(up);
+    if (idx + 1 < ids.length && r.bottom > vh * 1.4) {
+      set(down, `↓ 跳过本节 · ${short(idx + 1)}`, jump(ids[idx + 1]));
+    } else hide(down);
   };
   addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
   addEventListener('resize', update);
@@ -430,6 +461,10 @@ function render() {
 }
 
 function boot() {
+  // 全宽出血的安全宽度要在首次 render 之前写好：河流按 .chart-host 的实测宽度画布，
+  // 若此时 --vw-safe 还是 100vw 回退值（含滚动条宽度），首屏就会画宽 8px
+  document.documentElement.style
+    .setProperty('--vw-safe', `${document.documentElement.clientWidth}px`);
   const main = document.getElementById('sections');
   const toc = document.getElementById('toc');
   // 目录点击后收起筛选面板：面板是覆盖式浮层，不收起会正好盖住刚跳到的标题
@@ -451,8 +486,13 @@ function boot() {
   // 锚点让位高度跟着吸顶过滤器的真实高度走。展开的面板是绝对定位的浮层，
   // 不撑高 .filters，因此这个值在展开/收起之间保持恒定——正是要的效果。
   const filters = document.getElementById('filters');
-  const syncFiltersH = () => document.documentElement.style
-    .setProperty('--filters-h', `${Math.round(filters.getBoundingClientRect().height)}px`);
+  const syncFiltersH = () => {
+    document.documentElement.style
+      .setProperty('--filters-h', `${Math.round(filters.getBoundingClientRect().height)}px`);
+    // 全宽出血的安全宽度＝视口减竖向滚动条。100vw 含滚动条宽度，直接用会挤出横滚
+    document.documentElement.style
+      .setProperty('--vw-safe', `${document.documentElement.clientWidth}px`);
+  };
   new ResizeObserver(syncFiltersH).observe(filters);
   syncFiltersH();
 
@@ -466,7 +506,7 @@ function boot() {
     if (e.key === 'Escape' && S.filtersOpen) { S.filtersOpen = false; render(); }
   });
 
-  const refreshSkip = setupSectionSkip();
+  const refreshNav = setupSectionNav();
 
   // 视口宽度变了要重绘：Frame 是按宿主实测宽度布局的，不重绘就停在旧尺寸。
   // 只认宽度——手机上地址栏伸缩会不停触发 resize，但那只改高度，不该重画整页。
@@ -475,7 +515,7 @@ function boot() {
     if (window.innerWidth === lastW) return;
     lastW = window.innerWidth;
     clearTimeout(rzTimer);
-    rzTimer = setTimeout(() => { render(); refreshSkip(); }, 180);
+    rzTimer = setTimeout(() => { render(); refreshNav(); }, 180);
   });
 
   // 主题切换

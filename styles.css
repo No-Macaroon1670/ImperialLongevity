@@ -270,8 +270,27 @@ footer.foot { border-top: 1px solid var(--border); margin-top: 40px; padding-top
 ul { margin: 0 0 .6em; padding-left: 1.15em; }
 li { margin-bottom: .35em; }
 
-/* 「跳过本节」浮动按钮：仅窄屏启用，宽屏一屏能看完大半节，不需要它 */
-.skip-next { display: none; }
+/* 上下节导航条：仅窄屏启用，宽屏一屏能看完大半节，不需要它 */
+.sec-nav { display: none; }
+
+/* ── 竖向河流 ─────────────────────────────────────────────────────────── */
+/* 全宽出血：河流是整页的主体，不该缩在卡片的内边距里。
+   出血宽度用 100dvw 仍含竖向滚动条的宽度，会挤出 8px 的页面级横滚——
+   故出血只做到「视口减滚动条」：JS 把 clientWidth 写进 --vw-safe，CSS 取用。 */
+.chart-host.full-bleed {
+  margin-left: calc(50% - var(--vw-safe, 100vw) / 2);
+  width: var(--vw-safe, 100vw);
+  overflow-x: hidden;
+}
+.river-wrap { position: relative; }
+.river-svg { display: block; width: 100%; height: auto; }
+/* 点选高亮：选中者留亮、余者压暗。用 CSS 类而非逐个改 fill，
+   免得切换主题或重绘时把原色弄丢 */
+.river-emp { transition: opacity .12s; cursor: pointer; }
+.river-emp.dim { opacity: .28; }
+.river-emp.sel { stroke: var(--text-1); stroke-width: 1.6; paint-order: stroke; }
+
+.river-card { display: none; }
 
 /* ── 窄屏 ───────────────────────────────────────────────────────────────
    改造前在 375×812 实测：过滤器条 422px（占屏 52%）且常驻吸顶、
@@ -344,14 +363,42 @@ li { margin-bottom: .35em; }
   .timeline-scroll { max-height: 460px; }
   .scroll-hint { margin: 0 0 4px; text-align: center; letter-spacing: .04em; }
 
-  .skip-next.on {
-    display: inline-flex; align-items: center; position: fixed; z-index: 60;
-    right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    max-width: calc(100vw - 24px); min-height: 40px; padding: 8px 14px;
+  /* 顶／底固定条：既是上下节跳转，也是「一定不会点中什么」的安全起滑区。
+     除箭头外一律留空——这不是没想好放什么，是刻意留白，见 setupSectionNav 注释。
+     touch-action: pan-y 明示这里的手势只用于竖向滚动。 */
+  .sec-nav.on {
+    display: flex; align-items: center; position: fixed; z-index: 55;
+    left: 0; right: 0; height: 40px; padding: 0 10px;
+    background: color-mix(in srgb, var(--page) 88%, transparent);
+    backdrop-filter: blur(6px);
+    touch-action: pan-y; pointer-events: auto;
+  }
+  .sec-nav.up { top: var(--filters-h, 45px); border-bottom: 1px solid var(--border); justify-content: flex-start; }
+  .sec-nav.down { bottom: 0; padding-bottom: env(safe-area-inset-bottom, 0px);
+    height: calc(40px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--border); justify-content: flex-end; }
+  .sn-btn {
+    max-width: 70%; min-height: 32px; padding: 6px 12px;
     border: 1px solid var(--border); border-radius: 999px;
     background: var(--surface-1); color: var(--text-2);
-    font: inherit; font-size: .8rem; cursor: pointer;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, .18);
+    font: inherit; font-size: .78rem; cursor: pointer;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
+
+  /* 选中君主后的固定信息卡：贴在底部导航条之上 */
+  .river-card.on {
+    display: block; position: fixed; z-index: 56;
+    left: 8px; right: 8px; bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+    padding: 10px 34px 10px 12px; border-radius: 10px;
+    background: var(--surface-1); border: 1px solid var(--border);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, .22);
+  }
+  .rc-title { display: flex; align-items: center; gap: 7px; font-weight: 640; font-size: .9rem; margin-bottom: 5px; }
+  .rc-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .rc-rows { display: flex; flex-wrap: wrap; gap: 3px 14px; font-size: .8rem; color: var(--text-2); }
+  .rc-row { display: inline-flex; gap: 5px; align-items: baseline; }
+  .rc-row b { color: var(--text-1); font-variant-numeric: tabular-nums; }
+  .rc-note { margin: 6px 0 0; }
+  .rc-close { position: absolute; top: 6px; right: 6px; width: 26px; height: 26px;
+    border: none; background: none; color: var(--muted); font-size: 1rem; cursor: pointer; }
 }
