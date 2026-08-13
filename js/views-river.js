@@ -16,15 +16,16 @@
 //      「正统序列 → 北方主线 → 其余」，同一法统按其源头的起始年归堆，
 //      于是前蜀与后蜀、西魏与北周相邻而非四散。
 //
-//   3. **改道是长弯，不是台阶。** 初版在每个政权起讫点瞬间重分河宽、只留 10px 圆角，
-//      整张图读起来像阶梯，密集期尽是毛刺。现按 alluvial diagram 的画法重做：
-//      每次改道摊开成一段 ±42px 的过渡区，用 smoothstep 缓动；新政权自楔尖张开、
-//      亡者收拢成尖，因此河面在政权建立**之前几年**就开始让位——分叉是预告出来的，
-//      这是排版的提前量，不是史实的提前（君主色块的起讫始终是真实日期）。
+//   3. **改道是长弯，交替处不断流。** 初版在每个政权起讫点瞬间重分河宽、只留 10px
+//      圆角，整张图读起来像阶梯，密集期尽是毛刺。现按 alluvial diagram 的画法重做：
+//      每次改道摊开成一段 ±TRANS_PX 的过渡区，用 smoothstep 缓动；新政权自一线细流
+//      张开、亡者收束成细流而不掐断成零宽的尖（d3-sankey 的 linkMinWidth 同理），
+//      法统相承者在交替处共用一段变色的窄颈。河面在政权建立**之前几年**就开始让位——
+//      细流是排版的预告，不是史实的提前（君主色块的起讫始终是真实日期）。
 //      所有河道共用同一过渡窗做同一插值，任一瞬间的布局仍是一个不重叠的分割。
 //
-//   4. **河道之间留缝。** 溪流靠底色间隔分开（5px），不靠描边——参照 alluvial
-//      诸例中溪流间的留白；缝隙在楔尖与合拢处自然收窄，正是河流交汇的样子。
+//   4. **河道之间留缝。** 溪流靠底色间隔分开（随河宽 5–9px），不靠描边——参照
+//      alluvial 诸例中溪流间的留白；缝隙在细流与窄颈处自然收窄，正是河流交汇的样子。
 //
 //   5. **不套滚动容器 + 点选而非悬停。** 竖向内容再嵌一层竖向滚动是滚动陷阱，
 //      本图直接交给页面滚，全页只有一个滚动器；顶／底两条固定条充当上下节跳转
@@ -36,9 +37,12 @@ import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName } from './views-lanes.js';
 
 const GUTTER = 34;          // 左侧年份／时代标注的留白
-const GAP = 5;              // 河道之间的底色缝
-const TRANS_PX = 42;        // 改道过渡区的目标半长（像素）——长 S 弯的来源
+const TRANS_PX = 46;        // 改道过渡区的目标半长（像素）——长 S 弯的来源
+const STEM = 1.6;           // 细流的半宽：河道张开／收束的末端不归零（d3-sankey 的
+                            // linkMinWidth 同理），交替期的空档里始终有一线水流
 const EPS = 1e-6;
+/** 河道间的底色缝：随河宽自适应。窄屏 5px 已够分隔，宽屏同样的 5px 显得挤 */
+const gapFor = (w) => Math.max(5, Math.min(9, w * 0.008));
 
 /** 沿法统链上溯到源头，用于把同一支的政权排在一起 */
 function lineageRoot(key) {
@@ -85,17 +89,19 @@ function layoutChannels(bands, x0, x1) {
       .sort((p, q) => rank.get(p.d.key) - rank.get(q.d.key));
     if (!live.length) { slices.push({ a, z, live: [], n: 0, at: new Map() }); continue; }
     const n = live.length;
-    const w = ((x1 - x0) - (n - 1) * GAP) / n;
-    const at = new Map(live.map((b, k) => [b.d.key, [x0 + k * (w + GAP), x0 + k * (w + GAP) + w]]));
+    const gap = gapFor(x1 - x0);
+    const w = ((x1 - x0) - (n - 1) * gap) / n;
+    const at = new Map(live.map((b, k) => [b.d.key, [x0 + k * (w + gap), x0 + k * (w + gap) + w]]));
     slices.push({ a, z, live, n, at });
   }
   return { slices, ordered, rank };
 }
 
 /**
- * 某政权不在此段时的「退化盒」：宽度为零的点，放在按全局次序它本应插入的缝隙中点。
- * 新生河道自这里张开成楔，消亡河道向这里收拢成尖——分与合都收在正确的缝里，
- * 不会横穿别的河道。
+ * 某政权不在此段时的「退化盒」：一条 STEM 半宽的细流，放在按全局次序它本应
+ * 插入的缝隙中点。新生河道自细流张开，消亡河道收束成细流——不掐断成零宽的尖
+ * （初版收到零，法统交替处出现「X 形掐断」，河面像消失了一瞬）。
+ * 分与合都收在正确的缝里，不会横穿别的河道。
  */
 function degenerate(slice, rank, key, x0, x1) {
   const r = rank.get(key);
@@ -105,13 +111,14 @@ function degenerate(slice, rank, key, x0, x1) {
     if (rb < r) below = b;
     else { above = b; break; }
   }
+  const gap = gapFor(x1 - x0);
   const lo = below ? slice.at.get(below.d.key)[1] : null;
   const hi = above ? slice.at.get(above.d.key)[0] : null;
   const x = lo !== null && hi !== null ? (lo + hi) / 2
-    : lo !== null ? Math.min(lo + GAP / 2, x1)
-    : hi !== null ? Math.max(hi - GAP / 2, x0)
+    : lo !== null ? Math.min(lo + gap / 2, x1)
+    : hi !== null ? Math.max(hi - gap / 2, x0)
     : (x0 + x1) / 2;
-  return [x, x];
+  return [Math.max(x0, x - STEM), Math.min(x1, x + STEM)];
 }
 
 /**
@@ -130,6 +137,21 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
     const from = new Map(A.at), to = new Map(B.at);
     for (const k of B.at.keys()) if (!from.has(k)) from.set(k, degenerate(A, rank, k, x0, x1));
     for (const k of A.at.keys()) if (!to.has(k)) to.set(k, degenerate(B, rank, k, x0, x1));
+    // 法统相承且在同一切点交棒者（汉→新、唐→后梁…），前后两河共用一个「颈缩」盒：
+    // 前朝收进它、新朝从它张开，于是交替处是一段变色的窄颈，而不是两个背对背的尖——
+    // ggalluvial 把承续画成一条连续 ribbon，同理
+    const dying = [...A.at.keys()].filter((k) => !B.at.has(k));
+    for (const yk of B.at.keys()) {
+      if (A.at.has(yk)) continue;
+      const xk = SUCCESSION[yk];
+      if (!xk || !dying.includes(xk)) continue;
+      const XA = A.at.get(xk), YB = B.at.get(yk);
+      const cx = ((XA[0] + XA[1]) / 2 + (YB[0] + YB[1]) / 2) / 2;
+      const w = Math.max(2 * STEM, Math.min(Math.min(XA[1] - XA[0], YB[1] - YB[0]) * 0.2, 24));
+      const waist = [cx - w / 2, cx + w / 2];
+      to.set(xk, waist);
+      from.set(yk, waist);
+    }
     trans.push({ c, ha, hb, from, to });
   }
   return trans;
@@ -161,8 +183,8 @@ function sampleEdges(key, ta, tb, slices, trans) {
   for (const T of trans) {
     const w0 = T.c - T.ha, w1 = T.c + T.hb;
     if (w1 < ta || w0 > tb) continue;
-    for (let i = 0; i <= 10; i++) {
-      const t = w0 + (w1 - w0) * i / 10;
+    for (let i = 0; i <= 12; i++) {
+      const t = w0 + (w1 - w0) * i / 12;
       if (t > ta && t < tb) ts.add(t);
     }
   }
@@ -214,6 +236,10 @@ export function renderRiver(host, list, opts) {
   const sample = (key, ta, tb) => sampleEdges(key, ta, tb, slices, trans);
 
   const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, class: 'river-svg', role: 'img' });
+  // 四个绘制层，DOM 顺序即遮挡顺序：所有河床垫底，君主段全体压在其上——
+  // 因此新朝的预告细流（先于建国张开的淡色）只会显现在缝隙与河床里，
+  // 绝不会浮在邻河的君主色块之上
+  const gBeds = el('g'), gStrips = el('g'), gEmps = el('g'), gLabels = el('g');
 
   // ── 时代分带：整幅横向淡底，交替填充 ────────────────────────────────────
   ERAS.forEach((era, i) => {
@@ -230,6 +256,7 @@ export function renderRiver(host, list, opts) {
     svg.appendChild(el('text', { x: GUTTER - 7, y: y(t) + 3.5, class: 'tick', 'text-anchor': 'end', 'font-size': 9.5 },
       fmtYearAxis(t)));
   }
+  svg.appendChild(gBeds); svg.appendChild(gStrips); svg.appendChild(gEmps); svg.appendChild(gLabels);
 
   // ── 河道 ────────────────────────────────────────────────────────────────
   const empNodes = [];
@@ -252,7 +279,7 @@ export function renderRiver(host, list, opts) {
       { label: 'DSI', value: st.dsi === null ? '—' : `${fmt1(st.dsi)} 年/帝` },
       ...(b.d.note ? [b.d.note] : []),
     ], () => b.d.name);
-    svg.appendChild(bed);
+    gBeds.appendChild(bed);
 
     // 称帝前掌权期：贴河道左缘的窄条。不是正式在位期，视觉上必须与君主段可区分
     for (const g of b.preRule) {
@@ -267,7 +294,7 @@ export function renderRiver(host, list, opts) {
         { label: '称帝', value: fmtDate(g.e.acc) },
         '此段为该君主实际掌握政权最高权力、但尚未即皇帝位的时期，不计入「在位年数」。',
       ], () => `${b.d.name}·${g.e.temple}`);
-      svg.appendChild(node);
+      gStrips.appendChild(node);
     }
 
     // 君主分段：实色块。段间缝按像素给（1.1px），不按年——按年给会在密集期
@@ -288,7 +315,7 @@ export function renderRiver(host, list, opts) {
         ...(g.e.note ? [g.e.note] : []),
       ];
       hoverable(node, tip, () => `${b.d.name}·${g.e.temple}`);
-      svg.appendChild(node);
+      gEmps.appendChild(node);
       empNodes.push({ node, e: g.e, band: b, col, tip });
 
       // 非正常死亡：段末右缘的红色刻痕。初版横贯全河道，在五代十国这类
@@ -297,7 +324,7 @@ export function renderRiver(host, list, opts) {
         const box = edge(b.d.key, Math.max(g.s, g.x - gapY));
         if (box) {
           const wN = Math.max(9, Math.min((box[1] - box[0]) * 0.4, 46));
-          svg.appendChild(el('line', {
+          gEmps.appendChild(el('line', {
             x1: box[1] - 1.5 - wN, x2: box[1] - 1.5, y1: y(g.x) - 1.4, y2: y(g.x) - 1.4,
             stroke: 'var(--critical)', 'stroke-width': 2.5, 'stroke-linecap': 'round',
           }));
@@ -318,7 +345,7 @@ export function renderRiver(host, list, opts) {
           'pointer-events': 'none',
         });
         [...nm].forEach((c, i) => t.appendChild(el('tspan', { x: tx, dy: i ? 10 : 0 }, c)));
-        svg.appendChild(t);
+        gEmps.appendChild(t);
       }
     }
 
@@ -333,7 +360,7 @@ export function renderRiver(host, list, opts) {
       'font-size': 11.5, 'font-weight': 640, fill: 'var(--text-1)', 'pointer-events': 'none',
       stroke: 'var(--page)', 'stroke-width': 3, 'paint-order': 'stroke',
     }, b.d.name);
-    svg.appendChild(dot); svg.appendChild(label);
+    gLabels.appendChild(dot); gLabels.appendChild(label);
     labelNodes.push({ dot, label, y0: y(b.s), y1: y(b.e), lw, cx });
   }
 
@@ -429,9 +456,11 @@ export function renderRiver(host, list, opts) {
     + `同一法统按其源头的起始年归堆），因此任意两个政权只要共存，次序在每一段里都相同。`
     + `政权消失时右邻左移即为「合流」，新政权插入时右邻右让即为「分叉」——`
     + `图上所有的分与合都只是这一条规则的结果，没有额外的美化。`,
-    `**改道摊开成长弯**：每次政权更替的河宽重分摊在一段约 ±${TRANS_PX}px 的过渡区里`
-    + `（不超过邻段一半，以免过渡区互相穿透），用 smoothstep 缓动。新河道自楔尖张开、`
-    + `亡者收拢成尖，故河面在政权建立前数年即开始让位——**楔尖是排版的预告，不是史实的提前**：`
+    `**改道摊开成长弯，交替处不断流**：每次政权更替的河宽重分摊在一段约 ±${TRANS_PX}px 的`
+    + `过渡区里（不超过邻段一半，以免过渡区互相穿透），用 smoothstep 缓动。新河道自一线细流张开、`
+    + `亡者收束成细流而**不掐断成零宽的尖**（d3-sankey 的 linkMinWidth 同理）；`
+    + `法统相承者（汉→新、唐→后梁…）在交替处共用一段变色的窄颈，河面不断流。`
+    + `河面在政权建立前数年即开始让位——**细流是排版的预告，不是史实的提前**：`
     + `淡色河床可早于建国数年张开，但君主色块的起讫始终是真实日期。`
     + `所有河道在同一过渡窗内做同一插值，任一瞬间的布局仍是不重叠的分割，这是长弯不打架的保证。`,
     `**不套滚动容器**：竖向内容再嵌一层竖向滚动是经典的滚动陷阱，手指落在容器上页面就像卡住了。`
