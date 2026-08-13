@@ -12,7 +12,7 @@
 //      改为朝代长带后只需 9 条，且长带本身有足够宽度容纳名称。
 //   3. 朝代名在带首，并在横向滚动时吸附于视口左缘（不越出本带范围），
 //      因此任何时刻都能读出正在看的是哪一朝。
-import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hideTip, fmtYearAxis, fmt1 } from './charts.js';
+import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hideTip, fmtYearAxis, fmt1, scrollHint } from './charts.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, ORTHODOX, SECONDARY } from './dynasties.js';
 import { fmtDate } from './schema.js';
@@ -462,6 +462,7 @@ export function renderLaneTimeline(host, list, opts) {
   if (nLanes <= 10) scroller.style.overflowY = 'hidden';
   else scroller.style.maxHeight = `${10 * LANE_H + HEAD_H + 24}px`;
   host.appendChild(scroller);
+  scrollHint(scroller, '左右滑动即为时间流逝');
 
   // 图例：只列出当前视口内可见的朝代。色值本身固定不变，
   // 变的只是「这一屏有哪些朝代」——这是图例该做的事，不是重新配色。

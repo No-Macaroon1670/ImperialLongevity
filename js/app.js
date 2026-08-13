@@ -30,6 +30,11 @@ const S = {
   heatFacet: true,
   coxScale: 'age', coxVars: ['accAgeZ', 'unified', 'dsi', 'warfare', 'coup', 'alchemy'],
   dbQuery: '',
+
+  // 窄屏下过滤器面板的展开状态。必须存在 S 里而不是 DOM 上——
+  // 任一 chip 变动都会触发全量 render()，buildFilters 把整条过滤器重建一遍，
+  // 挂在节点上的状态会随之丢失，表现为「点一下筛选面板就自己收起来」。
+  filtersOpen: false,
 };
 
 function filtered() {
@@ -62,9 +67,48 @@ function toggleIn(set, v, min = 1) {
   if (set.has(v)) { if (set.size > min) set.delete(v); } else set.add(v);
 }
 
+/**
+ * 收起态要回答的问题只有一个：「我现在筛掉了什么？」
+ * 故摘要只列出**偏离默认值**的那几组——全默认时说「全部」，
+ * 而不是把七组条件原样复述一遍（那还不如展开看）。
+ */
+function filterSummary() {
+  const on = [];
+  if (S.unified.size < 2) on.push(S.unified.has(1) ? '仅大一统' : '仅分裂期');
+  if (S.death.size < 3) on.push('死亡性质');
+  if (S.onlyFounder) on.push('开国');
+  if (S.onlyLast) on.push('亡国');
+  if (S.onlyAlchemy) on.push('丹药');
+  if (S.eras.size < ERAS.length) on.push(`时代 ${S.eras.size}/${ERAS.length}`);
+  if (S.titles.size !== 3 || !['帝', '天王', '汗'].every((t) => S.titles.has(t))) on.push('入库范围');
+  if (S.includeNominal) on.push('含名义君主');
+  if (S.looseUnified) on.push('宽松大一统');
+  if (S.yearFrom !== null || S.yearTo !== null) on.push('年份');
+  return on;
+}
+
 function buildFilters(host) {
+  // 面板内的滚动位置在重建后要还原：面板滚到一半时点 chip，
+  // 若不还原就会弹回顶部，看上去像页面自己跳了一下
+  const prevScroll = host.querySelector('.filters-inner')?.scrollTop || 0;
   host.innerHTML = '';
-  const row = h('div', { class: 'filters-inner' });
+  host.classList.toggle('open', S.filtersOpen);
+
+  // 窄屏专用的收起条（桌面端由 CSS 隐藏）
+  const active = filterSummary();
+  const toggle = h('button', {
+    class: 'filters-toggle', type: 'button',
+    'aria-expanded': String(S.filtersOpen), 'aria-controls': 'filters-panel',
+    onclick: () => { S.filtersOpen = !S.filtersOpen; render(); },
+  }, [
+    h('span', { class: 'ft-caret', text: '▾' }),
+    h('span', { class: 'ft-label', text: '筛选' }),
+    h('span', { class: `ft-summary${active.length ? ' on' : ''}`,
+      text: active.length ? `${active.join('·')} · ${filtered().length} 位` : `全部 ${filtered().length} 位` }),
+  ]);
+  host.appendChild(h('div', { class: 'filters-bar' }, [toggle]));
+
+  const row = h('div', { class: 'filters-inner', id: 'filters-panel' });
 
   const g1 = h('div', { class: 'fgroup' }, [h('span', { class: 'flabel', text: '时期' })]);
   g1.appendChild(chip('大一统', S.unified.has(1), () => { toggleIn(S.unified, 1); render(); }, 'var(--c-unified)'));
@@ -123,6 +167,7 @@ function buildFilters(host) {
   const cnt = h('span', { class: 'filter-count', id: 'filter-count' });
   row.appendChild(cnt);
   host.appendChild(row);
+  row.scrollTop = prevScroll;
 }
 
 // ── 版块定义 ─────────────────────────────────────────────────────────────
@@ -340,6 +385,8 @@ function render() {
 function boot() {
   const main = document.getElementById('sections');
   const toc = document.getElementById('toc');
+  // 目录点击后收起筛选面板：面板是覆盖式浮层，不收起会正好盖住刚跳到的标题
+  toc.addEventListener('click', () => { if (S.filtersOpen) { S.filtersOpen = false; render(); } });
   for (const sec of SECTIONS) {
     toc.appendChild(h('a', { href: `#${sec.id}`, text: sec.title.split('：')[0] }));
     const card = h('section', { class: 'card', id: sec.id });
@@ -353,6 +400,34 @@ function boot() {
     hostMap.set(sec.id, { ctrl, chart });
   }
   render();
+
+  // 锚点让位高度跟着吸顶过滤器的真实高度走。展开的面板是绝对定位的浮层，
+  // 不撑高 .filters，因此这个值在展开/收起之间保持恒定——正是要的效果。
+  const filters = document.getElementById('filters');
+  const syncFiltersH = () => document.documentElement.style
+    .setProperty('--filters-h', `${Math.round(filters.getBoundingClientRect().height)}px`);
+  new ResizeObserver(syncFiltersH).observe(filters);
+  syncFiltersH();
+
+  // 面板外轻点即收起（浮层盖住的是正文，用户下一步多半是想读正文）
+  document.addEventListener('pointerdown', (e) => {
+    if (!S.filtersOpen) return;
+    if (e.target instanceof Element && e.target.closest('.filters')) return;
+    S.filtersOpen = false; render();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && S.filtersOpen) { S.filtersOpen = false; render(); }
+  });
+
+  // 视口宽度变了要重绘：Frame 是按宿主实测宽度布局的，不重绘就停在旧尺寸。
+  // 只认宽度——手机上地址栏伸缩会不停触发 resize，但那只改高度，不该重画整页。
+  let lastW = window.innerWidth, rzTimer = null;
+  window.addEventListener('resize', () => {
+    if (window.innerWidth === lastW) return;
+    lastW = window.innerWidth;
+    clearTimeout(rzTimer);
+    rzTimer = setTimeout(render, 180);
+  });
 
   // 主题切换
   const tt = document.getElementById('theme-toggle');

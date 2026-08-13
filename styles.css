@@ -83,7 +83,9 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 140px; }
+/* 锚点让位高度＝吸顶过滤器的实际高度，由 JS 用 ResizeObserver 写进 --filters-h。
+   从前写死 140px，桌面端刚好，手机上过滤器 422px，点目录必落错位置。 */
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--filters-h, 128px) + 12px); }
 body {
   margin: 0; background: var(--page); color: var(--text-1);
   font-family: var(--sans); font-size: 15px; line-height: 1.6;
@@ -122,6 +124,8 @@ header.masthead { padding: 34px 0 18px; border-bottom: 1px solid var(--border); 
 }
 .filters-inner { max-width: 1180px; margin: 0 auto; padding: 0 20px;
   display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+/* 折叠开关只在窄屏出现；桌面端整条过滤器常驻，不需要多一层点击 */
+.filters-bar { display: none; }
 .fgroup { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .fgroup > .flabel { color: var(--muted); font-size: .78rem; margin-right: 2px; }
 .chip {
@@ -157,7 +161,10 @@ section.card {
 section.card > .head { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; margin-bottom: 2px; }
 section.card .desc { color: var(--text-2); font-size: .88rem; max-width: 76ch; margin-bottom: 12px; }
 .chart-host { width: 100%; overflow-x: auto; }
-.chart-svg { width: 100%; height: auto; display: block; }
+/* 画布尺寸由 Frame 按宿主实际宽度算好并写在 width/height 属性上，此处不得再拉伸：
+   从前的 width:100% 会把 1080px 的画布等比压进 289px（0.27×，11px 刻度只剩 3px）。
+   现在宽于宿主的图（如 Cox 森林图）由 .chart-host 横向滚动承接。 */
+.chart-svg { height: auto; display: block; max-width: none; }
 .local-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 4px 0 12px; }
 .local-controls label { font-size: .82rem; color: var(--text-2); display: inline-flex; gap: 5px; align-items: center; }
 
@@ -262,3 +269,75 @@ footer.foot { border-top: 1px solid var(--border); margin-top: 40px; padding-top
 .tl-head-wrap svg, .tl-inner > svg { display: block; }
 ul { margin: 0 0 .6em; padding-left: 1.15em; }
 li { margin-bottom: .35em; }
+
+/* ── 窄屏 ───────────────────────────────────────────────────────────────
+   改造前在 375×812 实测：过滤器条 422px（占屏 52%）且常驻吸顶、
+   页首到第一张图要滚 1907px、13 个目录 pill 占 132px、卡片留白吃掉 84px。
+   断点取 720px：再宽就是平板横向或小窗口桌面，那时原布局仍然舒展。 */
+@media (max-width: 720px) {
+  body { font-size: 14.5px; }
+  .wrap { padding: 0 12px 56px; }
+  h1 { font-size: 1.45rem; }
+  h2 { font-size: 1.08rem; }
+
+  header.masthead { padding: 20px 0 12px; }
+  .masthead .kicker { font-size: .68rem; letter-spacing: .08em; }
+  .masthead p.lede { font-size: .9rem; }
+  /* 5 个概览数字原本靠 flex 折成三行；改两列网格后行高固定，且不会出现「孤儿列」 */
+  .hero-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; margin: 14px 0 2px; }
+  .stat { min-width: 0; }
+  .stat .value { font-size: 1.5rem; }
+  .stat .label, .stat .sub { font-size: .74rem; }
+
+  /* 目录改单行横向滑动条：13 个 pill 原本折成四行占 132px，现在只占一行 */
+  nav.toc { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+    margin: 12px -12px 4px; padding: 0 12px; scroll-padding-left: 12px; }
+  nav.toc::-webkit-scrollbar { display: none; }
+  nav.toc a { white-space: nowrap; flex: none; padding: 5px 11px; }
+
+  section.card { padding: 14px 13px 12px; margin: 14px 0; border-radius: 8px; }
+  section.card .desc { font-size: .84rem; }
+  .local-controls { gap: 8px; }
+  .local-controls label { font-size: .8rem; }
+
+  /* 过滤器：收起态只留一条 ~44px 的摘要栏，展开态做成**覆盖式浮层**。
+     关键在于浮层用 absolute 脱离文档流——若让面板撑高 .filters 本身，
+     吸顶条会重新占满半屏，而 scroll-padding-top 也得跟着变，等于没解决问题。 */
+  .filters { padding: 0; }
+  .filters-bar { display: block; }
+  .filters-toggle {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    background: none; border: none; color: var(--text-1); font: inherit;
+    padding: 10px 12px; cursor: pointer; text-align: left; min-height: 44px;
+  }
+  .filters-toggle .ft-caret { color: var(--muted); font-size: .8rem; transition: transform .16s; }
+  .filters.open .filters-toggle .ft-caret { transform: rotate(180deg); }
+  .filters-toggle .ft-label { font-weight: 620; font-size: .88rem; }
+  .filters-toggle .ft-summary { color: var(--muted); font-size: .8rem; margin-left: auto;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .filters-toggle .ft-summary.on { color: var(--seq-500); }
+
+  .filters-inner {
+    position: absolute; left: 0; right: 0; top: 100%;
+    display: none; padding: 10px 12px 14px;
+    background: var(--page); border-bottom: 1px solid var(--border);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .18);
+    /* 面板本身可能比一屏还高（7 组共 20 个 chip），故自带滚动；
+       用 dvh 而非 vh，避免 iOS 地址栏收缩时底部被裁掉 */
+    max-height: calc(100dvh - 52px); overflow-y: auto; overscroll-behavior: contain;
+  }
+  .filters.open .filters-inner { display: flex; }
+  .fgroup { width: 100%; }
+  .fgroup > .flabel { width: 100%; margin: 2px 0 0; }
+  /* 触控目标：原 31px 偏小，抬到 38px；WCAG 2.5.5 的 44px 在这里会让面板过高，
+     取折中并保证 2.5.8 的 24px 下限有充分余量 */
+  .chip { padding: 7px 13px; font-size: .84rem; min-height: 38px; }
+  .filter-count { margin-left: 0; width: 100%; }
+
+  /* 表格与提示：小屏收紧 */
+  .table-scroll { max-height: 320px; }
+  th, td { padding: 5px 7px; }
+  .tooltip { max-width: min(300px, calc(100vw - 24px)); font-size: .84rem; }
+  .timeline-scroll { max-height: 460px; }
+  .scroll-hint { margin: 0 0 4px; text-align: center; letter-spacing: .04em; }
+}

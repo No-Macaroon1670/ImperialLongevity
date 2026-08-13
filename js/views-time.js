@@ -1,5 +1,5 @@
 // views-time.js — 时间轴类视图：双层寿命/统治时间轴、历史总散点、寿命热力图
-import { el, h, linear, ticks, Frame, hoverable, legend, tableView, notes, fmt1, fmtYearAxis } from './charts.js';
+import { el, h, linear, ticks, Frame, hoverable, legend, tableView, notes, fmt1, fmtYearAxis, scrollHint } from './charts.js';
 import { ERAS } from './dynasties.js';
 import { fmtDate } from './schema.js';
 import { renderLaneTimeline } from './views-lanes.js';
@@ -100,7 +100,9 @@ export function renderTimeline(host, list, opts) {
   const headWrap = h('div', { class: 'tl-head-wrap' });
   headWrap.appendChild(head);
   const inner = h('div', { class: 'tl-inner' }, [headWrap, body]);
-  host.appendChild(h('div', { class: 'timeline-scroll' }, [inner]));
+  const scroller = h('div', { class: 'timeline-scroll' }, [inner]);
+  host.appendChild(scroller);
+  scrollHint(scroller, '左右滑动查看完整时间轴');
 
   host.appendChild(legend([
     { color: UNI, label: '大一统王朝' },
@@ -230,15 +232,21 @@ export function renderHeatmap(host, list, opts) {
   }
   const maxCount = Math.max(1, ...counts.flat(2));
 
+  // 同上：先入 DOM，Frame 才量得到真实可用宽度
   const wrap = h('div', { class: facet ? 'grid2' : '' });
+  host.appendChild(wrap);
   groups.forEach((g, gi) => {
     const box = h('div');
+    wrap.appendChild(box);
     box.appendChild(h('h4', { text: g.name, class: 'small', style: 'margin:2px 0 6px;color:var(--text-2)' }));
     const cellW = Math.max(14, Math.min(38, (facet ? 470 : 980) / cols.length));
     const W = cellW * cols.length + 70, H = bins.length * 30 + 54;
     const plot = h('div');                       // Frame 会清空宿主，故另开一层承载
     box.appendChild(plot);
-    const f = new Frame(plot, { width: W, height: H, m: { t: 8, r: 10, b: 42, l: 58 } });
+    // 热力图是密度网格，格子太窄就看不出深浅差别，故按列数定下限——
+    // 取 14px，与上面 cellW 自己的下限一致，避免在桌面分面里多出一条滚动条
+    const f = new Frame(plot, { width: W, height: H, m: { t: 8, r: 10, b: 42, l: 58 },
+      minWidth: cols.length * 14 + 68, scaleHeight: false });
     const cw = f.pw / cols.length, ch = f.ph / bins.length;
     cols.forEach((c, ci) => bins.forEach((b, bi) => {
       const n = counts[gi][ci][bi];
@@ -269,9 +277,7 @@ export function renderHeatmap(host, list, opts) {
       f.add(el('text', { x: ci * cw + cw / 2, y: f.ph + 16, class: 'tick', 'text-anchor': 'end', transform: `rotate(-45 ${ci * cw + cw / 2} ${f.ph + 16})` }, fmtYearAxis(c)));
     });
     f.add(el('text', { x: f.pw / 2, y: f.ph + 38, class: 'axis-label', 'text-anchor': 'middle' }, '出生年代（百年）'));
-    wrap.appendChild(box);
   });
-  host.appendChild(wrap);
 
   // 色阶图例：连续量必须给出刻度，不能只靠悬停
   const scaleRow = h('div', { class: 'legend' });

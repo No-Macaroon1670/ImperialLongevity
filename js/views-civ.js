@@ -65,7 +65,8 @@ export function renderCiv(host, list, opts) {
     + '交班已被制度吸收；左上／右上则是篡弑仍是主要退场方式。点面积正比于君主数。' }));
 
   // ── 2) 比例与置信区间 ────────────────────────────────────────────────
-  const f = new Frame(host, { width: 1080, height: 60 + groups.length * 52, m: { t: 30, r: 40, b: 46, l: 92 } });
+  const f = new Frame(host, { width: 1080, height: 60 + groups.length * 52,
+    m: { t: 30, r: 40, b: 46, l: 92 }, scaleHeight: false });
   const x = linear([0, 1], [0, f.pw]);
   const y = band(groups.map((g) => g.realm), [0, f.ph], 0.35);
   f.axes({ x, y, xTicks: [0, .2, .4, .6, .8, 1], yTicks: [], xFmt: (v) => `${Math.round(v * 100)}%`, xLabel: '占该文明君主的比例', grid: 'x' });

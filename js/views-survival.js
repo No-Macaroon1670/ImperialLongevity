@@ -189,7 +189,10 @@ export function renderCIF(host, list, opts) {
     { key: 'violent', label: '非正常死亡（被杀/战死/自杀）', color: 'var(--s2)' },
     { key: 'natural', label: '正常死亡（自然/疾病/意外）', color: 'var(--s1)' },
   ];
+  // 先挂进文档再造图：Frame 要量宿主的真实宽度决定画布尺寸，
+  // 若等到最后才 appendChild，构造时量到的是 0，只能回退到设计宽度
   const wrap = h('div', { class: 'grid2' });
+  host.appendChild(wrap);
   const tableRows = [];
   const banners = h('div');
   host.appendChild(banners);
@@ -201,8 +204,9 @@ export function renderCIF(host, list, opts) {
       cause: r.e.violent === 1 ? 'violent' : r.e.violent === 0 ? 'natural' : 'unknown',
     }));
     const box = h('div');
+    wrap.appendChild(box);
     box.appendChild(h('h4', { text: `${fc.name}（n=${withCause.length}）`, class: 'small', style: 'margin:2px 0 6px;color:var(--text-2)' }));
-    if (withCause.length < 5) { box.appendChild(h('p', { class: 'muted small', text: '样本不足。' })); wrap.appendChild(box); continue; }
+    if (withCause.length < 5) { box.appendChild(h('p', { class: 'muted small', text: '样本不足。' })); continue; }
     const diag = riskSetDiagnostics(withCause);
     const banner = degeneracyBanner(diag, opts, scale === 'age' ? '年龄' : '登基后年数');
     if (banner) {
@@ -227,9 +231,7 @@ export function renderCIF(host, list, opts) {
       f.add(el('text', { x: x(last.t) - 6, y: y(last.F) - 9, class: 'direct', 'text-anchor': 'end' }, `${(last.F * 100).toFixed(0)}%`));
       tableRows.push([fc.name, c.label, `${(last.F * 100).toFixed(1)}%`]);
     }
-    wrap.appendChild(box);
   }
-  host.appendChild(wrap);
   host.appendChild(legend(causeDefs.map((c) => ({ color: c.color, label: c.label, shape: 'line' }))));
   host.appendChild(notes(['两条曲线在同一分面内相加即为总死亡累积发生率。Aalen–Johansen 估计量正确处理竞争风险：把「被杀」当作删失会高估自然死亡风险。']));
   host.appendChild(tableView(['分组', '死亡方式', '终点累积发生率'], tableRows, { caption: '竞争风险终点值' }));
@@ -262,7 +264,14 @@ export function renderCox(host, list, opts) {
 
   // 森林图
   const rowsN = fit.terms.length;
-  const f = new Frame(host, { width: 1080, height: rowsN * 40 + 74, m: { t: 18, r: 150, b: 46, l: 250 } });
+  // 宽屏：变量名占左边距 250px、HR 文本占右边距 150px，CI 线居中一行。
+  // 窄屏：这 400px 的边距无论如何压不下去，故改成两行式——变量名与 HR 并排在上，
+  // CI 线单独一行在下。行高从 40 涨到 56，但图完整铺进手机屏，不必横向滚 257px。
+  const narrow = host.getBoundingClientRect().width < 560;
+  const rowH = narrow ? 56 : 40;
+  const f = new Frame(host, { width: 1080, height: rowsN * rowH + (narrow ? 62 : 74),
+    m: narrow ? { t: 14, r: 14, b: 46, l: 14 } : { t: 18, r: 150, b: 46, l: 250 },
+    scaleHeight: false });
   const allLo = Math.min(...fit.terms.map((t) => t.lo).filter(isFinite), 0.5);
   const allHi = Math.max(...fit.terms.map((t) => t.hi).filter(isFinite), 2);
   const lo = Math.max(0.05, Math.min(allLo, 0.6)), hi = Math.min(30, Math.max(allHi, 1.8));
@@ -274,17 +283,24 @@ export function renderCox(host, list, opts) {
   f.add(el('text', { x: f.pw / 2, y: f.ph + 38, class: 'axis-label', 'text-anchor': 'middle' }, '风险比 HR（对数刻度；1＝无影响）'));
 
   fit.terms.forEach((t, i) => {
-    const y = i * 40 + 20;
+    const y = i * rowH + (narrow ? 40 : 20);
     const sig = t.p < 0.05;
     const col = !sig ? 'var(--s1)' : t.hr > 1 ? 'var(--critical)' : 'var(--good)';
     const x0 = x(Math.log(Math.max(lo, t.lo))), x1 = x(Math.log(Math.min(hi, t.hi)));
     const g = el('g', { class: 'mark' });
     g.appendChild(el('line', { x1: x0, x2: x1, y1: y, y2: y, stroke: col, 'stroke-width': 2, 'stroke-linecap': 'round' }));
     g.appendChild(el('circle', { cx: x(Math.log(t.hr)), cy: y, r: 5, fill: col, stroke: 'var(--surface-1)', 'stroke-width': 2 }));
-    f.add(el('text', { x: -12, y: y + 4, class: 'tick', 'text-anchor': 'end', 'font-size': 12, fill: 'var(--text-1)' }, t.name));
-    f.add(el('text', { x: f.pw + 12, y: y + 4, class: 'tick', 'text-anchor': 'start', 'font-size': 11.5 },
-      `${fmt2(t.hr)}（${fmt2(t.lo)}–${fmt2(t.hi)}）`));
-    if (sig) f.add(el('text', { x: f.pw + 132, y: y + 4, class: 'tick', 'text-anchor': 'end', 'font-size': 11.5, fill: col }, '✱'));
+    if (narrow) {
+      const ty = i * rowH + 14;
+      f.add(el('text', { x: 0, y: ty, class: 'tick', 'font-size': 12, fill: 'var(--text-1)' }, t.name));
+      f.add(el('text', { x: f.pw, y: ty, class: 'tick', 'text-anchor': 'end', 'font-size': 11.5, fill: sig ? col : null },
+        `${fmt2(t.hr)}（${fmt2(t.lo)}–${fmt2(t.hi)}）${sig ? ' ✱' : ''}`));
+    } else {
+      f.add(el('text', { x: -12, y: y + 4, class: 'tick', 'text-anchor': 'end', 'font-size': 12, fill: 'var(--text-1)' }, t.name));
+      f.add(el('text', { x: f.pw + 12, y: y + 4, class: 'tick', 'text-anchor': 'start', 'font-size': 11.5 },
+        `${fmt2(t.hr)}（${fmt2(t.lo)}–${fmt2(t.hi)}）`));
+      if (sig) f.add(el('text', { x: f.pw + 132, y: y + 4, class: 'tick', 'text-anchor': 'end', 'font-size': 11.5, fill: col }, '✱'));
+    }
     hoverable(g, () => [
       { color: col, value: fmt2(t.hr), label: 'HR' },
       { label: '95% CI', value: `${fmt2(t.lo)} – ${fmt2(t.hi)}` },

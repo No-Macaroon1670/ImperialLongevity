@@ -99,7 +99,11 @@ export function renderBox(host, list, opts) {
 export function renderDSI(host, list, opts) {
   host.innerHTML = '';
   const level = opts.dsiLevel || 'dynasty';
-  const f = new Frame(host, { width: 1080, height: 434, m: { t: 30, r: 130, b: 52, l: 58 } });
+  // 右边距 130px 是给点旁的朝代直标留的；窄屏上这些标注本就会互相叠压，
+  // 省掉后边距收到 20px，图正好铺进手机屏，不必横向滚动
+  const narrow = host.getBoundingClientRect().width < 560;
+  const f = new Frame(host, { width: 1080, height: narrow ? 372 : 434,
+    m: { t: 30, r: narrow ? 20 : 130, b: 52, l: 58 } });
 
   let pts, xVals, yVals, note;
   if (level === 'dynasty') {
@@ -133,7 +137,7 @@ export function renderDSI(host, list, opts) {
       stroke: 'var(--text-2)', 'stroke-width': 1.5, 'stroke-linecap': 'round', opacity: .7,
     }));
   }
-  const labelled = pts.slice().sort((a, b) => b.n - a.n).slice(0, level === 'dynasty' ? 10 : 0);
+  const labelled = pts.slice().sort((a, b) => b.n - a.n).slice(0, narrow ? 0 : (level === 'dynasty' ? 10 : 0));
   for (const p of pts) {
     const col = (opts.looseUnified ? p.uL : p.unified) ? 'var(--c-unified)' : 'var(--c-split)';
     const r = level === 'dynasty' ? Math.max(4, Math.min(16, Math.sqrt(p.n) * 2.6)) : 4;
