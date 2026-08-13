@@ -4,25 +4,31 @@
 // 这一张把时间竖过来、把河宽整个交给「当时并存的政权」瓜分，读的是**分裂的形状**——
 // 大一统时是一条满宽的大河，分裂时河面裂成数股各自着色的分叉，重新统一时再合流。
 //
-// 四个设计决定：
+// 五个设计决定：
 //
 //   1. **河宽恒定，只按政权数均分。** 本库没有疆域或人口数据，若让分叉宽度去编码
 //      「谁更大」，那是在画我们并不掌握的东西。均分是诚实的选择，而且它让唯一的
 //      视觉变量——分叉数——正好等于那一刻并存的政权数，这恰是本图要回答的问题。
-//      代价是三年的割据小国与盛唐同宽；悬停与数据表给出真实规模。
+//      代价是三年的割据小国与盛唐同宽；点按详情与数据表给出真实规模。
 //
 //   2. **全局总序 ⇒ 河道永不交叉。** 任意两个政权的左右次序由一个全局排序键决定，
 //      因此在它们共存的每一段里次序都相同，两条河道不可能相交。次序为
 //      「正统序列 → 北方主线 → 其余」，同一法统按其源头的起始年归堆，
-//      于是前蜀与后蜀、西魏与北周相邻而非四散。政权消失时右邻左移，
-//      这个左移就是「合流」；新政权插入时右邻右让，这就是「分叉」。
+//      于是前蜀与后蜀、西魏与北周相邻而非四散。
 //
-//   3. **不套滚动容器，直接交给页面滚。** 竖向内容再套一层竖向滚动条是经典的滚动陷阱：
-//      手指落在容器上，页面就像卡住了。去掉容器后全页只有一个滚动器，陷阱从根上不存在。
-//      代价是这一节很长，故配以顶／底两条固定条充当「安全起滑区」与上下节跳转。
+//   3. **改道是长弯，不是台阶。** 初版在每个政权起讫点瞬间重分河宽、只留 10px 圆角，
+//      整张图读起来像阶梯，密集期尽是毛刺。现按 alluvial diagram 的画法重做：
+//      每次改道摊开成一段 ±42px 的过渡区，用 smoothstep 缓动；新政权自楔尖张开、
+//      亡者收拢成尖，因此河面在政权建立**之前几年**就开始让位——分叉是预告出来的，
+//      这是排版的提前量，不是史实的提前（君主色块的起讫始终是真实日期）。
+//      所有河道共用同一过渡窗做同一插值，任一瞬间的布局仍是一个不重叠的分割。
 //
-//   4. **点选而非悬停。** 触屏没有悬停。点中某位君主即高亮该段、其余压暗，
-//      并在底部固定卡片里给出完整信息；再点空白处取消。
+//   4. **河道之间留缝。** 溪流靠底色间隔分开（5px），不靠描边——参照 alluvial
+//      诸例中溪流间的留白；缝隙在楔尖与合拢处自然收窄，正是河流交汇的样子。
+//
+//   5. **不套滚动容器 + 点选而非悬停。** 竖向内容再嵌一层竖向滚动是滚动陷阱，
+//      本图直接交给页面滚，全页只有一个滚动器；顶／底两条固定条充当上下节跳转
+//      与「安全起滑区」。触屏没有悬停，点中君主即高亮、详情进底部固定卡片。
 import { el, h, linear, hoverable, legend, tableView, notes, fmtYearAxis, fmt1, textWidth } from './charts.js';
 import { DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, ORTHODOX, SECONDARY } from './dynasties.js';
@@ -30,7 +36,8 @@ import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName } from './views-lanes.js';
 
 const GUTTER = 34;          // 左侧年份／时代标注的留白
-const TRANS = 10;           // 分叉与合流处的过渡半径（像素）
+const GAP = 5;              // 河道之间的底色缝
+const TRANS_PX = 42;        // 改道过渡区的目标半长（像素）——长 S 弯的来源
 const EPS = 1e-6;
 
 /** 沿法统链上溯到源头，用于把同一支的政权排在一起 */
@@ -63,7 +70,7 @@ function orderKeys(bands) {
 
 /**
  * 把时间切成「并存政权集合不变」的一段段。切点即所有带的起讫年份。
- * 每段内每个政权占据河宽的 k/N–(k+1)/N。
+ * 段内每个政权分得 (河宽 − 缝隙) / N，政权间留 GAP 底色缝。
  */
 function layoutChannels(bands, x0, x1) {
   const ordered = orderKeys(bands);
@@ -77,78 +84,107 @@ function layoutChannels(bands, x0, x1) {
     const live = bands.filter((b) => b.s <= mid && mid <= b.e)
       .sort((p, q) => rank.get(p.d.key) - rank.get(q.d.key));
     if (!live.length) { slices.push({ a, z, live: [], n: 0, at: new Map() }); continue; }
-    const w = (x1 - x0) / live.length;
-    const at = new Map(live.map((b, k) => [b.d.key, [x0 + k * w, x0 + (k + 1) * w]]));
-    slices.push({ a, z, live, n: live.length, at });
+    const n = live.length;
+    const w = ((x1 - x0) - (n - 1) * GAP) / n;
+    const at = new Map(live.map((b, k) => [b.d.key, [x0 + k * (w + GAP), x0 + k * (w + GAP) + w]]));
+    slices.push({ a, z, live, n, at });
   }
-  return { slices, ordered };
+  return { slices, ordered, rank };
 }
 
 /**
- * 河道边界点：`{t, x0, x1}` 表示**自 t 起**该河道的左右边界为 x0/x1，直到下一个点。
- * 末尾补一个终止点（t = 带的结束年），其边界沿用前一段——河道到此为止，不再变宽。
- * 宽度没变的相邻切点直接合并，免得在同一处画出零长度的过渡。
+ * 某政权不在此段时的「退化盒」：宽度为零的点，放在按全局次序它本应插入的缝隙中点。
+ * 新生河道自这里张开成楔，消亡河道向这里收拢成尖——分与合都收在正确的缝里，
+ * 不会横穿别的河道。
  */
-function edgePoints(band, slices) {
-  const pts = [];
-  for (const s of slices) {
-    const box = s.at.get(band.d.key);
-    if (!box) continue;
-    const prev = pts[pts.length - 1];
-    if (prev && Math.abs(prev.x0 - box[0]) < 0.4 && Math.abs(prev.x1 - box[1]) < 0.4) continue;
-    pts.push({ t: Math.max(s.a, band.s), x0: box[0], x1: box[1] });
+function degenerate(slice, rank, key, x0, x1) {
+  const r = rank.get(key);
+  let below = null, above = null;
+  for (const b of slice.live) {
+    const rb = rank.get(b.d.key);
+    if (rb < r) below = b;
+    else { above = b; break; }
   }
-  if (!pts.length) return [];
-  const tail = pts[pts.length - 1];
-  pts.push({ t: band.e, x0: tail.x0, x1: tail.x1 });
-  return pts;
+  const lo = below ? slice.at.get(below.d.key)[1] : null;
+  const hi = above ? slice.at.get(above.d.key)[0] : null;
+  const x = lo !== null && hi !== null ? (lo + hi) / 2
+    : lo !== null ? Math.min(lo + GAP / 2, x1)
+    : hi !== null ? Math.max(hi - GAP / 2, x0)
+    : (x0 + x1) / 2;
+  return [x, x];
 }
 
-/** 把边界点裁到 [ta, tb]，两端各补一个点，使裁出的一段仍是完整的阶梯 */
-function clipPoints(pts, ta, tb) {
-  const out = [];
-  for (const p of pts) {
-    if (p.t <= ta + EPS) { out.length = 0; out.push({ ...p, t: ta }); continue; }
-    if (p.t >= tb - EPS) break;
-    out.push(p);
+/**
+ * 相邻两段之间的过渡：窗 [c − ha, c + hb]，半长取「目标半长」与「邻段一半」的较小者，
+ * 因此过渡窗彼此不相交。窗内所有河道用同一 smoothstep 在旧新两个分割之间插值——
+ * 两个不重叠分割的凸组合仍是不重叠分割，故过渡中也不会有河道相互侵入。
+ */
+function buildTransitions(slices, rank, pxYear, x0, x1) {
+  const tau = TRANS_PX / pxYear;
+  const trans = [];
+  for (let i = 1; i < slices.length; i++) {
+    const A = slices[i - 1], B = slices[i];
+    const c = B.a;
+    const ha = Math.min(tau, (A.z - A.a) / 2);
+    const hb = Math.min(tau, (B.z - B.a) / 2);
+    const from = new Map(A.at), to = new Map(B.at);
+    for (const k of B.at.keys()) if (!from.has(k)) from.set(k, degenerate(A, rank, k, x0, x1));
+    for (const k of A.at.keys()) if (!to.has(k)) to.set(k, degenerate(B, rank, k, x0, x1));
+    trans.push({ c, ha, hb, from, to });
   }
-  if (!out.length) return [];
-  out.push({ ...out[out.length - 1], t: tb });
+  return trans;
+}
+
+const smoothstep = (u) => u * u * (3 - 2 * u);
+
+/** 河道 key 在时刻 t 的左右边界；不存在（生前窗外／死后窗外）时返回 null */
+function edgeAt(key, t, slices, trans) {
+  for (const T of trans) {
+    if (t < T.c - T.ha - EPS || t > T.c + T.hb + EPS) continue;
+    const A = T.from.get(key), B = T.to.get(key);
+    if (A && B) {
+      const s = smoothstep(Math.min(1, Math.max(0, (t - (T.c - T.ha)) / (T.ha + T.hb))));
+      return [A[0] + (B[0] - A[0]) * s, A[1] + (B[1] - A[1]) * s];
+    }
+    break;                                     // 窗内但该河道两侧都无盒 → 交给段常态
+  }
+  const S = slices.find((s) => t >= s.a - EPS && t <= s.z + EPS);
+  return (S && S.at.get(key)) || null;
+}
+
+/**
+ * 在 [ta, tb] 内采样河道边界。常态段只需两端点，过渡窗内按 smoothstep 补 10 个采样点，
+ * 折线过这些点即视觉平滑，不必维护贝塞尔的簿记。
+ */
+function sampleEdges(key, ta, tb, slices, trans) {
+  const ts = new Set([ta, tb]);
+  for (const T of trans) {
+    const w0 = T.c - T.ha, w1 = T.c + T.hb;
+    if (w1 < ta || w0 > tb) continue;
+    for (let i = 0; i <= 10; i++) {
+      const t = w0 + (w1 - w0) * i / 10;
+      if (t > ta && t < tb) ts.add(t);
+    }
+  }
+  const out = [];
+  for (const t of [...ts].sort((a, b) => a - b)) {
+    const e = edgeAt(key, t, slices, trans);
+    if (e) out.push({ t, x0: e[0], x1: e[1] });
+  }
   return out;
 }
 
-/**
- * 一条河道在 [ta, tb] 区间内的多边形路径。
- *
- * 每个切点处河道要么变窄（有政权出现＝分叉）要么变宽（有政权消失＝合流）。
- * 硬折角会让整张图看起来像阶梯而非河流，故在切点上下各取 tr 像素做三次贝塞尔过渡；
- * tr 按相邻两段长度的一半封顶，避免过渡区互相穿透。
- */
-function channelPath(pts, y, ta, tb, inset = 0) {
-  const cl = clipPoints(pts, ta, tb);
-  if (cl.length < 2) return '';
-  const n = cl.length;
-  const ys = cl.map((p) => y(p.t));
-  const L = cl.map((p) => p.x0 + inset);
-  const R = cl.map((p) => p.x1 - inset);
-  if (L.some((v, i) => R[i] - v < 0.6)) return '';        // 内缩后已无宽度可画
-  const tr = (j) => Math.max(0, Math.min(TRANS, (ys[j] - ys[j - 1]) / 2,
-    (j + 1 < n ? ys[j + 1] - ys[j] : TRANS * 2) / 2));
-  const same = (a, b) => Math.abs(a - b) < 0.4;
-
-  let d = `M${L[0]},${ys[0]}`;
-  for (let j = 1; j < n; j++) {                            // 顺流而下，走左岸
-    if (same(L[j], L[j - 1])) { d += `L${L[j - 1]},${ys[j]}`; continue; }
-    const t = tr(j);
-    d += `L${L[j - 1]},${ys[j] - t}C${L[j - 1]},${ys[j]} ${L[j]},${ys[j]} ${L[j]},${ys[j] + t}`;
-  }
-  d += `L${R[n - 1]},${ys[n - 1]}`;                        // 横过河口
-  for (let j = n - 1; j >= 1; j--) {                       // 逆流而上，走右岸
-    if (same(R[j], R[j - 1])) { d += `L${R[j - 1]},${ys[j - 1]}`; continue; }
-    const t = tr(j);
-    d += `L${R[j]},${ys[j] + t}C${R[j]},${ys[j]} ${R[j - 1]},${ys[j]} ${R[j - 1]},${ys[j] - t}`;
-    d += `L${R[j - 1]},${ys[j - 1]}`;
-  }
+/** 采样点连成的封闭多边形：左岸顺流而下，右岸逆流而上 */
+function polyPath(samples, y, inset = 0) {
+  if (samples.length < 2) return '';
+  if (Math.max(...samples.map((p) => p.x1 - p.x0)) < inset * 2 + 1.2) return '';
+  const pt = samples.map((p) => {
+    const half = Math.min(inset, (p.x1 - p.x0) / 2);
+    return { yy: y(p.t), l: p.x0 + half, r: p.x1 - half };
+  });
+  let d = `M${pt[0].l.toFixed(1)},${pt[0].yy.toFixed(1)}`;
+  for (let i = 1; i < pt.length; i++) d += `L${pt[i].l.toFixed(1)},${pt[i].yy.toFixed(1)}`;
+  for (let i = pt.length - 1; i >= 0; i--) d += `L${pt[i].r.toFixed(1)},${pt[i].yy.toFixed(1)}`;
   return `${d}Z`;
 }
 
@@ -170,15 +206,16 @@ export function renderRiver(host, list, opts) {
   const H = Math.round((t1 - t0) * pxYear);
   const y = linear([t0, t1], [0, H]);
   const RX0 = GUTTER, RX1 = W - 6;
+  const tau = TRANS_PX / pxYear;
 
-  const { slices, ordered } = layoutChannels(bands, RX0, RX1);
-
-  const edgesOf = new Map();
-  for (const b of bands) edgesOf.set(b.d.key, edgePoints(b, slices));
+  const { slices, ordered, rank } = layoutChannels(bands, RX0, RX1);
+  const trans = buildTransitions(slices, rank, pxYear, RX0, RX1);
+  const edge = (key, t) => edgeAt(key, t, slices, trans);
+  const sample = (key, ta, tb) => sampleEdges(key, ta, tb, slices, trans);
 
   const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, class: 'river-svg', role: 'img' });
 
-  // ── 时代分带：整幅横向淡底，交替填充，名称贴在左栏 ──────────────────────
+  // ── 时代分带：整幅横向淡底，交替填充 ────────────────────────────────────
   ERAS.forEach((era, i) => {
     const ya = Math.max(0, y(era.s)), yb = Math.min(H, y(era.e));
     if (yb - ya < 3) return;
@@ -186,7 +223,7 @@ export function renderRiver(host, list, opts) {
     svg.appendChild(el('line', { x1: 0, x2: W, y1: yb, y2: yb, class: 'ref-line', opacity: .5 }));
   });
 
-  // ── 年份刻度：竖向下每 100 年一道，贴左栏 ───────────────────────────────
+  // ── 年份刻度：每 100 年一道，贴左栏 ─────────────────────────────────────
   const step = pxYear >= 12 ? 50 : 100;
   for (let t = Math.ceil(t0 / step) * step; t <= t1; t += step) {
     svg.appendChild(el('line', { x1: GUTTER - 4, x2: W, y1: y(t), y2: y(t), class: 'grid', opacity: .5 }));
@@ -198,16 +235,16 @@ export function renderRiver(host, list, opts) {
   const empNodes = [];
   const labelNodes = [];
   for (const b of ordered) {
-    const edges = edgesOf.get(b.d.key);
-    if (!edges || edges.length < 2) continue;
     const cvar = byDynasty ? slotVar(slots.get(b.d.key)) : (b.d.u ? '--c-unified' : '--c-split');
     const col = `var(${cvar})`;
     const st = DYN_STATS.get(b.d.key);
 
-    // 河床：整条存续期的淡色底，君主之间的空档由它透出——那正是「无在位君主」的年份
-    const bed = el('path', {
-      d: channelPath(edges, y, b.s, b.e, 1), fill: col, opacity: .16, class: 'mark',
-    });
+    // 河床：淡色底。首尾各向外多要 tau——楔尖与合拢尾就长在这段延伸里，
+    // 生前死后窗外的采样返回 null 自动裁掉，无须另算窗的实际半长
+    const bedSamples = sample(b.d.key, b.s - tau, b.e + tau);
+    const bedPath = polyPath(bedSamples, y, 1);
+    if (!bedPath) continue;
+    const bed = el('path', { d: bedPath, fill: col, opacity: .16, class: 'mark' });
     hoverable(bed, () => [
       { color: col, value: `${fmtYearAxis(b.d.s)}–${fmtYearAxis(b.d.e)}`, label: '国祚' },
       { label: '历时', value: `${st.span} 年` },
@@ -219,9 +256,10 @@ export function renderRiver(host, list, opts) {
 
     // 称帝前掌权期：贴河道左缘的窄条。不是正式在位期，视觉上必须与君主段可区分
     for (const g of b.preRule) {
-      const w = Math.min(7, (edges[0].x1 - edges[0].x0) / 3);
-      const narrow = edges.map((p) => ({ t: p.t, x0: p.x0, x1: p.x0 + w }));
-      const d = channelPath(narrow, y, g.s, g.x, 1);
+      const s0 = sample(b.d.key, g.s, g.x);
+      const w = s0.length ? Math.min(7, (s0[0].x1 - s0[0].x0) / 3) : 0;
+      if (!w) continue;
+      const d = polyPath(s0.map((p) => ({ t: p.t, x0: p.x0, x1: p.x0 + w })), y, 0.5);
       if (!d) continue;
       const node = el('path', { d, fill: col, opacity: .5, class: 'mark' });
       hoverable(node, () => [
@@ -232,10 +270,12 @@ export function renderRiver(host, list, opts) {
       svg.appendChild(node);
     }
 
-    // 君主分段：满河宽的实色块，段间留 1.5px 缝
+    // 君主分段：实色块。段间缝按像素给（1.1px），不按年——按年给会在密集期
+    // 放大成一屏横纹；起讫日期本身始终是真实值，缝只是绘图退让
     for (const g of b.segs) {
-      const gap = Math.min(0.8, (g.x - g.s) * 0.18);
-      const d = channelPath(edges, y, g.s + gap, g.x - gap, 1.5);
+      const gapY = Math.min(1.1 / pxYear, (g.x - g.s) * 0.22);
+      const segSamples = sample(b.d.key, g.s + gapY, g.x - gapY);
+      const d = polyPath(segSamples, y, 1);
       if (!d) continue;
       const node = el('path', { d, fill: col, class: 'mark river-emp' });
       node.dataset.emp = g.e.id;
@@ -251,24 +291,26 @@ export function renderRiver(host, list, opts) {
       svg.appendChild(node);
       empNodes.push({ node, e: g.e, band: b, col, tip });
 
-      // 非正常死亡：段末横贯河道的红杠（竖向下三角容易被误认为箭头）
+      // 非正常死亡：段末右缘的红色刻痕。初版横贯全河道，在五代十国这类
+      // 短祚扎堆的年代叠成一片红白横纹——刻痕保留信号、去掉噪音
       if (markViolent && g.e.violent === 1 && g.e.reignEnd && Math.abs(g.x - g.e.reignEnd.t) < 0.01) {
-        const seg = edges.filter((p) => p.t <= g.x + EPS).pop();
-        if (seg) {
+        const box = edge(b.d.key, Math.max(g.s, g.x - gapY));
+        if (box) {
+          const wN = Math.max(9, Math.min((box[1] - box[0]) * 0.4, 46));
           svg.appendChild(el('line', {
-            x1: seg.x0 + 2, x2: seg.x1 - 2, y1: y(g.x) - 1, y2: y(g.x) - 1,
+            x1: box[1] - 1.5 - wN, x2: box[1] - 1.5, y1: y(g.x) - 1.4, y2: y(g.x) - 1.4,
             stroke: 'var(--critical)', 'stroke-width': 2.5, 'stroke-linecap': 'round',
           }));
         }
       }
 
-      // 君主简称：河道竖向流动，名字竖排最省地方，也是汉字的本来排法
+      // 君主简称：竖排（汉字的本来排法）。取段中点处的河宽判断放不放得下
       const nm = shortName(g.e);
-      const seg0 = edges.find((p) => p.t >= g.s - EPS);
-      const chW = seg0 ? seg0.x1 - seg0.x0 : 0;
+      const midBox = edge(b.d.key, (g.s + g.x) / 2);
+      const chW = midBox ? midBox[1] - midBox[0] : 0;
       const runH = y(g.x) - y(g.s);
-      if (seg0 && chW >= 15 && runH >= nm.length * 10 + 6) {
-        const tx = (seg0.x0 + seg0.x1) / 2;
+      if (midBox && chW >= 15 && runH >= nm.length * 10 + 6) {
+        const tx = (midBox[0] + midBox[1]) / 2;
         const ty = y(g.s) + (runH - nm.length * 10) / 2 + 9;
         const t = el('text', {
           x: tx, y: ty, 'font-size': 10, 'text-anchor': 'middle',
@@ -281,10 +323,11 @@ export function renderRiver(host, list, opts) {
     }
 
     // 朝代名：写在河道起点上方；滚动时吸附于视口上缘，但不越出自身区间
-    const e0 = edges[0];
+    const box0 = edge(b.d.key, Math.min(b.e, b.s + Math.min(tau, (b.e - b.s) / 2))) || edge(b.d.key, b.s);
+    if (!box0) continue;
     const lw = textWidth(b.d.name, 11.5);
-    const cx = (e0.x0 + e0.x1) / 2;
-    const dot = el('circle', { cx: e0.x0 + 5, cy: y(b.s) + 6, r: 3, fill: col });
+    const cx = (box0[0] + box0[1]) / 2;
+    const dot = el('circle', { cx: box0[0] + 5, cy: y(b.s) + 6, r: 3, fill: col });
     const label = el('text', {
       x: Math.max(GUTTER + 2, Math.min(W - lw - 2, cx - lw / 2)), y: y(b.s) + 10,
       'font-size': 11.5, 'font-weight': 640, fill: 'var(--text-1)', 'pointer-events': 'none',
@@ -367,7 +410,7 @@ export function renderRiver(host, list, opts) {
   host.appendChild(h('p', { class: 'muted small', style: 'margin:10px 0 0', text:
     `河宽恒定，按当时并存的政权数均分：一股＝天下一统，数股＝分裂割据。`
     + `最宽处为 ${fmtYearAxis(peakSlice.a)} 年的 ${peak} 股。`
-    + (markViolent ? ' 横贯河道的红杠＝该帝非正常死亡。' : '')
+    + (markViolent ? ' 河道右缘的红色刻痕＝该帝非正常死亡。' : '')
     + ' 点按任一段可锁定该君主。' }));
   if (byDynasty) {
     host.appendChild(legend(ordered.map((b) => ({ color: `var(${slotVar(slots.get(b.d.key))})`, label: b.d.name }))));
@@ -381,11 +424,16 @@ export function renderRiver(host, list, opts) {
   host.appendChild(notes([
     `河宽**不编码疆域或人口**——本库没有这两项数据，若让分叉的宽窄去表示「谁更大」，`
     + `那是在画我们并不掌握的东西。故河宽恒定、按政权数均分，唯一的视觉变量「分叉数」`
-    + `正好等于那一刻并存的政权数。代价是三年的割据小国与盛唐同宽，真实规模见悬停与数据表。`,
+    + `正好等于那一刻并存的政权数。代价是三年的割据小国与盛唐同宽，真实规模见点按详情与数据表。`,
     `河道之间**永不交叉**：左右次序由一个全局排序键决定（正统序列 → 北方主线 → 其余，`
     + `同一法统按其源头的起始年归堆），因此任意两个政权只要共存，次序在每一段里都相同。`
     + `政权消失时右邻左移即为「合流」，新政权插入时右邻右让即为「分叉」——`
     + `图上所有的分与合都只是这一条规则的结果，没有额外的美化。`,
+    `**改道摊开成长弯**：每次政权更替的河宽重分摊在一段约 ±${TRANS_PX}px 的过渡区里`
+    + `（不超过邻段一半，以免过渡区互相穿透），用 smoothstep 缓动。新河道自楔尖张开、`
+    + `亡者收拢成尖，故河面在政权建立前数年即开始让位——**楔尖是排版的预告，不是史实的提前**：`
+    + `淡色河床可早于建国数年张开，但君主色块的起讫始终是真实日期。`
+    + `所有河道在同一过渡窗内做同一插值，任一瞬间的布局仍是不重叠的分割，这是长弯不打架的保证。`,
     `**不套滚动容器**：竖向内容再嵌一层竖向滚动是经典的滚动陷阱，手指落在容器上页面就像卡住了。`
     + `本图直接交给页面滚动，全页只有一个滚动器。代价是这一节很长（${Math.round(H)}px），`
     + `故顶／底两条固定条既是上下节跳转，也是保证能起滑的安全区。`,
