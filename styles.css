@@ -270,6 +270,9 @@ footer.foot { border-top: 1px solid var(--border); margin-top: 40px; padding-top
 ul { margin: 0 0 .6em; padding-left: 1.15em; }
 li { margin-bottom: .35em; }
 
+/* 「跳过本节」浮动按钮：仅窄屏启用，宽屏一屏能看完大半节，不需要它 */
+.skip-next { display: none; }
+
 /* ── 窄屏 ───────────────────────────────────────────────────────────────
    改造前在 375×812 实测：过滤器条 422px（占屏 52%）且常驻吸顶、
    页首到第一张图要滚 1907px、13 个目录 pill 占 132px、卡片留白吃掉 84px。
@@ -340,4 +343,15 @@ li { margin-bottom: .35em; }
   .tooltip { max-width: min(300px, calc(100vw - 24px)); font-size: .84rem; }
   .timeline-scroll { max-height: 460px; }
   .scroll-hint { margin: 0 0 4px; text-align: center; letter-spacing: .04em; }
+
+  .skip-next.on {
+    display: inline-flex; align-items: center; position: fixed; z-index: 60;
+    right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    max-width: calc(100vw - 24px); min-height: 40px; padding: 8px 14px;
+    border: 1px solid var(--border); border-radius: 999px;
+    background: var(--surface-1); color: var(--text-2);
+    font: inherit; font-size: .8rem; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .18);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
 }

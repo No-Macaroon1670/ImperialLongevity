@@ -354,6 +354,53 @@ function renderHero(host, list) {
   }
 }
 
+// ── 跳到下一节 ───────────────────────────────────────────────────────────
+/**
+ * 窄屏上的「跳过本节」浮动按钮。
+ *
+ * 手机一屏只有 812px，而跨文明比较一节 2.8 屏、H1–H5 2.4 屏——读者若对当前一节
+ * 不感兴趣，只能一路划过去。目录能跳，但要先滑回页首才够得着。
+ *
+ * 只在「本节确实长（>1.5 屏）且还剩不止一屏没读」时出现：否则它就是块常驻的挡板。
+ * 不出现的时候连 DOM 都在，但 display:none——按钮文案要随目标节变化，
+ * 每次重建反而更贵。
+ */
+function setupSectionSkip() {
+  const btn = h('button', { class: 'skip-next', type: 'button' });
+  document.body.appendChild(btn);
+  const ids = SECTIONS.map((s) => s.id);
+  let raf = null, shownFor = null;
+
+  const narrow = matchMedia('(max-width: 720px)');
+  const update = () => {
+    raf = null;
+    // 宽屏直接退出：这个判定要对每一节做 getBoundingClientRect，
+    // 挂在滚动上逐帧跑会白白引发布局计算，而按钮在宽屏本来就被 CSS 隐藏
+    if (!narrow.matches) { btn.classList.remove('on'); shownFor = null; return; }
+    const vh = window.innerHeight;
+    let idx = -1;
+    // 「当前这一节」＝跨过视口中线的那一节，比用 top 判断稳定得多
+    for (let i = 0; i < ids.length; i++) {
+      const r = document.getElementById(ids[i]).getBoundingClientRect();
+      if (r.top < vh * 0.5 && r.bottom > vh * 0.5) { idx = i; break; }
+    }
+    const next = idx >= 0 ? ids[idx + 1] : null;
+    const r = idx >= 0 ? document.getElementById(ids[idx]).getBoundingClientRect() : null;
+    const worth = next && r && r.height > vh * 1.5 && r.bottom > vh * 1.4;
+    if (!worth) { btn.classList.remove('on'); shownFor = null; return; }
+    if (shownFor !== next) {
+      shownFor = next;
+      btn.textContent = `跳过本节 · ${SECTIONS[idx + 1].title.split('：')[0]} ↓`;
+      btn.onclick = () => document.getElementById(next).scrollIntoView({ block: 'start' });
+    }
+    btn.classList.add('on');
+  };
+  addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+  addEventListener('resize', update);
+  update();
+  return update;
+}
+
 // ── 渲染 ─────────────────────────────────────────────────────────────────
 let hostMap = new Map();
 function renderOne(sec) {
@@ -419,6 +466,8 @@ function boot() {
     if (e.key === 'Escape' && S.filtersOpen) { S.filtersOpen = false; render(); }
   });
 
+  const refreshSkip = setupSectionSkip();
+
   // 视口宽度变了要重绘：Frame 是按宿主实测宽度布局的，不重绘就停在旧尺寸。
   // 只认宽度——手机上地址栏伸缩会不停触发 resize，但那只改高度，不该重画整页。
   let lastW = window.innerWidth, rzTimer = null;
@@ -426,7 +475,7 @@ function boot() {
     if (window.innerWidth === lastW) return;
     lastW = window.innerWidth;
     clearTimeout(rzTimer);
-    rzTimer = setTimeout(render, 180);
+    rzTimer = setTimeout(() => { render(); refreshSkip(); }, 180);
   });
 
   // 主题切换
