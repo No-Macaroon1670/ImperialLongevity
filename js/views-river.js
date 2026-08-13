@@ -32,7 +32,7 @@
 //      与「安全起滑区」。触屏没有悬停，点中君主即高亮、详情进底部固定卡片。
 import { el, h, linear, hoverable, legend, tableView, notes, fmtYearAxis, fmt1, textWidth } from './charts.js';
 import { DYN_STATS } from './data.js';
-import { ERAS, SUCCESSION, ORTHODOX, SECONDARY } from './dynasties.js';
+import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORTHODOX, SECONDARY } from './dynasties.js';
 import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName } from './views-lanes.js';
 
@@ -146,6 +146,25 @@ function degenerate(slice, rank, key, x0, x1) {
 }
 
 /**
+ * 目标河道近岸上的细流盒。用于「支流汇入干流／干流分出支流」：
+ * 亡者的收束点（或新生者的涌出点）骑在吞并者（或母体）的河岸上，
+ * 尾迹经由过渡窗弯向河岸、没入其君主色块之下——亡国是汇流，不是蒸发。
+ *
+ * 相邻性门槛：先找该河道按全局次序本应落座的缝隙，目标必须正好是缝隙的
+ * 左邻或右邻。中间隔着第三条河道时弯过去必然横穿别人（河道永不交叉是本图
+ * 的硬约束），返回 null 退回缝隙细流——数据记的是史实，几何画得出才画。
+ */
+function bankStem(slice, rank, key, tgt) {
+  const r = rank.get(key);
+  let j = 0;
+  for (const b of slice.live) { if (rank.get(b.d.key) < r) j++; else break; }
+  const L = slice.live[j - 1], R = slice.live[j];
+  if (L && L.d.key === tgt) { const box = slice.at.get(tgt); return [box[1] - STEM, box[1] + STEM]; }
+  if (R && R.d.key === tgt) { const box = slice.at.get(tgt); return [box[0] - STEM, box[0] + STEM]; }
+  return null;
+}
+
+/**
  * 相邻两段之间的过渡：窗 [c − ha, c + hb]，半长取「目标半长」与「邻段一半」的较小者，
  * 因此过渡窗彼此不相交。窗内所有河道用同一 smoothstep 在旧新两个分割之间插值——
  * 两个不重叠分割的凸组合仍是不重叠分割，故过渡中也不会有河道相互侵入。
@@ -161,6 +180,18 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
     const from = new Map(A.at), to = new Map(B.at);
     for (const k of B.at.keys()) if (!from.has(k)) from.set(k, degenerate(A, rank, k, x0, x1));
     for (const k of A.at.keys()) if (!to.has(k)) to.set(k, degenerate(B, rank, k, x0, x1));
+    // 亡入／分出：有吞并者（母体）且其正好相邻时，细流改放到对方河岸上——
+    // 支流汇入干流、干流分出支流，取代消失在缝隙里的尖角
+    for (const k of A.at.keys()) {
+      if (B.at.has(k)) continue;
+      const tgt = MERGED_INTO[k];
+      if (tgt && B.at.has(tgt)) { const st = bankStem(B, rank, k, tgt); if (st) to.set(k, st); }
+    }
+    for (const k of B.at.keys()) {
+      if (A.at.has(k)) continue;
+      const src = SPRANG_FROM[k];
+      if (src && A.at.has(src)) { const st = bankStem(A, rank, k, src); if (st) from.set(k, st); }
+    }
     // 法统相承且在同一切点交棒者（汉→新、唐→后梁…），前后两河共用一个「颈缩」盒：
     // 前朝收进它、新朝从它张开，于是交替处是一段变色的窄颈，而不是两个背对背的尖——
     // ggalluvial 把承续画成一条连续 ribbon，同理
@@ -295,7 +326,7 @@ export function renderRiver(host, list, opts) {
     const bedSamples = sample(b.d.key, b.s - tau, b.e + tau);
     const bedPath = polyPath(bedSamples, y, 1);
     if (!bedPath) continue;
-    const bed = el('path', { d: bedPath, fill: col, opacity: .16, class: 'mark' });
+    const bed = el('path', { d: bedPath, fill: col, opacity: .16, class: 'mark', 'data-dyn': b.d.key });
     hoverable(bed, () => [
       { color: col, value: `${fmtYearAxis(b.d.s)}–${fmtYearAxis(b.d.e)}`, label: '国祚' },
       { label: '历时', value: `${st.span} 年` },
@@ -488,6 +519,12 @@ export function renderRiver(host, list, opts) {
     + `真实疆域面积（河宽即国力，且自带总量上限），但本库没有逐年疆域数据，`
     + `且元、清这类跨界政权难以归一——容量分槽是「不画我们不掌握的东西」前提下最接近的近似。`
     + `并存 ≤2 时豁免：大一统满河与南北对峙半分的语法保持不变。`,
+    `**亡国是汇流，不是蒸发**：政权终结时其疆土并入谁家、建立时从谁家裂出，`
+    + `都是已知的史实（见 dynasties.js 的 MERGED_INTO / SPRANG_FROM 及逐条依据）。`
+    + `河道收束时弯向吞并者的河岸并没入其下（陈并于隋、北齐亡于北周、南宋亡于元…），`
+    + `新河道的细流自母体的河岸涌出（清起于叛明的后金、金起于叛辽的完颜部…）。`
+    + `吞并者与亡者之间隔着第三条河道时不弯——河道永不交叉是硬约束，此时退回缝隙细流。`
+    + `禅让式的法统相承另有画法（变色窄颈），两者都成立时窄颈优先。`,
     `**改道摊开成长弯，交替处不断流**：每次政权更替的河宽重分摊在一段约 ±${TRANS_PX}px 的`
     + `过渡区里（不超过邻段一半，以免过渡区互相穿透），用 smoothstep 缓动。新河道自一线细流张开、`
     + `亡者收束成细流而**不掐断成零宽的尖**（d3-sankey 的 linkMinWidth 同理）；`

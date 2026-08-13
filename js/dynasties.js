@@ -130,6 +130,67 @@ export const SUCCESSION = {
 };
 
 /**
+ * 亡入关系：`政权 → 吞并者`。政权终结时其疆土/朝廷并入谁家。
+ *
+ * 竖向河流用它画「支流汇入干流」：河道收束时不再消失在缝隙里，而是弯向吞并者的
+ * 河岸并没入其下——亡国是汇流，不是蒸发。与 SUCCESSION 的分工：SUCCESSION 记
+ * 禅让式的法统相承（同一切点交棒，画成变色的窄颈），此表记武力吞并与纳土归降。
+ * 两者都声明时窄颈优先。绘制端还有一道相邻性门槛：吞并者与亡者之间若隔着第三条
+ * 河道，弯过去必然横穿别人，此时退回缝隙细流——数据记的是史实，几何画得出才画。
+ *
+ * 逐条依据（年份为亡年）：更始残部为刘秀所并（25）；蜀汉亡于魏（263）、孙吴亡于
+ * 西晋（280）；西晋亡于汉赵（316，怀愍二帝被掳平阳）；桓楚为晋所平（404）、
+ * 成汉亡于东晋（347，桓温）、南燕（410）与后秦（417）皆亡于刘裕北伐；汉赵亡于
+ * 后赵（329）、后赵亡于冉魏（350）、冉魏亡于前燕（352）；前燕（370）与前凉（376）
+ * 亡于前秦；前秦亡于后秦（394）、西燕亡于后燕（394）、后凉亡于后秦（403）；
+ * 北凉（439）、胡夏（431）、北燕（436）亡于北魏；陈（589）与西梁（587）并于隋、
+ * 北齐亡于北周（577）；后唐亡于后晋（936，石敬瑭引契丹）；前蜀亡于后唐（925）、
+ * 闽（945）与楚（951）亡于南唐；后蜀（965）、南唐（975）、南汉（971）、吴越纳土
+ * （978）、南平（963）、北汉（979）皆并于宋；辽亡于金（1125）；西夏（1227）、
+ * 金（1234）、南宋（1279）亡于元；南明（1662）与太平天国（1864）亡于清。
+ */
+export const MERGED_INTO = {
+  xuanhan: 'ehan',
+  shu: 'wei', wu: 'xjin', xjin: 'hanzhao',
+  huanchu: 'ejin', chenghan: 'ejin', nanyan: 'ejin', houqin: 'ejin',
+  hanzhao: 'houzhao', houzhao: 'ranwei', ranwei: 'qianyan',
+  qianyan: 'qianqin', qianliang: 'qianqin',
+  qianqin: 'houqin', xiyan: 'houyan', houliang: 'houqin',
+  beiliang: 'bwei', xia: 'bwei', beiyan: 'bwei',
+  chen: 'sui', xiliang: 'sui', bqi: 'bzhou',
+  htang: 'hjin',
+  qshu: 'htang', min: 'ntang', chu: 'ntang',
+  hshu: 'nsong', ntang: 'nsong', nhan: 'nsong', wuyue: 'nsong', nanping: 'nsong', bhan: 'nsong',
+  liao: 'jin', xixia: 'yuan', jin: 'yuan', ssong: 'yuan',
+  nming: 'qing', taiping: 'qing',
+};
+
+/**
+ * 分出关系：`政权 → 母体`。政权建立时是从谁家的疆土上裂出来的（母体须在世）。
+ *
+ * 竖向河流用它画「干流分出支流」：新河道的细流自母体的河岸涌出，而不是凭空
+ * 出现在缝隙里。只记清晰的裂土自立：叛将（后秦姚苌、后燕慕容垂、西燕皆叛前秦；
+ * 后凉吕光亦前秦将；北凉段业叛后凉、胡夏赫连勃勃叛后秦、后金努尔哈赤叛明、
+ * 金完颜氏叛辽、西夏元昊叛宋）、宗室裂土（南燕慕容德分后燕、北汉刘崇承后汉、
+ * 蜀汉成汉汉赵起于晋乱）、藩镇自立（吴、前蜀、楚、吴越皆唐藩，闽、南汉受后梁封，
+ * 南平、后蜀出于后唐）、以及叛乱建国（冉魏灭后赵、桓楚篡晋旋灭、太平天国起于清）。
+ * 部族外来、无从裂出者（辽、元、中华帝国）不记。
+ */
+export const SPRANG_FROM = {
+  chenghan: 'xjin', hanzhao: 'xjin',
+  houzhao: 'hanzhao', ranwei: 'houzhao',
+  qianyan: 'ejin', qianqin: 'houzhao',
+  houqin: 'qianqin', houyan: 'qianqin', xiyan: 'qianqin', houliang: 'qianqin',
+  nanyan: 'houyan', beiliang: 'houliang', xia: 'houqin',
+  huanchu: 'ejin', xiliang: 'xwei',
+  wuten: 'tang', qshu: 'tang', chu: 'tang', wuyue: 'tang',
+  min: 'hliang', nhan: 'hliang',
+  nanping: 'htang', hshu: 'htang', bhan: 'hhan',
+  jin: 'liao', xixia: 'nsong',
+  qing: 'ming', taiping: 'qing',
+};
+
+/**
  * 正统序列：横向泳道最上一行专用。
  *
  * 取《资治通鉴》以降的传统正统观：三国承曹魏、南北朝承南朝、五代承中原五朝。
