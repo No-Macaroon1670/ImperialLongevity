@@ -1,0 +1,206 @@
+{
+ "_about": "人工判定层：Wikidata 的死亡方式仅覆盖 15/36，其余 21 位在此补齐；deposed（是否被废黜）Wikidata 无对应属性，故 36 位全部人工标注。与骨架分开存放，骨架可随时重抓而不覆盖这里的判断。",
+ "_schema": {
+  "violent": "1=非正常死亡（被杀/处决/战死/自杀），0=正常死亡（病殁/年老/意外）。与中国库 violent_death 同义，便于合并比较。",
+  "deposed": "1=在位期间被废黜或被迫退位（含苏丹制废除）。主动让位于子嗣者不计。",
+  "disputed": "1=死因史料有争议，敏感性分析可整体剔除后重跑",
+  "src": "wd=沿用 Wikidata P1196；manual=人工判定"
+ },
+ "rulers": {
+  "Q83100": {
+   "violent": 0,
+   "deposed": 0,
+   "src": "manual",
+   "note": "奥斯曼一世，病殁（痛风），王朝奠基者"
+  },
+  "Q133168": {
+   "violent": 0,
+   "deposed": 0,
+   "src": "manual",
+   "note": "奥尔汗一世，病殁"
+  },
+  "Q128358": {
+   "violent": 0,
+   "deposed": 1,
+   "disputed": 1,
+   "src": "manual",
+   "note": "巴耶济德一世，1402 安卡拉之役败于帖木儿被俘，次年死于囚中；一说自杀，故标存疑"
+  },
+  "Q168769": {
+   "violent": 0,
+   "deposed": 0,
+   "src": "manual",
+   "note": "穆罕默德一世，病殁"
+  },
+  "Q131394": {
+   "violent": 0,
+   "deposed": 0,
+   "src": "manual",
+   "note": "穆拉德二世，中风病殁。1444 年系主动让位于子，1446 复位，不计被废"
+  },
+  "Q34503": {
+   "violent": 0,
+   "deposed": 0,
+   "disputed": 1,
+   "src": "manual",
+   "note": "穆罕默德二世，征途中病殁；一说为御医所毒"
+  },
+  "Q165983": {
+   "violent": 0,
+   "deposed": 1,
+   "disputed": 1,
+   "src": "manual",
+   "note": "巴耶济德二世，1512 被子塞利姆一世逼退，月余卒于途，疑被毒。此条 Wikidata 英文标签误作 Selim i"
+  },
+  "Q8474": {
+   "violent": 0,
+   "deposed": 0,
+   "src": "manual",
+   "note": "苏莱曼一世，病殁于锡盖特堡围城军中"
+  },
+  "Q161872": {
+   "violent": 0,
+   "deposed": 0,
+   "src": "manual",
+   "note": "塞利姆二世，浴室跌伤后病殁，属意外"
+  },
+  "Q159934": {
+   "violent": 0,
+   "deposed": 0,
+   "src": "manual",
+   "note": "穆拉德三世，病殁"
+  },
+  "Q171465": {
+   "violent": 0,
+   "deposed": 0,
+   "src": "manual",
+   "note": "穆罕默德三世，病殁"
+  },
+  "Q174798": {
+   "violent": 0,
+   "deposed": 1,
+   "src": "manual",
+   "note": "穆斯塔法一世，两度即位两度被废（1618、1623），死于幽禁"
+  },
+  "Q170514": {
+   "violent": 0,
+   "deposed": 1,
+   "src": "manual",
+   "note": "穆罕默德四世，1687 兵变被废，1693 卒于幽禁"
+  },
+  "Q199660": {
+   "violent": 0,
+   "deposed": 0,
+   "src": "manual",
+   "note": "艾哈迈德二世，病殁"
+  },
+  "Q199659": {
+   "violent": 0,
+   "deposed": 1,
+   "disputed": 1,
+   "src": "manual",
+   "note": "穆斯塔法二世，1703 埃迪尔内事件被废，数周后卒；一说被毒"
+  },
+  "Q199482": {
+   "violent": 0,
+   "deposed": 1,
+   "src": "manual",
+   "note": "艾哈迈德三世，1730 帕特罗纳·哈利勒起义被废，1736 卒于幽禁"
+  },
+  "Q199481": {
+   "violent": 0,
+   "deposed": 0,
+   "src": "manual",
+   "note": "马哈茂德一世，礼拜归途心疾发作而卒"
+  },
+  "Q199484": {
+   "violent": 0,
+   "deposed": 0,
+   "src": "manual",
+   "note": "穆斯塔法三世，心疾病殁"
+  },
+  "Q199830": {
+   "violent": 1,
+   "deposed": 1,
+   "src": "manual",
+   "note": "穆斯塔法四世，1808 被废，同年由马哈茂德二世下令处死"
+  },
+  "Q134817": {
+   "violent": 0,
+   "deposed": 1,
+   "src": "manual",
+   "note": "阿卜杜勒-哈米德二世，1909 青年土耳其党人废黜，1918 病殁"
+  },
+  "Q151494": {
+   "violent": 0,
+   "deposed": 0,
+   "src": "manual",
+   "note": "穆罕默德五世，病殁"
+  },
+  "Q96261": {
+   "violent": 1,
+   "deposed": 0,
+   "src": "wd",
+   "note": "穆拉德一世，1389 科索沃战役中遇刺"
+  }
+ },
+ "deposed_only": {
+  "_note": "以下各位死亡方式已由 Wikidata 提供，此处仅补 deposed",
+  "Q494660": {
+   "deposed": 0,
+   "note": "塞利姆一世"
+  },
+  "Q199633": {
+   "deposed": 1,
+   "note": "塞利姆三世，1807 被废，1808 遇弑"
+  },
+  "Q114749": {
+   "deposed": 0,
+   "note": "艾哈迈德一世"
+  },
+  "Q172056": {
+   "deposed": 1,
+   "note": "奥斯曼二世，1622 耶尼切里兵变被废并弑于耶迪库勒"
+  },
+  "Q174762": {
+   "deposed": 0,
+   "note": "穆拉德四世"
+  },
+  "Q168776": {
+   "deposed": 1,
+   "note": "易卜拉欣一世，1648 被废后处死"
+  },
+  "Q172061": {
+   "deposed": 0,
+   "note": "苏莱曼二世"
+  },
+  "Q199825": {
+   "deposed": 0,
+   "note": "奥斯曼三世"
+  },
+  "Q170707": {
+   "deposed": 0,
+   "note": "阿卜杜勒-哈米德一世"
+  },
+  "Q174791": {
+   "deposed": 0,
+   "note": "马哈茂德二世"
+  },
+  "Q174772": {
+   "deposed": 0,
+   "note": "阿卜杜勒-迈吉德一世"
+  },
+  "Q199827": {
+   "deposed": 1,
+   "note": "穆拉德五世，在位 93 日被废，1904 卒于幽禁"
+  },
+  "Q162543": {
+   "deposed": 1,
+   "note": "穆罕默德六世，1922 苏丹制废除，流亡，1926 病殁"
+  },
+  "Q151500": {
+   "deposed": 1,
+   "note": "阿卜杜勒-阿齐兹，1876 被废，数日后死；官方定为自杀，广疑他杀——无论何者皆属非正常死亡"
+  }
+ }
+}

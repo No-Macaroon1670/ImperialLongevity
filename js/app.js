@@ -7,6 +7,7 @@ import { renderTimeline, renderHistoryScatter, renderHeatmap } from './views-tim
 import { renderLaneTimeline } from './views-lanes.js';
 import { renderKM, renderCIF, renderCox } from './views-survival.js';
 import { renderBox, renderDSI, renderHypotheses, renderDatabase, renderAudit } from './views-compare.js';
+import { renderCiv } from './views-civ.js';
 
 // ── 状态 ─────────────────────────────────────────────────────────────────
 const S = {
@@ -217,6 +218,12 @@ const SECTIONS = [
     desc: '以下结论随上方筛选条件实时重算。每条假说都附上它自身的方法学软肋——数据能支持什么、不能支持什么，同样重要。',
     controls: [],
     render: renderHypotheses,
+  },
+  {
+    id: 'civ', title: '跨文明比较：政治结构 → 统治风险',
+    desc: '同一套口径下比较不同文明的君主。以「登基后生存」与「非正常死亡比例」为主判据——在位起讫与死亡方式各文明史料都记得牢，而生年普遍稀疏，本项目的主结论亦不依赖生年。奥斯曼骨架取自 Wikidata（CC0）并逐位锚定 QID，死亡方式与废黜判定人工补齐。这是扩展的第一步：两个文明尚不足以检验因果链，拜占庭与日本这两个极端值才是关键。',
+    controls: [],
+    render: renderCiv,
   },
   {
     id: 'audit', title: '空档审计：朝代长带上的每一处悬空',
