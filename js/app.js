@@ -445,6 +445,7 @@ function renderOne(sec) {
     host.chart.innerHTML = '';
     host.chart.appendChild(h('p', { class: 'muted', text: `该图在当前筛选下无法绘制：${err.message}` }));
     console.error(sec.id, err);
+    (window.__RENDER_ERRS__ = window.__RENDER_ERRS__ || []).push(sec.id + ' :: ' + err.stack);
   }
 }
 function render() {

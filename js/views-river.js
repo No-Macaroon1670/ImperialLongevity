@@ -121,7 +121,20 @@ function layoutChannels(bands, x0, x1) {
       .sort((p, q) => rank.get(p.d.key) - rank.get(q.d.key));
     raw.push({ a, z, live, n: live.length });
   }
-  const C = Math.max(1, ...raw.map((r) => r.n));
+  // 长段细分：承平数十年的段切成 ≤SUBDIV 年的小段——缓回收与「承平回归」
+  // 都按段落步，一段一步、渐进不跳变；不细分则 979–1038 这类六十年长段
+  // 只有一次机会调整
+  const SUBDIV = 24;
+  const raw2 = [];
+  for (const r of raw) {
+    const len = r.z - r.a;
+    if (len <= SUBDIV) { raw2.push(r); continue; }
+    const parts = Math.ceil(len / SUBDIV);
+    for (let p2 = 0; p2 < parts; p2++) {
+      raw2.push({ a: r.a + (len * p2) / parts, z: r.a + (len * (p2 + 1)) / parts, live: r.live, n: r.n });
+    }
+  }
+  const C = Math.max(1, ...raw2.map((r) => r.n));
   const laneW = (x1 - x0) / C;
   const g0 = gapFor(x1 - x0);
   const HOLD = 16;                       // 空车道的回收等待期（年）
@@ -141,7 +154,8 @@ function layoutChannels(bands, x0, x1) {
   };
   const slices = [];
   let fresh = true;
-  for (const r of raw) {
+  let prevSig = '';
+  for (const r of raw2) {
     if (!r.n) {
       for (let l = 0; l < C; l++) if (owner[l]) { owner[l] = null; freedAt[l] = r.a; }
       slices.push({ a: r.a, z: r.z, live: [], n: 0, at: new Map() });
@@ -178,7 +192,12 @@ function layoutChannels(bands, x0, x1) {
       for (const b2 of r.live) {
         const k = b2.d.key;
         if (owner.includes(k)) continue;
-        const target = Math.max(1, Math.floor(C / r.n));
+        // 法统继承：后继者整段接手前身留下的空车道（北宋亡，南宋接其全部
+        // 车道，而不是按新丁只挤 1 条——此前南宋被挤成单车道，与辽金大理
+        // 等宽，正统主线看着突兀）。接手范围＝插入口两侧的连续空段，
+        // 那正是前身的旧河道
+        const inherit = SUCCESSION[k] && !liveSet.has(SUCCESSION[k]);
+        const target = inherit ? C : Math.max(1, Math.floor(C / r.n));
         const rk = rank.get(k);
         let pos = 0;
         for (let l = 0; l < C; l++) {
@@ -188,7 +207,7 @@ function layoutChannels(bands, x0, x1) {
         let got = 0;
         for (let l = pos; l < C && got < target && owner[l] === null; l++) { owner[l] = k; got++; }
         for (let l = pos - 1; l >= 0 && got < target && owner[l] === null; l--) { owner[l] = k; got++; }
-        while (got < target) {
+        while (!inherit && got < target) {
           const run = runOf(k) || [pos, pos - 1];
           const lK = run[0] > 0 ? owner[run[0] - 1] : null;
           const rK = run[1] < C - 1 ? owner[run[1] + 1] : null;
@@ -199,6 +218,24 @@ function layoutChannels(bands, x0, x1) {
           if (rSize >= lSize && rSize > 1) { owner[run[1] + 1] = k; got++; }
           else if (lSize > 1) { owner[run[0] - 1] = k; got++; }
           else break;
+        }
+        if (!owner.includes(k) && inherit) {
+          // 前身未留空位（罕见：被征服承接走了）：按普通新丁再走一遍挤入
+          const t2 = Math.max(1, Math.floor(C / r.n));
+          let got2 = 0;
+          for (let l = pos; l < C && got2 < t2 && owner[l] === null; l++) { owner[l] = k; got2++; }
+          while (got2 < t2) {
+            const run = runOf(k) || [pos, pos - 1];
+            const lK = run[0] > 0 ? owner[run[0] - 1] : null;
+            const rK = run[1] < C - 1 ? owner[run[1] + 1] : null;
+            const lRun = lK ? runOf(lK) : null;
+            const rRun = rK ? runOf(rK) : null;
+            const lSize = lRun ? lRun[1] - lRun[0] + 1 : 0;
+            const rSize = rRun ? rRun[1] - rRun[0] + 1 : 0;
+            if (rSize >= lSize && rSize > 1) { owner[run[1] + 1] = k; got2++; }
+            else if (lSize > 1) { owner[run[0] - 1] = k; got2++; }
+            else break;
+          }
         }
         if (!owner.includes(k)) {
           // 两邻皆已保底、又无近旁空位：本切片退回标准整数分配。
@@ -214,13 +251,66 @@ function layoutChannels(bands, x0, x1) {
           break;
         }
       }
-      // 3) 缓回收：空置满 HOLD 年的车道并入相邻 run
+      // 3) 缓回收：空置满 HOLD 年的车道并入相邻 run——优先给低于公平份额的一侧
+      const fairOf = new Map();
+      {
+        const base = Math.floor(C / r.n), rem = C % r.n;
+        r.live.forEach((b2, i2) => fairOf.set(b2.d.key, base + (i2 < rem ? 1 : 0)));
+      }
+      const deficit = (k2) => {
+        if (!k2) return -99;
+        const rr = runOf(k2);
+        return (fairOf.get(k2) ?? 0) - (rr ? rr[1] - rr[0] + 1 : 0);
+      };
       for (let l = 0; l < C; l++) {
         if (owner[l] !== null || r.a - freedAt[l] < HOLD) continue;
         const lK = l > 0 ? owner[l - 1] : null;
         const rK = l < C - 1 ? owner[l + 1] : null;
-        if (lK) owner[l] = lK; else if (rK) owner[l] = rK;
+        if (lK === null && rK === null) continue;
+        owner[l] = deficit(lK) >= deficit(rK) ? (lK || rK) : (rK || lK);
       }
+      // 3.5) 承平回归：格局未变的时段里，向公平份额缓步靠拢（每段至多转让一条）。
+      // 只救济低于公平份额者，从相邻的超额者处取——征服所得在无人饥饿时不没收
+      //（元并金的水不会平白还给南宋），北宋收十国后被辽隔断的失衡由此纠正
+      const sig = r.live.map((b2) => b2.d.key).join('|');
+      if (sig === prevSig) {
+        let uk = null, udef = 0;
+        for (const b2 of r.live) {
+          const d2 = deficit(b2.d.key);
+          if (d2 > udef) { udef = d2; uk = b2.d.key; }
+        }
+        if (uk) {
+          const run = runOf(uk);
+          // 沿相邻链找最近的超额者，整链向饥饿者平移一条车道：中间者宽度
+          // 不变、位置侧移一条（北宋的公平份额压在大理手里、隔着辽——
+          // 单看两邻永远转不过去）。空档挡路则不穿（留白由缓回收另行处理）
+          const chain = (dir) => {
+            let edge = dir > 0 ? run[1] : run[0];
+            const path = [];
+            while (true) {
+              const nl = edge + dir;
+              if (nl < 0 || nl >= C) return null;
+              const k2 = owner[nl];
+              if (k2 === null) return null;
+              const rr = runOf(k2);
+              path.push({ k: k2, run: rr });
+              if (-deficit(k2) > 0) return path;
+              edge = dir > 0 ? rr[1] : rr[0];
+            }
+          };
+          if (run) {
+            const pR = chain(1), pL = chain(-1);
+            const pick = pR && pL ? (pR.length <= pL.length ? { p: pR, d: 1 } : { p: pL, d: -1 })
+              : pR ? { p: pR, d: 1 } : pL ? { p: pL, d: -1 } : null;
+            if (pick) {
+              const lanes = pick.p.map((seg) => (pick.d > 0 ? seg.run[0] : seg.run[1]));
+              owner[lanes[0]] = uk;
+              for (let i2 = 1; i2 < lanes.length; i2++) owner[lanes[i2]] = pick.p[i2 - 1].k;
+            }
+          }
+        }
+      }
+      prevSig = sig;
       // 4) 一统：满河语法不可让
       if (r.n === 1) owner.fill(r.live[0].d.key);
     }
