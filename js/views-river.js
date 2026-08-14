@@ -721,18 +721,28 @@ export function renderRiver(host, list, opts) {
         }
       }
 
-      // 君主简称：竖排（汉字的本来排法）。取段中点处的河宽判断放不放得下
+      // 君主简称。窄河道竖排（汉字的本来排法，省横向空间）；河道宽过阈值时
+      // 转横排并按宽度微调字号——满幅大河里竖排两个字读起来滑稽。
+      // 阈值 110px：竖排只在横排放不开的地方出现，两种排法不会同屏打架
       const nm = shortName(g.e);
       const midBox = edge(b.d.key, (g.s + g.x) / 2);
       const chW = midBox ? midBox[1] - midBox[0] : 0;
       const runH = y(g.x) - y(g.s);
-      if (midBox && chW >= 15 && runH >= nm.length * 10 + 6) {
+      const inkCol = ink[cvar] === 'dark' ? 'var(--text-1)' : 'var(--surface-1)';
+      if (midBox && chW >= 110 && runH >= 18) {
+        const fs = chW >= 280 ? 13.5 : 12;
+        if (textWidth(nm, fs) + 12 < chW) {
+          gEmps.appendChild(el('text', {
+            x: (midBox[0] + midBox[1]) / 2, y: y((g.s + g.x) / 2) + fs * 0.36,
+            'font-size': fs, 'text-anchor': 'middle', fill: inkCol, 'pointer-events': 'none',
+          }, nm));
+        }
+      } else if (midBox && chW >= 15 && runH >= nm.length * 10 + 6) {
         const tx = (midBox[0] + midBox[1]) / 2;
         const ty = y(g.s) + (runH - nm.length * 10) / 2 + 9;
         const t = el('text', {
           x: tx, y: ty, 'font-size': 10, 'text-anchor': 'middle',
-          fill: ink[cvar] === 'dark' ? 'var(--text-1)' : 'var(--surface-1)',
-          'pointer-events': 'none',
+          fill: inkCol, 'pointer-events': 'none',
         });
         [...nm].forEach((c, i) => t.appendChild(el('tspan', { x: tx, dy: i ? 10 : 0 }, c)));
         gEmps.appendChild(t);

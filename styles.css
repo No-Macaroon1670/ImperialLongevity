@@ -288,6 +288,13 @@ li { margin-bottom: .35em; }
 .river-emp { transition: opacity .12s; cursor: pointer; }
 .river-emp.dim { opacity: .28; }
 
+/* 桌面上河流限宽居中:两千年的竖向长卷摊到 1090px 宽,满幅河道里竖排的
+   两字帝名显得滑稽;手机 375px 的比例是打磨过的,桌面取其近似上限 640px。
+   仅限宽屏——窄屏的全宽出血规则在媒体查询里,不受影响 */
+@media (min-width: 721px) {
+  section.card.river-mode .chart-host.full-bleed { max-width: 640px; margin-left: auto; margin-right: auto; }
+}
+
 /* 纪年滑杆：河流节专属，贴左缘竖放；进入本节才出现 */
 .river-scrub {
   position: fixed; left: 3px; top: 50%; transform: translateY(-50%);
