@@ -886,9 +886,9 @@ export function renderRiver(host, list, opts) {
     + (markViolent ? ' 河道右缘的红色刻痕＝该帝非正常死亡。' : '')
     + ' 各河道的淡色底＝河床：称帝前的预告、亡后的尾迹、在位空档，皆由它透出。'
     + ' 点按任一段可锁定该君主。' }));
-  if (byDynasty) {
-    host.appendChild(legend(ordered.map((b) => ({ color: `var(${slotVar(slots.get(b.d.key))})`, label: b.d.name }))));
-  } else {
+  // 按朝代配色时不放图例：65 个色块的对照表没人查得动，何况每条河道
+  // 都直接标着朝代名，颜色只是辅助通道。仅两色语义模式保留两行图例
+  if (!byDynasty) {
     host.appendChild(legend([
       { color: 'var(--c-unified)', label: '大一统王朝' },
       { color: 'var(--c-split)', label: '分裂时期政权' },
