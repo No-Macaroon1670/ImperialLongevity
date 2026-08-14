@@ -65,7 +65,8 @@ function familyHead(key, orth, sec) {
   const seen = new Set();
   while (!seen.has(k)) {
     seen.add(k);
-    const p = ORDER_HINT[k] || SUCCESSION[k] || SPRANG_FROM[k];
+    const hint = ORDER_HINT[k];
+    const p = (typeof hint === 'string' ? hint : null) || SUCCESSION[k] || SPRANG_FROM[k];
     if (!p || !DYN_MAP.has(p) || orth.has(p) || sec.has(p)) return k;
     k = p;
   }
@@ -87,7 +88,10 @@ function orderKeys(bands) {
     const g = t === 2 ? familyHead(b.d.key, orth, sec) : lineageRoot(b.d.key);
     groupKey.set(b.d.key, g);
     const gb = bandOf.get(g);
-    groupStart.set(b.d.key, gb ? gb.s : (DYN_MAP.get(g) ? DYN_MAP.get(g).s : b.s));
+    // 数值改判＝直接指定排序年（外置孤立政权，见 dynasties.js 注释）
+    const hint = ORDER_HINT[b.d.key];
+    groupStart.set(b.d.key, typeof hint === 'number' ? hint
+      : gb ? gb.s : (DYN_MAP.get(g) ? DYN_MAP.get(g).s : b.s));
   }
   const tier = (b) => (orth.has(b.d.key) ? 0 : sec.has(b.d.key) ? 1 : 2);
   return bands.slice().sort((a, b) =>
