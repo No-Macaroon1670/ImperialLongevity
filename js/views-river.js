@@ -186,57 +186,83 @@ function bankStem(slice, rank, key, tgt) {
 }
 
 /**
- * 相邻两段之间的过渡：窗 [c − ha, c + hb]，半长取「目标半长」与「邻段一半」的较小者，
- * 因此过渡窗彼此不相交。窗内所有河道用同一 smoothstep 在旧新两个分割之间插值——
- * 两个不重叠分割的凸组合仍是不重叠分割，故过渡中也不会有河道相互侵入。
+ * 相邻两个**稳定段**之间的过渡：窗 [c − ha, c + span + hb]，半长取「所需长度」
+ * 与「邻段一半」的较小者，因此过渡窗彼此不相交。窗内所有河道用同一 smoothstep
+ * 在旧新两个分割之间插值——两个不重叠分割的凸组合仍是不重叠分割。
+ *
+ * **微段桥接**：短于 MIN_SLICE 的段不作过渡目标。魏受禅至蜀汉自立仅数月，
+ * 河面不值得完整到达「魏独占满幅」再立刻改道——那会挤出「深掐到点＋平顶急弯」；
+ * 何况禅让两端常差一个月（献帝逊位 220-11、曹丕受禅 220-12），不桥接则微腰
+ * 根本触发不了。桥接后由前一稳定段直接过渡到下一稳定段（span＝桥接跨度），
+ * 微段的布局仍供点查（edgeAt 的过渡窗优先于段常态，桥内自动被窗覆盖）。
+ * 两个例外不桥接：微段里有前后两端都不在的独有政权（中华帝国仅存 83 天，
+ * 桥掉就从图上消失了）；连续微段合计超过 BRIDGE_MAX（吞掉真实短命格局就失真了）。
  */
 function buildTransitions(slices, rank, pxYear, x0, x1) {
   const tau = TRANS_PX / pxYear;
+  const MIN_SLICE = 1.5;
+  const BRIDGE_MAX = 4;
   const trans = [];
   const flows = [];
-  for (let i = 1; i < slices.length; i++) {
-    const A = slices[i - 1], B = slices[i];
-    const c = B.a;
+
+  const idx = [0];
+  let i = 1;
+  while (i < slices.length) {
+    let j = i, span = 0;
+    while (j < slices.length - 1 && (slices[j].z - slices[j].a) < MIN_SLICE && span <= BRIDGE_MAX) {
+      span += slices[j].z - slices[j].a;
+      j++;
+    }
+    if (j > i && span <= BRIDGE_MAX) {
+      const A = slices[idx[idx.length - 1]], B = slices[j];
+      const ok = slices.slice(i, j).every((m) =>
+        m.live.every((b) => A.at.has(b.d.key) || B.at.has(b.d.key)));
+      if (ok) { idx.push(j); i = j + 1; continue; }
+    }
+    idx.push(i);
+    i += 1;
+  }
+
+  for (let k = 1; k < idx.length; k++) {
+    const A = slices[idx[k - 1]], B = slices[idx[k]];
+    const c = A.z;
+    const span = B.a - A.z;
     const from = new Map(A.at), to = new Map(B.at);
     const local = [];
-    for (const k of B.at.keys()) if (!from.has(k)) from.set(k, degenerate(A, rank, k, x0, x1));
-    for (const k of A.at.keys()) if (!to.has(k)) to.set(k, degenerate(B, rank, k, x0, x1));
+    for (const k2 of B.at.keys()) if (!from.has(k2)) from.set(k2, degenerate(A, rank, k2, x0, x1));
+    for (const k2 of A.at.keys()) if (!to.has(k2)) to.set(k2, degenerate(B, rank, k2, x0, x1));
     // 亡入／分出：吞并者（母体）相邻时，细流直接放到对方河岸上——支流汇入
     // 干流、干流分出支流。中间隔着第三条河道时不能弯（河道永不交叉是硬约束），
     // 改记一条「穿流带」：半透明的细带穿过去，压在途经河道的君主色块之下、
     // 只在河床与缝隙间隐约可见，点选该政权时点亮——sankey 图的半透明 ribbon 同理
-    for (const k of A.at.keys()) {
-      if (B.at.has(k)) continue;
-      const tgt = MERGED_INTO[k];
+    for (const k2 of A.at.keys()) {
+      if (B.at.has(k2)) continue;
+      const tgt = MERGED_INTO[k2];
       if (!tgt) continue;
-      const st = B.at.has(tgt) ? bankStem(B, rank, k, tgt) : null;
-      if (st) to.set(k, st);
-      // 目标不相邻、或已先亡／尚未生（北魏亡后半年西魏方立）：转穿流带，
-      // 绘制端用 edge() 在带长范围内找目标，找不到才作罢
-      else local.push({ key: k, tgt, dir: 'merge' });
+      const st = B.at.has(tgt) ? bankStem(B, rank, k2, tgt) : null;
+      if (st) to.set(k2, st);
+      else local.push({ key: k2, tgt, dir: 'merge' });
     }
-    for (const k of B.at.keys()) {
-      if (A.at.has(k)) continue;
-      const src = SPRANG_FROM[k];
+    for (const k2 of B.at.keys()) {
+      if (A.at.has(k2)) continue;
+      const src = SPRANG_FROM[k2];
       if (!src) continue;
-      const st = A.at.has(src) ? bankStem(A, rank, k, src) : null;
-      if (st) from.set(k, st);
-      else local.push({ key: k, tgt: src, dir: 'spring' });
+      const st = A.at.has(src) ? bankStem(A, rank, k2, src) : null;
+      if (st) from.set(k2, st);
+      else local.push({ key: k2, tgt: src, dir: 'spring' });
     }
-    // 法统相承且在同一切点交棒者（汉→新、唐→后梁…），前后两河共用一个「颈缩」盒：
-    // 前朝收进它、新朝从它张开，于是交替处是一段变色的窄颈，而不是两个背对背的尖——
-    // ggalluvial 把承续画成一条连续 ribbon，同理
-    const dying = [...A.at.keys()].filter((k) => !B.at.has(k));
+    // 法统相承的交棒（汉→新、东汉→魏、唐→后梁…）：前后两河共用一个「河口」盒。
+    // 前朝收进它、新朝从它张开——交替处是一段变色的宽阔河口，而非两个背对背的尖。
+    // 河口取七成五而非六成：用户对照 river delta 指出六成仍收得太紧，
+    // 交替应读作「同一条河换了名字」，不是「河面塌缩重生」
+    const dying = [...A.at.keys()].filter((k2) => !B.at.has(k2));
     for (const yk of B.at.keys()) {
       if (A.at.has(yk)) continue;
       const xk = SUCCESSION[yk];
       if (!xk || !dying.includes(xk)) continue;
       const XA = A.at.get(xk), YB = B.at.get(yk);
       const cx = ((XA[0] + XA[1]) / 2 + (YB[0] + YB[1]) / 2) / 2;
-      // 颈宽取六成而非两成：同切点的禅让（汉→新、宋→齐、五代五朝…）本是同一
-      // 政权换了家姓，深掐成细颈会把「延续」错画成「崩解」。真正的崩解式收束
-      // 属于有空窗的更迭（秦亡至汉兴隔着楚汉之争），那由细流＋空档自然呈现
-      const w = Math.max(2 * STEM, Math.min(XA[1] - XA[0], YB[1] - YB[0]) * 0.6);
+      const w = Math.max(2 * STEM, Math.min(XA[1] - XA[0], YB[1] - YB[0]) * 0.75);
       const waist = [cx - w / 2, cx + w / 2];
       to.set(xk, waist);
       from.set(yk, waist);
@@ -245,20 +271,20 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
     // 不超过邻段一半）。位移大而窗短，边就近乎横切——统一与大分裂这类
     // 整幅重排，弯道必须给得更长
     let dx = 0;
-    for (const [k, fb] of from) {
-      const tb2 = to.get(k);
+    for (const [k2, fb] of from) {
+      const tb2 = to.get(k2);
       if (tb2) dx = Math.max(dx, Math.abs(fb[0] - tb2[0]), Math.abs(fb[1] - tb2[1]));
     }
     const need = Math.max(tau, Math.min(3 * tau, (dx * 0.7) / pxYear));
     const ha = Math.min(need, (A.z - A.a) / 2);
     const hb = Math.min(need, (B.z - B.a) / 2);
     for (const f of local) {
-      f.c = c;
+      f.c = f.dir === 'merge' ? c + span : c;
       f.h = f.dir === 'merge' ? hb : ha;
       f.stem = (f.dir === 'merge' ? to : from).get(f.key);
       flows.push(f);
     }
-    trans.push({ c, ha, hb, from, to });
+    trans.push({ c, span, ha, hb, from, to });
   }
   return { trans, flows };
 }
@@ -282,10 +308,10 @@ function waveOf(key, t, pxYear, amp) {
 /** 河道 key 在时刻 t 的左右边界；不存在（生前窗外／死后窗外）时返回 null */
 function edgeAt(key, t, slices, trans) {
   for (const T of trans) {
-    if (t < T.c - T.ha - EPS || t > T.c + T.hb + EPS) continue;
+    if (t < T.c - T.ha - EPS || t > T.c + T.span + T.hb + EPS) continue;
     const A = T.from.get(key), B = T.to.get(key);
     if (A && B) {
-      const s = smoothstep(Math.min(1, Math.max(0, (t - (T.c - T.ha)) / (T.ha + T.hb))));
+      const s = smoothstep(Math.min(1, Math.max(0, (t - (T.c - T.ha)) / (T.ha + T.span + T.hb))));
       return [A[0] + (B[0] - A[0]) * s, A[1] + (B[1] - A[1]) * s];
     }
     break;                                     // 窗内但该河道两侧都无盒 → 交给段常态
@@ -302,7 +328,7 @@ function edgeAt(key, t, slices, trans) {
 function sampleEdges(edgeFn, ta, tb, trans, pxYear) {
   const ts = new Set([ta, tb]);
   for (const T of trans) {
-    const w0 = T.c - T.ha, w1 = T.c + T.hb;
+    const w0 = T.c - T.ha, w1 = T.c + T.span + T.hb;
     if (w1 < ta || w0 > tb) continue;
     for (let i = 0; i <= 12; i++) {
       const t = w0 + (w1 - w0) * i / 12;
