@@ -200,6 +200,10 @@ const SECTIONS = [
       if (host.__riverCleanup) { host.__riverCleanup(); host.__riverCleanup = null; }
       const river = o.panoramaMode === 'river';
       host.classList.toggle('full-bleed', river);
+      // 河流模式卸掉卡片框：河流出血/居中铺开，边框既围不住图形元素，
+      // 还在背景里留下一截截线条；泳道视图保留卡片框
+      const card = host.closest('section.card');
+      if (card) card.classList.toggle('river-mode', river);
       (river ? renderRiver : renderLaneTimeline)(host, l, o);
     },
   },

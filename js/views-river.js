@@ -603,11 +603,12 @@ export function renderRiver(host, list, opts) {
   // 绝不会浮在邻河的君主色块之上
   const gBeds = el('g'), gStrips = el('g'), gEmps = el('g'), gLabels = el('g');
 
-  // ── 时代分带：整幅横向淡底，交替填充 ────────────────────────────────────
-  ERAS.forEach((era, i) => {
-    const ya = Math.max(0, y(era.s)), yb = Math.min(H, y(era.e));
-    if (yb - ya < 3) return;
-    if (i % 2 === 0) svg.appendChild(el('rect', { x: 0, y: ya, width: W, height: yb - ya, class: 'era-band', opacity: .55 }));
+  // ── 时代界线：只画一条细线，不再交替填充底色——灰条纹的语义太稀薄
+  //（用户实测会把它误读成某种标记），且与河床的淡色（预告楔、尾迹、空档）混淆。
+  // 时代的位置感交给纪年滑杆上的界标
+  ERAS.forEach((era) => {
+    const yb = Math.min(H, y(era.e));
+    if (yb <= 0 || yb >= H) return;
     svg.appendChild(el('line', { x1: 0, x2: W, y1: yb, y2: yb, class: 'ref-line', opacity: .5 }));
   });
 
@@ -756,6 +757,35 @@ export function renderRiver(host, list, opts) {
   const wrap = h('div', { class: 'river-wrap' }, [svg]);
   host.appendChild(wrap);
 
+  // ── 纪年滑杆：仅本节占据视口时出现，贴左缘；拖动即跳到对应年份。
+  // 两万像素的长卷里「翻到某一年」不该只能靠一路滚——滑杆就是这一节的目录。
+  // 杆上的短横线是时代界标（秦汉/魏晋南北朝/…的分界）
+  const scrub = h('div', { class: 'river-scrub' });
+  const thumb = h('div', { class: 'rs-thumb' });
+  scrub.appendChild(h('div', { class: 'rs-track' }));
+  for (const era of ERAS) {
+    const f = (era.e - t0) / (t1 - t0);
+    if (f > 0.02 && f < 0.98) scrub.appendChild(h('div', { class: 'rs-era', style: `top:${(f * 100).toFixed(2)}%` }));
+  }
+  scrub.appendChild(thumb);
+  document.body.appendChild(scrub);
+  const scrubTo = (clientY) => {
+    const r = scrub.getBoundingClientRect();
+    const f = Math.min(1, Math.max(0, (clientY - r.top) / r.height));
+    const t = t0 + f * (t1 - t0);
+    const wrapTop = wrap.getBoundingClientRect().top + scrollY;
+    scrollTo({ top: wrapTop + y(t) - innerHeight * 0.45, behavior: 'instant' });
+  };
+  let scrubbing = false;
+  scrub.addEventListener('pointerdown', (e) => {
+    scrubbing = true;
+    scrubTo(e.clientY);
+    try { scrub.setPointerCapture(e.pointerId); } catch { /* 合成指针无捕获可言 */ }
+    e.preventDefault();
+  });
+  scrub.addEventListener('pointermove', (e) => { if (scrubbing) scrubTo(e.clientY); });
+  scrub.addEventListener('pointerup', () => { scrubbing = false; });
+
   // ── 点选高亮 ────────────────────────────────────────────────────────────
   // 触屏没有悬停，故以点选替代：选中者留亮，同屏其余压暗，详情进底部固定卡片。
   const card = h('div', { class: 'river-card' });
@@ -811,6 +841,14 @@ export function renderRiver(host, list, opts) {
     const box = wrap.getBoundingClientRect();
     const top = -box.top + (parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0) + 44;
     const bottom = top + window.innerHeight;
+    // 纪年滑杆：本节跨过视口中线才出现，滑块标出视口中部对应的年份
+    const inView = box.top < innerHeight * 0.5 && box.bottom > innerHeight * 0.5;
+    scrub.classList.toggle('on', inView);
+    if (inView) {
+      const tMid = Math.min(t1, Math.max(t0, y.invert(-box.top + innerHeight * 0.45)));
+      thumb.style.top = `${(((tMid - t0) / (t1 - t0)) * 100).toFixed(2)}%`;
+      thumb.textContent = fmtYearAxis(tMid);
+    }
     for (const n of labelNodes) {
       const vis = n.y1 > top - 40 && n.y0 < bottom;
       n.dot.setAttribute('opacity', vis ? 1 : 0);
@@ -837,7 +875,7 @@ export function renderRiver(host, list, opts) {
   // 视图挂在 window 与 body 上的东西（滚动监听、固定卡片）在重绘或切走时必须撤：
   // scroll 监听不撤会随每次筛选累积一个引用死 DOM 的监听器，
   // 卡片不撤会留在泳道视图上。app.js 的 panorama render 包装器每次渲染前调用此钩子。
-  host.__riverCleanup = () => { card.remove(); removeEventListener('scroll', onScroll); };
+  host.__riverCleanup = () => { card.remove(); scrub.remove(); removeEventListener('scroll', onScroll); };
 
   // ── 图例与说明 ──────────────────────────────────────────────────────────
   const peak = slices.reduce((m, s) => Math.max(m, s.n), 0);
@@ -846,6 +884,7 @@ export function renderRiver(host, list, opts) {
     `河宽切成 ${C} 条固定车道，按当时并存的政权数整数分配：一股独占全部车道＝天下一统，`
     + `两股分 ${Math.ceil(C / 2)}/${Math.floor(C / 2)}，依次类推。最挤处为 ${fmtYearAxis(peakSlice.a)} 年的 ${peak} 股。`
     + (markViolent ? ' 河道右缘的红色刻痕＝该帝非正常死亡。' : '')
+    + ' 各河道的淡色底＝河床：称帝前的预告、亡后的尾迹、在位空档，皆由它透出。'
     + ' 点按任一段可锁定该君主。' }));
   if (byDynasty) {
     host.appendChild(legend(ordered.map((b) => ({ color: `var(${slotVar(slots.get(b.d.key))})`, label: b.d.name }))));
