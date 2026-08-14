@@ -38,7 +38,7 @@ import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName } from '.
 
 const GUTTER = 34;          // 左侧年份／时代标注的留白
 const TRANS_PX = 56;        // 改道过渡区的目标半长（像素）——长 S 弯的来源
-const CAP_WINDOW_PX = 200;  // 容量窗口的半长：河宽按此窗口内的并存峰值分槽
+const WAVE_PX = 320;        // 蜿蜒波长（像素）：打破大一统长段的矩形感
 const STEM = 1.6;           // 细流的半宽：河道张开／收束的末端不归零（d3-sankey 的
                             // linkMinWidth 同理），交替期的空档里始终有一线水流
 const EPS = 1e-6;
@@ -99,17 +99,16 @@ function orderKeys(bands) {
 }
 
 /**
- * 把时间切成「并存政权集合不变」的一段段。切点即所有带的起讫年份。
+ * 把时间切成「并存政权集合不变」的一段段，再把河宽切成 C 条**固定车道**。
  *
- * 河宽**按容量分槽，而不是按瞬时政权数**。容量 = ±CAP_WINDOW 年窗口内的并存峰值：
- * 初版按瞬时数均分，某政权一亡邻居立刻胀开、一立又立刻挤回，密集期整条河都在
- * 呼吸抽搐；而一段历史时期需要几条河道其实是可预知的。按窗口峰值定槽宽后，
- * 政权生灭只引起小幅侧移——瞬时数低于容量时，多出的宽度化作**留白**均匀摊进
- * 各缝隙，密集期的河道之间因此有成片的底色喘息。窗口向前看也向后看，
- * 故大分裂来临之前河道就开始收窄让位——分流是预告出来的。
- * 并存 ≤2 时豁免（容量＝瞬时数）：大一统满河与南北对峙半分的语法必须保住。
+ * C ＝ 全图并存峰值（用户原案：「我们可以实际运用 7 个 Lane」）。任一时刻的 n 条
+ * 河道各分得整数条车道：一统独占 C/C；两雄并立分 ⌈C/2⌉/⌊C/2⌋（七车道即 4/3）；
+ * 三分则 3/2/2，依次类推，多出的车道自左先分（左侧是正统主线）。
+ * 要点在于**车道边界是全图固定的网格**：政权生灭只转让整数条车道，
+ * 未被转让的边界纹丝不动——这就是河流「更直」的来源，也一并消掉了
+ * 此前按比例摊缝时远端河道跟着呼吸的毛病。缝隙从相邻河道交界各让 g0/2 刻出。
  */
-function layoutChannels(bands, x0, x1, pxYear) {
+function layoutChannels(bands, x0, x1) {
   const ordered = orderKeys(bands);
   const rank = new Map(ordered.map((b, i) => [b.d.key, i]));
   const cuts = [...new Set(bands.flatMap((b) => [b.s, b.e]))].sort((p, q) => p - q);
@@ -120,34 +119,27 @@ function layoutChannels(bands, x0, x1, pxYear) {
     const mid = (a + z) / 2;
     const live = bands.filter((b) => b.s <= mid && mid <= b.e)
       .sort((p, q) => rank.get(p.d.key) - rank.get(q.d.key));
-    raw.push({ a, z, mid, live, n: live.length });
+    raw.push({ a, z, live, n: live.length });
   }
-  const Wyr = CAP_WINDOW_PX / pxYear;
+  const C = Math.max(1, ...raw.map((r) => r.n));
+  const laneW = (x1 - x0) / C;
+  const g0 = gapFor(x1 - x0);
   const slices = [];
   for (const r of raw) {
-    if (!r.n) { slices.push({ a: r.a, z: r.z, live: [], n: 0, cap: 0, at: new Map() }); continue; }
-    // 豁免只留 n=1：大一统满河是不可让的语法。此前 n≤2 也豁免，结果金一亡
-    // 南宋与元立刻胀成两半——河流「骤然增流」却没有任何属于它自己的事件。
-    // 收紧后，对峙双雄只在窗口内确无第三者时才自然分得半河（容量本身=2），
-    // 统一时刻（280/589/1279…）成为全图唯一的满幅暴涨——涨在该涨的地方。
-    const cap = r.n === 1 ? 1
-      : Math.max(...raw.filter((o) => o.z >= r.mid - Wyr && o.a <= r.mid + Wyr).map((o) => o.n));
-    const g0 = gapFor(x1 - x0);
+    if (!r.n) { slices.push({ a: r.a, z: r.z, live: [], n: 0, at: new Map() }); continue; }
+    const base = Math.floor(C / r.n), rem = C % r.n;
     const at = new Map();
-    if (cap <= 2) {
-      // 满河语法：一统占满；窗口内确无第三者的对峙半分。无边缘留白
-      const w = ((x1 - x0) - (r.n - 1) * g0) / r.n;
-      r.live.forEach((b, k) => at.set(b.d.key, [x0 + k * (w + g0), x0 + k * (w + g0) + w]));
-    } else {
-      // 容量分槽：槽宽按 cap 计，占用 n 槽，余量均匀摊进 n+1 道缝隙
-      const w = ((x1 - x0) - (cap - 1) * g0) / cap;
-      const gap = ((x1 - x0) - r.n * w) / (r.n + 1);
-      let x = x0 + gap;
-      for (const b of r.live) { at.set(b.d.key, [x, x + w]); x += w + gap; }
-    }
-    slices.push({ a: r.a, z: r.z, live: r.live, n: r.n, cap, at });
+    let lane = 0;
+    r.live.forEach((b, i) => {
+      const size = base + (i < rem ? 1 : 0);
+      const xa = x0 + lane * laneW + (i > 0 ? g0 / 2 : 0);
+      const xb = x0 + (lane + size) * laneW - (i < r.n - 1 ? g0 / 2 : 0);
+      at.set(b.d.key, [xa, xb]);
+      lane += size;
+    });
+    slices.push({ a: r.a, z: r.z, live: r.live, n: r.n, at });
   }
-  return { slices, ordered, rank };
+  return { slices, ordered, rank, C };
 }
 
 /**
@@ -205,9 +197,8 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
   for (let i = 1; i < slices.length; i++) {
     const A = slices[i - 1], B = slices[i];
     const c = B.a;
-    const ha = Math.min(tau, (A.z - A.a) / 2);
-    const hb = Math.min(tau, (B.z - B.a) / 2);
     const from = new Map(A.at), to = new Map(B.at);
+    const local = [];
     for (const k of B.at.keys()) if (!from.has(k)) from.set(k, degenerate(A, rank, k, x0, x1));
     for (const k of A.at.keys()) if (!to.has(k)) to.set(k, degenerate(B, rank, k, x0, x1));
     // 亡入／分出：吞并者（母体）相邻时，细流直接放到对方河岸上——支流汇入
@@ -222,7 +213,7 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
       if (st) to.set(k, st);
       // 目标不相邻、或已先亡／尚未生（北魏亡后半年西魏方立）：转穿流带，
       // 绘制端用 edge() 在带长范围内找目标，找不到才作罢
-      else flows.push({ key: k, tgt, c, h: hb, stem: to.get(k), dir: 'merge' });
+      else local.push({ key: k, tgt, dir: 'merge' });
     }
     for (const k of B.at.keys()) {
       if (A.at.has(k)) continue;
@@ -230,7 +221,7 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
       if (!src) continue;
       const st = A.at.has(src) ? bankStem(A, rank, k, src) : null;
       if (st) from.set(k, st);
-      else flows.push({ key: k, tgt: src, c, h: ha, stem: from.get(k), dir: 'spring' });
+      else local.push({ key: k, tgt: src, dir: 'spring' });
     }
     // 法统相承且在同一切点交棒者（汉→新、唐→后梁…），前后两河共用一个「颈缩」盒：
     // 前朝收进它、新朝从它张开，于是交替处是一段变色的窄颈，而不是两个背对背的尖——
@@ -250,12 +241,43 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
       to.set(xk, waist);
       from.set(yk, waist);
     }
+    // 近直角压平：过渡窗的长度随本次改道的最大位移伸长（至多三倍标准窗、
+    // 不超过邻段一半）。位移大而窗短，边就近乎横切——统一与大分裂这类
+    // 整幅重排，弯道必须给得更长
+    let dx = 0;
+    for (const [k, fb] of from) {
+      const tb2 = to.get(k);
+      if (tb2) dx = Math.max(dx, Math.abs(fb[0] - tb2[0]), Math.abs(fb[1] - tb2[1]));
+    }
+    const need = Math.max(tau, Math.min(3 * tau, (dx * 0.7) / pxYear));
+    const ha = Math.min(need, (A.z - A.a) / 2);
+    const hb = Math.min(need, (B.z - B.a) / 2);
+    for (const f of local) {
+      f.c = c;
+      f.h = f.dir === 'merge' ? hb : ha;
+      f.stem = (f.dir === 'merge' ? to : from).get(f.key);
+      flows.push(f);
+    }
     trans.push({ c, ha, hb, from, to });
   }
   return { trans, flows };
 }
 
 const smoothstep = (u) => u * u * (3 - 2 * u);
+
+/**
+ * 确定性蜿蜒：河道整体做 ±amp 的横向摆动，打破大一统长段的矩形感。
+ * 相位取政权名的散列——不用随机数，同一筛选下重绘逐像素稳定；
+ * 两个不同频的正弦叠出「河」而非「正弦墙纸」的观感。
+ * 振幅不超过缝宽的三成，相邻河道即便反相摆动也吃不掉缝隙。
+ */
+function waveOf(key, t, pxYear, amp) {
+  let hsh = 0;
+  for (let i = 0; i < key.length; i++) hsh = (hsh * 31 + key.charCodeAt(i)) % 997;
+  const ph = (hsh / 997) * Math.PI * 2;
+  const u = (t * pxYear) / WAVE_PX * Math.PI * 2;
+  return amp * (Math.sin(u + ph) + 0.4 * Math.sin(2.3 * u + 1.7 * ph));
+}
 
 /** 河道 key 在时刻 t 的左右边界；不存在（生前窗外／死后窗外）时返回 null */
 function edgeAt(key, t, slices, trans) {
@@ -273,10 +295,11 @@ function edgeAt(key, t, slices, trans) {
 }
 
 /**
- * 在 [ta, tb] 内采样河道边界。常态段只需两端点，过渡窗内按 smoothstep 补 10 个采样点，
- * 折线过这些点即视觉平滑，不必维护贝塞尔的簿记。
+ * 在 [ta, tb] 内采样河道边界。过渡窗内按 smoothstep 补 12 个采样点；
+ * 常态段每 ~44px 也补一点——蜿蜒要靠这些点显形。折线过点即视觉平滑，
+ * 不必维护贝塞尔的簿记。边界一律经 edgeFn（含蜿蜒偏移）取得。
  */
-function sampleEdges(key, ta, tb, slices, trans) {
+function sampleEdges(edgeFn, ta, tb, trans, pxYear) {
   const ts = new Set([ta, tb]);
   for (const T of trans) {
     const w0 = T.c - T.ha, w1 = T.c + T.hb;
@@ -286,9 +309,11 @@ function sampleEdges(key, ta, tb, slices, trans) {
       if (t > ta && t < tb) ts.add(t);
     }
   }
+  const step = 44 / pxYear;
+  for (let t = ta + step; t < tb; t += step) ts.add(t);
   const out = [];
   for (const t of [...ts].sort((a, b) => a - b)) {
-    const e = edgeAt(key, t, slices, trans);
+    const e = edgeFn(t);
     if (e) out.push({ t, x0: e[0], x1: e[1] });
   }
   return out;
@@ -334,13 +359,20 @@ export function renderRiver(host, list, opts) {
   const RX0 = GUTTER, RX1 = W - 6;
   const tau = TRANS_PX / pxYear;
 
-  const { slices, ordered, rank } = layoutChannels(bands, RX0, RX1, pxYear);
+  const { slices, ordered, rank, C } = layoutChannels(bands, RX0, RX1);
   const { trans, flows } = buildTransitions(slices, rank, pxYear, RX0, RX1);
-  window.__RIVER__ = { slices, trans, flows, rank };   // 调试钩子：布局自检用
+  window.__RIVER__ = { slices, trans, flows, rank, C };   // 调试钩子：布局自检用
   const flowsBy = new Map();
   for (const f of flows) { if (!flowsBy.has(f.key)) flowsBy.set(f.key, []); flowsBy.get(f.key).push(f); }
-  const edge = (key, t) => edgeAt(key, t, slices, trans);
-  const sample = (key, ta, tb) => sampleEdges(key, ta, tb, slices, trans);
+  const amp = Math.min(1.6, gapFor(RX1 - RX0) * 0.3);
+  const edge = (key, t) => {
+    const b0 = edgeAt(key, t, slices, trans);
+    if (!b0) return null;
+    let w = waveOf(key, t, pxYear, amp);
+    w = Math.max(RX0 - b0[0], Math.min(RX1 - b0[1], w));
+    return [b0[0] + w, b0[1] + w];
+  };
+  const sample = (key, ta, tb) => sampleEdges((t) => edge(key, t), ta, tb, trans, pxYear);
 
   const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, class: 'river-svg', role: 'img' });
   // 四个绘制层，DOM 顺序即遮挡顺序：所有河床垫底，君主段全体压在其上——
@@ -375,7 +407,7 @@ export function renderRiver(host, list, opts) {
 
     // 河床：淡色底。首尾各向外多要 tau——楔尖与合拢尾就长在这段延伸里，
     // 生前死后窗外的采样返回 null 自动裁掉，无须另算窗的实际半长
-    const bedSamples = sample(b.d.key, b.s - tau, b.e + tau);
+    const bedSamples = sample(b.d.key, b.s - 3 * tau, b.e + 3 * tau);
     const bedPath = polyPath(bedSamples, y, 1);
     if (!bedPath) continue;
     const bed = el('path', { d: bedPath, fill: col, opacity: .16, class: 'mark', 'data-dyn': b.d.key });
@@ -588,8 +620,8 @@ export function renderRiver(host, list, opts) {
   const peak = slices.reduce((m, s) => Math.max(m, s.n), 0);
   const peakSlice = slices.find((s) => s.n === peak);
   host.appendChild(h('p', { class: 'muted small', style: 'margin:10px 0 0', text:
-    `河宽按「前后数十年内的并存峰值」分槽：一股＝天下一统，数股＝分裂割据；`
-    + `政权数低于峰值时多出的宽度化作河道间的留白。最挤处为 ${fmtYearAxis(peakSlice.a)} 年的 ${peak} 股。`
+    `河宽切成 ${C} 条固定车道，按当时并存的政权数整数分配：一股独占全部车道＝天下一统，`
+    + `两股分 ${Math.ceil(C / 2)}/${Math.floor(C / 2)}，依次类推。最挤处为 ${fmtYearAxis(peakSlice.a)} 年的 ${peak} 股。`
     + (markViolent ? ' 河道右缘的红色刻痕＝该帝非正常死亡。' : '')
     + ' 点按任一段可锁定该君主。' }));
   if (byDynasty) {
@@ -615,14 +647,15 @@ export function renderRiver(host, list, opts) {
     + `同一法统按其源头的起始年归堆），因此任意两个政权只要共存，次序在每一段里都相同。`
     + `政权消失时右邻左移即为「合流」，新政权插入时右邻右让即为「分叉」——`
     + `图上所有的分与合都只是这一条规则的结果，没有额外的美化。`,
-    `**河宽按容量分槽，不按瞬时政权数**：一段历史时期需要几条河道是可预知的`
-    + `（±${CAP_WINDOW_PX}px 窗口内的并存峰值），没必要把河面塞满。初版按瞬时数均分，`
-    + `某政权一亡邻居立刻胀开、一立又挤回，密集期整条河都在抽搐；按容量分槽后，`
-    + `政权生灭只引起小幅侧移，瞬时数低于容量的年份多出的宽度化作河道间成片的留白。`
-    + `窗口向前看也向后看，大分裂来临前河道就开始收窄让位。理想的调节量其实是各政权的`
-    + `真实疆域面积（河宽即国力，且自带总量上限），但本库没有逐年疆域数据，`
-    + `且元、清这类跨界政权难以归一——容量分槽是「不画我们不掌握的东西」前提下最接近的近似。`
-    + `并存 ≤2 时豁免：大一统满河与南北对峙半分的语法保持不变。`,
+    `**河宽切成 ${C} 条固定车道，按整数分配**：C＝全图并存峰值。任一时刻的 n 条河道`
+    + `各分得整数条车道——一统独占、两雄 ${Math.ceil(C / 2)}/${Math.floor(C / 2)}、三分 3/2/2…`
+    + `多出的车道自左先分（左侧是正统主线）。车道边界是全图固定的网格，政权生灭只转让`
+    + `整数条车道，**未被转让的边界纹丝不动**——这是河流「更直」的来源，也消掉了此前`
+    + `按比例摊缝时远端河道跟着呼吸的毛病。位移大的改道（统一、大分裂）会把过渡窗自动`
+    + `拉长至多三倍，不出现近乎直角的急弯；河道另有 ±2px 的确定性蜿蜒`
+    + `（相位取政权名散列，重绘稳定），免得大一统的长段读成矩形。`
+    + `理想的调节量是真实疆域面积（河宽即国力、自带总量上限），但本库没有逐年疆域数据，`
+    + `且元、清这类跨界政权难以归一——整数车道是「不画我们不掌握的东西」前提下的诚实近似。`,
     `**亡国是汇流，不是蒸发**：政权终结时其疆土并入谁家、建立时从谁家裂出，`
     + `都是已知的史实（见 dynasties.js 的 MERGED_INTO / SPRANG_FROM 及逐条依据）。`
     + `河道收束时弯向吞并者的河岸并没入其下（陈并于隋、北齐亡于北周、南宋亡于元…），`

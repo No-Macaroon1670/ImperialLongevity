@@ -274,14 +274,11 @@ li { margin-bottom: .35em; }
 .sec-nav { display: none; }
 
 /* ── 竖向河流 ─────────────────────────────────────────────────────────── */
-/* 全宽出血：河流是整页的主体，不该缩在卡片的内边距里。
-   出血宽度用 100dvw 仍含竖向滚动条的宽度，会挤出 8px 的页面级横滚——
-   故出血只做到「视口减滚动条」：JS 把 clientWidth 写进 --vw-safe，CSS 取用。 */
-.chart-host.full-bleed {
-  margin-left: calc(50% - var(--vw-safe, 100vw) / 2);
-  width: var(--vw-safe, 100vw);
-  overflow-x: hidden;
-}
+/* 全宽出血只给窄屏（规则在窄屏媒体查询内）：手机上河流是整页的主体，
+   不该缩在卡片的内边距里；桌面端河流居中于内容栏，与其余 UI 同一版心。
+   出血宽度不用 100vw——它含竖向滚动条宽度，会挤出 8px 页面级横滚，
+   故 JS 把 clientWidth 写进 --vw-safe，CSS 取用。 */
+.chart-host.full-bleed { overflow-x: hidden; }
 .river-wrap { position: relative; }
 .river-svg { display: block; width: 100%; height: auto; }
 /* 点选高亮：选中者留亮、余者压暗。用 CSS 类而非逐个改 fill，
@@ -362,6 +359,11 @@ li { margin-bottom: .35em; }
   .tooltip { max-width: min(300px, calc(100vw - 24px)); font-size: .84rem; }
   .timeline-scroll { max-height: 460px; }
   .scroll-hint { margin: 0 0 4px; text-align: center; letter-spacing: .04em; }
+
+  .chart-host.full-bleed {
+    margin-left: calc(50% - var(--vw-safe, 100vw) / 2);
+    width: var(--vw-safe, 100vw);
+  }
 
   /* 顶／底固定条：既是上下节跳转，也是「一定不会点中什么」的安全起滑区。
      除箭头外一律留空——这不是没想好放什么，是刻意留白，见 setupSectionNav 注释。

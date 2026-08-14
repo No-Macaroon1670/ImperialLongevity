@@ -88,6 +88,8 @@ export const DYNASTIES = [
     gapNote: '926–927 年的空档为太祖崩后述律后称制、德光即位前的过渡期' }),
   D('xixia', '西夏',    1038,1227, 0, 'sljx', M),
   D('jin',   '金',      1115,1234, 0, 'sljx', M),
+  D('dali',  '大理',    937, 1254, 0, 'sljx', { note: '段氏据云南，与两宋相始终；十位君主禅位为僧，逊位常态化',
+    gapNote: '1094–1096 年的空档为高升泰篡立的「大中国」，段氏旋复位（史称后理）' }),
   // ── 元明清 ────────────────────────────────────────────────────────────
   D('yuan',  '元',      1206,1368, 1, 'ymq', { ...M, note: '含大蒙古国时期（1206–1271）四位大汗；1279 年灭南宋后为大一统',
     gapNote: '1228–1229、1242–1246、1248–1251 三处空档为大蒙古国的监国/称制期（拖雷监国、乃马真后称制、海迷失后称制），汗位确实虚悬，非数据缺失' }),
@@ -149,7 +151,8 @@ export const SUCCESSION = {
  * 北齐亡于北周（577）；后唐亡于后晋（936，石敬瑭引契丹）；前蜀亡于后唐（925）、
  * 闽（945）与楚（951）亡于南唐；后蜀（965）、南唐（975）、南汉（971）、吴越纳土
  * （978）、南平（963）、北汉（979）皆并于宋；辽亡于金（1125）；西夏（1227）、
- * 金（1234）、南宋（1279）亡于元；南明（1662）与太平天国（1864）亡于清。
+ * 金（1234）、南宋（1279）与大理（1254，忽必烈亲征灭之）亡于元；
+ * 南明（1662）与太平天国（1864）亡于清。
  */
 export const MERGED_INTO = {
   xuanhan: 'ehan',
@@ -164,7 +167,7 @@ export const MERGED_INTO = {
   htang: 'hjin',
   qshu: 'htang', min: 'ntang', chu: 'ntang',
   hshu: 'nsong', ntang: 'nsong', nhan: 'nsong', wuyue: 'nsong', nanping: 'nsong', bhan: 'nsong',
-  liao: 'jin', xixia: 'yuan', jin: 'yuan', ssong: 'yuan',
+  liao: 'jin', xixia: 'yuan', jin: 'yuan', ssong: 'yuan', dali: 'yuan',
   nming: 'qing', taiping: 'qing',
 };
 
