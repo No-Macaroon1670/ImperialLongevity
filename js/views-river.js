@@ -124,19 +124,118 @@ function layoutChannels(bands, x0, x1) {
   const C = Math.max(1, ...raw.map((r) => r.n));
   const laneW = (x1 - x0) / C;
   const g0 = gapFor(x1 - x0);
+  const HOLD = 16;                       // 空车道的回收等待期（年）
+
+  // 有状态车道扫掠：宽度只在四种时刻变化——新政权挤入（不得不让）、
+  // 征服承接（灭国的水立刻归征服者：前秦并前燕当场涨，那是史实）、
+  // 空置满 HOLD 年后的缓回收、以及天下一统。其余时候一律保持现状：
+  // 政权死后其车道先空置成**留白**，邻居不立刻胀开——快变期宁可留白，
+  // 不要急弯。此前按瞬时 n 重分配，政权一生一灭全体幸存者跟着起伏，
+  // 密集期尽是 peak and shift。
+  const owner = new Array(C).fill(null);
+  const freedAt = new Array(C).fill(-1e9);
+  const runOf = (k) => {
+    let a = -1, b = -1;
+    for (let l = 0; l < C; l++) if (owner[l] === k) { if (a < 0) a = l; b = l; }
+    return a < 0 ? null : [a, b];
+  };
   const slices = [];
+  let fresh = true;
   for (const r of raw) {
-    if (!r.n) { slices.push({ a: r.a, z: r.z, live: [], n: 0, at: new Map() }); continue; }
-    const base = Math.floor(C / r.n), rem = C % r.n;
+    if (!r.n) {
+      for (let l = 0; l < C; l++) if (owner[l]) { owner[l] = null; freedAt[l] = r.a; }
+      slices.push({ a: r.a, z: r.z, live: [], n: 0, at: new Map() });
+      fresh = true;                      // 空档（楚汉之争）之后重新起排
+      continue;
+    }
+    const liveSet = new Set(r.live.map((b) => b.d.key));
+    if (fresh) {
+      const base = Math.floor(C / r.n), rem = C % r.n;
+      owner.fill(null);
+      let lane = 0;
+      r.live.forEach((b, i) => {
+        const size = base + (i < rem ? 1 : 0);
+        for (let l = lane; l < lane + size; l++) owner[l] = b.d.key;
+        lane += size;
+      });
+      fresh = false;
+    } else {
+      // 1) 亡者：征服者的 run 与其相邻则立刻承接，否则空置成留白
+      const deadKeys = [...new Set(owner.filter((k) => k && !liveSet.has(k)))];
+      for (const k of deadKeys) {
+        const [a, b] = runOf(k);
+        const tgt = MERGED_INTO[k];
+        const leftK = a > 0 ? owner[a - 1] : null;
+        const rightK = b < C - 1 ? owner[b + 1] : null;
+        if (tgt && liveSet.has(tgt) && (leftK === tgt || rightK === tgt)) {
+          for (let l = a; l <= b; l++) owner[l] = tgt;
+        } else {
+          for (let l = a; l <= b; l++) { owner[l] = null; freedAt[l] = r.a; }
+        }
+      }
+      // 2) 新生：按全局次序插到两邻之间。先吃插入口两侧连续的空车道
+      //    （死者留下的口子），再让两邻从面向新政权的边各退（保底 1 条）
+      for (const b2 of r.live) {
+        const k = b2.d.key;
+        if (owner.includes(k)) continue;
+        const target = Math.max(1, Math.floor(C / r.n));
+        const rk = rank.get(k);
+        let pos = 0;
+        for (let l = 0; l < C; l++) {
+          const o = owner[l];
+          if (o && rank.get(o) < rk) pos = l + 1;
+        }
+        let got = 0;
+        for (let l = pos; l < C && got < target && owner[l] === null; l++) { owner[l] = k; got++; }
+        for (let l = pos - 1; l >= 0 && got < target && owner[l] === null; l--) { owner[l] = k; got++; }
+        while (got < target) {
+          const run = runOf(k) || [pos, pos - 1];
+          const lK = run[0] > 0 ? owner[run[0] - 1] : null;
+          const rK = run[1] < C - 1 ? owner[run[1] + 1] : null;
+          const lRun = lK ? runOf(lK) : null;
+          const rRun = rK ? runOf(rK) : null;
+          const lSize = lRun ? lRun[1] - lRun[0] + 1 : 0;
+          const rSize = rRun ? rRun[1] - rRun[0] + 1 : 0;
+          if (rSize >= lSize && rSize > 1) { owner[run[1] + 1] = k; got++; }
+          else if (lSize > 1) { owner[run[0] - 1] = k; got++; }
+          else break;
+        }
+        if (!owner.includes(k)) {
+          // 两邻皆已保底、又无近旁空位：本切片退回标准整数分配。
+          // 稳定性让位于正确性；只在满员峰值的极端交接处偶发
+          const base = Math.floor(C / r.n), rem = C % r.n;
+          owner.fill(null);
+          let lane = 0;
+          r.live.forEach((b3, i3) => {
+            const size = base + (i3 < rem ? 1 : 0);
+            for (let l = lane; l < lane + size; l++) owner[l] = b3.d.key;
+            lane += size;
+          });
+          break;
+        }
+      }
+      // 3) 缓回收：空置满 HOLD 年的车道并入相邻 run
+      for (let l = 0; l < C; l++) {
+        if (owner[l] !== null || r.a - freedAt[l] < HOLD) continue;
+        const lK = l > 0 ? owner[l - 1] : null;
+        const rK = l < C - 1 ? owner[l + 1] : null;
+        if (lK) owner[l] = lK; else if (rK) owner[l] = rK;
+      }
+      // 4) 一统：满河语法不可让
+      if (r.n === 1) owner.fill(r.live[0].d.key);
+    }
+    // 盒子：连续 run；与邻接河道之间各让 g0/2，邻接留白侧不内缩
     const at = new Map();
-    let lane = 0;
-    r.live.forEach((b, i) => {
-      const size = base + (i < rem ? 1 : 0);
-      const xa = x0 + lane * laneW + (i > 0 ? g0 / 2 : 0);
-      const xb = x0 + (lane + size) * laneW - (i < r.n - 1 ? g0 / 2 : 0);
-      at.set(b.d.key, [xa, xb]);
-      lane += size;
-    });
+    for (const b2 of r.live) {
+      const run = runOf(b2.d.key);
+      if (!run) continue;
+      const leftOwned = run[0] > 0 && owner[run[0] - 1] !== null;
+      const rightOwned = run[1] < C - 1 && owner[run[1] + 1] !== null;
+      at.set(b2.d.key, [
+        x0 + run[0] * laneW + (leftOwned ? g0 / 2 : 0),
+        x0 + (run[1] + 1) * laneW - (rightOwned ? g0 / 2 : 0),
+      ]);
+    }
     slices.push({ a: r.a, z: r.z, live: r.live, n: r.n, at });
   }
   return { slices, ordered, rank, C };
@@ -157,8 +256,10 @@ function degenerate(slice, rank, key, x0, x1) {
     else { above = b; break; }
   }
   const gap = gapFor(x1 - x0);
-  const lo = below ? slice.at.get(below.d.key)[1] : null;
-  const hi = above ? slice.at.get(above.d.key)[0] : null;
+  const bLo = below ? slice.at.get(below.d.key) : null;
+  const bHi = above ? slice.at.get(above.d.key) : null;
+  const lo = bLo ? bLo[1] : null;
+  const hi = bHi ? bHi[0] : null;
   const x = lo !== null && hi !== null ? (lo + hi) / 2
     : lo !== null ? Math.min(lo + gap / 2, x1)
     : hi !== null ? Math.max(hi - gap / 2, x0)
@@ -180,8 +281,10 @@ function bankStem(slice, rank, key, tgt) {
   let j = 0;
   for (const b of slice.live) { if (rank.get(b.d.key) < r) j++; else break; }
   const L = slice.live[j - 1], R = slice.live[j];
-  if (L && L.d.key === tgt) { const box = slice.at.get(tgt); return [box[1] - STEM, box[1] + STEM]; }
-  if (R && R.d.key === tgt) { const box = slice.at.get(tgt); return [box[0] - STEM, box[0] + STEM]; }
+  const boxT = slice.at.get(tgt);
+  if (!boxT) return null;
+  if (L && L.d.key === tgt) return [boxT[1] - STEM, boxT[1] + STEM];
+  if (R && R.d.key === tgt) return [boxT[0] - STEM, boxT[0] + STEM];
   return null;
 }
 
@@ -673,13 +776,13 @@ export function renderRiver(host, list, opts) {
     + `同一法统按其源头的起始年归堆），因此任意两个政权只要共存，次序在每一段里都相同。`
     + `政权消失时右邻左移即为「合流」，新政权插入时右邻右让即为「分叉」——`
     + `图上所有的分与合都只是这一条规则的结果，没有额外的美化。`,
-    `**河宽切成 ${C} 条固定车道，按整数分配**：C＝全图并存峰值。任一时刻的 n 条河道`
-    + `各分得整数条车道——一统独占、两雄 ${Math.ceil(C / 2)}/${Math.floor(C / 2)}、三分 3/2/2…`
-    + `多出的车道自左先分（左侧是正统主线）。车道边界是全图固定的网格，政权生灭只转让`
-    + `整数条车道，**未被转让的边界纹丝不动**——这是河流「更直」的来源，也消掉了此前`
-    + `按比例摊缝时远端河道跟着呼吸的毛病。位移大的改道（统一、大分裂）会把过渡窗自动`
-    + `拉长至多三倍，不出现近乎直角的急弯；河道另有 ±2px 的确定性蜿蜒`
-    + `（相位取政权名散列，重绘稳定），免得大一统的长段读成矩形。`
+    `**河宽切成 ${C} 条固定车道，宽度只在四种时刻变化**：新政权挤入（不得不让）、`
+    + `征服承接（灭国的水立刻归征服者——前秦并前燕当场涨，那是史实）、`
+    + `空置满 16 年后的缓回收、以及天下一统。其余时候一律保持现状：政权死后其车道`
+    + `先空置成**留白**，邻居不立刻胀开——快变期宁可留白，不要急弯。`
+    + `车道边界是全图固定的网格，未被转让的边界纹丝不动，这是河流「更直」的来源。`
+    + `位移大的改道（统一、大分裂）会把过渡窗自动拉长至多三倍，不出现近乎直角的急弯；`
+    + `河道另有 ±2px 的确定性蜿蜒（相位取政权名散列，重绘稳定），免得大一统的长段读成矩形。`
     + `理想的调节量是真实疆域面积（河宽即国力、自带总量上限），但本库没有逐年疆域数据，`
     + `且元、清这类跨界政权难以归一——整数车道是「不画我们不掌握的东西」前提下的诚实近似。`,
     `**亡国是汇流，不是蒸发**：政权终结时其疆土并入谁家、建立时从谁家裂出，`
