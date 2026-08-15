@@ -37,6 +37,7 @@ import { DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP } from './dynasties.js';
 import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName } from './views-lanes.js';
+import { mountKnowledge } from './knowledge.js';
 
 const GUTTER = 34;          // 左侧年份／时代标注的留白
 const TRANS_PX = 56;        // 改道过渡区的目标半长（像素）——长 S 弯的来源
@@ -898,7 +899,9 @@ export function renderRiver(host, list, opts) {
       ];
       hoverable(node, tip, () => `${b.d.name}·${g.e.temple}`);
       gEmps.appendChild(node);
-      empNodes.push({ node, e: g.e, band: b, col, tip });
+      const midBox0 = edge(b.d.key, (g.s + g.x) / 2);
+      empNodes.push({ node, e: g.e, band: b, col, tip,
+        y0: y(g.s), y1: y(g.x), cx: midBox0 ? (midBox0[0] + midBox0[1]) / 2 : W / 2 });
 
       // 非正常死亡：段末右缘的红色刻痕。初版横贯全河道，在五代十国这类
       // 短祚扎堆的年代叠成一片红白横纹——刻痕保留信号、去掉噪音
@@ -968,6 +971,9 @@ export function renderRiver(host, list, opts) {
 
   const wrap = h('div', { class: 'river-wrap' }, [svg]);
   host.appendChild(wrap);
+
+  // 桌面两翼知识卡:点选或滚动经过名君时,实时拉取维基摘要(见 knowledge.js)
+  const kClean = mountKnowledge(empNodes, wrap, W);
 
   // ── 纪年滑杆：仅本节占据视口时出现，贴左缘；拖动即跳到对应年份。
   // 两万像素的长卷里「翻到某一年」不该只能靠一路滚——滑杆就是这一节的目录。
@@ -1146,7 +1152,7 @@ export function renderRiver(host, list, opts) {
   // 视图挂在 window 与 body 上的东西（滚动监听、固定卡片）在重绘或切走时必须撤：
   // scroll 监听不撤会随每次筛选累积一个引用死 DOM 的监听器，
   // 卡片不撤会留在泳道视图上。app.js 的 panorama render 包装器每次渲染前调用此钩子。
-  host.__riverCleanup = () => { card.remove(); scrub.remove(); removeEventListener('scroll', onScroll); };
+  host.__riverCleanup = () => { card.remove(); scrub.remove(); removeEventListener('scroll', onScroll); kClean(); };
 
   // ── 图例与说明 ──────────────────────────────────────────────────────────
   const peak = slices.reduce((m, s) => Math.max(m, s.n), 0);
@@ -1158,7 +1164,9 @@ export function renderRiver(host, list, opts) {
     + ' 各河道的淡色底＝河床：称帝前的预告、亡后的尾迹、在位空档，皆由它透出——'
     + '浓淡有向：预告楔自无洇入，越早越淡；真正断绝的世系洇出至无。'
     + ' 点按任一段可锁定该君主，并顺法统链上下各点亮两跳。'
-    + ' 左缘纪年滑杆轨上的色段＝天下一统的时段。' }));
+    + ' 左缘纪年滑杆轨上的色段＝天下一统的时段。'
+    + ' 宽屏（≥1100px）两翼另有知识卡：滚动经过名君时自动打开、点选任一君主即钉住，'
+    + '摘要实时取自中文维基百科，并附全文、百度百科与相关视频的直达链接。' }));
   // 按朝代配色时不放图例：65 个色块的对照表没人查得动，何况每条河道
   // 都直接标着朝代名，颜色只是辅助通道。仅两色语义模式保留两行图例
   if (!byDynasty) {

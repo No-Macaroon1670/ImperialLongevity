@@ -323,6 +323,38 @@ li { margin-bottom: .35em; }
 
 .river-card { display: none; }
 
+/* 桌面两翼知识卡:河流限宽 640 居中后的留白,给到点选/滚动名君的实时维基摘要。
+   窄于 1100px 时两翼放不下一张可读的卡,整个功能隐藏 */
+.kp {
+  position: fixed; top: 50%; transform: translateY(-50%);
+  width: min(300px, calc((100vw - 700px) / 2 - 20px));
+  max-height: 74vh; overflow-y: auto; z-index: 44; display: none;
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .13); padding: 14px 16px 12px;
+}
+.kp.on { display: block; animation: kp-in .22s ease; }
+@keyframes kp-in {
+  from { opacity: 0; transform: translateY(calc(-50% + 10px)); }
+  to { opacity: 1; transform: translateY(-50%); }
+}
+.kp-left { left: 16px; }
+.kp-right { right: 16px; }
+@media (max-width: 1099px) { .kp { display: none !important; } }
+.kp-thumb { width: 100%; max-height: 168px; object-fit: cover; object-position: top; border-radius: 8px; }
+.kp-sub { font-size: .74rem; color: var(--text-1); opacity: .62; margin-top: 8px; }
+.kp-title { font-weight: 720; font-size: 1.04rem; margin: 1px 0 6px; }
+.kp-ext { font-size: .82rem; line-height: 1.6; margin: 0;
+  display: -webkit-box; -webkit-line-clamp: 10; -webkit-box-orient: vertical; overflow: hidden; }
+.kp-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; font-size: .8rem; }
+.kp-links a { text-decoration: none; }
+.kp-links a:hover { text-decoration: underline; }
+.kp-close {
+  position: absolute; top: 6px; right: 8px; border: 0; background: none;
+  color: var(--text-1); opacity: .5; cursor: pointer; font-size: .85rem; padding: 4px;
+}
+.kp-close:hover { opacity: 1; }
+.kp-src { font-size: .68rem; color: var(--text-1); opacity: .45; margin-top: 8px; }
+
 /* ── 窄屏 ───────────────────────────────────────────────────────────────
    改造前在 375×812 实测：过滤器条 422px（占屏 52%）且常驻吸顶、
    页首到第一张图要滚 1907px、13 个目录 pill 占 132px、卡片留白吃掉 84px。
