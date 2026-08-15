@@ -287,6 +287,10 @@ li { margin-bottom: .35em; }
    免得切换主题或重绘时把原色弄丢 */
 .river-emp { transition: opacity .12s; cursor: pointer; }
 .river-emp.dim { opacity: .28; }
+/* 链上成员(法统前后两跳)只压半暗——河床在暗纱下发光是自相矛盾的画面 */
+.river-emp.dim2 { opacity: .55; }
+/* 河床/穿流带的点亮走 opacity 属性,给它同样的渐变,免得链式点亮瞬时跳变 */
+.river-svg path.mark { transition: opacity .15s; }
 
 /* 桌面上河流限宽居中:两千年的竖向长卷摊到 1090px 宽,满幅河道里竖排的
    两字帝名显得滑稽;手机 375px 的比例是打磨过的,桌面取其近似上限 640px。

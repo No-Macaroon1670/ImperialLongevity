@@ -39,7 +39,11 @@ import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName } from '.
 
 const GUTTER = 34;          // 左侧年份／时代标注的留白
 const TRANS_PX = 56;        // 改道过渡区的目标半长（像素）——长 S 弯的来源
-const WAVE_PX = 320;        // 蜿蜒波长（像素）：打破大一统长段的矩形感
+const WAVE_PX = 320;        // 窄河蜿蜒波长（像素）
+const WAVE_WIDE_PX = 2200;  // 宽河蜿蜒波长：河相关系（Leopold & Wolman）给出蜿蜒波长
+                            // ≈10–14×河宽,满宽河用 320px 波长正是「正弦墙纸」感的来源
+const WAVE_WIDE_AMP = 3.8;  // 宽河振幅:只在河道占幅超过 55% 后随宽度渐入,
+                            // 3.8px 保证与最窄邻居反相摆动时仍吃不掉 5px 缝
 const STEM = 1.6;           // 细流的半宽：河道张开／收束的末端不归零（d3-sankey 的
                             // linkMinWidth 同理），交替期的空档里始终有一线水流
 const EPS = 1e-6;
@@ -453,6 +457,7 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
   const GAP_BRIDGE_MAX = 16;   // 空窗桥接上限（年）：楚汉之争 5 年、居摄 3 年皆在内
   const trans = [];
   const flows = [];
+  const necks = [];            // 承统对及其过渡窗——河床的墨韵渐变按窗铺 stop
 
   // 桥接两类段：微段（<MIN_SLICE，禅让两端差一个月那类）与**空窗段**
   //（n=0、≤GAP_BRIDGE_MAX，秦亡至汉兴的楚汉之争、平帝崩至王莽代汉的居摄）。
@@ -512,10 +517,12 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
     // 河口取七成五而非六成：用户对照 river delta 指出六成仍收得太紧，
     // 交替应读作「同一条河换了名字」，不是「河面塌缩重生」
     const dying = [...A.at.keys()].filter((k2) => !B.at.has(k2));
+    const pairs = [];
     for (const yk of B.at.keys()) {
       if (A.at.has(yk)) continue;
       const xk = SUCCESSION[yk];
       if (!xk || !dying.includes(xk)) continue;
+      pairs.push({ xk, yk });
       const XA = A.at.get(xk), YB = B.at.get(yk);
       const cx = ((XA[0] + XA[1]) / 2 + (YB[0] + YB[1]) / 2) / 2;
       // 连续性三级：同切禅让＝75% 宽河口（同一条河换了名字）；隔着空窗的承统
@@ -539,6 +546,7 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
     const need = Math.max(tau, Math.min(3 * tau, (dx * 0.7) / pxYear));
     const ha = Math.min(need, (A.z - A.a) / 2);
     const hb = Math.min(need, (B.z - B.a) / 2);
+    for (const p2 of pairs) necks.push({ ...p2, a: c - ha, z: c + span + hb });
     for (const f of local) {
       f.c = f.dir === 'merge' ? c + span : c;
       f.h = f.dir === 'merge' ? hb : ha;
@@ -547,22 +555,25 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
     }
     trans.push({ c, span, ha, hb, from, to });
   }
-  return { trans, flows };
+  return { trans, flows, necks };
 }
 
 const smoothstep = (u) => u * u * (3 - 2 * u);
 
 /**
- * 确定性蜿蜒：河道整体做 ±amp 的横向摆动，打破大一统长段的矩形感。
- * 相位取政权名的散列——不用随机数，同一筛选下重绘逐像素稳定；
+ * 确定性蜿蜒：河道整体做 ±amp 的横向摆动。
+ * 相位取**法统源头**（lineageRoot）的散列而非政权名——「继位是改名，不是搬家」
+ * 在车道（原地接管）与河口（共用腰）之后抵达律动层：唐与后梁在河口两侧
+ * 同一支波贯穿，腰部不再有与叙事矛盾的相位拐点；正统一线从秦汉到明清
+ * 是同一笔摆动。不用随机数，同一筛选下重绘逐像素稳定；
  * 两个不同频的正弦叠出「河」而非「正弦墙纸」的观感。
- * 振幅不超过缝宽的三成，相邻河道即便反相摆动也吃不掉缝隙。
+ * 窄河振幅不超过缝宽的三成，相邻河道即便反相摆动也吃不掉缝隙。
  */
-function waveOf(key, t, pxYear, amp) {
+function waveOf(key, t, pxYear, amp, wavePx = WAVE_PX) {
   let hsh = 0;
   for (let i = 0; i < key.length; i++) hsh = (hsh * 31 + key.charCodeAt(i)) % 997;
   const ph = (hsh / 997) * Math.PI * 2;
-  const u = (t * pxYear) / WAVE_PX * Math.PI * 2;
+  const u = (t * pxYear) / wavePx * Math.PI * 2;
   return amp * (Math.sin(u + ph) + 0.4 * Math.sin(2.3 * u + 1.7 * ph));
 }
 
@@ -647,21 +658,34 @@ export function renderRiver(host, list, opts) {
   const tau = TRANS_PX / pxYear;
 
   const { slices, ordered, rank, C } = layoutChannels(bands, RX0, RX1);
-  const { trans, flows } = buildTransitions(slices, rank, pxYear, RX0, RX1);
-  window.__RIVER__ = { slices, trans, flows, rank, C };   // 调试钩子：布局自检用
+  const { trans, flows, necks } = buildTransitions(slices, rank, pxYear, RX0, RX1);
+  window.__RIVER__ = { slices, trans, flows, necks, rank, C };   // 调试钩子：布局自检用
   const flowsBy = new Map();
   for (const f of flows) { if (!flowsBy.has(f.key)) flowsBy.set(f.key, []); flowsBy.get(f.key).push(f); }
+  const bandBy = new Map(bands.map((b) => [b.d.key, b]));
+  const rootOf = new Map(bands.map((b) => [b.d.key, lineageRoot(b.d.key)]));  // 法统同相
   const amp = Math.min(1.6, gapFor(RX1 - RX0) * 0.3);
+  // 河相蜿蜒律:窄河用 λ320 的小摆,河道占幅超过 55% 后按 smoothstep 渐入
+  // λ2200 的宽河长摆——真实河流的蜿蜒波长约为河宽的 10–14 倍,大河从不高频抖动。
+  // 两套**固定**波形按宽度因子交叉混合,权重连续变化而波形不变,无 chirp 拐点。
+  // 越界处逐缘钳制而非把整体位移钳为零:旧钳制 w=max(RX0-b0[0], min(RX1-b0[1], w))
+  // 在满宽段恒等于 0——大一统河段的蜿蜒振幅精确为零,「盛唐读成方柱」正源于此;
+  // 现在满宽河在摆向一侧时贴岸内收 3.8px,河身在两岸之间从容游动
   const edge = (key, t) => {
     const b0 = edgeAt(key, t, slices, trans);
     if (!b0) return null;
-    let w = waveOf(key, t, pxYear, amp);
-    w = Math.max(RX0 - b0[0], Math.min(RX1 - b0[1], w));
-    return [b0[0] + w, b0[1] + w];
+    const root = rootOf.get(key) || key;
+    const f = smoothstep(Math.min(1, Math.max(0,
+      ((b0[1] - b0[0]) / (RX1 - RX0) - 0.55) / 0.45)));
+    const w = (1 - f) * waveOf(root, t, pxYear, amp)
+            + f * waveOf(root, t, pxYear, WAVE_WIDE_AMP, WAVE_WIDE_PX);
+    return [Math.max(RX0, b0[0] + w), Math.min(RX1, b0[1] + w)];
   };
   const sample = (key, ta, tb) => sampleEdges((t) => edge(key, t), ta, tb, trans, pxYear);
 
   const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, class: 'river-svg', role: 'img' });
+  const defs = el('defs');                 // 河床渐变(首尾洇散 × 河口墨韵)
+  svg.appendChild(defs);
   // 四个绘制层，DOM 顺序即遮挡顺序：所有河床垫底，君主段全体压在其上——
   // 因此新朝的预告细流（先于建国张开的淡色）只会显现在缝隙与河床里，
   // 绝不会浮在邻河的君主色块之上
@@ -698,7 +722,45 @@ export function renderRiver(host, list, opts) {
     const bedSamples = sample(b.d.key, b.s - 3 * tau, b.e + 3 * tau);
     const bedPath = polyPath(bedSamples, y, 1);
     if (!bedPath) continue;
-    const bed = el('path', { d: bedPath, fill: col, opacity: .16, class: 'mark', 'data-dyn': b.d.key });
+    // 首尾洇散 × 河口墨韵:每床一个纵向渐变,stop-opacity 给首尾方向性剖面、
+    // stop-color 在承统过渡窗里做两朝色的互渗。剖面与连续性三级同构:
+    //   无前身 → 预告楔自 0 洇入(浓淡编码「离真实建号还有多远」,预告不再与
+    //             在位空档同浓);承统头 → 窗内自前朝色洇入、透明度 0→1;
+    //   承统尾 → 窗内洇向新朝色、透明度 1→0——前尾与新头在共用的窗里恰好互补,
+    //             细颈全程合成恒定一层(秦→汉的悬丝不洇断,还顺带修掉此前
+    //             两床叠压的双重加深);亡入尾 → 保 0.6 终值(没入对岸,非蒸发);
+    //   真正断流 → 洇出至 0。君主色块分毫不动,洇与渗只发生在河床层;
+    // stop-color 走 CSS 变量,亮暗主题自动跟随
+    const bedA = b.s - 3 * tau, bedZ = b.e + 3 * tau;
+    const off = (t2) => Math.min(1, Math.max(0, (t2 - bedA) / (bedZ - bedA)));
+    const headN = necks.find((n2) => n2.yk === b.d.key);
+    const tailN = necks.find((n2) => n2.xk === b.d.key);
+    const varOf = (k2) => {
+      const bb = bandBy.get(k2);
+      return bb ? (byDynasty ? slotVar(slots.get(k2)) : (bb.d.u ? '--c-unified' : '--c-split')) : null;
+    };
+    const predV = headN ? varOf(headN.xk) : null;
+    const succV = tailN ? varOf(tailN.yk) : null;
+    const stops = [];
+    if (predV) stops.push([0, predV, 0], [off(headN.a), predV, 0], [off(headN.z), cvar, 1]);
+    else stops.push([0, cvar, 0], [off(b.s), cvar, 1]);
+    if (succV) stops.push([off(tailN.a), cvar, 1], [off(tailN.z), succV, 0], [1, succV, 0]);
+    else if (MERGED_INTO[b.d.key] && bandBy.has(MERGED_INTO[b.d.key]))
+      stops.push([off(b.e), cvar, 1], [1, cvar, 0.6]);
+    else stops.push([off(b.e), cvar, 1], [1, cvar, 0]);
+    const gid = `river-bed-${b.d.key}`;
+    const grad = el('linearGradient', {
+      id: gid, gradientUnits: 'userSpaceOnUse', x1: 0, x2: 0, y1: y(bedA), y2: y(bedZ),
+    });
+    let prevOff = 0;
+    for (const [o, cv, op] of stops) {
+      prevOff = Math.max(prevOff, o);
+      grad.appendChild(el('stop', {
+        offset: prevOff.toFixed(4), style: `stop-color:var(${cv});stop-opacity:${op}`,
+      }));
+    }
+    defs.appendChild(grad);
+    const bed = el('path', { d: bedPath, fill: `url(#${gid})`, opacity: .16, class: 'mark', 'data-dyn': b.d.key });
     hoverable(bed, () => [
       { color: col, value: `${fmtYearAxis(b.d.s)}–${fmtYearAxis(b.d.e)}`, label: '国祚' },
       { label: '历时', value: `${st.span} 年` },
@@ -794,12 +856,22 @@ export function renderRiver(host, list, opts) {
       const runH = y(g.x) - y(g.s);
       const inkCol = ink[cvar] === 'dark' ? 'var(--text-1)' : 'var(--surface-1)';
       if (midBox && chW >= 110 && runH >= 18) {
+        // 海名式疏排:地图给大水域注名的百年惯例——字距即领域感。名字属于整片
+        // 河面,字距随河宽增长(两字名封顶 1.0em 防散架,长名 1.5em),
+        // 「武帝」在满宽汉河里疏成横过河心的一行题字。逐字 tspan dx 而非
+        // letter-spacing:后者在末字后多算一格,居中会右偏
         const fs = chW >= 280 ? 13.5 : 12;
-        if (textWidth(nm, fs) + 12 < chW) {
-          gEmps.appendChild(el('text', {
-            x: (midBox[0] + midBox[1]) / 2, y: y((g.s + g.x) / 2) + fs * 0.36,
-            'font-size': fs, 'text-anchor': 'middle', fill: inkCol, 'pointer-events': 'none',
-          }, nm));
+        const base = textWidth(nm, fs);
+        const sp = Math.max(0, Math.min(fs * (nm.length <= 2 ? 1.0 : 1.5),
+          (chW * 0.35 - base) / Math.max(1, nm.length - 1)));
+        const total = base + sp * (nm.length - 1);
+        if (total + 12 < chW) {
+          const tEl = el('text', {
+            x: (midBox[0] + midBox[1]) / 2 - total / 2, y: y((g.s + g.x) / 2) + fs * 0.36,
+            'font-size': fs, fill: inkCol, 'pointer-events': 'none',
+          });
+          [...nm].forEach((c, i) => tEl.appendChild(el('tspan', i ? { dx: sp.toFixed(1) } : {}, c)));
+          gEmps.appendChild(tEl);
         }
       } else if (midBox && chW >= 15 && runH >= nm.length * 10 + 6) {
         const tx = (midBox[0] + midBox[1]) / 2;
@@ -836,7 +908,31 @@ export function renderRiver(host, list, opts) {
   // 杆上的短横线是时代界标（秦汉/魏晋南北朝/…的分界）
   const scrub = h('div', { class: 'river-scrub' });
   const thumb = h('div', { class: 'rs-thumb' });
-  scrub.appendChild(h('div', { class: 'rs-track' }));
+  const track = h('div', { class: 'rs-track' });
+  // 干流微图:把本图唯一的核心变量 n(t) 的「=1」区间(天下一统)印上滑轨——
+  // 滑杆既是目录,目录就该印出合分的节律。短于 5 年的 n=1 段不印:微段桥接
+  // 只影响绘制不影响 slices,曹丕受禅至蜀汉自立的数月「一统」印上去是史观失真;
+  // 短段放大到 0.9%(约 3px)保证可见,轻微时长失真可接受
+  {
+    const uni = [];
+    for (const s of slices) {
+      if (s.n !== 1) continue;
+      const last = uni[uni.length - 1];
+      if (last && s.a - last.z < EPS) last.z = s.z;
+      else uni.push({ a: s.a, z: s.z });
+    }
+    const pct = (t) => ((t - t0) / (t1 - t0)) * 100;
+    const gs = [];
+    for (const u of uni.filter((u2) => u2.z - u2.a >= 5)) {
+      let p1 = pct(u.a), p2 = pct(u.z);
+      if (p2 - p1 < 0.9) { const m = (p1 + p2) / 2; p1 = m - 0.45; p2 = m + 0.45; }
+      gs.push(`var(--border) ${p1.toFixed(2)}%`, `var(--c-unified) ${p1.toFixed(2)}%`,
+        `var(--c-unified) ${p2.toFixed(2)}%`, `var(--border) ${p2.toFixed(2)}%`);
+    }
+    if (gs.length) track.style.background =
+      `linear-gradient(to bottom, ${['var(--border) 0%', ...gs, 'var(--border) 100%'].join(', ')})`;
+  }
+  scrub.appendChild(track);
   for (const era of ERAS) {
     const f = (era.e - t0) / (t1 - t0);
     if (f > 0.02 && f < 0.98) scrub.appendChild(h('div', { class: 'rs-era', style: `top:${(f * 100).toFixed(2)}%` }));
@@ -866,25 +962,57 @@ export function renderRiver(host, list, opts) {
   document.body.appendChild(card);
   let selected = null;
   let litEls = [];
+  // 法统链两跳:点选时沿 SUCCESSION 上下各亮两跳,微光递减——「这条河从哪来、
+  // 到哪去」是点选后最自然的追问,链式微光是唯一能让「法统一线」在 2.6 万 px
+  // 长卷上显形的方式,且静息态零新增像素。两跳封顶是底线:不封顶则点一下清朝
+  // 亮出半部通史,喧宾夺主
+  const succRev = new Map();
+  for (const b of bands) {
+    const p = SUCCESSION[b.d.key];
+    if (p && bandBy.has(p)) { if (!succRev.has(p)) succRev.set(p, []); succRev.get(p).push(b.d.key); }
+  }
+  const chainOf = (key) => {
+    const lv = new Map([[key, 0]]);
+    let frontier = [key];
+    for (let hop = 1; hop <= 2; hop++) {
+      const next = [];
+      for (const k of frontier) {
+        const p = SUCCESSION[k];
+        if (p && bandBy.has(p) && !lv.has(p)) { lv.set(p, hop); next.push(p); }
+        for (const c2 of (succRev.get(k) || [])) if (!lv.has(c2)) { lv.set(c2, hop); next.push(c2); }
+      }
+      frontier = next;
+    }
+    return lv;
+  };
   const clearSel = () => {
     selected = null;
     card.classList.remove('on');
-    for (const n of empNodes) n.node.classList.remove('dim', 'sel');
+    for (const n of empNodes) n.node.classList.remove('dim', 'dim2', 'sel');
     for (const e2 of litEls) e2.setAttribute('opacity', e2.dataset.o0);
     litEls = [];
   };
   const select = (item) => {
     selected = item;
+    const lv = chainOf(item.band.d.key);
     for (const n of empNodes) {
-      n.node.classList.toggle('dim', n !== item);
+      const hop = lv.get(n.band.d.key);
       n.node.classList.toggle('sel', n === item);
+      // 链上成员的君主段只压到半暗(dim2)——河床在暗纱下发光是自相矛盾的画面
+      n.node.classList.toggle('dim2', n !== item && hop !== undefined);
+      n.node.classList.toggle('dim', n !== item && hop === undefined);
     }
-    // 点亮该政权的河床与穿流带：被压在君主色块下的汇流去向由此显形
+    // 点亮链上各政权的河床与穿流带,亮度随跳数递减:被压在君主色块下的
+    // 汇流去向、贯穿空窗的承统细颈,由此连成一条可见的水脉
     for (const e2 of litEls) e2.setAttribute('opacity', e2.dataset.o0);
-    litEls = [...svg.querySelectorAll(`path[data-dyn="${item.band.d.key}"]`)];
-    for (const e2 of litEls) {
-      e2.dataset.o0 = e2.getAttribute('opacity');
-      e2.setAttribute('opacity', e2.classList.contains('river-flow') ? '0.55' : '0.34');
+    litEls = [];
+    const bedOp = ['0.34', '0.27', '0.22'], flowOp = ['0.55', '0.42', '0.32'];
+    for (const [k, hop] of lv) {
+      for (const e2 of svg.querySelectorAll(`path[data-dyn="${k}"]`)) {
+        e2.dataset.o0 = e2.getAttribute('opacity');
+        e2.setAttribute('opacity', e2.classList.contains('river-flow') ? flowOp[hop] : bedOp[hop]);
+        litEls.push(e2);
+      }
     }
     card.innerHTML = '';
     card.appendChild(h('div', { class: 'rc-title' }, [
@@ -921,7 +1049,10 @@ export function renderRiver(host, list, opts) {
     if (inView) {
       const tMid = Math.min(t1, Math.max(t0, y.invert(-box.top + innerHeight * 0.45)));
       thumb.style.top = `${(((tMid - t0) / (t1 - t0)) * 100).toFixed(2)}%`;
-      thumb.textContent = fmtYearAxis(tMid);
+      // 浮标带时代名:界标画在杆上却匿名,补名是把既有元素的语义读完。
+      // ERAS 有重叠期(960–979 两带并置),首匹配即钦定的主叙事(见 dynasties.js)
+      const era = ERAS.find((e2) => tMid >= e2.s && tMid < e2.e);
+      thumb.textContent = era ? `${fmtYearAxis(tMid)} · ${era.name}` : fmtYearAxis(tMid);
     }
     for (const n of labelNodes) {
       const vis = n.y1 > top - 40 && n.y0 < bottom;
@@ -958,8 +1089,10 @@ export function renderRiver(host, list, opts) {
     `河宽切成 ${C} 条固定车道，按当时并存的政权数整数分配：一股独占全部车道＝天下一统，`
     + `两股分 ${Math.ceil(C / 2)}/${Math.floor(C / 2)}，依次类推。最挤处为 ${fmtYearAxis(peakSlice.a)} 年的 ${peak} 股。`
     + (markViolent ? ' 河道右缘的红色刻痕＝该帝非正常死亡。' : '')
-    + ' 各河道的淡色底＝河床：称帝前的预告、亡后的尾迹、在位空档，皆由它透出。'
-    + ' 点按任一段可锁定该君主。' }));
+    + ' 各河道的淡色底＝河床：称帝前的预告、亡后的尾迹、在位空档，皆由它透出——'
+    + '浓淡有向：预告楔自无洇入，越早越淡；真正断绝的世系洇出至无。'
+    + ' 点按任一段可锁定该君主，并顺法统链上下各点亮两跳。'
+    + ' 左缘纪年滑杆轨上的色段＝天下一统的时段。' }));
   // 按朝代配色时不放图例：65 个色块的对照表没人查得动，何况每条河道
   // 都直接标着朝代名，颜色只是辅助通道。仅两色语义模式保留两行图例
   if (!byDynasty) {
@@ -995,7 +1128,10 @@ export function renderRiver(host, list, opts) {
     + `先空置成**留白**，邻居不立刻胀开——快变期宁可留白，不要急弯。`
     + `车道边界是全图固定的网格，未被转让的边界纹丝不动，这是河流「更直」的来源。`
     + `位移大的改道（统一、大分裂）会把过渡窗自动拉长至多三倍，不出现近乎直角的急弯；`
-    + `河道另有 ±2px 的确定性蜿蜒（相位取政权名散列，重绘稳定），免得大一统的长段读成矩形。`
+    + `河道另有确定性蜿蜒，且**按河相关系随河宽换步**：真实河流的蜿蜒波长约为河宽的`
+    + ` 10–14 倍（Leopold & Wolman），大河从不高频抖动——窄流用 320px 波长的小摆，`
+    + `河道占幅超过 55% 后渐入 2200px 波长的从容长摆，满宽大一统在两岸之间贴岸游动；`
+    + `蜿蜒相位取**法统源头**的散列——继位是改名不是搬家，车道、河口之外，律动也不换笔。`
     + `理想的调节量是真实疆域面积（河宽即国力、自带总量上限），但本库没有逐年疆域数据，`
     + `且元、清这类跨界政权难以归一——整数车道是「不画我们不掌握的东西」前提下的诚实近似。`,
     `**亡国是汇流，不是蒸发**：政权终结时其疆土并入谁家、建立时从谁家裂出，`
@@ -1020,6 +1156,12 @@ export function renderRiver(host, list, opts) {
     `**不套滚动容器**：竖向内容再嵌一层竖向滚动是经典的滚动陷阱，手指落在容器上页面就像卡住了。`
     + `本图直接交给页面滚动，全页只有一个滚动器。代价是这一节很长（${Math.round(H)}px），`
     + `故顶／底两条固定条既是上下节跳转，也是保证能起滑的安全区。`,
+    `**河床的浓淡有向，与连续性三级同构**：无前身的政权，预告楔自无洇入——浓淡编码`
+    + `「离真实建号还有多远」，排版预告不再与在位空档同浓；承统交替处，前朝的河床尾`
+    + `与新朝的河床头在共用的过渡窗里互补洇变（前尾渐隐、新头渐显、两色互渗），`
+    + `细颈全程合成恒定的一层，秦→汉的悬丝不因洇散而断；亡入者的尾迹保留六成浓度`
+    + `没入对岸（汇流不是蒸发）；**洇出至无只留给无承继关系的真正终结**。`
+    + `君主色块分毫不动——洇与渗都只发生在河床层。`,
     `君主之间的空缺由淡色河床透出，那正是「该段年份没有在位君主的记录」——`
     + `成因与逐条核对见「空档审计」一节。`,
   ], { label: '这张图为什么这样画' }));
