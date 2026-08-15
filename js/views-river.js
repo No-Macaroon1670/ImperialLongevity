@@ -399,18 +399,26 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
   const tau = TRANS_PX / pxYear;
   const MIN_SLICE = 1.5;
   const BRIDGE_MAX = 4;
+  const GAP_BRIDGE_MAX = 16;   // 空窗桥接上限（年）：楚汉之争 5 年、居摄 3 年皆在内
   const trans = [];
   const flows = [];
 
+  // 桥接两类段：微段（<MIN_SLICE，禅让两端差一个月那类）与**空窗段**
+  //（n=0、≤GAP_BRIDGE_MAX，秦亡至汉兴的楚汉之争、平帝崩至王莽代汉的居摄）。
+  // 空窗桥接后，承统的窄颈才有机会跨过空窗触发——否则前朝收尖、后朝再起尖，
+  // 两尖相抵读作「文明断了又重启」。空窗里若无承统关系，过渡照旧收束成细流，
+  // 只是收束的弯被摊得更长更缓
   const idx = [0];
   let i = 1;
   while (i < slices.length) {
-    let j = i, span = 0;
-    while (j < slices.length - 1 && (slices[j].z - slices[j].a) < MIN_SLICE && span <= BRIDGE_MAX) {
-      span += slices[j].z - slices[j].a;
-      j++;
+    let j = i, spanShort = 0, spanEmpty = 0;
+    while (j < slices.length - 1) {
+      const L = slices[j].z - slices[j].a;
+      if (slices[j].n === 0 && L <= GAP_BRIDGE_MAX && spanEmpty + L <= GAP_BRIDGE_MAX) { spanEmpty += L; j++; continue; }
+      if (slices[j].n > 0 && L < MIN_SLICE && spanShort + L <= BRIDGE_MAX) { spanShort += L; j++; continue; }
+      break;
     }
-    if (j > i && span <= BRIDGE_MAX) {
+    if (j > i) {
       const A = slices[idx[idx.length - 1]], B = slices[j];
       const ok = slices.slice(i, j).every((m) =>
         m.live.every((b) => A.at.has(b.d.key) || B.at.has(b.d.key)));
@@ -459,7 +467,12 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
       if (!xk || !dying.includes(xk)) continue;
       const XA = A.at.get(xk), YB = B.at.get(yk);
       const cx = ((XA[0] + XA[1]) / 2 + (YB[0] + YB[1]) / 2) / 2;
-      const w = Math.max(2 * STEM, Math.min(XA[1] - XA[0], YB[1] - YB[0]) * 0.75);
+      // 连续性三级：同切禅让＝75% 宽河口（同一条河换了名字）；隔着空窗的承统
+      //（秦→汉、汉→新）＝10px 细颈贯穿空窗——法统如一线悬丝穿过乱世，
+      // 空窗本身仍由四周的留白与细颈的窄读出；断流只留给无承继关系的真正终结
+      const w = span < MIN_SLICE
+        ? Math.max(2 * STEM, Math.min(XA[1] - XA[0], YB[1] - YB[0]) * 0.75)
+        : Math.max(10, Math.min(XA[1] - XA[0], YB[1] - YB[0]) * 0.06);
       const waist = [cx - w / 2, cx + w / 2];
       to.set(xk, waist);
       from.set(yk, waist);
@@ -936,6 +949,10 @@ export function renderRiver(host, list, opts) {
     + `半透明的**穿流带**：压在途经河道的君主色块之下、只在底色间隐约可见，`
     + `点选该政权即点亮（sankey 图的半透明 ribbon 同理）。`
     + `禅让式的法统相承另有画法（变色微腰），两者都成立时微腰优先。`,
+    `**连续性三级**：同切点的禅让画成 75% 宽河口（同一条河换了名字）；隔着空窗的`
+    + `承统（秦亡至汉兴隔楚汉之争、平帝崩至王莽代汉隔居摄）画成 10px 细颈贯穿空窗——`
+    + `法统如一线悬丝穿过乱世，空窗仍由四周的留白与细颈之窄读出；`
+    + `**断流只留给无承继关系的真正终结**。`,
     `**改道摊开成长弯，交替处不断流**：每次政权更替的河宽重分摊在一段约 ±${TRANS_PX}px 的`
     + `过渡区里（不超过邻段一半，以免过渡区互相穿透），用 smoothstep 缓动。新河道自一线细流张开、`
     + `亡者收束成细流而**不掐断成零宽的尖**（d3-sankey 的 linkMinWidth 同理）；`
