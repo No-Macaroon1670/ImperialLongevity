@@ -11,10 +11,11 @@
 //      视觉变量——分叉数——正好等于那一刻并存的政权数，这恰是本图要回答的问题。
 //      代价是三年的割据小国与盛唐同宽；点按详情与数据表给出真实规模。
 //
-//   2. **全局总序 ⇒ 河道永不交叉。** 任意两个政权的左右次序由一个全局排序键决定，
-//      因此在它们共存的每一段里次序都相同，两条河道不可能相交。次序为
-//      「正统序列 → 北方主线 → 其余」，同一法统按其源头的起始年归堆，
-//      于是前蜀与后蜀、西魏与北周相邻而非四散。
+//   2. **出生按全局总序落位，此后位置有惯性 ⇒ 河道永不交叉。** 新政权按全局排序键
+//      （「正统序列 → 北方主线 → 其余」，同一法统按其源头的起始年归堆）落座，
+//      于是前蜀与后蜀、西魏与北周相邻而非四散。落座之后位置交给惯性：继位原地
+//      改名、挤入只侧移不越位——没有任何机制会让两条并存的河道互换左右，
+//      共存者的次序一经确定终生不变，河道因此不可能相交。
 //
 //   3. **改道是长弯，交替处不断流。** 初版在每个政权起讫点瞬间重分河宽、只留 10px
 //      圆角，整张图读起来像阶梯，密集期尽是毛刺。现按 alluvial diagram 的画法重做：
@@ -74,8 +75,9 @@ function familyHead(key, orth, sec) {
 }
 
 /**
- * 全局总序。返回的比较键在整张图中固定不变，这正是「河道不交叉」的保证：
- * 两个政权只要共存，左右关系在每一段里都一样。
+ * 全局总序，决定新政权**出生时的落位**；此后位置交给惯性（见 layoutChannels：
+ * 承统原地改名、挤入只侧移不越位），共存二者一经落位便不再互换左右——
+ * 这正是「河道不交叉」的保证。
  * 正统与北方主线沿用法统链；其余政权按谱系家长归堆（见 familyHead）。
  */
 function orderKeys(bands) {
@@ -151,6 +153,7 @@ function layoutChannels(bands, x0, x1) {
   // 密集期尽是 peak and shift。
   const owner = new Array(C).fill(null);
   const freedAt = new Array(C).fill(-1e9);
+  const freedBy = new Array(C).fill(null);   // 空车道的原主——隔年承统的认领凭据
   const runOf = (k) => {
     let a = -1, b = -1;
     for (let l = 0; l < C; l++) if (owner[l] === k) { if (a < 0) a = l; b = l; }
@@ -178,17 +181,26 @@ function layoutChannels(bands, x0, x1) {
       });
       fresh = false;
     } else {
-      // 1) 亡者：征服者的 run 与其相邻则立刻承接，否则空置成留白
+      // 1) 亡者三序：承统改名 → 征服承接 → 空置留白。
+      //    继位者与前身同段交接时**原地**接管其整段河道——继位是改名，不是搬家。
+      //    此前继位者被当作新丁按全局次序另寻插入口：北燕（407 年立，燕家序在
+      //    南燕之后）落到南燕右侧的空位，后燕的河道只好弯过南燕头顶去接，
+      //    承统窄颈横跨了第三条河的河面
       const deadKeys = [...new Set(owner.filter((k) => k && !liveSet.has(k)))];
       for (const k of deadKeys) {
         const [a, b] = runOf(k);
+        const heir = r.live.find((b2) => SUCCESSION[b2.d.key] === k && !owner.includes(b2.d.key));
+        if (heir) {
+          for (let l = a; l <= b; l++) owner[l] = heir.d.key;
+          continue;
+        }
         const tgt = MERGED_INTO[k];
         const leftK = a > 0 ? owner[a - 1] : null;
         const rightK = b < C - 1 ? owner[b + 1] : null;
         if (tgt && liveSet.has(tgt) && (leftK === tgt || rightK === tgt)) {
           for (let l = a; l <= b; l++) owner[l] = tgt;
         } else {
-          for (let l = a; l <= b; l++) { owner[l] = null; freedAt[l] = r.a; }
+          for (let l = a; l <= b; l++) { owner[l] = null; freedAt[l] = r.a; freedBy[l] = k; }
         }
       }
       // 2) 新生：按全局次序插到两邻之间。先吃插入口两侧连续的空车道
@@ -196,6 +208,21 @@ function layoutChannels(bands, x0, x1) {
       for (const b2 of r.live) {
         const k = b2.d.key;
         if (owner.includes(k)) continue;
+        // 隔年承统的认领：前身亡后隔了几年（其间无空窗清场）才建号的，其旧河道
+        // 若仍空置未被回收，凭 freedBy 原地整段接管——西晋亡（316）至东晋立（317）
+        // 隔一年而汉赵仍在场，东晋接的正是西晋留在原处的车道
+        const pred0 = SUCCESSION[k];
+        if (pred0 && !liveSet.has(pred0)) {
+          let bA = -1, bB = -1, a2 = -1;
+          for (let l = 0; l <= C; l++) {
+            if (l < C && owner[l] === null && freedBy[l] === pred0) { if (a2 < 0) a2 = l; }
+            else if (a2 >= 0) { if (l - 1 - a2 > bB - bA) { bA = a2; bB = l - 1; } a2 = -1; }
+          }
+          if (bA >= 0) {
+            for (let l = bA; l <= bB; l++) owner[l] = k;
+            continue;
+          }
+        }
         // 法统继承：后继者整段接手前身留下的空车道（北宋亡，南宋接其全部
         // 车道，而不是按新丁只挤 1 条——此前南宋被挤成单车道，与辽金大理
         // 等宽，正统主线看着突兀）。接手范围＝插入口两侧的连续空段，
@@ -242,8 +269,32 @@ function layoutChannels(bands, x0, x1) {
           }
         }
         if (!owner.includes(k)) {
-          // 两邻皆已保底、又无近旁空位：本切片退回标准整数分配。
-          // 稳定性让位于正确性；只在满员峰值的极端交接处偶发
+          // 链式挪位：两邻皆已保底时，向两侧找**最近的松动处**——空车道，或宽逾
+          // 一条的河道——把途中的河道整体侧移一条，在正确的次序缝里腾出一条车道。
+          // 途中者宽度不变、次序不变，只挪一条车道的位置。此前这里整片退回标准
+          // 分配：555 年西梁一入场，梁骤失两车道、西魏北齐全体平移——在场的河
+          // 应当优先保住自己的车道，一个新丁不该让同屏所有河道瞬间重排
+          let sR = -1, sL = -1;
+          for (let l = pos; l < C; l++) {
+            if (owner[l] === null) { sR = l; break; }
+            const rr = runOf(owner[l]);
+            if (l === rr[0] && rr[1] > rr[0]) { sR = l; break; }
+          }
+          for (let l = pos - 1; l >= 0; l--) {
+            if (owner[l] === null) { sL = l; break; }
+            const rr = runOf(owner[l]);
+            if (l === rr[1] && rr[1] > rr[0]) { sL = l; break; }
+          }
+          if (sR >= 0 && (sL < 0 || sR - pos <= pos - 1 - sL)) {
+            for (let l = sR; l > pos; l--) owner[l] = owner[l - 1];
+            owner[pos] = k;
+          } else if (sL >= 0) {
+            for (let l = sL; l < pos - 1; l++) owner[l] = owner[l + 1];
+            owner[pos - 1] = k;
+          }
+        }
+        if (!owner.includes(k)) {
+          // 理论上不可达（n ≤ C 时松动处必然存在），留作最后的正确性保险
           const base = Math.floor(C / r.n), rem = C % r.n;
           owner.fill(null);
           let lane = 0;
@@ -928,10 +979,16 @@ export function renderRiver(host, list, opts) {
     + `家族内按起年排。个别政权疆土与血统不一致（西燕裂自前秦而血统属燕），`
     + `由 dynasties.js 的 ORDER_HINT 手工改判。`
     + `称帝前掌权期不占槽位：孙权 200 年已掌江东，但吴的河道自其首位皇帝在位起才张开。`,
-    `河道之间**永不交叉**：左右次序由一个全局排序键决定（正统序列 → 北方主线 → 其余，`
-    + `同一法统按其源头的起始年归堆），因此任意两个政权只要共存，次序在每一段里都相同。`
+    `河道之间**永不交叉**：新政权按全局排序键（正统序列 → 北方主线 → 其余，`
+    + `同一法统按其源头的起始年归堆）落座，此后没有任何机制会让两条并存的河道互换左右`
+    + `——继位原地改名、挤入只侧移不越位——共存者的次序一经落位终生不变，故不可能相交。`
     + `政权消失时右邻左移即为「合流」，新政权插入时右邻右让即为「分叉」——`
     + `图上所有的分与合都只是这一条规则的结果，没有额外的美化。`,
+    `**在场的河优先保住自己的车道（惯性）**：继位是改名不是搬家——北燕原地接管`
+    + `后燕的河道、北周接西魏、陈接梁，不按全局次序另寻插入口（否则北燕按「燕家排行」`
+    + `落到南燕右侧，后燕的河道得弯过南燕头顶去接）。新政权入场也不触发整片重排：`
+    + `先吃身旁空位，两邻让无可让时向最近的松动处**链式挪位**——途中河道只侧移一条`
+    + `车道、宽度次序不变（此前 555 年西梁一入场，梁骤失两车道、西魏北齐全体平移）。`,
     `**河宽切成 ${C} 条固定车道，宽度只在四种时刻变化**：新政权挤入（不得不让）、`
     + `征服承接（灭国的水立刻归征服者——前秦并前燕当场涨，那是史实）、`
     + `空置满 16 年后的缓回收、以及天下一统。其余时候一律保持现状：政权死后其车道`
