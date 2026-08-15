@@ -452,7 +452,11 @@ function renderOne(sec) {
     (window.__RENDER_ERRS__ = window.__RENDER_ERRS__ || []).push(sec.id + ' :: ' + err.stack);
   }
 }
+// 本次渲染是否发生在后台页签:隐藏页签里的布局测量不可靠(实测出过 207px
+// 的挤扁渲染),回到前台时按此标记决定要不要整页重绘
+let renderedWhileHidden = false;
 function render() {
+  renderedWhileHidden = document.visibilityState === 'hidden';
   const list = filtered();
   buildFilters(document.getElementById('filters'));
   document.getElementById('filter-count').textContent = `当前样本 ${list.length} 位`;
@@ -521,6 +525,28 @@ function boot() {
     lastW = window.innerWidth;
     clearTimeout(rzTimer);
     rzTimer = setTimeout(() => { render(); refreshNav(); }, 180);
+  });
+
+  // 后台页签回来时的自愈。切去别的页签再回来,页面常显得「卡住」:浏览器
+  // 节流后台页签的定时器、停掉 rAF,页签冻结后滚动联动的 UI(标签吸附、
+  // 纪年滑杆、知识卡)停在旧态;更糟的是在后台发生的渲染可能量错宽度。
+  // 回到前台:若上次渲染发生在后台,整页重绘;若河流图的逻辑宽度与容器
+  // 实测宽度对不上(挤扁渲染的指纹),同样重绘;否则只踢一下 scroll/resize,
+  // 让各处监听器就地醒来——resize 踢不动整页重绘,宽度门控会拦住它
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    const chart = document.querySelector('#panorama .chart-host');
+    const riverSvg = chart && chart.querySelector('.river-svg');
+    const hostW = chart ? chart.getBoundingClientRect().width : 0;
+    const squeezed = riverSvg && hostW > 0
+      && Math.abs(riverSvg.viewBox.baseVal.width - hostW) > 48;
+    if (renderedWhileHidden || squeezed) {
+      render();
+      refreshNav();
+    } else {
+      dispatchEvent(new Event('resize'));
+      dispatchEvent(new Event('scroll'));
+    }
   });
 
   // 主题切换
