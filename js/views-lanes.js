@@ -13,6 +13,7 @@
 //   3. 朝代名在带首，并在横向滚动时吸附于视口左缘（不越出本带范围），
 //      因此任何时刻都能读出正在看的是哪一朝。
 import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hideTip, fmtYearAxis, fmt1, scrollHint } from './charts.js';
+import { mountKnowledgeCorner } from './knowledge.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, ORTHODOX, SECONDARY } from './dynasties.js';
 import { fmtDate } from './schema.js';
@@ -362,6 +363,7 @@ export function renderLaneTimeline(host, list, opts) {
   }
 
   const labelNodes = [];
+  const empRefs = [];   // 知识角卡的素材:每段一个 {点击靶, 皇帝, 朝代, 横心}
   for (const b of bands) {
     const y0 = b.lane * LANE_H + 4;
     const cvar = byDynasty ? slotVar(slots.get(b.d.key)) : (b.d.u ? '--c-unified' : '--c-split');
@@ -433,6 +435,7 @@ export function renderLaneTimeline(host, list, opts) {
         const hit = el('rect', { x: sx0, y: sy - 2, width: Math.max(10, sx1 - sx0), height: segH + 4, fill: 'transparent', class: 'mark' });
         hoverable(hit, segTip, () => `${b.d.name}·${g.e.temple}`);
         body.appendChild(hit);
+        empRefs.push({ node: hit, e: g.e, band: b, cx: (sx0 + sx1) / 2 });
         if (!widest || wSeg > widest.w) widest = { w: wSeg, x: sx0, y: sy, h: segH };
         // 非正常死亡：段末的小三角（状态色 + 图例说明，不单靠颜色表意）
         if (markViolent && g.e.violent === 1 && g.e.reignEnd
@@ -472,6 +475,12 @@ export function renderLaneTimeline(host, list, opts) {
   else scroller.style.maxHeight = `${10 * LANE_H + HEAD_H + 24}px`;
   host.appendChild(scroller);
   scrollHint(scroller, '左右滑动即为时间流逝');
+
+  // 说明段右侧的角落放知识卡:横滚经过名君自动上卡、点选任一君主钉卡。
+  // 挂在 __riverCleanup 上——app 的全景包装器在每次重绘前统一调用,
+  // 切去河流视图或改筛选重绘时,角卡与滚动监听一并撤走
+  const kClean = mountKnowledgeCorner(empRefs, scroller, host.closest('section.card'));
+  host.__riverCleanup = kClean;
 
   // 图例：只列出当前视口内可见的朝代。色值本身固定不变，
   // 变的只是「这一屏有哪些朝代」——这是图例该做的事，不是重新配色。

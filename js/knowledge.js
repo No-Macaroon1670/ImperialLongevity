@@ -48,6 +48,33 @@ function mkCard(sideClass) {
   return { el, img, head, title, ext, wiki, baidu, yt, close };
 }
 
+/** 共用的填卡逻辑:写入词条链接、实时拉取维基摘要。河流两翼卡与泳道角卡同用 */
+async function fillCard(card, item) {
+  const e = item.e, dyn = item.band.d;
+  if (card.el.dataset.key === e.id) { card.el.classList.add('on'); return; }
+  const title = e.name || `${dyn.name}${e.temple}`;
+  card.el.dataset.key = e.id;
+  card.head.textContent = `${dyn.name} · ${e.temple}`;
+  card.title.textContent = title;
+  card.ext.textContent = '…';
+  card.img.style.display = 'none';
+  card.wiki.href = `https://zh.wikipedia.org/wiki/${encodeURIComponent(title)}`;
+  card.baidu.href = `https://baike.baidu.com/item/${encodeURIComponent(title)}`;
+  card.yt.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(`${dyn.name} ${title} 历史`)}`;
+  card.yt.style.display = NOTABLE.has(e.name) ? '' : 'none';
+  card.el.classList.add('on');
+  const s = await fetchSummary(title);
+  if (card.el.dataset.key !== e.id) return;              // 等待期间已换人
+  if (s && s.extract) {
+    card.title.textContent = s.title || title;
+    card.ext.textContent = s.extract;
+    if (s.thumbnail && s.thumbnail.source) { card.img.src = s.thumbnail.source; card.img.style.display = ''; }
+    if (s.content_urls && s.content_urls.desktop) card.wiki.href = s.content_urls.desktop.page;
+  } else {
+    card.ext.textContent = '未能实时拉取维基摘要(可能无词条或网络受限),下方链接仍可直达。';
+  }
+}
+
 export function mountKnowledge(empNodes, wrap, W) {
   const mq = matchMedia('(min-width: 1100px)');
   // 1100–1279px 的次宽屏:左翼被滑杆走廊挤得放不下可读的卡(CSS 同步隐藏),
@@ -59,32 +86,7 @@ export function mountKnowledge(empNodes, wrap, W) {
   let pinned = { left: null, right: null };   // 侧 → e.id(点选钉住)
   const dismissed = new Set();                // 手动关掉的,不自动重弹
 
-  const fill = async (side, item) => {
-    const card = cards[side];
-    const e = item.e, dyn = item.band.d;
-    if (card.el.dataset.key === e.id) { card.el.classList.add('on'); return; }
-    const title = e.name || `${dyn.name}${e.temple}`;
-    card.el.dataset.key = e.id;
-    card.head.textContent = `${dyn.name} · ${e.temple}`;
-    card.title.textContent = title;
-    card.ext.textContent = '…';
-    card.img.style.display = 'none';
-    card.wiki.href = `https://zh.wikipedia.org/wiki/${encodeURIComponent(title)}`;
-    card.baidu.href = `https://baike.baidu.com/item/${encodeURIComponent(title)}`;
-    card.yt.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(`${dyn.name} ${title} 历史`)}`;
-    card.yt.style.display = NOTABLE.has(e.name) ? '' : 'none';
-    card.el.classList.add('on');
-    const s = await fetchSummary(title);
-    if (card.el.dataset.key !== e.id) return;              // 等待期间已换人
-    if (s && s.extract) {
-      card.title.textContent = s.title || title;
-      card.ext.textContent = s.extract;
-      if (s.thumbnail && s.thumbnail.source) { card.img.src = s.thumbnail.source; card.img.style.display = ''; }
-      if (s.content_urls && s.content_urls.desktop) card.wiki.href = s.content_urls.desktop.page;
-    } else {
-      card.ext.textContent = '未能实时拉取维基摘要(可能无词条或网络受限),下方链接仍可直达。';
-    }
-  };
+  const fill = (side, item) => fillCard(cards[side], item);
   const hide = (side) => {
     cards[side].el.classList.remove('on');
     cards[side].el.dataset.key = '';
@@ -154,5 +156,63 @@ export function mountKnowledge(empNodes, wrap, W) {
     if (timer) clearTimeout(timer);
     cards.left.el.remove();
     cards.right.el.remove();
+  };
+}
+
+/**
+ * 泳道角卡:横向泳道没有两翼留白,但说明段右侧的版面角落是空的——
+ * 单卡横排(图左文右)嵌在那里,说明文字给它让出右侧宽度(.has-kp)。
+ * 横向滚动时视窗中带里的名君自动上卡(单卡,权重最高者),
+ * 点选任一君主钉卡,✕ 关闭。<1000px 的窄屏整体隐藏。
+ */
+export function mountKnowledgeCorner(items, scroller, sectionEl) {
+  const mq = matchMedia('(min-width: 1000px)');
+  const card = mkCard('kp-corner');
+  sectionEl.classList.add('kp-anchor');
+  sectionEl.appendChild(card.el);
+  let pinnedId = null;
+  const dismissed = new Set();
+  const setOn = (on) => sectionEl.classList.toggle('has-kp', on);
+  const off = () => { card.el.classList.remove('on'); card.el.dataset.key = ''; setOn(false); };
+
+  card.close.addEventListener('click', () => {
+    if (card.el.dataset.key) dismissed.add(card.el.dataset.key);
+    pinnedId = null;
+    off();
+  });
+  for (const it of items) {
+    it.node.addEventListener('click', () => {
+      if (!mq.matches) return;
+      pinnedId = it.e.id;
+      dismissed.delete(it.e.id);
+      fillCard(card, it);
+      setOn(true);
+    });
+  }
+
+  let timer = null;
+  const update = () => {
+    timer = null;
+    if (!mq.matches) { off(); return; }
+    if (pinnedId) return;
+    const x0 = scroller.scrollLeft + scroller.clientWidth * 0.12;
+    const x1 = scroller.scrollLeft + scroller.clientWidth * 0.88;
+    const cands = items
+      .filter((it) => NOTABLE.has(it.e.name) && !dismissed.has(it.e.id) && it.cx > x0 && it.cx < x1)
+      .sort((a, b) => NOTABLE.get(b.e.name) - NOTABLE.get(a.e.name));
+    if (cands.length) { fillCard(card, cands[0]); setOn(true); }
+    else off();
+  };
+  const onScroll = () => { if (timer) clearTimeout(timer); timer = setTimeout(update, 220); };
+  scroller.addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll, { passive: true });
+  update();
+
+  return () => {
+    scroller.removeEventListener('scroll', onScroll);
+    removeEventListener('resize', onScroll);
+    if (timer) clearTimeout(timer);
+    card.el.remove();
+    sectionEl.classList.remove('kp-anchor', 'has-kp');
   };
 }

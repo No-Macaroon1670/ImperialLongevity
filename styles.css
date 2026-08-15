@@ -345,8 +345,28 @@ li { margin-bottom: .35em; }
    1100–1279px 的次宽屏左翼放不下可读的卡,只开右翼(knowledge.js 同步路由) */
 .kp-left { right: calc(50% + 336px); width: min(300px, calc(50vw - 336px - 100px)); }
 .kp-right { left: calc(50% + 336px); }
-@media (max-width: 1099px) { .kp { display: none !important; } }
+@media (max-width: 1099px) { .kp-left, .kp-right { display: none !important; } }
 @media (max-width: 1279px) { .kp-left { display: none !important; } }
+
+/* 泳道角卡:嵌在版面右上角、说明段旁边——泳道没有两翼留白,但这里是空的。
+   横排紧凑(图左浮动、文右绕排),说明与控件行经 .has-kp 让出右侧宽度,
+   卡高与让位后的说明区大致等高,不压泳道图 */
+.kp-anchor { position: relative; }
+section.card.has-kp .desc,
+section.card.has-kp .desc + div { padding-right: 384px; }
+.kp-corner {
+  position: absolute; top: 14px; right: 16px; left: auto;
+  transform: none; width: 352px; max-height: 268px; z-index: 5;
+}
+.kp-corner.on { animation: none; }
+.kp-corner .kp-thumb { float: left; width: 104px; height: 128px; object-fit: cover;
+  object-position: top; margin: 2px 12px 4px 0; }
+.kp-corner .kp-sub { margin-top: 0; }
+.kp-corner .kp-title { font-size: .96rem; margin: 1px 0 4px; }
+.kp-corner .kp-ext { font-size: .77rem; line-height: 1.55; -webkit-line-clamp: 6; }
+.kp-corner .kp-links { clear: both; margin-top: 8px; font-size: .78rem; }
+.kp-corner .kp-src { margin-top: 5px; }
+@media (max-width: 999px) { .kp-corner { display: none !important; } }
 .kp-thumb { width: 100%; max-height: 168px; object-fit: cover; object-position: top; border-radius: 8px; }
 .kp-sub { font-size: .74rem; color: var(--text-1); opacity: .62; margin-top: 8px; }
 .kp-title { font-weight: 720; font-size: 1.04rem; margin: 1px 0 6px; }

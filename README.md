@@ -13,8 +13,12 @@ Aalen–Johansen 竞争风险、Mann–Whitney、Spearman、自助法——全�
 ## 运行
 
 ```bash
-python -m http.server 4190 --directory imperial-longevity
+python imperial-longevity/tools/devserver.py 4190
 ```
+
+（`devserver.py` 即 `python -m http.server` 加一行 `Cache-Control: no-cache`——裸
+http.server 不发缓存头，浏览器对 JS/CSS 走启发式缓存，改完代码刷新常拿到旧体；
+no-cache 逼每次回源revalidate，未改文件仍走 304。生产的 GitHub Pages 自带正确缓存头。）
 
 或在 Claude Code 中：`preview_start { name: "imperial-longevity" }`（已写入 `.claude/launch.json`）。
 
@@ -66,7 +70,7 @@ tools/validate.html            在浏览器内跑该校验
 | 横向泳道时间轴 | 独立成节并置于页首（`#panorama`） | 多朝并立的年代在纵向图里读不出「同时有几个政权」；作为全景坐标，宜先于统计出现 |
 | 空档审计 | `#audit` | 泳道图暴露的悬空band是好用的数据质检信号，做成常设面板 |
 | 死因编码 6「意外事故」 | `js/schema.js` | 需求定义 0–5，但北齐孝昭帝坠马等确实两不属，作为显式扩展 |
-| 桌面两翼知识卡 | `js/knowledge.js` | 河流限宽 640 居中后两翼是整片留白；点选或滚动经过名君时**实时**拉取中文维基百科摘要（REST summary，CORS 开放、自动跟随重定向），页面不预存词条内容；百度百科无 CORS 只给直达链接；名君另配 YouTube 搜索直链（不存具体视频，链接永不腐坏） |
+| 桌面两翼知识卡＋泳道角卡 | `js/knowledge.js` | 河流限宽 640 居中后两翼是整片留白；点选或滚动经过名君时**实时**拉取中文维基百科摘要（REST summary，CORS 开放、自动跟随重定向），页面不预存词条内容；百度百科无 CORS 只给直达链接；名君另配 YouTube 搜索直链（不存具体视频，链接永不腐坏） |
 
 ## 数据模型
 
