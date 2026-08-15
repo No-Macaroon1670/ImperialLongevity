@@ -329,7 +329,7 @@ li { margin-bottom: .35em; }
    窄于 1100px 时两翼放不下一张可读的卡,整个功能隐藏 */
 .kp {
   position: fixed; top: 50%; transform: translateY(-50%);
-  width: min(300px, calc((100vw - 700px) / 2 - 20px));
+  width: min(300px, calc(50vw - 336px - 20px));
   max-height: 74vh; overflow-y: auto; z-index: 44; display: none;
   background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
   box-shadow: 0 8px 28px rgba(0, 0, 0, .13); padding: 14px 16px 12px;
@@ -339,9 +339,14 @@ li { margin-bottom: .35em; }
   from { opacity: 0; transform: translateY(calc(-50% + 10px)); }
   to { opacity: 1; transform: translateY(-50%); }
 }
-.kp-left { left: 16px; }
-.kp-right { right: 16px; }
+/* 贴河不贴边:卡片锚定在河(限宽 640、居中)的外缘 ±16px,而非视口边缘——
+   贴边时左卡会盖住最左侧的纪年滑杆。左卡另预留 100px 走廊:滑杆轨 33px
+   加「1042 · 宋辽金夏」这类年份浮标药丸(实测伸到约 x77)都要完整让开;
+   1100–1279px 的次宽屏左翼放不下可读的卡,只开右翼(knowledge.js 同步路由) */
+.kp-left { right: calc(50% + 336px); width: min(300px, calc(50vw - 336px - 100px)); }
+.kp-right { left: calc(50% + 336px); }
 @media (max-width: 1099px) { .kp { display: none !important; } }
+@media (max-width: 1279px) { .kp-left { display: none !important; } }
 .kp-thumb { width: 100%; max-height: 168px; object-fit: cover; object-position: top; border-radius: 8px; }
 .kp-sub { font-size: .74rem; color: var(--text-1); opacity: .62; margin-top: 8px; }
 .kp-title { font-weight: 720; font-size: 1.04rem; margin: 1px 0 6px; }

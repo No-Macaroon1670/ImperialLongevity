@@ -50,6 +50,9 @@ function mkCard(sideClass) {
 
 export function mountKnowledge(empNodes, wrap, W) {
   const mq = matchMedia('(min-width: 1100px)');
+  // 1100–1279px 的次宽屏:左翼被滑杆走廊挤得放不下可读的卡(CSS 同步隐藏),
+  // 一切选人路由到右卡
+  const mqLeft = matchMedia('(min-width: 1280px)');
   const cards = { left: mkCard('kp-left'), right: mkCard('kp-right') };
   document.body.appendChild(cards.left.el);
   document.body.appendChild(cards.right.el);
@@ -96,7 +99,7 @@ export function mountKnowledge(empNodes, wrap, W) {
   }
 
   // 点选:与河流的选中高亮同一手势,卡开在河道同侧并钉住
-  const sideOf = (item) => (item.cx < W / 2 ? 'left' : 'right');
+  const sideOf = (item) => (mqLeft.matches && item.cx < W / 2 ? 'left' : 'right');
   for (const n of empNodes) {
     n.node.addEventListener('click', () => {
       if (!mq.matches) return;
@@ -130,8 +133,9 @@ export function mountKnowledge(empNodes, wrap, W) {
     const want = { left: null, right: null };
     for (const p of picks) {
       const s = sideOf(p);
+      const o = s === 'left' ? 'right' : 'left';
       if (!want[s]) want[s] = p;
-      else if (!want[s === 'left' ? 'right' : 'left']) want[s === 'left' ? 'right' : 'left'] = p;
+      else if ((o !== 'left' || mqLeft.matches) && !want[o]) want[o] = p;  // 左翼关闭时不外溢
     }
     for (const side of ['left', 'right']) {
       if (pinned[side]) continue;                        // 钉住的卡不被滚动换掉
