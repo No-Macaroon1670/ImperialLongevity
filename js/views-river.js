@@ -11,10 +11,11 @@
 //      视觉变量——分叉数——正好等于那一刻并存的政权数，这恰是本图要回答的问题。
 //      代价是三年的割据小国与盛唐同宽；点按详情与数据表给出真实规模。
 //
-//   2. **出生按全局总序落位，此后位置有惯性 ⇒ 河道永不交叉。** 新政权按全局排序键
-//      （「正统序列 → 北方主线 → 其余」，同一法统按其源头的起始年归堆）落座，
-//      于是前蜀与后蜀、西魏与北周相邻而非四散。落座之后位置交给惯性：继位原地
-//      改名、挤入只侧移不越位——没有任何机制会让两条并存的河道互换左右，
+//   2. **谱系锚落位 ＋ 惯性 ⇒ 河道永不交叉（老河守岸）。** 新政权楔入其谱系母体的
+//      侧翼（骨肉两翼皆可、借道找锚的客不占岸侧、无锚者按全局总序落座），择侧按
+//      楔入代价——贴空道 ＜ 挤邻居 ＜ 链式挪位。于是老河沉在岸边、过客从内侧穿行：
+//      燕线 384–436 连续持右岸，五代中原线钉死左岸。落座之后位置交给惯性：继位
+//      原地改名、挤入只侧移不越位——没有任何机制会让两条并存的河道互换左右，
 //      共存者的次序一经确定终生不变，河道因此不可能相交。
 //
 //   3. **改道是长弯，交替处不断流。** 初版在每个政权起讫点瞬间重分河宽、只留 10px
@@ -158,6 +159,8 @@ function layoutChannels(bands, x0, x1) {
   const owner = new Array(C).fill(null);
   const freedAt = new Array(C).fill(-1e9);
   const freedBy = new Array(C).fill(null);   // 空车道的原主——隔年承统的认领凭据
+  const heirOf = new Map();                  // 前身 → 首位法统后继（谱系锚的走链用）
+  for (const [s2, p2] of Object.entries(SUCCESSION)) if (!heirOf.has(p2)) heirOf.set(p2, s2);
   const runOf = (k) => {
     let a = -1, b = -1;
     for (let l = 0; l < C; l++) if (owner[l] === k) { if (a < 0) a = l; b = l; }
@@ -203,12 +206,47 @@ function layoutChannels(bands, x0, x1) {
         const rightK = b < C - 1 ? owner[b + 1] : null;
         if (tgt && liveSet.has(tgt) && (leftK === tgt || rightK === tgt)) {
           for (let l = a; l <= b; l++) owner[l] = tgt;
+          continue;
+        }
+        // 灭梁式：后继与前身短暂并存（李存勖 923-4 称帝、923-11 灭梁），
+        // 前身亡时后继已在场、原地转让走不了——若两者相邻，水归胜者，
+        // 视同征服承接。排在 MERGED_INTO 之后：北魏的残统按既载入西魏，
+        // 不被已在场的东魏抢走。此洞曾让后梁的岸道空置成留白，
+        // 闽（927）借道楔入时白捡了正统线的左岸
+        const heirIn = r.live.find((b2) => SUCCESSION[b2.d.key] === k);
+        const hr = heirIn ? runOf(heirIn.d.key) : null;
+        if (hr && (hr[0] === b + 1 || hr[1] === a - 1)) {
+          for (let l = a; l <= b; l++) owner[l] = heirIn.d.key;
         } else {
           for (let l = a; l <= b; l++) { owner[l] = null; freedAt[l] = r.a; freedBy[l] = k; }
         }
       }
-      // 2) 新生：按全局次序插到两邻之间。先吃插入口两侧连续的空车道
-      //    （死者留下的口子），再让两邻从面向新政权的边各退（保底 1 条）
+      // 2) 新生：**老河守岸**——新政权楔入其谱系母体的侧翼，而不是按全局次序
+      //    绕到边上。此前按排位落座：凡比后燕晚生的燕凉政权排位都在它右边，
+      //    右岸永远让给最新的入场者，老住户被一次次向内挤（后燕 386 得右岸、
+      //    396 让后凉、400 又被南燕的链式挪位推离）。惯性改造后「河道永不交叉」
+      //    已不依赖出生排位（只需共存者落位后永不互换），排位从必需降为备用。
+      //    择侧按**楔入代价**：母体两翼各算一次（贴着空道 0 ＜ 可挤邻居 1 ＜
+      //    链式牵动 n 条河），代价低者胜，平手回退排位侧——过客从内侧穿行。
+      const insCost = (p3) => {
+        if ((p3 < C && owner[p3] === null) || (p3 > 0 && owner[p3 - 1] === null)) return 0;
+        const size = (k3) => { if (!k3) return 0; const rr = runOf(k3); return rr[1] - rr[0] + 1; };
+        if (size(p3 > 0 ? owner[p3 - 1] : null) > 1 || size(p3 < C ? owner[p3] : null) > 1) return 1;
+        let best = 99;
+        for (let l = p3, n3 = 1; l < C; l++) {
+          if (owner[l] === null) { best = Math.min(best, n3); break; }
+          const rr = runOf(owner[l]);
+          if (l === rr[0] && rr[1] > rr[0]) { best = Math.min(best, n3); break; }
+          if (l === rr[1]) n3++;
+        }
+        for (let l = p3 - 1, n3 = 1; l >= 0; l--) {
+          if (owner[l] === null) { best = Math.min(best, n3); break; }
+          const rr = runOf(owner[l]);
+          if (l === rr[1] && rr[1] > rr[0]) { best = Math.min(best, n3); break; }
+          if (l === rr[0]) n3++;
+        }
+        return best;
+      };
       for (const b2 of r.live) {
         const k = b2.d.key;
         if (owner.includes(k)) continue;
@@ -234,10 +272,37 @@ function layoutChannels(bands, x0, x1) {
         const inherit = SUCCESSION[k] && !liveSet.has(SUCCESSION[k]);
         const target = inherit ? C : Math.max(1, Math.floor(C / r.n));
         const rk = rank.get(k);
-        let pos = 0;
+        let posRank = 0;
         for (let l = 0; l < C; l++) {
           const o = owner[l];
-          if (o && rank.get(o) < rk) pos = l + 1;
+          if (o && rank.get(o) < rk) posRank = l + 1;
+        }
+        // 谱系锚：先血缘母体（裂土自立），再法统前身；亡者顺「水的去向」走链
+        //（征服者承其水、继位者承其位），直到找到在场者。西夏锚宋、桓楚锚晋、
+        // 十国锚五代中原线；辽、大理、蜀汉这类无从锚起的，退回全局排位落座。
+        // **骨肉与客的分别**：直接裂自／承自在场母体者是骨肉，两翼皆可（东西魏
+        // 分北魏，本就是同一片水）；借道走链找到的锚只是邻居，是客——客不许占
+        // 岸侧：闽（933，锚借道到后唐）曾从左翼楔入，把中原正统线挤离左岸
+        let anchor = null, direct = false;
+        for (const c3 of [SPRANG_FROM[k], SUCCESSION[k]]) {
+          if (c3 && owner.includes(c3)) { anchor = c3; direct = true; break; }
+        }
+        if (!anchor) {
+          let a3 = SPRANG_FROM[k] || SUCCESSION[k];
+          const seen2 = new Set([k]);
+          while (a3 && !seen2.has(a3) && !owner.includes(a3)) {
+            seen2.add(a3);
+            a3 = MERGED_INTO[a3] || heirOf.get(a3) || null;
+          }
+          if (a3 && !seen2.has(a3) && owner.includes(a3)) anchor = a3;
+        }
+        let pos = posRank;
+        if (anchor) {
+          const [aA, aB] = runOf(anchor);
+          const cL = direct || aA > 0 ? insCost(aA) : Infinity;
+          const cR = direct || aB < C - 1 ? insCost(aB + 1) : Infinity;
+          if (cL < Infinity || cR < Infinity)
+            pos = cL < cR ? aA : cR < cL ? aB + 1 : (posRank <= aA ? aA : aB + 1);
         }
         let got = 0;
         for (let l = pos; l < C && got < target && owner[l] === null; l++) { owner[l] = k; got++; }
@@ -391,28 +456,27 @@ function layoutChannels(bands, x0, x1) {
 }
 
 /**
- * 某政权不在此段时的「退化盒」：一条 STEM 半宽的细流，放在按全局次序它本应
- * 插入的缝隙中点。新生河道自细流张开，消亡河道收束成细流——不掐断成零宽的尖
- * （初版收到零，法统交替处出现「X 形掐断」，河面像消失了一瞬）。
- * 分与合都收在正确的缝里，不会横穿别的河道。
+ * 某政权不在此段时的「退化盒」：一条 STEM 半宽的细流，落在离它**真实位置**
+ * （相邻段的盒）最近的缝里——细流垂直落座，不斜穿。初版按全局排位找「本应在的
+ * 缝」；惯性与谱系锚落位之后，排位与实际位置可以分离，排位缝可能落在别的河道
+ * 身上（南燕亡后的尾迹曾按排位横扫北燕的头顶，只是压在色块下不易察觉）。
+ * 新生河道自细流张开，消亡河道收束成细流——不掐断成零宽的尖。
  */
-function degenerate(slice, rank, key, x0, x1) {
-  const r = rank.get(key);
-  let below = null, above = null;
-  for (const b of slice.live) {
-    const rb = rank.get(b.d.key);
-    if (rb < r) below = b;
-    else { above = b; break; }
+function degenerate(slice, refBox, x0, x1) {
+  const cx = refBox ? (refBox[0] + refBox[1]) / 2 : (x0 + x1) / 2;
+  const boxes = [...slice.at.values()].sort((p, q) => p[0] - q[0]);
+  let best = null, bd = Infinity;
+  let prev = x0;
+  for (const b of [...boxes, [x1, x1]]) {
+    const g = [prev, Math.max(prev, b[0])];
+    prev = Math.max(prev, b[1]);
+    const c2 = Math.min(Math.max(cx, g[0]), g[1]);
+    const d2 = Math.abs(c2 - cx);
+    if (d2 < bd) { bd = d2; best = [g, c2]; }
   }
-  const gap = gapFor(x1 - x0);
-  const bLo = below ? slice.at.get(below.d.key) : null;
-  const bHi = above ? slice.at.get(above.d.key) : null;
-  const lo = bLo ? bLo[1] : null;
-  const hi = bHi ? bHi[0] : null;
-  const x = lo !== null && hi !== null ? (lo + hi) / 2
-    : lo !== null ? Math.min(lo + gap / 2, x1)
-    : hi !== null ? Math.max(hi - gap / 2, x0)
-    : (x0 + x1) / 2;
+  const [g, c2] = best;
+  const x = g[1] - g[0] < 2 * STEM ? (g[0] + g[1]) / 2
+    : Math.min(Math.max(c2, g[0] + STEM), g[1] - STEM);
   return [Math.max(x0, x - STEM), Math.min(x1, x + STEM)];
 }
 
@@ -421,20 +485,22 @@ function degenerate(slice, rank, key, x0, x1) {
  * 亡者的收束点（或新生者的涌出点）骑在吞并者（或母体）的河岸上，
  * 尾迹经由过渡窗弯向河岸、没入其君主色块之下——亡国是汇流，不是蒸发。
  *
- * 相邻性门槛：先找该河道按全局次序本应落座的缝隙，目标必须正好是缝隙的
- * 左邻或右邻。中间隔着第三条河道时弯过去必然横穿别人（河道永不交叉是本图
- * 的硬约束），返回 null 退回缝隙细流——数据记的是史实，几何画得出才画。
+ * 相邻性按**几何**判定：在两者并存的参照段里，二者之间不得隔着第三条河道
+ * （初版按全局排位找缝，惯性落位后排位与位置可分离，会指错邻居）。
+ * 隔着第三者时弯过去必然横穿别人（河道永不交叉是硬约束），返回 null
+ * 退回缝隙细流——数据记的是史实，几何画得出才画。
  */
-function bankStem(slice, rank, key, tgt) {
-  const r = rank.get(key);
-  let j = 0;
-  for (const b of slice.live) { if (rank.get(b.d.key) < r) j++; else break; }
-  const L = slice.live[j - 1], R = slice.live[j];
-  const boxT = slice.at.get(tgt);
-  if (!boxT) return null;
-  if (L && L.d.key === tgt) return [boxT[1] - STEM, boxT[1] + STEM];
-  if (R && R.d.key === tgt) return [boxT[0] - STEM, boxT[0] + STEM];
-  return null;
+function bankStem(stemSlice, refSlice, key, tgt) {
+  const bK = refSlice.at.get(key), bT = refSlice.at.get(tgt), boxT = stemSlice.at.get(tgt);
+  if (!bK || !bT || !boxT) return null;
+  const lo = Math.min(bK[1], bT[1]), hi = Math.max(bK[0], bT[0]);
+  for (const [k2, b2] of refSlice.at) {
+    if (k2 === key || k2 === tgt) continue;
+    if (b2[0] >= lo - EPS && b2[1] <= hi + EPS) return null;
+  }
+  return (bK[0] + bK[1]) / 2 > (bT[0] + bT[1]) / 2
+    ? [boxT[1] - STEM, boxT[1] + STEM]
+    : [boxT[0] - STEM, boxT[0] + STEM];
 }
 
 /**
@@ -490,8 +556,8 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
     const span = B.a - A.z;
     const from = new Map(A.at), to = new Map(B.at);
     const local = [];
-    for (const k2 of B.at.keys()) if (!from.has(k2)) from.set(k2, degenerate(A, rank, k2, x0, x1));
-    for (const k2 of A.at.keys()) if (!to.has(k2)) to.set(k2, degenerate(B, rank, k2, x0, x1));
+    for (const k2 of B.at.keys()) if (!from.has(k2)) from.set(k2, degenerate(A, B.at.get(k2), x0, x1));
+    for (const k2 of A.at.keys()) if (!to.has(k2)) to.set(k2, degenerate(B, A.at.get(k2), x0, x1));
     // 亡入／分出：吞并者（母体）相邻时，细流直接放到对方河岸上——支流汇入
     // 干流、干流分出支流。中间隔着第三条河道时不能弯（河道永不交叉是硬约束），
     // 改记一条「穿流带」：半透明的细带穿过去，压在途经河道的君主色块之下、
@@ -500,7 +566,7 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
       if (B.at.has(k2)) continue;
       const tgt = MERGED_INTO[k2];
       if (!tgt) continue;
-      const st = B.at.has(tgt) ? bankStem(B, rank, k2, tgt) : null;
+      const st = B.at.has(tgt) ? bankStem(B, A, k2, tgt) : null;
       if (st) to.set(k2, st);
       else local.push({ key: k2, tgt, dir: 'merge' });
     }
@@ -508,7 +574,7 @@ function buildTransitions(slices, rank, pxYear, x0, x1) {
       if (A.at.has(k2)) continue;
       const src = SPRANG_FROM[k2];
       if (!src) continue;
-      const st = A.at.has(src) ? bankStem(A, rank, k2, src) : null;
+      const st = A.at.has(src) ? bankStem(A, B, k2, src) : null;
       if (st) from.set(k2, st);
       else local.push({ key: k2, tgt: src, dir: 'spring' });
     }
@@ -1112,11 +1178,19 @@ export function renderRiver(host, list, opts) {
     + `家族内按起年排。个别政权疆土与血统不一致（西燕裂自前秦而血统属燕），`
     + `由 dynasties.js 的 ORDER_HINT 手工改判。`
     + `称帝前掌权期不占槽位：孙权 200 年已掌江东，但吴的河道自其首位皇帝在位起才张开。`,
-    `河道之间**永不交叉**：新政权按全局排序键（正统序列 → 北方主线 → 其余，`
-    + `同一法统按其源头的起始年归堆）落座，此后没有任何机制会让两条并存的河道互换左右`
-    + `——继位原地改名、挤入只侧移不越位——共存者的次序一经落位终生不变，故不可能相交。`
-    + `政权消失时右邻左移即为「合流」，新政权插入时右邻右让即为「分叉」——`
-    + `图上所有的分与合都只是这一条规则的结果，没有额外的美化。`,
+    `河道之间**永不交叉**：新政权楔入其**谱系母体**的侧翼（西夏锚宋、桓楚锚晋、`
+    + `十国锚五代中原线；母体已亡则顺「水的去向」——征服者承其水、继位者承其位——`
+    + `走链找到在场者；辽、大理这类无从锚起的按全局总序落座），此后没有任何机制会让`
+    + `两条并存的河道互换左右——继位原地改名、挤入只侧移不越位——`
+    + `共存者的次序一经落位终生不变，故不可能相交。`
+    + `政权消失时右邻左移即为「合流」，新政权插入时右邻右让即为「分叉」。`,
+    `**老河守岸**：楔入母体侧翼时按**代价**择侧（贴着空道 ＜ 挤一条邻居 ＜ 链式挪位`
+    + `牵动数条），且**骨肉与客有别**——直接裂自／承自母体者是骨肉，两翼皆可`
+    + `（东西魏分北魏，本是同一片水）；借道走链找到锚的只是客，客不占岸侧。`
+    + `于是老河沉在岸边、过客从内侧穿行：燕家水系 384–436 连续持有右岸`
+    + `（西燕先坐、亡入后燕、北燕承之），五代中原正统线 907–960 钉死左岸，`
+    + `吴闽南汉在内侧排队。前后短暂并存的交替（李存勖 923-4 称帝、923-11 灭梁）`
+    + `原地转让走不了，改按征服承接——水归胜者，岸随水传。`,
     `**在场的河优先保住自己的车道（惯性）**：继位是改名不是搬家——北燕原地接管`
     + `后燕的河道、北周接西魏、陈接梁，不按全局次序另寻插入口（否则北燕按「燕家排行」`
     + `落到南燕右侧，后燕的河道得弯过南燕头顶去接）。新政权入场也不触发整片重排：`
