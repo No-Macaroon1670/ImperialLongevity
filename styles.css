@@ -282,7 +282,9 @@ li { margin-bottom: .35em; }
    故 JS 把 clientWidth 写进 --vw-safe，CSS 取用。 */
 .chart-host.full-bleed { overflow-x: hidden; }
 .river-wrap { position: relative; }
-.river-svg { display: block; width: 100%; height: auto; }
+/* touch-action: manipulation 保住双击锁定——不设则触屏双击被浏览器吃成缩放;
+   manipulation 仍允许滚动与捏合缩放,只禁双击缩放 */
+.river-svg { display: block; width: 100%; height: auto; touch-action: manipulation; }
 /* 点选高亮：选中者留亮、余者压暗。用 CSS 类而非逐个改 fill，
    免得切换主题或重绘时把原色弄丢 */
 .river-emp { transition: opacity .12s; cursor: pointer; }

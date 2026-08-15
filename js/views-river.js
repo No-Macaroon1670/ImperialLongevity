@@ -1101,8 +1101,23 @@ export function renderRiver(host, list, opts) {
     card.appendChild(h('button', { class: 'rc-close', type: 'button', text: '✕', onclick: clearSel }));
     card.classList.add('on');
   };
+  // 触屏上锁定改**双击**:滚动两万多像素的长卷时指尖常擦到河面,单击即选中
+  // 会一路误标(用户实测)。首击仍有触屏悬停提示(hoverable 的 touch 路径)
+  // 托底,双击的意图性才配得上「锁定 + 链式点亮 + 详情卡」这一整套动作。
+  // 桌面鼠标无此误触面,保持单击。
+  const coarse = matchMedia('(pointer: coarse)');
+  let lastTap = { id: null, t: 0 };
   for (const n of empNodes) {
-    n.node.addEventListener('click', (ev) => { ev.stopPropagation(); select(n); });
+    n.node.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      if (coarse.matches) {
+        const now = performance.now();
+        const twice = lastTap.id === n.e.id && now - lastTap.t < 400;
+        lastTap = { id: n.e.id, t: now };
+        if (!twice) return;
+      }
+      select(n);
+    });
   }
   svg.addEventListener('click', () => { if (selected) clearSel(); });
 
@@ -1163,7 +1178,8 @@ export function renderRiver(host, list, opts) {
     + (markViolent ? ' 河道右缘的红色刻痕＝该帝非正常死亡。' : '')
     + ' 各河道的淡色底＝河床：称帝前的预告、亡后的尾迹、在位空档，皆由它透出——'
     + '浓淡有向：预告楔自无洇入，越早越淡；真正断绝的世系洇出至无。'
-    + ' 点按任一段可锁定该君主，并顺法统链上下各点亮两跳。'
+    + ' 点按任一段可锁定该君主，并顺法统链上下各点亮两跳（触屏为双击，'
+    + '免得滚动时误触；单击仅浮出简要提示）。'
     + ' 左缘纪年滑杆轨上的色段＝天下一统的时段。'
     + ' 宽屏（≥1100px）两翼另有知识卡：滚动经过名君时自动打开、点选任一君主即钉住，'
     + '摘要实时取自中文维基百科，并附全文、百度百科与相关视频的直达链接。' }));
