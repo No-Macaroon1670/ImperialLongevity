@@ -336,7 +336,7 @@ export function renderLaneTimeline(host, list, opts) {
     const trW = new Set(Object.values(TRANSITIONS).map((t) => t.w));
     const evOff = new Set(opts.evOff || []);
     for (const ev of EVENTS) {
-      if (trW.has(ev.w) || evOff.has(ev.k)) continue;
+      if (trW.has(ev.w) || evOff.has(ev.k) || ev.k === 'era') continue;
       const ex = x(ev.y);
       if (ex < PAD_L - 40 || ex > W - PAD_L + 40) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
@@ -539,6 +539,53 @@ export function renderLaneTimeline(host, list, opts) {
     labelNodes.push({ dot, label, x0: bx0, x1: bx1, lw });
   }
 
+  // ── 治世外套：套在对应皇帝格子外的一圈 ──────────────────────────────────
+  //
+  // 治世与中兴不是「某年发生了什么」,而是**某几位皇帝的在位期被后世追认**——
+  // 贞观之治就是唐太宗那二十三年,康乾盛世横跨康雍乾三朝。挂在事件轨上等于
+  // 把它与时点事件混为一谈;套在那几格皇帝外面,它才落回自己的所指。
+  // 画成虚线外框而非填色:填色会盖住君主段本身的颜色与非正常死亡刻痕,
+  // 而外套的语义正是「这一段的评价」,不该遮挡这一段的事实。
+  if (showEvents && !(opts.evOff || []).includes('era')) {
+    const gEra = el('g', { class: 'tl-eras' });
+    for (const ev of EVENTS) {
+      if (ev.k !== 'era' || !ev.y2) continue;
+      // 归属哪一条带:取与该时段重叠最多的那个政权(康乾盛世→清、大定之治→金)
+      let best = null, bestOv = 0;
+      for (const b of bands) {
+        const ov = Math.min(b.e, ev.y2) - Math.max(b.s, ev.y);
+        if (ov > bestOv) { bestOv = ov; best = b; }
+      }
+      if (!best || bestOv <= 0) continue;
+      const ex0 = x(Math.max(ev.y, best.s)), ex1 = x(Math.min(ev.y2, best.e));
+      if (ex1 - ex0 < 6) continue;
+      const y0 = best.lane * LANE_H + 4;
+      const coat = el('rect', {
+        x: ex0 - 2, y: y0 + TRACK_Y - 4, width: ex1 - ex0 + 4, height: TRACK_H + 8, rx: 5,
+        fill: 'none', stroke: 'var(--ev-era)', 'stroke-width': 1.4, 'stroke-dasharray': '4 2.5',
+        opacity: .85, class: 'mark era-coat',
+      });
+      coat.dataset.evi = String(EVENTS.indexOf(ev));
+      hoverable(coat, () => [
+        { color: 'var(--ev-era)', value: `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}`, label: '治世·中兴' },
+        { label: '史称', value: ev.n },
+        { label: '所属', value: best.d.name },
+        '后世史书对这一段的追认，非当时建制；外框圈出的正是被追认的那几位君主。点它可读词条。',
+      ], () => ev.n);
+      gEra.appendChild(coat);
+      // 名字压在外框上缘,自带底色晕圈以免与君主名打架
+      const lw = textW(ev.n, 9.5);
+      if (ex1 - ex0 > lw + 10) {
+        gEra.appendChild(el('text', {
+          x: (ex0 + ex1) / 2 - lw / 2, y: y0 + TRACK_Y - 6, 'font-size': 9.5,
+          fill: 'var(--ev-era)', 'pointer-events': 'none',
+          stroke: 'var(--page)', 'stroke-width': 3, 'paint-order': 'stroke',
+        }, ev.n));
+      }
+    }
+    gTop.appendChild(gEra);
+  }
+
   // ── 承继细丝：点选才现,事件年份处的短接 ────────────────────────────────
   //
   // 泳道的车道分配是装箱算法定的(正统专用首行、北方主线次行、其余回收),
@@ -691,6 +738,16 @@ export function renderLaneTimeline(host, list, opts) {
   for (const r of empRefs) ownerOf.set(r.node, r.band.d.key);
   const allOn = opts.laneStrands === true;
   body.addEventListener('click', (ev) => {
+    // 点治世外套:卡片改讲这一段治世
+    const evi = ev.target && ev.target.dataset && ev.target.dataset.evi;
+    if (evi !== undefined && kp && kp.showEvent) {
+      const e3 = EVENTS[+evi];
+      if (e3) {
+        kp.showEvent({ id: `evt:${e3.w}`, head: `${fmtYearAxis(e3.y)}–${fmtYearAxis(e3.y2)} · 治世·中兴（史书追认）`,
+          title: e3.w, baidu: e3.b || e3.n, q: `${e3.n} 历史`, yt: true, display: e3.n });
+        return;
+      }
+    }
     // 点丝:朝代卡改讲那一场改朝换代;丝本身不改选中态,免得一点就散
     const evKey = ev.target && ev.target.dataset && ev.target.dataset.ev;
     if (evKey && kp && kp.showEvent) {

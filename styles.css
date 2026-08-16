@@ -357,6 +357,7 @@ li { margin-bottom: .35em; }
   --ev-inst: var(--s7);  /* 制度·交流存续期:同为长条,但与治世异色 */
 }
 .ev-dot { cursor: pointer; }
+.era-coat { cursor: pointer; }
 /* 事件类别图例:色标即筛选钮。关掉的一类降到灰、划一道删除线,
    一眼看得出「这一类被我关掉了」而不是「本来就没有」 */
 .ev-legend { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; }
