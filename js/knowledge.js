@@ -297,7 +297,8 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
   let timer = null;
   const update = () => {
     timer = null;
-    if (!mq.matches) { hide('dyn'); hide('emp'); return; }
+    // 窄到放不下卡时四张全收——此前只收了朝代与皇帝两张,事件卡会赖在屏上
+    if (!mq.matches) { for (const k of ALL) hide(k); syncStack(); return; }
     const r = wrap.getBoundingClientRect();
     if (!(r.top < innerHeight * 0.5 && r.bottom > innerHeight * 0.5)) {
       if (!pinned.dyn) hide('dyn');
