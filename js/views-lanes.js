@@ -340,7 +340,18 @@ export function renderLaneTimeline(host, list, opts) {
     const slots = [];
     const trW = new Set(Object.values(TRANSITIONS).map((t) => t.w));
     const evOff = new Set(opts.evOff || []);
-    for (const ev of EVENTS) {
+    // **分量决定先后**:此前是按年份顺序抢位子,于是一条无名小事只要年份靠前,
+    // 就能把「安史之乱」的名字挤掉——图上留下的是编排的偶然,不是历史的轻重。
+    // 现在一等先挑位子,二等次之,三等垫底(r 见 js/events.js:按维基三项指标定)。
+    // 画的次序反过来:三等先落笔,一等最后压顶,免得小点盖住大点。
+    const rk = (ev) => ev.r || 2;
+    const gEv = [3, 2, 1].map((r) => { const g = el('g', { class: `ev-tier ev-r${r}` }); head.appendChild(g); return [r, g]; });
+    const layer = Object.fromEntries(gEv);
+    // 缩得越小,能读的名字越少:紧凑档只让一等留名,舒展档三等也放出来。
+    // 点仍然全画——「那一年有事」这件事本身不该被缩放藏掉。
+    const labMaxR = pxYear >= 18 ? 3 : pxYear >= 12 ? 2 : 1;
+    const R = { 1: 4.3, 2: 3.2, 3: 2.4 };
+    for (const ev of [...EVENTS].sort((a, b) => rk(a) - rk(b))) {
       // era 已改画成皇帝格子的外套,不占事件轨
       if (trW.has(ev.w) || evOff.has(ev.k) || ev.k === 'era') continue;
       const ex = x(ev.y);
@@ -351,23 +362,29 @@ export function renderLaneTimeline(host, list, opts) {
       // 画成长条必然与邻近的条与点互撞(用户实测),而一根横贯的长杠也说不清
       // 「这一百五十年里发生了什么」。跨度交给悬停与卡片去讲——
       // 图上不硬画我们本就画不好的东西。起点用方块、时点用圆点,以示区别
+      const g = layer[rk(ev)];
+      const rad = R[rk(ev)];
       const dot = isSpan
-        ? el('rect', { x: ex - 3.4, y: evTop - 3.4, width: 6.8, height: 6.8, rx: 1.4,
+        ? el('rect', { x: ex - rad, y: evTop - rad, width: rad * 2, height: rad * 2, rx: rad * 0.4,
             fill: `var(--ev-${ev.k})`, class: 'mark ev-dot' })
-        : el('circle', { cx: ex, cy: evTop, r: 3.2, fill: `var(--ev-${ev.k})`, class: 'mark ev-dot' });
+        : el('circle', { cx: ex, cy: evTop, r: rad, fill: `var(--ev-${ev.k})`, class: 'mark ev-dot' });
       dot.dataset.evN = ev.n;
-      head.appendChild(dot);
+      g.appendChild(dot);
       // 名字竖写:汉字本来的排法,横向只占一个字宽,于是几乎不再互相挤——
       // 横排时六个字要六十余像素,密集处只能靠悬停读名
       // 一列放不下就折第二列,而不是截成省略号——名字读全了才有用。
       // 两列居中对齐锚点,于是标签仍以事件年份为中心
-      const nmAll = [...ev.n];
+      // **雅名**:凡有现成典故可指这件事的,图上写典故(破釜沉舟、四面楚歌),
+      // 本名与出处留在悬停与卡片里。史书式的平实叙述(「董贤拜大司马」)认不出、
+      // 也记不住;而典故本就是汉语替这些事留下的名字,读者早就认得。
+      const nmAll = [...(ev.ya || ev.n)];
       const nm = nmAll.length > COL_MAX * MAX_COLS
         ? nmAll.slice(0, COL_MAX * MAX_COLS - 1).concat('…') : nmAll;
       const cols = Math.min(MAX_COLS, Math.ceil(nm.length / COL_MAX));
       const colW = LAB_FS + 2;
       const halfW = (cols * colW) / 2;
-      const room = !slots.some(([sx, sw]) => Math.abs(sx - ex) < sw + halfW);
+      const room = rk(ev) <= labMaxR
+        && !slots.some(([sx, sw]) => Math.abs(sx - ex) < sw + halfW);
       if (room) {
         const per = Math.ceil(nm.length / cols);
         for (let c = 0; c < cols; c++) {
@@ -378,7 +395,7 @@ export function renderLaneTimeline(host, list, opts) {
           const t2 = el('text', { x: cx2, y: LAB_TOP, 'font-size': LAB_FS, 'text-anchor': 'middle',
             fill: 'var(--text-2)', 'pointer-events': 'none' });
           seg.forEach((ch, i) => t2.appendChild(el('tspan', { x: cx2, dy: i ? LAB_DY : 0 }, ch)));
-          head.appendChild(t2);
+          g.appendChild(t2);
         }
         slots.push([ex, halfW]);
       }
@@ -388,10 +405,11 @@ export function renderLaneTimeline(host, list, opts) {
       hoverable(hit, () => [
         { color: `var(--ev-${ev.k})`, value: ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y), label: kind.label },
         { label: '事件', value: ev.n },
+        ...(ev.yc ? [ev.yc] : []),
         ...(isSpan ? ['图上只标起点：这类制度或交流延续百年以上，画成长条会与邻近事件互撞，跨度见上方年份。'] : []),
         '点它可在右侧卡片读这条大事记的词条。',
-      ], () => ev.n);
-      head.appendChild(hit);
+      ], () => ev.ya || ev.n);
+      g.appendChild(hit);
     }
   }
 
