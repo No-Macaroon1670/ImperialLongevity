@@ -13,9 +13,9 @@
 //   3. 朝代名在带首，并在横向滚动时吸附于视口左缘（不越出本带范围），
 //      因此任何时刻都能读出正在看的是哪一朝。
 import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hideTip, fmtYearAxis, fmt1, scrollHint } from './charts.js';
-import { mountKnowledgeCorner } from './knowledge.js';
+import { mountKnowledgeCorner, eventSpec } from './knowledge.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
-import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORTHODOX, SECONDARY } from './dynasties.js';
+import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, TRANSITIONS, ORTHODOX, SECONDARY } from './dynasties.js';
 import { fmtDate } from './schema.js';
 
 const SLOT_VARS = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6', '--s7', '--s8'];
@@ -509,6 +509,7 @@ export function renderLaneTimeline(host, list, opts) {
     const s = dir >= 0 ? 1 : -1;
     return `M${xb.toFixed(1)},${yb.toFixed(1)}L${(xb - 3.6).toFixed(1)},${(yb - s * 6).toFixed(1)}L${(xb + 3.6).toFixed(1)},${(yb - s * 6).toFixed(1)}Z`;
   };
+  let kp = null;                       // 知识角卡的把手,点丝时用来推事件卡
   const clearStrands = () => { gStrand.innerHTML = ''; };
   /** 该带在某个横坐标处的那一段(交替期分上下半轨);落在带外时取最近的一段 */
   const partAt = (G, px) => G.parts.find((q) => px >= q.x0 - 0.5 && px <= q.x1 + 0.5)
@@ -539,6 +540,7 @@ export function renderLaneTimeline(host, list, opts) {
     }
     return out;
   };
+  const nameOfKey = (k) => (geo.get(k) ? geo.get(k).b.d.name : k);
   const drawStrands = (key, dim = false) => {
     clearStrands();
     const links = key === null ? allLinks() : (geo.has(key) ? linksOf(key) : []);
@@ -551,8 +553,30 @@ export function renderLaneTimeline(host, list, opts) {
       const pa = partAt(A, xa), pb = partAt(B, xb);
       const ca = (pa.top + pa.bot) / 2, cb = (pb.top + pb.bot) / 2;
       let ya, yb;
+      const trans0 = TRANSITIONS[`${L.from}>${L.to}`];
       if (Math.abs(ca - cb) < 1) {
-        if (Math.abs(xa - xb) < 4) continue;      // 同轨紧邻:相邻本身已经说明了承继
+        if (Math.abs(xa - xb) < 4) {
+          // 同轨紧邻:承继关系由「相邻」本身说明,不必再描一条线。但若这场交替
+          // 有名有姓(陈桥兵变、靖康之变),就在交界处刻一道可点的短竖痕——
+          // 与非正常死亡的红刻痕同一语法:刻痕标事件,不占版面也不牵线
+          if (!trans0) continue;
+          const mid = (xa + xb) / 2;
+          gStrand.appendChild(el('line', { x1: mid, x2: mid, y1: pa.top - 2, y2: pa.bot + 2,
+            stroke: 'var(--page)', 'stroke-width': 4.5, opacity: .8 }));
+          const tick = el('line', { x1: mid, x2: mid, y1: pa.top - 2, y2: pa.bot + 2,
+            stroke: B.col, 'stroke-width': 2.2, opacity: dim ? .7 : .95, class: 'mark',
+            'data-rel': `${nameOfKey(L.from)}→${nameOfKey(L.to)}·${L.label}`,
+          });
+          tick.dataset.ev = `${L.from}>${L.to}`;
+          hoverable(tick, () => [
+            { color: B.col, value: `${nameOfKey(L.from)} → ${nameOfKey(L.to)}`, label: L.label },
+            { label: '史称', value: trans0.n },
+            { label: '时点', value: fmtYearAxis(t0 + (mid - PAD_L) / (W - 2 * PAD_L) * (t1 - t0)) },
+            '同一泳道内首尾相接即为法统相承；此刻痕标出这场交替的名目，点它可读词条。',
+          ], () => trans0.n);
+          gStrand.appendChild(tick);
+          continue;
+        }
         ya = yb = ca;                             // 同轨隔着空窗:走中线的水平短接
         xa = A.x1; xb = B.x0;
       } else {
@@ -569,20 +593,23 @@ export function renderLaneTimeline(host, list, opts) {
         d, fill: 'none', stroke: 'var(--page)', 'stroke-width': dim ? 3.4 : 5,
         'stroke-linecap': 'round', opacity: dim ? .7 : .85,
       }));
-      const nameOf = (k) => (geo.get(k) ? geo.get(k).b.d.name : k);
       const line = el('path', {
         d, fill: 'none', stroke: col,
         'stroke-width': (L.kind === 'succ' ? 2.4 : 1.8) * (dim ? 0.72 : 1),
         'stroke-linecap': 'round', 'stroke-dasharray': L.kind === 'spring' ? '5 3' : null,
-        opacity: dim ? .6 : .95, class: 'mark', 'data-rel': `${nameOf(L.from)}→${nameOf(L.to)}·${L.label}`,
+        opacity: dim ? .6 : .95, class: 'mark', 'data-rel': `${nameOfKey(L.from)}→${nameOfKey(L.to)}·${L.label}`,
       });
+      const tr = TRANSITIONS[`${L.from}>${L.to}`];
+      if (tr) line.dataset.ev = `${L.from}>${L.to}`;
       hoverable(line, () => [
-        { color: col, value: `${nameOf(L.from)} → ${nameOf(L.to)}`, label: L.label },
+        { color: col, value: `${nameOfKey(L.from)} → ${nameOfKey(L.to)}`, label: L.label },
+        ...(tr ? [{ label: '史称', value: tr.n }] : []),
         { label: '时点', value: fmtYearAxis(t0 + (evX - PAD_L) / (W - 2 * PAD_L) * (t1 - t0)) },
         L.kind === 'succ' ? '禅让或称帝改元式的法统相承：前朝的正朔由后朝接过。'
           : L.kind === 'merge' ? '武力吞并或纳土归降：疆土与朝廷并入对方。'
             : '裂土自立：从母体的疆土上分出。',
-      ], () => L.label);
+        ...(tr ? ['点这条丝可在右侧卡片读这场改朝换代的词条。'] : []),
+      ], () => (tr ? tr.n : L.label));
       gStrand.appendChild(line);
       if (Math.abs(yb - ya) > 1) {
         gStrand.appendChild(el('path', { d: arrow(xb, yb, yb - ya), fill: col, opacity: dim ? .6 : .95 }));
@@ -595,6 +622,14 @@ export function renderLaneTimeline(host, list, opts) {
   for (const r of empRefs) ownerOf.set(r.node, r.band.d.key);
   const allOn = opts.laneStrands === true;
   body.addEventListener('click', (ev) => {
+    // 点丝:朝代卡改讲那一场改朝换代;丝本身不改选中态,免得一点就散
+    const evKey = ev.target && ev.target.dataset && ev.target.dataset.ev;
+    if (evKey && kp && kp.showEvent) {
+      const tr = TRANSITIONS[evKey];
+      const [f, t] = evKey.split('>');
+      const nm = (k) => (geo.get(k) ? geo.get(k).b.d.name : k);
+      if (tr && kp.showEvent(eventSpec(tr, nm(f), nm(t)))) return;
+    }
     const key = ownerOf.get(ev.target);
     // 全显模式下点某朝即「聚焦」——只留它的一跳邻域;点空白回到全显
     if (key) drawStrands(key);
@@ -617,8 +652,8 @@ export function renderLaneTimeline(host, list, opts) {
   // 说明段右侧的空当放知识卡:中间朝代、右侧皇帝,横滚自动跟随、点选钉卡。
   // 挂在 __riverCleanup 上——app 的全景包装器在每次重绘前统一调用,
   // 切去河流视图或改筛选重绘时,角卡与滚动监听一并撤走
-  const kClean = mountKnowledgeCorner(empRefs, bandRefs, scroller, host.closest('section.card'));
-  host.__riverCleanup = kClean;
+  kp = mountKnowledgeCorner(empRefs, bandRefs, scroller, host.closest('section.card'));
+  host.__riverCleanup = kp;
 
   // 图例：只列出当前视口内可见的朝代。色值本身固定不变，
   // 变的只是「这一屏有哪些朝代」——这是图例该做的事，不是重新配色。

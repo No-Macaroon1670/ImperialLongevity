@@ -141,12 +141,26 @@ const dynSpec = (band) => {
   };
 };
 
+/**
+ * 改朝换代事件卡的取数说明书(泳道点丝时用)。
+ * `TRANSITIONS` 里维基与百度的正名常不一致,故 `w`/`b` 分列(见 dynasties.js)
+ */
+export const eventSpec = (tr, fromName, toName) => ({
+  id: `ev:${tr.w}|${fromName}|${toName}`,
+  head: `${fromName} → ${toName} · 改朝换代`,
+  title: tr.w,
+  baidu: tr.b || tr.n,
+  q: `${tr.n} 历史`,
+  yt: true,
+  display: tr.n,          // 卡面用简体常用名,链接才用各家的正名
+});
+
 /** 共用的填卡逻辑:写入词条链接、实时拉取维基摘要 */
 async function fillCard(card, spec) {
   if (card.el.dataset.key === spec.id) { card.el.classList.add('on'); return; }
   card.el.dataset.key = spec.id;
   card.head.textContent = spec.head;
-  card.title.textContent = spec.title;
+  card.title.textContent = spec.display || spec.title;
   card.ext.textContent = '…';
   card.img.style.display = 'none';
   card.wiki.href = `https://zh.wikipedia.org/wiki/${encodeURIComponent(spec.title)}`;
@@ -157,7 +171,7 @@ async function fillCard(card, spec) {
   const s = await fetchSummary(spec.title);
   if (card.el.dataset.key !== spec.id) return;             // 等待期间已换人
   if (s && s.extract && s.type !== 'disambiguation') {
-    card.title.textContent = s.title || spec.title;
+    card.title.textContent = spec.display || s.title || spec.title;
     card.ext.textContent = s.extract;
     if (s.thumbnail && s.thumbnail.source) { card.img.src = s.thumbnail.source; card.img.style.display = ''; }
     if (s.content_urls && s.content_urls.desktop) card.wiki.href = s.content_urls.desktop.page;
@@ -396,7 +410,7 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
   addEventListener('resize', onScroll, { passive: true });
   update();
 
-  return () => {
+  const cleanup = () => {
     scroller.removeEventListener('scroll', onScroll);
     removeEventListener('resize', onScroll);
     if (timer) clearTimeout(timer);
@@ -406,4 +420,14 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
     if (chartHost) chartHost.style.paddingTop = '';
     sectionEl.classList.remove('kp-anchor', 'has-kp', 'has-kp2');
   };
+  // 点承继细丝时,朝代卡改讲那一场改朝换代(楚汉战争、靖康之变…)并钉住:
+  // 关系问的是「谁承谁」,事件答的是「那是怎么发生的」,两者本就该在同一格里
+  cleanup.showEvent = (spec) => {
+    if (!mqBoth.matches) return false;
+    pinned.dyn = spec.id;
+    dismissed.dyn.delete(spec.id);
+    show('dyn', spec);
+    return true;
+  };
+  return cleanup;
 }
