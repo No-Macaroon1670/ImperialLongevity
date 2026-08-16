@@ -353,6 +353,7 @@ li { margin-bottom: .35em; }
 :root {
   --ev-war: var(--critical); --ev-rev: var(--s2); --ev-out: var(--s6);
   --ev-gov: var(--s1); --ev-cul: var(--s3); --ev-dis: var(--lane-other);
+  --ev-era: var(--s4);   /* 治世·中兴:与六类时点事件区别开的第七色 */
 }
 .ev-dot { cursor: pointer; }
 .ev-hit { cursor: pointer; }

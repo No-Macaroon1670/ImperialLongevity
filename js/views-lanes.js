@@ -137,7 +137,7 @@ export function renderLaneTimeline(host, list, opts) {
   const ink = resolveInk(host);
 
   const showEvents = opts.laneEvents !== false;
-  const EV_H = showEvents ? 26 : 0;      // 事件轨:贴在表头之下、泳道之上
+  const EV_H = showEvents ? 30 : 0;      // 事件轨:贴在表头之下、泳道之上(含治世时段条)
   const LANE_H = 48, LABEL_H = 15, TRACK_Y = 18, TRACK_H = 24, HEAD_H = 54 + EV_H;
   const LABEL_FS = 12.5, SEG_FS = 10;
 
@@ -343,14 +343,22 @@ export function renderLaneTimeline(host, list, opts) {
       const lw = textW(label, 9.5);
       // 标记恒画;标签只在不与前一个相撞时才写(密集期宁可只留标记,靠悬停读名)
       let ty = evY - 8;
+      const exEnd = ev.y2 ? x(ev.y2) : ex;
       const room = !placed.some((iv) => ex - 4 < iv.z && iv.a < ex + lw + 8);
-      if (ev.y2 && x(ev.y2) - ex > 3) {
-        head.appendChild(el('rect', { x: ex, y: evY - 3.5, width: x(ev.y2) - ex, height: 3,
+      if (kind.span) {
+        // 治世／中兴是时段而非时点,且是后世史书的**追认**而非当时建制:
+        // 画成通长的浅底横条(不是点也不是线),名字写在条内,与事实类事件一眼可分
+        head.appendChild(el('rect', { x: ex, y: 53 + 2, width: Math.max(3, exEnd - ex), height: EV_H - 5,
+          rx: 3, fill: `var(--ev-era)`, opacity: .16 }));
+        head.appendChild(el('rect', { x: ex, y: 53 + 2, width: 2, height: EV_H - 5, fill: `var(--ev-era)`, opacity: .5 }));
+      } else if (ev.y2 && exEnd - ex > 3) {
+        head.appendChild(el('rect', { x: ex, y: evY - 3.5, width: exEnd - ex, height: 3,
           rx: 1.5, fill: `var(--ev-${ev.k})`, opacity: .5 }));
       }
-      const dot = el('circle', { cx: ex, cy: evY - 2, r: 3.2, fill: `var(--ev-${ev.k})`,
+      const dot = kind.span ? null : el('circle', { cx: ex, cy: evY - 2, r: 3.2, fill: `var(--ev-${ev.k})`,
         class: 'mark ev-dot', 'data-ev-n': label });
-      const hit = el('rect', { x: ex - 7, y: 53, width: 14, height: EV_H, fill: 'transparent',
+      const hit = el('rect', { x: kind.span ? ex : ex - 7, y: 53,
+        width: kind.span ? Math.max(14, exEnd - ex) : 14, height: EV_H, fill: 'transparent',
         'pointer-events': 'all', class: 'kp-hit ev-hit' });
       hit.dataset.evi = String(EVENTS.indexOf(ev));
       hoverable(hit, () => [
@@ -358,11 +366,12 @@ export function renderLaneTimeline(host, list, opts) {
         { label: '事件', value: label },
         '点它可在右侧卡片读这条大事记的词条。',
       ], () => label);
-      head.appendChild(dot);
-      if (room) {
-        head.appendChild(el('text', { x: ex + 5, y: ty + 1, 'font-size': 9.5,
-          fill: 'var(--text-2)', 'pointer-events': 'none' }, label));
-        placed.push({ a: ex, z: ex + lw + 8 });
+      if (dot) head.appendChild(dot);
+      // 时段条的名字写在条内(有地方就写),时点事件的名字写在点右侧
+      if (kind.span ? (exEnd - ex > lw + 10) : room) {
+        head.appendChild(el('text', { x: ex + 5, y: kind.span ? evY + 1 : ty + 1, 'font-size': 9.5,
+          fill: kind.span ? 'var(--text-2)' : 'var(--text-2)', 'pointer-events': 'none' }, label));
+        if (!kind.span) placed.push({ a: ex, z: ex + lw + 8 });
       }
       head.appendChild(hit);
     }
