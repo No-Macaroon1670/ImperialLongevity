@@ -1,6 +1,12 @@
 # 中国帝王寿命数据库 · China Imperial Longevity Database
 
-**▶ 在线访问：<https://no-macaroon1670.github.io/ImperialLongevity/>**
+**▶ 在线访问：<https://no-macaroon1670.github.io/ImperialLongevity/>**（统计核心）
+**▶ 王朝之河（全景时间轴）：<https://no-macaroon1670.github.io/ImperialLongevity/timeline.html>**
+
+两张页面共用同一份数据与同一套外壳（`js/shell.js`），但各有各的读者：
+统计页回答「帝王的寿命由什么决定」，全景页回答「谁在何时统治、天下有多分裂、谁承谁」。
+全景已长成一件独立的作品（河流／泳道／知识卡／承继细丝／改朝换代事件），
+留在统计页里既挤版面、也埋没了它自己的入口与标题。
 
 对标欧洲研究 *Survival and longevity of European rulers* 的中国版本。收录秦至清共 **382 位**君主
 （含三国、十六国、南北朝、五代十国、辽金夏与大理等并立政权），以生存分析回答：
@@ -25,7 +31,11 @@ no-cache 逼每次回源revalidate，未改文件仍走 304。生产的 GitHub P
 ## 目录
 
 ```
-index.html                     页面骨架、数据来源声明、方法与局限
+index.html                     统计核心页：页面骨架、数据来源声明、方法与局限
+timeline.html                  王朝全景页「王朝之河」：竖向河流 + 横向泳道
+js/shell.js                    两页共用的外壳：状态、筛选、渲染循环、章节导航、后台自愈
+js/sections-stats.js           统计页的章节表
+js/sections-panorama.js        全景页的章节表
 styles.css                     主题（浅/深两套「选定」步进）、版式
 js/schema.js                   编码表、日期解析（含公元前天文纪年换算）
 js/dynasties.js                65 个政权的起讫、大一统属性、时代分组、正统序列与北方主线
@@ -38,7 +48,7 @@ js/views-lanes.js              横向泳道全景（朝代长带 + 皇帝分段 
 js/views-survival.js           Kaplan–Meier、竞争风险、Cox 森林图
 js/views-compare.js            箱线图、DSI 散点、H1–H5 假说面板、数据库表
 js/knowledge.js                知识卡：朝代＋皇帝两张（河流两翼／泳道三栏），实时维基摘要
-js/app.js                      状态、一级过滤器、版块编排
+js/app.js / js/app-timeline.js 两页的入口（各自装配 shell + 自己的章节表）
 tools/validate_palette.js      配色六项检查（来自 dataviz 技能）
 tools/validate.html            在浏览器内跑该校验
 ```
