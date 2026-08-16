@@ -57,7 +57,7 @@ function filtered() {
 // ── 一级过滤器 UI ────────────────────────────────────────────────────────
 function chip(label, active, onClick, dotColor) {
   const b = h('button', { class: 'chip', 'aria-pressed': String(active), onclick: onClick });
-  if (dotColor) { const d = h('span', { class: 'dot' }); d.style.background = dotColor; b.appendChild(d); }
+  if (dotColor) { const d = h('span', { class: 'il-dot' }); d.style.background = dotColor; b.appendChild(d); }
   if (active) b.appendChild(h('span', { class: 'check', text: '✓' }));
   b.appendChild(h('span', { text: label }));
   return b;

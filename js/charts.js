@@ -224,7 +224,10 @@ export function hoverable(node, getRows, getTitle) {
 export function legend(items, { shape = 'rect' } = {}) {
   const wrap = h('div', { class: 'legend' });
   for (const it of items) {
-    const sw = h('span', { class: `legend-swatch ${it.shape || shape}` });
+    // 形状类加 sw- 前缀:裸的 .dot / .line 太常见,浏览器扩展注入的同名规则
+    // 会直接命中我们的元素(用户实测:某返利扩展的 `.dot{position:absolute}`
+    // 把图例色点拽出了流,压到文字上)。加前缀即与外界脱钩。
+    const sw = h('span', { class: `legend-swatch sw-${it.shape || shape}` });
     sw.style.background = it.color;
     if (it.hollow) { sw.style.background = 'transparent'; sw.style.boxShadow = `inset 0 0 0 2px ${it.color}`; }
     wrap.appendChild(h('span', { class: 'legend-item' }, [sw, h('span', { text: it.label })]));

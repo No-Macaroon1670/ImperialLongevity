@@ -137,7 +137,7 @@ header.masthead { padding: 34px 0 18px; border-bottom: 1px solid var(--border); 
 }
 .chip:hover { background: var(--surface-2); }
 .chip[aria-pressed="true"] { background: var(--text-1); color: var(--page); border-color: var(--text-1); }
-.chip .dot { width: 9px; height: 9px; border-radius: 50%; }
+.chip .il-dot { width: 9px; height: 9px; border-radius: 50%; }
 .chip .check { font-weight: 700; font-size: .9rem; }
 select, input[type="number"] {
   font: inherit; font-size: .84rem; padding: 4px 8px; border-radius: 7px;
@@ -188,9 +188,15 @@ text.direct.sub { fill: var(--text-2); font-weight: 400; }
 /* ── 图例 ─────────────────────────────────────────────────────────────── */
 .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 10px 0 2px; }
 .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: .82rem; color: var(--text-2); }
+/* 自家的小色块一律**显式写 position**。裸的 .dot / .line 是极常见的类名,
+   浏览器扩展往往注入同名的无作用域规则:用户就撞上过某返利扩展的
+   `.dot { position: absolute }`——我们只设了宽高与底色、没设 position,
+   于是那条赢了,色点被拽出 flex 流、不再占位,正好压在标签头一个字上。
+   类名已加前缀(il-dot / sw-*)与外界脱钩,这里再把 position 钉死,双保险。 */
+.legend-swatch, .il-dot { position: static; }
 .legend-swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
-.legend-swatch.line { width: 16px; height: 3px; border-radius: 2px; }
-.legend-swatch.dot { width: 10px; height: 10px; border-radius: 50%; }
+.legend-swatch.sw-line { width: 16px; height: 3px; border-radius: 2px; }
+.legend-swatch.sw-dot { width: 10px; height: 10px; border-radius: 50%; }
 
 /* ── 提示框 ───────────────────────────────────────────────────────────── */
 .tooltip {
@@ -386,9 +392,9 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
    flex gap 没生效(旧内核/嵌入式 webview 不支持 flex 的 gap),一旦不生效
    间距就归零、色点正好压到头一个字上。改用 margin 明确写死,不依赖 gap。 */
 .ev-chip { gap: 0; }
-.ev-chip .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; margin-right: 6px; }
+.ev-chip .il-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; margin-right: 6px; }
 .ev-chip.off { opacity: .45; text-decoration: line-through; }
-.ev-chip.off .dot { background: var(--muted) !important; }
+.ev-chip.off .il-dot { background: var(--muted) !important; }
 .ev-hit { cursor: pointer; }
 
 /* 搜索框:钉在版块标题行右侧,结果浮在其下 */

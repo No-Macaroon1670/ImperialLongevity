@@ -980,7 +980,7 @@ export function renderLaneTimeline(host, list, opts) {
           opts.setOpt('evOff', [...next]);
         },
       });
-      const dot = h('span', { class: 'dot' });
+      const dot = h('span', { class: 'il-dot' });
       dot.style.background = `var(--ev-${k})`;
       if (meta.span) { dot.style.width = '16px'; dot.style.borderRadius = '2px'; }
       chip.appendChild(dot);
