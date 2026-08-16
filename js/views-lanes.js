@@ -552,13 +552,19 @@ export function renderLaneTimeline(host, list, opts) {
     const gEra = el('g', { class: 'tl-eras' });
     for (const ev of EVENTS) {
       if (ev.k !== 'era' || !ev.y2) continue;
-      // 归属哪一条带:取与该时段重叠最多的那个政权(康乾盛世→清、大定之治→金)
-      let best = null, bestOv = 0;
-      for (const b of bands) {
-        const ov = Math.min(b.e, ev.y2) - Math.max(b.s, ev.y);
-        if (ov > bestOv) { bestOv = ov; best = b; }
+      // 归属**由数据显式指定**(events.js 的 `d`)。此前按重叠面积猜,而辽宋、
+      // 金宋、大理宋同时在场时谁都「完全覆盖」那段年份,于是咸平之治套到了辽国、
+      // 乾淳之治套到了大理——并存时代里,面积根本不是归属的证据
+      let best = ev.d ? bands.find((b) => b.d.key === ev.d) : null;
+      if (!best) {
+        let bestOv = 0;
+        for (const b of bands) {
+          const ov = Math.min(b.e, ev.y2) - Math.max(b.s, ev.y);
+          if (ov > bestOv) { bestOv = ov; best = b; }
+        }
+        if (!best || bestOv <= 0) continue;
       }
-      if (!best || bestOv <= 0) continue;
+      if (Math.min(best.e, ev.y2) - Math.max(best.s, ev.y) <= 0) continue;
       const ex0 = x(Math.max(ev.y, best.s)), ex1 = x(Math.min(ev.y2, best.e));
       if (ex1 - ex0 < 6) continue;
       const y0 = best.lane * LANE_H + 4;
