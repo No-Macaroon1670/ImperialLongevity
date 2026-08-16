@@ -333,6 +333,13 @@ export function renderLaneTimeline(host, list, opts) {
   // 第一行整行淡底，标出「这一行与其余行性质不同」。第二行不加底色——
   // 北方线只覆盖其中约 500 年，整行涂色会误示为该行全归北方线所有。
   if (useTop) body.appendChild(el('rect', { x: 0, y: 0, width: W, height: LANE_H, fill: 'var(--text-1)', opacity: 0.035 }));
+
+  // 三个绘制层,DOM 顺序即遮挡顺序:浅底带垫底 → 承继细丝 → 君主段与标签压顶。
+  // 细丝夹在中间,于是它在留白与浅底带上现身、遇到实心的君主段便潜行而过——
+  // 与竖向河流的分层教义同一条(穿流带压在君主色块之下,只在河床与缝隙间可见)
+  const gBase = el('g'), gStrand = el('g', { class: 'tl-strands' }), gTop = el('g');
+  body.appendChild(gBase); body.appendChild(gStrand); body.appendChild(gTop);
+
   if (contests.length) {
     // 交替并立期：45° 斜纹底衬。此处纹理承载的是「并立」这一状态，非装饰
     const defs = el('defs');
@@ -358,14 +365,14 @@ export function renderLaneTimeline(host, list, opts) {
           ? '两朝同时自居正朔：上半轨为前朝，下半轨为后朝。后世追认的正统归属要到此段结束才定下来。'
           : '北方主线的新旧交替：上半轨为前朝，下半轨为后朝，两者在此段内并存。',
       ], () => (orthodox ? '正统交替期' : '主线交替期'));
-      body.appendChild(rect);
+      gBase.appendChild(rect);
     }
   }
 
   const labelNodes = [];
   const empRefs = [];   // 知识角卡的素材:每段一个 {点击靶, 皇帝, 朝代, 横心}
   const bandRefs = [];  // 同上,朝代级:{朝代, 起讫像素, 底带节点} —— 朝代卡的取材
-  const geo = new Map();  // 朝代 → 几何(起讫像素、轨道中线),承继细丝的锚点
+  const geo = new Map();  // 朝代 → 几何(起讫像素、各分段上下缘),承继细丝的锚点
   for (const b of bands) {
     const y0 = b.lane * LANE_H + 4;
     const cvar = byDynasty ? slotVar(slots.get(b.d.key)) : (b.d.u ? '--c-unified' : '--c-split');
@@ -393,7 +400,7 @@ export function renderLaneTimeline(host, list, opts) {
         fill: col, opacity: 0.14, class: 'mark',
       });
       hoverable(track, trackTip, () => b.d.name);
-      body.appendChild(track);
+      gBase.appendChild(track);
       bandRefs.push({ band: b, x0: px0, x1: px1, node: track });
     }
     // 细丝的锚点按**分段**记:交替期的带被切成上下半轨,只记整轨中线会让
@@ -416,7 +423,7 @@ export function renderLaneTimeline(host, list, opts) {
           { label: '称帝', value: fmtDate(g.e.acc) },
           '此段为该君主实际掌握政权最高权力、但尚未即皇帝位的时期，不计入「在位年数」。',
         ], () => `${b.d.name}·${g.e.temple}`);
-        body.appendChild(node);
+        gTop.appendChild(node);
       }
     }
 
@@ -438,19 +445,19 @@ export function renderLaneTimeline(host, list, opts) {
         const sy = y0 + gm.y + g.sub * (segH + 2);
         const sx0 = x(p.x0), sx1 = x(p.x1);
         const wSeg = Math.max(1.5, sx1 - sx0 - 2);   // −2 ＝ 段间以底色留缝，而不是描边分隔
-        body.appendChild(el('rect', {
+        gTop.appendChild(el('rect', {
           x: sx0 + 1, y: sy, width: wSeg, height: segH, rx: Math.min(3, segH / 2), fill: col, class: 'mark',
         }));
         const hit = el('rect', { x: sx0, y: sy - 2, width: Math.max(10, sx1 - sx0), height: segH + 4, fill: 'transparent', class: 'mark' });
         hoverable(hit, segTip, () => `${b.d.name}·${g.e.temple}`);
-        body.appendChild(hit);
+        gTop.appendChild(hit);
         empRefs.push({ node: hit, e: g.e, band: b, cx: (sx0 + sx1) / 2 });
         if (!widest || wSeg > widest.w) widest = { w: wSeg, x: sx0, y: sy, h: segH };
         // 非正常死亡：段末的小三角（状态色 + 图例说明，不单靠颜色表意）
         if (markViolent && g.e.violent === 1 && g.e.reignEnd
             && Math.abs(g.x - g.e.reignEnd.t) < 0.01 && Math.abs(p.x1 - g.dx) < 1e-9) {
           const tipX = sx0 + 1 + wSeg;
-          body.appendChild(el('path', {
+          gTop.appendChild(el('path', {
             d: `M${tipX - 3.5},${sy - 1.5}L${tipX + 3.5},${sy - 1.5}L${tipX},${sy + 4}Z`,
             fill: 'var(--critical)',
           }));
@@ -459,7 +466,7 @@ export function renderLaneTimeline(host, list, opts) {
       // 段内简称：写在最宽的那一小段上，放不下就留给悬停与数据表
       const nm = shortName(g.e);
       if (widest && widest.h >= 9 && widest.w > textW(nm, SEG_FS) + 8) {
-        body.appendChild(el('text', {
+        gTop.appendChild(el('text', {
           x: widest.x + 5, y: widest.y + widest.h / 2 + SEG_FS * 0.36, 'font-size': SEG_FS,
           fill: ink[cvar] === 'dark' ? 'var(--text-1)' : 'var(--surface-1)',
         }, nm));
@@ -470,7 +477,7 @@ export function renderLaneTimeline(host, list, opts) {
     const lw = textW(b.d.name, LABEL_FS);
     const dot = el('circle', { cx: bx0 + 4, cy: y0 + 8, r: 3.5, fill: col });
     const label = el('text', { x: bx0 + 12, y: y0 + 12, 'font-size': LABEL_FS, 'font-weight': 600, fill: 'var(--text-1)' }, b.d.name);
-    body.appendChild(dot); body.appendChild(label);
+    gTop.appendChild(dot); gTop.appendChild(label);
     labelNodes.push({ dot, label, x0: bx0, x1: bx1, lw });
   }
 
@@ -484,8 +491,6 @@ export function renderLaneTimeline(host, list, opts) {
   // 只画选中朝代的一跳邻域(前身/后继/亡入/亡入我者/分出/分自我者),
   // 点空白即散。同车道相邻的承继不画——那正是装箱时「后继优先落在前身那一行」
   // 的结果,相邻本身已经是那句话,再描一条线是重复。
-  const gStrand = el('g', { class: 'tl-strands' });
-  body.appendChild(gStrand);
   // 三张表的键值方向并不一致,连线前必须先摆正:
   //   SUCCESSION[后继] = 前身   → 边是 前身 → 后继(rev)
   //   SPRANG_FROM[子]  = 母体   → 边是 母体 → 子  (rev)
