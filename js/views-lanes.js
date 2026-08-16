@@ -408,7 +408,7 @@ export function renderLaneTimeline(host, list, opts) {
       // 「赤眉·绿」「林起义」——把「绿林」劈成两半;名字里的「·」本就是天然的
       // 断处,依它断即得「赤眉」「绿林起义」(用户指出)。
       const raw = ev.ya || ev.n;
-      const sep = raw.indexOf('·');
+      const sep = Math.max(raw.indexOf('·'), raw.indexOf('、'));
       let segs = null;
       if (sep > 0 && sep < raw.length - 1
           && sep <= COL_MAX && raw.length - sep - 1 <= COL_MAX) {
@@ -450,18 +450,28 @@ export function renderLaneTimeline(host, list, opts) {
           g.appendChild(t2);
         }
         slots.push([cx0, halfW]);
+        // 标签下方再补一块命中区:此前命中区只盖着圆点,而标签可能被避让
+        // 挪开两年之远,于是点名字点不着自己、反而点到邻居(用户实测)
+        const lh = el('rect', {
+          x: cx0 - halfW - 2, y: LAB_TOP - 11, width: halfW * 2 + 4,
+          height: HEAD_H - LAB_TOP + 8,
+          fill: 'transparent', 'pointer-events': 'all', class: 'kp-hit ev-hit' });
+        lh.dataset.evi = String(EVENTS.indexOf(ev));
+        hoverable(lh, tipOf, () => ev.ya || ev.n);
+        g.appendChild(lh);
       }
-      const hit = el('rect', { x: ex - 7, y: evTop - 8, width: 14, height: HEAD_H - evTop + 6,
+      const hit = el('rect', { x: ex - 7, y: evTop - 8, width: 14, height: LAB_TOP - evTop - 2,
         fill: 'transparent', 'pointer-events': 'all', class: 'kp-hit ev-hit' });
       hit.dataset.evi = String(EVENTS.indexOf(ev));
-      hoverable(hit, () => [
+      hoverable(hit, tipOf, () => ev.ya || ev.n);
+      g.appendChild(hit);
+      function tipOf() { return [
         { color: `var(--ev-${ev.k})`, value: ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y), label: kind.label },
         { label: '事件', value: ev.n },
         ...(ev.yc ? [ev.yc] : []),
         ...(isSpan ? ['图上只标起点：这类制度或交流延续百年以上，画成长条会与邻近事件互撞，跨度见上方年份。'] : []),
         '点它可在右侧卡片读这条大事记的词条。',
-      ], () => ev.ya || ev.n);
-      g.appendChild(hit);
+      ]; }
     }
   }
 
