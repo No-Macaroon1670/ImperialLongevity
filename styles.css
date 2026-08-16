@@ -352,12 +352,28 @@ li { margin-bottom: .35em; }
    横排紧凑(图左浮动、文右绕排),说明与控件行经 .has-kp 让出右侧宽度,
    卡高与让位后的说明区大致等高,不压泳道图 */
 .kp-anchor { position: relative; }
-section.card.has-kp .desc,
-section.card.has-kp .desc + div { padding-right: 384px; }
-.kp-corner {
-  position: absolute; top: 14px; right: 16px; left: auto;
-  transform: none; width: 352px; max-height: 268px; z-index: 5;
+/* 说明段按当前实际显示的卡数让位:一张 356px、两张 692px。
+   `.desc` 本有 76ch 上限,再宽的版面它也用不掉——中间那片空当正是卡的位置。
+   注意让位必须改 max-width 而不是加 padding-right:`.desc` 的 76ch 上限
+   连同 border-box 会把 padding 从正文里扣,曾把说明挤成一行一个字(高 2837px) */
+/* 让位规则按卡片自身的隐藏断点包起来,不靠 JS 及时摘 class:连续拖动窗口时
+   resize 连发会不停重置防抖(角卡 220ms、整页重绘 180ms),两者一次都不跑,
+   has-kp2 会全程赖着;内容宽一跌破 692px,calc 便成负值钳到 0——正文又成
+   一行一个字。断点在此,拖动途中最多退回单卡让位,不会塌 */
+@media (min-width: 1000px) {
+  section.card.has-kp .desc { max-width: min(76ch, calc(100% - 356px)); }
+  section.card.has-kp .desc + div { padding-right: 356px; }
 }
+@media (min-width: 1200px) {
+  section.card.has-kp2 .desc { max-width: min(76ch, calc(100% - 692px)); }
+  section.card.has-kp2 .desc + div { padding-right: 692px; }
+}
+.kp-corner {
+  position: absolute; top: 14px; left: auto;
+  transform: none; width: 322px; max-height: 268px; z-index: 5;
+}
+.kp-corner-emp { right: 16px; }
+.kp-corner-dyn { right: 352px; }
 .kp-corner.on { animation: none; }
 .kp-corner .kp-thumb { float: left; width: 104px; height: 128px; object-fit: cover;
   object-position: top; margin: 2px 12px 4px 0; }
@@ -366,6 +382,7 @@ section.card.has-kp .desc + div { padding-right: 384px; }
 .kp-corner .kp-ext { font-size: .77rem; line-height: 1.55; -webkit-line-clamp: 6; }
 .kp-corner .kp-links { clear: both; margin-top: 8px; font-size: .78rem; }
 .kp-corner .kp-src { margin-top: 5px; }
+@media (max-width: 1199px) { .kp-corner-dyn { display: none !important; } }
 @media (max-width: 999px) { .kp-corner { display: none !important; } }
 .kp-thumb { width: 100%; max-height: 168px; object-fit: cover; object-position: top; border-radius: 8px; }
 .kp-sub { font-size: .74rem; color: var(--text-1); opacity: .62; margin-top: 8px; }

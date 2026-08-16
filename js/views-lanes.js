@@ -364,6 +364,7 @@ export function renderLaneTimeline(host, list, opts) {
 
   const labelNodes = [];
   const empRefs = [];   // 知识角卡的素材:每段一个 {点击靶, 皇帝, 朝代, 横心}
+  const bandRefs = [];  // 同上,朝代级:{朝代, 起讫像素, 底带节点} —— 朝代卡的取材
   for (const b of bands) {
     const y0 = b.lane * LANE_H + 4;
     const cvar = byDynasty ? slotVar(slots.get(b.d.key)) : (b.d.u ? '--c-unified' : '--c-split');
@@ -390,6 +391,7 @@ export function renderLaneTimeline(host, list, opts) {
       });
       hoverable(track, trackTip, () => b.d.name);
       body.appendChild(track);
+      bandRefs.push({ band: b, x0: px0, x1: px1, node: track });
     }
 
     // 称帝前的掌权期：贴在所在轨道底部的半高浅段
@@ -476,10 +478,10 @@ export function renderLaneTimeline(host, list, opts) {
   host.appendChild(scroller);
   scrollHint(scroller, '左右滑动即为时间流逝');
 
-  // 说明段右侧的角落放知识卡:横滚经过名君自动上卡、点选任一君主钉卡。
+  // 说明段右侧的空当放知识卡:中间朝代、右侧皇帝,横滚自动跟随、点选钉卡。
   // 挂在 __riverCleanup 上——app 的全景包装器在每次重绘前统一调用,
   // 切去河流视图或改筛选重绘时,角卡与滚动监听一并撤走
-  const kClean = mountKnowledgeCorner(empRefs, scroller, host.closest('section.card'));
+  const kClean = mountKnowledgeCorner(empRefs, bandRefs, scroller, host.closest('section.card'));
   host.__riverCleanup = kClean;
 
   // 图例：只列出当前视口内可见的朝代。色值本身固定不变，

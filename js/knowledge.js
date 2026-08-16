@@ -28,12 +28,19 @@ const DYN_WIKI = {
   大理: '大理国', 元: '元朝', 明: '明朝', 清: '清朝',
 };
 
-const CACHE = new Map();   // 词条标题 → Promise<summary|null>:会话内不重复拉取
+// 词条标题 → Promise<summary|null>:会话内不重复拉取。
+// **只缓存确定的结果**:404(确实没这个词条)值得记住,但网络抖动、离线、
+// 429 限流这类暂时失败必须逐出缓存——否则一次抖动就把该词条钉死成
+// 「未能拉取」直到刷新整页(fillCard 的同 key 早退让它连重试的机会都没有)
+const CACHE = new Map();
 function fetchSummary(title) {
   if (!CACHE.has(title)) {
     CACHE.set(title, fetch(`https://zh.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`)
-      .then((r) => (r.ok ? r.json() : null))
-      .catch(() => null));
+      .then((r) => {
+        if (!r.ok) { if (r.status !== 404) CACHE.delete(title); return null; }
+        return r.json();
+      })
+      .catch(() => { CACHE.delete(title); return null; }));
   }
   return CACHE.get(title);
 }
@@ -166,21 +173,25 @@ export function mountKnowledge(empNodes, wrap) {
       if (cand) fillCard(cards.emp, empSpec(cand));
       else hide('emp');
     }
-    // 左翼:中带里可见时长最长的朝代——大一统时即那条大河,分裂期通常是
-    // 贯穿最久的主线(十六国段多为东晋),恰是读者需要的时代锚
+    // 左翼:同朝优先——皇帝卡在场时给他的朝(两张卡是一对);皇帝卡空着时
+    // 退回「中带里可见时长最长的朝代」作时代锚(大一统时即那条大河,
+    // 分裂期通常是贯穿最久的主线)
     if (!pinned.dyn && mqLeft.matches) {
-      const span = new Map();
-      let best = null;
-      for (const n of empNodes) {
-        const ov = Math.min(n.y1, y1) - Math.max(n.y0, y0);
-        if (ov <= 0) continue;
-        const key = n.band.d.key;
-        if (dismissed.dyn.has(`dyn:${key}`)) continue;
-        const v = (span.get(key) || 0) + ov;
-        span.set(key, v);
-        if (!best || v > span.get(best.band.d.key) || 0) best = n;
+      const cur = empNodes.find((n) => n.e.id === cards.emp.el.dataset.key);
+      let best = cur ? cur.band : null;
+      if (!best || dismissed.dyn.has(`dyn:${best.d.key}`)) {
+        const span = new Map();
+        let bestV = 0;
+        best = null;
+        for (const n of empNodes) {
+          const ov = Math.min(n.y1, y1) - Math.max(n.y0, y0);
+          if (ov <= 0 || dismissed.dyn.has(`dyn:${n.band.d.key}`)) continue;
+          const v = (span.get(n.band.d.key) || 0) + ov;
+          span.set(n.band.d.key, v);
+          if (v > bestV) { bestV = v; best = n.band; }
+        }
       }
-      if (best) fillCard(cards.dyn, dynSpec(best.band));
+      if (best) fillCard(cards.dyn, dynSpec(best));
       else hide('dyn');
     } else if (!pinned.dyn && !mqLeft.matches) hide('dyn');
   };
@@ -199,49 +210,129 @@ export function mountKnowledge(empNodes, wrap) {
 }
 
 /**
- * 泳道角卡:横向泳道没有两翼留白,但说明段右侧的版面角落是空的——
- * 单卡横排(图左文右)嵌在那里,说明文字给它让出右侧宽度(.has-kp)。
- * 横向滚动时视窗中带里的名君自动上卡(单卡,权重最高者),
- * 点选任一君主钉卡,✕ 关闭。<1000px 的窄屏整体隐藏。
+ * 泳道知识卡:横向泳道没有两翼留白,但说明段右侧本是一片空当(`.desc` 有
+ * 76ch 上限,再宽也不会用掉)。填成三栏:**说明 | 朝代 | 皇帝**,与河流
+ * 两翼同一分工。卡片横排(图左浮动、文右绕排),说明段按卡数让出右侧宽度。
+ *
+ * 朝代卡跟随视窗中带里**可见宽度最长**的朝代底带,皇帝卡跟随权重最高的名君;
+ * 点选君主两卡联动(其人＋其朝),点选朝代底带则只钉朝代卡。
+ * <1000px 全隐;1000–1199px 只留皇帝卡(放不下第二张)。
  */
-export function mountKnowledgeCorner(items, scroller, sectionEl) {
+export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
   const mq = matchMedia('(min-width: 1000px)');
-  const card = mkCard('kp-corner');
+  const mqBoth = matchMedia('(min-width: 1200px)');
+  const cards = { dyn: mkCard('kp-corner kp-corner-dyn'), emp: mkCard('kp-corner kp-corner-emp') };
   sectionEl.classList.add('kp-anchor');
-  sectionEl.appendChild(card.el);
-  let pinnedId = null;
-  const dismissed = new Set();
-  const setOn = (on) => sectionEl.classList.toggle('has-kp', on);
-  const off = () => { card.el.classList.remove('on'); card.el.dataset.key = ''; setOn(false); };
+  sectionEl.appendChild(cards.dyn.el);
+  sectionEl.appendChild(cards.emp.el);
+  const pinned = { dyn: null, emp: null };
+  const dismissed = { dyn: new Set(), emp: new Set() };
+  // 让位按**最外侧被占的槽**算,不是按卡数:朝代卡的槽在右起 352–674px,
+  // 皇帝卡在 16–338px。只剩朝代卡时(视窗里没有名君、或皇帝卡被关掉——
+  // 唐中晚期、明中期、清中期这类长段常驻此态)若按「一张卡」只让 356px,
+  // 那 318px 的差正好落在说明段与控件行上,而卡是不透明且 z-index:5,既遮字也吃点击
+  const syncLayout = () => {
+    const dynOn = cards.dyn.el.classList.contains('on') && mqBoth.matches;
+    const empOn = cards.emp.el.classList.contains('on') && mq.matches;
+    sectionEl.classList.toggle('has-kp', dynOn || empOn);
+    sectionEl.classList.toggle('has-kp2', dynOn);
+    // 纵向也要让:卡是 absolute,不占文档高度。说明段一短(单卡态说明拿回
+    // 76ch 只排四行)卡的下缘就压住泳道图的吸顶年份标尺,故按实测把图顶下去。
+    // 卡的高度随内容(有无头图、摘要长短)而变,所以按 getBoundingClientRect
+    // 实测而非写死数字;摘要落地后 show() 会再同步一次
+    const chartHost = scroller.closest('.chart-host');
+    if (!chartHost) return;
+    chartHost.style.paddingTop = '';
+    if (!dynOn && !empOn) return;
+    const bottom = Math.max(dynOn ? cards.dyn.el.getBoundingClientRect().bottom : 0,
+      empOn ? cards.emp.el.getBoundingClientRect().bottom : 0);
+    const need = bottom + 12 - chartHost.getBoundingClientRect().top;
+    // 用 padding 而非 margin:相邻兄弟的外边距会合并,控件行本有 12px 下边距,
+    // 给 margin-top 只会取两者较大值,实测净空因此少 12px、正好贴住卡的下缘
+    if (need > 0) chartHost.style.paddingTop = `${Math.round(need)}px`;
+  };
+  const hide = (which) => {
+    cards[which].el.classList.remove('on');
+    cards[which].el.dataset.key = '';
+    syncLayout();
+  };
+  // 同步两次:立刻(卡已显形、占位已定)与摘要落地后(卡随内容长高)
+  const show = (which, spec) => { fillCard(cards[which], spec).then(syncLayout); syncLayout(); };
 
-  card.close.addEventListener('click', () => {
-    if (card.el.dataset.key) dismissed.add(card.el.dataset.key);
-    pinnedId = null;
-    off();
-  });
+  for (const which of ['dyn', 'emp']) {
+    cards[which].close.addEventListener('click', () => {
+      if (cards[which].el.dataset.key) dismissed[which].add(cards[which].el.dataset.key);
+      pinned[which] = null;
+      hide(which);
+    });
+    // 头图比摘要晚落地,落地后卡还会再长高一截——纵向让位得跟着重算,
+    // 否则按图前高度算出的 margin 会被吃掉大半(实测净空 12px 缩到 3px)
+    cards[which].img.addEventListener('load', syncLayout);
+  }
+  // 点选君主:右卡其人、中卡其朝,一并钉住
   for (const it of items) {
     it.node.addEventListener('click', () => {
       if (!mq.matches) return;
       const es = empSpec(it);
-      pinnedId = es.id;
-      dismissed.delete(es.id);
-      fillCard(card, es);
-      setOn(true);
+      pinned.emp = es.id;
+      dismissed.emp.delete(es.id);
+      show('emp', es);
+      if (mqBoth.matches) {
+        const ds = dynSpec(it.band);
+        pinned.dyn = ds.id;
+        dismissed.dyn.delete(ds.id);
+        show('dyn', ds);
+      }
+    });
+  }
+  // 点选朝代底带:只钉朝代卡——问的是朝代,答的就该是朝代
+  for (const br of bands) {
+    br.node.addEventListener('click', () => {
+      if (!mqBoth.matches) return;
+      const ds = dynSpec(br.band);
+      pinned.dyn = ds.id;
+      dismissed.dyn.delete(ds.id);
+      show('dyn', ds);
     });
   }
 
   let timer = null;
   const update = () => {
     timer = null;
-    if (!mq.matches) { off(); return; }
-    if (pinnedId) return;
+    if (!mq.matches) { hide('dyn'); hide('emp'); return; }
     const x0 = scroller.scrollLeft + scroller.clientWidth * 0.12;
     const x1 = scroller.scrollLeft + scroller.clientWidth * 0.88;
-    const cands = items
-      .filter((it) => NOTABLE.has(it.e.name) && !dismissed.has(it.e.id) && it.cx > x0 && it.cx < x1)
-      .sort((a, b) => NOTABLE.get(b.e.name) - NOTABLE.get(a.e.name));
-    if (cands.length) { fillCard(card, empSpec(cands[0])); setOn(true); }
-    else off();
+    if (!pinned.emp) {
+      const cand = items
+        .filter((it) => NOTABLE.has(it.e.name) && !dismissed.emp.has(it.e.id) && it.cx > x0 && it.cx < x1)
+        .sort((a, b) => NOTABLE.get(b.e.name) - NOTABLE.get(a.e.name))[0];
+      if (cand) show('emp', empSpec(cand));
+      else hide('emp');
+    }
+    if (!pinned.dyn && mqBoth.matches) {
+      // 同朝优先:皇帝卡在场时,朝代卡给他的朝——两张卡是一对(秦始皇配秦),
+      // 而不是各说各话(旁边挂着按可见宽度最长算出的西汉)。
+      // 皇帝卡空着时才退回「视窗里可见宽度最长的朝代」作时代锚
+      const cur = items.find((it) => it.e.id === cards.emp.el.dataset.key);
+      let best = cur ? cur.band : null;
+      if (!best || dismissed.dyn.has(`dyn:${best.d.key}`)) {
+        const seen = new Map();
+        best = null;
+        let bestW = 0;
+        for (const br of bands) {
+          const ov = Math.min(br.x1, x1) - Math.max(br.x0, x0);
+          if (ov <= 0 || dismissed.dyn.has(`dyn:${br.band.d.key}`)) continue;
+          const w = (seen.get(br.band.d.key) || 0) + ov;    // 一朝可能分成数段底带
+          seen.set(br.band.d.key, w);
+          if (w > bestW) { bestW = w; best = br.band; }
+        }
+      }
+      if (best) show('dyn', dynSpec(best));
+      else hide('dyn');
+    } else if (!pinned.dyn) hide('dyn');
+    // 断点变化时也要重算让位宽度:卡被钉住时上面两支都不走,
+    // 窄到放不下朝代卡后 has-kp2 会赖着不走,说明段白白让出 330px
+    syncLayout();
   };
   const onScroll = () => { if (timer) clearTimeout(timer); timer = setTimeout(update, 220); };
   scroller.addEventListener('scroll', onScroll, { passive: true });
@@ -252,7 +343,10 @@ export function mountKnowledgeCorner(items, scroller, sectionEl) {
     scroller.removeEventListener('scroll', onScroll);
     removeEventListener('resize', onScroll);
     if (timer) clearTimeout(timer);
-    card.el.remove();
-    sectionEl.classList.remove('kp-anchor', 'has-kp');
+    cards.dyn.el.remove();
+    cards.emp.el.remove();
+    const chartHost = scroller.closest('.chart-host');
+    if (chartHost) chartHost.style.paddingTop = '';
+    sectionEl.classList.remove('kp-anchor', 'has-kp', 'has-kp2');
   };
 }
