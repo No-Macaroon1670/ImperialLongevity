@@ -334,8 +334,9 @@ export function renderLaneTimeline(host, list, opts) {
     // 运行时护栏:与承继细丝同条目的事件不画——那件事细丝的刻痕已经能点开,
     // 画两遍只会让同一件事在图上出现两次(用户实测:太平天国既是政权又是事件)
     const trW = new Set(Object.values(TRANSITIONS).map((t) => t.w));
+    const evOff = new Set(opts.evOff || []);
     for (const ev of EVENTS) {
-      if (trW.has(ev.w)) continue;
+      if (trW.has(ev.w) || evOff.has(ev.k)) continue;
       const ex = x(ev.y);
       if (ex < PAD_L - 40 || ex > W - PAD_L + 40) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
@@ -746,6 +747,37 @@ export function renderLaneTimeline(host, list, opts) {
   if (markViolent) key.push('▲＝该帝非正常死亡');
   key.push('点选朝代或皇帝可显丝：粗实线＝法统相承 · 细实线＝亡入 · 虚线＝裂自');
   staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text: key.join(' · ') }));
+
+  // ── 事件类别图例:颜色没有图例就等于没编码 ──────────────────────────────
+  // 八类各一个色标,点一下即隐藏该类——分类本身就是一种读法:
+  // 只留「战事」看的是王朝的武运,只留「制度」看的是治理术的演进。
+  if (showEvents) {
+    const off = new Set(opts.evOff || []);
+    const row = h('div', { class: 'ev-legend' });
+    const counts = {};
+    for (const ev of EVENTS) counts[ev.k] = (counts[ev.k] || 0) + 1;
+    for (const [k, meta] of Object.entries(EVENT_KINDS)) {
+      if (!counts[k]) continue;
+      const chip = h('button', {
+        type: 'button', class: 'chip ev-chip' + (off.has(k) ? ' off' : ''),
+        'aria-pressed': String(!off.has(k)),
+        title: off.has(k) ? '点按显示这一类' : '点按隐藏这一类',
+        onclick: () => {
+          const next = new Set(off);
+          if (next.has(k)) next.delete(k); else next.add(k);
+          opts.setOpt('evOff', [...next]);
+        },
+      });
+      const dot = h('span', { class: 'dot' });
+      dot.style.background = `var(--ev-${k})`;
+      if (meta.span) { dot.style.width = '16px'; dot.style.borderRadius = '2px'; }
+      chip.appendChild(dot);
+      chip.appendChild(h('span', { text: `${meta.label} ${counts[k]}` }));
+      row.appendChild(chip);
+    }
+    staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:10px 0 2px', text: '大事记（点色标可按类筛选）' }));
+    staticLegend.appendChild(row);
+  }
 
   let raf = null;
   const sync = () => {
