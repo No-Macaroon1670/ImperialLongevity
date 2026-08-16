@@ -381,7 +381,12 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
    一眼看得出「这一类被我关掉了」而不是「本来就没有」 */
 .ev-legend { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; }
 .ev-chip { font-size: .78rem; padding: 3px 9px; }
-.ev-chip .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+/* 色点与文字的间距**不靠 flex gap**:用户在 Chrome 上看到色点贴着字,
+   而同一份 CSS 在此处量得的间距是准确的 6px。最可能的解释是那边的
+   flex gap 没生效(旧内核/嵌入式 webview 不支持 flex 的 gap),一旦不生效
+   间距就归零、色点正好压到头一个字上。改用 margin 明确写死,不依赖 gap。 */
+.ev-chip { gap: 0; }
+.ev-chip .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; margin-right: 6px; }
 .ev-chip.off { opacity: .45; text-decoration: line-through; }
 .ev-chip.off .dot { background: var(--muted) !important; }
 .ev-hit { cursor: pointer; }
