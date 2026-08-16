@@ -129,6 +129,41 @@ export function buildBands(list) {
 }
 
 /**
+ * 事件标记的**形状**。十类各一色本已到色板的极限（红与橙、深绿与青绿、粉与玫
+ * 两两难分），而竖河把事件搬进河道之后更糟：河道**本身**就是用同一套色板着色的，
+ * 蓝点落在蓝河上就等于没画（用户实测:「这个蓝色圆球是被 clip 了吗」——
+ * 没有被裁，是与河同色）。故加一条正交通道:形状。
+ *
+ * 颜色仍在（远看的分组感靠它），但认类不再只靠颜色——这正是配色规范里
+ * 「颜色不承担唯一识别职责」那条。形状按语义取:战事尖头向上、灾疫尖头向下、
+ * 民变是十字、外交是菱形、制度是方块、著述是圆点、遗址是屋形、文物是六边。
+ * 起讫类（存续期／遗址／文物）另有共同点:都不是尖的，与时点类一眼分得开。
+ *
+ * 描边取页色:标记压在饱和的君主色块上，一圈页色的细边就是图与地的分界，
+ * 与朝代名、事件名的描边衬底同一手法。
+ */
+const EV_SHAPE = {
+  war: 'up', dis: 'down', rev: 'plus', out: 'diamond', gov: 'square',
+  cul: 'circle', inst: 'bar', era: 'bar', her: 'house', art: 'hex',
+};
+export function evMark(kind, cx, cy, r, extra = {}) {
+  const a = { fill: `var(--ev-${kind})`, ...extra };
+  const P = (list) => ({ points: list.map(([x, y]) => `${(cx + x * r).toFixed(2)},${(cy + y * r).toFixed(2)}`).join(' '), ...a });
+  switch (EV_SHAPE[kind] || 'circle') {
+    case 'up':      return el('polygon', P([[0, -1.2], [1.05, 0.76], [-1.05, 0.76]]));
+    case 'down':    return el('polygon', P([[0, 1.2], [1.05, -0.76], [-1.05, -0.76]]));
+    case 'diamond': return el('polygon', P([[0, -1.3], [1.3, 0], [0, 1.3], [-1.3, 0]]));
+    case 'hex':     return el('polygon', P([[0, -1.2], [1.04, -0.6], [1.04, 0.6], [0, 1.2], [-1.04, 0.6], [-1.04, -0.6]]));
+    case 'house':   return el('polygon', P([[0, -1.3], [1.05, -0.3], [1.05, 1], [-1.05, 1], [-1.05, -0.3]]));
+    case 'plus':    return el('polygon', P([[-0.42, -1.2], [0.42, -1.2], [0.42, -0.42], [1.2, -0.42], [1.2, 0.42],
+      [0.42, 0.42], [0.42, 1.2], [-0.42, 1.2], [-0.42, 0.42], [-1.2, 0.42], [-1.2, -0.42], [-0.42, -0.42]]));
+    case 'square':  return el('rect', { x: cx - r * 0.92, y: cy - r * 0.92, width: r * 1.84, height: r * 1.84, rx: r * 0.24, ...a });
+    case 'bar':     return el('rect', { x: cx - r * 1.2, y: cy - r * 0.7, width: r * 2.4, height: r * 1.4, rx: r * 0.32, ...a });
+    default:        return el('circle', { cx, cy, r, ...a });
+  }
+}
+
+/**
  * 事件类别图例＝筛选钮。颜色没有图例就等于没编码;而关掉一类会降灰划线,
  * 一眼看得出是「我关掉了」而非「本来就没有」。分类本身也是一种读法:
  * 只留战事看的是王朝的武运,只留制度看的是治理术的演进。
@@ -136,14 +171,17 @@ export function buildBands(list) {
  * 两个视图共用一份:河流此前只在宽屏有两岸事件轨、且图例只画在泳道图下,
  * 于是手机上既筛不了类,也不知道那些彩点各是什么——而事件层恰恰是手机上
  * 最主要的一层。返回两个节点(小标题与色标行),由调用方决定挂在哪儿。
+ *
+ * `skip` 去掉本视图根本不画的类:治世·中兴在泳道里是皇帝格子外的虚线外套,
+ * 河流没有这一层,那个色标点了也不会有任何变化——按不动的开关比没有开关更糟。
  */
-export function eventLegend(opts) {
+export function eventLegend(opts, { skip = [] } = {}) {
   const off = new Set(opts.evOff || []);
   const row = h('div', { class: 'ev-legend' });
   const counts = {};
   for (const ev of EVENTS) counts[ev.k] = (counts[ev.k] || 0) + 1;
   for (const [k, meta] of Object.entries(EVENT_KINDS)) {
-    if (!counts[k]) continue;
+    if (!counts[k] || skip.includes(k)) continue;
     const chip = h('button', {
       type: 'button', class: 'chip ev-chip' + (off.has(k) ? ' off' : ''),
       'aria-pressed': String(!off.has(k)),
@@ -154,10 +192,10 @@ export function eventLegend(opts) {
         opts.setOpt('evOff', [...next]);
       },
     });
-    const dot = h('span', { class: 'il-dot' });
-    dot.style.background = `var(--ev-${k})`;
-    if (meta.span) { dot.style.width = '16px'; dot.style.borderRadius = '2px'; }
-    chip.appendChild(dot);
+    // 图例画的就是图上那个形状:色标只说得出颜色,而颜色已不是唯一的识别通道
+    const glyph = el('svg', { width: 14, height: 14, viewBox: '0 0 14 14', class: 'ev-glyph' });
+    glyph.appendChild(evMark(k, 7, 7, 5));
+    chip.appendChild(glyph);
     chip.appendChild(h('span', { text: `${meta.label} ${counts[k]}` }));
     row.appendChild(chip);
   }
@@ -446,10 +484,7 @@ export function renderLaneTimeline(host, list, opts) {
       // 图上不硬画我们本就画不好的东西。起点用方块、时点用圆点,以示区别
       const g = layer[rk(ev)];
       const rad = R[rk(ev)];
-      const dot = isSpan
-        ? el('rect', { x: ex - rad, y: evTop - rad, width: rad * 2, height: rad * 2, rx: rad * 0.4,
-            fill: `var(--ev-${ev.k})`, class: 'mark ev-dot' })
-        : el('circle', { cx: ex, cy: evTop, r: rad, fill: `var(--ev-${ev.k})`, class: 'mark ev-dot' });
+      const dot = evMark(ev.k, ex, evTop, rad, { class: 'mark ev-dot' });
       dot.dataset.evN = ev.n;
       g.appendChild(dot);
       // 名字竖写:汉字本来的排法,横向只占一个字宽,于是几乎不再互相挤——
