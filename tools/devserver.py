@@ -21,7 +21,9 @@ class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
 
 
 if __name__ == '__main__':
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 4190
+    # 端口优先听 PORT 环境变量:预览器分配端口就是走它。其次命令行参数,
+    # 最后才落到 4190。写死端口会在端口被占时直接起不来。
+    port = int(os.environ.get('PORT') or (sys.argv[1] if len(sys.argv) > 1 else 4190))
     handler = functools.partial(NoCacheHandler, directory=ROOT)
     print(f'serving {ROOT} on :{port} (Cache-Control: no-cache)', flush=True)
     http.server.ThreadingHTTPServer(('', port), handler).serve_forever()
