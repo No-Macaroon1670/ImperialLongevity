@@ -10,6 +10,7 @@
 // 直达链接;「相关视频」给 YouTube 搜索直链而非具体视频——不预存链接就
 // 永远不会烂,搜索结果也天然比三年前存的某支视频新鲜。
 import { h, fmtYearAxis } from './charts.js';
+import { EVENT_KINDS } from './events.js';
 
 /**
  * 值得自动弹卡的名君(姓名 → 权重 1–3):滚动经过时自动打开,权重高者优先。
@@ -86,16 +87,71 @@ const DYN_BAIDU = {
 // 429 限流这类暂时失败必须逐出缓存——否则一次抖动就把该词条钉死成
 // 「未能拉取」直到刷新整页(fillCard 的同 key 早退让它连重试的机会都没有)
 const CACHE = new Map();
+
+// 会话之间也留着:内存 Map 一刷新就空,而这一页里滚一遍河就要拉近百个词条,
+// 回访、刷新、在两个视图之间来回切都得重拉一遍。摘要几乎不变,存下来即可——
+// 维基的 REST 接口对匿名请求限流并不宽松(本项目做批量校验时实测撞过 429),
+// 能不发的请求就别发。
+//
+// 只存我们真正用到的四个字段(约半 KB 一条,四百条不到 200KB,localStorage
+// 上限 5MB);失败**一律不落盘**,理由同上:一次网络抖动不该被记成永久结论。
+const LS_KEY = 'il.kp.v1';
+const LS_TTL = 7 * 24 * 3600 * 1000;
+let disk = null;
+function diskLoad() {
+  if (disk) return disk;
+  disk = {};
+  try {
+    const raw = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+    const now = Date.now();
+    for (const [k, v] of Object.entries(raw)) if (v && now - v.t < LS_TTL) disk[k] = v;
+  } catch { disk = {}; }
+  return disk;
+}
+let flushTimer = null;
+function diskSave(title, s) {
+  const d = diskLoad();
+  d[title] = { t: Date.now(), title: s.title, extract: s.extract,
+    thumb: s.thumbnail && s.thumbnail.source,
+    url: s.content_urls && s.content_urls.desktop && s.content_urls.desktop.page };
+  // 合并写:一屏可能连落几条,没必要每条都序列化整个库
+  if (flushTimer) return;
+  flushTimer = setTimeout(() => {
+    flushTimer = null;
+    try { localStorage.setItem(LS_KEY, JSON.stringify(disk)); }
+    catch { try { localStorage.removeItem(LS_KEY); } catch { /* 配额满或禁用,放弃落盘 */ } }
+  }, 800);
+}
+const revive = (v) => ({ type: 'standard', title: v.title, extract: v.extract,
+  thumbnail: v.thumb ? { source: v.thumb } : null,
+  content_urls: v.url ? { desktop: { page: v.url } } : null });
+
 function fetchSummary(title) {
   if (!CACHE.has(title)) {
+    const hit = diskLoad()[title];
+    if (hit && hit.extract) { CACHE.set(title, Promise.resolve(revive(hit))); return CACHE.get(title); }
     CACHE.set(title, fetch(`https://zh.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`)
       .then((r) => {
         if (!r.ok) { if (r.status !== 404) CACHE.delete(title); return null; }
         return r.json();
       })
+      .then((j) => {
+        if (j && j.extract && j.type !== 'disambiguation') diskSave(title, j);
+        return j;
+      })
       .catch(() => { CACHE.delete(title); return null; }));
   }
   return CACHE.get(title);
+}
+
+/** 大事记 → 卡片规格。点选与自动跟随共用,不再各写一份 */
+export function evSpec(ev) {
+  const span = ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y);
+  return {
+    id: `evt:${ev.w}`, head: `${span} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
+    title: ev.w, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
+    q: `${ev.n} 历史`, yt: true,
+  };
 }
 
 function mkCard(sideClass) {
@@ -186,7 +242,7 @@ async function fillCard(card, spec) {
  * 联动钉住——右卡其人、左卡其朝。✕ 各自关闭并拉黑,不在原地重弹。
  * 左翼 ≥1280px(CSS 同步),右翼 ≥1100px。
  */
-export function mountKnowledge(empNodes, wrap) {
+export function mountKnowledge(empNodes, wrap, evNodes = []) {
   const mq = matchMedia('(min-width: 1100px)');
   const mqLeft = matchMedia('(min-width: 1280px)');
   // 四张卡,两栏两行:上行仍是「左朝代、右皇帝」,下行接住两岸的事件轨——
@@ -278,6 +334,21 @@ export function mountKnowledge(empNodes, wrap) {
       if (best) fillCard(cards.dyn, dynSpec(best));
       else hide('dyn');
     } else if (!pinned.dyn && !mqLeft.matches) hide('dyn');
+
+    // 事件卡跟随**锚点**(一等大事),不跟随全部三百条——后者滚一屏换三次,
+    // 成了走马灯;锚点全程约五十个,几屏才换一次,正是「读到哪一段了」的答案。
+    // 且**只在当前那个滚出视野后才换**:还看得见就不动,免得边缘处来回跳。
+    for (const [which, side] of [['evL', true], ['evR', false]]) {
+      if (pinned[which]) continue;
+      if (which === 'evL' && !mqLeft.matches) { hide(which); continue; }
+      const inBand = evNodes.filter((n) => n.left === side && (n.ev.r || 2) === 1
+        && n.y > y0 && n.y < y1 && !dismissed[which].has(`evt:${n.ev.w}`));
+      const curKey = cards[which].el.dataset.key;
+      if (curKey && inBand.some((n) => `evt:${n.ev.w}` === curKey)) continue;
+      const pick = inBand.sort((a, b) => Math.abs(a.y - (y0 + y1) / 2) - Math.abs(b.y - (y0 + y1) / 2))[0];
+      if (pick) fillCard(cards[which], evSpec(pick.ev));
+      else hide(which);
+    }
     syncStack();
   };
   const onScroll = () => { if (timer) clearTimeout(timer); timer = setTimeout(update, 220); };

@@ -38,7 +38,7 @@ import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECON
 import { EVENTS, EVENT_KINDS, LEFT_BANK } from './events.js';
 import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName } from './views-lanes.js';
-import { mountKnowledge } from './knowledge.js';
+import { mountKnowledge, evSpec } from './knowledge.js';
 import { stampHash } from './search.js';
 
 const GUTTER = 34;          // 左侧年份／时代标注的留白
@@ -774,6 +774,7 @@ export function renderRiver(host, list, opts) {
   // 绝不会浮在邻河的君主色块之上
   const gBeds = el('g'), gStrips = el('g'), gEmps = el('g'), gLabels = el('g');
   const gEvents = el('g', { class: 'river-ev' });
+  const evNodes = [];      // 供两翼卡自动跟随锚点用
 
   // ── 时代界线：只画一条细线，不再交替填充底色——灰条纹的语义太稀薄
   //（用户实测会把它误读成某种标记），且与河床的淡色（预告楔、尾迹、空档）混淆。
@@ -845,6 +846,7 @@ export function renderRiver(host, list, opts) {
         width: EV_STRIP, height: ROW,
         fill: 'transparent', 'pointer-events': 'all', class: 'kp-hit ev-hit' });
       hit.dataset.evi = String(EVENTS.indexOf(ev));
+      evNodes.push({ ev, y: ty, left });
       hoverable(hit, () => [
         { color: `var(--ev-${ev.k})`, label: kind.label,
           value: ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y) },
@@ -1053,7 +1055,7 @@ export function renderRiver(host, list, opts) {
   host.appendChild(wrap);
 
   // 桌面两翼知识卡:上行左朝代、右皇帝,下行接住两岸事件轨(见 knowledge.js)
-  const kClean = mountKnowledge(empNodes, wrap);
+  const kClean = mountKnowledge(empNodes, wrap, evNodes);
   // 点事件:哪岸点的就落哪栏。左岸政事落左栏、右岸文教落右栏——
   // 卡片正在它那条轨的下方,眼睛不必横跨整条河去找刚点的那件事
   wrap.addEventListener('click', (e) => {
@@ -1061,13 +1063,7 @@ export function renderRiver(host, list, opts) {
     if (!hit || !kClean.showEvent) return;
     const ev = EVENTS[Number(hit.dataset.evi)];
     if (!ev) return;
-    const kind = EVENT_KINDS[ev.k] || {};
-    const span = ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y);
-    kClean.showEvent({
-      id: `evt:${ev.w}`, head: `${span} · ${kind.label || '大事'}`,
-      title: ev.w, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
-      q: `${ev.n} 历史`, yt: true,
-    }, LEFT_BANK.has(ev.k) ? 'left' : 'right');
+    kClean.showEvent(evSpec(ev), LEFT_BANK.has(ev.k) ? 'left' : 'right');
     stampHash('ev', ev.n);
   });
 
