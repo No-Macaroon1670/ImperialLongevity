@@ -13,7 +13,7 @@ export const SECTIONS = [
       sel('panoramaMode', '视图', [['river', '竖向河流'], ['lanes', '横向泳道']]),
       sel('riverPx', '时间缩放', [[7, '标准 7 px/年'], [4, '紧凑 4 px/年'], [11, '舒展 11 px/年']],
         (st) => st.panoramaMode === 'river'),
-      sel('lanePx', '时间缩放', [[10, '标准 10 px/年'], [6, '紧凑 6 px/年'], [14, '舒展 14 px/年']],
+      sel('lanePx', '时间缩放', [[14, '标准 14 px/年'], [10, '紧凑 10 px/年'], [20, '舒展 20 px/年']],
         (st) => st.panoramaMode !== 'river'),
       sel('laneColor', '配色', [['dynasty', '按具体朝代'], ['unified', '按大一统 / 分裂']]),
       tog('laneViolent', '标记非正常死亡'),

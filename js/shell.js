@@ -20,7 +20,7 @@ const S = {
   // 默认按屏宽选：手机竖屏顺着拇指的方向读河流；宽屏一屏并列看得到更多政权，泳道更强。
   panoramaMode: matchMedia('(max-width: 720px)').matches ? 'river' : 'lanes',
   riverPx: 7,
-  lanePx: 10, laneColor: 'dynasty', laneViolent: true, laneStrands: false, laneEvents: true, evOff: [],
+  lanePx: 14, laneColor: 'dynasty', laneViolent: true, laneStrands: false, laneEvents: true, evOff: [],
   scatterX: 'birth',
   kmGroup: 'unified', kmScale: 'reign', kmCensorAbd: true, kmCI: true, kmFromAge: 15,
   cifScale: 'age',

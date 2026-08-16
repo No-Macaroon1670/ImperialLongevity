@@ -138,7 +138,7 @@ export function renderLaneTimeline(host, list, opts) {
   const ink = resolveInk(host);
 
   const showEvents = opts.laneEvents !== false;
-  const EV_H = showEvents ? 76 : 0;      // 事件轨:贴在表头之下、泳道之上(名字竖写,故要高)
+  const EV_H = showEvents ? 88 : 0;      // 事件轨:名字竖写且可折两列,故要高
   const LANE_H = 48, LABEL_H = 15, TRACK_Y = 18, TRACK_H = 24, HEAD_H = 54 + EV_H;
   const LABEL_FS = 12.5, SEG_FS = 10;
 
@@ -320,9 +320,9 @@ export function renderLaneTimeline(host, list, opts) {
   });
   for (const t of yTicks) {
     head.appendChild(el('line', { x1: x(t), x2: x(t), y1: 24, y2: 30, class: 'axis-line' }));
-    head.appendChild(el('text', { x: x(t), y: 44, class: 'tick', 'text-anchor': 'middle' }, fmtYearAxis(t)));
+    head.appendChild(el('text', { x: x(t), y: 42, class: 'tick', 'text-anchor': 'middle' }, fmtYearAxis(t)));
   }
-  head.appendChild(el('line', { x1: 0, x2: W, y1: 53, y2: 53, class: 'axis-line' }));
+  head.appendChild(el('line', { x1: 0, x2: W, y1: 49, y2: 49, class: 'axis-line' }));
 
   // ── 事件轨：大事记 ──────────────────────────────────────────────────────
   // 时间轴此前只画「谁在统治」,事件层补上「那两千年里发生了什么」——
@@ -330,9 +330,10 @@ export function renderLaneTimeline(host, list, opts) {
   // 跨年事件(安史之乱 755–763)画成一段横条,点标记即在知识卡里读词条。
   // 放在表头内而非泳道里:它随表头吸顶,滚到哪一段都看得见,且不占泳道行数。
   if (showEvents) {
-    const evTop = 55;                        // 标记行
-    const LAB_TOP = evTop + 8;               // 竖排名字自此起
-    const LAB_FS = 9, LAB_DY = 9.4, LAB_MAX = 6;
+    const evTop = 54;                        // 标记行:贴着分隔线,给下方的名字让地方
+    const LAB_TOP = evTop + 12;              // 竖排名字自此起
+    const LAB_FS = 10.5, LAB_DY = 11.4;      // 字比初版大一号:9px 竖排在密集处认不出
+    const COL_MAX = 5, MAX_COLS = 2;         // 一列五字,超出折第二列(最多两列十字)
     const slots = [];
     const trW = new Set(Object.values(TRANSITIONS).map((t) => t.w));
     const evOff = new Set(opts.evOff || []);
@@ -355,17 +356,30 @@ export function renderLaneTimeline(host, list, opts) {
       head.appendChild(dot);
       // 名字竖写:汉字本来的排法,横向只占一个字宽,于是几乎不再互相挤——
       // 横排时六个字要六十余像素,密集处只能靠悬停读名
-      const room = !slots.some((sx) => Math.abs(sx - ex) < 11);
+      // 一列放不下就折第二列,而不是截成省略号——名字读全了才有用。
+      // 两列居中对齐锚点,于是标签仍以事件年份为中心
+      const nmAll = [...ev.n];
+      const nm = nmAll.length > COL_MAX * MAX_COLS
+        ? nmAll.slice(0, COL_MAX * MAX_COLS - 1).concat('…') : nmAll;
+      const cols = Math.min(MAX_COLS, Math.ceil(nm.length / COL_MAX));
+      const colW = LAB_FS + 2;
+      const halfW = (cols * colW) / 2;
+      const room = !slots.some(([sx, sw]) => Math.abs(sx - ex) < sw + halfW);
       if (room) {
-        const nm = [...ev.n];
-        const shown = nm.length > LAB_MAX ? nm.slice(0, LAB_MAX - 1).concat('…') : nm;
-        const t2 = el('text', { x: ex, y: LAB_TOP, 'font-size': LAB_FS, 'text-anchor': 'middle',
-          fill: 'var(--text-2)', 'pointer-events': 'none' });
-        shown.forEach((c, i) => t2.appendChild(el('tspan', { x: ex, dy: i ? LAB_DY : 0 }, c)));
-        head.appendChild(t2);
-        slots.push(ex);
+        const per = Math.ceil(nm.length / cols);
+        for (let c = 0; c < cols; c++) {
+          const seg = nm.slice(c * per, (c + 1) * per);
+          if (!seg.length) continue;
+          // 竖排多列依汉字传统自右向左:首列在右
+          const cx2 = ex + halfW - colW * (c + 0.5);
+          const t2 = el('text', { x: cx2, y: LAB_TOP, 'font-size': LAB_FS, 'text-anchor': 'middle',
+            fill: 'var(--text-2)', 'pointer-events': 'none' });
+          seg.forEach((ch, i) => t2.appendChild(el('tspan', { x: cx2, dy: i ? LAB_DY : 0 }, ch)));
+          head.appendChild(t2);
+        }
+        slots.push([ex, halfW]);
       }
-      const hit = el('rect', { x: ex - 6, y: evTop - 8, width: 12, height: EV_H - 4,
+      const hit = el('rect', { x: ex - 7, y: evTop - 8, width: 14, height: EV_H - 6,
         fill: 'transparent', 'pointer-events': 'all', class: 'kp-hit ev-hit' });
       hit.dataset.evi = String(EVENTS.indexOf(ev));
       hoverable(hit, () => [
