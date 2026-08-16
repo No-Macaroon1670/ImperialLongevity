@@ -150,7 +150,7 @@ export function evSpec(ev) {
   return {
     id: `evt:${ev.w}${ev.ws || ''}`, head: `${span} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
     title: ev.w, sec: ev.ws, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
-    q: `${ev.n} 历史`, yt: true,
+    q: ev.n, yt: true,
   };
 }
 
@@ -161,13 +161,15 @@ function mkCard(sideClass) {
   const ext = h('p', { class: 'kp-ext' });
   const wiki = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '维基百科全文 ↗' });
   const baidu = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '百度百科 ↗' });
-  const yt = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '▶ 相关视频' });
+  const yt = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '▶ YouTube' });
+  // B 站分一个按钮:中文史料类的视频这边远比 YouTube 全,而读者多半也在这边找
+  const bili = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '▶ 哔哩哔哩' });
   const close = h('button', { class: 'kp-close', type: 'button', text: '✕' });
   const src = h('div', { class: 'kp-src', text: '摘要实时取自中文维基百科' });
   const el = h('div', { class: `kp ${sideClass}` }, [
-    close, img, head, title, ext, h('div', { class: 'kp-links' }, [wiki, baidu, yt]), src,
+    close, img, head, title, ext, h('div', { class: 'kp-links' }, [wiki, baidu, yt, bili]), src,
   ]);
-  return { el, img, head, title, ext, wiki, baidu, yt, close };
+  return { el, img, head, title, ext, wiki, baidu, yt, bili, close };
 }
 
 /** 皇帝卡的取数说明书。库内 382 位君主全有姓名,故标题恒为人名 */
@@ -179,7 +181,7 @@ const empSpec = (item) => {
     head: `${dyn.name} · ${e.temple}`,
     title: nm,
     baidu: nm,
-    q: `${dyn.name} ${nm} 历史`,
+    q: `${dyn.name} ${nm}`,
     yt: NOTABLE.has(e.name),
   };
 };
@@ -192,7 +194,7 @@ const dynSpec = (band) => {
     head: `${fmtYearAxis(d.s)} – ${fmtYearAxis(d.e)} · 朝代`,
     title: wk,
     baidu: DYN_BAIDU[d.name] || d.name,
-    q: `${wk} 历史 纪录片`,
+    q: `${wk} 纪录片`,
     yt: true,
   };
 };
@@ -206,7 +208,7 @@ export const eventSpec = (tr, fromName, toName) => ({
   head: `${fromName} → ${toName} · 改朝换代`,
   title: tr.w,
   baidu: tr.b || tr.n,
-  q: `${tr.n} 历史`,
+  q: tr.n,
   yt: true,
   display: tr.n,          // 卡面用简体常用名,链接才用各家的正名
 });
@@ -225,7 +227,9 @@ async function fillCard(card, spec) {
     + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
   card.baidu.href = `https://baike.baidu.com/item/${encodeURIComponent(spec.baidu || spec.title)}`;
   card.yt.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(spec.q)}`;
+  card.bili.href = `https://search.bilibili.com/all?keyword=${encodeURIComponent(spec.q)}`;
   card.yt.style.display = spec.yt ? '' : 'none';
+  card.bili.style.display = spec.yt ? '' : 'none';
   card.el.classList.add('on');
   const s = await fetchSummary(spec.title);
   if (card.el.dataset.key !== spec.id) return;             // 等待期间已换人

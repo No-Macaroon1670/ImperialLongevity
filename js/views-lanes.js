@@ -360,6 +360,8 @@ export function renderLaneTimeline(host, list, opts) {
       const g = sameYear.get(e2.y);
       return g && g.length > 1 ? (g.indexOf(e2) - (g.length - 1) / 2) * 7 : 0;
     };
+    const gEvLead = el('g', { class: 'ev-lead' });
+    head.appendChild(gEvLead);
     const gEv = [3, 2, 1].map((r) => { const g = el('g', { class: `ev-tier ev-r${r}` }); head.appendChild(g); return [r, g]; });
     const layer = Object.fromEntries(gEv);
     // 缩得越小,能读的名字越少:紧凑档只让一等留名,舒展档三等也放出来。
@@ -398,21 +400,36 @@ export function renderLaneTimeline(host, list, opts) {
       const cols = Math.min(MAX_COLS, Math.ceil(nm.length / COL_MAX));
       const colW = LAB_FS + 2;
       const halfW = (cols * colW) / 2;
-      const room = rk(ev) <= labMaxR
-        && !slots.some(([sx, sw]) => Math.abs(sx - ex) < sw + halfW);
-      if (room) {
+      // **挤不下就往旁边挪,而不是不写**。此前一撞就整条不留名——可两侧往往
+      // 就有空位,而每个标记自带年份,挪开一两年读者照样对得上。
+      // 依次试 0、±4、±8… 直到两年的宽度为止;真挪开了就补一根细引线回到圆点。
+      const maxShift = Math.max(10, pxYear * 2);
+      let cx0 = null;
+      if (rk(ev) <= labMaxR) {
+        for (let d = 0; d <= maxShift && cx0 === null; d += 4) {
+          for (const cand of (d === 0 ? [ex] : [ex + d, ex - d])) {
+            if (!slots.some(([sx, sw]) => Math.abs(sx - cand) < sw + halfW)) { cx0 = cand; break; }
+          }
+        }
+      }
+      if (cx0 !== null) {
+        if (Math.abs(cx0 - ex) > 1) {
+          gEvLead.appendChild(el('line', {
+            x1: ex, y1: evTop + rad + 1, x2: cx0, y2: LAB_TOP - 9,
+            stroke: `var(--ev-${ev.k})`, 'stroke-width': 0.8, opacity: .45 }));
+        }
         const per = Math.ceil(nm.length / cols);
         for (let c = 0; c < cols; c++) {
           const seg = nm.slice(c * per, (c + 1) * per);
           if (!seg.length) continue;
           // 竖排多列依汉字传统自右向左:首列在右
-          const cx2 = ex + halfW - colW * (c + 0.5);
+          const cx2 = cx0 + halfW - colW * (c + 0.5);
           const t2 = el('text', { x: cx2, y: LAB_TOP, 'font-size': LAB_FS, 'text-anchor': 'middle',
             fill: 'var(--text-2)', 'pointer-events': 'none' });
           seg.forEach((ch, i) => t2.appendChild(el('tspan', { x: cx2, dy: i ? LAB_DY : 0 }, ch)));
           g.appendChild(t2);
         }
-        slots.push([ex, halfW]);
+        slots.push([cx0, halfW]);
       }
       const hit = el('rect', { x: ex - 7, y: evTop - 8, width: 14, height: HEAD_H - evTop + 6,
         fill: 'transparent', 'pointer-events': 'all', class: 'kp-hit ev-hit' });
