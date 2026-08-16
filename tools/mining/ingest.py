@@ -27,7 +27,7 @@ def to_astro(s):
         return int(m.group(1))
     raise SystemExit("看不懂的年份:%r" % s)
 
-VALID_K = {"war", "gov", "rev", "out", "cul", "dis", "inst", "her", "era"}
+VALID_K = {"war", "gov", "rev", "out", "cul", "dis", "inst", "her", "era", "art"}
 out, seen = [], set()
 for path in sys.argv[1:]:
     raw = io.open(path, encoding="utf-8").read()
