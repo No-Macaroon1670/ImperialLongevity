@@ -17,7 +17,7 @@ import { mountKnowledgeCorner, eventSpec } from './knowledge.js';
 import { stampHash } from './search.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, TRANSITIONS, ORTHODOX, SECONDARY } from './dynasties.js';
-import { EVENTS, EVENT_KINDS } from './events.js';
+import { EVENTS, EVENT_KINDS, LEFT_BANK } from './events.js';
 import { fmtDate } from './schema.js';
 
 const SLOT_VARS = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6', '--s7', '--s8'];
@@ -138,8 +138,13 @@ export function renderLaneTimeline(host, list, opts) {
   const ink = resolveInk(host);
 
   const showEvents = opts.laneEvents !== false;
-  const EV_H = showEvents ? 72 : 0;      // 事件轨:名字竖写,一列五字,可折两列
-  const LANE_H = 48, LABEL_H = 15, TRACK_Y = 18, TRACK_H = 24, HEAD_H = 54 + EV_H;
+  // 事件名分居分隔线上下两侧,各留五字之高。此前全挤在线下:实测 547 条里
+  // 72 条(13%)根本排不下名字,另有 144 条被挤得偏离本位——近三成的名字
+  // 站错了地方。分成上下两条独立的争位赛道,两头都松快。
+  const EV_UP = showEvents ? 62 : 0;    // 线上:文教
+  const EV_DN = showEvents ? 74 : 0;    // 线下:政事 + 年份
+  const LANE_H = 48, LABEL_H = 15, TRACK_Y = 18, TRACK_H = 24;
+  const HEAD_H = 24 + EV_UP + EV_DN + (showEvents ? 6 : 25);
   const LABEL_FS = 12.5, SEG_FS = 10;
 
   // 1) 组装朝代带
@@ -318,10 +323,14 @@ export function renderLaneTimeline(host, list, opts) {
     head.appendChild(t);
     eraLabels.push({ node: t, x0, x1, lw: textW(era.name, 10.5) });
   });
-  const AXIS_Y = showEvents ? 58 : 49;
+  const AXIS_Y = showEvents ? 24 + EV_UP : 49;
+  // **年份挪到表头最下缘**,紧贴泳道。年份是拿来读泳道的,原先却排在表头顶上,
+  // 中间隔着整条事件轨——要对照哪一年是哪一朝,眼睛得跨过五十像素的名字。
+  const TICK_Y = showEvents ? HEAD_H - 4 : 42;
   for (const t of yTicks) {
-    head.appendChild(el('line', { x1: x(t), x2: x(t), y1: 24, y2: 30, class: 'axis-line' }));
-    head.appendChild(el('text', { x: x(t), y: 42, class: 'tick', 'text-anchor': 'middle' }, fmtYearAxis(t)));
+    head.appendChild(el('line', { x1: x(t), x2: x(t), y1: showEvents ? TICK_Y - 13 : 24,
+      y2: showEvents ? TICK_Y - 8 : 30, class: 'axis-line' }));
+    head.appendChild(el('text', { x: x(t), y: TICK_Y, class: 'tick', 'text-anchor': 'middle' }, fmtYearAxis(t)));
   }
   // 分隔线:有事件轨时下移,把标记行让到线**上**——标记与竖排名字之间隔着一条线,
   // 眼睛便不必在同一片留白里分辨「哪个球配哪串字」(标记压在名字头上时挤得难读)
@@ -333,11 +342,13 @@ export function renderLaneTimeline(host, list, opts) {
   // 跨年事件(安史之乱 755–763)画成一段横条,点标记即在知识卡里读词条。
   // 放在表头内而非泳道里:它随表头吸顶,滚到哪一段都看得见,且不占泳道行数。
   if (showEvents) {
-    const evTop = AXIS_Y - 8;                // 标记行在分隔线**上**方,名字在线下方
-    const LAB_TOP = AXIS_Y + 11;             // 竖排名字自此起
+    // 标记**钉在分隔线上**:名字分居上下两侧,标记居中才不偏袒哪一边
+    const evTop = AXIS_Y;
+    const LAB_DN = AXIS_Y + 12;              // 线下名字的起笔(政事)
+    const LAB_UP_BOT = AXIS_Y - 11;          // 线上名字的**末字**位置(文教,自下往上排)
     const LAB_FS = 10.5, LAB_DY = 11.4;      // 字比初版大一号:9px 竖排在密集处认不出
     const COL_MAX = 5, MAX_COLS = 2;         // 一列五字,超出折第二列(最多两列十字)
-    const slots = [];
+    const slots = { up: [], dn: [] };   // 上下各争各的位子,互不相扰
     const evOff = new Set(opts.evOff || []);
     // **分量决定先后**:此前是按年份顺序抢位子,于是一条无名小事只要年份靠前,
     // 就能把「安史之乱」的名字挤掉——图上留下的是编排的偶然,不是历史的轻重。
@@ -423,19 +434,29 @@ export function renderLaneTimeline(host, list, opts) {
       // **挤不下就往旁边挪,而不是不写**。此前一撞就整条不留名——可两侧往往
       // 就有空位,而每个标记自带年份,挪开一两年读者照样对得上。
       // 依次试 0、±4、±8… 直到两年的宽度为止;真挪开了就补一根细引线回到圆点。
+      // **上下分家,与竖河的左右岸同一套分法**:政事(战、乱、灾、交、制)在线下,
+      // 紧挨着年份与泳道;文教(著述、科技、遗址、文物)在线上。两侧各争各的位子,
+      // 于是同一段年份能容下的名字翻了一倍。两个视图从此共用一套语法。
+      const up = !LEFT_BANK.has(ev.k);
+      const lane = up ? slots.up : slots.dn;
       const maxShift = Math.max(10, pxYear * 2);
       let cx0 = null;
       {
         for (let d = 0; d <= maxShift && cx0 === null; d += 4) {
           for (const cand of (d === 0 ? [ex] : [ex + d, ex - d])) {
-            if (!slots.some(([sx, sw]) => Math.abs(sx - cand) < sw + halfW)) { cx0 = cand; break; }
+            if (!lane.some(([sx, sw]) => Math.abs(sx - cand) < sw + halfW)) { cx0 = cand; break; }
           }
         }
       }
       if (cx0 !== null) {
+        // 线上的名字自下往上排(末字贴着线),线下的自上往下——两侧都从线起笔,
+        // 名字长短不一时也不会离自己的标记忽远忽近
+        const nRows = Math.ceil(nm.length / cols);
+        const y0 = up ? LAB_UP_BOT - (nRows - 1) * LAB_DY : LAB_DN;
         if (Math.abs(cx0 - ex) > 1) {
           gEvLead.appendChild(el('line', {
-            x1: ex, y1: evTop + rad + 1, x2: cx0, y2: LAB_TOP - 9,
+            x1: ex, y1: evTop + (up ? -rad - 1 : rad + 1), x2: cx0,
+            y2: up ? LAB_UP_BOT + 3 : LAB_DN - 9,
             stroke: `var(--ev-${ev.k})`, 'stroke-width': 0.8, opacity: .45 }));
         }
         const per = Math.ceil(nm.length / cols);
@@ -444,23 +465,23 @@ export function renderLaneTimeline(host, list, opts) {
           if (!seg.length) continue;
           // 竖排多列依汉字传统自右向左:首列在右
           const cx2 = cx0 + halfW - colW * (c + 0.5);
-          const t2 = el('text', { x: cx2, y: LAB_TOP, 'font-size': LAB_FS, 'text-anchor': 'middle',
+          const t2 = el('text', { x: cx2, y: y0, 'font-size': LAB_FS, 'text-anchor': 'middle',
             fill: 'var(--text-2)', 'pointer-events': 'none' });
           seg.forEach((ch, i) => t2.appendChild(el('tspan', { x: cx2, dy: i ? LAB_DY : 0 }, ch)));
           g.appendChild(t2);
         }
-        slots.push([cx0, halfW]);
+        lane.push([cx0, halfW]);
         // 标签下方再补一块命中区:此前命中区只盖着圆点,而标签可能被避让
         // 挪开两年之远,于是点名字点不着自己、反而点到邻居(用户实测)
         const lh = el('rect', {
-          x: cx0 - halfW - 2, y: LAB_TOP - 11, width: halfW * 2 + 4,
-          height: HEAD_H - LAB_TOP + 8,
+          x: cx0 - halfW - 2, y: up ? y0 - 12 : LAB_DN - 11, width: halfW * 2 + 4,
+          height: up ? LAB_UP_BOT - y0 + 16 : HEAD_H - LAB_DN - 6,
           fill: 'transparent', 'pointer-events': 'all', class: 'kp-hit ev-hit' });
         lh.dataset.evi = String(EVENTS.indexOf(ev));
         hoverable(lh, tipOf, () => ev.ya || ev.n);
         g.appendChild(lh);
       }
-      const hit = el('rect', { x: ex - 7, y: evTop - 8, width: 14, height: LAB_TOP - evTop - 2,
+      const hit = el('rect', { x: ex - 7, y: evTop - 9, width: 14, height: 18,
         fill: 'transparent', 'pointer-events': 'all', class: 'kp-hit ev-hit' });
       hit.dataset.evi = String(EVENTS.indexOf(ev));
       hoverable(hit, tipOf, () => ev.ya || ev.n);
