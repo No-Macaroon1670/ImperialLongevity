@@ -15,7 +15,7 @@
 import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hideTip, fmtYearAxis, fmt1, scrollHint } from './charts.js';
 import { mountKnowledgeCorner } from './knowledge.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
-import { ERAS, SUCCESSION, ORTHODOX, SECONDARY } from './dynasties.js';
+import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORTHODOX, SECONDARY } from './dynasties.js';
 import { fmtDate } from './schema.js';
 
 const SLOT_VARS = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6', '--s7', '--s8'];
@@ -365,6 +365,7 @@ export function renderLaneTimeline(host, list, opts) {
   const labelNodes = [];
   const empRefs = [];   // 知识角卡的素材:每段一个 {点击靶, 皇帝, 朝代, 横心}
   const bandRefs = [];  // 同上,朝代级:{朝代, 起讫像素, 底带节点} —— 朝代卡的取材
+  const geo = new Map();  // 朝代 → 几何(起讫像素、轨道中线),承继细丝的锚点
   for (const b of bands) {
     const y0 = b.lane * LANE_H + 4;
     const cvar = byDynasty ? slotVar(slots.get(b.d.key)) : (b.d.u ? '--c-unified' : '--c-split');
@@ -393,6 +394,7 @@ export function renderLaneTimeline(host, list, opts) {
       body.appendChild(track);
       bandRefs.push({ band: b, x0: px0, x1: px1, node: track });
     }
+    geo.set(b.d.key, { b, col, x0: bx0, x1: bx1, y: y0 + TRACK_Y + TRACK_H / 2 });
 
     // 称帝前的掌权期：贴在所在轨道底部的半高浅段
     for (const g of b.preRule) {
@@ -467,6 +469,90 @@ export function renderLaneTimeline(host, list, opts) {
     labelNodes.push({ dot, label, x0: bx0, x1: bx1, lw });
   }
 
+  // ── 承继细丝：点选才现,事件年份处的短接 ────────────────────────────────
+  //
+  // 泳道的车道分配是装箱算法定的(正统专用首行、北方主线次行、其余回收),
+  // 谱系关系跨行连线若常驻,65 条带上百条关系必成面条。两条约束换来一个干净解：
+  //   1) **不动任何车道**——线只是覆在图上的临时层,布局分毫不改;
+  //   2) **锚在事件年份**——亡入锚在亡年、分出锚在立国年、禅让锚在交接点,
+  //      于是每条线都是一段近乎竖直的短接,不横跨长距离,也就不会互相缠绕。
+  // 只画选中朝代的一跳邻域(前身/后继/亡入/亡入我者/分出/分自我者),
+  // 点空白即散。同车道相邻的承继不画——那正是装箱时「后继优先落在前身那一行」
+  // 的结果,相邻本身已经是那句话,再描一条线是重复。
+  const gStrand = el('g', { class: 'tl-strands' });
+  body.appendChild(gStrand);
+  // 三张表的键值方向并不一致,连线前必须先摆正:
+  //   SUCCESSION[后继] = 前身   → 边是 前身 → 后继(rev)
+  //   SPRANG_FROM[子]  = 母体   → 边是 母体 → 子  (rev)
+  //   MERGED_INTO[亡者] = 吞并者 → 边是 亡者 → 吞并者
+  // 照同一方向连会画出跨百年的横线与斜线(实测宋→后周画成 1127→960 的倒行)
+  const REL = [
+    ['succ', SUCCESSION, '法统相承', true],
+    ['merge', MERGED_INTO, '亡入', false],
+    ['spring', SPRANG_FROM, '裂自', true],
+  ];
+  const strandPath = (xa, ya, xb, yb) => {
+    const my = (ya + yb) / 2;
+    return `M${xa.toFixed(1)},${ya.toFixed(1)}C${xa.toFixed(1)},${my.toFixed(1)} ${xb.toFixed(1)},${my.toFixed(1)} ${xb.toFixed(1)},${yb.toFixed(1)}`;
+  };
+  const arrow = (xb, yb, dir) => {
+    const s = dir >= 0 ? 1 : -1;
+    return `M${xb.toFixed(1)},${yb.toFixed(1)}L${(xb - 3.6).toFixed(1)},${(yb - s * 6).toFixed(1)}L${(xb + 3.6).toFixed(1)},${(yb - s * 6).toFixed(1)}Z`;
+  };
+  const clearStrands = () => { gStrand.innerHTML = ''; };
+  const drawStrands = (key) => {
+    clearStrands();
+    const me = geo.get(key);
+    if (!me) return;
+    const links = [];
+    for (const [kind, MAP, label, rev] of REL) {
+      const tgt = MAP[key];
+      if (tgt && geo.has(tgt)) {
+        links.push({ kind, label, from: rev ? tgt : key, to: rev ? key : tgt });
+      }
+      for (const [k2, v2] of Object.entries(MAP)) {
+        if (v2 === key && geo.has(k2)) {
+          links.push({ kind, label, from: rev ? key : k2, to: rev ? k2 : key });
+        }
+      }
+    }
+    for (const L of links) {
+      const A = geo.get(L.from), B = geo.get(L.to);
+      // 事件年份:承统与亡入锚在前者的终点,分出锚在后者的起点
+      const evX = L.kind === 'spring' ? B.x0 : A.x1;
+      const xa = Math.min(Math.max(evX, A.x0), A.x1);
+      const xb = Math.min(Math.max(evX, B.x0), B.x1);
+      if (Math.abs(A.y - B.y) < 1 && Math.abs(xa - xb) < 4) continue;   // 同车道紧邻:相邻即已说明
+      const col = L.kind === 'merge' ? A.col : B.col;
+      const d = strandPath(xa, A.y, xb, B.y);
+      gStrand.appendChild(el('path', { d, fill: 'none', stroke: 'var(--page)', 'stroke-width': 5, 'stroke-linecap': 'round', opacity: .85 }));
+      const nameOf = (k) => (geo.get(k) ? geo.get(k).b.d.name : k);
+      const line = el('path', {
+        d, fill: 'none', stroke: col, 'stroke-width': L.kind === 'succ' ? 2.4 : 1.8,
+        'stroke-linecap': 'round', 'stroke-dasharray': L.kind === 'spring' ? '5 3' : null,
+        opacity: .95, class: 'mark', 'data-rel': `${nameOf(L.from)}→${nameOf(L.to)}·${L.label}`,
+      });
+      hoverable(line, () => [
+        { color: col, value: `${nameOf(L.from)} → ${nameOf(L.to)}`, label: L.label },
+        { label: '时点', value: fmtYearAxis(t0 + (evX - PAD_L) / (W - 2 * PAD_L) * (t1 - t0)) },
+        L.kind === 'succ' ? '禅让或称帝改元式的法统相承：前朝的正朔由后朝接过。'
+          : L.kind === 'merge' ? '武力吞并或纳土归降：疆土与朝廷并入对方。'
+            : '裂土自立：从母体的疆土上分出。',
+      ], () => L.label);
+      gStrand.appendChild(line);
+      gStrand.appendChild(el('path', { d: arrow(xb, B.y, B.y - A.y), fill: col, opacity: .95 }));
+    }
+  };
+  // 委派一个监听:点朝代底带或皇帝分段都按其朝代显丝,点空白即散
+  const ownerOf = new Map();
+  for (const r of bandRefs) ownerOf.set(r.node, r.band.d.key);
+  for (const r of empRefs) ownerOf.set(r.node, r.band.d.key);
+  body.addEventListener('click', (ev) => {
+    const key = ownerOf.get(ev.target);
+    if (key) drawStrands(key);
+    else clearStrands();
+  });
+
   // ── 组装：表头与主体同处一个滚动容器，横向同步、纵向吸顶 ────────────────
   const headWrap = h('div', { class: 'tl-head-wrap' }, [head]);
   const inner = h('div', { class: 'tl-inner' }, [headWrap, body]);
@@ -497,6 +583,7 @@ export function renderLaneTimeline(host, list, opts) {
   if (contests.length) key.push('斜纹＝新旧并立（上半轨前朝、下半轨后朝）');
   key.push('浅色半高段＝称帝前掌权期');
   if (markViolent) key.push('▲＝该帝非正常死亡');
+  key.push('点选朝代或皇帝可显丝：粗实线＝法统相承 · 细实线＝亡入 · 虚线＝裂自');
   staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text: key.join(' · ') }));
 
   let raf = null;
