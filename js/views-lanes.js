@@ -383,9 +383,11 @@ export function renderLaneTimeline(host, list, opts) {
       ...(b.lane === 0 ? ['位于正统序列行；与前后朝并存的那一段以上下半轨表示正统未定。'] : []),
       ...(b.d.note ? [b.d.note] : []),
     ];
+    const gparts = [];
     for (const p of spanParts(b, b.s, b.e)) {
       const g = slotGeom(p.slot);
       const px0 = x(p.x0), px1 = x(p.x1);
+      gparts.push({ x0: px0, x1: px1, top: y0 + g.y, bot: y0 + g.y + g.h });
       const track = el('rect', {
         x: px0 + 1, y: y0 + g.y, width: Math.max(2, px1 - px0 - 2), height: g.h, rx: 4,
         fill: col, opacity: 0.14, class: 'mark',
@@ -394,7 +396,10 @@ export function renderLaneTimeline(host, list, opts) {
       body.appendChild(track);
       bandRefs.push({ band: b, x0: px0, x1: px1, node: track });
     }
-    geo.set(b.d.key, { b, col, x0: bx0, x1: bx1, y: y0 + TRACK_Y + TRACK_H / 2 });
+    // 细丝的锚点按**分段**记:交替期的带被切成上下半轨,只记整轨中线会让
+    // 线端消失在色块中央,进出看不出来(用户实测「二行并一处一眼看不清」)
+    geo.set(b.d.key, { b, col, x0: bx0, x1: bx1, parts: gparts.length ? gparts
+      : [{ x0: bx0, x1: bx1, top: y0 + TRACK_Y, bot: y0 + TRACK_Y + TRACK_H }] });
 
     // 称帝前的掌权期：贴在所在轨道底部的半高浅段
     for (const g of b.preRule) {
@@ -500,6 +505,10 @@ export function renderLaneTimeline(host, list, opts) {
     return `M${xb.toFixed(1)},${yb.toFixed(1)}L${(xb - 3.6).toFixed(1)},${(yb - s * 6).toFixed(1)}L${(xb + 3.6).toFixed(1)},${(yb - s * 6).toFixed(1)}Z`;
   };
   const clearStrands = () => { gStrand.innerHTML = ''; };
+  /** 该带在某个横坐标处的那一段(交替期分上下半轨);落在带外时取最近的一段 */
+  const partAt = (G, px) => G.parts.find((q) => px >= q.x0 - 0.5 && px <= q.x1 + 0.5)
+    || G.parts.reduce((best, q) => (Math.min(Math.abs(px - q.x0), Math.abs(px - q.x1))
+      < Math.min(Math.abs(px - best.x0), Math.abs(px - best.x1)) ? q : best), G.parts[0]);
   const linksOf = (key) => {
     const out = [];
     for (const [kind, MAP, label, rev] of REL) {
@@ -532,11 +541,24 @@ export function renderLaneTimeline(host, list, opts) {
       const A = geo.get(L.from), B = geo.get(L.to);
       // 事件年份:承统与亡入锚在前者的终点,分出锚在后者的起点
       const evX = L.kind === 'spring' ? B.x0 : A.x1;
-      const xa = Math.min(Math.max(evX, A.x0), A.x1);
-      const xb = Math.min(Math.max(evX, B.x0), B.x1);
-      if (Math.abs(A.y - B.y) < 1 && Math.abs(xa - xb) < 4) continue;   // 同车道紧邻:相邻即已说明
+      let xa = Math.min(Math.max(evX, A.x0), A.x1);
+      let xb = Math.min(Math.max(evX, B.x0), B.x1);
+      const pa = partAt(A, xa), pb = partAt(B, xb);
+      const ca = (pa.top + pa.bot) / 2, cb = (pb.top + pb.bot) / 2;
+      let ya, yb;
+      if (Math.abs(ca - cb) < 1) {
+        if (Math.abs(xa - xb) < 4) continue;      // 同轨紧邻:相邻本身已经说明了承继
+        ya = yb = ca;                             // 同轨隔着空窗:走中线的水平短接
+        xa = A.x1; xb = B.x0;
+      } else {
+        // **边到边**:自源带背向目标的那一侧穿出、落在目标带朝向源的那一缘。
+        // 于是线在色块边界上现身与消失,半轨交替处也一眼看得出进出
+        const down = cb > ca;
+        ya = down ? pa.bot : pa.top;
+        yb = down ? pb.top : pb.bot;
+      }
       const col = L.kind === 'merge' ? A.col : B.col;
-      const d = strandPath(xa, A.y, xb, B.y);
+      const d = strandPath(xa, ya, xb, yb);
       // 全显模式把丝压细压淡:百来条同时在场,单看每条不重要,重要的是疏密的分布
       gStrand.appendChild(el('path', {
         d, fill: 'none', stroke: 'var(--page)', 'stroke-width': dim ? 3.4 : 5,
@@ -557,7 +579,9 @@ export function renderLaneTimeline(host, list, opts) {
             : '裂土自立：从母体的疆土上分出。',
       ], () => L.label);
       gStrand.appendChild(line);
-      gStrand.appendChild(el('path', { d: arrow(xb, B.y, B.y - A.y), fill: col, opacity: dim ? .6 : .95 }));
+      if (Math.abs(yb - ya) > 1) {
+        gStrand.appendChild(el('path', { d: arrow(xb, yb, yb - ya), fill: col, opacity: dim ? .6 : .95 }));
+      }
     }
   };
   // 委派一个监听:点朝代底带或皇帝分段都按其朝代显丝,点空白即散
