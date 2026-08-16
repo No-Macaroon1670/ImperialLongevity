@@ -12,7 +12,7 @@
 //
 // 两个视图各自实现同名的 `host.__locate`（year/emperor/dynasty/event），
 // 本模块只管说「去哪儿」，不必知道那一张是横滚还是竖滚。
-import { h } from './charts.js';
+import { h, fmtYearAxis } from './charts.js';
 import { EMPERORS, DYNASTIES } from './data.js';
 import { EVENTS } from './events.js';
 
@@ -24,7 +24,7 @@ function buildIndex() {
   for (const e of EMPERORS) {
     idx.push({
       kind: 'emp', id: e.id, label: `${e.dynasty}·${e.temple}`,
-      sub: `${e.name || ''}${e.acc ? ` · ${e.acc.year <= 0 ? `前${-e.acc.year + 1}` : e.acc.year} 年即位` : ''}`,
+      sub: `${e.name || ''}${e.acc ? ` · ${fmtYearAxis(e.acc.year)} 年即位` : ''}`,
       keys: [e.name, e.temple, e.posth, `${e.dynasty}${e.temple}`, e.dynasty].filter(Boolean).map(norm),
       y: e.acc ? e.acc.t : 0,
     });
@@ -32,14 +32,14 @@ function buildIndex() {
   for (const d of DYNASTIES) {
     idx.push({
       kind: 'dyn', id: d.key, label: d.name,
-      sub: `政权 · ${d.s <= 0 ? `前${-d.s + 1}` : d.s}–${d.e}`,
+      sub: `政权 · ${fmtYearAxis(d.s)}–${fmtYearAxis(d.e)}`,
       keys: [d.name, d.key].map(norm), y: d.s,
     });
   }
   EVENTS.forEach((ev, i) => {
     idx.push({
       kind: 'ev', id: i, label: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
-      sub: `大事 · ${ev.y < 0 ? `前${-ev.y}` : ev.y}${ev.y2 ? `–${ev.y2}` : ''}`,
+      sub: `大事 · ${fmtYearAxis(ev.y)}${ev.y2 ? `–${fmtYearAxis(ev.y2)}` : ''}`,
       // 雅名也要能搜:图上写的是「破釜沉舟」,搜这四个字却找不到巨鹿之战,
       // 等于把刚教给读者的名字又藏起来
       keys: [ev.n, ev.w, ev.ya].filter(Boolean).map(norm), y: ev.y, raw: ev.n,
@@ -89,6 +89,20 @@ export function mountSearch(sectionEl, hostOf) {
   const list = h('div', { class: 'ts-list', role: 'listbox' });
   box.appendChild(input); box.appendChild(list);
   (sectionEl.querySelector('.head') || sectionEl).appendChild(box);
+  // 本节在视口里就把搜索框钉住。用 IntersectionObserver 而非 scroll 事件:
+  // 后者在页面隐藏/后台标签页里不一定按时来(本项目已为此栽过一次),
+  // 而「够不够得着搜索框」这件事不该受那些影响。
+  const headEl = sectionEl.querySelector('.head') || sectionEl;
+  let headGone = false, sectionHere = false;
+  const sync = () => box.classList.toggle('pinned', headGone && sectionHere);
+  new IntersectionObserver(([e]) => {
+    headGone = !e.isIntersecting && e.boundingClientRect.top < 0;   // 标题栏滚到上方去了
+    sync();
+  }, { threshold: 0 }).observe(headEl);
+  new IntersectionObserver(([e]) => {
+    sectionHere = e.isIntersecting;                                  // 本节还在视口里
+    sync();
+  }, { threshold: 0 }).observe(sectionEl);
 
   let items = [], cur = -1;
   const close = () => { list.classList.remove('on'); cur = -1; };

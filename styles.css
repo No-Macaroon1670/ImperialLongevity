@@ -382,6 +382,16 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 
 /* 搜索框:钉在版块标题行右侧,结果浮在其下 */
 .tl-search { position: relative; margin-left: auto; }
+/* 长卷里的搜索必须**够得着**:全景一节高一万五千像素,搜索框跟着标题栏
+   滚出视野后,想搜就得先滚回顶上——而「页太长滚不动」正是搜索要解决的事。
+   故本节占据视口时把它钉在右上角(与纪年滑杆同一套出没规则) */
+.tl-search.pinned {
+  position: fixed; top: 10px; right: 14px; z-index: 70; margin: 0;
+}
+.tl-search.pinned input {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .16); background: var(--surface-1);
+}
+@media (max-width: 719px) { .tl-search.pinned { top: 6px; right: 8px; } }
 .tl-search input {
   font: inherit; font-size: .84rem; padding: 5px 11px; width: min(260px, 46vw);
   border: 1px solid var(--border); border-radius: 999px;
