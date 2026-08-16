@@ -331,8 +331,11 @@ let renderedWhileHidden = false;
 function render() {
   renderedWhileHidden = document.visibilityState === 'hidden';
   const list = filtered();
-  buildFilters(document.getElementById('filters'));
-  document.getElementById('filter-count').textContent = `当前样本 ${list.length} 位`;
+  const fHost = document.getElementById('filters');
+  if (fHost) {
+    buildFilters(fHost);
+    document.getElementById('filter-count').textContent = `当前样本 ${list.length} 位`;
+  }
   if (HERO) renderHero(document.getElementById('hero'), list);
   for (const sec of PAGE_SECTIONS) {
     const host = hostMap.get(sec.id);
@@ -376,13 +379,21 @@ export function mountApp({ sections, hero }) {
   // 不撑高 .filters，因此这个值在展开/收起之间保持恒定——正是要的效果。
   const filters = document.getElementById('filters');
   const syncFiltersH = () => {
+    if (!filters) {
+      // 无筛选器的页面(全景页):锚点让位只需一点顶部余量
+      document.documentElement.style.setProperty('--filters-h', '8px');
+      document.documentElement.style
+        .setProperty('--vw-safe', `${document.documentElement.clientWidth}px`);
+      return;
+    }
     document.documentElement.style
       .setProperty('--filters-h', `${Math.round(filters.getBoundingClientRect().height)}px`);
     // 全宽出血的安全宽度＝视口减竖向滚动条。100vw 含滚动条宽度，直接用会挤出横滚
     document.documentElement.style
       .setProperty('--vw-safe', `${document.documentElement.clientWidth}px`);
   };
-  new ResizeObserver(syncFiltersH).observe(filters);
+  if (filters) new ResizeObserver(syncFiltersH).observe(filters);
+  else addEventListener('resize', syncFiltersH);
   syncFiltersH();
 
   // 面板外轻点即收起（浮层盖住的是正文，用户下一步多半是想读正文）

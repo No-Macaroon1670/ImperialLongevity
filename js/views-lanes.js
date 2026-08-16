@@ -331,7 +331,11 @@ export function renderLaneTimeline(host, list, opts) {
   if (showEvents) {
     const evY = 53 + EV_H / 2 + 1;
     const placed = [];                       // 已占用的横向区间,用于避让重叠
+    // 运行时护栏:与承继细丝同条目的事件不画——那件事细丝的刻痕已经能点开,
+    // 画两遍只会让同一件事在图上出现两次(用户实测:太平天国既是政权又是事件)
+    const trW = new Set(Object.values(TRANSITIONS).map((t) => t.w));
     for (const ev of EVENTS) {
+      if (trW.has(ev.w)) continue;
       const ex = x(ev.y);
       if (ex < PAD_L - 40 || ex > W - PAD_L + 40) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
