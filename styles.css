@@ -348,6 +348,15 @@ li { margin-bottom: .35em; }
 @media (max-width: 1099px) { .kp-left, .kp-right { display: none !important; } }
 @media (max-width: 1279px) { .kp-left { display: none !important; } }
 
+/* 事件层的六个类别色:全部取自既有槽位,不新造色相。
+   战事＝危险色、民变＝橙、外患＝紫、制度＝蓝、文化＝绿、灾疫＝灰 */
+:root {
+  --ev-war: var(--critical); --ev-rev: var(--s2); --ev-out: var(--s6);
+  --ev-gov: var(--s1); --ev-cul: var(--s3); --ev-dis: var(--lane-other);
+}
+.ev-dot { cursor: pointer; }
+.ev-hit { cursor: pointer; }
+
 /* 承继细丝的命中带:透明加宽,只吃指针不占颜色 */
 .kp-hit { cursor: pointer; }
 

@@ -16,6 +16,7 @@ import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hid
 import { mountKnowledgeCorner, eventSpec } from './knowledge.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, TRANSITIONS, ORTHODOX, SECONDARY } from './dynasties.js';
+import { EVENTS, EVENT_KINDS } from './events.js';
 import { fmtDate } from './schema.js';
 
 const SLOT_VARS = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6', '--s7', '--s8'];
@@ -135,7 +136,9 @@ export function renderLaneTimeline(host, list, opts) {
   const slots = dynastyColorSlots();
   const ink = resolveInk(host);
 
-  const LANE_H = 48, LABEL_H = 15, TRACK_Y = 18, TRACK_H = 24, HEAD_H = 54;
+  const showEvents = opts.laneEvents !== false;
+  const EV_H = showEvents ? 26 : 0;      // 事件轨:贴在表头之下、泳道之上
+  const LANE_H = 48, LABEL_H = 15, TRACK_Y = 18, TRACK_H = 24, HEAD_H = 54 + EV_H;
   const LABEL_FS = 12.5, SEG_FS = 10;
 
   // 1) 组装朝代带
@@ -318,7 +321,48 @@ export function renderLaneTimeline(host, list, opts) {
     head.appendChild(el('line', { x1: x(t), x2: x(t), y1: 24, y2: 30, class: 'axis-line' }));
     head.appendChild(el('text', { x: x(t), y: 44, class: 'tick', 'text-anchor': 'middle' }, fmtYearAxis(t)));
   }
-  head.appendChild(el('line', { x1: 0, x2: W, y1: HEAD_H - 1, y2: HEAD_H - 1, class: 'axis-line' }));
+  head.appendChild(el('line', { x1: 0, x2: W, y1: 53, y2: 53, class: 'axis-line' }));
+
+  // ── 事件轨：大事记 ──────────────────────────────────────────────────────
+  // 时间轴此前只画「谁在统治」,事件层补上「那两千年里发生了什么」——
+  // 教育类时间轴的主体内容正是这一层。标记按类别取形与色(EVENT_KINDS),
+  // 跨年事件(安史之乱 755–763)画成一段横条,点标记即在知识卡里读词条。
+  // 放在表头内而非泳道里:它随表头吸顶,滚到哪一段都看得见,且不占泳道行数。
+  if (showEvents) {
+    const evY = 53 + EV_H / 2 + 1;
+    const placed = [];                       // 已占用的横向区间,用于避让重叠
+    for (const ev of EVENTS) {
+      const ex = x(ev.y);
+      if (ex < PAD_L - 40 || ex > W - PAD_L + 40) continue;
+      const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
+      const label = ev.n;
+      const lw = textW(label, 9.5);
+      // 标记恒画;标签只在不与前一个相撞时才写(密集期宁可只留标记,靠悬停读名)
+      let ty = evY - 8;
+      const room = !placed.some((iv) => ex - 4 < iv.z && iv.a < ex + lw + 8);
+      if (ev.y2 && x(ev.y2) - ex > 3) {
+        head.appendChild(el('rect', { x: ex, y: evY - 3.5, width: x(ev.y2) - ex, height: 3,
+          rx: 1.5, fill: `var(--ev-${ev.k})`, opacity: .5 }));
+      }
+      const dot = el('circle', { cx: ex, cy: evY - 2, r: 3.2, fill: `var(--ev-${ev.k})`,
+        class: 'mark ev-dot', 'data-ev-n': label });
+      const hit = el('rect', { x: ex - 7, y: 53, width: 14, height: EV_H, fill: 'transparent',
+        'pointer-events': 'all', class: 'kp-hit ev-hit' });
+      hit.dataset.evi = String(EVENTS.indexOf(ev));
+      hoverable(hit, () => [
+        { color: `var(--ev-${ev.k})`, value: ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y), label: kind.label },
+        { label: '事件', value: label },
+        '点它可在右侧卡片读这条大事记的词条。',
+      ], () => label);
+      head.appendChild(dot);
+      if (room) {
+        head.appendChild(el('text', { x: ex + 5, y: ty + 1, 'font-size': 9.5,
+          fill: 'var(--text-2)', 'pointer-events': 'none' }, label));
+        placed.push({ a: ex, z: ex + lw + 8 });
+      }
+      head.appendChild(hit);
+    }
+  }
 
   // ── 主体 ────────────────────────────────────────────────────────────────
   const body = el('svg', { viewBox: `0 0 ${W} ${BODY_H}`, width: W, height: BODY_H });
@@ -650,6 +694,14 @@ export function renderLaneTimeline(host, list, opts) {
   if (allOn) drawStrands(null, true);
 
   // ── 组装：表头与主体同处一个滚动容器，横向同步、纵向吸顶 ────────────────
+  head.addEventListener('click', (ev2) => {
+    const i = ev2.target && ev2.target.dataset && ev2.target.dataset.evi;
+    if (i === undefined || !kp || !kp.showEvent) return;
+    const e3 = EVENTS[+i];
+    kp.showEvent({ id: `evt:${e3.w}`, head: `${e3.y2 ? `${fmtYearAxis(e3.y)}–${fmtYearAxis(e3.y2)}` : fmtYearAxis(e3.y)} · ${(EVENT_KINDS[e3.k] || {}).label || '大事'}`,
+      title: e3.w, baidu: e3.b || e3.n, q: `${e3.n} 历史`, yt: true, display: e3.n });
+  });
+
   const headWrap = h('div', { class: 'tl-head-wrap' }, [head]);
   const inner = h('div', { class: 'tl-inner' }, [headWrap, body]);
   const scroller = h('div', { class: 'lane-scroll' }, [inner]);

@@ -18,6 +18,7 @@ export const SECTIONS = [
       sel('laneColor', '配色', [['dynasty', '按具体朝代'], ['unified', '按大一统 / 分裂']]),
       tog('laneViolent', '标记非正常死亡'),
       tog('laneStrands', '全部承继关系', (st) => st.panoramaMode !== 'river'),
+      tog('laneEvents', '大事记', (st) => st.panoramaMode !== 'river'),
     ],
     render: (host, l, o) => {
       // 切换视图时先撤掉河流留在 body 上的固定卡片，否则它会挂在泳道图上
