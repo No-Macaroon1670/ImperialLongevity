@@ -26,7 +26,7 @@ const S = {
   // 默认按屏宽选：手机竖屏顺着拇指的方向读河流；宽屏一屏并列看得到更多政权，泳道更强。
   panoramaMode: matchMedia('(max-width: 720px)').matches ? 'river' : 'lanes',
   riverPx: 7,
-  lanePx: 10, laneColor: 'dynasty', laneViolent: true,
+  lanePx: 10, laneColor: 'dynasty', laneViolent: true, laneStrands: false,
   scatterX: 'birth',
   kmGroup: 'unified', kmScale: 'reign', kmCensorAbd: true, kmCI: true, kmFromAge: 15,
   cifScale: 'age',
@@ -194,6 +194,7 @@ const SECTIONS = [
         (st) => st.panoramaMode !== 'river'),
       sel('laneColor', '配色', [['dynasty', '按具体朝代'], ['unified', '按大一统 / 分裂']]),
       tog('laneViolent', '标记非正常死亡'),
+      tog('laneStrands', '全部承继关系', (st) => st.panoramaMode !== 'river'),
     ],
     render: (host, l, o) => {
       // 切换视图时先撤掉河流留在 body 上的固定卡片，否则它会挂在泳道图上

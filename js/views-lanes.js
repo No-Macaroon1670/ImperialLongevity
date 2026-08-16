@@ -500,22 +500,34 @@ export function renderLaneTimeline(host, list, opts) {
     return `M${xb.toFixed(1)},${yb.toFixed(1)}L${(xb - 3.6).toFixed(1)},${(yb - s * 6).toFixed(1)}L${(xb + 3.6).toFixed(1)},${(yb - s * 6).toFixed(1)}Z`;
   };
   const clearStrands = () => { gStrand.innerHTML = ''; };
-  const drawStrands = (key) => {
-    clearStrands();
-    const me = geo.get(key);
-    if (!me) return;
-    const links = [];
+  const linksOf = (key) => {
+    const out = [];
     for (const [kind, MAP, label, rev] of REL) {
       const tgt = MAP[key];
-      if (tgt && geo.has(tgt)) {
-        links.push({ kind, label, from: rev ? tgt : key, to: rev ? key : tgt });
-      }
+      if (tgt && geo.has(tgt)) out.push({ kind, label, from: rev ? tgt : key, to: rev ? key : tgt });
       for (const [k2, v2] of Object.entries(MAP)) {
-        if (v2 === key && geo.has(k2)) {
-          links.push({ kind, label, from: rev ? key : k2, to: rev ? k2 : key });
-        }
+        if (v2 === key && geo.has(k2)) out.push({ kind, label, from: rev ? key : k2, to: rev ? k2 : key });
       }
     }
+    return out;
+  };
+  const allLinks = () => {
+    const seen = new Set(), out = [];
+    for (const [kind, MAP, label, rev] of REL) {
+      for (const [k2, v2] of Object.entries(MAP)) {
+        if (!geo.has(k2) || !geo.has(v2)) continue;
+        const L = { kind, label, from: rev ? v2 : k2, to: rev ? k2 : v2 };
+        const sig = `${kind}|${L.from}|${L.to}`;
+        if (seen.has(sig)) continue;
+        seen.add(sig);
+        out.push(L);
+      }
+    }
+    return out;
+  };
+  const drawStrands = (key, dim = false) => {
+    clearStrands();
+    const links = key === null ? allLinks() : (geo.has(key) ? linksOf(key) : []);
     for (const L of links) {
       const A = geo.get(L.from), B = geo.get(L.to);
       // 事件年份:承统与亡入锚在前者的终点,分出锚在后者的起点
@@ -525,12 +537,17 @@ export function renderLaneTimeline(host, list, opts) {
       if (Math.abs(A.y - B.y) < 1 && Math.abs(xa - xb) < 4) continue;   // 同车道紧邻:相邻即已说明
       const col = L.kind === 'merge' ? A.col : B.col;
       const d = strandPath(xa, A.y, xb, B.y);
-      gStrand.appendChild(el('path', { d, fill: 'none', stroke: 'var(--page)', 'stroke-width': 5, 'stroke-linecap': 'round', opacity: .85 }));
+      // 全显模式把丝压细压淡:百来条同时在场,单看每条不重要,重要的是疏密的分布
+      gStrand.appendChild(el('path', {
+        d, fill: 'none', stroke: 'var(--page)', 'stroke-width': dim ? 3.4 : 5,
+        'stroke-linecap': 'round', opacity: dim ? .7 : .85,
+      }));
       const nameOf = (k) => (geo.get(k) ? geo.get(k).b.d.name : k);
       const line = el('path', {
-        d, fill: 'none', stroke: col, 'stroke-width': L.kind === 'succ' ? 2.4 : 1.8,
+        d, fill: 'none', stroke: col,
+        'stroke-width': (L.kind === 'succ' ? 2.4 : 1.8) * (dim ? 0.72 : 1),
         'stroke-linecap': 'round', 'stroke-dasharray': L.kind === 'spring' ? '5 3' : null,
-        opacity: .95, class: 'mark', 'data-rel': `${nameOf(L.from)}→${nameOf(L.to)}·${L.label}`,
+        opacity: dim ? .6 : .95, class: 'mark', 'data-rel': `${nameOf(L.from)}→${nameOf(L.to)}·${L.label}`,
       });
       hoverable(line, () => [
         { color: col, value: `${nameOf(L.from)} → ${nameOf(L.to)}`, label: L.label },
@@ -540,18 +557,22 @@ export function renderLaneTimeline(host, list, opts) {
             : '裂土自立：从母体的疆土上分出。',
       ], () => L.label);
       gStrand.appendChild(line);
-      gStrand.appendChild(el('path', { d: arrow(xb, B.y, B.y - A.y), fill: col, opacity: .95 }));
+      gStrand.appendChild(el('path', { d: arrow(xb, B.y, B.y - A.y), fill: col, opacity: dim ? .6 : .95 }));
     }
   };
   // 委派一个监听:点朝代底带或皇帝分段都按其朝代显丝,点空白即散
   const ownerOf = new Map();
   for (const r of bandRefs) ownerOf.set(r.node, r.band.d.key);
   for (const r of empRefs) ownerOf.set(r.node, r.band.d.key);
+  const allOn = opts.laneStrands === true;
   body.addEventListener('click', (ev) => {
     const key = ownerOf.get(ev.target);
+    // 全显模式下点某朝即「聚焦」——只留它的一跳邻域;点空白回到全显
     if (key) drawStrands(key);
+    else if (allOn) drawStrands(null, true);
     else clearStrands();
   });
+  if (allOn) drawStrands(null, true);
 
   // ── 组装：表头与主体同处一个滚动容器，横向同步、纵向吸顶 ────────────────
   const headWrap = h('div', { class: 'tl-head-wrap' }, [head]);
