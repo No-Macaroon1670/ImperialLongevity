@@ -349,8 +349,8 @@ export function renderLaneTimeline(host, list, opts) {
         // 治世／中兴是时段而非时点,且是后世史书的**追认**而非当时建制:
         // 画成通长的浅底横条(不是点也不是线),名字写在条内,与事实类事件一眼可分
         head.appendChild(el('rect', { x: ex, y: 53 + 2, width: Math.max(3, exEnd - ex), height: EV_H - 5,
-          rx: 3, fill: `var(--ev-era)`, opacity: .16 }));
-        head.appendChild(el('rect', { x: ex, y: 53 + 2, width: 2, height: EV_H - 5, fill: `var(--ev-era)`, opacity: .5 }));
+          rx: 3, fill: `var(--ev-${ev.k})`, opacity: .16 }));
+        head.appendChild(el('rect', { x: ex, y: 53 + 2, width: 2, height: EV_H - 5, fill: `var(--ev-${ev.k})`, opacity: .5 }));
       } else if (ev.y2 && exEnd - ex > 3) {
         head.appendChild(el('rect', { x: ex, y: evY - 3.5, width: exEnd - ex, height: 3,
           rx: 1.5, fill: `var(--ev-${ev.k})`, opacity: .5 }));
