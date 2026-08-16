@@ -128,6 +128,42 @@ export function buildBands(list) {
   return bands;
 }
 
+/**
+ * 事件类别图例＝筛选钮。颜色没有图例就等于没编码;而关掉一类会降灰划线,
+ * 一眼看得出是「我关掉了」而非「本来就没有」。分类本身也是一种读法:
+ * 只留战事看的是王朝的武运,只留制度看的是治理术的演进。
+ *
+ * 两个视图共用一份:河流此前只在宽屏有两岸事件轨、且图例只画在泳道图下,
+ * 于是手机上既筛不了类,也不知道那些彩点各是什么——而事件层恰恰是手机上
+ * 最主要的一层。返回两个节点(小标题与色标行),由调用方决定挂在哪儿。
+ */
+export function eventLegend(opts) {
+  const off = new Set(opts.evOff || []);
+  const row = h('div', { class: 'ev-legend' });
+  const counts = {};
+  for (const ev of EVENTS) counts[ev.k] = (counts[ev.k] || 0) + 1;
+  for (const [k, meta] of Object.entries(EVENT_KINDS)) {
+    if (!counts[k]) continue;
+    const chip = h('button', {
+      type: 'button', class: 'chip ev-chip' + (off.has(k) ? ' off' : ''),
+      'aria-pressed': String(!off.has(k)),
+      title: off.has(k) ? '点按显示这一类' : '点按隐藏这一类',
+      onclick: () => {
+        const next = new Set(off);
+        if (next.has(k)) next.delete(k); else next.add(k);
+        opts.setOpt('evOff', [...next]);
+      },
+    });
+    const dot = h('span', { class: 'il-dot' });
+    dot.style.background = `var(--ev-${k})`;
+    if (meta.span) { dot.style.width = '16px'; dot.style.borderRadius = '2px'; }
+    chip.appendChild(dot);
+    chip.appendChild(h('span', { text: `${meta.label} ${counts[k]}` }));
+    row.appendChild(chip);
+  }
+  return [h('p', { class: 'muted small', style: 'margin:10px 0 2px', text: '大事记（点色标可按类筛选）' }), row];
+}
+
 // ── 主渲染 ───────────────────────────────────────────────────────────────
 export function renderLaneTimeline(host, list, opts) {
   host.innerHTML = '';
@@ -141,8 +177,8 @@ export function renderLaneTimeline(host, list, opts) {
   // 事件名分居分隔线上下两侧,各留五字之高。此前全挤在线下:实测 547 条里
   // 72 条(13%)根本排不下名字,另有 144 条被挤得偏离本位——近三成的名字
   // 站错了地方。分成上下两条独立的争位赛道,两头都松快。
-  const EV_UP = showEvents ? 62 : 0;    // 线上:文教
-  const EV_DN = showEvents ? 74 : 0;    // 线下:政事 + 年份
+  const EV_UP = showEvents ? 66 : 0;    // 线上:文教
+  const EV_DN = showEvents ? 81 : 0;    // 线下:政事 + 年份
   const LANE_H = 48, LABEL_H = 15, TRACK_Y = 18, TRACK_H = 24;
   const HEAD_H = 24 + EV_UP + EV_DN + (showEvents ? 6 : 25);
   const LABEL_FS = 12.5, SEG_FS = 10;
@@ -328,8 +364,13 @@ export function renderLaneTimeline(host, list, opts) {
   // 中间隔着整条事件轨——要对照哪一年是哪一朝,眼睛得跨过五十像素的名字。
   const TICK_Y = showEvents ? HEAD_H - 4 : 42;
   for (const t of yTicks) {
-    head.appendChild(el('line', { x1: x(t), x2: x(t), y1: showEvents ? TICK_Y - 13 : 24,
-      y2: showEvents ? TICK_Y - 8 : 30, class: 'axis-line' }));
+    // 年份上方原有一小截竖线。年份还在表头顶上时它有用——指明这个数对着哪条竖线;
+    // 如今年份已贴着泳道,而泳道里本就有一条**通高的**网格线站在同一个 x 上
+    //(见下方 body 的 class: 'grid'),这一小截不过是那条线被表头截断的残段。
+    // 无事件轨时年份仍在上方,那时才需要它。
+    if (!showEvents) {
+      head.appendChild(el('line', { x1: x(t), x2: x(t), y1: 24, y2: 30, class: 'axis-line' }));
+    }
     head.appendChild(el('text', { x: x(t), y: TICK_Y, class: 'tick', 'text-anchor': 'middle' }, fmtYearAxis(t)));
   }
   // 分隔线:有事件轨时下移,把标记行让到线**上**——标记与竖排名字之间隔着一条线,
@@ -344,8 +385,11 @@ export function renderLaneTimeline(host, list, opts) {
   if (showEvents) {
     // 标记**钉在分隔线上**:名字分居上下两侧,标记居中才不偏袒哪一边
     const evTop = AXIS_Y;
-    const LAB_DN = AXIS_Y + 12;              // 线下名字的起笔(政事)
-    const LAB_UP_BOT = AXIS_Y - 11;          // 线上名字的**末字**位置(文教,自下往上排)
+    // 留空要按**字身**算,不能按基线算:基线以上还有约九像素的字身,
+    // 而标记如今骑在线上、半径最大 4.3px。先前按基线留 12px,实测 434 处
+    // 名字压到了标记上(纵向压进一到两像素,用户一眼看出来)。
+    const LAB_DN = AXIS_Y + 19;              // 线下名字的起笔(政事)
+    const LAB_UP_BOT = AXIS_Y - 15;          // 线上名字的**末字**基线(文教,自下往上排)
     const LAB_FS = 10.5, LAB_DY = 11.4;      // 字比初版大一号:9px 竖排在密集处认不出
     const COL_MAX = 5, MAX_COLS = 2;         // 一列五字,超出折第二列(最多两列十字)
     const slots = { up: [], dn: [] };   // 上下各争各的位子,互不相扰
@@ -981,36 +1025,7 @@ export function renderLaneTimeline(host, list, opts) {
   key.push('点选朝代或皇帝可显丝：粗实线＝法统相承 · 细实线＝亡入 · 虚线＝裂自');
   staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text: key.join(' · ') }));
 
-  // ── 事件类别图例:颜色没有图例就等于没编码 ──────────────────────────────
-  // 八类各一个色标,点一下即隐藏该类——分类本身就是一种读法:
-  // 只留「战事」看的是王朝的武运,只留「制度」看的是治理术的演进。
-  if (showEvents) {
-    const off = new Set(opts.evOff || []);
-    const row = h('div', { class: 'ev-legend' });
-    const counts = {};
-    for (const ev of EVENTS) counts[ev.k] = (counts[ev.k] || 0) + 1;
-    for (const [k, meta] of Object.entries(EVENT_KINDS)) {
-      if (!counts[k]) continue;
-      const chip = h('button', {
-        type: 'button', class: 'chip ev-chip' + (off.has(k) ? ' off' : ''),
-        'aria-pressed': String(!off.has(k)),
-        title: off.has(k) ? '点按显示这一类' : '点按隐藏这一类',
-        onclick: () => {
-          const next = new Set(off);
-          if (next.has(k)) next.delete(k); else next.add(k);
-          opts.setOpt('evOff', [...next]);
-        },
-      });
-      const dot = h('span', { class: 'il-dot' });
-      dot.style.background = `var(--ev-${k})`;
-      if (meta.span) { dot.style.width = '16px'; dot.style.borderRadius = '2px'; }
-      chip.appendChild(dot);
-      chip.appendChild(h('span', { text: `${meta.label} ${counts[k]}` }));
-      row.appendChild(chip);
-    }
-    staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:10px 0 2px', text: '大事记（点色标可按类筛选）' }));
-    staticLegend.appendChild(row);
-  }
+  if (showEvents) for (const n of eventLegend(opts)) staticLegend.appendChild(n);
 
   let raf = null;
   const sync = () => {
