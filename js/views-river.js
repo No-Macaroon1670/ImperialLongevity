@@ -805,7 +805,6 @@ export function renderRiver(host, list, opts) {
   // 分法取 176:120 而非「兵祸/文治」的 72:224——后者更好听,但本库有一百一十二
   // 条文化类(我们有意补进的文学与科技),右岸会挤到掉名字而左岸空着一半。
   if (EV_STRIP > 0) {
-    const trW = new Set(Object.values(TRANSITIONS).map((t) => t.w));
     const evOff = new Set(opts.evOff || []);
     const FS = 10.5, ROW = 12.5;
     const R = { 1: 4, 2: 3, 3: 2.2 };
@@ -814,11 +813,12 @@ export function renderRiver(host, list, opts) {
     // 故沿河岸上下摊开;同年但分属两岸的本来就不撞,只在同岸内分组。
     const sameYear = new Map();
     for (const e2 of EVENTS) {
-      if (trW.has(e2.w) || evOff.has(e2.k) || e2.k === 'era') continue;
+      if (evOff.has(e2.k) || e2.k === 'era') continue;
       const key = `${e2.y}|${LEFT_BANK.has(e2.k) ? 'L' : 'R'}`;
       if (!sameYear.has(key)) sameYear.set(key, []);
       sameYear.get(key).push(e2);
     }
+    for (const g of sameYear.values()) g.sort((a2, b2) => (a2.o || 99) - (b2.o || 99));
     const fanOf = (e2) => {
       const g = sameYear.get(`${e2.y}|${LEFT_BANK.has(e2.k) ? 'L' : 'R'}`);
       return g && g.length > 1 ? (g.indexOf(e2) - (g.length - 1) / 2) * 6 : 0;
@@ -827,7 +827,12 @@ export function renderRiver(host, list, opts) {
     const maxCh = Math.max(3, Math.floor((EV_STRIP - 22) / FS));
     // 分量高的先挑位子(同泳道图),缩放小的年代只留一等的名字
     for (const ev of [...EVENTS].sort((a, b) => rk(a) - rk(b))) {
-      if (trW.has(ev.w) || evOff.has(ev.k) || ev.k === 'era') continue;
+      // 不再按 TRANSITIONS 滤:凡**收进 events.js 的**就是我们判定该画的。
+      // 那条规则本是为「别把改朝换代画两遍」,但它连淝水之战、隋灭陈之战、
+      // 陈桥兵变、靖康之变都一并挡掉了——正是先前特意补回来的那十一条,
+      // 补进数据却仍被这里拦在轨外,等于白补。承继细丝的刻痕在河身、
+      // 事件点在表头,两处register不同,并存不算重复。
+      if (evOff.has(ev.k) || ev.k === 'era') continue;
       const ty = y(ev.y) + fanOf(ev);
       if (ty < -20 || ty > H + 20) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;

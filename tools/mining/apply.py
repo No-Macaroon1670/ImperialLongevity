@@ -91,8 +91,9 @@ for fn in ["dis_conv.json", "dis2_conv.json", "prehan_conv.json", "dis3_conv.jso
 json.dump(cache, io.open(CACHE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
 
 # ── 三、写回 ────────────────────────────────────────────────────────────────
-evs.sort(key=lambda e: (e["y"], e.get("y2", e["y"]), e["n"]))
-KEYS = ["y", "y2", "k", "n", "w", "ws", "b", "d", "ya", "yc", "u", "r"]
+# 年内次序按 o,没有 o 的排在后面;名字只作最后的稳定排序键
+evs.sort(key=lambda e: (e["y"], e.get("y2", e["y"]), e.get("o", 99), e["n"]))
+KEYS = ["y", "y2", "o", "k", "n", "w", "ws", "b", "d", "ya", "yc", "u", "r"]
 lines = []
 for e in evs:
     parts = []

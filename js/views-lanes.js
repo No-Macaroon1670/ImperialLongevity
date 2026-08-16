@@ -338,7 +338,6 @@ export function renderLaneTimeline(host, list, opts) {
     const LAB_FS = 10.5, LAB_DY = 11.4;      // 字比初版大一号:9px 竖排在密集处认不出
     const COL_MAX = 5, MAX_COLS = 2;         // 一列五字,超出折第二列(最多两列十字)
     const slots = [];
-    const trW = new Set(Object.values(TRANSITIONS).map((t) => t.w));
     const evOff = new Set(opts.evOff || []);
     // **分量决定先后**:此前是按年份顺序抢位子,于是一条无名小事只要年份靠前,
     // 就能把「安史之乱」的名字挤掉——图上留下的是编排的偶然,不是历史的轻重。
@@ -352,10 +351,14 @@ export function renderLaneTimeline(host, list, opts) {
     // 按年分组横向摊开,标准档 7px 合半年,肉眼几乎看不出,但各自可点、也各自可留名。
     const sameYear = new Map();
     for (const e2 of EVENTS) {
-      if (trW.has(e2.w) || evOff.has(e2.k) || e2.k === 'era') continue;
+      if (evOff.has(e2.k) || e2.k === 'era') continue;
       if (!sameYear.has(e2.y)) sameYear.set(e2.y, []);
       sameYear.get(e2.y).push(e2);
     }
+    // 组内按 o(年内次序)排:此前是合并脚本按**名字**排的,于是 1449 年
+    // 「北京保卫战」排到了「土木堡之变」左边——八月的事跑到十月的事后头。
+    // 无月序可考的留 o 空缺,彼此相对位置不表意。
+    for (const g of sameYear.values()) g.sort((a2, b2) => (a2.o || 99) - (b2.o || 99));
     const fanOf = (e2) => {
       const g = sameYear.get(e2.y);
       return g && g.length > 1 ? (g.indexOf(e2) - (g.length - 1) / 2) * 7 : 0;
@@ -370,7 +373,12 @@ export function renderLaneTimeline(host, list, opts) {
     const R = { 1: 4.3, 2: 3.2, 3: 2.4 };
     for (const ev of [...EVENTS].sort((a, b) => rk(a) - rk(b))) {
       // era 已改画成皇帝格子的外套,不占事件轨
-      if (trW.has(ev.w) || evOff.has(ev.k) || ev.k === 'era') continue;
+      // 不再按 TRANSITIONS 滤:凡**收进 events.js 的**就是我们判定该画的。
+      // 那条规则本是为「别把改朝换代画两遍」,但它连淝水之战、隋灭陈之战、
+      // 陈桥兵变、靖康之变都一并挡掉了——正是先前特意补回来的那十一条,
+      // 补进数据却仍被这里拦在轨外,等于白补。承继细丝的刻痕在河身、
+      // 事件点在表头,两处register不同,并存不算重复。
+      if (evOff.has(ev.k) || ev.k === 'era') continue;
       const ex = x(ev.y) + fanOf(ev);
       if (ex < PAD_L - 40 || ex > W - PAD_L + 40) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;

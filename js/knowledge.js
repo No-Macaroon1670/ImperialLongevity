@@ -165,7 +165,7 @@ export function evSpec(ev) {
   return {
     id: `evt:${ev.w}${ev.ws || ''}`, head: `${span} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
     title: ev.w, sec: ev.ws, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
-    q: ev.n, yt: true,
+    q: ev.ya || ev.n, yt: true,
   };
 }
 
