@@ -848,8 +848,8 @@ export function renderRiver(host, list, opts) {
         x1: bank + dir * 3, x2: bank + dir * (7 - rad - 1), y1: ty, y2: ty,
         stroke: `var(--ev-${ev.k})`, 'stroke-width': 1, opacity: .55 }));
       const lane = left ? taken.L : taken.R;
-      const room = rk(ev) <= (pxYear >= 9 ? 3 : pxYear >= 6 ? 2 : 1)
-        && !lane.some((v) => Math.abs(v - ty) < ROW);
+      // 同泳道图:分量只管抢位子的先后,不卡死谁有资格留名(见 views-lanes.js 的注)
+      const room = !lane.some((v) => Math.abs(v - ty) < ROW);
       if (room) {
         lane.push(ty);
         const nm = [...(ev.ya || ev.n)];

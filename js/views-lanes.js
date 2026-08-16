@@ -367,9 +367,11 @@ export function renderLaneTimeline(host, list, opts) {
     head.appendChild(gEvLead);
     const gEv = [3, 2, 1].map((r) => { const g = el('g', { class: `ev-tier ev-r${r}` }); head.appendChild(g); return [r, g]; });
     const layer = Object.fromEntries(gEv);
-    // 缩得越小,能读的名字越少:紧凑档只让一等留名,舒展档三等也放出来。
-    // 点仍然全画——「那一年有事」这件事本身不该被缩放藏掉。
-    const labMaxR = pxYear >= 18 ? 3 : pxYear >= 12 ? 2 : 1;
+    // **不按分量卡死留名**。分量只决定**抢位子的先后**,不决定谁有资格留名:
+    // 空位还剩着却不写名字,是白白浪费。1457–1490 那一段原先一个名字都没有
+    //(夺门之变、曹石之变、荆襄流民起义…全是三等,被门槛一刀切掉),
+    // 而那里明明空着一大片(用户实测)。
+    // 密不密由碰撞检测管,它本来就保证不重叠;门槛只在**没人争**的地方伤人。
     const R = { 1: 4.3, 2: 3.2, 3: 2.4 };
     for (const ev of [...EVENTS].sort((a, b) => rk(a) - rk(b))) {
       // era 已改画成皇帝格子的外套,不占事件轨
@@ -413,7 +415,7 @@ export function renderLaneTimeline(host, list, opts) {
       // 依次试 0、±4、±8… 直到两年的宽度为止;真挪开了就补一根细引线回到圆点。
       const maxShift = Math.max(10, pxYear * 2);
       let cx0 = null;
-      if (rk(ev) <= labMaxR) {
+      {
         for (let d = 0; d <= maxShift && cx0 === null; d += 4) {
           for (const cand of (d === 0 ? [ex] : [ex + d, ex - d])) {
             if (!slots.some(([sx, sw]) => Math.abs(sx - cand) < sw + halfW)) { cx0 = cand; break; }
