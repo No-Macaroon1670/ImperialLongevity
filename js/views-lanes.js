@@ -510,6 +510,7 @@ export function renderLaneTimeline(host, list, opts) {
     return `M${xb.toFixed(1)},${yb.toFixed(1)}L${(xb - 3.6).toFixed(1)},${(yb - s * 6).toFixed(1)}L${(xb + 3.6).toFixed(1)},${(yb - s * 6).toFixed(1)}Z`;
   };
   let kp = null;                       // 知识角卡的把手,点丝时用来推事件卡
+  const HIT_W = 13;                    // 命中带宽度:丝两侧各 ±6.5px 的容差
   const clearStrands = () => { gStrand.innerHTML = ''; };
   /** 该带在某个横坐标处的那一段(交替期分上下半轨);落在带外时取最近的一段 */
   const partAt = (G, px) => G.parts.find((q) => px >= q.x0 - 0.5 && px <= q.x1 + 0.5)
@@ -567,14 +568,19 @@ export function renderLaneTimeline(host, list, opts) {
             stroke: B.col, 'stroke-width': 2.2, opacity: dim ? .7 : .95, class: 'mark',
             'data-rel': `${nameOfKey(L.from)}→${nameOfKey(L.to)}·${L.label}`,
           });
-          tick.dataset.ev = `${L.from}>${L.to}`;
-          hoverable(tick, () => [
+          gStrand.appendChild(tick);
+          // 命中带:与刻痕同形而透明加宽,专吃点击与悬停。刻痕只有 2.2px,
+          // 视觉上够醒目、指头却按不准(用户实测「箭头有点难点」)
+          const tHit = el('line', { x1: mid, x2: mid, y1: pa.top - 7, y2: pa.bot + 7,
+            stroke: 'transparent', 'stroke-width': HIT_W, 'pointer-events': 'stroke', class: 'kp-hit' });
+          tHit.dataset.ev = `${L.from}>${L.to}`;
+          hoverable(tHit, () => [
             { color: B.col, value: `${nameOfKey(L.from)} → ${nameOfKey(L.to)}`, label: L.label },
             { label: '史称', value: trans0.n },
             { label: '时点', value: fmtYearAxis(t0 + (mid - PAD_L) / (W - 2 * PAD_L) * (t1 - t0)) },
             '同一泳道内首尾相接即为法统相承；此刻痕标出这场交替的名目，点它可读词条。',
           ], () => trans0.n);
-          gStrand.appendChild(tick);
+          gStrand.appendChild(tHit);
           continue;
         }
         ya = yb = ca;                             // 同轨隔着空窗:走中线的水平短接
@@ -599,9 +605,14 @@ export function renderLaneTimeline(host, list, opts) {
         'stroke-linecap': 'round', 'stroke-dasharray': L.kind === 'spring' ? '5 3' : null,
         opacity: dim ? .6 : .95, class: 'mark', 'data-rel': `${nameOfKey(L.from)}→${nameOfKey(L.to)}·${L.label}`,
       });
+      gStrand.appendChild(line);
       const tr = TRANSITIONS[`${L.from}>${L.to}`];
-      if (tr) line.dataset.ev = `${L.from}>${L.to}`;
-      hoverable(line, () => [
+      // 同上:透明加宽的命中带覆在丝上,±6px 的容差换来可点性;
+      // 它仍在细丝层内,故君主色块照旧压在其上,不会抢走色块自身的点选
+      const hit = el('path', { d, fill: 'none', stroke: 'transparent', 'stroke-width': HIT_W,
+        'stroke-linecap': 'round', 'pointer-events': 'stroke', class: 'kp-hit' });
+      if (tr) hit.dataset.ev = `${L.from}>${L.to}`;
+      hoverable(hit, () => [
         { color: col, value: `${nameOfKey(L.from)} → ${nameOfKey(L.to)}`, label: L.label },
         ...(tr ? [{ label: '史称', value: tr.n }] : []),
         { label: '时点', value: fmtYearAxis(t0 + (evX - PAD_L) / (W - 2 * PAD_L) * (t1 - t0)) },
@@ -610,7 +621,7 @@ export function renderLaneTimeline(host, list, opts) {
             : '裂土自立：从母体的疆土上分出。',
         ...(tr ? ['点这条丝可在右侧卡片读这场改朝换代的词条。'] : []),
       ], () => (tr ? tr.n : L.label));
-      gStrand.appendChild(line);
+      gStrand.appendChild(hit);
       if (Math.abs(yb - ya) > 1) {
         gStrand.appendChild(el('path', { d: arrow(xb, yb, yb - ya), fill: col, opacity: dim ? .6 : .95 }));
       }
