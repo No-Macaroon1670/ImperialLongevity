@@ -169,6 +169,36 @@ export function evSpec(ev) {
   };
 }
 
+/**
+ * 手机单卡。侧卡要 1100px、角卡要 1000px 才放得下,窄屏于是**一张也弹不出来**——
+ * 手机上点开一件事什么反应都没有,而事件层正是手机上最该点得开的一层。
+ * 改用一张贴底的单卡:**一次只开一张,开新的即顶掉旧的**——手机没有可以并排
+ * 摆两张卡的版面,与其排队不如替换,读者的注意力本来也一次只在一件事上。
+ */
+function mountSolo(wideMq) {
+  const card = mkCard('kp-solo');
+  document.body.appendChild(card.el);
+  // body 上留个记号:贴底那块地方一次只归一个人,河流的手势提示据此让位
+  const hide = () => {
+    card.el.classList.remove('on');
+    card.el.dataset.key = '';
+    document.body.classList.remove('kp-solo-on');
+  };
+  card.close.addEventListener('click', hide);
+  // 视窗一宽到摆得下侧卡就收掉:否则旋转屏幕后底部会赖着一张本该让位的卡
+  const onWide = () => { if (wideMq.matches) hide(); };
+  wideMq.addEventListener('change', onWide);
+  return {
+    show: (spec) => { document.body.classList.add('kp-solo-on'); return fillCard(card, spec); },
+    hide,
+    destroy: () => {
+      wideMq.removeEventListener('change', onWide);
+      card.el.remove();
+      document.body.classList.remove('kp-solo-on');
+    },
+  };
+}
+
 function mkCard(sideClass) {
   const img = h('img', { class: 'kp-thumb', alt: '' });
   const head = h('div', { class: 'kp-sub' });
@@ -278,6 +308,7 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
   };
   const ALL = ['dyn', 'emp', 'evL', 'evR'];
   for (const k of ALL) document.body.appendChild(cards[k].el);
+  const solo = mountSolo(mq);        // 窄屏走这一张(见 mountSolo 的注)
   const pinned = { dyn: null, emp: null, evL: null, evR: null };
   const dismissed = { dyn: new Set(), emp: new Set(), evL: new Set(), evR: new Set() };
   // 同侧两张都开着才叠成上下两行;只开一张时仍居中,免得半屏空着
@@ -386,19 +417,27 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
     removeEventListener('resize', onScroll);
     if (timer) clearTimeout(timer);
     for (const k of ALL) cards[k].el.remove();
+    solo.destroy();
     document.body.classList.remove('kp-stk-l', 'kp-stk-r');
   };
   // 点两岸事件轨:哪岸点的就落哪栏,并钉住。事件卡不随滚动自动换——
   // 四张卡都自己动的话,滚一屏就成了走马灯。
+  // 窄屏没有两翼可分,一律落到贴底的手机单卡。
   cleanup.showEvent = (spec, side) => {
+    if (!mq.matches) { solo.show(spec); return true; }
     const which = side === 'left' ? 'evL' : 'evR';
-    if (!mq.matches || (which === 'evL' && !mqLeft.matches)) return false;
+    if (which === 'evL' && !mqLeft.matches) return false;
     pinned[which] = spec.id;
     dismissed[which].delete(spec.id);
     fillCard(cards[which], spec);
     syncStack();
     return true;
   };
+  // 窄屏的君主词条:河流的底部信息卡给的是本库的数据(生卒、在位、死因),
+  // 词条摘要另在单卡里——两张卡不并存,故由那张卡上的一个按钮换过来
+  cleanup.soloMode = () => !mq.matches;
+  cleanup.showEmperor = (item) => { if (mq.matches) return false; solo.show(empSpec(item)); return true; };
+  cleanup.hideSolo = solo.hide;
   return cleanup;
 }
 
@@ -415,6 +454,7 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
   const mq = matchMedia('(min-width: 1000px)');
   const mqBoth = matchMedia('(min-width: 1200px)');
   const cards = { dyn: mkCard('kp-corner kp-corner-dyn'), emp: mkCard('kp-corner kp-corner-emp') };
+  const solo = mountSolo(mqBoth);    // 窄到摆不下角卡时走这一张
   sectionEl.classList.add('kp-anchor');
   sectionEl.appendChild(cards.dyn.el);
   sectionEl.appendChild(cards.emp.el);
@@ -538,6 +578,7 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
     if (timer) clearTimeout(timer);
     cards.dyn.el.remove();
     cards.emp.el.remove();
+    solo.destroy();
     const chartHost = scroller.closest('.chart-host');
     if (chartHost) chartHost.style.paddingTop = '';
     sectionEl.classList.remove('kp-anchor', 'has-kp', 'has-kp2');
@@ -545,7 +586,7 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
   // 点承继细丝时,朝代卡改讲那一场改朝换代(楚汉战争、靖康之变…)并钉住:
   // 关系问的是「谁承谁」,事件答的是「那是怎么发生的」,两者本就该在同一格里
   cleanup.showEvent = (spec) => {
-    if (!mqBoth.matches) return false;
+    if (!mqBoth.matches) { solo.show(spec); return true; }   // 窄屏落贴底的手机单卡
     pinned.dyn = spec.id;
     dismissed.dyn.delete(spec.id);
     show('dyn', spec);

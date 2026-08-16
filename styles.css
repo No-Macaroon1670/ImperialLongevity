@@ -193,7 +193,7 @@ text.direct.sub { fill: var(--text-2); font-weight: 400; }
    `.dot { position: absolute }`——我们只设了宽高与底色、没设 position,
    于是那条赢了,色点被拽出 flex 流、不再占位,正好压在标签头一个字上。
    类名已加前缀(il-dot / sw-*)与外界脱钩,这里再把 position 钉死,双保险。 */
-.legend-swatch, .il-dot { position: static; }
+.legend-swatch, .il-dot, .ev-glyph { position: static; }
 .legend-swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
 .legend-swatch.sw-line { width: 16px; height: 3px; border-radius: 2px; }
 .legend-swatch.sw-dot { width: 10px; height: 10px; border-radius: 50%; }
@@ -321,16 +321,48 @@ li { margin-bottom: .35em; }
 }
 .river-scrub .rs-era { position: absolute; left: 10px; width: 10px; height: 2px;
   background: var(--axis); border-radius: 1px; }
+/* 手柄常驻，年份读数只在动的时候现身。
+   两件事一起解决：① 药丸原先**居中于轨道**，探出视口的正是左边那一半——年份，
+   「1268 · 元明清」在手机上只剩「68 · 元明清」（用户实测）；改为左缘对齐即不再越界。
+   ② 但左缘对齐后它就一直压在河的左岸上，而事件层贴岸排之后，左岸正是政事类
+   事件的落脚处（用户实测：一个球看着像被裁了一半）。故读数**滚动时浮出、
+   停手一秒余即隐去**：要看年份时它在，读河面时它不在；手柄始终留在轨上，
+   拖动的抓手不会消失 */
 .river-scrub .rs-thumb {
   position: absolute; left: 15px; transform: translate(-50%, -50%);
+  width: 13px; height: 13px; border-radius: 999px;
+  background: var(--surface-1); border: 2px solid var(--text-2);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, .22); pointer-events: none;
+}
+.river-scrub .rs-read {
+  position: absolute; left: 26px; transform: translateY(-50%);
   background: var(--surface-1); border: 1px solid var(--border); border-radius: 999px;
   font-size: .68rem; line-height: 1.2; padding: 2px 7px; color: var(--text-1);
   white-space: nowrap; box-shadow: 0 2px 8px rgba(0, 0, 0, .16);
   font-variant-numeric: tabular-nums; pointer-events: none;
+  opacity: 0; transition: opacity .18s ease;
 }
+.river-scrub .rs-read.on { opacity: 1; }
 .river-emp.sel { stroke: var(--text-1); stroke-width: 1.6; paint-order: stroke; }
 
 .river-card { display: none; }
+
+/* 手势提示：触屏上「单击出名字、双击开词条」是约定而非常识，图上没有任何
+   东西在说它，读者点一下只看见一条转瞬即逝的提示，多半就以为到此为止。
+   它占的正是卡片那块地方——**卡在就让位，卡不在才现身**，于是它既是说明，
+   也是那块地方的占位，一开卡便知道刚才那句话说的是什么。
+   不吃点击（pointer-events: none），免得替下面的河面挡掉一次触摸 */
+.river-hint {
+  display: none; position: fixed; z-index: 54; bottom: 8px;
+  left: 50%; transform: translateX(-50%); max-width: calc(100% - 32px);
+  padding: 5px 12px; border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-1) 88%, transparent);
+  border: 1px solid var(--border); backdrop-filter: blur(4px);
+  font-size: .74rem; color: var(--text-2); white-space: nowrap;
+  pointer-events: none;
+}
+.river-hint.on { display: block; }
+body.kp-solo-on .river-hint, body.river-card-on .river-hint { display: none; }
 
 /* 桌面两翼知识卡:河流限宽 640 居中后的留白,给到点选/滚动名君的实时维基摘要。
    窄于 1100px 时两翼放不下一张可读的卡,整个功能隐藏 */
@@ -367,13 +399,33 @@ body.kp-stk-l .kp-left-ev.on,
 body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 @keyframes kp-in-flat { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
+/* 手机单卡：窄屏既没有两翼也没有角落，卡改为贴底铺开，一次只开一张
+   （见 knowledge.js 的 mountSolo）。它与河流的君主信息卡共用底部这块地方，
+   两者互斥——手机上没有并排摆两张卡的版面，与其排队不如替换。
+   动画换成 kp-in-flat：侧卡那套 translateY(-50%) 是给「垂直居中」用的，
+   套到贴底卡上会把它整个掀出屏幕。 */
+.kp-solo {
+  position: fixed; top: auto; transform: none;
+  left: 8px; right: 8px; bottom: 8px; width: auto;
+  /* 上限跟河同宽（640）：820px 这类中间宽度上，一张横贯全屏的卡读起来像弹窗 */
+  max-width: 640px; margin-inline: auto;
+  max-height: 52vh; z-index: 57; padding: 12px 14px 10px;
+}
+.kp-solo.on { animation: kp-in-flat .22s ease; }
+.kp-solo .kp-thumb { max-height: 116px; }
+.kp-solo .kp-ext { -webkit-line-clamp: 5; }
+
 /* 事件层的六个类别色:全部取自既有槽位,不新造色相。
    战事＝危险色、民变＝橙、外患＝紫、制度＝蓝、文化＝绿、灾疫＝灰 */
 :root {
-  --ev-war: var(--critical); --ev-rev: var(--s2); --ev-out: var(--s6);
+  /* 外患取**紫**（s7）而非 s6：s6 是 #008300 深绿，与文化·科技的 s3 青绿
+     几乎认不出差别——上一行注释里写的本就是「外患＝紫」，是色板改版后
+     槽位漂了、注释没跟上（用户实测：「颜色对人来说太像了」）。
+     腾出的深绿给存续期：它在左岸、青绿的著述在右岸，两岸相隔且形状不同 */
+  --ev-war: var(--critical); --ev-rev: var(--s2); --ev-out: var(--s7);
   --ev-gov: var(--s1); --ev-cul: var(--s3); --ev-dis: var(--lane-other);
   --ev-era: var(--s4);   /* 治世·中兴:与时点事件区别开 */
-  --ev-inst: var(--s7);  /* 制度·交流存续期:同为长条,但与治世异色 */
+  --ev-inst: var(--s6);  /* 制度·交流存续期:同为长条,但与治世异色 */
   --ev-her: var(--s5);   /* 世界遗产:实物遗存,与著述类的 cul 分色 */
   /* 文物:调色板八个槽位到此已全部用尽,而 --s8 (#e34948) 与战事用的
      --critical (#d03b3b) 几乎同色,并排根本分不出。世界遗产与文物本是一家
@@ -392,9 +444,9 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
    flex gap 没生效(旧内核/嵌入式 webview 不支持 flex 的 gap),一旦不生效
    间距就归零、色点正好压到头一个字上。改用 margin 明确写死,不依赖 gap。 */
 .ev-chip { gap: 0; }
-.ev-chip .il-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; margin-right: 6px; }
+.ev-chip .ev-glyph { flex: none; margin-right: 6px; overflow: visible; }
 .ev-chip.off { opacity: .45; text-decoration: line-through; }
-.ev-chip.off .il-dot { background: var(--muted) !important; }
+.ev-chip.off .ev-glyph * { fill: var(--muted) !important; }
 .ev-hit { cursor: pointer; }
 
 /* 搜索框:钉在版块标题行右侧,结果浮在其下 */
@@ -477,9 +529,17 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 .kp-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; font-size: .8rem; }
 .kp-links a { text-decoration: none; }
 .kp-links a:hover { text-decoration: underline; }
+/* ✕ 自带底衬：卡首是词条头图，一个没有底的叉压在照片上就看不见了
+   （用户实测：那张塔的照片正好把叉吃掉）。给它一枚半透明圆片，
+   于是无论压在照片、纯色还是文字上，它都还是那枚可按的叉。
+   同时抬到 28px 见方——手指按得着，也压得住照片的任何一角 */
 .kp-close {
-  position: absolute; top: 6px; right: 8px; border: 0; background: none;
-  color: var(--text-1); opacity: .5; cursor: pointer; font-size: .85rem; padding: 4px;
+  position: absolute; top: 6px; right: 8px; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; padding: 0; border: 0; border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-1) 82%, transparent);
+  backdrop-filter: blur(3px); box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
+  color: var(--text-1); opacity: .72; cursor: pointer; font-size: .85rem; line-height: 1;
 }
 .kp-close:hover { opacity: 1; }
 .kp-src { font-size: .68rem; color: var(--text-1); opacity: .45; margin-top: 8px; }
@@ -598,4 +658,11 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
   .rc-note { margin: 6px 0 0; }
   .rc-close { position: absolute; top: 6px; right: 6px; width: 26px; height: 26px;
     border: none; background: none; color: var(--muted); font-size: 1rem; cursor: pointer; }
+  /* 换到词条卡：这张卡给的是本库的数据，词条摘要在手机单卡里，两张不并存 */
+  .rc-more { margin-top: 7px; padding: 5px 11px; min-height: 30px;
+    border: 1px solid var(--border); border-radius: 999px;
+    background: var(--surface-2); color: var(--text-2); font: inherit; font-size: .78rem; cursor: pointer; }
+  /* 单卡贴在底部导航条之上，与君主信息卡同一处落脚；手势提示占同一格 */
+  .kp-solo { bottom: calc(48px + env(safe-area-inset-bottom, 0px)); max-height: 46vh; }
+  .river-hint { bottom: calc(48px + env(safe-area-inset-bottom, 0px)); }
 }

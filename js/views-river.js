@@ -37,7 +37,7 @@ import { DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS } from './dynasties.js';
 import { EVENTS, EVENT_KINDS, LEFT_BANK } from './events.js';
 import { fmtDate } from './schema.js';
-import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName } from './views-lanes.js';
+import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName, eventLegend, evMark } from './views-lanes.js';
 import { mountKnowledge, evSpec } from './knowledge.js';
 import { stampHash } from './search.js';
 
@@ -840,9 +840,7 @@ export function renderRiver(host, list, opts) {
       const bank = left ? RX0 : RX1;
       const dir = left ? -1 : 1;
       const rad = R[rk(ev)];
-      gEvents.appendChild(el('circle', {
-        cx: bank + dir * 7, cy: ty, r: rad,
-        fill: `var(--ev-${ev.k})`, class: 'mark ev-dot' }));
+      gEvents.appendChild(evMark(ev.k, bank + dir * 7, ty, rad, { class: 'mark ev-dot' }));
       // 短引线搭到岸上:眼睛不必拿尺子量「这条名字对着哪一年」
       gEvents.appendChild(el('line', {
         x1: bank + dir * 3, x2: bank + dir * (7 - rad - 1), y1: ty, y2: ty,
@@ -879,6 +877,10 @@ export function renderRiver(host, list, opts) {
   // ── 河道 ────────────────────────────────────────────────────────────────
   const empNodes = [];
   const labelNodes = [];
+  // 河面上已经写了字的地方：君主名（海名式疏排／竖排）、非正常死亡的刻痕、
+  // 朝代名。窄屏的事件层要写进河道里，就得先知道哪些地方已经有人——
+  // 否则「诛吕安刘」会正好压在「后 少 帝」的三个字上（用户实测截图）。
+  const inkTaken = [];
   for (const b of ordered) {
     const cvar = byDynasty ? slotVar(slots.get(b.d.key)) : (b.d.u ? '--c-unified' : '--c-split');
     const col = `var(${cvar})`;
@@ -1013,6 +1015,7 @@ export function renderRiver(host, list, opts) {
             x1: box[1] - 1.5 - wN, x2: box[1] - 1.5, y1: y(g.x) - 1.4, y2: y(g.x) - 1.4,
             stroke: 'var(--critical)', 'stroke-width': 2.5, 'stroke-linecap': 'round',
           }));
+          inkTaken.push([box[1] - 2.5 - wN, box[1] - 0.5, y(g.x) - 3.4, y(g.x) + 0.6]);
         }
       }
 
@@ -1035,12 +1038,15 @@ export function renderRiver(host, list, opts) {
           (chW * 0.35 - base) / Math.max(1, nm.length - 1)));
         const total = base + sp * (nm.length - 1);
         if (total + 12 < chW) {
+          const x0 = (midBox[0] + midBox[1]) / 2 - total / 2;
+          const cy = y((g.s + g.x) / 2);
           const tEl = el('text', {
-            x: (midBox[0] + midBox[1]) / 2 - total / 2, y: y((g.s + g.x) / 2) + fs * 0.36,
+            x: x0, y: cy + fs * 0.36,
             'font-size': fs, fill: inkCol, 'pointer-events': 'none',
           });
           [...nm].forEach((c, i) => tEl.appendChild(el('tspan', i ? { dx: sp.toFixed(1) } : {}, c)));
           gEmps.appendChild(tEl);
+          inkTaken.push([x0 - 3, x0 + total + 3, cy - fs * 0.62, cy + fs * 0.62]);
         }
       } else if (midBox && chW >= 15 && runH >= nm.length * 10 + 6) {
         const tx = (midBox[0] + midBox[1]) / 2;
@@ -1051,6 +1057,7 @@ export function renderRiver(host, list, opts) {
         });
         [...nm].forEach((c, i) => t.appendChild(el('tspan', { x: tx, dy: i ? 10 : 0 }, c)));
         gEmps.appendChild(t);
+        inkTaken.push([tx - 8, tx + 8, ty - 9, ty + 10 * (nm.length - 1) + 2.5]);
       }
     }
 
@@ -1059,9 +1066,14 @@ export function renderRiver(host, list, opts) {
     if (!box0) continue;
     const lw = textWidth(b.d.name, 11.5);
     const cx = (box0[0] + box0[1]) / 2;
+    const lx = Math.max(GUTTER + 2, Math.min(W - lw - 2, cx - lw / 2));
     const dot = el('circle', { cx: box0[0] + 5, cy: y(b.s) + 6, r: 3, fill: col });
+    // 朝代名滚动时会吸顶游走，登记的是它的**起点**——那是它待得最久的位置，
+    // 也是「西汉」两个字与「齐王墓方镜」撞在一起的地方
+    inkTaken.push([lx - 3, lx + lw + 3, y(b.s) - 2, y(b.s) + 13]);
+    inkTaken.push([box0[0], box0[0] + 10, y(b.s) + 1, y(b.s) + 11]);
     const label = el('text', {
-      x: Math.max(GUTTER + 2, Math.min(W - lw - 2, cx - lw / 2)), y: y(b.s) + 10,
+      x: lx, y: y(b.s) + 10,
       'font-size': 11.5, 'font-weight': 640, fill: 'var(--text-1)', 'pointer-events': 'none',
       stroke: 'var(--page)', 'stroke-width': 3, 'paint-order': 'stroke',
     }, b.d.name);
@@ -1069,27 +1081,237 @@ export function renderRiver(host, list, opts) {
     labelNodes.push({ dot, label, y0: y(b.s), y1: y(b.e), lw, key: b.d.key });
   }
 
+  // 事件层放在最后：它要避开的不只是彼此，还有河道里已有的字
+  // （君主名与朝代名）——先画河才知道那些字占了哪里
+  if (EV_STRIP === 0 && showEvents) {
+    // ── 河道内的事件层（窄屏） ──────────────────────────────────────────────
+    // 手机上让不出两条边栏，于是把事件放进**河道本身**——事件本就发生在历史
+    // 这条河里，而不是发生在它的岸边。有空间就直接写名字，没空间只留标记。
+    //
+    // 归属阶梯（四级，越靠前越硬；能确定才进河道，不能确定的一律不占河）：
+    //   ① `d` 字段显式指定——era 类早就是这么做的（并存时代里，重叠面积从来
+    //      不是归属的证据：咸平之治会被面积猜到辽国、乾淳之治猜到大理）；
+    //   ② **改朝换代类落过渡段的正中**。这一类的归属本是个死结——淝水之战放进
+    //      前秦的河道还是东晋的？放哪边都是替读者判断。而它们本来就不属于任何
+    //      一边，属于「一边变成另一边」的那一刻，落在过渡的正中即两不亏欠；
+    //   ③ 当时只有一个政权在场：无歧义（安史之乱→唐）；
+    //   ④ 其余落在**河道之间的缝上**——与②同一个道理：说不准归谁，就不占谁。
+    const evOff = new Set(opts.evOff || []);
+    // ROW 13.5 而非字号的 11.5：10px 的字实际占 12px 高，再贴着排就是两行字
+    // 挨在一起没有一丝白；13.5 给出一线呼吸
+    const FS = 10, ROW = 13.5;
+    const R = { 1: 4, 2: 3, 3: 2.3 };
+    const rk = (e) => e.r || 2;
+    // 二三等要「河道宽松」才放出来，宽松有两个方向：
+    //   横向 MIN_W——河道窄到写不下就别挤（十六国的九股并流里，二三等一律不放）；
+    //   纵向 PAD ——名字要多大的清净才配写出来。一等按自身高度找空当，二等要
+    //     两倍半、三等要五倍。于是**标记可以密、名字必须疏**：那正是
+    //     「有空间时直接写名字，没空间时只画标记」——标记是「这儿有一件事」，
+    //     写不写得下名字是另一回事，不该让一条写不下的名字连点都不留。
+    const MIN_W = { 1: 0, 2: 40, 3: 80 };
+    // PAD 比初版松（2.6/5 → 1.8/2.8）：那时名字全挤在岸边一列上，一列之内
+    // 只能靠拉大纵向间距来防挤；如今落位会自己摊到几档上，横向已经分开了，
+    // 再要求那么大的纵向清净，白白扔掉三十来条本可以写出来的名字
+    const PAD = { 1: 1.15, 2: 1.8, 3: 2.8 };
+    // 改朝换代事件的索引：条目名 → 那次改道的中点。TRANSITIONS 的键即「前者>后者」，
+    // 而 buildTransitions 已经算出每次改道前后两端的河道盒，中点直接可用。
+    // 同名多处的（刘裕北伐既灭南燕又灭后秦、东汉统一战争两见）按年份就近取
+    const transByW = new Map();
+    for (const [pair, tr] of Object.entries(TRANSITIONS)) {
+      const [xk, yk] = pair.split('>');
+      for (const t of trans) {
+        if (!t.from.has(xk) || !t.to.has(yk) || t.to.has(xk)) continue;
+        const A = t.from.get(xk), B = t.to.get(yk);
+        if (!transByW.has(tr.w)) transByW.set(tr.w, []);
+        transByW.get(tr.w).push({ c: t.c + t.span / 2, x: ((A[0] + A[1]) + (B[0] + B[1])) / 4 });
+      }
+    }
+    const sliceAt = (t) => slices.find((s) => t >= s.a - EPS && t < s.z + EPS);
+    const anchorOf = (ev) => {
+      if (ev.d) {
+        const b = edge(ev.d, ev.y);
+        if (b) return { x: (b[0] + b[1]) / 2, w: b[1] - b[0], lo: b[0] + 1, hi: b[1] - 1, key: ev.d };
+      }
+      // 未落在河道里的（改朝换代与归属未定）也不贴岸：留 2px 免得字被裁在边上
+      const cands = transByW.get(ev.w);
+      if (cands) {
+        const best = cands.reduce((m, c) => (Math.abs(c.c - ev.y) < Math.abs(m.c - ev.y) ? c : m));
+        // 只认时间上对得上的那一次：事件与改道相差二十年以上，多半是同名异事
+        if (Math.abs(best.c - ev.y) <= 20) return { x: best.x, w: RX1 - RX0, lo: RX0 + 2, hi: RX1 - 2, key: null };
+      }
+      const sl = sliceAt(ev.y);
+      if (!sl || !sl.n) return null;
+      const boxes = [];
+      for (const k of sl.at.keys()) { const b = edge(k, ev.y); if (b) boxes.push([b, k]); }
+      if (!boxes.length) return null;
+      if (boxes.length === 1) {
+        const [b, k] = boxes[0];
+        return { x: (b[0] + b[1]) / 2, w: b[1] - b[0], lo: b[0] + 1, hi: b[1] - 1, key: k };
+      }
+      boxes.sort((a, b) => a[0][0] - b[0][0]);
+      const mid = (RX0 + RX1) / 2;
+      let x = null;
+      for (let i = 0; i + 1 < boxes.length; i++) {
+        const seam = (boxes[i][0][1] + boxes[i + 1][0][0]) / 2;
+        if (x === null || Math.abs(seam - mid) < Math.abs(x - mid)) x = seam;
+      }
+      return x === null ? null : { x, w: (RX1 - RX0) / boxes.length, lo: RX0 + 2, hi: RX1 - 2, key: null };
+    };
+    // 占位表：河面上已有的字（君主名、朝代名、刻痕）先入表，事件只能填空当；
+    // 而后标记与名字也各自登记，后来者按分量高低依次找位。名字挤不下就只留
+    // 标记，标记也挤不下就整条不画（一等除外——锚点恒画，宁可与人相叠）
+    const taken = inkTaken.slice();
+    const free = (x0, x1, y0, y1) => !taken.some((p) => x0 < p[1] && x1 > p[0] && y0 < p[3] && y1 > p[2]);
+    for (const ev of [...EVENTS].sort((a, b) => rk(a) - rk(b) || a.y - b.y)) {
+      if (evOff.has(ev.k) || ev.k === 'era') continue;
+      const ty = y(ev.y);
+      if (ty < -20 || ty > H + 20) continue;
+      const an = anchorOf(ev);
+      if (!an || an.w < MIN_W[rk(ev)]) continue;
+      const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
+      const rad = R[rk(ev)];
+      const txt = ev.ya || ev.n;
+      // 标记＋间隙＋名字。textWidth 按 1em 估汉字宽,实测字面要 1.05em,
+      // 再加描边衬底左右各溢出 1.3px——不留这点余量,密处会蹭到邻居
+      const gw = rad * 2 + 3 + textWidth(txt, FS) * 1.06 + 3;
+      // **贴岸排**，与宽屏两岸同一条规则:左岸政事(战事、民变、灾疫、外交、立制)、
+      // 右岸文教(著述、科技、遗存)——只是这回贴的是**本河道自己的两岸**。
+      // 三个好处一并到手:两岸的疏密照旧自己说话(唐末左岸挤满、北宋右岸大放);
+      // 河心让给君主名(海名式疏排本就写在河心);且名字排成两列而不是撒在河面上——
+      // 初版从河心起找空位,每条各偏一点,读起来像一片词云而不是一条时间轴。
+      // 缝上的(改朝换代、归属未定)不属于任何一条河,仍居中于缝。
+      const bank = an.key ? (LEFT_BANK.has(ev.k) ? 'L' : 'R') : 'C';
+      // 落位分两步:先把本半区切成几档,再**挑最空的那一档**——不是「第一个放得下的」。
+      // 挑第一个会把所有名字压在岸边排成一条，另半边整片空着（北宋一水的文教类，
+      // 右岸叠成一柱、左岸空白）；挑最空的则自动摊开，密处两三档并用、疏处仍归岸边。
+      // 「空」按**与最近邻的纵向净距**算，只看 x 上真正相交的那些——超过 SPREAD
+      // 就都算足够空，不再为几像素的差别把名字甩到对岸。
+      // 本半区排不下时才越过河心（tier 1）：不是取消两岸之分，而是让「一岸挤爆、
+      // 另一岸空着」时名字有地方去——两岸都忙的年代（唐）自然轮不到它。
+      const SPREAD = 110;
+      const clearance = (x0, x1, hh) => {
+        let min = SPREAD;
+        for (const p of taken) {
+          if (x0 >= p[1] || x1 <= p[0]) continue;        // x 不相交，互不相干
+          const dy = Math.max(p[2] - (ty + hh), (ty - hh) - p[3]);
+          if (dy < 0) return null;                       // 撞上了
+          if (dy < min) min = dy;
+        }
+        return min;
+      };
+      const seek = (w, hh) => {
+        const span = an.hi - an.lo;
+        if (w > span) return null;
+        const room = span - w;
+        const own = bank === 'C' ? room : room / 2;      // 本半区的可移动量
+        const N = 3;
+        const cands = [];
+        for (let i = 0; i <= N; i++) cands.push([(own * i) / N, 0]);
+        for (let i = 1; i <= N; i++) cands.push([own + ((room - own) * i) / N, 1]);
+        let best = null;
+        for (const [d, tier] of cands) {
+          const x = Math.max(an.lo, Math.min(an.hi - w,
+            bank === 'R' ? an.hi - w - d : bank === 'L' ? an.lo + d : an.x - w / 2 + (d - own / 2)));
+          const gap = clearance(x, x + w, hh);
+          if (gap === null) continue;
+          // 同档次里取最空的；差不多空（6px 以内）时取更贴岸的那一档，免得为一点点
+          // 差别把整列名字晃来晃去
+          if (!best || tier < best.tier || (tier === best.tier && gap > best.gap + 6)) best = { x, gap, tier };
+        }
+        return best ? best.x : null;
+      };
+      let lab = true;
+      let x0 = seek(gw, (ROW / 2) * PAD[rk(ev)]);
+      if (x0 === null) { lab = false; x0 = seek(rad * 2 + 2, rad + 1); }
+      if (x0 === null) {
+        if (rk(ev) > 1) continue;
+        x0 = bank === 'R' ? an.hi - rad * 2 - 2 : bank === 'L' ? an.lo : an.x - rad - 1;
+      }
+      const gwNow = lab ? gw : rad * 2 + 2;
+      // 标记在**外侧**(贴岸那一头)、名字向河心伸展——与两岸事件轨的引线同向
+      const mx = bank === 'R' && lab ? x0 + gwNow - rad : x0 + rad + 1;
+      const half = lab ? ROW / 2 : rad + 1;            // 登记的是实占，不是求得的清净
+      taken.push([x0, x0 + gwNow, ty - half, ty + half]);
+      const g = el('g', { class: 'river-evi' });
+      g.dataset.dyn = an.key || '';        // 空＝落在缝上（改朝换代或归属未定），布局自检用
+      // 形状分类、页色细边分图地:标记压在饱和的君主色块上，而河道本身正是用
+      // 同一套色板着色的——蓝点落在蓝河上就等于没画（见 views-lanes 的 evMark）
+      g.appendChild(evMark(ev.k, mx, ty, rad,
+        { class: 'mark ev-dot', stroke: 'var(--page)', 'stroke-width': 0.8 }));
+      if (lab) {
+        // 名字压在君主色块之上，故以页色描边作衬——与朝代名同一套写法。
+        // 贴右岸者名字右对齐(自河心向岸边收),两侧于是各成一列齐整的边
+        g.appendChild(el('text', {
+          x: bank === 'R' ? x0 + gwNow - rad * 2 - 3 : x0 + rad * 2 + 3, y: ty + 3.4,
+          'font-size': FS, fill: 'var(--text-1)', 'text-anchor': bank === 'R' ? 'end' : 'start',
+          stroke: 'var(--page)', 'stroke-width': 2.6, 'paint-order': 'stroke',
+          'pointer-events': 'none' }, txt));
+      }
+      const hit = el('rect', {
+        x: x0 - 3, y: ty - Math.max(half, 5.5), width: gwNow + 6, height: Math.max(half, 5.5) * 2,
+        fill: 'transparent', 'pointer-events': 'all', class: 'kp-hit ev-hit' });
+      hit.dataset.evi = String(EVENTS.indexOf(ev));
+      hoverable(hit, () => [
+        { color: `var(--ev-${ev.k})`, label: kind.label,
+          value: ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y) },
+        { label: '事件', value: ev.n },
+        ...(ev.yc ? [ev.yc] : []),
+        ...(an.key ? [] : ['画在河道之间的缝上：改朝换代本就发生在两条河之间；'
+          + '其余落在缝上的，是并存年代里归属尚未判定的，不占任何一条河。']),
+        '再点一下可读这条大事记的词条。',
+      ], () => ev.ya || ev.n);
+      g.appendChild(hit);
+      gEvents.appendChild(g);
+    }
+  }
+
   const wrap = h('div', { class: 'river-wrap' }, [svg]);
   host.appendChild(wrap);
+
+  // 触屏上锁定改**双击**:滚动两万多像素的长卷时指尖常擦到河面,单击即选中
+  // 会一路误标(用户实测)。首击仍有触屏悬停提示(hoverable 的 touch 路径)
+  // 托底,双击的意图性才配得上「锁定 + 链式点亮 + 详情卡」这一整套动作。
+  // 桌面鼠标无此误触面,保持单击。事件层同此规矩:单击显示名字、双击开知识卡。
+  const coarse = matchMedia('(pointer: coarse)');
+  let lastTap = { id: null, t: 0 };
+  const twiceOn = (id) => {
+    const now = performance.now();
+    const twice = lastTap.id === id && now - lastTap.t < 400;
+    lastTap = { id, t: now };
+    return twice;
+  };
 
   // 桌面两翼知识卡:上行左朝代、右皇帝,下行接住两岸事件轨(见 knowledge.js)
   const kClean = mountKnowledge(empNodes, wrap, evNodes);
   // 点事件:哪岸点的就落哪栏。左岸政事落左栏、右岸文教落右栏——
-  // 卡片正在它那条轨的下方,眼睛不必横跨整条河去找刚点的那件事
-  wrap.addEventListener('click', (e) => {
-    const hit = e.target.closest && e.target.closest('.ev-hit');
-    if (!hit || !kClean.showEvent) return;
-    const ev = EVENTS[Number(hit.dataset.evi)];
-    if (!ev) return;
+  // 卡片正在它那条轨的下方,眼睛不必横跨整条河去找刚点的那件事。
+  // 窄屏没有两翼,落到底部的手机单卡(一次只开一张)
+  const openEvent = (ev) => {
+    if (!kClean.showEvent) return;
+    if (kClean.soloMode && kClean.soloMode()) clearSel();   // 底部只容得下一张卡
     kClean.showEvent(evSpec(ev), LEFT_BANK.has(ev.k) ? 'left' : 'right');
     stampHash('ev', ev.n);
+  };
+  wrap.addEventListener('click', (e) => {
+    const hit = e.target.closest && e.target.closest('.ev-hit');
+    if (!hit) return;
+    const ev = EVENTS[Number(hit.dataset.evi)];
+    if (!ev) return;
+    e.stopPropagation();
+    if (coarse.matches && !twiceOn(`ev:${hit.dataset.evi}`)) return;
+    openEvent(ev);
   });
 
   // ── 纪年滑杆：仅本节占据视口时出现，贴左缘；拖动即跳到对应年份。
   // 两万像素的长卷里「翻到某一年」不该只能靠一路滚——滑杆就是这一节的目录。
   // 杆上的短横线是时代界标（秦汉/魏晋南北朝/…的分界）
   const scrub = h('div', { class: 'river-scrub' });
+  // 手柄常驻、**读数只在动的时候现身**:年份药丸是不透明的,又贴着左缘——
+  // 事件层贴岸排之后,左岸正是政事类事件的落脚处,一块常驻的白底就压在它们身上
+  // (用户实测:一个球看着像被裁了一半,底下还压着一个)。读数随滚动浮出、
+  // 停手一秒余即隐去:要看年份的时候它在,读河面的时候它不在。
   const thumb = h('div', { class: 'rs-thumb' });
+  const read = h('div', { class: 'rs-read' });
   const track = h('div', { class: 'rs-track' });
   // 干流微图:把本图唯一的核心变量 n(t) 的「=1」区间(天下一统)印上滑轨——
   // 滑杆既是目录,目录就该印出合分的节律。短于 5 年的 n=1 段不印:微段桥接
@@ -1120,7 +1342,15 @@ export function renderRiver(host, list, opts) {
     if (f > 0.02 && f < 0.98) scrub.appendChild(h('div', { class: 'rs-era', style: `top:${(f * 100).toFixed(2)}%` }));
   }
   scrub.appendChild(thumb);
+  scrub.appendChild(read);
   document.body.appendChild(scrub);
+  // 读数浮出、停手即隐:药丸不透明又贴左缘,常驻就一直压着左岸的事件
+  let readT = null;
+  const flashRead = () => {
+    read.classList.add('on');
+    if (readT) clearTimeout(readT);
+    readT = setTimeout(() => read.classList.remove('on'), 1300);
+  };
   const scrubTo = (clientY) => {
     const r = scrub.getBoundingClientRect();
     const f = Math.min(1, Math.max(0, (clientY - r.top) / r.height));
@@ -1170,12 +1400,14 @@ export function renderRiver(host, list, opts) {
   const clearSel = () => {
     selected = null;
     card.classList.remove('on');
+    document.body.classList.remove('river-card-on');
     for (const n of empNodes) n.node.classList.remove('dim', 'dim2', 'sel');
     for (const e2 of litEls) e2.setAttribute('opacity', e2.dataset.o0);
     litEls = [];
   };
   const select = (item) => {
     selected = item;
+    if (kClean.hideSolo) kClean.hideSolo();     // 底部只容得下一张卡:开这张即收那张
     const lv = chainOf(item.band.d.key);
     for (const n of empNodes) {
       const hop = lv.get(n.band.d.key);
@@ -1208,29 +1440,35 @@ export function renderRiver(host, list, opts) {
       ]))));
     const noteTxt = item.tip().find((r) => typeof r === 'string');
     if (noteTxt) card.appendChild(h('p', { class: 'rc-note muted small', text: noteTxt }));
+    // 窄屏此前根本弹不出知识卡(整个面板被 1100px 挡在门外)。这张卡给的是
+    // 本库的数据,词条摘要在手机单卡里,故留一个按钮换过去——两张不并存
+    if (kClean.soloMode && kClean.soloMode()) {
+      card.appendChild(h('button', { class: 'rc-more', type: 'button', text: '读词条 ↗',
+        onclick: () => { clearSel(); kClean.showEmperor(item); } }));
+    }
     card.appendChild(h('button', { class: 'rc-close', type: 'button', text: '✕', onclick: clearSel }));
     card.classList.add('on');
+    document.body.classList.add('river-card-on');
   };
-  // 触屏上锁定改**双击**:滚动两万多像素的长卷时指尖常擦到河面,单击即选中
-  // 会一路误标(用户实测)。首击仍有触屏悬停提示(hoverable 的 touch 路径)
-  // 托底,双击的意图性才配得上「锁定 + 链式点亮 + 详情卡」这一整套动作。
-  // 桌面鼠标无此误触面,保持单击。
-  const coarse = matchMedia('(pointer: coarse)');
-  let lastTap = { id: null, t: 0 };
   for (const n of empNodes) {
     n.node.addEventListener('click', (ev) => {
       ev.stopPropagation();
       stampHash('e', n.e.name || n.e.temple);
-      if (coarse.matches) {
-        const now = performance.now();
-        const twice = lastTap.id === n.e.id && now - lastTap.t < 400;
-        lastTap = { id: n.e.id, t: now };
-        if (!twice) return;
-      }
+      if (coarse.matches && !twiceOn(n.e.id)) return;
       select(n);
     });
   }
   svg.addEventListener('click', () => { if (selected) clearSel(); });
+
+  // ── 手势提示 ────────────────────────────────────────────────────────────
+  // 触屏上「单击出名字、双击开词条」是约定，不是常识——图上没有任何东西
+  // 在说这件事，读者点一下只看见一条转瞬即逝的提示，多半就以为到此为止了。
+  // 提示占的正是卡片那块地方：**卡在就不提示，卡不在才提示**，于是它既是
+  // 说明也是那块地方的占位，读者一开卡就明白提示说的是什么。
+  // 只在触屏出现：鼠标那边本来就是单击开卡，说「双击」反而是错的。
+  const hint = coarse.matches
+    ? h('div', { class: 'river-hint', text: '点一下看名字 · 双击读词条' }) : null;
+  if (hint) document.body.appendChild(hint);
 
   // ── 滚动时的标签吸附 ────────────────────────────────────────────────────
   // 页面自身在滚，故监听 window 而非容器；仅当区间跨过视口上缘时才吸附，
@@ -1244,13 +1482,19 @@ export function renderRiver(host, list, opts) {
     // 纪年滑杆：本节跨过视口中线才出现，滑块标出视口中部对应的年份
     const inView = box.top < innerHeight * 0.5 && box.bottom > innerHeight * 0.5;
     scrub.classList.toggle('on', inView);
+    // 有没有卡在场交给 CSS 判（body 上的 kp-solo-on / river-card-on）：
+    // 卡是点开的、不是滚出来的，用类名比在滚动回调里轮询干净
+    if (hint) hint.classList.toggle('on', inView);
     if (inView) {
       const tMid = Math.min(t1, Math.max(t0, y.invert(-box.top + innerHeight * 0.45)));
-      thumb.style.top = `${(((tMid - t0) / (t1 - t0)) * 100).toFixed(2)}%`;
+      const pct = `${(((tMid - t0) / (t1 - t0)) * 100).toFixed(2)}%`;
+      thumb.style.top = pct;
+      read.style.top = pct;
+      flashRead();
       // 浮标带时代名:界标画在杆上却匿名,补名是把既有元素的语义读完。
       // ERAS 有重叠期(960–979 两带并置),首匹配即钦定的主叙事(见 dynasties.js)
       const era = ERAS.find((e2) => tMid >= e2.s && tMid < e2.e);
-      thumb.textContent = era ? `${fmtYearAxis(tMid)} · ${era.name}` : fmtYearAxis(tMid);
+      read.textContent = era ? `${fmtYearAxis(tMid)} · ${era.name}` : fmtYearAxis(tMid);
     }
     for (const n of labelNodes) {
       const vis = n.y1 > top - 40 && n.y0 < bottom;
@@ -1278,7 +1522,13 @@ export function renderRiver(host, list, opts) {
   // 视图挂在 window 与 body 上的东西（滚动监听、固定卡片）在重绘或切走时必须撤：
   // scroll 监听不撤会随每次筛选累积一个引用死 DOM 的监听器，
   // 卡片不撤会留在泳道视图上。app.js 的 panorama render 包装器每次渲染前调用此钩子。
-  host.__riverCleanup = () => { card.remove(); scrub.remove(); removeEventListener('scroll', onScroll); kClean(); };
+  host.__riverCleanup = () => {
+    card.remove(); scrub.remove(); if (hint) hint.remove();
+    if (readT) clearTimeout(readT);
+    document.body.classList.remove('river-card-on');
+    removeEventListener('scroll', onScroll);
+    kClean();
+  };
 
   // 定位接口:与横向泳道同名同义,由搜索与深链调用(见 js/search.js)
   const goY = (t) => {
@@ -1301,7 +1551,15 @@ export function renderRiver(host, list, opts) {
       goY((b.s + b.e) / 2);
       return true;
     },
-    event() { return false; },      // 事件层目前只在泳道视图
+    // 搜索与深链(#ev=安史之乱)落到事件:跳到那一年并开卡。两个视图同名同义,
+    // 调用方只说「去哪儿」——此前河流一侧只能退回按年份跳
+    event(i) {
+      const ev = EVENTS[i];
+      if (!ev) return false;
+      goY(ev.y);
+      openEvent(ev);
+      return true;
+    },
   };
 
   // ── 图例与说明 ──────────────────────────────────────────────────────────
@@ -1319,6 +1577,18 @@ export function renderRiver(host, list, opts) {
     + ' 宽屏两翼另有知识卡——左翼是当前时段的主导朝代、右翼是视口内的名君，'
     + '随滚动自动更替；点选任一君主则两卡联动钉住（右卡其人、左卡其朝）。'
     + '摘要实时取自中文维基百科，并附全文、百度百科与相关视频的直达链接。' }));
+  // 事件层的读法与筛选:窄屏事件在河道里,宽屏在两岸
+  if (showEvents) {
+    host.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text: EV_STRIP > 0
+      ? '两岸的事件轨：左岸政事（战事、民变、灾疫、外交、立制），右岸文教（著述、科技、遗存）。'
+        + '点一条即在卡片里读它的词条。'
+      : '事件画在河道里——事件本就发生在这条河上。落在河道之间的缝上的，'
+        + '是改朝换代（本就发生在两条河之间）与并存年代里归属尚未判定的，两者都不占任何一条河。'
+        + '点一下显示名字，再点一下读词条。标记按类别取**形状**与颜色（见下方色标）：'
+        + '尖头与十字、方块、菱形、圆点＝那一年发生的事；扁条、屋形、六边＝起讫历时数百年者（图上只标起点）。' }));
+    // 治世·中兴不列:它在泳道里是皇帝格子外的虚线外套,河流没有那一层
+    for (const n of eventLegend(opts, { skip: ['era'] })) host.appendChild(n);
+  }
   // 按朝代配色时不放图例：65 个色块的对照表没人查得动，何况每条河道
   // 都直接标着朝代名，颜色只是辅助通道。仅两色语义模式保留两行图例
   if (!byDynasty) {
