@@ -35,7 +35,7 @@
 import { el, h, linear, hoverable, legend, tableView, notes, fmtYearAxis, fmt1, textWidth } from './charts.js';
 import { DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS } from './dynasties.js';
-import { EVENTS, EVENT_KINDS } from './events.js';
+import { EVENTS, EVENT_KINDS, LEFT_BANK } from './events.js';
 import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName } from './views-lanes.js';
 import { mountKnowledge } from './knowledge.js';
@@ -804,7 +804,6 @@ export function renderRiver(host, list, opts) {
   // 分法取 176:120 而非「兵祸/文治」的 72:224——后者更好听,但本库有一百一十二
   // 条文化类(我们有意补进的文学与科技),右岸会挤到掉名字而左岸空着一半。
   if (EV_STRIP > 0) {
-    const LEFT_K = new Set(['war', 'rev', 'dis', 'out', 'gov']);
     const trW = new Set(Object.values(TRANSITIONS).map((t) => t.w));
     const evOff = new Set(opts.evOff || []);
     const FS = 10.5, ROW = 12.5;
@@ -818,7 +817,7 @@ export function renderRiver(host, list, opts) {
       const ty = y(ev.y);
       if (ty < -20 || ty > H + 20) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
-      const left = LEFT_K.has(ev.k);
+      const left = LEFT_BANK.has(ev.k);
       const bank = left ? RX0 : RX1;
       const dir = left ? -1 : 1;
       const rad = R[rk(ev)];
@@ -1053,8 +1052,24 @@ export function renderRiver(host, list, opts) {
   const wrap = h('div', { class: 'river-wrap' }, [svg]);
   host.appendChild(wrap);
 
-  // 桌面两翼知识卡:左翼朝代、右翼皇帝,实时拉取维基摘要(见 knowledge.js)
+  // 桌面两翼知识卡:上行左朝代、右皇帝,下行接住两岸事件轨(见 knowledge.js)
   const kClean = mountKnowledge(empNodes, wrap);
+  // 点事件:哪岸点的就落哪栏。左岸政事落左栏、右岸文教落右栏——
+  // 卡片正在它那条轨的下方,眼睛不必横跨整条河去找刚点的那件事
+  wrap.addEventListener('click', (e) => {
+    const hit = e.target.closest && e.target.closest('.ev-hit');
+    if (!hit || !kClean.showEvent) return;
+    const ev = EVENTS[Number(hit.dataset.evi)];
+    if (!ev) return;
+    const kind = EVENT_KINDS[ev.k] || {};
+    const span = ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y);
+    kClean.showEvent({
+      id: `evt:${ev.w}`, head: `${span} · ${kind.label || '大事'}`,
+      title: ev.w, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
+      q: `${ev.n} 历史`, yt: true,
+    }, LEFT_BANK.has(ev.k) ? 'left' : 'right');
+    stampHash('ev', ev.n);
+  });
 
   // ── 纪年滑杆：仅本节占据视口时出现，贴左缘；拖动即跳到对应年份。
   // 两万像素的长卷里「翻到某一年」不该只能靠一路滚——滑杆就是这一节的目录。

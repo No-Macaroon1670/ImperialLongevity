@@ -348,6 +348,18 @@ li { margin-bottom: .35em; }
 @media (max-width: 1099px) { .kp-left, .kp-right { display: none !important; } }
 @media (max-width: 1279px) { .kp-left { display: none !important; } }
 
+/* 两栏两行:上行朝代／皇帝,下行接住两岸事件轨点开的那件事。
+   只在同侧两张都开着时才分上下——单开一张仍居中,免得半屏空着晃眼 */
+body.kp-stk-l .kp-left,
+body.kp-stk-r .kp-right { top: 13vh; transform: none; max-height: 37vh; }
+body.kp-stk-l .kp-left-ev,
+body.kp-stk-r .kp-right-ev { top: 53vh; transform: none; max-height: 37vh; }
+body.kp-stk-l .kp-left.on,
+body.kp-stk-r .kp-right.on,
+body.kp-stk-l .kp-left-ev.on,
+body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
+@keyframes kp-in-flat { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
 /* 事件层的六个类别色:全部取自既有槽位,不新造色相。
    战事＝危险色、民变＝橙、外患＝紫、制度＝蓝、文化＝绿、灾疫＝灰 */
 :root {

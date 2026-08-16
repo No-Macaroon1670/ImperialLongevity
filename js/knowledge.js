@@ -189,21 +189,34 @@ async function fillCard(card, spec) {
 export function mountKnowledge(empNodes, wrap) {
   const mq = matchMedia('(min-width: 1100px)');
   const mqLeft = matchMedia('(min-width: 1280px)');
-  const cards = { dyn: mkCard('kp-left'), emp: mkCard('kp-right') };
-  document.body.appendChild(cards.dyn.el);
-  document.body.appendChild(cards.emp.el);
-  const pinned = { dyn: null, emp: null };
-  const dismissed = { dyn: new Set(), emp: new Set() };
+  // 四张卡,两栏两行:上行仍是「左朝代、右皇帝」,下行接住两岸的事件轨——
+  // 左岸政事的落左栏,右岸文教的落右栏,卡片就在它那条轨的正下方,
+  // 眼睛不必横跨整条河去找刚点的那件事。
+  const cards = {
+    dyn: mkCard('kp-left'), emp: mkCard('kp-right'),
+    evL: mkCard('kp-left kp-ev kp-left-ev'), evR: mkCard('kp-right kp-ev kp-right-ev'),
+  };
+  const ALL = ['dyn', 'emp', 'evL', 'evR'];
+  for (const k of ALL) document.body.appendChild(cards[k].el);
+  const pinned = { dyn: null, emp: null, evL: null, evR: null };
+  const dismissed = { dyn: new Set(), emp: new Set(), evL: new Set(), evR: new Set() };
+  // 同侧两张都开着才叠成上下两行;只开一张时仍居中,免得半屏空着
+  const syncStack = () => {
+    const on = (k) => cards[k].el.classList.contains('on');
+    document.body.classList.toggle('kp-stk-l', on('dyn') && on('evL'));
+    document.body.classList.toggle('kp-stk-r', on('emp') && on('evR'));
+  };
 
   const hide = (which) => {
     cards[which].el.classList.remove('on');
     cards[which].el.dataset.key = '';
   };
-  for (const which of ['dyn', 'emp']) {
+  for (const which of ALL) {
     cards[which].close.addEventListener('click', () => {
       if (cards[which].el.dataset.key) dismissed[which].add(cards[which].el.dataset.key);
       pinned[which] = null;
       hide(which);
+      syncStack();
     });
   }
 
@@ -265,19 +278,32 @@ export function mountKnowledge(empNodes, wrap) {
       if (best) fillCard(cards.dyn, dynSpec(best));
       else hide('dyn');
     } else if (!pinned.dyn && !mqLeft.matches) hide('dyn');
+    syncStack();
   };
   const onScroll = () => { if (timer) clearTimeout(timer); timer = setTimeout(update, 220); };
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onScroll, { passive: true });
   update();
 
-  return () => {
+  const cleanup = () => {
     removeEventListener('scroll', onScroll);
     removeEventListener('resize', onScroll);
     if (timer) clearTimeout(timer);
-    cards.dyn.el.remove();
-    cards.emp.el.remove();
+    for (const k of ALL) cards[k].el.remove();
+    document.body.classList.remove('kp-stk-l', 'kp-stk-r');
   };
+  // 点两岸事件轨:哪岸点的就落哪栏,并钉住。事件卡不随滚动自动换——
+  // 四张卡都自己动的话,滚一屏就成了走马灯。
+  cleanup.showEvent = (spec, side) => {
+    const which = side === 'left' ? 'evL' : 'evR';
+    if (!mq.matches || (which === 'evL' && !mqLeft.matches)) return false;
+    pinned[which] = spec.id;
+    dismissed[which].delete(spec.id);
+    fillCard(cards[which], spec);
+    syncStack();
+    return true;
+  };
+  return cleanup;
 }
 
 /**
