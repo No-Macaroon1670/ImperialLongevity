@@ -810,12 +810,25 @@ export function renderRiver(host, list, opts) {
     const FS = 10.5, ROW = 12.5;
     const R = { 1: 4, 2: 3, 3: 2.2 };
     const rk = (e) => e.r || 2;
+    // 同年错开,与泳道图同理(见 views-lanes.js 的长注)。竖河里时间是纵向的,
+    // 故沿河岸上下摊开;同年但分属两岸的本来就不撞,只在同岸内分组。
+    const sameYear = new Map();
+    for (const e2 of EVENTS) {
+      if (trW.has(e2.w) || evOff.has(e2.k) || e2.k === 'era') continue;
+      const key = `${e2.y}|${LEFT_BANK.has(e2.k) ? 'L' : 'R'}`;
+      if (!sameYear.has(key)) sameYear.set(key, []);
+      sameYear.get(key).push(e2);
+    }
+    const fanOf = (e2) => {
+      const g = sameYear.get(`${e2.y}|${LEFT_BANK.has(e2.k) ? 'L' : 'R'}`);
+      return g && g.length > 1 ? (g.indexOf(e2) - (g.length - 1) / 2) * 6 : 0;
+    };
     const taken = { L: [], R: [] };
     const maxCh = Math.max(3, Math.floor((EV_STRIP - 22) / FS));
     // 分量高的先挑位子(同泳道图),缩放小的年代只留一等的名字
     for (const ev of [...EVENTS].sort((a, b) => rk(a) - rk(b))) {
       if (trW.has(ev.w) || evOff.has(ev.k) || ev.k === 'era') continue;
-      const ty = y(ev.y);
+      const ty = y(ev.y) + fanOf(ev);
       if (ty < -20 || ty > H + 20) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
       const left = LEFT_BANK.has(ev.k);

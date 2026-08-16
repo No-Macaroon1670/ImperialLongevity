@@ -345,6 +345,21 @@ export function renderLaneTimeline(host, list, opts) {
     // 现在一等先挑位子,二等次之,三等垫底(r 见 js/events.js:按维基三项指标定)。
     // 画的次序反过来:三等先落笔,一等最后压顶,免得小点盖住大点。
     const rk = (ev) => ev.r || 2;
+    // **同年错开**。此前同一年的几条事件坐标完全相同,命中区整块重叠,
+    // 于是每年只有最后画上去的那条点得开——用户点「开凿大运河」,
+    // 弹出来的是同年的「赵州桥建成」。实测 129 条事件挤在 59 个年份上
+    // (1900 年有四条),即四分之一的事件层点不开,且看见的名字与点开的常非一物。
+    // 按年分组横向摊开,标准档 7px 合半年,肉眼几乎看不出,但各自可点、也各自可留名。
+    const sameYear = new Map();
+    for (const e2 of EVENTS) {
+      if (trW.has(e2.w) || evOff.has(e2.k) || e2.k === 'era') continue;
+      if (!sameYear.has(e2.y)) sameYear.set(e2.y, []);
+      sameYear.get(e2.y).push(e2);
+    }
+    const fanOf = (e2) => {
+      const g = sameYear.get(e2.y);
+      return g && g.length > 1 ? (g.indexOf(e2) - (g.length - 1) / 2) * 7 : 0;
+    };
     const gEv = [3, 2, 1].map((r) => { const g = el('g', { class: `ev-tier ev-r${r}` }); head.appendChild(g); return [r, g]; });
     const layer = Object.fromEntries(gEv);
     // 缩得越小,能读的名字越少:紧凑档只让一等留名,舒展档三等也放出来。
@@ -354,7 +369,7 @@ export function renderLaneTimeline(host, list, opts) {
     for (const ev of [...EVENTS].sort((a, b) => rk(a) - rk(b))) {
       // era 已改画成皇帝格子的外套,不占事件轨
       if (trW.has(ev.w) || evOff.has(ev.k) || ev.k === 'era') continue;
-      const ex = x(ev.y);
+      const ex = x(ev.y) + fanOf(ev);
       if (ex < PAD_L - 40 || ex > W - PAD_L + 40) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
       const isSpan = !!kind.span;
