@@ -148,8 +148,8 @@ function fetchSummary(title) {
 export function evSpec(ev) {
   const span = ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y);
   return {
-    id: `evt:${ev.w}`, head: `${span} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
-    title: ev.w, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
+    id: `evt:${ev.w}${ev.ws || ''}`, head: `${span} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
+    title: ev.w, sec: ev.ws, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
     q: `${ev.n} 历史`, yt: true,
   };
 }
@@ -219,7 +219,10 @@ async function fillCard(card, spec) {
   card.title.textContent = spec.display || spec.title;
   card.ext.textContent = '…';
   card.img.style.display = 'none';
-  card.wiki.href = `https://zh.wikipedia.org/wiki/${encodeURIComponent(spec.title)}`;
+  // 有些事**没有独立条目**,只是某篇通史里的一节(东汉末那串大疫见《中國瘟疫史·漢朝》)。
+  // 与其因此不收,不如链到那一节:摘要仍取母条目(泛些,但对得上题),链接直达段落。
+  card.wiki.href = `https://zh.wikipedia.org/wiki/${encodeURIComponent(spec.title)}`
+    + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
   card.baidu.href = `https://baike.baidu.com/item/${encodeURIComponent(spec.baidu || spec.title)}`;
   card.yt.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(spec.q)}`;
   card.yt.style.display = spec.yt ? '' : 'none';
@@ -230,7 +233,9 @@ async function fillCard(card, spec) {
     card.title.textContent = spec.display || s.title || spec.title;
     card.ext.textContent = s.extract;
     if (s.thumbnail && s.thumbnail.source) { card.img.src = s.thumbnail.source; card.img.style.display = ''; }
-    if (s.content_urls && s.content_urls.desktop) card.wiki.href = s.content_urls.desktop.page;
+    if (s.content_urls && s.content_urls.desktop) {
+      card.wiki.href = s.content_urls.desktop.page + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
+    }
   } else {
     card.ext.textContent = '未能实时拉取维基摘要(可能无词条或网络受限),下方链接仍可直达。';
   }

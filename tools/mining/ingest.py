@@ -39,6 +39,8 @@ for path in sys.argv[1:]:
         if not r.get("w") or not r.get("n"):
             print("  ! 缺 n 或 w,跳过:%r" % r, file=sys.stderr); continue
         e = {"y": to_astro(r["y"]), "k": r["k"], "n": r["n"], "w": r["w"]}
+        if r.get("ws"):
+            e["ws"] = r["ws"]          # 段落锚点:该事无独立条目,链到某条目的某一节
         if r.get("y2"):
             e["y2"] = to_astro(r["y2"])
             if e["y2"] < e["y"]:

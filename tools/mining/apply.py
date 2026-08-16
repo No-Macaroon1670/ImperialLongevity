@@ -74,7 +74,9 @@ for e in evs:
     if p and p != "?":
         seen.setdefault(p[0], e)
 
-for fn in ["famous.json", "gaps2.json", "heritage.json"]:
+# 只读**已换算过**的批次(ingest.py 的产物)。famous/gaps2/heritage 三个旧暂存
+# 文件已并完,且用的是旧年份约定,再读它们会复活手工删掉的条目、并带错年份进来
+for fn in ["dis_conv.json", "dis2_conv.json"]:
     for c in json.load(io.open(os.path.join(HERE, fn), encoding="utf-8")):
         p = pid(c["w"])
         if p == "?":
@@ -90,7 +92,7 @@ json.dump(cache, io.open(CACHE, "w", encoding="utf-8"), ensure_ascii=False, inde
 
 # ── 三、写回 ────────────────────────────────────────────────────────────────
 evs.sort(key=lambda e: (e["y"], e.get("y2", e["y"]), e["n"]))
-KEYS = ["y", "y2", "k", "n", "w", "b", "d", "ya", "yc", "u", "r"]
+KEYS = ["y", "y2", "k", "n", "w", "ws", "b", "d", "ya", "yc", "u", "r"]
 lines = []
 for e in evs:
     parts = []
