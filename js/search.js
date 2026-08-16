@@ -38,9 +38,11 @@ function buildIndex() {
   }
   EVENTS.forEach((ev, i) => {
     idx.push({
-      kind: 'ev', id: i, label: ev.n,
+      kind: 'ev', id: i, label: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
       sub: `大事 · ${ev.y < 0 ? `前${-ev.y}` : ev.y}${ev.y2 ? `–${ev.y2}` : ''}`,
-      keys: [ev.n, ev.w].map(norm), y: ev.y,
+      // 雅名也要能搜:图上写的是「破釜沉舟」,搜这四个字却找不到巨鹿之战,
+      // 等于把刚教给读者的名字又藏起来
+      keys: [ev.n, ev.w, ev.ya].filter(Boolean).map(norm), y: ev.y, raw: ev.n,
     });
   });
   return idx;
@@ -75,7 +77,9 @@ const hashOf = (item) => (
   item.kind === 'year' ? `#y=${item.id}`
     : item.kind === 'emp' ? `#e=${encodeURIComponent(item.label.split('·').pop())}`
       : item.kind === 'dyn' ? `#d=${item.id}`
-        : `#ev=${encodeURIComponent(item.label)}`);
+        // 深链用本名不用显示名:显示名带着雅名与括号(「破釜沉舟（巨鹿之战）」),
+        // 拿它做链接,回来时按索引键一个也对不上
+        : `#ev=${encodeURIComponent(item.raw || item.label)}`);
 
 export function mountSearch(sectionEl, hostOf) {
   const idx = buildIndex();
