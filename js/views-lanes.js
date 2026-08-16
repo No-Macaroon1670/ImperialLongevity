@@ -137,7 +137,7 @@ export function renderLaneTimeline(host, list, opts) {
   const ink = resolveInk(host);
 
   const showEvents = opts.laneEvents !== false;
-  const EV_H = showEvents ? 30 : 0;      // 事件轨:贴在表头之下、泳道之上(含治世时段条)
+  const EV_H = showEvents ? 76 : 0;      // 事件轨:贴在表头之下、泳道之上(名字竖写,故要高)
   const LANE_H = 48, LABEL_H = 15, TRACK_Y = 18, TRACK_H = 24, HEAD_H = 54 + EV_H;
   const LABEL_FS = 12.5, SEG_FS = 10;
 
@@ -329,51 +329,50 @@ export function renderLaneTimeline(host, list, opts) {
   // 跨年事件(安史之乱 755–763)画成一段横条,点标记即在知识卡里读词条。
   // 放在表头内而非泳道里:它随表头吸顶,滚到哪一段都看得见,且不占泳道行数。
   if (showEvents) {
-    const evY = 53 + EV_H / 2 + 1;
-    const placed = [];                       // 已占用的横向区间,用于避让重叠
-    // 运行时护栏:与承继细丝同条目的事件不画——那件事细丝的刻痕已经能点开,
-    // 画两遍只会让同一件事在图上出现两次(用户实测:太平天国既是政权又是事件)
+    const evTop = 55;                        // 标记行
+    const LAB_TOP = evTop + 8;               // 竖排名字自此起
+    const LAB_FS = 9, LAB_DY = 9.4, LAB_MAX = 6;
+    const slots = [];
     const trW = new Set(Object.values(TRANSITIONS).map((t) => t.w));
     const evOff = new Set(opts.evOff || []);
     for (const ev of EVENTS) {
+      // era 已改画成皇帝格子的外套,不占事件轨
       if (trW.has(ev.w) || evOff.has(ev.k) || ev.k === 'era') continue;
       const ex = x(ev.y);
       if (ex < PAD_L - 40 || ex > W - PAD_L + 40) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
-      const label = ev.n;
-      const lw = textW(label, 9.5);
-      // 标记恒画;标签只在不与前一个相撞时才写(密集期宁可只留标记,靠悬停读名)
-      let ty = evY - 8;
-      const exEnd = ev.y2 ? x(ev.y2) : ex;
-      const room = !placed.some((iv) => ex - 4 < iv.z && iv.a < ex + lw + 8);
-      if (kind.span) {
-        // 治世／中兴是时段而非时点,且是后世史书的**追认**而非当时建制:
-        // 画成通长的浅底横条(不是点也不是线),名字写在条内,与事实类事件一眼可分
-        head.appendChild(el('rect', { x: ex, y: 53 + 2, width: Math.max(3, exEnd - ex), height: EV_H - 5,
-          rx: 3, fill: `var(--ev-${ev.k})`, opacity: .16 }));
-        head.appendChild(el('rect', { x: ex, y: 53 + 2, width: 2, height: EV_H - 5, fill: `var(--ev-${ev.k})`, opacity: .5 }));
-      } else if (ev.y2 && exEnd - ex > 3) {
-        head.appendChild(el('rect', { x: ex, y: evY - 3.5, width: exEnd - ex, height: 3,
-          rx: 1.5, fill: `var(--ev-${ev.k})`, opacity: .5 }));
+      const isSpan = !!kind.span;
+      // **百年以上的制度只标起点**:租庸调行用一百五十余年、遣唐使往还二百六十年,
+      // 画成长条必然与邻近的条与点互撞(用户实测),而一根横贯的长杠也说不清
+      // 「这一百五十年里发生了什么」。跨度交给悬停与卡片去讲——
+      // 图上不硬画我们本就画不好的东西。起点用方块、时点用圆点,以示区别
+      const dot = isSpan
+        ? el('rect', { x: ex - 3.4, y: evTop - 3.4, width: 6.8, height: 6.8, rx: 1.4,
+            fill: `var(--ev-${ev.k})`, class: 'mark ev-dot' })
+        : el('circle', { cx: ex, cy: evTop, r: 3.2, fill: `var(--ev-${ev.k})`, class: 'mark ev-dot' });
+      dot.dataset.evN = ev.n;
+      head.appendChild(dot);
+      // 名字竖写:汉字本来的排法,横向只占一个字宽,于是几乎不再互相挤——
+      // 横排时六个字要六十余像素,密集处只能靠悬停读名
+      const room = !slots.some((sx) => Math.abs(sx - ex) < 11);
+      if (room) {
+        const nm = [...ev.n];
+        const shown = nm.length > LAB_MAX ? nm.slice(0, LAB_MAX - 1).concat('…') : nm;
+        const t2 = el('text', { x: ex, y: LAB_TOP, 'font-size': LAB_FS, 'text-anchor': 'middle',
+          fill: 'var(--text-2)', 'pointer-events': 'none' });
+        shown.forEach((c, i) => t2.appendChild(el('tspan', { x: ex, dy: i ? LAB_DY : 0 }, c)));
+        head.appendChild(t2);
+        slots.push(ex);
       }
-      const dot = kind.span ? null : el('circle', { cx: ex, cy: evY - 2, r: 3.2, fill: `var(--ev-${ev.k})`,
-        class: 'mark ev-dot', 'data-ev-n': label });
-      const hit = el('rect', { x: kind.span ? ex : ex - 7, y: 53,
-        width: kind.span ? Math.max(14, exEnd - ex) : 14, height: EV_H, fill: 'transparent',
-        'pointer-events': 'all', class: 'kp-hit ev-hit' });
+      const hit = el('rect', { x: ex - 6, y: evTop - 8, width: 12, height: EV_H - 4,
+        fill: 'transparent', 'pointer-events': 'all', class: 'kp-hit ev-hit' });
       hit.dataset.evi = String(EVENTS.indexOf(ev));
       hoverable(hit, () => [
         { color: `var(--ev-${ev.k})`, value: ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y), label: kind.label },
-        { label: '事件', value: label },
+        { label: '事件', value: ev.n },
+        ...(isSpan ? ['图上只标起点：这类制度或交流延续百年以上，画成长条会与邻近事件互撞，跨度见上方年份。'] : []),
         '点它可在右侧卡片读这条大事记的词条。',
-      ], () => label);
-      if (dot) head.appendChild(dot);
-      // 时段条的名字写在条内(有地方就写),时点事件的名字写在点右侧
-      if (kind.span ? (exEnd - ex > lw + 10) : room) {
-        head.appendChild(el('text', { x: ex + 5, y: kind.span ? evY + 1 : ty + 1, 'font-size': 9.5,
-          fill: kind.span ? 'var(--text-2)' : 'var(--text-2)', 'pointer-events': 'none' }, label));
-        if (!kind.span) placed.push({ a: ex, z: ex + lw + 8 });
-      }
+      ], () => ev.n);
       head.appendChild(hit);
     }
   }
@@ -527,6 +526,9 @@ export function renderLaneTimeline(host, list, opts) {
         gTop.appendChild(el('text', {
           x: widest.x + 5, y: widest.y + widest.h / 2 + SEG_FS * 0.36, 'font-size': SEG_FS,
           fill: ink[cvar] === 'dark' ? 'var(--text-1)' : 'var(--surface-1)',
+          // 名字不吃指针:否则点在「太宗」二字上既选不中太宗,又被委派监听
+          // 当成点了空白(丝散、卡不开)
+          'pointer-events': 'none',
         }, nm));
       }
     }
@@ -565,22 +567,33 @@ export function renderLaneTimeline(host, list, opts) {
         fill: 'none', stroke: 'var(--ev-era)', 'stroke-width': 1.4, 'stroke-dasharray': '4 2.5',
         opacity: .85, class: 'mark era-coat',
       });
-      coat.dataset.evi = String(EVENTS.indexOf(ev));
-      hoverable(coat, () => [
+      gEra.appendChild(coat);
+      // 命中环:fill:none 的框只有 1.4px 描边可点(用户实测「框对但点不着」)。
+      // 沿框再画一圈**向外扩**的透明粗描边,环几乎全在框外——既好点,
+      // 又不抢走框内君主格子自己的点选
+      const coatHit = el('rect', {
+        x: ex0 - 8, y: y0 + TRACK_Y - 10, width: ex1 - ex0 + 16, height: TRACK_H + 20, rx: 9,
+        fill: 'none', stroke: 'transparent', 'stroke-width': 14, 'pointer-events': 'stroke',
+        class: 'kp-hit era-coat',
+      });
+      coatHit.dataset.evi = String(EVENTS.indexOf(ev));
+      hoverable(coatHit, () => [
         { color: 'var(--ev-era)', value: `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}`, label: '治世·中兴' },
         { label: '史称', value: ev.n },
         { label: '所属', value: best.d.name },
         '后世史书对这一段的追认，非当时建制；外框圈出的正是被追认的那几位君主。点它可读词条。',
       ], () => ev.n);
-      gEra.appendChild(coat);
-      // 名字压在外框上缘,自带底色晕圈以免与君主名打架
+      gEra.appendChild(coatHit);
+      // 名字压在外框上缘,自带底色晕圈以免与君主名打架;名字本身也可点
       const lw = textW(ev.n, 9.5);
       if (ex1 - ex0 > lw + 10) {
-        gEra.appendChild(el('text', {
+        const lab = el('text', {
           x: (ex0 + ex1) / 2 - lw / 2, y: y0 + TRACK_Y - 6, 'font-size': 9.5,
-          fill: 'var(--ev-era)', 'pointer-events': 'none',
-          stroke: 'var(--page)', 'stroke-width': 3, 'paint-order': 'stroke',
-        }, ev.n));
+          fill: 'var(--ev-era)', stroke: 'var(--page)', 'stroke-width': 3, 'paint-order': 'stroke',
+          class: 'kp-hit era-coat',
+        }, ev.n);
+        lab.dataset.evi = String(EVENTS.indexOf(ev));
+        gEra.appendChild(lab);
       }
     }
     gTop.appendChild(gEra);
