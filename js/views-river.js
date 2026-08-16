@@ -34,7 +34,8 @@
 //      与「安全起滑区」。触屏没有悬停，点中君主即高亮、详情进底部固定卡片。
 import { el, h, linear, hoverable, legend, tableView, notes, fmtYearAxis, fmt1, textWidth } from './charts.js';
 import { DYN_STATS } from './data.js';
-import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP } from './dynasties.js';
+import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS } from './dynasties.js';
+import { EVENTS, EVENT_KINDS } from './events.js';
 import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName } from './views-lanes.js';
 import { mountKnowledge } from './knowledge.js';
@@ -722,7 +723,21 @@ export function renderRiver(host, list, opts) {
   const t1 = Math.max(...bands.map((b) => b.e)) + 4;
   const H = Math.round((t1 - t0) * pxYear);
   const y = linear([t0, t1], [0, H]);
-  const RX0 = GUTTER, RX1 = W - 6;
+  // ── 两岸的事件轨 ────────────────────────────────────────────────────────
+  // 竖河远比横轴适合装事件:同样是密集的一个十年,横轴上只有一百四十像素要塞
+  // 十条名字,竖河里那是**一百四十像素的高**,一条名字才占十六——于是名字可以
+  // 横写(汉字本来的读法),也几乎不必互相让位。
+  // 代价是河面要让出两条边栏。窄到一定程度就不值:十六国九股并流时,
+  // 河宽每让出一百像素,每股就少十一像素——名字先挤不下的是河里,不是岸上。
+  // 故设河宽下限,让不出边栏时就不设边栏(改由 setupNarrowEvents 走另一套排法)。
+  const showEvents = opts.laneEvents !== false;
+  const BAND_MIN = 340;                    // 河宽下限:低于此不再割边栏
+  const STRIP_MIN = 70;                    // 边栏下限:窄于此写不下名字
+  // 要么给足,要么不给:三四十像素的边栏一个字都摆不下,却照样从河面上割走
+  // 八十像素——那是两头落空。宽度不够时边栏归零,河面吃满(窄屏另有排法)。
+  const stripRaw = Math.floor((W - GUTTER - 6 - BAND_MIN) / 2);
+  const EV_STRIP = showEvents && stripRaw >= STRIP_MIN ? Math.min(150, stripRaw) : 0;
+  const RX0 = GUTTER + EV_STRIP, RX1 = W - 6 - EV_STRIP;
   const tau = TRANS_PX / pxYear;
 
   const { slices, ordered, rank, C } = layoutChannels(bands, RX0, RX1);
@@ -758,6 +773,7 @@ export function renderRiver(host, list, opts) {
   // 因此新朝的预告细流（先于建国张开的淡色）只会显现在缝隙与河床里，
   // 绝不会浮在邻河的君主色块之上
   const gBeds = el('g'), gStrips = el('g'), gEmps = el('g'), gLabels = el('g');
+  const gEvents = el('g', { class: 'river-ev' });
 
   // ── 时代界线：只画一条细线，不再交替填充底色——灰条纹的语义太稀薄
   //（用户实测会把它误读成某种标记），且与河床的淡色（预告楔、尾迹、空档）混淆。
@@ -776,6 +792,70 @@ export function renderRiver(host, list, opts) {
       fmtYearAxis(t)));
   }
   svg.appendChild(gBeds); svg.appendChild(gStrips); svg.appendChild(gEmps); svg.appendChild(gLabels);
+  svg.appendChild(gEvents);
+
+  // ── 两岸事件轨 ──────────────────────────────────────────────────────────
+  // **按性质分岸**,不为排版而左右交替:
+  //   左岸政事——战事、民变、灾疫、外交、立制:朝廷做的事与遭的事
+  //   右岸文教——著述、科技、学派:这个文明留下来的东西
+  // 碰撞因此减半是顺带的好处,要紧的是两岸的疏密自己会说话:唐末左岸挤满而
+  // 右岸空落,北宋右岸大放而左岸尽是败绩。若只为把标签分开而交替左右,
+  // 这层意思就白丢了。
+  // 分法取 176:120 而非「兵祸/文治」的 72:224——后者更好听,但本库有一百一十二
+  // 条文化类(我们有意补进的文学与科技),右岸会挤到掉名字而左岸空着一半。
+  if (EV_STRIP > 0) {
+    const LEFT_K = new Set(['war', 'rev', 'dis', 'out', 'gov']);
+    const trW = new Set(Object.values(TRANSITIONS).map((t) => t.w));
+    const evOff = new Set(opts.evOff || []);
+    const FS = 10.5, ROW = 12.5;
+    const R = { 1: 4, 2: 3, 3: 2.2 };
+    const rk = (e) => e.r || 2;
+    const taken = { L: [], R: [] };
+    const maxCh = Math.max(3, Math.floor((EV_STRIP - 22) / FS));
+    // 分量高的先挑位子(同泳道图),缩放小的年代只留一等的名字
+    for (const ev of [...EVENTS].sort((a, b) => rk(a) - rk(b))) {
+      if (trW.has(ev.w) || evOff.has(ev.k) || ev.k === 'era') continue;
+      const ty = y(ev.y);
+      if (ty < -20 || ty > H + 20) continue;
+      const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
+      const left = LEFT_K.has(ev.k);
+      const bank = left ? RX0 : RX1;
+      const dir = left ? -1 : 1;
+      const rad = R[rk(ev)];
+      gEvents.appendChild(el('circle', {
+        cx: bank + dir * 7, cy: ty, r: rad,
+        fill: `var(--ev-${ev.k})`, class: 'mark ev-dot' }));
+      // 短引线搭到岸上:眼睛不必拿尺子量「这条名字对着哪一年」
+      gEvents.appendChild(el('line', {
+        x1: bank + dir * 3, x2: bank + dir * (7 - rad - 1), y1: ty, y2: ty,
+        stroke: `var(--ev-${ev.k})`, 'stroke-width': 1, opacity: .55 }));
+      const lane = left ? taken.L : taken.R;
+      const room = rk(ev) <= (pxYear >= 9 ? 3 : pxYear >= 6 ? 2 : 1)
+        && !lane.some((v) => Math.abs(v - ty) < ROW);
+      if (room) {
+        lane.push(ty);
+        const nm = [...(ev.ya || ev.n)];
+        const txt = nm.length > maxCh ? nm.slice(0, maxCh - 1).join('') + '…' : nm.join('');
+        gEvents.appendChild(el('text', {
+          x: bank + dir * 14, y: ty + 3.6, 'font-size': FS,
+          'text-anchor': left ? 'end' : 'start',
+          fill: 'var(--text-2)', 'pointer-events': 'none' }, txt));
+      }
+      const hit = el('rect', {
+        x: left ? bank - EV_STRIP - 2 : bank + 2, y: ty - ROW / 2,
+        width: EV_STRIP, height: ROW,
+        fill: 'transparent', 'pointer-events': 'all', class: 'kp-hit ev-hit' });
+      hit.dataset.evi = String(EVENTS.indexOf(ev));
+      hoverable(hit, () => [
+        { color: `var(--ev-${ev.k})`, label: kind.label,
+          value: ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y) },
+        { label: '事件', value: ev.n },
+        ...(ev.yc ? [ev.yc] : []),
+        '点它可在卡片里读这条大事记的词条。',
+      ], () => ev.ya || ev.n);
+      gEvents.appendChild(hit);
+    }
+  }
 
   // ── 河道 ────────────────────────────────────────────────────────────────
   const empNodes = [];
