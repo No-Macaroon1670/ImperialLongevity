@@ -138,7 +138,7 @@ export function renderLaneTimeline(host, list, opts) {
   const ink = resolveInk(host);
 
   const showEvents = opts.laneEvents !== false;
-  const EV_H = showEvents ? 88 : 0;      // 事件轨:名字竖写且可折两列,故要高
+  const EV_H = showEvents ? 72 : 0;      // 事件轨:名字竖写,一列五字,可折两列
   const LANE_H = 48, LABEL_H = 15, TRACK_Y = 18, TRACK_H = 24, HEAD_H = 54 + EV_H;
   const LABEL_FS = 12.5, SEG_FS = 10;
 
@@ -318,11 +318,14 @@ export function renderLaneTimeline(host, list, opts) {
     head.appendChild(t);
     eraLabels.push({ node: t, x0, x1, lw: textW(era.name, 10.5) });
   });
+  const AXIS_Y = showEvents ? 58 : 49;
   for (const t of yTicks) {
     head.appendChild(el('line', { x1: x(t), x2: x(t), y1: 24, y2: 30, class: 'axis-line' }));
     head.appendChild(el('text', { x: x(t), y: 42, class: 'tick', 'text-anchor': 'middle' }, fmtYearAxis(t)));
   }
-  head.appendChild(el('line', { x1: 0, x2: W, y1: 49, y2: 49, class: 'axis-line' }));
+  // 分隔线:有事件轨时下移,把标记行让到线**上**——标记与竖排名字之间隔着一条线,
+  // 眼睛便不必在同一片留白里分辨「哪个球配哪串字」(标记压在名字头上时挤得难读)
+  head.appendChild(el('line', { x1: 0, x2: W, y1: AXIS_Y, y2: AXIS_Y, class: 'axis-line' }));
 
   // ── 事件轨：大事记 ──────────────────────────────────────────────────────
   // 时间轴此前只画「谁在统治」,事件层补上「那两千年里发生了什么」——
@@ -330,8 +333,8 @@ export function renderLaneTimeline(host, list, opts) {
   // 跨年事件(安史之乱 755–763)画成一段横条,点标记即在知识卡里读词条。
   // 放在表头内而非泳道里:它随表头吸顶,滚到哪一段都看得见,且不占泳道行数。
   if (showEvents) {
-    const evTop = 54;                        // 标记行:贴着分隔线,给下方的名字让地方
-    const LAB_TOP = evTop + 12;              // 竖排名字自此起
+    const evTop = AXIS_Y - 8;                // 标记行在分隔线**上**方,名字在线下方
+    const LAB_TOP = AXIS_Y + 11;             // 竖排名字自此起
     const LAB_FS = 10.5, LAB_DY = 11.4;      // 字比初版大一号:9px 竖排在密集处认不出
     const COL_MAX = 5, MAX_COLS = 2;         // 一列五字,超出折第二列(最多两列十字)
     const slots = [];
@@ -379,7 +382,7 @@ export function renderLaneTimeline(host, list, opts) {
         }
         slots.push([ex, halfW]);
       }
-      const hit = el('rect', { x: ex - 7, y: evTop - 8, width: 14, height: EV_H - 6,
+      const hit = el('rect', { x: ex - 7, y: evTop - 8, width: 14, height: HEAD_H - evTop + 6,
         fill: 'transparent', 'pointer-events': 'all', class: 'kp-hit ev-hit' });
       hit.dataset.evi = String(EVENTS.indexOf(ev));
       hoverable(hit, () => [
