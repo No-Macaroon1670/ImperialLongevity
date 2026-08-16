@@ -20,12 +20,28 @@ const NOTABLE = new Map(Object.entries({
   朱元璋: 3, 朱棣: 3, 朱翊钧: 2, 朱由检: 2, 玄烨: 3, 胤禛: 2, 弘历: 3, 溥仪: 3,
 }));
 
-/** 朝代的维基词条标题:单字国号直接搜多是消歧义页,按惯用全称改写;
- *  不在表内的照用库内名(西汉/北魏/后燕这类本就是词条名) */
+/**
+ * 朝代的词条标题——**两家各有一张表**:单字国号直接搜多半撞上消歧义页,
+ * 而两家的正名并不相同,一张表管不了两家。表外的照用库内名。
+ *
+ * 维基:实测只有「吴越」是消歧义页(→吴越国);其余靠重定向都能落对
+ *（玄汉→更始政權、陈朝→南陳、中华帝国→中華帝國）。
+ *
+ * 百度:没有 CORS 接口、链接是盲发的,实测撞了一串——
+ *   陈朝 → 中国地质大学副教授;胡夏 → 内地男歌手;吴越 → 内地女演员;
+ *   马楚、南梁、吴越国 → 多义词页;中华帝国 → 直接跳「中国」。
+ * 故按百度自己的正名另立一表(逐条实测过):南朝陈、南朝梁、赫连夏（→大夏）、
+ * 南楚（→楚国）、吴越国、洪宪帝制。人名类不必管:刘彻、石虎实测都落在
+ * 帝王义项上——百度按知名度取义项,历史人物几乎总是压得住同名今人。
+ */
 const DYN_WIKI = {
   秦: '秦朝', 新: '新朝', 梁: '南梁', 陈: '陈朝', 隋: '隋朝', 唐: '唐朝',
   吴: '杨吴', 闽: '闽国', 楚: '马楚', 南平: '荆南', 辽: '辽朝', 金: '金朝',
-  大理: '大理国', 元: '元朝', 明: '明朝', 清: '清朝',
+  大理: '大理国', 元: '元朝', 明: '明朝', 清: '清朝', 吴越: '吴越国',
+};
+const DYN_BAIDU = {
+  ...DYN_WIKI,
+  梁: '南朝梁', 陈: '南朝陈', 楚: '南楚', 胡夏: '赫连夏', 中华帝国: '洪宪帝制',
 };
 
 // 词条标题 → Promise<summary|null>:会话内不重复拉取。
@@ -61,25 +77,29 @@ function mkCard(sideClass) {
   return { el, img, head, title, ext, wiki, baidu, yt, close };
 }
 
-/** 皇帝卡的取数说明书 */
+/** 皇帝卡的取数说明书。库内 382 位君主全有姓名,故标题恒为人名 */
 const empSpec = (item) => {
   const e = item.e, dyn = item.band.d;
+  const nm = e.name || `${dyn.name}${e.temple}`;
   return {
     id: e.id,
     head: `${dyn.name} · ${e.temple}`,
-    title: e.name || `${dyn.name}${e.temple}`,
-    q: `${dyn.name} ${e.name || e.temple} 历史`,
+    title: nm,
+    baidu: nm,
+    q: `${dyn.name} ${nm} 历史`,
     yt: NOTABLE.has(e.name),
   };
 };
-/** 朝代卡的取数说明书 */
+/** 朝代卡的取数说明书。维基与百度各取各的正名(见 DYN_WIKI / DYN_BAIDU) */
 const dynSpec = (band) => {
   const d = band.d;
+  const wk = DYN_WIKI[d.name] || d.name;
   return {
     id: `dyn:${d.key}`,
     head: `${fmtYearAxis(d.s)} – ${fmtYearAxis(d.e)} · 朝代`,
-    title: DYN_WIKI[d.name] || d.name,
-    q: `${DYN_WIKI[d.name] || d.name} 历史 纪录片`,
+    title: wk,
+    baidu: DYN_BAIDU[d.name] || d.name,
+    q: `${wk} 历史 纪录片`,
     yt: true,
   };
 };
@@ -93,7 +113,7 @@ async function fillCard(card, spec) {
   card.ext.textContent = '…';
   card.img.style.display = 'none';
   card.wiki.href = `https://zh.wikipedia.org/wiki/${encodeURIComponent(spec.title)}`;
-  card.baidu.href = `https://baike.baidu.com/item/${encodeURIComponent(spec.title)}`;
+  card.baidu.href = `https://baike.baidu.com/item/${encodeURIComponent(spec.baidu || spec.title)}`;
   card.yt.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(spec.q)}`;
   card.yt.style.display = spec.yt ? '' : 'none';
   card.el.classList.add('on');
