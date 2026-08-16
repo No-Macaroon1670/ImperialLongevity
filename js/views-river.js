@@ -38,6 +38,7 @@ import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECON
 import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName } from './views-lanes.js';
 import { mountKnowledge } from './knowledge.js';
+import { stampHash } from './search.js';
 
 const GUTTER = 34;          // 左侧年份／时代标注的留白
 const TRANS_PX = 56;        // 改道过渡区的目标半长（像素）——长 S 弯的来源
@@ -1110,6 +1111,7 @@ export function renderRiver(host, list, opts) {
   for (const n of empNodes) {
     n.node.addEventListener('click', (ev) => {
       ev.stopPropagation();
+      stampHash('e', n.e.name || n.e.temple);
       if (coarse.matches) {
         const now = performance.now();
         const twice = lastTap.id === n.e.id && now - lastTap.t < 400;
@@ -1168,6 +1170,30 @@ export function renderRiver(host, list, opts) {
   // scroll 监听不撤会随每次筛选累积一个引用死 DOM 的监听器，
   // 卡片不撤会留在泳道视图上。app.js 的 panorama render 包装器每次渲染前调用此钩子。
   host.__riverCleanup = () => { card.remove(); scrub.remove(); removeEventListener('scroll', onScroll); kClean(); };
+
+  // 定位接口:与横向泳道同名同义,由搜索与深链调用(见 js/search.js)
+  const goY = (t) => {
+    const top = wrap.getBoundingClientRect().top + scrollY;
+    scrollTo({ top: top + y(Math.min(Math.max(t, t0), t1)) - innerHeight * 0.42, behavior: 'instant' });
+  };
+  host.__locate = {
+    view: 'river',
+    year: goY,
+    emperor(id) {
+      const n = empNodes.find((q) => q.e.id === id);
+      if (!n) return false;
+      goY(y.invert((n.y0 + n.y1) / 2));
+      select(n);
+      return true;
+    },
+    dynasty(key) {
+      const b = bands.find((q) => q.d.key === key);
+      if (!b) return false;
+      goY((b.s + b.e) / 2);
+      return true;
+    },
+    event() { return false; },      // 事件层目前只在泳道视图
+  };
 
   // ── 图例与说明 ──────────────────────────────────────────────────────────
   const peak = slices.reduce((m, s) => Math.max(m, s.n), 0);

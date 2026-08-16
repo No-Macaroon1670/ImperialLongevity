@@ -14,6 +14,7 @@
 //      因此任何时刻都能读出正在看的是哪一朝。
 import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hideTip, fmtYearAxis, fmt1, scrollHint } from './charts.js';
 import { mountKnowledgeCorner, eventSpec } from './knowledge.js';
+import { stampHash } from './search.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, TRANSITIONS, ORTHODOX, SECONDARY } from './dynasties.js';
 import { EVENTS, EVENT_KINDS } from './events.js';
@@ -509,6 +510,7 @@ export function renderLaneTimeline(host, list, opts) {
         hoverable(hit, segTip, () => `${b.d.name}·${g.e.temple}`);
         gTop.appendChild(hit);
         empRefs.push({ node: hit, e: g.e, band: b, cx: (sx0 + sx1) / 2 });
+        hit.addEventListener('click', () => stampHash('e', g.e.name || g.e.temple));
         if (!widest || wSeg > widest.w) widest = { w: wSeg, x: sx0, y: sy, h: segH };
         // 非正常死亡：段末的小三角（状态色 + 图例说明，不单靠颜色表意）
         if (markViolent && g.e.violent === 1 && g.e.reignEnd
@@ -807,6 +809,43 @@ export function renderLaneTimeline(host, list, opts) {
   // 切去河流视图或改筛选重绘时,角卡与滚动监听一并撤走
   kp = mountKnowledgeCorner(empRefs, bandRefs, scroller, host.closest('section.card'));
   host.__riverCleanup = kp;
+
+  // 定位接口:搜索跳转与深链共用同一套入口(见 js/search.js)。
+  // 两个视图各自实现,调用方只管说「去 755 年」「去李世民」,不必知道
+  // 这一张是横滚的还是竖滚的
+  host.__locate = {
+    view: 'lanes',
+    year(yr) {
+      scroller.scrollLeft = x(yr) - scroller.clientWidth / 2;
+      host.closest('section.card').scrollIntoView({ block: 'start', behavior: 'instant' });
+    },
+    emperor(id) {
+      const r = empRefs.find((q) => q.e.id === id);
+      if (!r) return false;
+      scroller.scrollLeft = r.cx - scroller.clientWidth / 2;
+      host.closest('section.card').scrollIntoView({ block: 'start', behavior: 'instant' });
+      r.node.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      return true;
+    },
+    dynasty(key) {
+      const b = bandRefs.find((q) => q.band.d.key === key);
+      if (!b) return false;
+      scroller.scrollLeft = (b.x0 + b.x1) / 2 - scroller.clientWidth / 2;
+      host.closest('section.card').scrollIntoView({ block: 'start', behavior: 'instant' });
+      b.node.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      return true;
+    },
+    event(i) {
+      const ev = EVENTS[i];
+      if (!ev) return false;
+      this.year(ev.y);
+      if (kp && kp.showEvent) {
+        kp.showEvent({ id: `evt:${ev.w}`, head: `${ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y)} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
+          title: ev.w, baidu: ev.b || ev.n, q: `${ev.n} 历史`, yt: true, display: ev.n });
+      }
+      return true;
+    },
+  };
 
   // 图例：只列出当前视口内可见的朝代。色值本身固定不变，
   // 变的只是「这一屏有哪些朝代」——这是图例该做的事，不是重新配色。

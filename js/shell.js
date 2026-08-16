@@ -265,7 +265,7 @@ function setupSectionNav() {
     return { bar, btn, label: null };
   };
   const up = mk('up'), down = mk('down');
-  const ids = SECTIONS.map((s) => s.id);
+  const ids = PAGE_SECTIONS.map((s) => s.id);
   const narrow = matchMedia('(max-width: 720px)');
   let raf = null;
 
@@ -293,7 +293,7 @@ function setupSectionNav() {
     const r = idx >= 0 ? document.getElementById(ids[idx]).getBoundingClientRect() : null;
     if (!r || r.height <= vh * 1.5) { hide(up); hide(down); return; }
 
-    const short = (i) => SECTIONS[i].title.split('：')[0];
+    const short = (i) => PAGE_SECTIONS[i].title.split('：')[0];
     if (r.top < -vh * 0.4) {
       set(up, idx > 0 ? `↑ 上一节 · ${short(idx - 1)}` : '↑ 回到页首', jump(idx > 0 ? ids[idx - 1] : null));
     } else hide(up);
