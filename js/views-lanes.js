@@ -404,10 +404,20 @@ export function renderLaneTimeline(host, list, opts) {
       // **雅名**:凡有现成典故可指这件事的,图上写典故(破釜沉舟、四面楚歌),
       // 本名与出处留在悬停与卡片里。史书式的平实叙述(「董贤拜大司马」)认不出、
       // 也记不住;而典故本就是汉语替这些事留下的名字,读者早就认得。
-      const nmAll = [...(ev.ya || ev.n)];
+      // 折行处按**词**断,不按字数中分。「赤眉·绿林起义」原先按 7÷2 断成
+      // 「赤眉·绿」「林起义」——把「绿林」劈成两半;名字里的「·」本就是天然的
+      // 断处,依它断即得「赤眉」「绿林起义」(用户指出)。
+      const raw = ev.ya || ev.n;
+      const sep = raw.indexOf('·');
+      let segs = null;
+      if (sep > 0 && sep < raw.length - 1
+          && sep <= COL_MAX && raw.length - sep - 1 <= COL_MAX) {
+        segs = [[...raw.slice(0, sep)], [...raw.slice(sep + 1)]];
+      }
+      const nmAll = [...raw];
       const nm = nmAll.length > COL_MAX * MAX_COLS
         ? nmAll.slice(0, COL_MAX * MAX_COLS - 1).concat('…') : nmAll;
-      const cols = Math.min(MAX_COLS, Math.ceil(nm.length / COL_MAX));
+      const cols = segs ? 2 : Math.min(MAX_COLS, Math.ceil(nm.length / COL_MAX));
       const colW = LAB_FS + 2;
       const halfW = (cols * colW) / 2;
       // **挤不下就往旁边挪,而不是不写**。此前一撞就整条不留名——可两侧往往
@@ -430,7 +440,7 @@ export function renderLaneTimeline(host, list, opts) {
         }
         const per = Math.ceil(nm.length / cols);
         for (let c = 0; c < cols; c++) {
-          const seg = nm.slice(c * per, (c + 1) * per);
+          const seg = segs ? segs[c] : nm.slice(c * per, (c + 1) * per);
           if (!seg.length) continue;
           // 竖排多列依汉字传统自右向左:首列在右
           const cx2 = cx0 + halfW - colW * (c + 0.5);
