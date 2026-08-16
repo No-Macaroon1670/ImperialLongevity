@@ -367,6 +367,7 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
   --ev-gov: var(--s1); --ev-cul: var(--s3); --ev-dis: var(--lane-other);
   --ev-era: var(--s4);   /* 治世·中兴:与时点事件区别开 */
   --ev-inst: var(--s7);  /* 制度·交流存续期:同为长条,但与治世异色 */
+  --ev-her: var(--s5);   /* 世界遗产:实物遗存,与著述类的 cul 分色 */
 }
 .ev-dot { cursor: pointer; }
 .era-coat { cursor: pointer; }
