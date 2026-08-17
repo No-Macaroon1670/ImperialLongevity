@@ -1023,6 +1023,11 @@ export function renderLaneTimeline(host, list, opts) {
   // 横滚到某个画布 x,居中。`o.smooth` 走缓动并把 Promise 挂在 __locate.pending 上——
   // 导览要等到位了再打光,而搜索跳转只想立刻到,两者共用这一个入口
   const goX = (px, o = {}) => {
+    // 跳转即松钉:钉住是为了「点了谁就别跟着滚动乱换」,但那只该在原地生效。
+    // 跨年代跳过去之后,旧位置钉住的卡就是陈货(骰子掷到 589,右卡还钉着 1161 的
+    // 完颜亮)。松开不等于清空——未钉住的卡由 update() 按新视口重新跟随,
+    // 跟不上就自己收起来;紧接着的 showEvent/click 会把该钉的重新钉上
+    if (kp && kp.releasePins) kp.releasePins();
     const lim = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
     const to = Math.max(0, Math.min(lim, px - scroller.clientWidth / 2));
     host.closest('section.card').scrollIntoView({ block: 'start', behavior: 'instant' });

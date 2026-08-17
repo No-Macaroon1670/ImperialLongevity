@@ -1534,6 +1534,9 @@ export function renderRiver(host, list, opts) {
   // `o.smooth` 走缓动并把 Promise 挂在 __locate.pending 上——导览要等到位了再打光,
   // 而搜索跳转只想立刻到,两者共用这一个入口
   const goY = (t, o = {}) => {
+    // 跳转即松钉,同泳道那一侧(见 views-lanes.js 的 goX)。河流有四张卡,
+    // 留下陈货的机会更多
+    if (kClean && kClean.releasePins) kClean.releasePins();
     const top = wrap.getBoundingClientRect().top + scrollY;
     const to = top + y(Math.min(Math.max(t, t0), t1)) - innerHeight * 0.42;
     const p = o.smooth

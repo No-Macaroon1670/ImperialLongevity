@@ -454,6 +454,9 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
   // 点两岸事件轨:哪岸点的就落哪栏,并钉住。事件卡不随滚动自动换——
   // 四张卡都自己动的话,滚一屏就成了走马灯。
   // 窄屏没有两翼可分,一律落到贴底的手机单卡。
+  // 同泳道那一侧:跳转前松开全部钉住的卡,免得旧位置的卡跟着一起穿越
+  // （河流这边有四张,朝代与皇帝之外还有左右两张事件卡,更容易留下陈货）
+  cleanup.releasePins = () => { for (const k of Object.keys(pinned)) pinned[k] = null; };
   cleanup.showEvent = (spec, side) => {
     if (!mq.matches) { solo.show(spec); return true; }
     const which = side === 'left' ? 'evL' : 'evR';
@@ -647,6 +650,17 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
   };
   // 点承继细丝时,朝代卡改讲那一场改朝换代(楚汉战争、靖康之变…)并钉住:
   // 关系问的是「谁承谁」,事件答的是「那是怎么发生的」,两者本就该在同一格里
+  /**
+   * 松开全部钉住的卡。跳转前调用。
+   *
+   * 钉住原本是为了「我点了谁就别再跟着滚动乱换」，可它此前**跨越跳转仍然生效**：
+   * 骰子掷到 589 年的破镜重圆，右边那张还钉着上一次点开的完颜亮（1161）——
+   * 两张卡相隔六百年，读者没法不当它是错的（用户实测）。
+   *
+   * 松开之后不强行给它填新内容：事件不必配一位皇帝。松开只是把决定权交回
+   * update()——视口里有够格的名君就跟过去，没有就自己收起来。
+   */
+  cleanup.releasePins = () => { for (const k of Object.keys(pinned)) pinned[k] = null; };
   cleanup.showEvent = (spec) => {
     if (!mqBoth.matches) { solo.show(spec); return true; }   // 窄屏落贴底的手机单卡
     pinned.dyn = spec.id;
