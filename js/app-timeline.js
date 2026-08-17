@@ -6,6 +6,8 @@ import { mountApp } from './shell.js';
 import { SECTIONS } from './sections-panorama.js';
 import { mountSearch } from './search.js';
 import { mountTour } from './tour.js';
+import { EMPERORS, DYNASTIES } from './data.js';
+import { EVENTS } from './events.js';
 
 mountApp({ sections: SECTIONS, hero: false });
 
@@ -18,3 +20,19 @@ mountTour(panorama, chartHost);
 
 // 搜索与深链:两千年的长卷,得能搜得到、也发得出(见 js/search.js)
 mountSearch(panorama, chartHost);
+
+/**
+ * 正文里的「N 位君主 / N 个政权」由数据现算，不写死。
+ *
+ * 起因：补进南越（一政权、五君主）之后，四个文件里的「382 位」「65 个政权」
+ * 全成了错的，得手工逐处改——而这类数字**每次增补都会再错一次**。
+ * HTML 里仍留着一个值作兜底（脚本没跑起来时不至于空着），运行时按实际覆盖。
+ */
+function syncCounts() {
+  const n = { emp: EMPERORS.length, dyn: DYNASTIES.length, ev: EVENTS.length };
+  for (const el of document.querySelectorAll('[data-il-count]')) {
+    const v = n[el.dataset.ilCount];
+    if (v !== undefined) el.textContent = String(v);
+  }
+}
+syncCounts();

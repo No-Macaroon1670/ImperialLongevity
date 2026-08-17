@@ -232,7 +232,7 @@ function mkCard(sideClass) {
   return { el, img, head, title, ext, wiki, baidu, yt, bili, close };
 }
 
-/** 皇帝卡的取数说明书。库内 382 位君主全有姓名,故标题恒为人名 */
+/** 皇帝卡的取数说明书。库内 387 位君主全有姓名,故标题恒为人名 */
 const empSpec = (item) => {
   const e = item.e, dyn = item.band.d;
   const nm = e.name || `${dyn.name}${e.temple}`;
