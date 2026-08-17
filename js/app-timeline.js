@@ -5,9 +5,16 @@
 import { mountApp } from './shell.js';
 import { SECTIONS } from './sections-panorama.js';
 import { mountSearch } from './search.js';
+import { mountTour } from './tour.js';
 
 mountApp({ sections: SECTIONS, hero: false });
 
+const panorama = document.getElementById('panorama');
+const chartHost = () => document.querySelector('#panorama .chart-host');
+
+// 导览先挂:两者都往 .head 里塞按钮,而搜索框靠 margin-left:auto 顶到最右,
+// 先挂的导览按钮才会留在标题这一侧
+mountTour(panorama, chartHost);
+
 // 搜索与深链:两千年的长卷,得能搜得到、也发得出(见 js/search.js)
-mountSearch(document.getElementById('panorama'),
-  () => document.querySelector('#panorama .chart-host'));
+mountSearch(panorama, chartHost);

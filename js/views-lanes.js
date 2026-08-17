@@ -12,7 +12,7 @@
 //      改为朝代长带后只需 9 条，且长带本身有足够宽度容纳名称。
 //   3. 朝代名在带首，并在横向滚动时吸附于视口左缘（不越出本带范围），
 //      因此任何时刻都能读出正在看的是哪一朝。
-import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hideTip, fmtYearAxis, fmt1, scrollHint } from './charts.js';
+import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hideTip, fmtYearAxis, fmt1, scrollHint, glide } from './charts.js';
 import { mountKnowledgeCorner, eventSpec } from './knowledge.js';
 import { stampHash } from './search.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
@@ -1010,32 +1010,49 @@ export function renderLaneTimeline(host, list, opts) {
   // 定位接口:搜索跳转与深链共用同一套入口(见 js/search.js)。
   // 两个视图各自实现,调用方只管说「去 755 年」「去李世民」,不必知道
   // 这一张是横滚的还是竖滚的
+  // 横滚到某个画布 x,居中。`o.smooth` 走缓动并把 Promise 挂在 __locate.pending 上——
+  // 导览要等到位了再打光,而搜索跳转只想立刻到,两者共用这一个入口
+  const goX = (px, o = {}) => {
+    const lim = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+    const to = Math.max(0, Math.min(lim, px - scroller.clientWidth / 2));
+    host.closest('section.card').scrollIntoView({ block: 'start', behavior: 'instant' });
+    const p = o.smooth
+      ? glide(() => scroller.scrollLeft, (v) => { scroller.scrollLeft = v; }, to)
+      : (scroller.scrollLeft = to, Promise.resolve());
+    host.__locate.pending = p;
+    return p;
+  };
+
   host.__locate = {
     view: 'lanes',
-    year(yr) {
-      scroller.scrollLeft = x(yr) - scroller.clientWidth / 2;
-      host.closest('section.card').scrollIntoView({ block: 'start', behavior: 'instant' });
+    pending: Promise.resolve(),
+    year(yr, o) { return goX(x(yr), o); },
+    /** 某段年份在视口中的矩形——导览的「熄灯打光」按它挖洞,随滚动逐帧重算 */
+    rect(a, b) {
+      const sr = scroller.getBoundingClientRect();
+      const x0 = sr.left + x(a) - scroller.scrollLeft;
+      const x1 = sr.left + x(b) - scroller.scrollLeft;
+      return { x: x0, y: sr.top, w: Math.max(x1 - x0, 10), h: sr.height };
     },
-    emperor(id) {
+    emperor(id, o) {
       const r = empRefs.find((q) => q.e.id === id);
       if (!r) return false;
-      scroller.scrollLeft = r.cx - scroller.clientWidth / 2;
-      host.closest('section.card').scrollIntoView({ block: 'start', behavior: 'instant' });
+      goX(r.cx, o);
+      // 卡片立刻开:摘要要向维基取,趁着滚动这一路把请求发出去,到站时正好读得上
       r.node.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-      return true;
+      return r.node;
     },
-    dynasty(key) {
+    dynasty(key, o) {
       const b = bandRefs.find((q) => q.band.d.key === key);
       if (!b) return false;
-      scroller.scrollLeft = (b.x0 + b.x1) / 2 - scroller.clientWidth / 2;
-      host.closest('section.card').scrollIntoView({ block: 'start', behavior: 'instant' });
+      goX((b.x0 + b.x1) / 2, o);
       b.node.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-      return true;
+      return b.node;
     },
-    event(i) {
+    event(i, o) {
       const ev = EVENTS[i];
       if (!ev) return false;
-      this.year(ev.y);
+      this.year(ev.y2 ? (ev.y + ev.y2) / 2 : ev.y, o);
       if (kp && kp.showEvent) {
         kp.showEvent({ id: `evt:${ev.w}`, head: `${ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y)} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
           title: ev.w, baidu: ev.b || ev.n, q: `${ev.n} 历史`, yt: true, display: ev.n });

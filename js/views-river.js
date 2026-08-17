@@ -32,7 +32,7 @@
 //   5. **不套滚动容器 + 点选而非悬停。** 竖向内容再嵌一层竖向滚动是滚动陷阱，
 //      本图直接交给页面滚，全页只有一个滚动器；顶／底两条固定条充当上下节跳转
 //      与「安全起滑区」。触屏没有悬停，点中君主即高亮、详情进底部固定卡片。
-import { el, h, linear, hoverable, legend, tableView, notes, fmtYearAxis, fmt1, textWidth } from './charts.js';
+import { el, h, linear, hoverable, legend, tableView, notes, fmtYearAxis, fmt1, textWidth, glide } from './charts.js';
 import { DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS } from './dynasties.js';
 import { EVENTS, EVENT_KINDS, LEFT_BANK } from './events.js';
@@ -1531,32 +1531,48 @@ export function renderRiver(host, list, opts) {
   };
 
   // 定位接口:与横向泳道同名同义,由搜索与深链调用(见 js/search.js)
-  const goY = (t) => {
+  // `o.smooth` 走缓动并把 Promise 挂在 __locate.pending 上——导览要等到位了再打光,
+  // 而搜索跳转只想立刻到,两者共用这一个入口
+  const goY = (t, o = {}) => {
     const top = wrap.getBoundingClientRect().top + scrollY;
-    scrollTo({ top: top + y(Math.min(Math.max(t, t0), t1)) - innerHeight * 0.42, behavior: 'instant' });
+    const to = top + y(Math.min(Math.max(t, t0), t1)) - innerHeight * 0.42;
+    const p = o.smooth
+      ? glide(() => scrollY, (v) => scrollTo({ top: v, behavior: 'instant' }), to)
+      : (scrollTo({ top: to, behavior: 'instant' }), Promise.resolve());
+    host.__locate.pending = p;
+    return p;
   };
   host.__locate = {
     view: 'river',
+    pending: Promise.resolve(),
     year: goY,
-    emperor(id) {
+    /** 某段年份在视口中的矩形——导览的「熄灯打光」按它挖洞,随滚动逐帧重算 */
+    rect(a, b) {
+      const wr = wrap.getBoundingClientRect();
+      const ya = wr.top + y(Math.min(Math.max(a, t0), t1));
+      const yb = wr.top + y(Math.min(Math.max(b, t0), t1));
+      return { x: wr.left, y: ya, w: wr.width, h: Math.max(yb - ya, 10) };
+    },
+    emperor(id, o) {
       const n = empNodes.find((q) => q.e.id === id);
       if (!n) return false;
-      goY(y.invert((n.y0 + n.y1) / 2));
+      goY(y.invert((n.y0 + n.y1) / 2), o);
+      // 卡片立刻开:摘要要向维基取,趁着滚动这一路把请求发出去,到站时正好读得上
       select(n);
-      return true;
+      return n.node;
     },
-    dynasty(key) {
+    dynasty(key, o) {
       const b = bands.find((q) => q.d.key === key);
       if (!b) return false;
-      goY((b.s + b.e) / 2);
+      goY((b.s + b.e) / 2, o);
       return true;
     },
     // 搜索与深链(#ev=安史之乱)落到事件:跳到那一年并开卡。两个视图同名同义,
     // 调用方只说「去哪儿」——此前河流一侧只能退回按年份跳
-    event(i) {
+    event(i, o) {
       const ev = EVENTS[i];
       if (!ev) return false;
-      goY(ev.y);
+      goY(ev.y2 ? (ev.y + ev.y2) / 2 : ev.y, o);
       openEvent(ev);
       return true;
     },

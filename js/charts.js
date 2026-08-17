@@ -291,6 +291,38 @@ export function scrollHint(scroller, text = '左右滑动查看完整时间轴')
   });
 }
 
+/**
+ * 带缓动的滚动，时长随距离增长；返回 Promise，到位后 resolve。
+ *
+ * 全景图是两千年铺开的长卷,从五代跳到南宋是两千余像素的路。瞬移到位省时间,
+ * 却把「这中间隔着三百年」一并省掉了——走这段路花掉的时间本身就是尺度感,
+ * 而尺度正是这张图要讲的事。故时长按距离加,但封顶,免得跨越全图时读者干等。
+ *
+ * read/write 由调用方给,于是横滚(scrollLeft)与竖滚(window.scrollY)共用一套。
+ * 系统设了「减少动态效果」就直接落位:眩晕比尺度感要紧。
+ */
+export function glide(read, write, to, { min = 380, max = 1400, perPx = 0.5 } = {}) {
+  const from = read();
+  const dist = Math.abs(to - from);
+  if (dist < 3 || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    write(to);
+    return Promise.resolve();
+  }
+  const dur = Math.min(max, min + dist * perPx);
+  return new Promise((done) => {
+    let t0 = null;
+    const step = (ts) => {
+      if (t0 === null) t0 = ts;
+      const p = Math.min(1, (ts - t0) / dur);
+      // easeInOutCubic:起步与到站都慢、中途快——像镜头推移,不像瞬移
+      const k = p < 0.5 ? 4 * p * p * p : 1 - ((-2 * p + 2) ** 3) / 2;
+      write(from + (to - from) * k);
+      if (p < 1) requestAnimationFrame(step); else done();
+    };
+    requestAnimationFrame(step);
+  });
+}
+
 export const fmtYear = (y) => (y <= 0 ? `前${-y + 1}` : String(Math.round(y)));
 export const fmtYearAxis = (y) => (y <= 0 ? `前${-Math.round(y) + 1}` : String(Math.round(y)));
 export const fmt1 = (v) => (v === null || v === undefined || !isFinite(v) ? '—' : v.toFixed(1));

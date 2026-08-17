@@ -359,10 +359,14 @@ export function mountApp({ sections, hero }) {
     .setProperty('--vw-safe', `${document.documentElement.clientWidth}px`);
   const main = document.getElementById('sections');
   const toc = document.getElementById('toc');
+  // 只有一节的页面（全景页）不要目录：一个条目的目录跳不到别处，
+  // 它只是把版块标题原样复述一遍，还在页首与正文之间垫出一行
+  const wantToc = PAGE_SECTIONS.length > 1;
+  if (!wantToc) toc.remove();
   // 目录点击后收起筛选面板：面板是覆盖式浮层，不收起会正好盖住刚跳到的标题
-  toc.addEventListener('click', () => { if (S.filtersOpen) { S.filtersOpen = false; render(); } });
+  else toc.addEventListener('click', () => { if (S.filtersOpen) { S.filtersOpen = false; render(); } });
   for (const sec of PAGE_SECTIONS) {
-    toc.appendChild(h('a', { href: `#${sec.id}`, text: sec.title.split('：')[0] }));
+    if (wantToc) toc.appendChild(h('a', { href: `#${sec.id}`, text: sec.title.split('：')[0] }));
     const card = h('section', { class: 'card', id: sec.id });
     // 需求编号属于交付追溯，写在 README 的对照表里，不占版面
     const head = h('div', { class: 'head' }, [h('h2', { text: sec.title })]);

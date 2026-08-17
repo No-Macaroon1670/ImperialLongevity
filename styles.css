@@ -38,6 +38,9 @@
   /* 横向泳道「按朝代配色」时，色相槽位用尽后折入的中性色（≥4:1，可承载白字） */
   --lane-other: #6e6c66;
 
+  /* 导览熄灯层的压暗色。深色面上仍用黑:留在洞里的那块保持原亮度,
+     周围整体降下去,对比照样成立 */
+  --tour-dim: rgba(12, 12, 10, 0.62);
   --radius: 10px;
   --sans: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
 }
@@ -51,6 +54,7 @@
     --text-1:    #ffffff;
     --text-2:    #c3c2b7;
     --muted:     #898781;
+    --tour-dim: rgba(0, 0, 0, 0.70);
     --grid:      #2c2c2a;
     --axis:      #383835;
     --border:    rgba(255, 255, 255, 0.10);
@@ -71,6 +75,7 @@
   color-scheme: dark;
   --page:#0d0d0d; --surface-1:#1a1a19; --surface-2:#222221;
   --text-1:#ffffff; --text-2:#c3c2b7; --muted:#898781;
+  --tour-dim: rgba(0, 0, 0, 0.70);
   --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,0.10);
   --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
   --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
@@ -102,7 +107,10 @@ a { color: var(--seq-500); }
 .small { font-size: .82rem; }
 .mono { font-variant-numeric: tabular-nums; }
 
-.wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px 80px; }
+/* 页尾留白挂在 body 上,不挂 .wrap:全景页有两个 .wrap(页首一个、正文一个),
+   80px 写在 .wrap 上时,第一个 .wrap 会在页首与目录之间凭空垫出 80px */
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+body { padding-bottom: 80px; }
 
 /* ── 页首 ─────────────────────────────────────────────────────────────── */
 header.masthead { padding: 34px 0 18px; border-bottom: 1px solid var(--border); }
@@ -703,4 +711,127 @@ section.card.has-kp:not(.desc-full) > .desc::after {
   /* 单卡贴在底部导航条之上，与君主信息卡同一处落脚；手势提示占同一格 */
   .kp-solo { bottom: calc(48px + env(safe-area-inset-bottom, 0px)); max-height: 46vh; }
   .river-hint { bottom: calc(48px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* ── 入门导览 ────────────────────────────────────────────────────────────
+   熄灯打光 + 讲解面板。熄灯层整层 pointer-events:none——压暗是为了聚焦，
+   不是为了把人关住：灯下的词条链接、搜索框、视频按钮照样点得动。
+   洞用 SVG mask 挖，因为要同时开两个（讲的那段年份 + 正在演示的那个控件），
+   box-shadow 的老办法一次只挖得动一个。 */
+.tour-scrim {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  z-index: 900; pointer-events: none;
+  opacity: 0; visibility: hidden; transition: opacity .28s ease, visibility .28s;
+}
+.tour-scrim.on { opacity: 1; visibility: visible; }
+/* 飞行途中减淡：掠过的那两千年得看得见，尺度感就在这一路上 */
+.tour-scrim.on.moving { opacity: .42; }
+.tour-ring {
+  fill: none; stroke: var(--seq-400); stroke-width: 2; opacity: .9;
+  filter: drop-shadow(0 0 6px rgba(57, 135, 229, .55));
+}
+
+.tour-panel {
+  background: var(--surface-1); color: var(--text-1);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .34);
+  padding: 12px 14px 11px; display: none;
+}
+.tour-panel.on { display: block; animation: tour-in .24s ease; }
+@keyframes tour-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.tour-head { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.tour-tag {
+  font-size: .7rem; font-weight: 700; letter-spacing: .08em;
+  padding: 2px 7px; border-radius: 999px;
+  background: var(--seq-400); color: #fff;
+}
+.tour-step { font-size: .74rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tour-x {
+  margin-left: auto; width: 26px; height: 26px; border: none; background: none;
+  color: var(--muted); font-size: 1rem; cursor: pointer; border-radius: 6px;
+}
+.tour-x:hover { background: var(--surface-2); color: var(--text-1); }
+.tour-title { margin: 0 0 5px; font-size: 1rem; line-height: 1.35; }
+.tour-body { margin: 0 0 7px; font-size: .84rem; line-height: 1.58; color: var(--text-2); }
+/* 「你来试试」这一句要和背景说明分得开：读者只肯读一句时，该读到的是这句 */
+.tour-cta {
+  margin: 0; font-size: .82rem; line-height: 1.55; color: var(--text-1);
+  border-left: 3px solid var(--seq-400); padding: 4px 0 4px 9px; background: var(--surface-2);
+  border-radius: 0 6px 6px 0;
+}
+.tour-extra:not(:empty) { margin-top: 9px; }
+/* 只在窄屏出现的一句实话（见 tour.js 的 mnote） */
+.tour-mnote { display: none; }
+.tour-go2 { text-decoration: none; background: var(--seq-400); color: #fff; border-color: var(--seq-400); }
+.tour-go2:hover { background: var(--seq-500); }
+.tour-nav { display: flex; gap: 8px; justify-content: flex-end; margin-top: 11px; }
+.tour-nav .chip:disabled { opacity: .4; cursor: default; }
+.tour-next { background: var(--text-1); color: var(--page); border-color: var(--text-1); }
+
+/* 副卡：类别开关。真正的图例在图的下方，一屏常放不下卡片、图、图例三样，
+   于是把那排开关搬到讲解旁边。DOM 顺序恒为「讲解、副卡」，由 flex 决定谁在上：
+   桌面端贴底、column-reverse（副卡在上）；手机贴顶、column（副卡在下）。 */
+.tour-dock {
+  position: fixed; z-index: 902; left: 16px; bottom: 16px;
+  width: min(360px, calc(100vw - 32px));
+  display: flex; flex-direction: column-reverse; gap: 10px;
+  pointer-events: none;          /* 空隙不挡下面的图 */
+  /* 坞从下缘往上长；矮窗口上两块叠起来会顶出屏外，故封顶后让它自己滚 */
+  max-height: calc(100vh - 32px); overflow-y: auto;
+}
+.tour-dock > * { pointer-events: auto; }
+.tour-aside {
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .34);
+  padding: 9px 12px 10px; display: none;
+}
+.tour-aside.on { display: block; animation: tour-in .24s ease; }
+.tour-aside-h { font-size: .74rem; color: var(--muted); margin-bottom: 6px; }
+.tour-aside .ev-legend { display: flex; flex-wrap: wrap; gap: 5px; margin: 0; }
+.tour-aside .ev-chip { font-size: .74rem; padding: 2px 8px; }
+
+.tour-launch-head { margin-left: 8px; }
+/* 目录行里的那个要跟目录链接一样高，否则它把整行撑开半格 */
+.tour-launch-toc { font-size: .8rem; padding: 3px 10px; }
+/* 没走过导览的人看到的是一句邀请，走过的人看到的是一个不碍事的小按钮 */
+.tour-launch.fresh {
+  background: var(--seq-400); color: #fff; border-color: var(--seq-400); font-weight: 600;
+  animation: tour-pulse 2.6s ease-in-out 3;
+}
+@keyframes tour-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(57, 135, 229, .5); }
+  50% { box-shadow: 0 0 0 7px rgba(57, 135, 229, 0); }
+}
+/* 导览进行中，手机上那两条固定的上下节导航条只会挡住讲解面板 */
+body.tour-on .sec-nav { display: none !important; }
+
+@media (max-width: 719px) {
+  /* 手机：讲解在上、知识卡在下，两者各占一头不打架；
+     顶部让开吸顶的搜索框（.tl-search.pinned 在 top:6px）。
+     坞改为正序：讲解在前、类别开关跟在它下面 */
+  .tour-dock {
+    left: 8px; right: 8px; width: auto; top: 50px; bottom: auto;
+    flex-direction: column; gap: 8px;
+    /* 贴底的手机单卡最高 46vh、下缘留 48px，它的上缘约在 54vh 处；
+       坞封在 40vh 以内就够不着它，装不下时坞自己滚 */
+    max-height: 40vh; overflow-y: auto;
+  }
+  /* 手机上类别开关摊成十行会把坞撑到四百多像素，正好撞上贴底的知识卡。
+     改成一行横滑：坞矮下去，卡片那一头就还留得住。 */
+  .tour-aside .ev-legend {
+    flex-wrap: nowrap; overflow-x: auto; padding-bottom: 3px;
+    scrollbar-width: none;
+  }
+  .tour-aside .ev-legend::-webkit-scrollbar { display: none; }
+  .tour-aside .ev-chip { flex: 0 0 auto; }
+  .tour-nav { margin-top: 9px; }
+  .tour-body { font-size: .8rem; }
+  .tour-mnote {
+    display: block; margin: 8px 0 0; font-size: .72rem; line-height: 1.45;
+    color: var(--muted); border-top: 1px solid var(--border); padding-top: 7px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tour-panel.on, .tour-launch.fresh { animation: none; }
+  .tour-scrim { transition: none; }
 }
