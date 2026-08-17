@@ -1,0 +1,1226 @@
+{
+ "art:㝬簋": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "周厉王自作器，铭文明记厉王十二年；按断代工程厉王元年前877推算即前866，与现值一致",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E3%9D%AC%E7%B0%8B",
+  "tier": "secondary"
+ },
+ "art:七女为父报仇": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正",
+  "conf": "高",
+  "note": "条目称其为「東漢殯葬藝術中常見的主題紋飾」，并列举图像见于山东、河南、安徽乃至内蒙古等地，著名实例包括武氏祠（两例）、孝堂山郭氏墓石祠及曹操墓",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/七女為父報仇",
+  "tier": "secondary"
+ },
+ "art:七孔玉刀": {
+  "by": "agent/date_ancient",
+  "claim": "断代窗口收窄为 前1610–前1520",
+  "conf": "中",
+  "note": "现窗口前1900–前1500沿用的是1983年仇士华的旧测年上下限；2015年公布的AMS新数据把二里头文化四期定为前1750–前1520，而这件玉刀一般被定为三期或四期器，故收到前1610–前1520（若要更保守，整个二里头文化前1750",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E4%BA%8C%E9%87%8C%E5%A4%B4%E9%81%97%E5%9D%80",
+  "tier": "secondary"
+ },
+ "art:万壑松风图": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目录画上款「皇宋宣和甲辰春河阳李唐笔」并注「甲辰是宋宣和六年（1124年）」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E8%90%AC%E5%A3%91%E6%9D%BE%E9%A2%A8%E5%9C%96",
+  "tier": "secondary"
+ },
+ "art:中山王铁足鼎": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目载「1977年出土于河北省平山县中山王墓」、为「战国时代的青铜器中铭文字数最多的一件」，未另给系年，故无据改动",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/中山王铁足铜鼎",
+  "tier": "secondary"
+ },
+ "art:书谱": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「成书于武后垂拱三年（687年），他亲自以草书书写全书。原本现藏於臺北國立故宮博物院」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/书谱",
+  "tier": "secondary"
+ },
+ "art:五星出东方锦": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正",
+  "conf": "高",
+  "note": "条目首句即写「1995年出土于……尼雅遗址的汉代到魏晋时期的蜀锦」，断代跨汉与魏晋两段，且注明现藏新疆维吾尔自治区博物馆",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/“五星出东方利中国”护膊",
+  "tier": "secondary"
+ },
+ "art:五牛图": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正",
+  "conf": "高",
+  "note": "故宫博物院藏品页写「《五牛图》卷，唐，韩滉作」，并在作者小传中给出「韩滉（723—787年）」——即现窗口两端正是画家的生卒年",
+  "on": "2026-08-17",
+  "src": "https://www.dpm.org.cn/collection/paint/234599.html",
+  "tier": "secondary"
+ },
+ "art:五马图": {
+  "by": "agent/date_late",
+  "claim": "断代窗口收窄为 1086–1094",
+  "conf": "中",
+  "note": "条目信息框将创作年代记作北宋元祐（1086－1094）年间，正文记所画为元祐年间进献的西域马",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hans/%E4%BA%94%E9%A9%AC%E5%9B%BE",
+  "tier": "secondary"
+ },
+ "art:人兽树纹罽袍": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目称其为「一件东汉晚期双层两面纹毛织物」，1995年出土于营盘古城及古墓群15号墓",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/红地对人兽树纹罽袍",
+  "tier": "secondary"
+ },
+ "art:人物御龙帛画": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目称其为「战国中晚期的帛画精品」，1973年长沙子弹库一号墓出土，未给更细年代",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/人物御龙帛画",
+  "tier": "secondary"
+ },
+ "art:人物龙凤帛画": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目称其为「中国东周战国中晚期的帛画精品」，无更细系年",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/人物龙凤帛画",
+  "tier": "secondary"
+ },
+ "art:人面鱼纹彩陶盆": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "半坡遗址整体碳十四为距今6800–5300年，此盆属其中最早的半坡类型，现窗口前4800–前4300正是半坡类型的通行年代，已经是能拿到的最紧区间",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E5%8D%8A%E5%9D%A1%E9%81%97%E5%9D%80",
+  "tier": "secondary"
+ },
+ "art:伯矩鬲": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "出自琉璃河燕国墓地M251，器形纹饰为西周早期典型，铭文记燕侯赐贝，父名「戊」仍循商人天干旧俗，正合周初；现窗口前1046–前1000合适",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E4%BC%AF%E7%9F%A9%E9%AC%B2",
+  "tier": "secondary"
+ },
+ "art:八重宝函": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目载其为「唐懿宗赐赠的一套八层盒函」，1987年发现于陕西扶风法门寺地宫后室",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/八重宝函",
+  "tier": "secondary"
+ },
+ "art:兽首玛瑙杯": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目载「1970年于陕西省西安市何家村唐代窖藏出土」，为唐代玉雕，未给更细系年",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/镶金兽首玛瑙杯",
+  "tier": "secondary"
+ },
+ "art:刊谬补缺切韵": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目题名后直接标注「（706年）」，并说明北京故宫藏唐写本《王韻》为完帙",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/刊謬補缺切韻",
+  "tier": "secondary"
+ },
+ "art:利簋": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "铭文「珷征商，隹甲子朝」，是唯一记下伐商具体日期的器物；断代工程把牧野之战定在前1046年1月20日，利簋铸于其后数日至数月，现值与库中牧野之战条目同年，正确",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E5%88%A9%E7%B0%8B",
+  "tier": "secondary"
+ },
+ "art:前赤壁赋": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「于元丰五年（1082年）写下了这篇作品」，并记元丰五年苏轼两次游黄州赤壁",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hans/%E5%89%8D%E8%B5%A4%E5%A3%81%E8%B5%8B",
+  "tier": "secondary"
+ },
+ "art:千里江山图": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "故宫博物院藏品页录蔡京跋文「政和三年四月八日赐。希孟年十八岁…不逾半岁，乃以此图进」，并注政和三年为1113年",
+  "on": "2026-08-17",
+  "src": "https://www.dpm.org.cn/collection/paint/228354.html",
+  "tier": "secondary"
+ },
+ "art:双鸟朝阳纹牙雕": {
+  "by": "agent/date_ancient",
+  "claim": "断代窗口收窄为 前5000–前4500",
+  "conf": "中",
+  "note": "现窗口前5000–前3300恰好是整个河姆渡文化的跨度，属于把文化期直接当成器物年代；而这件象牙蝶形器在各方叙述中一律称「七千多年前」，应收进河姆渡文化最早一期",
+  "on": "2026-08-17",
+  "src": "http://hzdaily.hangzhou.com.cn/hzrb/2025/01/10/article_detail_1_20250110A117.html",
+  "tier": "secondary"
+ },
+ "art:口和本续": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "低",
+  "note": "中新社访谈段玉泉，称其为「唯一经国家权威部门鉴定的辽宋夏金时期的木活字版印本」「1991年在宁夏贺兰县拜寺沟方塔中出土」，全文未给具体年号或年份",
+  "on": "2026-08-17",
+  "src": "https://www.chinanews.com.cn/dxw/2024/06-25/10240343.shtml",
+  "tier": "secondary"
+ },
+ "art:史墙盘": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "铭文历数文武成康昭穆诸王功德，末及时王共王，作器者为共王史官墙；断代工程定共王在位前922–前900，与现窗口逐年吻合",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E5%8F%B2%E5%A2%99%E7%9B%98",
+  "tier": "secondary"
+ },
+ "art:司马金龙漆屏": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目载「1965年11月出土于山西省大同市的司马金龙墓」，年代由墓主卒年定",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/彩绘人物故事漆屏",
+  "tier": "secondary"
+ },
+ "art:四羊方尊": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "宁乡青铜器群的代表器，1938年农民锄地挖出、无科学发掘记录，只能靠器形纹饰定为商代晚期，现窗口即商代晚期，没有更细的落点",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E5%9B%9B%E7%BE%8A%E6%96%B9%E5%B0%8A",
+  "tier": "secondary"
+ },
+ "art:圆明园兽首": {
+  "by": "agent/date_late",
+  "claim": "定年 1759",
+  "conf": "中",
+  "note": "文中写「海晏堂位于方外观东面，是长春园西洋楼建筑群中最大的一组建筑。建成于乾隆二十四年（1759）」，并记郎世宁、蒋友仁以十二生肖作喷泉雕像",
+  "on": "2026-08-17",
+  "src": "https://www.thepaper.cn/newsDetail_forward_1750908",
+  "tier": "secondary"
+ },
+ "art:坤舆万国全图": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「《坤舆万国全图》的多幅印刷品制作于1602年，原件副本仅存六份」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E5%9D%A4%E8%BC%BF%E8%90%AC%E5%9C%8B%E5%85%A8%E5%9C%96",
+  "tier": "secondary"
+ },
+ "art:大克鼎": {
+  "by": "agent/date_ancient",
+  "claim": "断代窗口收窄为 前900–前880",
+  "conf": "中",
+  "note": "上海博物馆定其为西周孝王时膳夫克所铸（约前十世纪末至前九世纪初），断代工程孝王在位前891–前886；现窗口前900–前771把厉、宣、幽三朝全包了进去，宜收到孝王前后（区间已为夷王说留了余地）",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E5%A4%A7%E5%85%8B%E9%BC%8E",
+  "tier": "secondary"
+ },
+ "art:大玉戈": {
+  "by": "agent/date_ancient",
+  "claim": "断代窗口收窄为 前1500–前1400",
+  "conf": "中",
+  "note": "出自盘龙城李家嘴3号墓，而李家嘴的高等级墓属盘龙城「第二阶段」，相当于早商二里岗期；到第三阶段（中商，约前1400以后）权力中心已迁往杨家湾，李家嘴不再下葬，所以窗口不该拖到前1300，媒体亦普遍称「距今约3500年」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E7%9B%98%E9%BE%99%E5%9F%8E%E9%81%97%E5%9D%80",
+  "tier": "secondary"
+ },
+ "art:大盂鼎": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "铭文纪年为康王二十三年，现值前1003出自旧年表；若与库中其余条目统一采断代工程（康王前1020–前996）则应为前998，相差五年，在这条时间轴上看不出差别，不必改",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E5%A4%A7%E7%9B%82%E9%BC%8E",
+  "tier": "secondary"
+ },
+ "art:大禾方鼎": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "同为宁乡黄材出土的传世品，无地层依据，学界在商代晚期与商末周初之间未定，现窗口已覆盖主流意见",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E5%A4%A7%E7%A6%BE%E6%96%B9%E9%BC%8E",
+  "tier": "secondary"
+ },
+ "art:大秦景教碑": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目称其为「记述景教在唐代流传情况的石碑」，现藏西安碑林博物馆；碑文自署建中二年（781年）",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/大秦景教流行中国碑",
+  "tier": "secondary"
+ },
+ "art:大维德花瓶": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「是1351年在景德镇生产的一对青花瓷大花瓶」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hans/%E5%A4%A7%E7%BB%B4%E5%BE%B7%E8%8A%B1%E7%93%B6",
+  "tier": "secondary"
+ },
+ "art:天亡簋": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "铭文称「不显考文王」，作器者为武王，事在克商前后；断代工程定武王在位前1046–前1043，现窗口正对其在位期",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E5%A4%A9%E4%BA%A1%E7%B0%8B",
+  "tier": "secondary"
+ },
+ "art:太保鼎": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "铭文「大保铸」即辅佐成王的召公奭，召公卒于成康之际，现窗口前1046–前1000正覆盖其活动期；此器为清代梁山七器之一，出土记载本身就只是「相传」，不宜再细",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E5%A4%AA%E4%BF%9D%E9%BC%8E",
+  "tier": "secondary"
+ },
+ "art:太阳神鸟金饰": {
+  "by": "agent/date_ancient",
+  "claim": "断代窗口收窄为 前1250–前1000",
+  "conf": "低",
+  "note": "严格说是「移窗」而非收窄：现窗口起点前1300比金沙遗址自身的年代上限（约前1250）还早，器物不可能早于遗址；国家文物局定名作「商周太阳神鸟金饰」，一般系于商代晚期至西周初，故建议前1250–前1000",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E9%87%91%E6%B2%99%E9%81%97%E5%9D%80",
+  "tier": "secondary"
+ },
+ "art:女史箴图": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正；380",
+  "conf": "中",
+  "note": "Google Arts & Culture 上大英博物馆的藏品页把年代一栏标为「Tang Dynasty Copy」（唐代摹本），作者作「Gu Kaizhi (attributed)」；中文维基同条亦称「現代學術界則多判定為5至8世紀（南北朝至唐朝）之間的摹本」",
+  "on": "2026-08-17",
+  "src": "https://artsandculture.google.com/asset/admonitions-of-the-instructress-to-the-court-ladies%EF%BC%88the-admonitions-scroll%EF%BC%89-gu-kaizhi-attributed/JQGDTAoASm56LQ",
+  "tier": "secondary"
+ },
+ "art:子龙鼎": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "传世品，出土信息不详，学界在「商末」（朱凤瀚，比郭家庄M160圆鼎）与「西周早期」（陈佩芬）之间未定，现窗口覆盖商末一段，尚可。另：条目 w 字段写作繁体「子龍鼎」，中文维基并无此页（正确页名是简体「子龙鼎」），这条外链目前是坏的",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E5%AD%90%E9%BE%99%E9%BC%8E",
+  "tier": "secondary"
+ },
+ "art:宗周钟": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "作器者「㝬」经考证即周厉王，铭文记厉王南征、二十六邦来朝；断代工程定厉王在位前877–前841，现窗口基本正对",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E5%AE%97%E5%91%A8%E9%90%98",
+  "tier": "secondary"
+ },
+ "art:定窑婴儿枕": {
+  "by": "agent/date_late",
+  "claim": "断代窗口收窄为 1100–1127",
+  "conf": "高",
+  "note": "故宫典藏资料检索「定窑 白瓷婴儿枕」（故瓷004923）年代栏作「北宋 西元12世纪」",
+  "on": "2026-08-17",
+  "src": "https://digitalarchive.npm.gov.tw/Collection/Detail/72?dep=U",
+  "tier": "secondary"
+ },
+ "art:定陵凤冠": {
+  "by": "agent/date_late",
+  "claim": "条目建模需修正；1573–1620",
+  "conf": "中",
+  "note": "条目开篇即写「1957年从北京市昌平县十三陵之一的定陵出土的四件凤冠」，并逐顶列出名称、所属皇后与现藏机构（故宫博物院、中国国家博物馆、明十三陵博物馆）",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hans/%E5%87%A4%E5%86%A0_(%E5%AE%9A%E9%99%B5)",
+  "tier": "secondary"
+ },
+ "art:富春山居图": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「创作于1347年至1350年」「从至正7年一直画到至正10年」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hans/%E5%AF%8C%E6%98%A5%E5%B1%B1%E5%B1%85%E5%9B%BE",
+  "tier": "secondary"
+ },
+ "art:寒食帖": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目将此帖系于西元1082年、元丰五年",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E5%AF%92%E9%A3%9F%E5%B8%96",
+  "tier": "secondary"
+ },
+ "art:岳麓秦简": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正",
+  "conf": "高",
+  "note": "光明网《岳麓秦简与秦代法制史的研究价值》写明「一共有编号2100个（另外还有香港收藏家捐赠的76个编号的秦简），其中相对比较完整的有1300余枚」，可证其为简牍群而非单件",
+  "on": "2026-08-17",
+  "src": "https://news.gmw.cn/2023-06/17/content_36636073.htm",
+  "tier": "secondary"
+ },
+ "art:嵌绿松石象牙杯": {
+  "by": "agent/date_ancient",
+  "claim": "断代窗口收窄为 前1250–前1192",
+  "conf": "高",
+  "note": "出自殷墟妇好墓，是上古器物里罕见的能与甲骨文对上、墓主可考的一批；妇好为武丁配偶且先武丁而卒，断代工程定武丁在位前1250–前1192，可把整段商代晚期窗口收到武丁一朝（习称「约前1200年」）",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E5%A6%87%E5%A5%BD%E5%A2%93",
+  "tier": "secondary"
+ },
+ "art:帛书周易": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写明「三號墓出土木牘表明墓主人埋葬於前168年」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/马王堆汉墓",
+  "tier": "secondary"
+ },
+ "art:平复帖": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目称其为「西晋文学家、书法家陆机写给友人的一通私人信札，是中国书法史上传世名家法帖中年代最早的一件」，即认其为真迹，未给具体年份",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/平复帖",
+  "tier": "secondary"
+ },
+ "art:平安何如奉橘帖": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正",
+  "conf": "高",
+  "note": "国立故宫博物院精选赏析页写明「三帖皆唐人雙鉤廓填，押署一併摹出」，并把作者王羲之标注为303–361年",
+  "on": "2026-08-17",
+  "src": "https://theme.npm.edu.tw/selection/Article.aspx?sNo=04001009",
+  "tier": "secondary"
+ },
+ "art:康熙台湾舆图": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「原图绘制约于1699~1704年间（清康熙38年至43年）」，并记现藏国立台湾博物馆、2010年指定为国宝",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E5%BA%B7%E7%86%99%E8%87%BA%E7%81%A3%E8%BC%BF%E5%9C%96",
+  "tier": "secondary"
+ },
+ "art:快雪时晴帖": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正",
+  "conf": "中",
+  "note": "条目写「現存一般認為是唐代精摹本，不過亦有人認為是王羲之傳世的唯一真跡」，即通说为唐摹、真迹说未成定论",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/快雪時晴帖",
+  "tier": "secondary"
+ },
+ "art:挥扇仕女图": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "低",
+  "note": "故宫博物院藏品页标为「《挥扇仕女图》卷，传为唐周昉绘」，作者小传注明周昉生卒年不详",
+  "on": "2026-08-17",
+  "src": "https://www.dpm.org.cn/collection/paint/228711.html",
+  "tier": "secondary"
+ },
+ "art:散氏盘": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "由铭文所见夨、散两国人物推定为厉王时期铸作，现窗口与厉王在位期一致；铭文本身不纪王年，无法再细",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E6%95%A3%E6%B0%8F%E7%9B%A4",
+  "tier": "secondary"
+ },
+ "art:敦煌遗书": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正",
+  "conf": "高",
+  "note": "条目写明它是「1900年发现于敦煌莫高窟17号洞窟中的一批书籍的总称，总数约5万卷……最早的是前秦苻坚甘露元年（359年），最晚为南宋庆元二年（1196年）」——现窗口两端正是这两个数字",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/敦煌文獻",
+  "tier": "secondary"
+ },
+ "art:斗彩鸡缸杯": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目记「明朝成化年间于景德镇陶瓷窑厂制成」「底部印有大明成化年制的款式」，并称「截至21世纪，全球尚有20件成化鸡缸杯存世」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hans/%E6%98%8E%E6%88%90%E5%8C%96%E6%96%97%E5%BD%A9%E9%B8%A1%E7%BC%B8%E6%9D%AF",
+  "tier": "secondary"
+ },
+ "art:早春图": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目记此画作于宋神宗熙宁5年（1072年），并引画上「壬子年」款",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E6%97%A9%E6%98%A5%E5%9C%96",
+  "tier": "secondary"
+ },
+ "art:昭陵六骏": {
+  "by": "agent/date_mid",
+  "claim": "定年 636",
+  "conf": "高",
+  "note": "西安碑林博物馆藏品介绍页写明「昭陵六骏刻于唐贞观十年(公元636)」",
+  "on": "2026-08-17",
+  "src": "https://www.beilin-museum.com/index.php?m=home&c=View&a=index&aid=142",
+  "tier": "secondary"
+ },
+ "art:晋侯苏编钟": {
+  "by": "agent/date_ancient",
+  "claim": "定年 前845",
+  "conf": "中",
+  "note": "铭文记「王三十三年」而不著王名，厉王三十三年（前845）、宣王三十三年（前795）、宣王十三年诸说并存，现多倾向厉王三十三年，故给前845；顺带一提现有起点在库内换算下等于前846，比厉王三十三年早了一年",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E6%99%89%E4%BE%AF%E7%A9%8C%E7%B7%A8%E9%90%98",
+  "tier": "secondary"
+ },
+ "art:景云钟": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「因铸于唐睿宗景云二年（711年），今稱之為『景云钟』」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/景雲鐘",
+  "tier": "secondary"
+ },
+ "art:曾侯乙外棺": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目「墓主人及其年代」节写明「曾侯乙墓的入葬时间大约在楚惠王五十六年（公元前433年）或稍晚」，并说木炭测年支持这一推断",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/曾侯乙墓",
+  "tier": "secondary"
+ },
+ "art:曾侯乙尊盘": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "同上，条目给出入葬年为楚惠王五十六年（前433年）或稍晚",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/曾侯乙墓",
+  "tier": "secondary"
+ },
+ "art:曾侯乙编钟": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目载镈钟铭文为楚惠王五十六年（前433年）赠曾侯乙之物，入葬年即据此定为前433年或稍晚",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/曾侯乙墓",
+  "tier": "secondary"
+ },
+ "art:朱然墓漆木屐": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目载其1984年6月出土于朱然墓，为目前中国最古老的漆木屐",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/朱然墓出土漆木屐",
+  "tier": "secondary"
+ },
+ "art:朱然墓漆盘": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目称其为「1984年出土于……朱然墓中的三国东吴时期的文物」，年代由墓主定",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/朱然墓出土贵族生活图漆盘",
+  "tier": "secondary"
+ },
+ "art:样式雷": {
+  "by": "agent/date_late",
+  "claim": "条目建模需修正；1750–1910",
+  "conf": "中",
+  "note": "教科文组织世界记忆名录页写「The existing documents range in date from the middle of the 18th century to the beginning of the 20th century」，并说明入选年份为2007，内容为雷氏家族所制图样与烫样",
+  "on": "2026-08-17",
+  "src": "https://www.unesco.org/en/memory-world/qing-dynasty-yangshi-lei-archives",
+  "tier": "secondary"
+ },
+ "art:步辇图": {
+  "by": "agent/date_late",
+  "claim": "条目建模需修正；641",
+  "conf": "高",
+  "note": "故宫博物院藏品页记为「《步辇图》卷，唐，阎立本作」，正文写「贞观十五年（641年）春天，松赞干布派相国禄东赞到长安来迎接文成公主」",
+  "on": "2026-08-17",
+  "src": "https://www.dpm.org.cn/collection/paint/234620.html",
+  "tier": "secondary"
+ },
+ "art:毛公鼎": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "铭文为宣王册命毛公瘖的完整册命书，断代工程定宣王在位前827–前782，现窗口正对；郭沫若等据文气系于宣王初年，但铭文不纪王年，收得更紧没有硬证据",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E6%AF%9B%E5%85%AC%E9%BC%8E",
+  "tier": "secondary"
+ },
+ "art:水晶杯": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目只写「1990年出土於浙江省杭州市半山鎮石塘村的戰國墓地」，未给任何更细的年代",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/水晶杯",
+  "tier": "secondary"
+ },
+ "art:永元器物簿": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目题名与正文即标明所记为「永元五年至七年」，为居延汉简中保存最完整的汉代简册",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/廣地南部永元五年至七年官兵釜磑月言及四時簿",
+  "tier": "secondary"
+ },
+ "art:汝窑水仙盆": {
+  "by": "agent/date_late",
+  "claim": "断代窗口收窄为 1086–1106",
+  "conf": "中",
+  "note": "条目写「汝官窑烧制贡瓷的时间前后约为二十年，从宋哲宗元祐元年到徽宗崇宁五年（1086－1106年）」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hans/%E6%B1%9D%E7%AA%AF",
+  "tier": "secondary"
+ },
+ "art:江行初雪图": {
+  "by": "agent/date_late",
+  "claim": "断代窗口收窄为 961–975",
+  "conf": "高",
+  "note": "维基条目图说明写「赵幹《江行初雪图》…作于约961至975年间」；台北故宫精选赏析页（sNo=04000958）另记赵幹「为南唐后主画院学生」，是这个区间的依据",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E6%B1%9F%E8%A1%8C%E5%88%9D%E9%9B%AA%E5%9C%96",
+  "tier": "secondary"
+ },
+ "art:沈有容退红毛碑": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目写「为台湾现存年代最早的石碑，内容指1604年明朝将领沈有容在谈判下，使荷兰人韦麻郎离开澎湖的事件」，并记此碑1919年才被发现",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E6%B2%88%E6%9C%89%E5%AE%B9%E8%AB%AD%E9%80%80%E7%B4%85%E6%AF%9B%E7%95%AA%E9%9F%8B%E9%BA%BB%E9%83%8E%E7%AD%89%E7%A2%91",
+  "tier": "secondary"
+ },
+ "art:河姆渡朱漆碗": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "维基与浙博系统均记其出自河姆渡遗址第二期（第三）文化层，按层位应晚于遗址最早一期；但各家对文化层的编号方向不一（有从下往上也有从上往下数的），而博物馆与官媒一律沿用「距今约七千年」，两说相差约五百年，不足以支撑移窗，现有前5000–前450",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E6%B2%B3%E5%A7%86%E6%B8%A1%E5%87%BA%E5%9C%9F%E6%9C%B1%E6%BC%86%E7%A2%97",
+  "tier": "secondary"
+ },
+ "art:淅川铜禁": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写明「铜禁于1978年在河南省淅川县下寺2号楚墓（子庚墓）出土」，墓主即卒于前552年的楚令尹子庚",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/淅川出土铜禁",
+  "tier": "secondary"
+ },
+ "art:淳化大鼎": {
+  "by": "agent/date_ancient",
+  "claim": "断代窗口收窄为 前1046–前996",
+  "conf": "高",
+  "note": "现窗口前1046–前771把整个西周都算了进去；此鼎出自淳化史家塬的西周早期墓，器形近堇鼎、大盂鼎，学界定为西周早期、下限不晚于康王，按断代工程康王在位前1020–前996，收到前1046–前996",
+  "on": "2026-08-17",
+  "src": "https://news.qq.com/rain/a/20250523A05AXS00",
+  "tier": "secondary"
+ },
+ "art:清明上河图": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "故宫博物院藏品页题「《清明上河图》卷，北宋，张择端作」，并称「再现了12世纪北宋全盛时期都城汴京的生活面貌」",
+  "on": "2026-08-17",
+  "src": "https://www.dpm.org.cn/collection/paint/228226.html",
+  "tier": "secondary"
+ },
+ "art:游春图": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正",
+  "conf": "中",
+  "note": "美术报刊载傅熹年《关于展子虔〈游春图〉年代的探讨》一文，系统论证该卷风格属北宋而非隋，主张其为北宋摹本",
+  "on": "2026-08-17",
+  "src": "http://msb.zjol.com.cn/html/2008-02/16/content_2045158.htm",
+  "tier": "secondary"
+ },
+ "art:溪山清远图": {
+  "by": "agent/date_late",
+  "claim": "断代窗口收窄为 1195–1224",
+  "conf": "中",
+  "note": "故宫典藏资料检索「宋夏珪溪山清远 卷」年代栏作「南宋宁宗朝（西元1195至1224年）」，作者栏另记「夏圭（活动于1180?1230前后）」",
+  "on": "2026-08-17",
+  "src": "https://digitalarchive.npm.gov.tw/Collection/Detail/30?dep=P",
+  "tier": "secondary"
+ },
+ "art:溪山行旅图": {
+  "by": "agent/date_late",
+  "claim": "断代窗口收窄为 1000–1030",
+  "conf": "中",
+  "note": "故宫典藏资料检索「宋范宽谿山行旅图 轴」页，网页说明作「范宽（活动于11世纪初期）」，作者简介另作「范宽（西元十世纪）」",
+  "on": "2026-08-17",
+  "src": "https://digitalarchive.npm.gov.tw/Collection/Detail/1195?dep=P",
+  "tier": "secondary"
+ },
+ "art:溪岸图": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "大都会艺术博物馆藏品页把此画标为「Attributed to Dong Yuan (active 930s–960s)」、「Southern Tang dynasty (937–76)」，未给具体年份",
+  "on": "2026-08-17",
+  "src": "https://www.metmuseum.org/art/collection/search/39542",
+  "tier": "secondary"
+ },
+ "art:滇王之印": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "中国国家博物馆藏品页写明「公元前109年，滇王降汉，汉武帝在滇国地区设置益州郡，赐滇王王印」",
+  "on": "2026-08-17",
+  "src": "https://www.chnmuseum.cn/zp/zpml/kgfjp/202110/t20211028_251978.shtml",
+  "tier": "secondary"
+ },
+ "art:满文老档": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「记事起于明万历三十五年（清天命前九年，1607年），迄于明崇祯九年（清崇德元年，1636年）」，并记原稿本四十册现存台北故宫、乾隆四十三年（1778年）重抄本另藏",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E6%BB%BF%E6%96%87%E8%80%81%E6%AA%94",
+  "tier": "secondary"
+ },
+ "art:爨宝子碑": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「爨宝子碑刻立于东晋义熙元年（405年，碑文沿用「大亨」年号，署为大亨四年）」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/爨宝子碑",
+  "tier": "secondary"
+ },
+ "art:玉琮王": {
+  "by": "agent/date_ancient",
+  "claim": "定年 前3000",
+  "conf": "中",
+  "note": "现窗口前3300–前2500照抄的是良渚文化整段跨度；玉琮王是反山M12（反山王陵）出土的M12:98，考古界一致称这座王墓「距今约五千年」，故取前3000作最佳估计",
+  "on": "2026-08-17",
+  "src": "http://kaogu.cssn.cn/zwb/xshdzx/dsj_zgggkg_sslt_xlbd/201512/t20151231_3936041.shtml",
+  "tier": "secondary"
+ },
+ "art:玉边璋": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "三星堆一号祭祀坑出土，2022年公布的坑群碳十四为距今约3200–3000年，与现窗口前1200–前1000正好吻合",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E4%B8%89%E6%98%9F%E5%A0%86%E9%81%BA%E5%9D%80",
+  "tier": "secondary"
+ },
+ "art:白釉龙柄传瓶": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目开头即写「天津博物馆馆藏文物隋白釉龙柄双联传瓶」，并录底部铭文「此传瓶，有並」——可证 w 所指为天津那件传世品，非国博李静训墓出土者",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/隋白釉龙柄双联传瓶",
+  "tier": "secondary"
+ },
+ "art:皇后之玺": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目明说「由此推测它很可能是吕后生前所用的印章」——用的是「推测」二字，不足以据此定年",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/皇后之玺",
+  "tier": "secondary"
+ },
+ "art:皿方罍": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "器形、云雷地纹与兽面夔凤组合都是殷墟期风格，铭文族氏「皿」亦见于同期铜器，商代晚期已是最细的定年。附带提醒：中文维基该条目正文混进了「西汉梁王刘武收藏」一类明显不实的内容，取材时不要采信",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E7%9A%BF%E6%96%B9%E7%BD%8D",
+  "tier": "secondary"
+ },
+ "art:直裾素纱襌衣": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目开头把辛追生卒写作「前3世纪—晚於前168年」，即一号墓下葬只能定到「前168年之后」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/辛追",
+  "tier": "secondary"
+ },
+ "art:石鼓": {
+  "by": "agent/date_ancient",
+  "claim": "条目建模需修正；前777–前374",
+  "conf": "中",
+  "note": "两处模型错误。一是石鼓为十枚一组的刻石，不是单件器物。二是现窗口前827–前374根本不是年代区间，而是把「周宣王说」到唐兰「秦献公十一年说」的全部异说首尾相接凑成的——自1923年马衡论定石鼓为春秋秦国刻石后，周宣王说已基本被放弃，起点至",
+  "on": "2026-08-17",
+  "src": "https://www.fdgwz.org.cn/Web/Show/797",
+  "tier": "secondary"
+ },
+ "art:祭侄文稿": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「是唐朝書法家顏真卿於乾元元年九月初三（758年10月9日）所書……真跡現藏于國立故宮博物院」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/祭姪文稿",
+  "tier": "secondary"
+ },
+ "art:祭柱贮贝器": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目称其为「中国西汉时期文物」，1955年晋宁石寨山甲区一号墓出土，未给具体年份",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/杀人祭柱场面贮贝器",
+  "tier": "secondary"
+ },
+ "art:竹林七贤砖画": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正",
+  "conf": "中",
+  "note": "条目首句写它是「中国南北朝时期南朝墓葬中常见的大型砖印拼镶壁画题材……在江苏的南京宫山、丹阳胡桥等地均有出土」，保存最完好者为1960年南京西善桥宫山南朝墓所出",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/竹林七賢與榮啟期",
+  "tier": "secondary"
+ },
+ "art:红山女神像": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "辽宁省公布保护单位的正式文件把牛河梁女神庙等四处遗迹一并定为红山文化后期、距今五千五百年左右，现窗口前3500–前3000正好覆盖；女神庙自身测年区间仍宽，给单点会是假精确",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E7%89%9B%E6%B2%B3%E6%A2%81%E9%81%97%E5%9D%80",
+  "tier": "secondary"
+ },
+ "art:红山文化玉龙": {
+  "by": "agent/date_ancient",
+  "claim": "条目建模需修正",
+  "conf": "低",
+  "note": "模型问题：「红山文化玉龙」是一类器物的统称（已面世二十六件），不是单件文物。条目实际想指的应是翁牛特旗三星他拉那件C形碧玉龙，建议改名点明。年代本身不必动，但要知道那件是1971年村民捡获、没有地层关系，全靠类型学比对，各家从「不晚于距今5",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E7%BA%A2%E5%B1%B1%E6%96%87%E5%8C%96%E7%8E%89%E9%BE%99",
+  "tier": "secondary"
+ },
+ "art:翠玉白菜": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "台北故宫精选赏析页年代标「清 西元1644-1911」，正文写「此件作品原置于紫禁城的永和宫…因此有人推测此器为瑾妃的嫁妆」，并注「并未留下相关的资料记载」",
+  "on": "2026-08-17",
+  "src": "https://theme.npm.edu.tw/selection/Article.aspx?sNo=04001080",
+  "tier": "secondary"
+ },
+ "art:肉形石": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "故宫典藏资料检索「肉形石」（故杂000178）年代栏作「清 西元1644-1911年」",
+  "on": "2026-08-17",
+  "src": "https://digitalarchive.npm.gov.tw/Collection/Detail/49961?dep=U",
+  "tier": "secondary"
+ },
+ "art:自叙帖": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目写「寫於代宗大曆十二年十月廿八（777年12月2日）」，并另辟篇幅记述真伪之争与2004年台北故宫的科学检测",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/自敘帖",
+  "tier": "secondary"
+ },
+ "art:舞马衔杯银壶": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目载「1970年10月出土于陕西省西安市南郊的何家村唐代窖藏」，为唐代文物",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/舞马衔杯仿皮囊式银壶",
+  "tier": "secondary"
+ },
+ "art:苦笋帖": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "低",
+  "note": "条目只称其为「唐朝僧人、书法家怀素的草书墨宝」，录全文十四字，未给任何年份",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/苦笋帖",
+  "tier": "secondary"
+ },
+ "art:莲塘乳鸭图": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目开篇即写「为南宋宋高宗年间江南丝画家朱克柔的缂丝作品」，并录款识「江东朱刚制莲塘乳鸭图」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E8%93%AE%E5%A1%98%E4%B9%B3%E9%B4%A8%E5%9C%96",
+  "tier": "secondary"
+ },
+ "art:莲鹤方壶": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目称其为「一对春秋时期的青铜器」，出土于新郑李家楼大墓，全文只给到「春秋」这一级，无更细断代",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/莲鹤方壶",
+  "tier": "secondary"
+ },
+ "art:萧翼赚兰亭图": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正",
+  "conf": "高",
+  "note": "条目正文写「阎立本《萧翼赚兰亭图》共有三种宋代摹本传世」，并分别列出辽宁省博物馆、台北故宫、北京故宫三本",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/萧翼赚兰亭图",
+  "tier": "secondary"
+ },
+ "art:虢季子白盘": {
+  "by": "agent/date_ancient",
+  "claim": "定年 前816",
+  "conf": "高",
+  "note": "铭文开首「隹十又二年正月初吉丁亥」，通行读作周宣王十二年，即前816年虢季子白洛河北岸败猃狁受赏而铸，国博与多数论著都采此说，可直接给单点",
+  "on": "2026-08-17",
+  "src": "https://www.chnmuseum.cn/portals/0/web/zt/100n/guobao_content-2.html?id=24",
+  "tier": "secondary"
+ },
+ "art:蜀素帖": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目记此帖书于哲宗元祐三年（1088年）",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E8%9C%80%E7%B4%A0%E5%B8%96",
+  "tier": "secondary"
+ },
+ "art:蜡梅山禽图": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目记为宋徽宗赵佶（1082~1135）所作绢本设色画，未给作画年份，并录徐邦达认为系「院人代笔」之说",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hans/%E8%9C%A1%E6%A2%85%E5%B1%B1%E7%A6%BD%E5%9B%BE",
+  "tier": "secondary"
+ },
+ "art:角形玉杯": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目载「1983年6月出土于廣東省廣州市越秀區象崗西漢南越王墓」，年代由墓主卒年定",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/角形玉杯",
+  "tier": "secondary"
+ },
+ "art:诅盟场面贮贝器": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目称其为「中国西汉时期文物」，1955至1960年间云南晋宁石寨山出土，未给更细年代",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/诅盟场面贮贝器",
+  "tier": "secondary"
+ },
+ "art:赤壁图": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目开篇即写「为金代画家武元直（活动于1149－1189）所绘」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E8%B5%A4%E5%A3%81%E5%9C%96",
+  "tier": "secondary"
+ },
+ "art:赵佶草书千字文": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「传《草书千字文》书写于宋徽宗宣和四年（1122年）」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E8%B6%99%E4%BD%B6%E8%8D%89%E6%9B%B8%E5%8D%83%E5%AD%97%E6%96%87",
+  "tier": "secondary"
+ },
+ "art:越王勾践剑": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目称其为「春秋时代末年的锡青铜剑，为越王勾践所使用」，1965年江陵望山1号楚墓出土，断代依据即剑主身份",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/越王勾践剑",
+  "tier": "secondary"
+ },
+ "art:远宦帖": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正",
+  "conf": "高",
+  "note": "条目首句即写「〈遠宦帖〉為晋代王羲之草書尺牘的雙鉤廓填本，為唐代摹本」，并载安岐《墨緣彙觀》「訂為唐人鉤摹本」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/远宦帖",
+  "tier": "secondary"
+ },
+ "art:逨盘": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "杨家村窖藏同出四十二年、四十三年逨鼎（宣王四十二、四十三年即前786、前785），逨盘铭文历数十二王至时王宣王，铸期即在这两年前后，现值合理",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E9%80%A8%E7%9B%98",
+  "tier": "secondary"
+ },
+ "art:金杖": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "与玉边璋同出三星堆一号祭祀坑，年代依据相同，现窗口与新测年一致",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E4%B8%89%E6%98%9F%E5%A0%86%E9%81%BA%E5%9D%80",
+  "tier": "secondary"
+ },
+ "art:金瓯永固杯": {
+  "by": "agent/date_late",
+  "claim": "条目建模需修正；1797",
+  "conf": "中",
+  "note": "条目写「金瓯永固杯共有四件（1件铜杯、3件金杯）」，分记乾隆四年（1739）、乾隆五年（1740）、乾隆六十二年（1797）三个制作年份，并指北京故宫所藏为乾隆六十二年的金杯",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hans/%E9%87%91%E7%93%AF%E6%B0%B8%E5%9B%BA%E6%9D%AF",
+  "tier": "secondary"
+ },
+ "art:金缕玉衣": {
+  "by": "agent/date_mid",
+  "claim": "条目建模需修正；前113",
+  "conf": "高",
+  "note": "条目第一句即定义「玉衣又稱玉匣、玉柙，為中國漢朝皇帝與王公后妃所用的喪葬殮服」，并给出四百年的存在跨度——是类别条目而非单件器物",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/玉衣",
+  "tier": "secondary"
+ },
+ "art:钱镠铁券": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「因平定軍閥董昌有功，唐昭宗于乾宁四年（897年）八月赐钱镠丹书铁券」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/钱镠铁券",
+  "tier": "secondary"
+ },
+ "art:铜浮屠": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目载其为中国唐代文物，1987年出土于陕西省宝鸡市扶风县法门寺地宫，塔内供有玉质佛指舍利",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/铜浮屠",
+  "tier": "secondary"
+ },
+ "art:铜车马": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目载「1980年出土于陕西省临潼秦始皇陵封土西侧」，出土位置即定其为始皇陵陪葬品",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/铜车马",
+  "tier": "secondary"
+ },
+ "art:铸客铜鼎": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目载「1933年出土於安徽省寿县朱家集李三孤堆楚王墓」，为战国时期楚国青铜炊器，未指定具体年份",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/鑄客銅鼎",
+  "tier": "secondary"
+ },
+ "art:长信宫灯": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目载「1968年对满城汉墓中窦绾墓的发掘作业中发现」，年代由满城汉墓定，未给单独系年",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/長信宮燈",
+  "tier": "secondary"
+ },
+ "art:陶鹰鼎": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "多数论述把它归为仰韶文化庙底沟类型的晚期器物，而庙底沟类型一般定在距今约6000–5500年，这暗示现窗口可能整体偏晚两三百年；但庙底沟类型的下限本身各家不一，证据不够硬，先不移",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E9%99%B6%E9%B9%B0%E9%BC%8E",
+  "tier": "secondary"
+ },
+ "art:霁青转心瓶": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "台北故宫精选赏析「霁青描金游鱼转心瓶」年代标「清 乾隆 西元1736-1795」，页面未提任何具体制作年份",
+  "on": "2026-08-17",
+  "src": "https://theme.npm.edu.tw/selection/Article.aspx?sNo=04009155",
+  "tier": "secondary"
+ },
+ "art:青铜神树": {
+  "by": "agent/date_ancient",
+  "claim": "条目建模需修正；前1200–前1000",
+  "conf": "中",
+  "note": "两个问题。一是模型：三星堆二号坑出的树形器共六件，「青铜神树」是统称，条目若指最著名那件应改叫「一号青铜神树」。二是年代：2022年公布的六座祭祀坑碳十四集中在距今约3200–3000年，现窗口起点前1300偏早；更明显的是它出自二号坑，而",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E4%B8%89%E6%98%9F%E5%A0%86%E9%81%BA%E5%9D%80",
+  "tier": "secondary"
+ },
+ "art:青铜纵目面具": {
+  "by": "agent/date_ancient",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "年代与新公布的坑群测年一致，无需改；仅提示它出自二号坑而非一号坑，若条目按坑分组需要留意",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/%E4%B8%89%E6%98%9F%E5%A0%86%E9%81%BA%E5%9D%80",
+  "tier": "secondary"
+ },
+ "art:鞍马出行图": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目载「《鞍马出行图》是北齐墓道壁画，1979年出土于山西省太原市娄睿墓」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/鞍马出行图",
+  "tier": "secondary"
+ },
+ "art:韩熙载夜宴图": {
+  "by": "agent/date_late",
+  "claim": "条目建模需修正；961–970",
+  "conf": "中",
+  "note": "故宫博物院藏品页题「《韩熙载夜宴图》卷，五代，顾闳中作（宋摹本）」，正文断「此卷据各方面考证，当属南宋孝宗至宁宗朝（1163—1224年）摹本」，并记韩熙载（902—970年）、李煜（961—975年在位）",
+  "on": "2026-08-17",
+  "src": "https://www.dpm.org.cn/collection/paint/228200.html",
+  "tier": "secondary"
+ },
+ "art:马王堆帛画": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目写「三號墓出土木牘表明墓主人埋葬於前168年」，并说「三号墓的封土存在被一号墓封土扰动的情况，证明三号墓的建成时间要比一号墓早」，即一号墓晚于前168年",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/马王堆汉墓",
+  "tier": "secondary"
+ },
+ "art:马王堆木棺椁": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "同上，条目给辛追卒年为「晚於前168年」，未给具体年份",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/辛追",
+  "tier": "secondary"
+ },
+ "art:马踏飞燕": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "低",
+  "note": "条目称「1969年出土于中国甘肃武威雷台古墓的一件东汉青铜器」，只给到「东汉」这一级",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/铜奔马",
+  "tier": "secondary"
+ },
+ "art:高逸图": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "低",
+  "note": "条目称其为「唐末书画家孙位唯一存世的作品」，现藏上海博物馆，未给作画年份；孙位生卒年不详",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/高逸图",
+  "tier": "secondary"
+ },
+ "art:鲁王圹志": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目录志文「壬寅十一月十三日中痰而薨」，并记1959年于金门出土、2011年指定为国宝",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hant/%E7%9A%87%E6%98%8E%E7%9B%A3%E5%9C%8B%E9%AD%AF%E7%8E%8B%E5%A3%99%E8%AA%8C",
+  "tier": "secondary"
+ },
+ "art:鸭形玻璃注": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目载「1965年9月出土於辽宁省北票县西官营子的北燕冯素弗墓」，年代由墓主卒年定",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/鸭形玻璃注",
+  "tier": "secondary"
+ },
+ "art:鹊华秋色图": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "条目写「是元代书画家赵孟頫创作于1295年的绘画作品」",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/zh-hans/%E9%B9%8A%E5%8D%8E%E7%A7%8B%E8%89%B2%E5%9B%BE",
+  "tier": "secondary"
+ },
+ "art:黑石号": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "中",
+  "note": "条目称其为「一艘公元830年左右行驶于中国至中东航线的阿拉伯帆船的遗骸」，与现窗口晚端一致",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/黑石号",
+  "tier": "secondary"
+ },
+ "art:齐王墓方镜": {
+  "by": "agent/date_mid",
+  "claim": "维持现有断代",
+  "conf": "低",
+  "note": "条目只写「1980年于山东淄博的西汉诸侯王墓中出土」「窝托社区南古墓五号陪葬坑」，未指认墓主，也未给年份——即不足以支持收窄",
+  "on": "2026-08-17",
+  "src": "https://zh.wikipedia.org/wiki/齐王墓青铜方镜",
+  "tier": "secondary"
+ },
+ "art:龙藏经": {
+  "by": "agent/date_late",
+  "claim": "维持现有断代",
+  "conf": "高",
+  "note": "故宫南院精选件页题「清康熙8年（1669）内府泥金写本藏文《龙藏经》」，正文写「于康熙六年（1667）下诏开始抄写，康熙八年（1669）完成」",
+  "on": "2026-08-17",
+  "src": "https://south.npm.gov.tw/SelectionsDetailC004100.aspx?Cond=bf32abcc-c4e2-422c-84f8-a746cd9665e2",
+  "tier": "secondary"
+ }
+}
