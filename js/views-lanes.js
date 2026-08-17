@@ -993,13 +993,53 @@ export function renderLaneTimeline(host, list, opts) {
   if (allOn) drawStrands(null, true);
 
   // ── 组装：表头与主体同处一个滚动容器，横向同步、纵向吸顶 ────────────────
+  /**
+   * 跨度只在点中它时才现形。
+   *
+   * 有起讫的条目此前在图上**只标起点**（见上方 isSpan 那段注释：画成通长的长条
+   * 必与邻近事件互撞）。代价是跨度完全看不见——四羊方尊画在前1300 一个点上，
+   * 谁也看不出那是个两百五十年的断代窗口，得悬停才知道。
+   *
+   * 按需现形两头都占：默认一个点、零杂乱；点中了才横着拉出一条线。
+   * 全图同时只有一条，撞不着谁。
+   *
+   * 线分两种，因为 y2 本身就有两种意思：
+   *   **真的持续了这么久**（inst 存续期、her 遗址、era 治世）——莫高窟确实
+   *     从 366 存在到 1368。画实线。
+   *   **不知道是哪一年**（art 文物）——四羊方尊铸成于某一刻，前1300–前1046
+   *     是断代窗口不是寿命。画**半透明**的线，且两端加竖挡：这是误差棒，
+   *     不是时间段。同一根实线画上去等于断言一件假事。
+   */
+  const spanLayer = el('g', { class: 'ev-span-layer' });
+  head.appendChild(spanLayer);
+  const showSpan = (e3) => {
+    spanLayer.innerHTML = '';
+    if (!e3 || !e3.y2 || e3.y2 <= e3.y) return;
+    const x0 = x(e3.y), x1 = x(e3.y2);
+    const window_ = e3.k === 'art';          // 断代窗口 vs 真实存续
+    spanLayer.appendChild(el('line', {
+      x1: x0, x2: x1, y1: AXIS_Y, y2: AXIS_Y,
+      stroke: `var(--ev-${e3.k})`, 'stroke-width': window_ ? 2.5 : 3.5,
+      'stroke-linecap': 'round', opacity: window_ ? 0.38 : 0.75,
+      ...(window_ ? { 'stroke-dasharray': '5 4' } : {}),
+    }));
+    if (window_) {                            // 误差棒的两根竖挡
+      for (const xx of [x0, x1]) {
+        spanLayer.appendChild(el('line', { x1: xx, x2: xx, y1: AXIS_Y - 4, y2: AXIS_Y + 4,
+          stroke: `var(--ev-${e3.k})`, 'stroke-width': 2, opacity: 0.5 }));
+      }
+    }
+  };
+
   head.addEventListener('click', (ev2) => {
     const i = ev2.target && ev2.target.dataset && ev2.target.dataset.evi;
     if (i === undefined || !kp || !kp.showEvent) return;
     const e3 = EVENTS[+i];
+    showSpan(e3);
     kp.showEvent({ id: `evt:${e3.w}`, head: `${e3.y2 ? `${fmtYearAxis(e3.y)}–${fmtYearAxis(e3.y2)}` : fmtYearAxis(e3.y)} · ${(EVENT_KINDS[e3.k] || {}).label || '大事'}`,
       title: e3.w, baidu: e3.b || e3.n, q: `${e3.n} 历史`, yt: true, display: e3.n });
   });
+  host.__showSpan = showSpan;      // 搜索/深链/骰子落到事件时同样拉出跨度
 
   const headWrap = h('div', { class: 'tl-head-wrap' }, [head]);
   const inner = h('div', { class: 'tl-inner' }, [headWrap, body]);
@@ -1068,6 +1108,7 @@ export function renderLaneTimeline(host, list, opts) {
       const ev = EVENTS[i];
       if (!ev) return false;
       this.year(ev.y2 ? (ev.y + ev.y2) / 2 : ev.y, o);
+      if (host.__showSpan) host.__showSpan(ev);      // 跳过去的也把跨度拉出来
       if (kp && kp.showEvent) {
         kp.showEvent({ id: `evt:${ev.w}`, head: `${ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y)} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
           title: ev.w, baidu: ev.b || ev.n, q: `${ev.n} 历史`, yt: true, display: ev.n });
