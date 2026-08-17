@@ -303,8 +303,12 @@ async function fillCard(card, spec) {
   //       在百度一律 404——那个括号是维基的内部约定，不该跟着出门。
   //   二、`nb` 为真即整个藏掉按钮：百度确实没有这个词条（实测 37 条），
   //       给一个明知打不开的链接，不如不给。
+  //   三、`b` 允许写成「名字/义项号」。少数条目**存在却够不着**：百度自己的
+  //       同义词表把 /item/文景之治 劫持到一本 2007 年的图书，正条只能靠义项号
+  //       进去。故按 / 分段编码，斜杠本身留着——整串编码会把它变成 %2F。
   const bdName = (spec.baidu || spec.title).replace(/\s*[（(][^）)]*[）)]\s*$/, '');
-  card.baidu.href = `https://baike.baidu.com/item/${encodeURIComponent(bdName)}`;
+  const bdPath = bdName.split('/').map(encodeURIComponent).join('/');
+  card.baidu.href = `https://baike.baidu.com/item/${bdPath}`;
   card.baidu.style.display = spec.noBaidu ? 'none' : '';
   // 少数条目手挑了片子。搜索对它们并不友好——搜《清明上河图》出来的多是
   // 商品、仿作与短视频切片,而这几部讲得确实好,与其让读者自己淘,不如直接给。
