@@ -187,7 +187,7 @@ export function evSpec(ev) {
     title: ev.w, sec: ev.ws, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
     // b：百度自己的正名（维基与百度的条目名常不一致，实测 75 条要另写）
     // nb：百度确实没有这个词条，藏掉按钮而不是给个 404
-    baidu: ev.b, noBaidu: !!ev.nb,
+    baidu: ev.b, noBaidu: !!ev.nb, museum: ev.m,
     q: ev.ya || ev.n, yt: true,
   };
 }
@@ -232,12 +232,16 @@ function mkCard(sideClass) {
   const yt = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '▶ YouTube' });
   // B 站分一个按钮:中文史料类的视频这边远比 YouTube 全,而读者多半也在这边找
   const bili = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '▶ 哔哩哔哩' });
+  // 馆藏页:持有这件东西的机构自己的条目页。对文物而言这是最硬的一档来源——
+  // 尺寸、出土时间、出土地点这类事实,博物馆比任何百科都可靠,
+  // 且它是 `tier: primary` 那一级(见 tools/mining/sources.json)。无则不显示。
+  const museum = h('a', { class: 'kp-a kp-museum', target: '_blank', rel: 'noopener', text: '馆藏页 ↗' });
   const close = h('button', { class: 'kp-close', type: 'button', text: '✕' });
   const src = h('div', { class: 'kp-src', text: '摘要实时取自中文维基百科' });
   const el = h('div', { class: `kp ${sideClass}` }, [
-    close, img, head, title, ext, h('div', { class: 'kp-links' }, [wiki, baidu, yt, bili]), src,
+    close, img, head, title, ext, h('div', { class: 'kp-links' }, [wiki, baidu, museum, yt, bili]), src,
   ]);
-  return { el, img, head, title, ext, wiki, baidu, yt, bili, close };
+  return { el, img, head, title, ext, wiki, baidu, museum, yt, bili, close };
 }
 
 /** 皇帝卡的取数说明书。库内 387 位君主全有姓名,故标题恒为人名 */
@@ -319,6 +323,8 @@ async function fillCard(card, spec) {
     card.baidu.textContent = '百度百科 ↗';
   }
   card.baidu.style.display = spec.noBaidu ? 'none' : '';
+  card.museum.href = spec.museum || '#';
+  card.museum.style.display = spec.museum ? '' : 'none';
   // 少数条目手挑了片子。搜索对它们并不友好——搜《清明上河图》出来的多是
   // 商品、仿作与短视频切片,而这几部讲得确实好,与其让读者自己淘,不如直接给。
   // 其余仍走搜索(手挑一条要看过才敢挂,不可能挂满六百条)。
