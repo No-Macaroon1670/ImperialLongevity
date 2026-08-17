@@ -21,7 +21,7 @@ UA = {"User-Agent": "ImperialLongevity/1.0 (merge)"}
 cache = json.load(io.open(CACHE, encoding="utf-8")) if os.path.exists(CACHE) else {}
 
 # 字段顺序照库里现有的写法,新条目混进去看不出是后加的
-ORDER = ["y", "o", "k", "n", "w", "ws", "d", "r", "cf", "ya",
+ORDER = ["y", "o", "k", "n", "w", "ws", "d", "u", "r", "cf", "ya",
          "y2", "u1", "u2", "b", "nb", "m", "yc"]
 
 

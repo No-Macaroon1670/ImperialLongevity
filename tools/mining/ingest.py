@@ -63,6 +63,8 @@ for path in sys.argv[1:]:
             e["m"] = r["museum"]           # agent 那边惯用全名,两种都认
         if r.get("nb"):
             e["nb"] = 1
+        if r.get("u"):
+            e["u"] = int(r["u"])           # 世界遗产列入年(公元后,不走 to_astro)
         if r.get("conf") in CONF:
             e["cf"] = CONF[r["conf"]]
         if r.get("y2"):
