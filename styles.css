@@ -513,8 +513,10 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
   section.card.has-kp2 .desc { max-width: min(76ch, calc(100% - 692px)); }
   section.card.has-kp2 .desc + div { padding-right: 692px; }
 }
+/* 上缘由 JS 按「图的上沿倒推」算出（见 knowledge.js 的 syncLayout）：
+   卡吊在图上沿之上、标题行之下。写死 14px 时它正好压住标题行右边那排按钮。 */
 .kp-corner {
-  position: absolute; top: 14px; left: auto;
+  position: absolute; top: var(--kp-top, 14px); left: auto;
   transform: none; width: 322px; max-height: 268px; z-index: 5;
 }
 .kp-corner-emp { right: 16px; }

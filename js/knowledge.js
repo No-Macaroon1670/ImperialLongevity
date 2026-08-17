@@ -236,6 +236,9 @@ const empSpec = (item) => {
     id: e.id,
     head: `${dyn.name} · ${e.temple}`,
     title: nm,
+    // 本名取不到时的退路(见 fillCard)。庙号本身多半已含朝代(唐宪宗、秦始皇),
+    // 不再补前缀,否则会拼出「唐唐宪宗」这种查不到的名字
+    alt: e.temple && e.temple !== nm ? e.temple : null,
     baidu: nm,
     q: `${dyn.name} ${nm}`,
     yt: NOTABLE.has(e.name),
@@ -291,8 +294,17 @@ async function fillCard(card, spec) {
   card.yt.style.display = spec.yt ? '' : 'none';
   card.bili.style.display = spec.yt ? '' : 'none';
   card.el.classList.add('on');
-  const s = await fetchSummary(spec.title);
+  let s = await fetchSummary(spec.title);
   if (card.el.dataset.key !== spec.id) return;             // 等待期间已换人
+  // 本名常常不是条目所在:李纯既是唐宪宗、也是当代演员,取回来的是一页义项列表,
+  // 卡上于是只剩「未能实时拉取」,而「维基百科全文」也指着那页消歧义(用户实测)。
+  // 退到庙号再取一次——帝王的条目多半就立在那儿。取到了连带把链接也改对,
+  // 因为下面的 wiki.href 是按取回的 content_urls 重写的
+  if ((!s || !s.extract || s.type === 'disambiguation') && spec.alt) {
+    const s2 = await fetchSummary(spec.alt);
+    if (card.el.dataset.key !== spec.id) return;
+    if (s2 && s2.extract && s2.type !== 'disambiguation') s = s2;
+  }
   if (s && s.extract && s.type !== 'disambiguation') {
     card.title.textContent = spec.display || s.title || spec.title;
     card.ext.textContent = s.extract;
@@ -497,19 +509,37 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
     const empOn = cards.emp.el.classList.contains('on') && mq.matches;
     sectionEl.classList.toggle('has-kp', dynOn || empOn);
     sectionEl.classList.toggle('has-kp2', dynOn);
-    // 纵向也要让:卡是 absolute,不占文档高度。说明段一短(单卡态说明拿回
-    // 76ch 只排四行)卡的下缘就压住泳道图的吸顶年份标尺,故按实测把图顶下去。
-    // 卡的高度随内容(有无头图、摘要长短)而变,所以按 getBoundingClientRect
-    // 实测而非写死数字;摘要落地后 show() 会再同步一次
+    // 卡**吊在图的上沿**,不再从版块顶端往下量。
+    //
+    // 原先写死 top:14px,于是卡的上缘正落在标题行那一档。说明段与控件行都按
+    // has-kp 让出了右侧宽度,**唯独标题行没让**——而它右边排着「展开说明 /
+    // 导览 / 骰子 / 搜索框」。卡不透明且 z-index:5,那几样既看不见也点不动
+    // (用户实测:导览、骰子、搜索框三个全被吃掉)。
+    //
+    // 改成按图的上沿倒推,一举两得:一来卡自然落到标题行下方,二来卡因摘要长短
+    // 而变高时是**往上长**,图不再跟着上下跳——从前是上缘钉死、下缘变动,
+    // 每换一张卡图就位移一次。
+    // 顶不过去时(卡比标题行到图之间的空当还高)才回过头把图推下去。
     const chartHost = scroller.closest('.chart-host');
     if (!chartHost) return;
     chartHost.style.paddingTop = '';
-    if (!dynOn && !empOn) return;
-    const bottom = Math.max(dynOn ? cards.dyn.el.getBoundingClientRect().bottom : 0,
-      empOn ? cards.emp.el.getBoundingClientRect().bottom : 0);
-    const need = bottom + 12 - chartHost.getBoundingClientRect().top;
+    if (!dynOn && !empOn) { sectionEl.style.removeProperty('--kp-top'); return; }
+
+    const GAP = 12;
+    const secTop = sectionEl.getBoundingClientRect().top;
+    const head = sectionEl.querySelector(':scope > .head');
+    // 上限:压到标题行就等于吃掉那一排按钮。标题行会随屏宽折行,高度不是定值,
+    // 故按实测取,不写死
+    const floor = head ? head.getBoundingClientRect().bottom - secTop + 10 : 14;
+    // 此刻 paddingTop 已清空,量到的是图「没被推过」的自然位置
+    const natural = chartHost.getBoundingClientRect().top - secTop;
+    const tall = Math.max(dynOn ? cards.dyn.el.offsetHeight : 0,
+      empOn ? cards.emp.el.offsetHeight : 0);
+    const top = Math.max(floor, natural - GAP - tall);
+    sectionEl.style.setProperty('--kp-top', `${Math.round(top)}px`);
     // 用 padding 而非 margin:相邻兄弟的外边距会合并,控件行本有 12px 下边距,
     // 给 margin-top 只会取两者较大值,实测净空因此少 12px、正好贴住卡的下缘
+    const need = top + tall + GAP - natural;
     if (need > 0) chartHost.style.paddingTop = `${Math.round(need)}px`;
   };
   const hide = (which) => {
