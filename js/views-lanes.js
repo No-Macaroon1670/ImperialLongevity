@@ -13,7 +13,7 @@
 //   3. 朝代名在带首，并在横向滚动时吸附于视口左缘（不越出本带范围），
 //      因此任何时刻都能读出正在看的是哪一朝。
 import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hideTip, fmtYearAxis, fmt1, scrollHint, glide } from './charts.js';
-import { mountKnowledgeCorner, eventSpec } from './knowledge.js';
+import { mountKnowledgeCorner, eventSpec, evSpec } from './knowledge.js';
 import { stampHash } from './search.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, TRANSITIONS, ORTHODOX, SECONDARY } from './dynasties.js';
@@ -1043,8 +1043,7 @@ export function renderLaneTimeline(host, list, opts) {
     if (i === undefined || !kp || !kp.showEvent) return;
     const e3 = EVENTS[+i];
     showSpan(e3);
-    kp.showEvent({ id: `evt:${e3.w}`, head: `${e3.y2 ? `${fmtYearAxis(e3.y)}–${fmtYearAxis(e3.y2)}` : fmtYearAxis(e3.y)} · ${(EVENT_KINDS[e3.k] || {}).label || '大事'}`,
-      title: e3.w, baidu: e3.b || e3.n, q: `${e3.n} 历史`, yt: true, display: e3.n });
+    kp.showEvent(evSpec(e3));
   });
   host.__showSpan = showSpan;      // 搜索/深链/骰子落到事件时同样拉出跨度
 
@@ -1117,8 +1116,7 @@ export function renderLaneTimeline(host, list, opts) {
       this.year(ev.y2 ? (ev.y + ev.y2) / 2 : ev.y, o);
       if (host.__showSpan) host.__showSpan(ev);      // 跳过去的也把跨度拉出来
       if (kp && kp.showEvent) {
-        kp.showEvent({ id: `evt:${ev.w}`, head: `${ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y)} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
-          title: ev.w, baidu: ev.b || ev.n, q: `${ev.n} 历史`, yt: true, display: ev.n });
+        kp.showEvent(evSpec(ev));
       }
       return true;
     },

@@ -185,6 +185,9 @@ export function evSpec(ev) {
   return {
     id: `evt:${ev.w}${ev.ws || ''}`, head: `${span} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
     title: ev.w, sec: ev.ws, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
+    // b：百度自己的正名（维基与百度的条目名常不一致，实测 75 条要另写）
+    // nb：百度确实没有这个词条，藏掉按钮而不是给个 404
+    baidu: ev.b, noBaidu: !!ev.nb,
     q: ev.ya || ev.n, yt: true,
   };
 }
@@ -293,7 +296,16 @@ async function fillCard(card, spec) {
   // 与其因此不收,不如链到那一节:摘要仍取母条目(泛些,但对得上题),链接直达段落。
   card.wiki.href = `https://zh.wikipedia.org/wiki/${encodeURIComponent(spec.title)}`
     + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
-  card.baidu.href = `https://baike.baidu.com/item/${encodeURIComponent(spec.baidu || spec.title)}`;
+  // 百度这一侧此前从未被机器核过（没有 CORS，链接是盲发的），实测 725 条里
+  // 坏 112 条。逐条的修法写在数据的 `b` 字段里；这里再加两道通用兜底：
+  //
+  //   一、剥掉维基的消歧义后缀。`石鼓 (先秦)`、`李密 (隋朝)`、`玉壁之战 (546年)`
+  //       在百度一律 404——那个括号是维基的内部约定，不该跟着出门。
+  //   二、`nb` 为真即整个藏掉按钮：百度确实没有这个词条（实测 37 条），
+  //       给一个明知打不开的链接，不如不给。
+  const bdName = (spec.baidu || spec.title).replace(/\s*[（(][^）)]*[）)]\s*$/, '');
+  card.baidu.href = `https://baike.baidu.com/item/${encodeURIComponent(bdName)}`;
+  card.baidu.style.display = spec.noBaidu ? 'none' : '';
   // 少数条目手挑了片子。搜索对它们并不友好——搜《清明上河图》出来的多是
   // 商品、仿作与短视频切片,而这几部讲得确实好,与其让读者自己淘,不如直接给。
   // 其余仍走搜索(手挑一条要看过才敢挂,不可能挂满六百条)。
