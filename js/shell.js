@@ -365,8 +365,34 @@ export function mountApp({ sections, hero }) {
     toc.appendChild(h('a', { href: `#${sec.id}`, text: sec.title.split('：')[0] }));
     const card = h('section', { class: 'card', id: sec.id });
     // 需求编号属于交付追溯，写在 README 的对照表里，不占版面
-    card.appendChild(h('div', { class: 'head' }, [h('h2', { text: sec.title })]));
-    card.appendChild(h('p', { class: 'desc', text: sec.desc }));
+    const head = h('div', { class: 'head' }, [h('h2', { text: sec.title })]);
+    card.appendChild(head);
+    const desc = h('p', { class: 'desc', text: sec.desc });
+    card.appendChild(desc);
+    // 说明段可收起。窄一点的屏上,原先是**先牺牲知识卡**(角卡在 1199/999px
+    // 以下一律隐藏),可那几段说明读过一遍就不必再占着地方,而卡是随时在用的。
+    // 收起说明即把那片横向空间让给卡,于是卡的断点能往下挪三百多像素。
+    // 只给带角卡的那一节加(全景页),统计页的说明没有卡跟它争地方。
+    if (sec.id === 'panorama') {
+      const key = `il.desc.${sec.id}`;
+      const btn = h('button', { class: 'chip desc-toggle', type: 'button' });
+      const sync = () => {
+        const off = card.classList.contains('desc-off');
+        btn.textContent = off ? '展开说明' : '收起说明';
+        btn.setAttribute('aria-expanded', String(!off));
+      };
+      btn.addEventListener('click', () => {
+        card.classList.toggle('desc-off');
+        try { localStorage.setItem(key, card.classList.contains('desc-off') ? '1' : '0'); } catch { /* 隐私模式 */ }
+        sync();
+        dispatchEvent(new Event('resize'));   // 让角卡与图重新量宽
+      });
+      let saved = null;
+      try { saved = localStorage.getItem(key); } catch { /* 同上 */ }
+      if (saved === '1') card.classList.add('desc-off');
+      sync();
+      head.appendChild(btn);
+    }
     const ctrl = h('div');
     const chart = h('div', { class: 'chart-host' });
     card.appendChild(ctrl); card.appendChild(chart);

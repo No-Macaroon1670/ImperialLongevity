@@ -451,8 +451,21 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
  * <1000px 全隐;1000–1199px 只留皇帝卡(放不下第二张)。
  */
 export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
-  const mq = matchMedia('(min-width: 1000px)');
-  const mqBoth = matchMedia('(min-width: 1200px)');
+  // 断点分两档:说明段展开时按原值,收起时下移三百余像素——说明一收,
+  // 横向就空出七十六字的宽度,那正是卡要的地方(CSS 侧同步,见 styles.css 的
+  // .desc-off 段)。故不能只看窗宽,还要看说明收没收起。
+  const NARROW = { one: 680, both: 1010 }, WIDE = { one: 1000, both: 1200 };
+  const descOff = () => sectionEl.classList.contains('desc-off');
+  const lim = () => (descOff() ? NARROW : WIDE);
+  // 仿 MediaQueryList 的接口(mountSolo 要 addEventListener),但阈值是活的:
+  // 说明一收就换一档。改动经 resize 通知——收起按钮会派发一个 resize,
+  // 窗口本身缩放也走它,两条路合一。
+  const mkMq = (key) => ({
+    get matches() { return innerWidth >= lim()[key]; },
+    addEventListener: (_t, fn) => addEventListener('resize', fn),
+    removeEventListener: (_t, fn) => removeEventListener('resize', fn),
+  });
+  const mq = mkMq('one'), mqBoth = mkMq('both');
   const cards = { dyn: mkCard('kp-corner kp-corner-dyn'), emp: mkCard('kp-corner kp-corner-emp') };
   const solo = mountSolo(mqBoth);    // 窄到摆不下角卡时走这一张
   sectionEl.classList.add('kp-anchor');

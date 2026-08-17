@@ -521,6 +521,22 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 .kp-corner .kp-src { margin-top: 5px; }
 @media (max-width: 1199px) { .kp-corner-dyn { display: none !important; } }
 @media (max-width: 999px) { .kp-corner { display: none !important; } }
+
+/* 收起说明,把那片横向空间让给卡。
+   原先窄屏是**先牺牲卡**:角卡在 1199／999px 以下一律隐藏,说明段却照旧占着
+   七十六字宽。可说明读过一遍就不必再占地方,卡却是随时在用的——该让的是说明。
+   说明一收,断点就能往下挪三百多像素:单卡 999 → 680,双卡 1199 → 1010。
+   收起状态记在 localStorage,下次进来还是你上次选的那样。 */
+.desc-toggle { margin-left: auto; align-self: center; font-size: .74rem; padding: 2px 10px; }
+section.card.desc-off > .desc { display: none; }
+@media (min-width: 680px) {
+  section.card.desc-off.has-kp .kp-corner-emp { display: block !important; }
+  section.card.desc-off.has-kp .desc + div { padding-right: 356px; }
+}
+@media (min-width: 1010px) {
+  section.card.desc-off.has-kp2 .kp-corner-dyn { display: block !important; }
+  section.card.desc-off.has-kp2 .desc + div { padding-right: 692px; }
+}
 .kp-thumb { width: 100%; max-height: 168px; object-fit: cover; object-position: top; border-radius: 8px; }
 .kp-sub { font-size: .74rem; color: var(--text-1); opacity: .62; margin-top: 8px; }
 .kp-title { font-weight: 720; font-size: 1.04rem; margin: 1px 0 6px; }
