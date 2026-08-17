@@ -76,7 +76,7 @@ for e in evs:
 
 # 只读**已换算过**的批次(ingest.py 的产物)。famous/gaps2/heritage 三个旧暂存
 # 文件已并完,且用的是旧年份约定,再读它们会复活手工删掉的条目、并带错年份进来
-for fn in ["dis_conv.json", "dis2_conv.json", "prehan_conv.json", "dis3_conv.json", "qinhan_conv.json", "song_conv.json", "weijin_conv.json", "tang_conv.json", "mingqing_conv.json", "relic1_conv.json", "relic2_conv.json", "relic3_conv.json", "sites_conv.json", "feiyi_conv.json", "han_conv.json"]:
+for fn in ["dis_conv.json", "dis2_conv.json", "prehan_conv.json", "dis3_conv.json", "qinhan_conv.json", "song_conv.json", "weijin_conv.json", "tang_conv.json", "mingqing_conv.json", "relic1_conv.json", "relic2_conv.json", "relic3_conv.json", "sites_conv.json", "feiyi_conv.json", "han_conv.json", "canon_conv.json", "more_conv.json"]:
     for c in json.load(io.open(os.path.join(HERE, fn), encoding="utf-8")):
         p = pid(c["w"])
         if p == "?":
