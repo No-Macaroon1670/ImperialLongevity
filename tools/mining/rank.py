@@ -135,6 +135,50 @@ for i, e in enumerate(order):
 # 类别保底同样按比例:每类至少拿到 N1 的这个份额,免得一等清一色是战争政变
 FLOOR_SHARE = {"war": .19, "rev": .15, "gov": .15, "cul": .15, "out": .10, "inst": .07, "dis": .05}
 FLOOR = {k: max(2, round(N1 * v)) for k, v in FLOOR_SHARE.items()}
+
+# ── 定年存疑者不当锚点 ──────────────────────────────────────────────────────
+# 一等是「锚点」:知识卡自动跟随它们,手机上只显示这一等。也就是说锚点是
+# 本库主动推到读者眼前的那一批。**连哪一年都拿不准的条目,不该享受这个待遇**。
+#
+# `cf: 3`(低)是入库时 agent 自报的定年把握。眼下最扎眼的例子:青梅竹马靠
+# 《长干行》系于 726,而那首诗本无确年,726 是据李白行迹推的;它却因为
+# `w` 指向李白(全站最热条目之一)而在名人轶事里排第一。
+# 把它推到读者面前,等于拿全库最不确定的一条当门面。
+#
+# 只降 `cf: 3`,不动 `cf: 2`——「中」是常态,史事本来就多半只能定到那个程度。
+low = [e for e in rankable if e.get("cf") == 3 and tier[id(e)] == 1]
+for e in low:
+    tier[id(e)] = 2
+if low:
+    print("定年存疑降级 %d 条:%s" % (len(low), "、".join(e["n"] for e in low)))
+
+# ── 类别上限:名人轶事要封顶,不是保底 ────────────────────────────────────────
+# 别类的 `w` 指向**事件**条目,fig 的 `w` 指向**人**——苏轼、谢安、王羲之。
+# 人物条目的入链与访问量系统性地高出一大截,实测中位数:
+#     fig  入链 392 / 年访问 43509
+#     war  入链 138 / 年访问 10746
+#     art  入链 113 / 年访问  3091
+# 也就是说这三个信号在 fig 身上量的是「这个人有多有名」,不是「这条轶事有多重要」。
+# 闻鸡起舞分数高,是因为祖逖条目写得全、读得多,与那件轶事本身够不够格无关。
+#
+# 这与本脚本开头警告的是同一种病,只是换了个轴:「那不是重要,那是维基的写作偏好」。
+# 不封顶时 fig 一类独占 29 个锚点,是全库最多的——而它只占全库 9%。
+#
+# 故 fig 的分数**不与别类比**,只在自己内部排,按人口比例取一份额度。
+CEIL_SHARE = {"fig": None}          # None = 按该类占全库的比例
+for k in CEIL_SHARE:
+    pool = [e for e in rankable if e["k"] == k]
+    if not pool:
+        continue
+    quota = max(3, round(N1 * len(pool) / len(rankable)))
+    keep = {id(e) for e in sorted(pool, key=lambda e: -e["score"])[:quota]}
+    cut = 0
+    for e in pool:
+        if tier[id(e)] == 1 and id(e) not in keep:
+            tier[id(e)] = 2
+            cut += 1
+    print("类别上限 %s:额度 %d,降级 %d 条(信号量的是人不是事,不与别类同池排)"
+          % (k, quota, cut))
 bycat = defaultdict(list)
 for e in order:
     bycat[e["k"]].append(e)
