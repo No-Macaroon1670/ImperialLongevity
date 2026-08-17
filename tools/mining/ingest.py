@@ -54,15 +54,29 @@ for path in sys.argv[1:]:
         #   d  政权归属(河流视图据此把点放进对应河道,缺了就浮在河道之间)
         #   ya 雅名 / yc 出处注记(这一层的主体就是成语,丢了等于丢了内容)
         #   cf 定年置信度(见上)
-        for f in ("d", "ya", "yc"):
+        #   m  馆藏页(文物的本体页,比百科硬一档)
+        #   b  百度自己的正名(维基与百度条目名常不一致;支持 `名字/义项号`)
+        for f in ("d", "ya", "yc", "m", "b"):
             if r.get(f):
                 e[f] = r[f]
+        if r.get("museum") and not e.get("m"):
+            e["m"] = r["museum"]           # agent 那边惯用全名,两种都认
+        if r.get("nb"):
+            e["nb"] = 1
         if r.get("conf") in CONF:
             e["cf"] = CONF[r["conf"]]
         if r.get("y2"):
             e["y2"] = to_astro(r["y2"])
             if e["y2"] < e["y"]:
                 print("  ! %s 的 y2 早于 y,跳过" % r["n"], file=sys.stderr); continue
+        # u1/u2 是**定年窗口**,与 y/y2 的**真实历时**是两回事——这两者混在一个
+        # 字段里过,分开之后 ingest 却一直没跟上,于是 agent 报的窗口全被丢掉。
+        if r.get("u1") and r.get("u2"):
+            e["u1"], e["u2"] = to_astro(r["u1"]), to_astro(r["u2"])
+            if not (e["u1"] <= e["y"] <= e["u2"]):
+                print("  ! %s 的 y 落在窗口 u1–u2 之外,跳过" % r["n"], file=sys.stderr); continue
+        elif r.get("u1") or r.get("u2"):
+            print("  ! %s 只给了半个窗口,跳过" % r["n"], file=sys.stderr); continue
         if len(e["n"]) > 8:
             print("  ! %s 名字超过八字,图上写不下,跳过" % r["n"], file=sys.stderr); continue
         key = (e["y"], e["n"])
