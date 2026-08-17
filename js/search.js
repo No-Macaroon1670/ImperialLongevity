@@ -14,7 +14,7 @@
 // 本模块只管说「去哪儿」，不必知道那一张是横滚还是竖滚。
 import { h, fmtYearAxis } from './charts.js';
 import { EMPERORS, DYNASTIES } from './data.js';
-import { EVENTS } from './events.js';
+import { EVENTS, EVENT_KINDS } from './events.js';
 
 const norm = (s) => (s || '').toLowerCase().replace(/[·・\s（）()]/g, '');
 
@@ -37,9 +37,15 @@ function buildIndex() {
     });
   }
   EVENTS.forEach((ev, i) => {
+    // 副行写类别与年代;**名人轶事另把主角写出来**——这一类的名字是成语
+    // (孤注一掷),条目却挂在人身上(寇准),两者是不同的东西。搜「寇准」本来
+    // 就命中得了(keys 里有 ev.w),可结果行只写「孤注一掷」,读者既不知道
+    // 它为什么匹配,也不知道讲的是谁。其余各类的 n 与 w 说的是同一件事,不必赘写。
+    const kind = (EVENT_KINDS[ev.k] || {}).label || '大事';
+    const who = ev.k === 'fig' && ev.w && ev.w !== ev.n ? ` · ${ev.w}` : '';
     idx.push({
       kind: 'ev', id: i, label: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
-      sub: `大事 · ${fmtYearAxis(ev.y)}${ev.y2 ? `–${fmtYearAxis(ev.y2)}` : ''}`,
+      sub: `${kind} · ${fmtYearAxis(ev.y)}${ev.y2 ? `–${fmtYearAxis(ev.y2)}` : ''}${who}`,
       // 雅名也要能搜:图上写的是「破釜沉舟」,搜这四个字却找不到巨鹿之战,
       // 等于把刚教给读者的名字又藏起来
       keys: [ev.n, ev.w, ev.ya].filter(Boolean).map(norm), y: ev.y, raw: ev.n,
