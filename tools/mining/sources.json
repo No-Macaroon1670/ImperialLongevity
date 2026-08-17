@@ -1222,5 +1222,23 @@
   "on": "2026-08-17",
   "src": "https://south.npm.gov.tw/SelectionsDetailC004100.aspx?Cond=bf32abcc-c4e2-422c-84f8-a746cd9665e2",
   "tier": "secondary"
+ },
+ "fig:孔融让梨": {
+  "by": "claude/hand",
+  "claim": "系年 154（cf 3）与典源",
+  "conf": "中",
+  "note": "《後漢書》卷七十孔融傳，唐李賢注引《融家傳》原文实测为「兄弟七人，融第六，幼有自然之性。年四歲時，每與諸兄共食梨，融輒引小者」——正文无此事，仅见于注引；孔融生 151，四岁即 154，故只能算约数",
+  "on": "2026-08-17",
+  "src": "https://zh.wikisource.org/wiki/後漢書/卷70",
+  "tier": "primary"
+ },
+ "fig:游化嵩洛": {
+  "by": "claude/hand",
+  "claim": "改属北魏；系年 527 存疑（cf 3）",
+  "conf": "低",
+  "note": "「遊化嵩洛」四字实出《續高僧傳》卷十六慧可传「遇天竺沙門菩提達磨遊化嵩洛」，非達磨本传；同卷〈菩提達磨傳〉云「初達宋境南越，末又北度至魏」，把入华系于刘宋，与梁武帝会面之说不合，故 d 由 liang 改 bwei（嵩洛 527 年属北魏）。一苇渡江、面壁九年皆宋代禅籍才成型",
+  "on": "2026-08-17",
+  "src": "https://zh.wikisource.org/wiki/續高僧傳/卷16",
+  "tier": "primary"
  }
 }
