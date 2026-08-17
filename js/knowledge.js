@@ -455,7 +455,7 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
   // 横向就空出七十六字的宽度,那正是卡要的地方(CSS 侧同步,见 styles.css 的
   // .desc-off 段)。故不能只看窗宽,还要看说明收没收起。
   const NARROW = { one: 680, both: 1010 }, WIDE = { one: 1000, both: 1200 };
-  const descOff = () => sectionEl.classList.contains('desc-off');
+  const descOff = () => !sectionEl.classList.contains('desc-full');
   const lim = () => (descOff() ? NARROW : WIDE);
   // 仿 MediaQueryList 的接口(mountSolo 要 addEventListener),但阈值是活的:
   // 说明一收就换一档。改动经 resize 通知——收起按钮会派发一个 resize,

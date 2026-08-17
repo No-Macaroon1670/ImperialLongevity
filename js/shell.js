@@ -377,19 +377,19 @@ export function mountApp({ sections, hero }) {
       const key = `il.desc.${sec.id}`;
       const btn = h('button', { class: 'chip desc-toggle', type: 'button' });
       const sync = () => {
-        const off = card.classList.contains('desc-off');
-        btn.textContent = off ? '展开说明' : '收起说明';
-        btn.setAttribute('aria-expanded', String(!off));
+        const full = card.classList.contains('desc-full');
+        btn.textContent = full ? '收起说明' : '展开说明';
+        btn.setAttribute('aria-expanded', String(full));
       };
       btn.addEventListener('click', () => {
-        card.classList.toggle('desc-off');
-        try { localStorage.setItem(key, card.classList.contains('desc-off') ? '1' : '0'); } catch { /* 隐私模式 */ }
+        card.classList.toggle('desc-full');
+        try { localStorage.setItem(key, card.classList.contains('desc-full') ? '1' : '0'); } catch { /* 隐私模式 */ }
         sync();
         dispatchEvent(new Event('resize'));   // 让角卡与图重新量宽
       });
       let saved = null;
       try { saved = localStorage.getItem(key); } catch { /* 同上 */ }
-      if (saved === '1') card.classList.add('desc-off');
+      if (saved === '1') card.classList.add('desc-full');
       sync();
       head.appendChild(btn);
     }

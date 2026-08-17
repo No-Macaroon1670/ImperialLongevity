@@ -519,8 +519,11 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 .kp-corner .kp-ext { font-size: .77rem; line-height: 1.55; -webkit-line-clamp: 6; }
 .kp-corner .kp-links { clear: both; margin-top: 8px; font-size: .78rem; }
 .kp-corner .kp-src { margin-top: 5px; }
-@media (max-width: 1199px) { .kp-corner-dyn { display: none !important; } }
-@media (max-width: 999px) { .kp-corner { display: none !important; } }
+/* 硬隐的断点随「卡优先」下移:单卡 999→680、双卡 1199→1010。
+   低于 680px 才真的摆不下角卡,那时交给贴底的手机单卡(.kp-solo)。
+   这两条带 !important,不下移的话上面那些让位规则会被它们压掉 */
+@media (max-width: 1009px) { .kp-corner-dyn { display: none !important; } }
+@media (max-width: 679px) { .kp-corner { display: none !important; } }
 
 /* 收起说明,把那片横向空间让给卡。
    原先窄屏是**先牺牲卡**:角卡在 1199／999px 以下一律隐藏,说明段却照旧占着
@@ -528,14 +531,33 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
    说明一收,断点就能往下挪三百多像素:单卡 999 → 680,双卡 1199 → 1010。
    收起状态记在 localStorage,下次进来还是你上次选的那样。 */
 .desc-toggle { margin-left: auto; align-self: center; font-size: .74rem; padding: 2px 10px; }
-section.card.desc-off > .desc { display: none; }
+
+/* **卡优先**:只要这个宽度摆得下卡,就摆卡,让说明段去收窄。
+   原先反过来——说明段占满七十六字,卡在 1199／999px 以下一律隐藏;可说明
+   读一遍就够了,卡是随时在用的。断点因此整体下移(单卡 999→680、双卡
+   1199→1010),说明段在这些档位自动让宽并截行。
+   截行是必须的:段落一窄行数就涨,不截的话反而比让宽前更高,下面那排控件
+   会被顶下去——用户要的是「横着收,别上下跳」。
+   「展开说明」按钮是**反向**的手动挡:想读全文时用,那时卡让位给字。 */
 @media (min-width: 680px) {
-  section.card.desc-off.has-kp .kp-corner-emp { display: block !important; }
-  section.card.desc-off.has-kp .desc + div { padding-right: 356px; }
+  section.card.has-kp:not(.desc-full) > .desc {
+    max-width: min(76ch, calc(100% - 356px));
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; overflow: hidden;
+  }
+  section.card.has-kp:not(.desc-full) > .desc + div { padding-right: 356px; }
 }
 @media (min-width: 1010px) {
-  section.card.desc-off.has-kp2 .kp-corner-dyn { display: block !important; }
-  section.card.desc-off.has-kp2 .desc + div { padding-right: 692px; }
+  section.card.has-kp2:not(.desc-full) > .desc { max-width: min(76ch, calc(100% - 692px)); }
+  section.card.has-kp2:not(.desc-full) > .desc + div { padding-right: 692px; }
+}
+/* 宽到放得下全文就不截:1400px 往上,说明与两张卡各得其所 */
+@media (min-width: 1400px) {
+  section.card > .desc { -webkit-line-clamp: none; display: block; }
+}
+/* 截掉的部分要让人知道是截掉的 */
+section.card.has-kp:not(.desc-full) > .desc::after {
+  content: '…'; display: inline; opacity: .55;
+}
 }
 .kp-thumb { width: 100%; max-height: 168px; object-fit: cover; object-position: top; border-radius: 8px; }
 .kp-sub { font-size: .74rem; color: var(--text-1); opacity: .62; margin-top: 8px; }
