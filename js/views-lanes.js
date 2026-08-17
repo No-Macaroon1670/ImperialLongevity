@@ -17,7 +17,7 @@ import { mountKnowledgeCorner, eventSpec } from './knowledge.js';
 import { stampHash } from './search.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, TRANSITIONS, ORTHODOX, SECONDARY } from './dynasties.js';
-import { EVENTS, EVENT_KINDS, LEFT_BANK } from './events.js';
+import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor } from './events.js';
 import { fmtDate } from './schema.js';
 
 const SLOT_VARS = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6', '--s7', '--s8'];
@@ -484,7 +484,7 @@ export function renderLaneTimeline(host, list, opts) {
       // 补进数据却仍被这里拦在轨外,等于白补。承继细丝的刻痕在河身、
       // 事件点在表头,两处register不同,并存不算重复。
       if (evOff.has(ev.k) || ev.k === 'era') continue;
-      const ex = x(ev.y) + fanOf(ev);
+      const ex = x(evAnchor(ev)) + fanOf(ev);
       if (ex < PAD_L - 40 || ex > W - PAD_L + 40) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
       const isSpan = !!kind.span;

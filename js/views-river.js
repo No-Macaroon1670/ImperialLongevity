@@ -35,7 +35,7 @@
 import { el, h, linear, hoverable, legend, tableView, notes, fmtYearAxis, fmt1, textWidth, glide } from './charts.js';
 import { DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS } from './dynasties.js';
-import { EVENTS, EVENT_KINDS, LEFT_BANK } from './events.js';
+import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor } from './events.js';
 import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName, eventLegend, evMark } from './views-lanes.js';
 import { mountKnowledge, evSpec } from './knowledge.js';
@@ -833,7 +833,7 @@ export function renderRiver(host, list, opts) {
       // 补进数据却仍被这里拦在轨外,等于白补。承继细丝的刻痕在河身、
       // 事件点在表头,两处register不同,并存不算重复。
       if (evOff.has(ev.k) || ev.k === 'era') continue;
-      const ty = y(ev.y) + fanOf(ev);
+      const ty = y(evAnchor(ev)) + fanOf(ev);
       if (ty < -20 || ty > H + 20) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
       const left = LEFT_BANK.has(ev.k);
@@ -1139,7 +1139,7 @@ export function renderRiver(host, list, opts) {
         // 只认时间上对得上的那一次：事件与改道相差二十年以上，多半是同名异事
         if (Math.abs(best.c - ev.y) <= 20) return { x: best.x, w: RX1 - RX0, lo: RX0 + 2, hi: RX1 - 2, key: null };
       }
-      const sl = sliceAt(ev.y);
+      const sl = sliceAt(evAnchor(ev));
       if (!sl || !sl.n) return null;
       const boxes = [];
       for (const k of sl.at.keys()) { const b = edge(k, ev.y); if (b) boxes.push([b, k]); }
