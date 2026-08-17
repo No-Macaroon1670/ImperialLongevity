@@ -160,6 +160,9 @@ export const SUCCESSION = {
  */
 export const MERGED_INTO = {
   xuanhan: 'ehan',
+  // 南越亡于汉：元鼎六年路博德破番禺，国除为九郡。此前赵佗虽已去帝号称臣,
+  // 那是名义上的藩属,与七十余年后真正被灭并入是两回事
+  nanyue: 'xhan',
   shu: 'wei', wu: 'xjin', xjin: 'hanzhao',
   huanchu: 'ejin', chenghan: 'ejin', nanyan: 'ejin', houqin: 'ejin',
   hanzhao: 'houzhao', houzhao: 'ranwei', ranwei: 'qianyan',
