@@ -29,6 +29,10 @@ const YT_PICK = {
   清明上河图: 'https://www.youtube.com/watch?v=cffWkBzxrI4',
   段正严: 'https://www.youtube.com/watch?v=JyFGYBasMLk&list=PL9K8ksI6u301XTqLlxyefKHUmvnlnS5LY',
   段和誉: 'https://www.youtube.com/watch?v=JyFGYBasMLk&list=PL9K8ksI6u301XTqLlxyefKHUmvnlnS5LY',
+  // 全库最后一位「皇帝」，洪宪帝制八十三天。
+  // Never Gonna Give You Up —— 恰恰是他没做到的那件事。
+  // 旁边的哔哩哔哩按钮仍是正常检索，真想看他的片子的人不会被卡住。
+  袁世凯: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
 };
 
 const NOTABLE = new Map(Object.entries({

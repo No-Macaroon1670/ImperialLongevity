@@ -145,6 +145,9 @@ export function buildBands(list) {
 const EV_SHAPE = {
   war: 'up', dis: 'down', rev: 'plus', out: 'diamond', gov: 'square',
   cul: 'circle', inst: 'bar', era: 'bar', her: 'house', art: 'hex',
+  // 名人轶事用星:九种形状里星是唯一没被占的,而它恰好也是「名人」的现成隐喻。
+  // 色相到这一类已经排到第十一个,颜色本身分辨力所剩无几,形状是这一类的主通道
+  fig: 'star',
 };
 export function evMark(kind, cx, cy, r, extra = {}) {
   const a = { fill: `var(--ev-${kind})`, ...extra };
@@ -157,6 +160,13 @@ export function evMark(kind, cx, cy, r, extra = {}) {
     case 'house':   return el('polygon', P([[0, -1.3], [1.05, -0.3], [1.05, 1], [-1.05, 1], [-1.05, -0.3]]));
     case 'plus':    return el('polygon', P([[-0.42, -1.2], [0.42, -1.2], [0.42, -0.42], [1.2, -0.42], [1.2, 0.42],
       [0.42, 0.42], [0.42, 1.2], [-0.42, 1.2], [-0.42, 0.42], [-1.2, 0.42], [-1.2, -0.42], [-0.42, -0.42]]));
+    // 五角星:外顶点 1.35r、内顶点 0.55r。外径放大是因为星形的**视觉面积**
+    // 比同外接圆的三角、方块小得多,取同一个 r 画出来会显著偏小
+    case 'star':    return el('polygon', P(Array.from({ length: 10 }, (_, i) => {
+      const t = -Math.PI / 2 + (i * Math.PI) / 5;
+      const rr = i % 2 ? 0.55 : 1.35;
+      return [Math.cos(t) * rr, Math.sin(t) * rr];
+    })));
     case 'square':  return el('rect', { x: cx - r * 0.92, y: cy - r * 0.92, width: r * 1.84, height: r * 1.84, rx: r * 0.24, ...a });
     case 'bar':     return el('rect', { x: cx - r * 1.2, y: cy - r * 0.7, width: r * 2.4, height: r * 1.4, rx: r * 0.32, ...a });
     default:        return el('circle', { cx, cy, r, ...a });

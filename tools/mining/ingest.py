@@ -27,7 +27,16 @@ def to_astro(s):
         return int(m.group(1))
     raise SystemExit("看不懂的年份:%r" % s)
 
-VALID_K = {"war", "gov", "rev", "out", "cul", "dis", "inst", "her", "era", "art"}
+VALID_K = {"war", "gov", "rev", "out", "cul", "dis", "inst", "her", "era", "art", "fig"}
+
+# 置信度 → 落库字段。只落「中」「低」两档:「高」是默认假设,写出来只是噪声,
+# 而 `grep "cf:"` 恰好就是「哪些年份值得再查一遍」的完整清单。
+#
+# 这一条是补上一个真实的损失:上一批文物/事件也让 agent 报了 高/中/低,
+# 我拿它筛完就**没有存**——于是全库 655 条里只有 27 条带注记,
+# 「快雪时晴帖系于王羲之生年而非作品年」这种事后来无从分辨,只能重新推导一遍。
+# 判断用过就丢,等于每次都要重付一次代价。
+CONF = {"中": 2, "低": 3}
 out, seen = [], set()
 for path in sys.argv[1:]:
     raw = io.open(path, encoding="utf-8").read()
@@ -41,6 +50,15 @@ for path in sys.argv[1:]:
         e = {"y": to_astro(r["y"]), "k": r["k"], "n": r["n"], "w": r["w"]}
         if r.get("ws"):
             e["ws"] = r["ws"]          # 段落锚点:该事无独立条目,链到某条目的某一节
+        # 以下几个字段此前**没有被带过来**,agent 填了也白填:
+        #   d  政权归属(河流视图据此把点放进对应河道,缺了就浮在河道之间)
+        #   ya 雅名 / yc 出处注记(这一层的主体就是成语,丢了等于丢了内容)
+        #   cf 定年置信度(见上)
+        for f in ("d", "ya", "yc"):
+            if r.get(f):
+                e[f] = r[f]
+        if r.get("conf") in CONF:
+            e["cf"] = CONF[r["conf"]]
         if r.get("y2"):
             e["y2"] = to_astro(r["y2"])
             if e["y2"] < e["y"]:
