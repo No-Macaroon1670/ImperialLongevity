@@ -88,6 +88,33 @@ export function mountSearch(sectionEl, hostOf) {
     'aria-label': '搜索并跳转', autocomplete: 'off' });
   const list = h('div', { class: 'ts-list', role: 'listbox' });
   box.appendChild(input); box.appendChild(list);
+
+  /**
+   * 随手翻一处。搜索要求读者**先想得起来一个名字**,可这张图最值钱的地方
+   * 恰恰是那些想不起来的:七女为父报仇、王恭厂大爆炸、段正严。骰子解决的
+   * 就是「不知道该搜什么」——按下去缓缓滚过去,顺带看见路上隔了多少年。
+   *
+   * 池子取君主与大事两类(政权不取:一个朝代跨几百年,落点等于没落点)。
+   * 记住上一次的落点,免得连按两下停在原地——那看着像按钮坏了。
+   */
+  let lastPick = null;
+  const pool = idx.filter((it) => it.kind === 'emp' || it.kind === 'ev');
+  const dice = h('button', {
+    class: 'chip tl-dice', type: 'button', title: '随机跳到一位君主或一件大事',
+    onclick: () => {
+      if (pool.length < 2) return;
+      let pick = null;
+      for (let a = 0; a < 8 && (!pick || pick === lastPick); a++) {
+        pick = pool[Math.floor(Math.random() * pool.length)];
+      }
+      lastPick = pick;
+      dice.classList.remove('rolling');
+      void dice.offsetWidth;                 // 重启动画:不回流的话连按第二下不动
+      dice.classList.add('rolling');
+      go(pick, { smooth: true });
+    },
+  }, [h('span', { class: 'tl-dice-face', text: '🎲' }), h('span', { text: '随便看看' })]);
+  (sectionEl.querySelector('.head') || sectionEl).appendChild(dice);
   (sectionEl.querySelector('.head') || sectionEl).appendChild(box);
   // 本节在视口里就把搜索框钉住。用 IntersectionObserver 而非 scroll 事件:
   // 后者在页面隐藏/后台标签页里不一定按时来(本项目已为此栽过一次),
@@ -106,13 +133,13 @@ export function mountSearch(sectionEl, hostOf) {
 
   let items = [], cur = -1;
   const close = () => { list.classList.remove('on'); cur = -1; };
-  const go = (item) => {
+  const go = (item, o) => {
     const loc = hostOf() && hostOf().__locate;
     if (!loc || !item) return;
-    if (item.kind === 'year') loc.year(item.id);
-    else if (item.kind === 'emp') loc.emperor(item.id);
-    else if (item.kind === 'dyn') loc.dynasty(item.id);
-    else if (item.kind === 'ev') { if (!loc.event(item.id)) loc.year(item.y); }
+    if (item.kind === 'year') loc.year(item.id, o);
+    else if (item.kind === 'emp') loc.emperor(item.id, o);
+    else if (item.kind === 'dyn') loc.dynasty(item.id, o);
+    else if (item.kind === 'ev') { if (!loc.event(item.id, o)) loc.year(item.y, o); }
     history.replaceState(null, '', hashOf(item));
     input.value = '';
     close();

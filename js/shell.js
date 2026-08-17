@@ -173,6 +173,13 @@ function buildFilters(host) {
 // when：可选谓词，仅在当前状态满足时才显示该控件（如泳道专属选项）
 const sel = (key, label, options, when) => ({ type: 'select', key, label, options, when });
 const tog = (key, label, when) => ({ type: 'toggle', key, label, when });
+// 只有两三个选项时用分段器而非下拉：下拉把另一个选项藏起来，读者得先点开
+// 才知道有得选，换一次要两下；分段器两个都摆在明面上，换一次一下。
+const seg = (key, label, options, when) => ({ type: 'seg', key, label, options, when });
+// 连续量用滑杆。时间缩放本来给的是三档预设，可「多宽算合适」取决于屏宽与
+// 你正在看哪一段，三档常常没有一档正好；滑杆让读者自己定，并且看得见量纲。
+const rng = (key, label, { min, max, step = 1, fmt }, when) =>
+  ({ type: 'range', key, label, min, max, step, fmt, when });
 
 function buildControls(sec) {
   const wrap = h('div', { class: 'local-controls' });
@@ -191,6 +198,30 @@ function buildControls(sec) {
         render();
       });
       wrap.appendChild(h('label', {}, [h('span', { text: c.label }), s]));
+    } else if (c.type === 'seg') {
+      const boxSeg = h('div', { class: 'segctl', role: 'radiogroup', 'aria-label': c.label });
+      for (const [v, lab] of c.options) {
+        const on = String(S[c.key]) === String(v);
+        boxSeg.appendChild(h('button', {
+          type: 'button', class: `seg${on ? ' on' : ''}`, role: 'radio', 'aria-checked': String(on),
+          text: lab,
+          onclick: () => { S[c.key] = /^-?\d+$/.test(String(v)) ? +v : v; render(); },
+        }));
+      }
+      wrap.appendChild(h('label', { class: 'seg-label' }, [h('span', { text: c.label }), boxSeg]));
+    } else if (c.type === 'range') {
+      const out = h('span', { class: 'rng-val', text: c.fmt(S[c.key]) });
+      const r = h('input', {
+        type: 'range', class: 'rng', min: String(c.min), max: String(c.max), step: String(c.step),
+        'aria-label': c.label,
+      });
+      r.value = String(S[c.key]);
+      // 拖动途中只改读数、不重绘：render() 会把整条控件行重建，滑块节点当场
+      // 被换掉，手指还按着但拖的已经是个不存在的元素——表现为「拖一下就脱手」。
+      // 松手（change）才重绘；键盘方向键两个事件都发，照样即时生效。
+      r.addEventListener('input', () => { out.textContent = c.fmt(+r.value); });
+      r.addEventListener('change', () => { S[c.key] = +r.value; render(); });
+      wrap.appendChild(h('label', { class: 'rng-label' }, [h('span', { text: c.label }), r, out]));
     } else if (c.type === 'toggle') {
       const cb = h('input', { type: 'checkbox' });
       cb.checked = !!S[c.key];
@@ -481,5 +512,5 @@ export function mountApp({ sections, hero }) {
   });
 }
 
-export { S, filtered, render, sel, tog };
+export { S, filtered, render, sel, seg, rng, tog };
 window.__DB__ = { EMPERORS, DYNASTIES, DYN_STATS, S, filtered };

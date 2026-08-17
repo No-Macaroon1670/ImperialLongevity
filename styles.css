@@ -558,14 +558,13 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
   section.card.has-kp2:not(.desc-full) > .desc { max-width: min(76ch, calc(100% - 692px)); }
   section.card.has-kp2:not(.desc-full) > .desc + div { padding-right: 692px; }
 }
-/* 宽到放得下全文就不截:1400px 往上,说明与两张卡各得其所 */
-@media (min-width: 1400px) {
-  section.card > .desc { -webkit-line-clamp: none; display: block; }
-}
+/* 这里原有一条「1400px 往上一律不截」的规则，它把收起状态整个盖掉了：
+   宽屏上按「收起说明」什么也不会发生，按钮成了死开关（用户实测）。
+   宽到放得下全文，跟读者想不想让它占着地方，本来就是两回事——
+   截不截交给那个按钮说了算，这条规则删掉。 */
 /* 截掉的部分要让人知道是截掉的 */
 section.card.has-kp:not(.desc-full) > .desc::after {
   content: '…'; display: inline; opacity: .55;
-}
 }
 .kp-thumb { width: 100%; max-height: 168px; object-fit: cover; object-position: top; border-radius: 8px; }
 .kp-sub { font-size: .74rem; color: var(--text-1); opacity: .62; margin-top: 8px; }
@@ -789,6 +788,41 @@ section.card.has-kp:not(.desc-full) > .desc::after {
 .tour-aside-h { font-size: .74rem; color: var(--muted); margin-bottom: 6px; }
 .tour-aside .ev-legend { display: flex; flex-wrap: wrap; gap: 5px; margin: 0; }
 .tour-aside .ev-chip { font-size: .74rem; padding: 2px 8px; }
+
+/* 分段器：两三个选项时代替下拉。两个选项都摆在明面上，换一次一下。
+   外框一圈、选中项反白，读作「同一组里选一个」，与 .chip 那种独立开关分得开。 */
+.segctl {
+  display: inline-flex; border: 1px solid var(--border); border-radius: 999px;
+  background: var(--surface-1); padding: 2px; gap: 2px;
+}
+.segctl .seg {
+  border: none; background: none; color: var(--text-2); font: inherit; font-size: .8rem;
+  padding: 3px 11px; border-radius: 999px; cursor: pointer; white-space: nowrap;
+  transition: background .12s, color .12s;
+}
+.segctl .seg:hover:not(.on) { background: var(--surface-2); color: var(--text-1); }
+.segctl .seg.on { background: var(--text-1); color: var(--page); font-weight: 600; }
+.seg-label { display: inline-flex; align-items: center; gap: 6px; }
+
+/* 缩放滑杆。读数用等宽数字，拖动时数字不会左右跳。 */
+.rng-label { display: inline-flex; align-items: center; gap: 8px; }
+.rng { width: 116px; accent-color: var(--seq-400); cursor: pointer; }
+.rng-val {
+  font-size: .78rem; color: var(--text-2); font-variant-numeric: tabular-nums;
+  min-width: 62px;
+}
+
+/* 骰子：随手翻一处。放在搜索框左边——搜索要你先想得起来一个名字，
+   这个不用。按下时骰面滚一圈，说明「又掷了一次」。 */
+.tl-dice { margin-left: 8px; }
+.tl-dice-face { display: inline-block; font-size: .95rem; line-height: 1; }
+.tl-dice.rolling .tl-dice-face { animation: dice-roll .5s cubic-bezier(.34, 1.3, .5, 1); }
+@keyframes dice-roll {
+  from { transform: rotate(0) scale(1); }
+  60%  { transform: rotate(340deg) scale(1.25); }
+  to   { transform: rotate(360deg) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { .tl-dice.rolling .tl-dice-face { animation: none; } }
 
 .tour-launch-head { margin-left: 8px; }
 /* 目录行里的那个要跟目录链接一样高，否则它把整行撑开半格 */

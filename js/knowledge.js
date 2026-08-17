@@ -20,6 +20,17 @@ import { EVENT_KINDS } from './events.js';
  * 每个大一统王朝的在位长者与转折点人物、每个割据政权至少一位开国或代表君主,
  * 使全图任意百年视窗都至少有一位在榜。权重 3 家喻户晓、2 重要、1 补位。
  */
+/**
+ * 手挑的视频。键是维基条目名(spec.title),繁简都收一份——事件的 `w` 用繁体
+ * (清明上河圖),图上写的名字是简体(清明上河图),两处都可能传进来。
+ */
+const YT_PICK = {
+  清明上河圖: 'https://www.youtube.com/watch?v=cffWkBzxrI4',
+  清明上河图: 'https://www.youtube.com/watch?v=cffWkBzxrI4',
+  段正严: 'https://www.youtube.com/watch?v=JyFGYBasMLk&list=PL9K8ksI6u301XTqLlxyefKHUmvnlnS5LY',
+  段和誉: 'https://www.youtube.com/watch?v=JyFGYBasMLk&list=PL9K8ksI6u301XTqLlxyefKHUmvnlnS5LY',
+};
+
 const NOTABLE = new Map(Object.entries({
   // 秦汉
   嬴政: 3, 胡亥: 2, 刘邦: 3, 刘恒: 2, 刘启: 2, 刘彻: 3, 刘弗陵: 1, 刘询: 2, 刘骜: 1,
@@ -271,7 +282,11 @@ async function fillCard(card, spec) {
   card.wiki.href = `https://zh.wikipedia.org/wiki/${encodeURIComponent(spec.title)}`
     + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
   card.baidu.href = `https://baike.baidu.com/item/${encodeURIComponent(spec.baidu || spec.title)}`;
-  card.yt.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(spec.q)}`;
+  // 少数条目手挑了片子。搜索对它们并不友好——搜《清明上河图》出来的多是
+  // 商品、仿作与短视频切片,而这几部讲得确实好,与其让读者自己淘,不如直接给。
+  // 其余仍走搜索(手挑一条要看过才敢挂,不可能挂满六百条)。
+  card.yt.href = YT_PICK[spec.title] || YT_PICK[spec.display]
+    || `https://www.youtube.com/results?search_query=${encodeURIComponent(spec.q)}`;
   card.bili.href = `https://search.bilibili.com/all?keyword=${encodeURIComponent(spec.q)}`;
   card.yt.style.display = spec.yt ? '' : 'none';
   card.bili.style.display = spec.yt ? '' : 'none';

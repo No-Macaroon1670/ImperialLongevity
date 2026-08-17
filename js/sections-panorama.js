@@ -1,5 +1,5 @@
 // 王朝全景页(timeline.html)的章节表：竖向河流与横向泳道。
-import { sel, tog } from './shell.js';
+import { sel, seg, rng, tog } from './shell.js';
 import { renderLaneTimeline } from './views-lanes.js';
 import { renderRiver } from './views-river.js';
 
@@ -10,12 +10,17 @@ export const SECTIONS = [
     id: 'panorama', title: '王朝全景：分裂的形状',
     desc: '同一份数据的两种读法。竖向河流：时间自上而下流，河宽恒定、按当时并存的政权数均分——一股是天下一统，数股是分裂割据，重新统一时几股再合为一体；它顺着页面滚动，不套滚动容器。横向泳道：朝代做成横向长带、皇帝做成带内分段，泳道可回收，第一行为正统序列专用、第二行是与之并行的北方政权主线。大事记在宽屏画于两岸、窄屏直接画进河道（事件本就发生在这条河里）。知识卡宽屏是两翼四张、窄屏是贴底的单卡（一次只开一张），摘要实时取自中文维基百科。',
     controls: [
-      sel('panoramaMode', '视图', [['river', '竖向河流'], ['lanes', '横向泳道']]),
-      sel('riverPx', '时间缩放', [[7, '标准 7 px/年'], [4, '紧凑 4 px/年'], [11, '舒展 11 px/年']],
+      // 两个选项用分段器:下拉得先点开才知道有另一种读法,而「换个视角看同一份
+      // 数据」正是这一节的主张,不该藏在收起的菜单里
+      seg('panoramaMode', '视图', [['river', '竖向河流'], ['lanes', '横向泳道']]),
+      // 缩放本是连续量，原先给三档预设，可「多宽算合适」取决于屏宽与正在看哪一段，
+      // 三档常常没有一档正好。滑杆两端各留出比原预设更远的余地：
+      // 拉到最紧能一屏望尽两千年，拉到最松够把五代十国那七十年铺开看。
+      rng('riverPx', '时间缩放', { min: 3, max: 16, fmt: (v) => `${v} px/年` },
         (st) => st.panoramaMode === 'river'),
-      sel('lanePx', '时间缩放', [[14, '标准 14 px/年'], [10, '紧凑 10 px/年'], [20, '舒展 20 px/年']],
+      rng('lanePx', '时间缩放', { min: 6, max: 30, fmt: (v) => `${v} px/年` },
         (st) => st.panoramaMode !== 'river'),
-      sel('laneColor', '配色', [['dynasty', '按具体朝代'], ['unified', '按大一统 / 分裂']]),
+      seg('laneColor', '配色', [['dynasty', '按具体朝代'], ['unified', '按大一统 / 分裂']]),
       tog('laneViolent', '标记非正常死亡'),
       tog('laneStrands', '全部承继关系', (st) => st.panoramaMode !== 'river'),
       // 大事记开关此前只给泳道:河流的事件轨在两岸(宽屏)与河道里(窄屏),
