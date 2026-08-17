@@ -306,9 +306,18 @@ async function fillCard(card, spec) {
   //   三、`b` 允许写成「名字/义项号」。少数条目**存在却够不着**：百度自己的
   //       同义词表把 /item/文景之治 劫持到一本 2007 年的图书，正条只能靠义项号
   //       进去。故按 / 分段编码，斜杠本身留着——整串编码会把它变成 %2F。
-  const bdName = (spec.baidu || spec.title).replace(/\s*[（(][^）)]*[）)]\s*$/, '');
-  const bdPath = bdName.split('/').map(encodeURIComponent).join('/');
-  card.baidu.href = `https://baike.baidu.com/item/${bdPath}`;
+  //   四、`b` 写成完整网址时**照原样用**，并把按钮改名。有些条目百科根本没收，
+  //       却有正经文献可指（七女为父报仇即一例：百科无此条，但有一篇考释论文）。
+  //       按钮仍写「百度百科」就名不副实了——链接与它自称的东西必须一致。
+  const raw = spec.baidu || spec.title;
+  if (/^https?:\/\//.test(raw)) {
+    card.baidu.href = raw;
+    card.baidu.textContent = '相关文献 ↗';
+  } else {
+    const bdName = raw.replace(/\s*[（(][^）)]*[）)]\s*$/, '');
+    card.baidu.href = `https://baike.baidu.com/item/${bdName.split('/').map(encodeURIComponent).join('/')}`;
+    card.baidu.textContent = '百度百科 ↗';
+  }
   card.baidu.style.display = spec.noBaidu ? 'none' : '';
   // 少数条目手挑了片子。搜索对它们并不友好——搜《清明上河图》出来的多是
   // 商品、仿作与短视频切片,而这几部讲得确实好,与其让读者自己淘,不如直接给。
