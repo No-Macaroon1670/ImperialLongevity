@@ -1014,9 +1014,16 @@ export function renderLaneTimeline(host, list, opts) {
   head.appendChild(spanLayer);
   const showSpan = (e3) => {
     spanLayer.innerHTML = '';
-    if (!e3 || !e3.y2 || e3.y2 <= e3.y) return;
-    const x0 = x(e3.y), x1 = x(e3.y2);
-    const window_ = e3.k === 'art';          // 断代窗口 vs 真实存续
+    if (!e3) return;
+    // 两种线读的是两组不同的字段,不再靠类别去猜:
+    //   u1/u2 断代窗口(锚点可能落在哪儿)  → 半透明虚线 + 两端竖挡,是误差棒
+    //   y/y2  真实存续(那些年它确实在)    → 实线
+    // 二者可以并存(有起讫、边界又不确定的东西,如夏商),此时窗口优先画出来
+    const window_ = e3.u1 !== undefined && e3.u2 !== undefined;
+    const lo = window_ ? e3.u1 : e3.y;
+    const hi = window_ ? e3.u2 : e3.y2;
+    if (hi === undefined || hi <= lo) return;
+    const x0 = x(lo), x1 = x(hi);
     spanLayer.appendChild(el('line', {
       x1: x0, x2: x1, y1: AXIS_Y, y2: AXIS_Y,
       stroke: `var(--ev-${e3.k})`, 'stroke-width': window_ ? 2.5 : 3.5,
