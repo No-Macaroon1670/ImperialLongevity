@@ -772,6 +772,7 @@ section.card.has-kp:not(.desc-full) > .desc::after {
   border-left: 3px solid var(--seq-400); padding: 4px 0 4px 9px; background: var(--surface-2);
   border-radius: 0 6px 6px 0;
 }
+.tour-cta2 { margin-top: 7px; border-left-color: var(--ev-inst); }
 .tour-extra:not(:empty) { margin-top: 9px; }
 /* 只在窄屏出现的一句实话（见 tour.js 的 mnote） */
 .tour-mnote { display: none; }

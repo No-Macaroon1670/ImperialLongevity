@@ -79,7 +79,10 @@ const STOPS = [
   },
   {
     t: '隋末民变：事件轴怎么读',
-    b: '六一一年王薄在长白山举旗，到六二四年江南辅公祏败亡，十三年的乱局；李渊父子只是其中一支——最后赢的那一支。轴分两侧：线下是政事（战事、民变·政变、外患、制度、灾疫），线上是文教（文化科技、遗址、文物）。形状即类别，点的大小即分量；有起讫的画成长条，一个时点的画成一点——这一条就是十三年的长条。',
+    b: '六一一年王薄在长白山举旗，到六二四年江南辅公祏败亡，十三年的乱局；李渊父子只是其中一支——最后赢的那一支。轴分两侧：线下是政事（战事、民变·政变、外患、制度、灾疫），线上是文教（文化科技、遗址、文物）。形状即类别，点的大小即分量——每件事都只画一个点，横贯的长条会互相撞成一片。',
+    // 跨度不常显，故非说不可:不说的话读者根本不知道点一下还有这一层。
+    // 两种线的分别也要在这里讲清——它是全图唯一一处「图形本身在讲不确定性」
+    cta2: '这一条你点开时，轴上横拉出一条**实线**：它真的持续了十三年。另一种是**半透明的虚线**（多见于文物）——那不是「持续了这么久」，而是「只知道落在这段里」，两端的竖挡就是误差棒。跨度平时不画，点中才现形，免得几百条长条糊成一片。',
     cta: '点任一标记即开卡；旁边那排就是类别开关，可逐类开关。卡片底下的两个视频按钮，YouTube 与 B 站各一个——这一段在 B 站能找到几部讲得不错的。',
     ev: '隋末民变',
     card: true,
@@ -130,6 +133,10 @@ export function mountTour(sectionEl, hostOf) {
   const title = h('h3', { class: 'tour-title' });
   const body = h('p', { class: 'tour-body' });
   const cta = h('p', { class: 'tour-cta' });
+  // 第二句提示:留给「这一站还藏着一层」的那类说明(如跨度要点开才现形)。
+  // 与 cta 分开而不是接在后面,是因为两句话性质不同——cta 是「你来试试」,
+  // 这一句是「这里还有你看不见的东西」
+  const cta2 = h('p', { class: 'tour-cta tour-cta2' });
   const extra = h('div', { class: 'tour-extra' });
   const prev = h('button', { class: 'chip', type: 'button', text: '← 上一站' });
   const next = h('button', { class: 'chip tour-next', type: 'button', text: '下一站 →' });
@@ -141,7 +148,7 @@ export function mountTour(sectionEl, hostOf) {
     class: 'tour-panel', role: 'dialog', 'aria-live': 'polite', 'aria-label': '导览',
   }, [
     h('div', { class: 'tour-head' }, [h('span', { class: 'tour-tag', text: '导览' }), step, closeBtn]),
-    title, body, cta, extra, mnote,
+    title, body, cta, cta2, extra, mnote,
     h('div', { class: 'tour-nav' }, [prev, next]),
   ]);
   // 讲解与副卡装在同一个坞里,由 flex 排上下——各自 position:fixed 的话
@@ -243,6 +250,10 @@ export function mountTour(sectionEl, hostOf) {
     body.textContent = st.b;
     cta.textContent = st.cta || '';
     cta.style.display = st.cta ? '' : 'none';
+    // **粗体** 转 <strong>。文案是本文件里的字面量,不是外来输入
+    cta2.innerHTML = (st.cta2 || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    cta2.style.display = st.cta2 ? '' : 'none';
     extra.innerHTML = '';
     if (st.go2) {
       extra.appendChild(h('a', { class: 'chip tour-go2', href: st.go2.href, text: st.go2.text }));
