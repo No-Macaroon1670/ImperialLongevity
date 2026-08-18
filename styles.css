@@ -536,7 +536,9 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
    吊挂/让位那一整套几何计算随之退役。 */
 .kp-corner {
   position: static; transform: none;
-  flex: 0 1 430px; width: auto; max-width: 430px; max-height: 196px;
+  /* 放开生长：两张卡平分整行、独卡也能舒展到 580px——定宽 430 会在宽屏
+     留出大片死白（用户实测「poor use of space」）。摘要列随宽多露字 */
+  flex: 1 1 430px; width: auto; max-width: 580px; max-height: 196px;
   /* 第一列 auto 而非定宽：无缩略图（或图未加载）时列宽自动归零。
      头行 kp-sub 必须显式钉在第 2 列——靠自动落位的话，图一隐藏它就
      滑进第一列，版式散架（用户实测「时好时坏」，开关正是图的有无） */
@@ -546,7 +548,7 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 /* 控制列 | 卡区 并排；窄了卡区整体换行到控制列之下，谁也不盖谁 */
 .ctrl-row { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
 .ctrl-row .sec-ctrls { flex: 0 1 auto; }
-.kp-zone { flex: 1 1 320px; display: flex; gap: 12px; justify-content: flex-end;
+.kp-zone { flex: 1 1 320px; display: flex; gap: 14px; justify-content: center;
   align-items: flex-start; flex-wrap: wrap; margin-left: auto; }
 /* display 必须在 .on 态重申：.kp.on{display:block} 是双类，会压掉上面的
    单类 grid——塌成竖排后内容超高冒出纵滚条，恰好骑在 ✕ 上，「关闭失灵」
