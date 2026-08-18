@@ -738,7 +738,7 @@ export function renderLaneTimeline(host, list, opts) {
         { label: '享年', value: g.e.lifespan === null ? '不详' : `${Math.floor(g.e.lifespan)} 岁` },
         { label: '登基年龄', value: g.e.accAge === null ? '不详' : `${Math.floor(g.e.accAge)} 岁` },
         { label: '死因', value: g.e.causeLabel },
-        ...(g.e.yearsSurmised ? ['斜纹段＝年代拟测：此段在位年份为推算所得——或传统系年等比铺入（夏与商前期），或诸家体系并存取其一（晋末、赵卿段、越后段等），非史源确年；具体依据见本条备注。'] : []),
+        ...(g.e.yearsSurmised ? ['斜纹段＝低置信年份：推算所得（传统系年铺入，或诸家体系并存取其一），非史源确年；依据见本条备注。'] : []),
         ...(g.e.note ? [g.e.note] : []),
       ];
       const parts = spanParts(b, g.ds, g.dx);
