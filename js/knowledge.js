@@ -567,8 +567,9 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
   sectionEl.classList.add('kp-anchor');
   // 孤儿清扫：上一代角卡若因异常渲染滞留（用户实测出现过「两层卡」），新一代挂载前扫净
   for (const n of sectionEl.querySelectorAll('.kp-corner')) n.remove();
-  sectionEl.appendChild(cards.dyn.el);
-  sectionEl.appendChild(cards.emp.el);
+  const zone = sectionEl.querySelector('.kp-zone') || sectionEl;
+  zone.appendChild(cards.dyn.el);
+  zone.appendChild(cards.emp.el);
   const pinned = { dyn: null, emp: null };
   const dismissed = { dyn: new Set(), emp: new Set() };
   // 关闭即静音整个卡位（同河流侧注）：不静音的话 dismissed 只除名当前主角，
@@ -579,43 +580,13 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
   // 唐中晚期、明中期、清中期这类长段常驻此态)若按「一张卡」只让 356px,
   // 那 318px 的差正好落在说明段与控件行上,而卡是不透明且 z-index:5,既遮字也吃点击
   const syncLayout = () => {
-    const dynOn = cards.dyn.el.classList.contains('on') && mqBoth.matches;
-    const empOn = cards.emp.el.classList.contains('on') && mq.matches;
-    sectionEl.classList.toggle('has-kp', dynOn || empOn);
-    sectionEl.classList.toggle('has-kp2', dynOn);
-    // 卡**吊在图的上沿**,不再从版块顶端往下量。
-    //
-    // 原先写死 top:14px,于是卡的上缘正落在标题行那一档。说明段与控件行都按
-    // has-kp 让出了右侧宽度,**唯独标题行没让**——而它右边排着「展开说明 /
-    // 导览 / 骰子 / 搜索框」。卡不透明且 z-index:5,那几样既看不见也点不动
-    // (用户实测:导览、骰子、搜索框三个全被吃掉)。
-    //
-    // 改成按图的上沿倒推,一举两得:一来卡自然落到标题行下方,二来卡因摘要长短
-    // 而变高时是**往上长**,图不再跟着上下跳——从前是上缘钉死、下缘变动,
-    // 每换一张卡图就位移一次。
-    // 顶不过去时(卡比标题行到图之间的空当还高)才回过头把图推下去。
+    // 卡已入流（.kp-zone 排版元素），吊挂与让位的整套几何计算随之退役；
+    // 这里只清掉历史属性，函数保留是因为 show/hide/resize 各处还在调它
     const chartHost = scroller.closest('.chart-host');
-    if (!chartHost) return;
-    chartHost.style.paddingTop = '';
-    if (!dynOn && !empOn) { sectionEl.style.removeProperty('--kp-top'); return; }
-
-    const GAP = 12;
-    const secTop = sectionEl.getBoundingClientRect().top;
-    const head = sectionEl.querySelector(':scope > .head');
-    // 上限:压到标题行就等于吃掉那一排按钮。标题行会随屏宽折行,高度不是定值,
-    // 故按实测取,不写死
-    const floor = head ? head.getBoundingClientRect().bottom - secTop + 10 : 14;
-    // 此刻 paddingTop 已清空,量到的是图「没被推过」的自然位置
-    const natural = chartHost.getBoundingClientRect().top - secTop;
-    const tall = Math.max(dynOn ? cards.dyn.el.offsetHeight : 0,
-      empOn ? cards.emp.el.offsetHeight : 0);
-    const top = Math.max(floor, natural - GAP - tall);
-    sectionEl.style.setProperty('--kp-top', `${Math.round(top)}px`);
-    // 用 padding 而非 margin:相邻兄弟的外边距会合并,控件行本有 12px 下边距,
-    // 给 margin-top 只会取两者较大值,实测净空因此少 12px、正好贴住卡的下缘
-    const need = top + tall + GAP - natural;
-    if (need > 0) chartHost.style.paddingTop = `${Math.round(need)}px`;
+    if (chartHost) chartHost.style.paddingTop = '';
+    sectionEl.style.removeProperty('--kp-top');
   };
+
   const hide = (which) => {
     cards[which].el.classList.remove('on');
     cards[which].el.dataset.key = '';

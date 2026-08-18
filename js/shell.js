@@ -435,7 +435,12 @@ export function mountApp({ sections, hero }) {
     }
     const ctrl = h('div', { class: 'sec-ctrls' });   // 有名字才能在 CSS 里给角卡让位
     const chart = h('div', { class: 'chart-host' });
-    card.appendChild(ctrl); card.appendChild(chart);
+    // 全景节：控制列与知识卡区并排一行**同在文档流**——卡从浮层降为排版元素，
+    // 结构上不可能遮任何控件（用户定案：与其追补让位断点，不如消除遮蔽本身）
+    if (sec.id === 'panorama') {
+      card.appendChild(h('div', { class: 'ctrl-row' }, [ctrl, h('div', { class: 'kp-zone' })]));
+    } else card.appendChild(ctrl);
+    card.appendChild(chart);
     main.appendChild(card);
     hostMap.set(sec.id, { ctrl, chart });
   }

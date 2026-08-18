@@ -526,33 +526,28 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
    resize 连发会不停重置防抖(角卡 220ms、整页重绘 180ms),两者一次都不跑,
    has-kp2 会全程赖着;内容宽一跌破 692px,calc 便成负值钳到 0——正文又成
    一行一个字。断点在此,拖动途中最多退回单卡让位,不会塌 */
-/* 控制区给角卡让位。原先挂在 .desc + div 上——说明段并入页首后选择器落空，
-   缩放/配色行被卡压住（用户版式重排后的回归），改为点名 .sec-ctrls */
-@media (min-width: 1000px) {
-  section.card.has-kp .desc { max-width: min(76ch, calc(100% - 470px)); }
-  section.card.has-kp .sec-ctrls { padding-right: 470px; }
-  /* 左列窄了，标签别折成竖排单字 */
-  .sec-ctrls .seg-label > span, .sec-ctrls .rng-label > span, .sec-ctrls .flabel { white-space: nowrap; }
-}
-@media (min-width: 1130px) {
-  section.card.has-kp2 .desc { max-width: min(76ch, calc(100% - 910px)); }
-  section.card.has-kp2 .sec-ctrls { padding-right: 910px; }
-}
+/* 卡已入流，让位规则退役；标签横排锁定保留 */
+.sec-ctrls .seg-label > span, .sec-ctrls .rng-label > span, .sec-ctrls .flabel { white-space: nowrap; }
 /* 上缘由 JS 按「图的上沿倒推」算出（见 knowledge.js 的 syncLayout）：
    卡吊在图上沿之上、标题行之下。写死 14px 时它正好压住标题行右边那排按钮。 */
 /* 角卡横排网格（用户定的版式）：图 | 文 | 链接一列。卡更宽更矮，
-   链接不再横铺卡底换行挤压，而是竖成一列贴在卡内右缘。 */
+   链接不再横铺卡底换行挤压，而是竖成一列贴在卡内右缘。
+   卡在文档流内（.kp-zone 排版元素）：不浮空、不遮任何控件（用户定案），
+   吊挂/让位那一整套几何计算随之退役。 */
 .kp-corner {
-  position: absolute; top: var(--kp-top, 14px); left: auto;
-  transform: none; width: 430px; max-height: 196px; z-index: 5;
+  position: static; transform: none;
+  flex: 0 1 430px; width: auto; max-width: 430px; max-height: 196px;
   /* 第一列 auto 而非定宽：无缩略图（或图未加载）时列宽自动归零。
      头行 kp-sub 必须显式钉在第 2 列——靠自动落位的话，图一隐藏它就
      滑进第一列，版式散架（用户实测「时好时坏」，开关正是图的有无） */
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-rows: auto auto 1fr auto; column-gap: 12px;
 }
-.kp-corner-emp { right: 16px; }
-.kp-corner-dyn { right: 462px; }
+/* 控制列 | 卡区 并排；窄了卡区整体换行到控制列之下，谁也不盖谁 */
+.ctrl-row { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+.ctrl-row .sec-ctrls { flex: 0 1 auto; }
+.kp-zone { flex: 1 1 320px; display: flex; gap: 12px; justify-content: flex-end;
+  align-items: flex-start; flex-wrap: wrap; margin-left: auto; }
 /* display 必须在 .on 态重申：.kp.on{display:block} 是双类，会压掉上面的
    单类 grid——塌成竖排后内容超高冒出纵滚条，恰好骑在 ✕ 上，「关闭失灵」
    与「版式时好时坏」同根（用户两报实为一案）。overflow 锁死：角卡定高
@@ -575,7 +570,6 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 /* 硬隐的断点随「卡优先」下移:单卡 999→680、双卡 1199→1010。
    低于 680px 才真的摆不下角卡,那时交给贴底的手机单卡(.kp-solo)。
    这两条带 !important,不下移的话上面那些让位规则会被它们压掉 */
-@media (max-width: 1129px) { .kp-corner-dyn { display: none !important; } }
 @media (max-width: 679px) { .kp-corner { display: none !important; } }
 
 /* 收起说明,把那片横向空间让给卡。
