@@ -2,6 +2,7 @@
 import { CAUSE, FLAGS, parseDate, yearsBetween, pairPrecision } from './schema.js';
 import { DYNASTIES, DYN_MAP, ERA_MAP } from './dynasties.js';
 import d0 from './data-0-xianqin.js';
+import d0b from './data-0b-lieguo.js';
 import d1 from './data-1-qin-han.js';
 import d2 from './data-2-sanguo-jin.js';
 import d3 from './data-3-shiliuguo.js';
@@ -12,7 +13,7 @@ import d7 from './data-7-song-liao-xia-jin.js';
 import d8 from './data-8-yuan-ming.js';
 import d9 from './data-9-qing.js';
 
-const RAW = [...d0, ...d1, ...d2, ...d3, ...d4, ...d5, ...d6, ...d7, ...d8, ...d9];
+const RAW = [...d0, ...d0b, ...d1, ...d2, ...d3, ...d4, ...d5, ...d6, ...d7, ...d8, ...d9];
 
 const EPS = 1 / 365.2425;
 
