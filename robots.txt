@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://no-macaroon1670.github.io/ImperialLongevity/sitemap.xml
