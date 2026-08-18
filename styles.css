@@ -493,11 +493,13 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
    搜索框浮在过滤条上时与黑条错着半层，看着像两套东西（用户实测）。
    骰子跟着钉在搜索框左侧，只留 🎲 图标。 */
 @media (max-width: 719px) {
-  .tl-search.pinned { top: calc(var(--filters-h, 45px) + 5px); right: 8px; }
+  .tl-search.pinned { top: calc(var(--filters-h, 45px) + 7px); right: 8px; }
   .tl-dice.pinned {
-    position: fixed; z-index: 70; margin: 0; padding: 0 9px;
-    height: 34px; box-sizing: border-box; align-items: center;
-    top: calc(var(--filters-h, 45px) + 5px);
+    position: fixed; z-index: 70; margin: 0; padding: 0;
+    width: 34px; height: 34px; min-height: 0; box-sizing: border-box;
+    align-items: center; justify-content: center;
+    line-height: 1; overflow: hidden;
+    top: calc(var(--filters-h, 45px) + 7px);
     right: calc(8px + min(260px, 46vw) + 6px);
   }
   .tl-dice.pinned span:not(.tl-dice-face) { display: none; }
@@ -737,7 +739,10 @@ section.card.has-kp:not(.desc-full) > .desc::after {
     backdrop-filter: blur(6px);
     touch-action: pan-y; pointer-events: auto;
   }
-  .sec-nav.up { top: var(--filters-h, 45px); border-bottom: 1px solid var(--border); justify-content: flex-start; }
+  /* 顶条加高到 48px：钉进来的搜索框（34px）与骰子在条内有 7px 上下余量，
+     骰子圆框不再探出条外（用户实测截图）；底条维持 40px。 */
+  .sec-nav.up { top: var(--filters-h, 45px); height: 48px;
+    border-bottom: 1px solid var(--border); justify-content: flex-start; }
   .sec-nav.down { bottom: 0; padding-bottom: env(safe-area-inset-bottom, 0px);
     height: calc(40px + env(safe-area-inset-bottom, 0px));
     border-top: 1px solid var(--border); justify-content: flex-end; }
