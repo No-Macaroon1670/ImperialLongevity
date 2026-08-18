@@ -545,16 +545,23 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 .kp-corner {
   position: absolute; top: var(--kp-top, 14px); left: auto;
   transform: none; width: 430px; max-height: 196px; z-index: 5;
-  display: grid; grid-template-columns: 86px minmax(0, 1fr) auto;
+  /* 第一列 auto 而非定宽：无缩略图（或图未加载）时列宽自动归零。
+     头行 kp-sub 必须显式钉在第 2 列——靠自动落位的话，图一隐藏它就
+     滑进第一列，版式散架（用户实测「时好时坏」，开关正是图的有无） */
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-rows: auto auto 1fr auto; column-gap: 12px;
 }
 .kp-corner-emp { right: 16px; }
 .kp-corner-dyn { right: 462px; }
-.kp-corner.on { animation: none; }
+/* display 必须在 .on 态重申：.kp.on{display:block} 是双类，会压掉上面的
+   单类 grid——塌成竖排后内容超高冒出纵滚条，恰好骑在 ✕ 上，「关闭失灵」
+   与「版式时好时坏」同根（用户两报实为一案）。overflow 锁死：角卡定高
+   定版，宁可截断绝不出滚动条抢点击 */
+.kp-corner.on { animation: none; display: grid; }
+.kp-corner { overflow: hidden; }
 .kp-corner .kp-thumb { grid-column: 1; grid-row: 1 / span 3; float: none;
   width: 86px; height: 116px; object-fit: cover; object-position: top; margin: 2px 0 0; }
-.kp-corner .kp-head { grid-column: 2; grid-row: 1; }
-.kp-corner .kp-sub { margin-top: 0; }
+.kp-corner .kp-sub { grid-column: 2; grid-row: 1; margin-top: 0; }
 .kp-corner .kp-title { grid-column: 2; grid-row: 2; font-size: .96rem; margin: 1px 0 4px; }
 .kp-corner .kp-ext { grid-column: 2; grid-row: 3; font-size: .77rem; line-height: 1.55; -webkit-line-clamp: 4; }
 .kp-corner .kp-links {
