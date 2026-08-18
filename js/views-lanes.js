@@ -214,6 +214,11 @@ export function eventLegend(opts, { skip = [] } = {}) {
 
 // ── 主渲染 ───────────────────────────────────────────────────────────────
 export function renderLaneTimeline(host, list, opts) {
+  // 重绘前先记下读者正看着哪一年（闭包由上一轮渲染在文件尾留下）——滑杆、
+  // 配色、视图切换都走整段重绘，不记的话每次都被扔回图的最左端，
+  // 而先秦扩张后那里是夏初的荒原
+  if (host.__yearOfScroll) host.__anchorYear = host.__yearOfScroll();
+  for (const n of document.querySelectorAll('.lane-peek')) n.remove();   // 上一轮的预览小窗
   host.innerHTML = '';
   let pxYear = opts.lanePx || 10;
   const byDynasty = opts.laneColor !== 'unified';
@@ -1145,6 +1150,16 @@ export function renderLaneTimeline(host, list, opts) {
     },
   };
 
+  // 落点：重绘回到读者离开的那一年；首绘（无记录）落在秦始皇——开卷即四千年，
+  // 读者应站在帝制的门口（向左是更早的世界），而不是传说时代的荒原。
+  // 深链随后由 search.js 的双 rAF 落位覆盖。只动横滚，不动页面纵滚。
+  {
+    const yr = host.__anchorYear ?? -220;
+    const lim = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+    scroller.scrollLeft = Math.max(0, Math.min(lim, x(yr) - scroller.clientWidth / 2));
+    host.__yearOfScroll = () => x.invert(scroller.scrollLeft + scroller.clientWidth / 2);
+  }
+
   // 图例：只列出当前视口内可见的朝代。色值本身固定不变，
   // 变的只是「这一屏有哪些朝代」——这是图例该做的事，不是重新配色。
   const legendHost = h('div');
@@ -1164,6 +1179,67 @@ export function renderLaneTimeline(host, list, opts) {
   if (showEvents) for (const n of eventLegend(opts)) staticLegend.appendChild(n);
 
   let raf = null;
+  let fitInit = false;    // 首次高度落定后才开过渡，免得开页先看一段收缩动画
+  // 视口自适应高度（用户点子）：泳道行数是全局分配的——先秦段里往往只有
+  // 一两行有货，其余十几行是给五代十国备着的空行。按视口内实际占用的
+  // 最深一行收放容器高度，空行裁掉，图注与大事记随之上来。
+  // **只在滚动停稳后动**（280ms 无滚动）：横滚条贴着容器底缘，拖动中途
+  // 改高度会让它在指针底下上蹿下跳（用户实测）；代价是拖进密集时代的
+  // 一瞬间下缘行迟 280ms 才展开，远轻于抓不住滚动条。
+  const fitHeight = () => {
+    const left = scroller.scrollLeft, right = left + scroller.clientWidth;
+    const y0 = x.invert(left), y1 = x.invert(right);
+    let deep = 0;
+    for (const b of bands) if (b.e > y0 && b.s < y1 && b.lane > deep) deep = b.lane;
+    const sbH = scroller.offsetHeight - scroller.clientHeight;      // 横滚条自身的高
+    const contentH = scroller.scrollHeight;
+    const capH = nLanes <= 10 ? contentH + sbH : 10 * LANE_H + HEAD_H + 24;
+    const want = Math.min(contentH - (nLanes - deep - 1) * LANE_H + sbH, capH);
+    if (scroller.__fitH === want) return;
+    scroller.__fitH = want;
+    scroller.style.maxHeight = 'none';
+    scroller.style.height = `${want}px`;
+    if (nLanes > 10) {
+      scroller.style.overflowY = want < capH - 1 ? 'hidden' : 'auto';
+      // 收紧裁切时纵滚归零：被裁的只能是底部空行——在密集时代往下滚过、
+      // 再拖回先秦时，陈旧的 scrollTop 会把正统行顶出视野（用户实测「大一统行消失」）
+      if (want < capH - 1) scroller.scrollTop = 0;
+    }
+    if (!fitInit) { fitInit = true; requestAnimationFrame(() => { scroller.style.transition = 'height .25s ease'; }); }
+  };
+  let settleT = null;
+  // 拖动预览（用户点子）：拖着横滚条飞越四千年时主画布高度冻结（见 fitHeight），
+  // 给指针边上一枚小窗勾出目标时段的泳道轮廓——像视频进度条的缩略图。
+  // 原生滚动条拖动期间浏览器不派发 mousemove，位置只能按滚动比例推算；
+  // 「在拖条」的判据取单次滚动事件跨过约半个视口（滚轮/方向键到不了这个步幅）。
+  const peek = document.createElement('div');
+  peek.className = 'lane-peek';
+  peek.style.display = 'none';
+  document.body.appendChild(peek);
+  let peekOn = false, peekLast = 0;
+  const renderPeek = () => {
+    const left = scroller.scrollLeft, cw = scroller.clientWidth;
+    const y0 = x.invert(left), y1 = x.invert(left + cw), yc = (y0 + y1) / 2;
+    const vis2 = bands.filter((b) => b.e > y0 && b.s < y1);
+    const era = ERAS.find((er) => yc >= er.s && yc <= er.e);
+    const PW = 188, rows = Math.max(1, vis2.reduce((m, b) => Math.max(m, b.lane), 0) + 1);
+    const PH = Math.min(rows, 12) * 7 + 4;
+    const sx = (t) => Math.max(0, Math.min(PW, (t - y0) / (y1 - y0) * PW));
+    let bars = '';
+    for (const b of vis2) {
+      const bx0 = sx(b.s), bx1 = sx(b.e);
+      const cvar = byDynasty ? slotVar(slots.get(b.d.key)) : (b.d.u ? '--c-unified' : '--c-split');
+      bars += `<rect x="${bx0.toFixed(1)}" y="${b.lane * 7 + 2}" width="${Math.max(2, bx1 - bx0).toFixed(1)}" height="5" rx="2" fill="var(${cvar})" opacity=".85"></rect>`;
+    }
+    peek.innerHTML = `<div class="lp-cap">${fmtYearAxis(yc)} 年${era ? ' · ' + era.name : ''} · ${vis2.length} 政权</div>`
+      + `<svg width="${PW}" height="${PH}" viewBox="0 0 ${PW} ${PH}">${bars}</svg>`;
+    const rect = scroller.getBoundingClientRect();
+    const frac = left / Math.max(1, scroller.scrollWidth - cw);
+    const px = Math.max(rect.left + 8, Math.min(rect.right - PW - 24, rect.left + frac * rect.width - PW / 2));
+    peek.style.left = `${px}px`;
+    peek.style.top = `${rect.bottom - PH - 58}px`;
+    peek.style.display = '';
+  };
   const sync = () => {
     raf = null;
     const left = scroller.scrollLeft, right = left + scroller.clientWidth;
@@ -1213,8 +1289,17 @@ export function renderLaneTimeline(host, list, opts) {
       legendHost.appendChild(h('div', { class: 'muted small', text: vis.map((b) => b.d.name).join('、') }));
     }
   };
-  scroller.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(sync); });
+  scroller.addEventListener('scroll', () => {
+    if (!raf) raf = requestAnimationFrame(sync);
+    const d = Math.abs(scroller.scrollLeft - peekLast);
+    peekLast = scroller.scrollLeft;
+    if (d > scroller.clientWidth * 0.45) peekOn = true;
+    if (peekOn) renderPeek();
+    clearTimeout(settleT);
+    settleT = setTimeout(() => { fitHeight(); peekOn = false; peek.style.display = 'none'; }, 280);
+  });
   requestAnimationFrame(sync);
+  fitHeight();                          // 首绘立即定高（锚点已落好）
 
   const greyN = [...slots.values()].filter((v) => v < 0).length;
   const stacked = bands.filter((b) => b.subs > 1);

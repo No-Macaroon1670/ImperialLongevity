@@ -249,7 +249,7 @@ function mkCard(sideClass) {
   const close = h('button', { class: 'kp-close', type: 'button', text: '✕' });
   const src = h('div', { class: 'kp-src', text: '摘要实时取自中文维基百科' });
   const el = h('div', { class: `kp ${sideClass}` }, [
-    close, img, head, title, ext, h('div', { class: 'kp-links' }, [wiki, baidu, museum, yt, bili]), src,
+    close, img, head, title, ext, h('div', { class: 'kp-links' }, [wiki, baidu, museum, h('span', { class: 'kp-vids' }, [yt, bili])]), src,
   ]);
   return { el, img, head, title, ext, wiki, baidu, museum, yt, bili, close };
 }

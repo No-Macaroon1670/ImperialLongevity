@@ -587,6 +587,8 @@ section.card.has-kp:not(.desc-full) > .desc::after {
   display: -webkit-box; -webkit-line-clamp: 10; -webkit-box-orient: vertical; overflow: hidden; }
 .kp-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; font-size: .8rem; }
 .kp-links a { text-decoration: none; }
+/* 两个视频链接绑成一组：要换行一起换，绝不把哔哩哔哩单独挤到下一行（用户实测） */
+.kp-vids { display: inline-flex; gap: 12px; white-space: nowrap; }
 .kp-links a:hover { text-decoration: underline; }
 /* ✕ 自带底衬：卡首是词条头图，一个没有底的叉压在照片上就看不见了
    （用户实测：那张塔的照片正好把叉吃掉）。给它一枚半透明圆片，

@@ -702,6 +702,9 @@ function polyPath(samples, y, inset = 0) {
 
 // ── 主渲染 ───────────────────────────────────────────────────────────────
 export function renderRiver(host, list, opts) {
+  // 重绘前记下读者正看着哪一年（同 views-lanes 的做法；host 跨视图切换存活，
+  // 泳道里看到唐、切到河流仍落在唐）
+  if (host.__yearOfScroll) host.__anchorYear = host.__yearOfScroll();
   host.innerHTML = '';
   // 槽位只从首位君主**实际在位**起算。buildBands 的带首含称帝前掌权期（泳道的
   // 半高段需要它），照搬到河流会让孙权自 200 年就占满一个槽——东汉最后二十年被
@@ -1594,6 +1597,15 @@ export function renderRiver(host, list, opts) {
       return true;
     },
   };
+
+  // 落点：重绘回到读者离开的那一年；首绘落在秦始皇（理由同 views-lanes——
+  // 开卷即四千年，帝制的门口才是锚）。河流的位置即页面位置，故这里会动页滚；
+  // 深链随后由 search.js 覆盖
+  {
+    const wrapTop = () => wrap.getBoundingClientRect().top + scrollY;
+    goY(host.__anchorYear ?? -220);
+    host.__yearOfScroll = () => y.invert(scrollY + innerHeight * 0.42 - wrapTop());
+  }
 
   // ── 图例与说明 ──────────────────────────────────────────────────────────
   const peak = slices.reduce((m, s) => Math.max(m, s.n), 0);
