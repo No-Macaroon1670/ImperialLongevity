@@ -433,7 +433,7 @@ export function mountApp({ sections, hero }) {
       sync();
       head.appendChild(btn);
     }
-    const ctrl = h('div');
+    const ctrl = h('div', { class: 'sec-ctrls' });   // 有名字才能在 CSS 里给角卡让位
     const chart = h('div', { class: 'chart-host' });
     card.appendChild(ctrl); card.appendChild(chart);
     main.appendChild(card);

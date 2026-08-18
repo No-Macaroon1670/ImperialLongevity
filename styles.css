@@ -121,6 +121,11 @@ body { padding-bottom: 80px; }
 header.masthead { padding: 34px 0 18px; border-bottom: 1px solid var(--border); }
 .masthead .kicker { color: var(--muted); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; }
 .masthead p.lede { color: var(--text-2); max-width: 68ch; margin-top: .5em; }
+/* 介绍并框后长了三倍，68ch 单列在宽屏右侧空出一大片（用户实测）。
+   宽屏改双栏报纸式自由流——行长仍在可读范围，空间不再闲置 */
+@media (min-width: 1000px) {
+  .masthead p.lede { max-width: none; columns: 2; column-gap: 44px; }
+}
 
 .hero-row { display: flex; flex-wrap: wrap; gap: 26px; margin: 20px 0 4px; }
 .stat { min-width: 110px; }
@@ -517,13 +522,17 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
    resize 连发会不停重置防抖(角卡 220ms、整页重绘 180ms),两者一次都不跑,
    has-kp2 会全程赖着;内容宽一跌破 692px,calc 便成负值钳到 0——正文又成
    一行一个字。断点在此,拖动途中最多退回单卡让位,不会塌 */
+/* 控制区给角卡让位。原先挂在 .desc + div 上——说明段并入页首后选择器落空，
+   缩放/配色行被卡压住（用户版式重排后的回归），改为点名 .sec-ctrls */
 @media (min-width: 1000px) {
-  section.card.has-kp .desc { max-width: min(76ch, calc(100% - 356px)); }
-  section.card.has-kp .desc + div { padding-right: 356px; }
+  section.card.has-kp .desc { max-width: min(76ch, calc(100% - 470px)); }
+  section.card.has-kp .sec-ctrls { padding-right: 470px; }
+  /* 左列窄了，标签别折成竖排单字 */
+  .sec-ctrls .seg-label > span, .sec-ctrls .rng-label > span, .sec-ctrls .flabel { white-space: nowrap; }
 }
-@media (min-width: 1200px) {
-  section.card.has-kp2 .desc { max-width: min(76ch, calc(100% - 692px)); }
-  section.card.has-kp2 .desc + div { padding-right: 692px; }
+@media (min-width: 1130px) {
+  section.card.has-kp2 .desc { max-width: min(76ch, calc(100% - 910px)); }
+  section.card.has-kp2 .sec-ctrls { padding-right: 910px; }
 }
 /* 上缘由 JS 按「图的上沿倒推」算出（见 knowledge.js 的 syncLayout）：
    卡吊在图上沿之上、标题行之下。写死 14px 时它正好压住标题行右边那排按钮。 */
