@@ -712,7 +712,7 @@ export function renderRiver(host, list, opts) {
   });
   if (!bands.length) { host.appendChild(h('p', { class: 'muted', text: '当前筛选无数据。' })); return; }
 
-  const pxYear = opts.riverPx || 7;
+  let pxYear = opts.riverPx || 7;
   const byDynasty = opts.laneColor !== 'unified';
   const markViolent = opts.laneViolent !== false;
   const slots = dynastyColorSlots();
@@ -721,6 +721,10 @@ export function renderRiver(host, list, opts) {
   const W = Math.max(300, Math.floor(host.getBoundingClientRect().width) || 360);
   const t0 = Math.min(...bands.map((b) => b.s)) - 4;
   const t1 = Math.max(...bands.map((b) => b.e)) + 4;
+  // 轴跨钳制：竖河画到夏初时 16px/年 × 约四千年 ≈ 6.4万px 高，iOS Safari 对
+  // 超高 SVG 的栅格化内存是实际风险。生效值按跨度封顶在约 4.5万px（现库
+  // 拉满 3.4万px，行为不变；轴前伸后最松档自动让步）。
+  pxYear = Math.min(pxYear, Math.max(3, 45000 / (t1 - t0)));
   const H = Math.round((t1 - t0) * pxYear);
   const y = linear([t0, t1], [0, H]);
   // ── 两岸的事件轨 ────────────────────────────────────────────────────────
@@ -769,6 +773,11 @@ export function renderRiver(host, list, opts) {
   const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, class: 'river-svg', role: 'img' });
   const defs = el('defs');                 // 河床渐变(首尾洇散 × 河口墨韵)
   svg.appendChild(defs);
+  // 年代拟测（F 旗 Y）的斜纹：与泳道视图同一语汇（vy-hatch-l），id 分开
+  // 只因两个 SVG 可能先后挂进同一份 DOM，url(#) 按文档解析，不冒撞 id 的险
+  defs.appendChild(el('pattern', {
+    id: 'vy-hatch-r', width: 7, height: 7, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)',
+  }, [el('line', { x1: 0, y1: 0, x2: 0, y2: 7, stroke: 'var(--surface-1)', 'stroke-width': 2.2, opacity: 0.55 })]));
   // 四个绘制层，DOM 顺序即遮挡顺序：所有河床垫底，君主段全体压在其上——
   // 因此新朝的预告细流（先于建国张开的淡色）只会显现在缝隙与河床里，
   // 绝不会浮在邻河的君主色块之上
@@ -989,7 +998,8 @@ export function renderRiver(host, list, opts) {
       const segSamples = sample(b.d.key, g.s + gapY, g.x - gapY);
       const d = polyPath(segSamples, y, 1);
       if (!d) continue;
-      const node = el('path', { d, fill: col, class: 'mark river-emp' });
+      const node = el('path', { d, fill: col, class: 'mark river-emp',
+        ...(g.e.yearsSurmised ? { opacity: 0.55 } : {}) });
       node.dataset.emp = g.e.id;
       const tip = () => [
         { color: col, value: `${fmtDate(g.e.acc, { yearOnly: true })}–${g.e.reignEnd ? fmtDate(g.e.reignEnd, { yearOnly: true }) : '？'}`, label: '在位' },
@@ -997,10 +1007,14 @@ export function renderRiver(host, list, opts) {
         { label: '享年', value: g.e.lifespan === null ? '不详' : `${Math.floor(g.e.lifespan)} 岁` },
         { label: '登基年龄', value: g.e.accAge === null ? '不详' : `${Math.floor(g.e.accAge)} 岁` },
         { label: '死因', value: g.e.causeLabel },
+        ...(g.e.yearsSurmised ? ['斜纹段：在位年份为传统系年等比铺入的坐标，非史源确年——共和（前841）以前无确切纪年。'] : []),
         ...(g.e.note ? [g.e.note] : []),
       ];
       hoverable(node, tip, () => `${b.d.name}·${g.e.temple}`);
       gEmps.appendChild(node);
+      if (g.e.yearsSurmised) {
+        gEmps.appendChild(el('path', { d, fill: 'url(#vy-hatch-r)', 'pointer-events': 'none', class: 'mark' }));
+      }
       const midBox0 = edge(b.d.key, (g.s + g.x) / 2);
       empNodes.push({ node, e: g.e, band: b, col, tip,
         y0: y(g.s), y1: y(g.x), cx: midBox0 ? (midBox0[0] + midBox0[1]) / 2 : W / 2 });

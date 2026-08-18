@@ -407,11 +407,17 @@ export function renderHypotheses(host, list, opts) {
 // 这一节把三者逐条列出，使第三类不必靠肉眼在图上找。
 // 审计针对完整数据集，不受上方过滤器影响：缺口是数据问题，不是筛选结果。
 const GAP_MIN = 1.0;
+// 先秦两带整体豁免：共和（前841）以前只有推定年与传统系年，「缺口 ≥1 年即待核查」
+// 的质检语义在那里不成立——夏商的每一条缝都是精度问题而非漏收问题，灌进来只会
+// 稀释这张表对帝制时代的质检价值（本表靠信噪比才找得出唐敬宗那类真错）。
+// 先秦的质检走 tools/mining 的来源账本（sources.json 按段声明锚源）。
+const AUDIT_EXEMPT_ERAS = new Set(['xsz', 'cqzg']);
 export function renderAudit(host) {
   host.innerHTML = '';
   const rows = [];
   let unresolved = 0;
   for (const d of DYNASTIES) {
+    if (AUDIT_EXEMPT_ERAS.has(d.era)) continue;
     const emps = EMPERORS.filter((e) => e.dynKey === d.key);
     if (!emps.length) {
       rows.push([d.name, `${fmtY(d.s)}–${fmtY(d.e)}`, '整朝无记录', d.e - d.s + 1, '—', '待核查']);

@@ -215,7 +215,7 @@ export function eventLegend(opts, { skip = [] } = {}) {
 // ── 主渲染 ───────────────────────────────────────────────────────────────
 export function renderLaneTimeline(host, list, opts) {
   host.innerHTML = '';
-  const pxYear = opts.lanePx || 10;
+  let pxYear = opts.lanePx || 10;
   const byDynasty = opts.laneColor !== 'unified';
   const markViolent = opts.laneViolent !== false;
   const slots = dynastyColorSlots();
@@ -234,6 +234,13 @@ export function renderLaneTimeline(host, list, opts) {
   // 1) 组装朝代带
   const bands = buildBands(list);
   if (!bands.length) { host.appendChild(h('p', { class: 'muted', text: '当前筛选无数据。' })); return; }
+  // 轴跨钳制：泳道画到夏初时 30px/年 × 约四千年 ≈ 12万px，逼近部分渲染引擎
+  // 2^17=131072px 的图层上限（表头 SVG 同宽、绘制面积翻倍）。滑杆照旧，
+  // 生效值按实际跨度封顶——宁可最松档少几像素，不可整幅泳道画不出来。
+  {
+    const span = Math.max(...bands.map((b) => b.e)) - Math.min(...bands.map((b) => b.s)) + 20;
+    pxYear = Math.min(pxYear, Math.max(6, Math.floor(110000 / span)));
+  }
 
   // 2) 泳道装箱。带的横向足迹取「带宽」与「名称宽度」的较大者，
   //    因此带首的名称永远不会压到上一条政权的尾部。
@@ -605,6 +612,15 @@ export function renderLaneTimeline(host, list, opts) {
   const gBase = el('g'), gStrand = el('g', { class: 'tl-strands' }), gTop = el('g');
   body.appendChild(gBase); body.appendChild(gStrand); body.appendChild(gTop);
 
+  // 年代拟测（F 旗 Y）的斜纹：夏与商前期的君主格是传统系年等比铺入的坐标，
+  // 不是史源确年，画法上必须与实证段一眼可辨（斜纹＋半透明）。
+  // 与 contest-hatch 分立：一个说「并立」，一个说「虚年」，语义不同不共用。
+  const defsY = el('defs');
+  defsY.appendChild(el('pattern', {
+    id: 'vy-hatch-l', width: 7, height: 7, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)',
+  }, [el('line', { x1: 0, y1: 0, x2: 0, y2: 7, stroke: 'var(--surface-1)', 'stroke-width': 2.2, opacity: 0.55 })]));
+  body.appendChild(defsY);
+
   if (contests.length) {
     // 交替并立期：45° 斜纹底衬。此处纹理承载的是「并立」这一状态，非装饰
     const defs = el('defs');
@@ -700,6 +716,7 @@ export function renderLaneTimeline(host, list, opts) {
         { label: '享年', value: g.e.lifespan === null ? '不详' : `${Math.floor(g.e.lifespan)} 岁` },
         { label: '登基年龄', value: g.e.accAge === null ? '不详' : `${Math.floor(g.e.accAge)} 岁` },
         { label: '死因', value: g.e.causeLabel },
+        ...(g.e.yearsSurmised ? ['斜纹段：在位年份为传统系年等比铺入的坐标，非史源确年——共和（前841）以前无确切纪年。'] : []),
         ...(g.e.note ? [g.e.note] : []),
       ];
       const parts = spanParts(b, g.ds, g.dx);
@@ -710,9 +727,15 @@ export function renderLaneTimeline(host, list, opts) {
         const sy = y0 + gm.y + g.sub * (segH + 2);
         const sx0 = x(p.x0), sx1 = x(p.x1);
         const wSeg = Math.max(1.5, sx1 - sx0 - 2);   // −2 ＝ 段间以底色留缝，而不是描边分隔
+        const segAttrs = { x: sx0 + 1, y: sy, width: wSeg, height: segH, rx: Math.min(3, segH / 2) };
         gTop.appendChild(el('rect', {
-          x: sx0 + 1, y: sy, width: wSeg, height: segH, rx: Math.min(3, segH / 2), fill: col, class: 'mark',
+          ...segAttrs, fill: col, class: 'mark', ...(g.e.yearsSurmised ? { opacity: 0.55 } : {}),
         }));
+        if (g.e.yearsSurmised) {
+          gTop.appendChild(el('rect', {
+            ...segAttrs, fill: 'url(#vy-hatch-l)', class: 'mark', 'pointer-events': 'none',
+          }));
+        }
         const hit = el('rect', { x: sx0, y: sy - 2, width: Math.max(10, sx1 - sx0), height: segH + 4, fill: 'transparent', class: 'mark' });
         hoverable(hit, segTip, () => `${b.d.name}·${g.e.temple}`);
         gTop.appendChild(hit);

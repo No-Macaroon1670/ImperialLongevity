@@ -10,7 +10,11 @@ const S = {
   death: new Set(['normal', 'violent', 'unknown']),
   onlyFounder: false, onlyLast: false, onlyAlchemy: false,
   eras: new Set(ERAS.map((e) => e.key)),
-  titles: new Set(['帝', '天王', '汗']),     // 默认不含仅称「王」者
+  // 先秦扩张起默认全含：春秋战国的国君多数终身是公/侯，楚吴越诸王也只称王，
+  // 不全含的话新收的二百余位在两页上一位都看不见。副作用同样是刻意的：
+  // 原先默认隐藏的 38 位「仅称王者」（十国诸王、南越后三主）一并进入默认视图
+  // ——「全部入库」的口径本就该如此。要整体摘出先秦，用「时代」chips 反选两带。
+  titles: new Set(['帝', '天王', '汗', '王', '公', '侯']),
   includeNominal: false,
   looseUnified: false,
   yearFrom: null, yearTo: null,
@@ -133,8 +137,9 @@ function buildFilters(host) {
   row.appendChild(g4);
 
   const g5 = h('div', { class: 'fgroup' }, [h('span', { class: 'flabel', text: '入库范围' })]);
-  for (const t of ['帝', '天王', '汗', '王']) {
-    g5.appendChild(chip(t === '帝' ? '皇帝' : t === '王' ? '仅称王者' : t, S.titles.has(t), () => { toggleIn(S.titles, t); render(); }));
+  for (const t of ['帝', '天王', '汗', '王', '公', '侯']) {
+    g5.appendChild(chip(t === '帝' ? '皇帝' : t === '王' ? '称王者' : t === '公' ? '诸侯·公' : t === '侯' ? '诸侯·侯' : t,
+      S.titles.has(t), () => { toggleIn(S.titles, t); render(); }));
   }
   g5.appendChild(chip('名义君主', S.includeNominal, () => { S.includeNominal = !S.includeNominal; render(); }));
   row.appendChild(g5);
@@ -158,7 +163,7 @@ function buildFilters(host) {
     onclick: () => {
       S.unified = new Set([1, 0]); S.death = new Set(['normal', 'violent', 'unknown']);
       S.onlyFounder = S.onlyLast = S.onlyAlchemy = false;
-      S.eras = new Set(ERAS.map((e) => e.key)); S.titles = new Set(['帝', '天王', '汗']);
+      S.eras = new Set(ERAS.map((e) => e.key)); S.titles = new Set(['帝', '天王', '汗', '王', '公', '侯']);
       S.includeNominal = false; S.looseUnified = false; S.yearFrom = S.yearTo = null;
       render();
     },
