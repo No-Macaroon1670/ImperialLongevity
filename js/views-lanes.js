@@ -1189,13 +1189,19 @@ export function renderLaneTimeline(host, list, opts) {
   const staticLegend = h('div');
   host.appendChild(staticLegend);
   // 读图必需的视觉语法留在图旁，一行说完；来龙去脉收进折叠块
+  // 速查行只留一词一义、按在场要素显隐；长解释在下方折叠块（用户定的分工）。
+  // 注意斜纹一词二义：底轨斜纹（并立）与君主格斜纹（低置信年份）是两种语法
+  const hasVY = bands.some((b) => b.segs.some((g) => g.e.yearsSurmised));
+  const hasMicro = bands.some((b) => b.micro);
   const key = [];
   if (useTop) key.push('淡底首行＝正统序列');
-  if (useSecond) key.push('次行＝北方政权主线');
-  if (contests.length) key.push('斜纹＝新旧并立（上半轨前朝、下半轨后朝）');
-  key.push('浅色半高段＝称帝前掌权期');
-  if (markViolent) key.push('▲＝该帝非正常死亡');
-  key.push('点选朝代或皇帝可显丝：粗实线＝法统相承 · 细实线＝亡入 · 虚线＝裂自');
+  if (useSecond) key.push('次行＝北方主线');
+  if (contests.length) key.push('底轨斜纹＝新旧并立');
+  if (hasVY) key.push('君主格斜纹＝低置信年份');
+  key.push('浅色半高＝称帝前掌权');
+  if (markViolent) key.push('▲＝非正常死亡');
+  if (hasMicro) key.push('极短政权仅存色点');
+  key.push('点选可显承继丝（详见下方说明）');
   staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text: key.join(' · ') }));
 
   if (showEvents) for (const n of eventLegend(opts)) staticLegend.appendChild(n);
@@ -1348,6 +1354,7 @@ export function renderLaneTimeline(host, list, opts) {
   const greyN = [...slots.values()].filter((v) => v < 0).length;
   const stacked = bands.filter((b) => b.subs > 1);
   host.appendChild(notes([
+    '图例详解——斜纹有两处语义，不可混读：**底轨**上的斜纹标「新旧并立」的交替期（上半轨前朝、下半轨后朝，正统行与北方主线共用此画法）；**君主格**上的斜纹＋半透明标「低置信年份」——推算所得（传统系年铺入，或诸家体系并存取其一），依据见各条悬停备注。点选朝代或皇帝会点亮承继丝：粗实线＝法统相承、细实线＝亡入、虚线＝裂自；「全部承继关系」开关可整图齐显。画宽装不下自己名字的极短政权（桓楚、中华帝国）只画色点，名字在悬停里。',
     useTop && `第一行为正统序列专用（${orth.length} 朝），不参与泳道回收，任何割据政权都不会挤进来，`
       + `于是它自成一条贯通两千年的主线；其余政权一律平等地排在下方，不含褒贬。`
       + `斜纹段为正统交替期——陈与隋并立八年、南宋与元并立七十三年、明与清并立二十八年，`
