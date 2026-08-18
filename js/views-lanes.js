@@ -286,7 +286,12 @@ export function renderLaneTimeline(host, list, opts) {
 
   const spanOf = (b) => {
     const a = b.s * pxYear;
-    return { a, z: Math.max(b.e * pxYear, a + textW(b.d.name, LABEL_FS) + 14) };
+    // 微型政权（画宽装不下自己的名字，如桓楚二年）在紧缩放下不为标签占位：
+    // 名字改由色点＋悬停承载，占位缩到点宽——否则一年的政权要为 45px 的
+    // 字幅独占一整行（用户实测：后凉—桓楚—胡夏本可共檐，桓楚被标签挤走）
+    const lw = textW(b.d.name, LABEL_FS) + 14;
+    b.micro = (b.e - b.s) * pxYear < lw;
+    return { a, z: Math.max(b.e * pxYear, a + (b.micro ? 18 : lw)) };
   };
   const ensure = (k) => { while (lanes.length <= k) lanes.push([]); return lanes[k]; };
   const place = (b, k) => {
@@ -782,12 +787,16 @@ export function renderLaneTimeline(host, list, opts) {
       }
     }
 
-    // 朝代名（带首；滚动时吸附于视口左缘，但不越出本带）
+    // 朝代名（带首；滚动时吸附于视口左缘，但不越出本带）。
+    // 微型政权（见 spanOf）只画色点不写名——名字在底带与君主段的悬停里
     const lw = textW(b.d.name, LABEL_FS);
     const dot = el('circle', { cx: bx0 + 4, cy: y0 + 8, r: 3.5, fill: col });
-    const label = el('text', { x: bx0 + 12, y: y0 + 12, 'font-size': LABEL_FS, 'font-weight': 600, fill: 'var(--text-1)' }, b.d.name);
-    gTop.appendChild(dot); gTop.appendChild(label);
-    labelNodes.push({ dot, label, x0: bx0, x1: bx1, lw });
+    gTop.appendChild(dot);
+    if (!b.micro) {
+      const label = el('text', { x: bx0 + 12, y: y0 + 12, 'font-size': LABEL_FS, 'font-weight': 600, fill: 'var(--text-1)' }, b.d.name);
+      gTop.appendChild(label);
+      labelNodes.push({ dot, label, x0: bx0, x1: bx1, lw });
+    }
   }
 
   // ── 治世外套：套在对应皇帝格子外的一圈 ──────────────────────────────────
