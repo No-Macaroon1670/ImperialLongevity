@@ -527,24 +527,35 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 }
 /* 上缘由 JS 按「图的上沿倒推」算出（见 knowledge.js 的 syncLayout）：
    卡吊在图上沿之上、标题行之下。写死 14px 时它正好压住标题行右边那排按钮。 */
+/* 角卡横排网格（用户定的版式）：图 | 文 | 链接一列。卡更宽更矮，
+   链接不再横铺卡底换行挤压，而是竖成一列贴在卡内右缘。 */
 .kp-corner {
   position: absolute; top: var(--kp-top, 14px); left: auto;
-  transform: none; width: 322px; max-height: 268px; z-index: 5;
+  transform: none; width: 430px; max-height: 196px; z-index: 5;
+  display: grid; grid-template-columns: 86px minmax(0, 1fr) auto;
+  grid-template-rows: auto auto 1fr auto; column-gap: 12px;
 }
 .kp-corner-emp { right: 16px; }
-.kp-corner-dyn { right: 352px; }
+.kp-corner-dyn { right: 462px; }
 .kp-corner.on { animation: none; }
-.kp-corner .kp-thumb { float: left; width: 104px; height: 128px; object-fit: cover;
-  object-position: top; margin: 2px 12px 4px 0; }
+.kp-corner .kp-thumb { grid-column: 1; grid-row: 1 / span 3; float: none;
+  width: 86px; height: 116px; object-fit: cover; object-position: top; margin: 2px 0 0; }
+.kp-corner .kp-head { grid-column: 2; grid-row: 1; }
 .kp-corner .kp-sub { margin-top: 0; }
-.kp-corner .kp-title { font-size: .96rem; margin: 1px 0 4px; }
-.kp-corner .kp-ext { font-size: .77rem; line-height: 1.55; -webkit-line-clamp: 6; }
-.kp-corner .kp-links { clear: both; margin-top: 8px; font-size: .78rem; }
-.kp-corner .kp-src { margin-top: 5px; }
+.kp-corner .kp-title { grid-column: 2; grid-row: 2; font-size: .96rem; margin: 1px 0 4px; }
+.kp-corner .kp-ext { grid-column: 2; grid-row: 3; font-size: .77rem; line-height: 1.55; -webkit-line-clamp: 4; }
+.kp-corner .kp-links {
+  grid-column: 3; grid-row: 1 / span 3; align-self: start;
+  display: flex; flex-direction: column; gap: 4px;
+  clear: none; margin-top: 2px; padding-right: 20px;   /* 给右上角的 ✕ 让位 */
+  font-size: .76rem; white-space: nowrap;
+}
+.kp-corner .kp-vids { display: flex; flex-direction: column; gap: 4px; }
+.kp-corner .kp-src { grid-column: 1 / -1; grid-row: 4; margin-top: 4px; }
 /* 硬隐的断点随「卡优先」下移:单卡 999→680、双卡 1199→1010。
    低于 680px 才真的摆不下角卡,那时交给贴底的手机单卡(.kp-solo)。
    这两条带 !important,不下移的话上面那些让位规则会被它们压掉 */
-@media (max-width: 1009px) { .kp-corner-dyn { display: none !important; } }
+@media (max-width: 1129px) { .kp-corner-dyn { display: none !important; } }
 @media (max-width: 679px) { .kp-corner { display: none !important; } }
 
 /* 收起说明,把那片横向空间让给卡。

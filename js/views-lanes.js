@@ -1081,8 +1081,9 @@ export function renderLaneTimeline(host, list, opts) {
   const scroller = h('div', { class: 'lane-scroll' }, [inner]);
   // 泳道数在 10 以内时不设高度上限并关掉纵向滚动：横向滚动条本身要占十几像素，
   // 若照旧设 max-height，就会为了这十几像素逼出一条纵向滚动条，纯属噪音。
-  if (nLanes <= 10) scroller.style.overflowY = 'hidden';
-  else scroller.style.maxHeight = `${10 * LANE_H + HEAD_H + 24}px`;
+  // 纵向不再滚动（用户定的版式）：介绍出框省下的高度足以铺开全部泳道行，
+  // fitHeight 会按视口占用收放，密集时代整幅展开、荒原时代收成两行
+  scroller.style.overflowY = 'hidden';
   host.appendChild(scroller);
   scrollHint(scroller, '左右滑动即为时间流逝');
 
@@ -1194,18 +1195,12 @@ export function renderLaneTimeline(host, list, opts) {
     for (const b of bands) if (b.e > y0 && b.s < y1 && b.lane > deep) deep = b.lane;
     const sbH = scroller.offsetHeight - scroller.clientHeight;      // 横滚条自身的高
     const contentH = scroller.scrollHeight;
-    const capH = nLanes <= 10 ? contentH + sbH : 10 * LANE_H + HEAD_H + 24;
-    const want = Math.min(contentH - (nLanes - deep - 1) * LANE_H + sbH, capH);
+    const want = contentH - (nLanes - deep - 1) * LANE_H + sbH;
     if (scroller.__fitH === want) return;
     scroller.__fitH = want;
     scroller.style.maxHeight = 'none';
     scroller.style.height = `${want}px`;
-    if (nLanes > 10) {
-      scroller.style.overflowY = want < capH - 1 ? 'hidden' : 'auto';
-      // 收紧裁切时纵滚归零：被裁的只能是底部空行——在密集时代往下滚过、
-      // 再拖回先秦时，陈旧的 scrollTop 会把正统行顶出视野（用户实测「大一统行消失」）
-      if (want < capH - 1) scroller.scrollTop = 0;
-    }
+    scroller.scrollTop = 0;      // 恒 hidden 下的保险：被裁的只能是底部空行
     if (!fitInit) { fitInit = true; requestAnimationFrame(() => { scroller.style.transition = 'height .25s ease'; }); }
   };
   let settleT = null;

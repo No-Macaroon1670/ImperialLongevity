@@ -407,13 +407,13 @@ export function mountApp({ sections, hero }) {
     // 需求编号属于交付追溯，写在 README 的对照表里，不占版面
     const head = h('div', { class: 'head' }, [h('h2', { text: sec.title })]);
     card.appendChild(head);
-    const desc = h('p', { class: 'desc', text: sec.desc });
-    card.appendChild(desc);
+    // 说明段可整段留空（全景页的介绍已并入页首 lede，框内只剩名称——用户定的版式）
+    if (sec.desc) card.appendChild(h('p', { class: 'desc', text: sec.desc }));
     // 说明段可收起。窄一点的屏上,原先是**先牺牲知识卡**(角卡在 1199/999px
     // 以下一律隐藏),可那几段说明读过一遍就不必再占着地方,而卡是随时在用的。
     // 收起说明即把那片横向空间让给卡,于是卡的断点能往下挪三百多像素。
     // 只给带角卡的那一节加(全景页),统计页的说明没有卡跟它争地方。
-    if (sec.id === 'panorama') {
+    if (sec.id === 'panorama' && sec.desc) {
       const key = `il.desc.${sec.id}`;
       const btn = h('button', { class: 'chip desc-toggle', type: 'button' });
       const sync = () => {
