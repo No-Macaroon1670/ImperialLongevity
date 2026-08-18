@@ -134,6 +134,17 @@ function buildFilters(host) {
   for (const era of ERAS) {
     g4.appendChild(chip(era.name, S.eras.has(era.key), () => { toggleIn(S.eras, era.key); render(); }));
   }
+  // 一键滤除先秦（决策 4 的批注）：先秦年代分层复杂（部分低置信），
+  // 审稿人质疑「数据太软」时，点它即得帝制时代（秦以降）的干净样本
+  {
+    const preQ = ['xsz', 'cqzg'];
+    const on = preQ.every((k) => !S.eras.has(k));
+    g4.appendChild(chip('仅帝制时代', on, () => {
+      if (on) preQ.forEach((k) => S.eras.add(k));
+      else preQ.forEach((k) => S.eras.delete(k));
+      render();
+    }));
+  }
   row.appendChild(g4);
 
   const g5 = h('div', { class: 'fgroup' }, [h('span', { class: 'flabel', text: '入库范围' })]);
