@@ -121,10 +121,14 @@ body { padding-bottom: 80px; }
 header.masthead { padding: 34px 0 18px; border-bottom: 1px solid var(--border); }
 .masthead .kicker { color: var(--muted); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; }
 .masthead p.lede { color: var(--text-2); max-width: 68ch; margin-top: .5em; }
-/* 介绍并框后长了三倍，68ch 单列在宽屏右侧空出一大片（用户实测）。
-   宽屏改双栏报纸式自由流——行长仍在可读范围，空间不再闲置 */
+/* 介绍并框后长了三倍，68ch 单列在宽屏右侧空出一大片。先试过双栏报纸式，
+   用户定稿为**单条宽幅居中列**：页首整块（眉题、标题、介绍）同宽居中，
+   行长放宽到约百字符仍可读，两侧留对称呼吸边 */
 @media (min-width: 1000px) {
-  .masthead p.lede { max-width: none; columns: 2; column-gap: 44px; }
+  /* 用 rem 不用 ch：ch 随各元素字号缩放，眉题/标题/正文会各算出一条
+     不同宽的“列”，参差不齐——同一条居中列必须同一个绝对宽 */
+  header.masthead > * { max-width: 60rem; margin-left: auto; margin-right: auto; }
+  .masthead p.lede { max-width: 60rem; }
 }
 
 .hero-row { display: flex; flex-wrap: wrap; gap: 26px; margin: 20px 0 4px; }
