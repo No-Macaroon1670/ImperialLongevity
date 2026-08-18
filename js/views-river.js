@@ -1144,6 +1144,13 @@ export function renderRiver(host, list, opts) {
       }
     }
     const sliceAt = (t) => slices.find((s) => t >= s.a - EPS && t < s.z + EPS);
+    // 缝上事件（key null）此前拿着全河宽 [RX0,RX1] 的自由度找空位，结果全
+    // 漂进河面较空的那一条：南越与西汉并流的九十三年里，马王堆帛书、诛吕
+    // 安刘、封狼居胥全被挤进南越河（用户实测）。收紧为「贴缝走廊」：只准
+    // 在锚点 ±CORR 内滑动——密处名字挤不下自然退成标记，也不越河认亲
+    const CORR = 58;
+    const corridor = (x, lo, hi) => ({ lo: Math.max(lo, x - CORR), hi: Math.min(hi, x + CORR) });
+    const CAMEO = new Set([...DYN_MAP.values()].filter((d) => d.cameo).map((d) => d.key));
     const anchorOf = (ev) => {
       if (ev.d) {
         const b = edge(ev.d, ev.y);
@@ -1154,7 +1161,7 @@ export function renderRiver(host, list, opts) {
       if (cands) {
         const best = cands.reduce((m, c) => (Math.abs(c.c - ev.y) < Math.abs(m.c - ev.y) ? c : m));
         // 只认时间上对得上的那一次：事件与改道相差二十年以上，多半是同名异事
-        if (Math.abs(best.c - ev.y) <= 20) return { x: best.x, w: RX1 - RX0, lo: RX0 + 2, hi: RX1 - 2, key: null };
+        if (Math.abs(best.c - ev.y) <= 20) return { x: best.x, w: RX1 - RX0, ...corridor(best.x, RX0 + 2, RX1 - 2), key: null };
       }
       const sl = sliceAt(evAnchor(ev));
       if (!sl || !sl.n) return null;
@@ -1163,6 +1170,12 @@ export function renderRiver(host, list, opts) {
       if (!boxes.length) return null;
       if (boxes.length === 1) {
         const [b, k] = boxes[0];
+        // 客串政权（cameo，单主入库）不自动认领无主事件：西楚独占河面的那
+        // 几年里，鸿门宴、楚汉战争并不因此成了西楚的内政——落缝上语义
+        if (CAMEO.has(k)) {
+          const cx = (b[0] + b[1]) / 2;
+          return { x: cx, w: b[1] - b[0], ...corridor(cx, b[0] + 1, b[1] - 1), key: null };
+        }
         return { x: (b[0] + b[1]) / 2, w: b[1] - b[0], lo: b[0] + 1, hi: b[1] - 1, key: k };
       }
       boxes.sort((a, b) => a[0][0] - b[0][0]);
@@ -1172,7 +1185,7 @@ export function renderRiver(host, list, opts) {
         const seam = (boxes[i][0][1] + boxes[i + 1][0][0]) / 2;
         if (x === null || Math.abs(seam - mid) < Math.abs(x - mid)) x = seam;
       }
-      return x === null ? null : { x, w: (RX1 - RX0) / boxes.length, lo: RX0 + 2, hi: RX1 - 2, key: null };
+      return x === null ? null : { x, w: (RX1 - RX0) / boxes.length, ...corridor(x, RX0 + 2, RX1 - 2), key: null };
     };
     // 占位表：河面上已有的字（君主名、朝代名、刻痕）先入表，事件只能填空当；
     // 而后标记与名字也各自登记，后来者按分量高低依次找位。名字挤不下就只留
@@ -1554,11 +1567,18 @@ export function renderRiver(host, list, opts) {
     // 跳转即松钉,同泳道那一侧(见 views-lanes.js 的 goX)。河流有四张卡,
     // 留下陈货的机会更多
     if (kClean && kClean.releasePins) kClean.releasePins();
-    const top = wrap.getBoundingClientRect().top + scrollY;
-    const to = top + y(Math.min(Math.max(t, t0), t1)) - innerHeight * 0.42;
-    const p = o.smooth
-      ? glide(() => scrollY, (v) => scrollTo({ top: v, behavior: 'instant' }), to)
-      : (scrollTo({ top: to, behavior: 'instant' }), Promise.resolve());
+    const yPix = y(Math.min(Math.max(t, t0), t1));
+    const dest = () => wrap.getBoundingClientRect().top + scrollY + yPix - innerHeight * 0.42;
+    const p = (o.smooth
+      ? glide(() => scrollY, (v) => scrollTo({ top: v, behavior: 'instant' }), dest())
+      : (scrollTo({ top: dest(), behavior: 'instant' }), Promise.resolve()))
+      // 到站再校一次：手机上跳转常发生在软键盘收起的同时（搜索/骰子都在
+      // 输入框旁），起跳时按缩半的视口算的落点，键盘一收就漂到黑条底下
+      // ——「随机跳到的锚点顶在盒子最上沿」（用户实测）即此
+      .then(() => {
+        const d = dest();
+        if (Math.abs(d - scrollY) > 40) scrollTo({ top: d, behavior: 'instant' });
+      });
     host.__locate.pending = p;
     return p;
   };

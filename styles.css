@@ -932,3 +932,12 @@ body.tour-on .sec-nav { display: none !important; }
   .tour-panel.on, .tour-launch.fresh { animation: none; }
   .tour-scrim { transition: none; }
 }
+
+/* 王朝之河的导语分档：桌面全文，手机只留「河宽=并存数、秦始皇锚点、
+   斜纹=低置信、触屏操作」四件事——原文在手机上是三屏长的门槛，且讲的
+   多是泳道与宽屏概念（用户实测）。 */
+.lede-touch { display: none; }
+@media (max-width: 719px) {
+  .masthead .lede-desk { display: none; }
+  .lede-touch { display: inline; }
+}

@@ -15,8 +15,32 @@
 import { h, fmtYearAxis } from './charts.js';
 import { EMPERORS, DYNASTIES } from './data.js';
 import { EVENTS, EVENT_KINDS } from './events.js';
+import PY from './data-pinyin.js';
 
 const norm = (s) => (s || '').toLowerCase().replace(/[·・\s（）()]/g, '');
+
+/**
+ * 拼音键：每个中文键另生成全拼与首字母两个 ascii 键（破釜沉舟 →
+ * pofuchenzhou / pfcz），与既有的前缀/子串匹配天然兼容。此前政权能被拼音
+ * 搜到纯属巧合——索引里恰好有 d.key（'tang'）；君主与大事一直搜不到
+ * （用户实测）。字级映射由 tools/mining/gen_pinyin.py 生成，多音字取常读
+ * ——冒顿会拼成 maodun，这是搜索容错，不是注音。
+ */
+const pyKeys = (list) => {
+  const out = [];
+  for (const s of list) {
+    let full = '', ini = '';
+    for (const ch of s) {
+      const p = PY[ch];
+      if (p) { full += p; ini += p[0]; }
+      else if (/[a-z0-9]/.test(ch)) { full += ch; ini += ch; }
+    }
+    if (full && full !== s) out.push(full);
+    if (ini.length > 1 && ini !== full) out.push(ini);
+  }
+  return out;
+};
+const withPy = (keys) => keys.concat(pyKeys(keys));
 
 /** 建索引：君主、政权、大事记各成一类，按名字的多种写法建关键词 */
 function buildIndex() {
@@ -25,7 +49,7 @@ function buildIndex() {
     idx.push({
       kind: 'emp', id: e.id, label: `${e.dynasty}·${e.temple}`,
       sub: `${e.name || ''}${e.acc ? ` · ${fmtYearAxis(e.acc.year)} 年即位` : ''}`,
-      keys: [e.name, e.temple, e.posth, `${e.dynasty}${e.temple}`, e.dynasty].filter(Boolean).map(norm),
+      keys: withPy([e.name, e.temple, e.posth, `${e.dynasty}${e.temple}`, e.dynasty].filter(Boolean).map(norm)),
       y: e.acc ? e.acc.t : 0,
     });
   }
@@ -33,7 +57,7 @@ function buildIndex() {
     idx.push({
       kind: 'dyn', id: d.key, label: d.name,
       sub: `政权 · ${fmtYearAxis(d.s)}–${fmtYearAxis(d.e)}`,
-      keys: [d.name, d.key].map(norm), y: d.s,
+      keys: withPy([d.name, d.key].map(norm)), y: d.s,
     });
   }
   EVENTS.forEach((ev, i) => {
@@ -48,7 +72,7 @@ function buildIndex() {
       sub: `${kind} · ${fmtYearAxis(ev.y)}${ev.y2 ? `–${fmtYearAxis(ev.y2)}` : ''}${who}`,
       // 雅名也要能搜:图上写的是「破釜沉舟」,搜这四个字却找不到巨鹿之战,
       // 等于把刚教给读者的名字又藏起来
-      keys: [ev.n, ev.w, ev.ya].filter(Boolean).map(norm), y: ev.y, raw: ev.n,
+      keys: withPy([ev.n, ev.w, ev.ya].filter(Boolean).map(norm)), y: ev.y, raw: ev.n,
     });
   });
   return idx;
@@ -146,6 +170,7 @@ export function mountSearch(sectionEl, hostOf) {
   const go = (item, o) => {
     const loc = hostOf() && hostOf().__locate;
     if (!loc || !item) return;
+    input.blur();     // 先收软键盘：不收的话，落点按缩半的视口算，键盘一收就漂
     if (item.kind === 'year') loc.year(item.id, o);
     else if (item.kind === 'emp') loc.emperor(item.id, o);
     else if (item.kind === 'dyn') loc.dynasty(item.id, o);
