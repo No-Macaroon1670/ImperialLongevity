@@ -72,8 +72,8 @@ export const DYNASTIES = [
     { note: '前453 三家实分晋地起；前403 王命为侯（景侯），前323 五国相王。前230 韩王安降秦，六国先亡者' }),
   D('zhaoguo','赵国',  -452,  -227,  0, 'cqzg',
     { note: '前453 起（襄子在位中）；前403 王命为侯，前323 五国相王，前307 胡服骑射。前228 邯郸破、王迁降；代王嘉残存至前222，只作注' }),
-  D('weiguo','魏国',   -452,  -224,  0, 'cqzg',
-    { note: '前453 起；文侯（前445 即位）实为开国之主，前403 方受王命为侯。前225 王贲水灌大梁' }),
+  D('weiguo','魏国',   -452,  -224,  0, 'cqzg', { tier: 1,
+    note: '前453 起，承晋之线（得晋腹心河东，魏惠王犹自称「晋国，天下莫强焉」——《孟子》）；文侯（前445 即位）实为开国之主，前403 方受王命为侯。前225 王贲水灌大梁' }),
   // ── 秦汉 ──────────────────────────────────────────────────────────────
   D('qin',   '秦',     -220, -206, 1, 'qh', M),
   D('xhan',  '西汉',   -201, 8,    1, 'qh', M),
@@ -169,6 +169,10 @@ export const SUCCESSION = {
   // 秦朝承秦国、田齐承姜齐：同一河道内的换段，不是新政权凭空出现。
   shang: 'xiachao', xzhou: 'shang', dzhou: 'xzhou',
   tianqi: 'jiangqi', qin: 'qinguo',
+  // 三家之中由**魏**接晋的泳道与法统：魏得晋之腹心（河东故绛），战国初独霸，
+  // 且魏人自认为晋——《孟子·梁惠王》魏惠王开口即「晋国，天下莫强焉」。
+  // 几何上亦仅魏韩可接（皆起前453 与晋带无缝；赵襄子前475 已立，重叠廿三年）。
+  weiguo: 'jinguo',
   // 秦汉—魏晋—南朝：一条法统贯穿到陈
   // 东汉直接续新而非玄汉：更始政权与王莽实际并存过八个月（更始二月称帝、王莽十月被杀），
   // 挂在玄汉后面会因重叠而退回首次适配，反倒把汉家法统打散
@@ -221,6 +225,7 @@ export const MERGED_INTO = {
   // **晋不在此表**：一对三分给韩赵魏，单值映射装不下，改由 SPRANG_FROM
   // 记三家各自裂出（子键天然一对多），晋的河道到前376 自行收束。
   xiachao: 'shang', shang: 'xzhou', dzhou: 'qinguo',
+  jinguo: 'weiguo',   // 晋的河道转让给魏（承晋依据见 SUCCESSION 注）；韩赵以裂出细流交代
   wuguo: 'yueguo', yueguo: 'chuguo', jiangqi: 'tianqi',
   hanguo: 'qinguo', zhaoguo: 'qinguo', weiguo: 'qinguo',
   chuguo: 'qinguo', yanguo: 'qinguo', tianqi: 'qinguo',
@@ -263,7 +268,7 @@ export const SPRANG_FROM = {
   // **韩赵魏裂自晋（前453）是本表在先秦的主戏**：一对三分汊，子键天然支持。
   jinguo: 'xzhou', jiangqi: 'xzhou', chuguo: 'xzhou', qinguo: 'xzhou', yanguo: 'xzhou',
   wuguo: 'dzhou',
-  hanguo: 'jinguo', zhaoguo: 'jinguo', weiguo: 'jinguo',
+  hanguo: 'jinguo', zhaoguo: 'jinguo',   // 魏改走 SUCCESSION 承晋，不再重复记裂出
   chenghan: 'xjin', hanzhao: 'xjin',
   houzhao: 'hanzhao', ranwei: 'houzhao',
   qianyan: 'ejin', qianqin: 'houzhao',
