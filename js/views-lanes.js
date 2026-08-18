@@ -107,7 +107,8 @@ export function buildBands(list) {
       for (const rg of e.reigns) {
         const s = rg.s, en = rg.e || e.death || e.censor;
         if (!s || !en) continue;
-        segs.push({ e, s: s.t, x: Math.max(en.t, s.t + 0.08) });
+        segs.push({ e, s: s.t, x: Math.max(en.t, s.t + 0.08),
+          p0: s.precision === 'year', p1: en.precision === 'year' });
       }
       // 称帝前已实际掌握该政权最高权力的一段（石勒 319 称赵王、330 才称帝；
       // 忽必烈 1260 即汗位、1271 才建国号元）。不画出来，带首就会凭空空一大截，
@@ -119,6 +120,16 @@ export function buildBands(list) {
     }
     if (!segs.length) continue;
     segs.sort((a, b) => a.s - b.s);
+    // 年精度缝合：先秦纪年只到年，且循踰年改元——旧君卒于末年、新君**翌年**
+    // 才是元年，图上每处交接便凭空空出一年（14px/年 时肉眼可见，用户实测）。
+    // 王位其实没有空过，空的是记账口径。两侧边界都只精确到年、缝隙不超过
+    // 1.6 年时贴合绘制；真空档（共和 14 年、太康失国、夏商丧期 ≥2 年）与
+    // 月日精度的帝制时代一概不碰——月日数据撑得起真缝，年数据撑不起。
+    for (let i = 0; i + 1 < segs.length; i++) {
+      const a = segs[i], c = segs[i + 1];
+      const gap = c.s - a.x;
+      if (a.p1 && c.p0 && gap > 0 && gap <= 1.6) c.s = a.x;
+    }
     for (const g of segs) { g.ds = g.s; g.dx = g.x; }   // ds/dx＝绘图坐标，s/x 始终保留真实日期
     const s = Math.min(...segs.map((g) => g.s), ...preRule.map((g) => g.s));
     const e2 = Math.max(...segs.map((g) => g.x));
