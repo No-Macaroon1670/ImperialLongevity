@@ -16,9 +16,14 @@ export const SECTIONS = [
       // 缩放本是连续量，原先给三档预设，可「多宽算合适」取决于屏宽与正在看哪一段，
       // 三档常常没有一档正好。滑杆两端各留出比原预设更远的余地：
       // 拉到最紧能一屏望尽两千年，拉到最松够把五代十国那七十年铺开看。
-      rng('riverPx', '时间缩放', { min: 3, max: 16, fmt: (v) => `${v} px/年` },
+      // 读数不写 px/年——像素是实现细节，读者关心的是「一屏能看多少年」
+      //（用户点出的）。泳道按容器宽换算、河流按视口高，取整到 5
+      rng('riverPx', '时间缩放', { min: 3, max: 16,
+        fmt: (v) => `一屏 ≈ ${Math.max(5, Math.round(innerHeight / v / 5) * 5)} 年` },
         (st) => st.panoramaMode === 'river'),
-      rng('lanePx', '时间缩放', { min: 6, max: 30, fmt: (v) => `${v} px/年` },
+      rng('lanePx', '时间缩放', { min: 6, max: 30,
+        fmt: (v) => { const w = document.querySelector('.lane-scroll')?.clientWidth || (innerWidth - 80);
+          return `一屏 ≈ ${Math.max(5, Math.round(w / v / 5) * 5)} 年`; } },
         (st) => st.panoramaMode !== 'river'),
       seg('laneColor', '配色', [['dynasty', '具体朝代'], ['unified', '大一统 / 分裂']]),
       tog('laneViolent', '标记非正常死亡'),
