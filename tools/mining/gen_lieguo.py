@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""生成 js/data-0b-lieguo.js —— 春秋战国列国君主（P2）。
+"""生成 js/data-0b-lieguo.js —— 春秋战国列国君主（P2）＋先秦单主客串政权。
 
 输入：P2 工作流八路 agent 的结构化王表（scratchpad/lg_rows.json，
 由主循环从 workflow journal 提取），每行 {t,n,wk,a,e,end_kind,tc,c,f,l,Y,no}。
@@ -22,18 +22,20 @@ report 里、由主循环人工复核后才落到输入文件：
 import io, json, os, sys
 
 ROOT = r"C:/Users/ziyi_/Claude/imperial-longevity"
-SC = (r"C:/Users/ziyi_/AppData/Local/Temp/claude/C--Users-ziyi--Claude/"
-      r"1fabfb86-a26a-4b09-be7f-6c753fa25f61/scratchpad")
 OUT = os.path.join(ROOT, "js/data-0b-lieguo.js")
 
-D_OF = {'晋': 'jinguo', '姜齐': 'jiangqi', '田齐': 'tianqi', '楚': 'chuguo',
+D_OF = {'有穷': 'youqiong', '岐周': 'qizhou', '共': 'gongguo',
+        '晋': 'jinguo', '姜齐': 'jiangqi', '田齐': 'tianqi', '楚': 'chuguo',
         '秦': 'qinguo', '燕': 'yanguo', '吴': 'wuguo', '越': 'yueguo',
         '韩': 'hanguo', '赵': 'zhaoguo', '魏': 'weiguo', '宋': 'songguo', '郑': 'zhengguo'}
 # 允许区间（BC 年，含卿段的前伸；出界即报错拒收）
-RANGE = {'晋': (785, 345), '姜齐': (800, 375), '田齐': (390, 218), '楚': (795, 220),
+RANGE = {'有穷': (1990, 1945), '岐周': (1099, 1050), '共': (841, 828),
+         '晋': (785, 345), '姜齐': (800, 375), '田齐': (390, 218), '楚': (795, 220),
          '秦': (782, 244), '燕': (870, 219), '吴': (590, 470), '越': (545, 328),
          '韩': (460, 227), '赵': (480, 225), '魏': (460, 221), '宋': (655, 635), '郑': (748, 698)}
-HEAD = {'晋': '晋国（前780–前349）', '姜齐': '姜齐（约前794–前379）',
+HEAD = {'有穷': '有穷（无王期客串，铺入坐标，仅收寒浞）',
+        '岐周': '岐周（仅收文王，传统系年）', '共': '共国（仅收共伯和）',
+        '晋': '晋国（前780–前349）', '姜齐': '姜齐（约前794–前379）',
         '田齐': '田齐（前386–前221）', '楚': '楚国（前790–前223）',
         '秦': '秦国（前777–前221）', '燕': '燕国（前864–前222）',
         '吴': '吴国（前585–前473）', '越': '越国（约前538–前333）',
@@ -52,7 +54,7 @@ def rec(state, r):
     a, e = bc(r['a']), bc(r['e'])
     if not (hi <= e <= a <= lo):
         raise SystemExit('%s %s 年份出界：%s–%s（允许 前%d–前%d）' % (state, r['t'], r['a'], r['e'], lo, hi))
-    if r['tc'] not in ('王', '公', '侯', '子', '卿'):
+    if r['tc'] not in ('王', '公', '侯', '子', '卿', '伯'):
         raise SystemExit('%s %s tc 非法：%r' % (state, r['t'], r['tc']))
     if not r.get('wk'):
         raise SystemExit('%s %s 缺 wk' % (state, r['t']))
@@ -73,7 +75,8 @@ def rec(state, r):
     if r.get('no'): parts.append("no: '%s'" % r['no'].replace("'", "\\'"))
     return '  { %s },' % ', '.join(parts)
 
-data = json.load(io.open(os.path.join(SC, 'lg_rows.json'), encoding='utf-8'))
+# 王表源数据入库（tools/mining/lg_rows.json）：此前只存 scratchpad，会话一清就失传
+data = json.load(io.open(os.path.join(ROOT, 'tools/mining/lg_rows.json'), encoding='utf-8'))
 
 lines = [
     '// 先秦 · 春秋战国列国（P2）。**由 tools/mining/gen_lieguo.py 生成**，手改会被覆盖。',
@@ -83,7 +86,7 @@ lines = [
 ]
 warn = []
 total = 0
-for state in ['晋', '姜齐', '田齐', '楚', '秦', '燕', '吴', '越', '韩', '赵', '魏', '宋', '郑']:
+for state in ['有穷', '岐周', '共', '晋', '姜齐', '田齐', '楚', '秦', '燕', '吴', '越', '韩', '赵', '魏', '宋', '郑']:
     rows = data.get(state) or []
     if not rows:
         warn.append('%s 无数据！' % state); continue

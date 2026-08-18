@@ -14,7 +14,7 @@ const S = {
   // 不全含的话新收的二百余位在两页上一位都看不见。副作用同样是刻意的：
   // 原先默认隐藏的 38 位「仅称王者」（十国诸王、南越后三主）一并进入默认视图
   // ——「全部入库」的口径本就该如此。要整体摘出先秦，用「时代」chips 反选两带。
-  titles: new Set(['帝', '天王', '汗', '王', '公', '侯', '子', '卿']),
+  titles: new Set(['帝', '天王', '汗', '王', '公', '侯', '子', '卿', '伯']),
   includeNominal: false,
   looseUnified: false,
   yearFrom: null, yearTo: null,
@@ -83,7 +83,7 @@ function filterSummary() {
   if (S.onlyLast) on.push('亡国');
   if (S.onlyAlchemy) on.push('丹药');
   if (S.eras.size < ERAS.length) on.push(`时代 ${S.eras.size}/${ERAS.length}`);
-  if (S.titles.size !== 8) on.push('入库范围');   // 默认全含八类，少任何一类即偏离
+  if (S.titles.size !== 9) on.push('入库范围');   // 默认全含九类，少任何一类即偏离
   if (S.includeNominal) on.push('含名义君主');
   if (S.looseUnified) on.push('宽松大一统');
   if (S.yearFrom !== null || S.yearTo !== null) on.push('年份');
@@ -148,8 +148,8 @@ function buildFilters(host) {
   row.appendChild(g4);
 
   const g5 = h('div', { class: 'fgroup' }, [h('span', { class: 'flabel', text: '入库范围' })]);
-  for (const t of ['帝', '天王', '汗', '王', '公', '侯', '子', '卿']) {
-    g5.appendChild(chip(t === '帝' ? '皇帝' : t === '王' ? '称王者' : t === '公' ? '诸侯·公' : t === '侯' ? '诸侯·侯' : t === '子' ? '诸侯·子' : t === '卿' ? '晋卿' : t,
+  for (const t of ['帝', '天王', '汗', '王', '公', '侯', '子', '卿', '伯']) {
+    g5.appendChild(chip(t === '帝' ? '皇帝' : t === '王' ? '称王者' : t === '公' ? '诸侯·公' : t === '侯' ? '诸侯·侯' : t === '子' ? '诸侯·子' : t === '卿' ? '晋卿' : t === '伯' ? '诸侯·伯' : t,
       S.titles.has(t), () => { toggleIn(S.titles, t); render(); }));
   }
   g5.appendChild(chip('名义君主', S.includeNominal, () => { S.includeNominal = !S.includeNominal; render(); }));
@@ -174,7 +174,7 @@ function buildFilters(host) {
     onclick: () => {
       S.unified = new Set([1, 0]); S.death = new Set(['normal', 'violent', 'unknown']);
       S.onlyFounder = S.onlyLast = S.onlyAlchemy = false;
-      S.eras = new Set(ERAS.map((e) => e.key)); S.titles = new Set(['帝', '天王', '汗', '王', '公', '侯', '子', '卿']);
+      S.eras = new Set(ERAS.map((e) => e.key)); S.titles = new Set(['帝', '天王', '汗', '王', '公', '侯', '子', '卿', '伯']);
       S.includeNominal = false; S.looseUnified = false; S.yearFrom = S.yearTo = null;
       render();
     },
