@@ -219,6 +219,7 @@ export function renderLaneTimeline(host, list, opts) {
   // 而先秦扩张后那里是夏初的荒原
   if (host.__yearOfScroll) host.__anchorYear = host.__yearOfScroll();
   for (const n of document.querySelectorAll('.lane-peek')) n.remove();   // 上一轮的预览小窗
+  if (host.__peekCleanup) { host.__peekCleanup(); host.__peekCleanup = null; }
   host.innerHTML = '';
   let pxYear = opts.lanePx || 10;
   const byDynasty = opts.laneColor !== 'unified';
@@ -1208,15 +1209,18 @@ export function renderLaneTimeline(host, list, opts) {
     if (!fitInit) { fitInit = true; requestAnimationFrame(() => { scroller.style.transition = 'height .25s ease'; }); }
   };
   let settleT = null;
-  // 拖动预览（用户点子）：拖着横滚条飞越四千年时主画布高度冻结（见 fitHeight），
+  // 拖动预览（用户点子）：拖着横滚条飞越四千年时主画布高度冻结（见下），
   // 给指针边上一枚小窗勾出目标时段的泳道轮廓——像视频进度条的缩略图。
-  // 原生滚动条拖动期间浏览器不派发 mousemove，位置只能按滚动比例推算；
-  // 「在拖条」的判据取单次滚动事件跨过约半个视口（滚轮/方向键到不了这个步幅）。
+  // 「在拖条」不猜步幅、不掐时间（首版按单次滚动跨半屏判，慢拖判不出来；
+  // 停稳定时器又会在拖动中途的停顿里提前开火——皆用户实测）：
+  // mousedown 落在滚动条区（target 是容器自身且坐标越过 clientHeight/Width）
+  // 即入拖动态，期间小窗常显、高度绝不动；mouseup/pointerup/失焦即释放，
+  // 高度一次调齐。原生拖条不派发 mousemove，小窗位置按滚动比例推算。
   const peek = document.createElement('div');
   peek.className = 'lane-peek';
   peek.style.display = 'none';
   document.body.appendChild(peek);
-  let peekOn = false, peekLast = 0;
+  let dragging = false, peekLast = 0;
   const renderPeek = () => {
     const left = scroller.scrollLeft, cw = scroller.clientWidth;
     const y0 = x.invert(left), y1 = x.invert(left + cw), yc = (y0 + y1) / 2;
@@ -1289,14 +1293,39 @@ export function renderLaneTimeline(host, list, opts) {
       legendHost.appendChild(h('div', { class: 'muted small', text: vis.map((b) => b.d.name).join('、') }));
     }
   };
+  const endDrag = () => {
+    if (!dragging) return;
+    dragging = false;
+    peek.style.display = 'none';
+    clearTimeout(settleT);
+    fitHeight();                        // 松手即一次调齐——用户要的「on release」
+  };
+  scroller.addEventListener('mousedown', (e2) => {
+    if (e2.target !== scroller) return;                     // 点在内容上的不算
+    if (e2.offsetY >= scroller.clientHeight || e2.offsetX >= scroller.clientWidth) {
+      dragging = true; peekLast = scroller.scrollLeft;      // 落在横/纵滚动条区
+    }
+  });
+  const onUp = () => endDrag();
+  addEventListener('mouseup', onUp, true);
+  addEventListener('pointerup', onUp, true);
+  addEventListener('blur', onUp);
+  host.__peekCleanup = () => {
+    removeEventListener('mouseup', onUp, true);
+    removeEventListener('pointerup', onUp, true);
+    removeEventListener('blur', onUp);
+    peek.remove();
+  };
   scroller.addEventListener('scroll', () => {
     if (!raf) raf = requestAnimationFrame(sync);
-    const d = Math.abs(scroller.scrollLeft - peekLast);
-    peekLast = scroller.scrollLeft;
-    if (d > scroller.clientWidth * 0.45) peekOn = true;
-    if (peekOn) renderPeek();
-    clearTimeout(settleT);
-    settleT = setTimeout(() => { fitHeight(); peekOn = false; peek.style.display = 'none'; }, 280);
+    if (dragging) {
+      if (scroller.scrollLeft !== peekLast) { peekLast = scroller.scrollLeft; renderPeek(); }
+      clearTimeout(settleT);
+      settleT = setTimeout(endDrag, 1600);   // mouseup 偶被浏览器吞掉时的保险丝
+    } else {
+      clearTimeout(settleT);
+      settleT = setTimeout(fitHeight, 280);  // 滚轮/触板：光标不在条上，照旧沉降
+    }
   });
   requestAnimationFrame(sync);
   fitHeight();                          // 首绘立即定高（锚点已落好）
