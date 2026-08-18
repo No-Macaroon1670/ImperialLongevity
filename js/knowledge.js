@@ -261,7 +261,9 @@ const empSpec = (item) => {
   return {
     id: e.id,
     head: `${dyn.name} · ${e.temple}`,
-    title: nm,
+    // wk 优先：先秦君主的人名直搜是雷区（子庄→景昌王、子发→东陵连嚣子发），
+    // 该批逐王带核验过的词条正题；未带 wk 的照旧人名优先
+    title: e.wk || nm,
     // 本名取不到时的退路(见 fillCard)。庙号本身多半已含朝代(唐宪宗、秦始皇),
     // 不再补前缀,否则会拼出「唐唐宪宗」这种查不到的名字
     alt: e.temple && e.temple !== nm ? e.temple : null,
