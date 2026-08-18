@@ -203,11 +203,21 @@ function armTouchDismiss() {
  * 实测等于手机上完全读不到提示。故触摸时按下即显示、抬起不收，改由点击别处收起。
  */
 export function hoverable(node, getRows, getTitle) {
+  // 触屏不走 pointerenter：那是手指一落地就来的事件，滚长卷时指尖擦过
+  // 任何可点段，提示卡就「自动」弹出（用户 iPad/手机实测）。触屏改为
+  // 记下触意、等真正的轻点（click——滚动手势不会触发它）再弹；鼠标照旧悬停。
+  let touchArmed = false;
   const show = (e) => {
-    const touch = e.pointerType === 'touch';
+    if (e.pointerType === 'touch') { touchArmed = true; return; }
     showTip(e, getRows(), getTitle ? getTitle() : undefined);
-    if (touch) { moveTip(e, true); armTouchDismiss(); }
   };
+  node.addEventListener('click', (e) => {
+    if (!touchArmed) return;
+    touchArmed = false;
+    showTip(e, getRows(), getTitle ? getTitle() : undefined);
+    moveTip(e, true);
+    armTouchDismiss();
+  });
   node.addEventListener('pointerenter', show);
   node.addEventListener('pointermove', (e) => { if (e.pointerType !== 'touch') moveTip(e); });
   node.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') hideTip(); });

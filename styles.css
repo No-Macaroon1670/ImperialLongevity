@@ -489,7 +489,21 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 .tl-search.pinned input {
   box-shadow: 0 4px 16px rgba(0, 0, 0, .16); background: var(--surface-1);
 }
-@media (max-width: 719px) { .tl-search.pinned { top: 6px; right: 8px; } }
+/* 窄屏：钉进顶部黑条（sec-nav.up）那一行，与「回到页首」同排——
+   搜索框浮在过滤条上时与黑条错着半层，看着像两套东西（用户实测）。
+   骰子跟着钉在搜索框左侧，只留 🎲 图标。 */
+@media (max-width: 719px) {
+  .tl-search.pinned { top: calc(var(--filters-h, 45px) + 5px); right: 8px; }
+  .tl-dice.pinned {
+    position: fixed; z-index: 70; margin: 0; padding: 0 9px;
+    height: 34px; box-sizing: border-box; align-items: center;
+    top: calc(var(--filters-h, 45px) + 5px);
+    right: calc(8px + min(260px, 46vw) + 6px);
+  }
+  .tl-dice.pinned span:not(.tl-dice-face) { display: none; }
+  /* 黑条左侧按钮给右边的骰子＋搜索留位 */
+  .sec-nav.up .sn-btn { max-width: calc(100vw - min(260px, 46vw) - 96px); }
+}
 .tl-search input {
   font: inherit; font-size: .84rem; padding: 5px 11px; width: min(260px, 46vw);
   border: 1px solid var(--border); border-radius: 999px;
@@ -542,7 +556,11 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
   /* 第一列 auto 而非定宽：无缩略图（或图未加载）时列宽自动归零。
      头行 kp-sub 必须显式钉在第 2 列——靠自动落位的话，图一隐藏它就
      滑进第一列，版式散架（用户实测「时好时坏」，开关正是图的有无） */
-  display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+  /* display 只写在 .on 态（下方）：裸 .kp-corner 若声明 display:grid，
+     会以同权重却更靠后的位置压掉 .kp{display:none}——没被自动跟随填过、
+     或被 ✕ 静音的空卡就一直挂在版面上（用户 iPad 实测：一张只有链接
+     没有内容的白卡）。网格参数留在这里，display 由 .on 决定 */
+  grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-rows: auto auto 1fr auto; column-gap: 12px;
 }
 /* 控制列 | 卡区 并排；窄了卡区整体换行到控制列之下，谁也不盖谁 */
@@ -558,6 +576,7 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 .kp-corner { overflow: hidden; }
 .kp-corner .kp-thumb { grid-column: 1; grid-row: 1 / span 3; float: none;
   width: 86px; height: 116px; object-fit: cover; object-position: top; margin: 2px 0 0; }
+.kp-corner .kp-sub, .kp-corner .kp-title, .kp-corner .kp-ext { min-width: 0; }
 .kp-corner .kp-sub { grid-column: 2; grid-row: 1; margin-top: 0; }
 .kp-corner .kp-title { grid-column: 2; grid-row: 2; font-size: .96rem; margin: 1px 0 4px; }
 .kp-corner .kp-ext { grid-column: 2; grid-row: 3; font-size: .77rem; line-height: 1.55; -webkit-line-clamp: 4; }

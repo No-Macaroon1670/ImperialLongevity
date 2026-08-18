@@ -127,7 +127,11 @@ export function mountSearch(sectionEl, hostOf) {
   // 而「够不够得着搜索框」这件事不该受那些影响。
   const headEl = sectionEl.querySelector('.head') || sectionEl;
   let headGone = false, sectionHere = false;
-  const sync = () => box.classList.toggle('pinned', headGone && sectionHere);
+  const sync = () => {
+    const on = headGone && sectionHere;
+    box.classList.toggle('pinned', on);
+    dice.classList.toggle('pinned', on);    // 窄屏时骰子跟着钉进顶部黑条（CSS 侧只在窄屏生效）
+  };
   new IntersectionObserver(([e]) => {
     headGone = !e.isIntersecting && e.boundingClientRect.top < 0;   // 标题栏滚到上方去了
     sync();
