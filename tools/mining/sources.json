@@ -1223,6 +1223,15 @@
   "src": "https://south.npm.gov.tw/SelectionsDetailC004100.aspx?Cond=bf32abcc-c4e2-422c-84f8-a746cd9665e2",
   "tier": "secondary"
  },
+ "events:P3先秦事件层": {
+  "by": "claude/p3",
+  "claim": "d 回填 32 条、换代事件去重 4 条、先秦典故 24 条与钩子 11 条入库",
+  "conf": "中",
+  "note": "d 只回填河道覆盖其年份者（燕器伯矩鬲/太保鼎、二里头七孔玉刀、曾侯乙、中山、古蜀留空——缺失远好过猜错）；鸣条/牧野/越灭吴/秦灭六国四事件改由 TRANSITIONS 窄颈承载（库规：改朝换代不入事件层）；夏商段钩子的年份为铺入坐标（cf3 注明），国人暴动为确切纪年分水岭全库首收；11 个钩子词条当日逐一 REST 核验 standard（九世之乱经 429 重试）",
+  "on": "2026-08-18",
+  "src": "tools/mining/fig_prequin.json + scratchpad hooks_p3.json",
+  "tier": "secondary"
+ },
  "fig:孔融让梨": {
   "by": "claude/hand",
   "claim": "系年 154（cf 3）与典源",
