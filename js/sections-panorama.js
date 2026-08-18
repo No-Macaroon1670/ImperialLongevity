@@ -20,7 +20,7 @@ export const SECTIONS = [
         (st) => st.panoramaMode === 'river'),
       rng('lanePx', '时间缩放', { min: 6, max: 30, fmt: (v) => `${v} px/年` },
         (st) => st.panoramaMode !== 'river'),
-      seg('laneColor', '配色', [['dynasty', '按具体朝代'], ['unified', '按大一统 / 分裂']]),
+      seg('laneColor', '配色', [['dynasty', '具体朝代'], ['unified', '大一统 / 分裂']]),
       tog('laneViolent', '标记非正常死亡'),
       tog('laneStrands', '全部承继关系', (st) => st.panoramaMode !== 'river'),
       // 大事记开关此前只给泳道:河流的事件轨在两岸(宽屏)与河道里(窄屏),
