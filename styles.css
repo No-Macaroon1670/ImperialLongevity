@@ -987,3 +987,16 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 }
 .tour-body2 { margin: 0 0 7px; font-size: .84rem; line-height: 1.58; color: var(--text-2); }
 @media (max-width: 720px) { .tour-body2 { font-size: .8rem; } }
+
+/* 常驻读进度条：贴在讲解坞右缘。系统的浮动滚动条滚完就淡出，读者于是不知道
+   「下面还有」（用户实测）。位置由 tour.js 逐帧写入，故事线的站点卡沿用同一条。 */
+.tour-sbar {
+  position: fixed; z-index: 903; width: 4px; border-radius: 999px;
+  background: color-mix(in srgb, var(--text-1) 14%, transparent);
+  display: none; pointer-events: none;
+}
+.tour-sbar.on { display: block; }
+.tour-sbar-thumb {
+  width: 100%; border-radius: 999px;
+  background: color-mix(in srgb, var(--text-1) 52%, transparent);
+}

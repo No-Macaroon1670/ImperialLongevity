@@ -184,6 +184,28 @@ export function mountTour(sectionEl, hostOf) {
   // 两块会抢同一个角,还得手算偏移
   const dock = h('div', { class: 'tour-dock' }, [panel]);
   document.body.appendChild(dock);
+  // 常驻的读进度条。系统的浮动滚动条滚完就淡出，读者于是不知道「下面还有」
+  // （用户实测：讲解被夹在坞里，右缘那道细线一闪就没了）。自绘一条：坞一旦
+  // 装不下就现身，位置与高度逐帧跟着坞走（paint 本就在跑，不额外开循环）。
+  // 故事线的站点卡沿用同一条。
+  const sbarThumb = h('div', { class: 'tour-sbar-thumb' });
+  const sbar = h('div', { class: 'tour-sbar' }, [sbarThumb]);
+  document.body.appendChild(sbar);
+  const syncSbar = () => {
+    const sh = dock.scrollHeight, ch = dock.clientHeight;
+    if (!on || sh <= ch + 2) { sbar.classList.remove('on'); return; }
+    const r = dock.getBoundingClientRect();
+    sbar.classList.add('on');
+    sbar.style.left = `${Math.round(r.right - 5)}px`;
+    sbar.style.top = `${Math.round(r.top + 6)}px`;
+    sbar.style.height = `${Math.round(r.height - 12)}px`;
+    const frac = ch / sh;
+    const th = Math.max(18, (r.height - 12) * frac);
+    const room = (r.height - 12) - th;
+    const prog = sh - ch > 0 ? dock.scrollTop / (sh - ch) : 0;
+    sbarThumb.style.height = `${Math.round(th)}px`;
+    sbarThumb.style.transform = `translateY(${Math.round(room * prog)}px)`;
+  };
 
   // ── 副卡：类别开关 ───────────────────────────────────────────────────
   // 真正的类别图例挂在图的**下方**,矮一点的窗口上它落在一屏之外——
@@ -247,6 +269,7 @@ export function mountTour(sectionEl, hostOf) {
       const cardOn = !!document.querySelector('.kp-solo.on, .river-card.on');
       dock.classList.toggle('dock-bottom', !cardOn && c < H * 0.42);
     }
+    syncSbar();
     const band = visibleBand();
     // 一个 getter 可以给回多块(宽屏的知识卡是左右两张,该一起亮)
     for (let r of raw) {
@@ -519,6 +542,7 @@ export function mountTour(sectionEl, hostOf) {
   function stop(done) {
     document.body.classList.remove('tour-card-on');
     dock.classList.remove('dock-bottom');
+    sbar.classList.remove('on');
     on = false;
     if (raf) { cancelAnimationFrame(raf); raf = null; }   // 不清掉,下次 kick 会被它挡住
     holes = [];
