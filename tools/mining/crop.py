@@ -97,6 +97,16 @@ def main():
     im = im.convert('RGB')
     clean = Image.new('RGB', im.size)
     clean.putdata(list(im.getdata()))
+    # **一律存成 .jpg**：输入可能是 webp/png/heic（手机与网页图源常见），
+    # 而这里存的是 JPEG 数据；若照原扩展名写回，就会出现「叫 .webp 的 JPEG 文件」，
+    # 浏览器多半仍能显示，但 `<img>` 之外的工具会按扩展名判类型而读错。
+    # 扩展名与内容必须一致——这是出处准确性的最低一档。
+    stem, ext = os.path.splitext(path)
+    if ext.lower() != '.jpg':
+        out_path = stem + '.jpg'
+        if os.path.exists(path) and out_path != path:
+            os.remove(path)
+        path = out_path
     clean.save(path, 'JPEG', quality=88, optimize=True, progressive=True)
     print('写回 %s（%.0f KB）' % (os.path.basename(path), os.path.getsize(path) / 1024))
     return 0
