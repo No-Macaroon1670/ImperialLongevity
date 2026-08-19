@@ -10,3 +10,19 @@ desktop.ini
 
 # 本机预览配置（含绝对路径，不可移植）
 .claude/
+
+# 自摄照片的裁前原图：**里面还有被裁掉的路人**，只留本地，绝不上传。
+# crop.py 留 -orig 是为了裁错能重来（见 tools/mining/crop.py），不是为了发布。
+img/own/*-orig.*
+
+# 认领用的中间产物：agent 为看清说明牌做的提亮图、局部裁切图。
+# 它们是工作过程，不是成果，而且同样可能带着未处理的人像。
+img/own/bright*.png
+img/own/crop[0-9]*.png
+img/own/*_bright.png
+
+# **未认领的照片不入库**：相机原名＝还没人看过图、没抄过说明牌、
+# 没查过画面里有没有可辨识的人。改名（见 tools/mining/inbox.py --rename）
+# 即表示已过这三关，那时才该提交。
+img/own/PXL_*
+img/own/IMG_*
