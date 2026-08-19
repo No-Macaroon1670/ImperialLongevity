@@ -550,6 +550,7 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
     for (const k of Object.keys(muted)) muted[k] = false;   // 跳转即新语境，静音解除
   };
   cleanup.setAuto = (on) => { auto = on !== false; if (auto) onScroll(); };
+  cleanup.eventSlot = 'ev';        // 河流有专设的事件卡（左右两张），不与朝代抢格
   /**
    * 把两翼的**背景卡**设成这一站该配的朝代与君主，并钉住。
    * 导览关掉自动跟随之后，这两格不该空着也不该乱填——讲龙门就配北魏与当时那位
@@ -557,12 +558,19 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
    */
   cleanup.setContext = ({ dynKey, empId } = {}) => {
     if (!mq.matches) return false;
-    const it = empId ? empNodes.find((n) => n.e.id === empId) : null;
-    if (it) { const es = empSpec(it); pinned.emp = es.id; muted.emp = false; fillCard(cards.emp, es); }
-    else hide('emp');
-    const bn = dynKey ? empNodes.find((n) => n.band.d.key === dynKey) : null;
-    if (bn && mqLeft.matches) { const ds = dynSpec(bn.band); pinned.dyn = ds.id; muted.dyn = false; fillCard(cards.dyn, ds); }
-    else hide('dyn');
+    // 三态，别混：undefined＝**这一格别动**（它归本站自己的卡，如泳道里事件
+    // 就住在朝代格）；null＝清空；字符串＝设成它。此前把「别动」也写成 null，
+    // 于是让路的那一手反倒把事件卡关掉了（用户实测：事件卡一直不出现）。
+    if (empId !== undefined) {
+      const it = empId ? empNodes.find((n) => n.e.id === empId) : null;
+      if (it) { const es = empSpec(it); pinned.emp = es.id; muted.emp = false; fillCard(cards.emp, es); }
+      else hide('emp');
+    }
+    if (dynKey !== undefined) {
+      const bn = dynKey ? empNodes.find((n) => n.band.d.key === dynKey) : null;
+      if (bn && mqLeft.matches) { const ds = dynSpec(bn.band); pinned.dyn = ds.id; muted.dyn = false; fillCard(cards.dyn, ds); }
+      else hide('dyn');
+    }
     syncStack();
     return true;
   };
@@ -756,14 +764,25 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
     for (const k of Object.keys(muted)) muted[k] = false;   // 跳转即新语境，静音解除
   };
   cleanup.setAuto = (on) => { auto = on !== false; if (auto) onScroll(); };
+  // 泳道没有专设的事件卡：事件写进**朝代卡那一格**（承继细丝与改朝换代本就同格）。
+  // 导览据此让路——这一站有事件时就别用背景朝代去顶它（用户实测：设了背景卡之后，
+  // 故事线的事件卡不再出现）
+  cleanup.eventSlot = 'dyn';
   cleanup.setContext = ({ dynKey, empId } = {}) => {
     if (!mq.matches) return false;
-    const it = empId ? items.find((q) => q.e.id === empId) : null;
-    if (it) { const es = empSpec(it); pinned.emp = es.id; muted.emp = false; show('emp', es); }
-    else hide('emp');
-    const br = dynKey ? bands.find((q) => q.band.d.key === dynKey) : null;
-    if (br && mqBoth.matches) { const ds = dynSpec(br.band); pinned.dyn = ds.id; muted.dyn = false; show('dyn', ds); }
-    else hide('dyn');
+    // 三态，别混：undefined＝**这一格别动**（它归本站自己的卡，如泳道里事件
+    // 就住在朝代格）；null＝清空；字符串＝设成它。此前把「别动」也写成 null，
+    // 于是让路的那一手反倒把事件卡关掉了（用户实测：事件卡一直不出现）。
+    if (empId !== undefined) {
+      const it = empId ? items.find((q) => q.e.id === empId) : null;
+      if (it) { const es = empSpec(it); pinned.emp = es.id; muted.emp = false; show('emp', es); }
+      else hide('emp');
+    }
+    if (dynKey !== undefined) {
+      const br = dynKey ? bands.find((q) => q.band.d.key === dynKey) : null;
+      if (br && mqBoth.matches) { const ds = dynSpec(br.band); pinned.dyn = ds.id; muted.dyn = false; show('dyn', ds); }
+      else hide('dyn');
+    }
     return true;
   };
   // 窄屏的君主词条出口：与河流侧同名同义（骰子/搜索跳转用；角卡在窄屏摆不下）

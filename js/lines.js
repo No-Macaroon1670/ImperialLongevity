@@ -13,6 +13,8 @@
 //
 // 每条线的最后一站收在「回环」上——把开头那个问题重新问一遍，而答案已经变了。
 
+import { PROLOGUE, TEXT, EPILOGUE } from './line-text-shiku.js';
+
 /** 石窟线：佛教东传与中国化的实物轴，一千八百年凿在山壁上。 */
 const SHIKU = [
   {
@@ -121,7 +123,11 @@ export const LINES = {
     name: '石窟线',
     sub: '佛教东传与中国化的实物轴',
     lede: '从洛阳的一场梦，到一九〇〇年洞开：一千八百年凿在山壁上。',
-    stops: SHIKU,
+    // 长文（js/line-text-shiku.js）按站点的 ev 挂上：宽屏右侧另开一张读物卡，
+    // 面板仍只放一句主旨——两种读法，一种给「走一遍」，一种给「读进去」
+    stops: SHIKU.map((s) => (TEXT[s.ev] ? { ...s, long: TEXT[s.ev] } : s)),
+    prologue: PROLOGUE,
+    epilogue: EPILOGUE,
   },
 };
 

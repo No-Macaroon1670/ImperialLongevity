@@ -830,6 +830,16 @@ section.card.has-kp:not(.desc-full) > .desc::after {
 .tour-x:hover { background: var(--surface-2); color: var(--text-1); }
 .tour-title { margin: 0 0 5px; font-size: 1rem; line-height: 1.35; }
 .tour-body { margin: 0 0 7px; font-size: .84rem; line-height: 1.58; color: var(--text-2); }
+/* 长文态：故事线的整段散文长在讲解里。逐段成 <p>，行距放开一点——
+   这是拿来读的，不是拿来扫的；坞本来就会滚，右缘那条自绘进度条管「下面还有」。
+   面板同时放宽到 420px：六百字挤在 360px 里一行只剩十七八个字，读着像在数格子。 */
+.tour-body .tour-p { margin: 0 0 .62em; }
+.tour-body .tour-p:last-child { margin-bottom: 0; }
+.tour-body .tour-q { border-left: 2px solid var(--border); padding-left: 9px; color: var(--text-1); }
+@media (min-width: 1001px) {
+  .tour-dock.dock-long { width: min(420px, calc(100vw - 32px)); }
+  .tour-dock.dock-long .tour-body { font-size: .85rem; line-height: 1.72; }
+}
 /* 「你来试试」这一句要和背景说明分得开：读者只肯读一句时，该读到的是这句 */
 .tour-cta {
   margin: 0; font-size: .82rem; line-height: 1.55; color: var(--text-1);

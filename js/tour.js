@@ -171,7 +171,7 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   const step = h('span', { class: 'tour-step' });
   const closeBtn = h('button', { class: 'tour-x', type: 'button', 'aria-label': '结束导览', text: '✕' });
   const title = h('h3', { class: 'tour-title' });
-  const body = h('p', { class: 'tour-body' });
+  const body = h('div', { class: 'tour-body' });
   // b2＝主旨之后的其余交代。它属于详解的第一段：主旨永远看得见，细节点开才来
   const body2 = h('p', { class: 'tour-body2' });
   const cta = h('p', { class: 'tour-cta' });
@@ -214,6 +214,19 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   // 两块会抢同一个角,还得手算偏移
   const dock = h('div', { class: 'tour-dock' }, [panel]);
   document.body.appendChild(dock);
+  // ── 长文：直接写进面板 ────────────────────────────────────────────
+  // 原先想在右侧另开一张读物卡，试下来是多此一举——讲解卡本来就在读者眼睛
+  // 落的地方，右边再摆一张，等于要人左右横跳（用户实测：放这里也没事）。
+  // 故长文取代 b/b2 长在面板里，坞自己会滚，读进度条已经在了。
+  // 窄屏不给：一屏预算里塞不下六百字，手机仍读 b/b2 那两句。
+  const LONG_MIN_W = 1000;
+  const wantLong = (st) => !!(st && st.long && st.long.length && innerWidth > LONG_MIN_W);
+  const fillLong = (st) => {
+    body.innerHTML = '';
+    for (const t of st.long) {
+      body.appendChild(h('p', { class: 'tour-p' + (/^「/.test(t) ? ' tour-q' : ''), text: t }));
+    }
+  };
   // 常驻的读进度条。系统的浮动滚动条滚完就淡出，读者于是不知道「下面还有」
   // （用户实测：讲解被夹在坞里，右缘那道细线一闪就没了）。自绘一条：坞一旦
   // 装不下就现身，位置与高度逐帧跟着坞走（paint 本就在跑，不额外开循环）。
@@ -409,9 +422,11 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     // 隔到下面（用户实测：桌面还是原来的全文更好读）。
     // 故宽屏合成一段、详解摊平（无折叠头），窄屏才走三级折叠
     const wideProse = innerWidth > 720;
-    body.textContent = wideProse && st.b2 ? st.b + st.b2 : st.b;
-    body2.textContent = wideProse ? '' : (st.b2 || '');
-    body2.style.display = !wideProse && st.b2 ? '' : 'none';
+    const longOn = wantLong(st);
+    if (longOn) fillLong(st); else body.textContent = wideProse && st.b2 ? st.b + st.b2 : st.b;
+    dock.classList.toggle('dock-long', longOn);
+    body2.textContent = (wideProse || longOn) ? '' : (st.b2 || '');
+    body2.style.display = (!wideProse && !longOn && st.b2) ? '' : 'none';
     more.classList.toggle('flat', wideProse);
     // 与 cta2 同一条路径：**粗体** 转 <strong>（文案是本文件的字面量，非外来输入）
     cta.innerHTML = (st.cta || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -437,7 +452,7 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     }
     // 详解的默认态每站重置：宽屏摆得下就直接摊开，手机收起（点开即看）。
     // 「这一站有没有藏着东西」交给 summary 的字样说，免得读者以为没了
-    const hasMore = !!(st.b2 || st.cta || st.cta2 || st.go2);
+    const hasMore = !!((st.b2 && !longOn) || st.cta || st.cta2 || st.go2);
     more.style.display = hasMore ? '' : 'none';
     more.open = hasMore && innerWidth > 720;
     // 开卡的站，讲解让位给卡（同屏只有一个主讲人，见上方预算法则）。
@@ -698,7 +713,10 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
       empId = r ? r.id : null;
     }
     if (st.emp) empId = empIdOf(st.emp) || empId;   // 站自己点名的君主优先
-    kc.setContext({ dynKey, empId });
+    // 事件卡与朝代卡共用一格的视图（泳道）：这一站有事件时，那一格归事件，
+    // 背景只设君主。否则背景会把本站真正要讲的那张卡顶掉（用户实测）
+    const evOwnsDyn = st.ev && kc.eventSlot === 'dyn';
+    kc.setContext({ dynKey: evOwnsDyn ? undefined : (dynKey || null), empId: empId || null });
   }
 
   /** 图被重画后就地归位。不带缓动:这不是一段旅程,是把人放回他刚才站的地方 */
@@ -757,6 +775,7 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     goto(at === undefined ? Number(memo.get(AT_KEY, 0)) || 0 : at);
   }
   function stop(done) {
+    dock.classList.remove('dock-long');
     dock.classList.remove('dock-right');
     {   // 自动跟随还给读者：导览关掉它只为这一程，不该留下后遗症
       const kc = hostOf() && hostOf().__kp;
