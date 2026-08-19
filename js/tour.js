@@ -31,10 +31,8 @@ import { eventLegend } from './views-lanes.js';
 import { EMPERORS } from './data.js';
 import { EVENTS } from './events.js';
 
-const SEEN_KEY = 'il.tour.seen';
 // 走到第几站也要记:面板右上角就是个 ✕,误触一下就没了,
 // 再从第一站走一遍是惩罚读者手滑
-const AT_KEY = 'il.tour.at';
 const memo = {
   get(k, d) { try { return localStorage.getItem(k) ?? d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch { /* 隐私模式 */ } },
@@ -55,7 +53,7 @@ const CULTURE_ONLY = ['war', 'gov', 'rev', 'out', 'dis', 'era', 'inst', 'her', '
  *   holes 要开的洞,依次为 [年份带, 控件选择器…]
  *   t/b   标题与正文;cta 是那句「你来试试」
  */
-const STOPS = [
+const DEFAULT_STOPS = [
   {
     // 头一站给**河**：手机的默认视图是河，页面也叫「王朝之河」，
     // 而此前导览开口就把人切到泳道、再没回来（用户实测指出）。
@@ -143,7 +141,21 @@ const STOPS = [
   },
 ];
 
-export function mountTour(sectionEl, hostOf) {
+/**
+ * 挂载一条**逐站走的线**。导览是它的第一位客人，策展故事线是第二位——
+ * 两者共用同一套打光、落位、清场与一屏预算（约定见 docs/idea-storylines.md
+ * 「四之五」，改动前先读那一节）。
+ *
+ * @param opts.stops   站表；缺省即新手导览的 STOPS
+ * @param opts.tag     面板左上角的小标签（「导览」／「故事线」）
+ * @param opts.key     存档键前缀；不同的线各记各的进度
+ * @param opts.launch  false＝不挂入口按钮（故事线由目录或深链拉起）
+ */
+export function mountTour(sectionEl, hostOf, opts = {}) {
+  const STOPS = opts.stops || DEFAULT_STOPS;
+  const TAG = opts.tag || '导览';
+  const KEY = opts.key || 'il.tour';
+  const SEEN_KEY = `${KEY}.seen`, AT_KEY = `${KEY}.at`;
   // ── 熄灯层：全屏 SVG，用 mask 挖任意多个洞 ────────────────────────────
   const mask = el('mask', { id: 'tour-mask', maskUnits: 'userSpaceOnUse' });
   const base = el('rect', { fill: '#fff' });
@@ -194,7 +206,7 @@ export function mountTour(sectionEl, hostOf) {
   const panel = h('div', {
     class: 'tour-panel', role: 'dialog', 'aria-live': 'polite', 'aria-label': '导览',
   }, [
-    h('div', { class: 'tour-head' }, [h('span', { class: 'tour-tag', text: '导览' }), step, closeBtn]),
+    h('div', { class: 'tour-head' }, [h('span', { class: 'tour-tag', text: TAG }), step, closeBtn]),
     title, body, cta, more,
     h('div', { class: 'tour-nav' }, [prev, next]),
   ]);
@@ -484,6 +496,7 @@ export function mountTour(sectionEl, hostOf) {
     // 都被罩进去，无关的政权与底下的空白一并「照亮」（用户实测：讲南宋与元，
     // 金、大理连同空白全在光里）。两个视图的带都带 data-dyn，可直接点名。
     if (st.bands) holes.push(nodeHole(st.bands.map((k) => `[data-dyn="${k}"]`).join(',')));
+    if (st.dyn && !st.bands) holes.push(nodeHole(`[data-dyn="${st.dyn}"]`));
     if (st.emp) holes.push(nodeHole(() => empBox.node));
 
     // 三、走过去
@@ -587,6 +600,14 @@ export function mountTour(sectionEl, hostOf) {
       const k = evIdx(st.ev);
       return k >= 0 ? one(document.querySelector(`[data-evi="${k}"]`)) : null;
     }
+    if (st.dyn) {
+      const ns = [...document.querySelectorAll(`[data-dyn="${st.dyn}"]`)]
+        .map(one).filter(Boolean);
+      if (!ns.length) return null;
+      return { x: Math.min(...ns.map((r) => r.x)), y: Math.min(...ns.map((r) => r.y)),
+        w: Math.max(...ns.map((r) => r.x + r.w)) - Math.min(...ns.map((r) => r.x)),
+        h: Math.max(...ns.map((r) => r.y + r.h)) - Math.min(...ns.map((r) => r.y)) };
+    }
     if (st.search) return one(sectionEl.querySelector('.tl-search'));
     if (st.span && loc.rect) return loc.rect(st.span[0], st.span[1]);
     return null;
@@ -603,6 +624,10 @@ export function mountTour(sectionEl, hostOf) {
     } else if (st.ev) {
       const k = evIdx(st.ev);
       if (k >= 0) loc.event(k, o);
+    } else if (st.dyn) {
+      // 政权站：跳到那条政权带的中点。此前引擎从未调用过 loc.dynasty——
+      // 新手导览没有这种站，故事线（石窟线的政权段、两岸故宫线的南迁）要用
+      loc.dynasty(st.dyn, o);
     } else if (st.search) {
       // 卡已在切站时统一清掉（见 goto 的清场）。这一站尤其要干净：角卡是绝对
       // 定位、层级低于**吸顶后**的搜索框，而这一站要滚回页首，那时搜索框还没
@@ -749,6 +774,6 @@ export function mountTour(sectionEl, hostOf) {
       : at > 0 ? `接着走 · 第 ${at + 1} 站` : '导览';
   }
   syncLaunch();
-  (sectionEl.querySelector('.head') || sectionEl).appendChild(launch);
-  return { start, stop };
+  if (opts.launch !== false) (sectionEl.querySelector('.head') || sectionEl).appendChild(launch);
+  return { start, stop, stops: STOPS };
 }
