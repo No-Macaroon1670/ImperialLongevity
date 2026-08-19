@@ -975,11 +975,15 @@ section.card.river-mode .chart-host.full-bleed > .notes {
   /* 一屏预算法则（见 tour.js 的长注）：图 ≥45vh、卡 ≤30vh、面板开卡时 ≤22vh。
      开卡的那一站，讲解收成「标题＋主旨两行＋导航」，把屏让给卡与图。 */
   body.tour-card-on .tour-dock { max-height: 22vh; }
-  body.tour-card-on .tour-body {
-    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
-  }
+  /* 舞台优先：要照的东西落在上半屏时，讲解坞让到下缘去（见 tour.js paint 的注） */
+  .tour-dock.dock-bottom { top: auto; bottom: 10px; }
+  /* 主旨**绝不截断**：截了又没处看全，等于把信息吞掉（用户实测）。
+     短是写出来的，不是裁出来的——每站的 b 就是一句话主旨，其余在 b2，
+     b2 是「详解」的第一段。故这里不设 line-clamp。 */
   /* 导览期间的贴底单卡走精简版：缩略图减半、摘要限三行 */
   body.tour-on .kp-solo { max-height: 30vh; }
   body.tour-on .kp-solo .kp-thumb { max-height: 72px; }
   body.tour-on .kp-solo .kp-ext { -webkit-line-clamp: 3; }
 }
+.tour-body2 { margin: 0 0 7px; font-size: .84rem; line-height: 1.58; color: var(--text-2); }
+@media (max-width: 720px) { .tour-body2 { font-size: .8rem; } }

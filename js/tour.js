@@ -58,7 +58,8 @@ const CULTURE_ONLY = ['war', 'gov', 'rev', 'out', 'dis', 'era', 'inst', 'her', '
 const STOPS = [
   {
     t: '五代十国：全图最挤的一段',
-    b: '九〇七年朱温废唐，到九七九年北汉降宋，七十二年里北方换了五姓十三君，南方十国并峙。这是整张图最挤的一段——泳道被占满，河也分成最多股。',
+    b: '七十二年里北方换了五姓十三君，南方十国并峙——这是整张图最挤的一段。',
+    b2: '九〇七年朱温废唐，到九七九年北汉降宋。泳道被占满，河也分成最多股。',
     cta: '已替你打开下方的「全部承继关系」：粗实线＝法统相承，细实线＝亡入，虚线＝裂自。哪一国是从哪一国裂出来的，只有这些细丝说得出。',
     set: { panoramaMode: 'lanes', laneStrands: true, laneEvents: true, evOff: [] },
     span: [907, 979],
@@ -66,21 +67,24 @@ const STOPS = [
   },
   {
     t: '南宋与元：交接期有七十三年',
-    b: '一二〇六年铁木真建大蒙古国，一二七一年忽必烈改国号为元，而南宋还在临安——两条带子并排走了七十三年，直到一二七九年南宋亡。',
+    b: '蒙古已立国，南宋还在临安——两条带子并排走了七十三年。',
+    b2: '一二〇六年铁木真建大蒙古国，一二七一年忽必烈改国号为元，直到一二七九年南宋亡。',
     cta: '看这段重叠：改朝换代不是一刀两断，明与清并立二十八年，陈与隋并立八年。泳道敢让它们重叠，正是因为那几十年里两边真的都还在。',
     set: { panoramaMode: 'lanes', laneStrands: true },
     span: [1206, 1279],
   },
   {
     t: '段正严：段誉真有其人',
-    b: '大理国君段正严，又名段和誉，一一〇八年即位，在位三十九年后禅位为僧，享年九十三——本库六百八十九位君主里最长寿的一位——乾隆八十八，还差他五岁。他的父亲叫段正淳。金庸《天龙八部》里的段誉与段正淳，名字就取自这一对父子。',
+    b: '金庸《天龙八部》里的段誉与段正淳，名字取自大理这一对真父子。',
+    b2: '段正严又名段和誉，一一〇八年即位，在位三十九年后禅位为僧，享年九十三——本库六百八十九位君主里最长寿的一位，乾隆八十八还差他五岁。他的父亲便是段正淳。',
     cta: '卡片的摘要实时取自中文维基百科，每一位君主、每一个政权都有。',
     emp: '段正严',
     card: true,
   },
   {
     t: '隋末民变：事件轴怎么读',
-    b: '六一一年王薄在长白山举旗，到六二四年江南辅公祏败亡，十三年的乱局；李渊父子只是其中一支——最后赢的那一支。轴分两侧：线下是政事（战事、民变·政变、外患、制度、灾疫），线上是文教（文化科技、遗址、文物）。形状即类别，点的大小即分量——每件事都只画一个点，横贯的长条会互相撞成一片。',
+    b: '十三年的乱局里群雄并起，李渊父子只是其中一支——最后赢的那一支。',
+    b2: '六一一年王薄在长白山举旗，到六二四年江南辅公祏败亡。轴分两侧：线下是政事（战事、民变·政变、外患、制度、灾疫），线上是文教（文化科技、遗址、文物）。形状即类别，点的大小即分量——每件事都只画一个点，横贯的长条会互相撞成一片。',
     // 跨度不常显，故非说不可:不说的话读者根本不知道点一下还有这一层。
     // 两种线的分别也要在这里讲清——它是全图唯一一处「图形本身在讲不确定性」
     cta2: '这一条你点开时，轴上横拉出一条**实线**：它真的持续了十三年。另一种是**半透明的虚线**（多见于文物）——那不是「持续了这么久」，而是「只知道落在这段里」，两端的竖挡就是误差棒。跨度平时不画，点中才现形，免得几百条长条糊成一片。',
@@ -92,7 +96,8 @@ const STOPS = [
   },
   {
     t: '七女为父报仇：一块石头上的连环画',
-    b: '汉代画像石上的一个母题：七个女儿为父报仇。它不是哪一场战争，也不是哪一位皇帝，却在石头上被反复刻了一百多年。',
+    b: '汉代画像石上的一个母题：七个女儿为父报仇。',
+    b2: '它不是哪一场战争，也不是哪一位皇帝，却在石头上被反复刻了一百多年。',
     cta: '维基那篇写得相当好，值得点进去读——卡片里的「维基百科全文」就是。顺带：我把类别筛到只剩「文化·科技」与「文物」，旁边那排开关随时可以改回来。',
     set: { evOff: CULTURE_ONLY, laneEvents: true },
     ev: '七女为父报仇',
@@ -101,20 +106,23 @@ const STOPS = [
   },
   {
     t: '上游：低置信的一千八百年',
-    b: '秦始皇再往前，河又流了一千八百年。分水岭在共和元年（前841）：此后逐年可考，此前只有推算——夏与商前期的君主格铺的是传统系年，画成斜纹半透明；西周逐王取断代工程年，实心但整体存疑。前770 平王东迁，满河分汊成列国争流，晋线归魏、姜齐续田齐，直到秦并六国再合而为一。',
+    b: '秦始皇再往前，河还流了一千八百年——那一段的年份多半是推算出来的。',
+    b2: '分水岭在共和元年（前841）：此后逐年可考，此前只有推算——夏与商前期的君主格铺的是传统系年，画成斜纹半透明；西周逐王取断代工程年，实心但整体存疑。前770 平王东迁，满河分汊成列国争流，晋线归魏、姜齐续田齐，直到秦并六国再合而为一。',
     cta: '悬停任何一个斜纹格，能读到那段年份的依据；把图拖向更上游，看夏商的斜纹河源。',
     span: [-860, -640],
   },
   {
     t: '现在换你来找',
-    b: '右上角这个框：搜君主、搜政权、搜大事，也能直接输年份。雅名也认——输「破釜沉舟」找得到巨鹿之战。',
+    b: '右上角那个框：搜君主、搜政权、搜大事，也能直接输年份。',
+    b2: '雅名也认——输「破釜沉舟」找得到巨鹿之战。',
     cta: '试试输「755」，或者随便一个你想得起来的名字。跳过去之后地址栏会变成那一屏的链接，可以直接发给别人。',
     set: { evOff: [] },
     search: true,
   },
   {
     t: '最后回到起点',
-    b: '秦始皇是第一个用「皇帝」这两个字的人，也是帝王丹药史的开端——晚年遣徐福、卢生入海求仙，服食丹药，五十岁崩于东巡途中的沙丘。',
+    b: '秦始皇是第一个用「皇帝」这两个字的人，也是帝王丹药史的开端。',
+    b2: '晚年遣徐福、卢生入海求仙，服食丹药，五十岁崩于东巡途中的沙丘。',
     cta: '同一份数据还有另一种读法：六百八十九位君主的生卒、在位与死因，用生存分析问一句「帝王的寿命由什么决定」。那边有一组筛选就叫「丹药组」——秦始皇是它的第一个成员。',
     emp: '嬴政',
     card: true,
@@ -139,6 +147,8 @@ export function mountTour(sectionEl, hostOf) {
   const closeBtn = h('button', { class: 'tour-x', type: 'button', 'aria-label': '结束导览', text: '✕' });
   const title = h('h3', { class: 'tour-title' });
   const body = h('p', { class: 'tour-body' });
+  // b2＝主旨之后的其余交代。它属于详解的第一段：主旨永远看得见，细节点开才来
+  const body2 = h('p', { class: 'tour-body2' });
   const cta = h('p', { class: 'tour-cta' });
   // 第二句提示:留给「这一站还藏着一层」的那类说明(如跨度要点开才现形)。
   // 与 cta 分开而不是接在后面,是因为两句话性质不同——cta 是「你来试试」,
@@ -161,7 +171,7 @@ export function mountTour(sectionEl, hostOf) {
   // 派生出的两条做法：**同屏只有一个主讲人**（开卡即让位），
   // **文案分三级**（标题／一句主旨／详解折叠）。
   const more = h('details', { class: 'tour-more' }, [
-    h('summary', { class: 'tour-more-sum', text: '详解' }), cta, cta2, extra, mnote,
+    h('summary', { class: 'tour-more-sum', text: '详解' }), body2, cta, cta2, extra, mnote,
   ]);
   const panel = h('div', {
     class: 'tour-panel', role: 'dialog', 'aria-live': 'polite', 'aria-label': '导览',
@@ -197,6 +207,27 @@ export function mountTour(sectionEl, hostOf) {
 
   // ── 打光：逐帧重算，洞才跟得住滚动 ───────────────────────────────────
   let holes = [], raf = null, on = false, curLoc = null;
+  /**
+   * 可见带：视口减去**全宽的遮挡物**（手机上的讲解坞、贴底卡、顶底导航条）。
+   * 这是导览的**舞台**——打光只在带内发生，滚动定位也把内容送进带内。
+   * 照亮一截被卡片盖住的东西，读者看到的只是「亮了一片，可什么也没有」
+   * （用户实测：洞罩住整排图例还漏到卡片上）。
+   * 只占一角的（宽屏 360px 的讲解坞、两翼卡）不算带：它们旁边还有大片图看得见。
+   */
+  const visibleBand = () => {
+    const W = document.documentElement.clientWidth, H = innerHeight;
+    const band = { top: 0, bot: H };
+    for (const sel of ['.tour-dock', '.kp-solo.on', '.river-card.on', '.sec-nav.up.on', '.sec-nav.down.on']) {
+      const oc = document.querySelector(sel);
+      if (!oc) continue;
+      const b = oc.getBoundingClientRect();
+      if (b.height <= 0 || b.width < W * 0.7) continue;
+      if ((b.top + b.bottom) / 2 < H / 2) band.top = Math.max(band.top, b.bottom);
+      else band.bot = Math.min(band.bot, b.top);
+    }
+    if (band.bot - band.top < 120) return { top: 0, bot: H };   // 带子薄得没意义时退回整屏
+    return band;
+  };
   const paint = () => {
     if (!on) return;
     // clientWidth 而非 innerWidth:后者含竖向滚动条,矩形会溢出 svg 自身的盒子
@@ -207,9 +238,18 @@ export function mountTour(sectionEl, hostOf) {
     // 洞与描边逐帧重建:数量与位置都在变,复用节点省不下什么,却容易漏改属性
     for (const n of [...mask.children].slice(1)) n.remove();
     rings.innerHTML = '';
+    // 舞台优先：**讲解站到内容的对面**。手机上讲解坞钉在顶部，可有的站要照的
+    // 东西也在顶部（第 7 站的搜索框就在坞底下）——那就把坞挪到下缘去。
+    // 贴底卡在场时下缘已被占，坞留在顶上（此时坞已收成一行，遮挡有限）。
+    const raw = holes.flatMap((get) => [].concat(get() || [])).filter((r) => r && r.w > 0 && r.h > 0);
+    if (raw.length && innerWidth <= 720) {
+      const c = raw.reduce((a, r) => a + r.y + r.h / 2, 0) / raw.length;
+      const cardOn = !!document.querySelector('.kp-solo.on, .river-card.on');
+      dock.classList.toggle('dock-bottom', !cardOn && c < H * 0.42);
+    }
+    const band = visibleBand();
     // 一个 getter 可以给回多块(宽屏的知识卡是左右两张,该一起亮)
-    for (let r of holes.flatMap((get) => [].concat(get() || []))) {
-      if (!r || r.w <= 0 || r.h <= 0) continue;
+    for (let r of raw) {
       // 洞比屏还宽就等于没熄灯。七女为父报仇跨一百二十年,按 14px/年是 1680px——
       // 照原样挖,整屏全亮,读者不知道在看哪儿。超过屏宽七成即绕中心收窄:
       // 这是聚光灯,不是量尺,读者要的是「在这儿」而不是「有多长」
@@ -217,6 +257,12 @@ export function mountTour(sectionEl, hostOf) {
       if (r.w > cap) { r = { ...r, x: r.x + (r.w - cap) / 2, w: cap }; }
       const pad = r.pad === undefined ? 6 : r.pad;
       const box = { x: r.x - pad, y: r.y - pad, width: r.w + pad * 2, height: r.h + pad * 2, rx: 8 };
+      // 与可见带、与视口求交；交完太薄就整块不画——宁可不打光，也不打在看不见的地方
+      const x0 = Math.max(box.x, 0), x1 = Math.min(box.x + box.width, W);
+      const y0 = Math.max(box.y, band.top), y1 = Math.min(box.y + box.height, band.bot);
+      if (x1 - x0 < 8 || y1 - y0 < 8) continue;
+      box.x = x0; box.width = x1 - x0;
+      box.y = y0; box.height = y1 - y0;
       mask.appendChild(el('rect', { ...box, fill: '#000' }));
       rings.appendChild(el('rect', { ...box, class: 'tour-ring' }));
     }
@@ -267,6 +313,8 @@ export function mountTour(sectionEl, hostOf) {
     step.textContent = `${i + 1} / ${STOPS.length}`;
     title.textContent = st.t;
     body.textContent = st.b;
+    body2.textContent = st.b2 || '';
+    body2.style.display = st.b2 ? '' : 'none';
     cta.textContent = st.cta || '';
     cta.style.display = st.cta ? '' : 'none';
     // **粗体** 转 <strong>。文案是本文件里的字面量,不是外来输入
@@ -279,7 +327,7 @@ export function mountTour(sectionEl, hostOf) {
     }
     // 详解的默认态每站重置：宽屏摆得下就直接摊开，手机收起（点开即看）。
     // 「这一站有没有藏着东西」交给 summary 的字样说，免得读者以为没了
-    const hasMore = !!(st.cta || st.cta2 || st.go2);
+    const hasMore = !!(st.b2 || st.cta || st.cta2 || st.go2);
     more.style.display = hasMore ? '' : 'none';
     more.open = hasMore && innerWidth > 720;
     // 开卡的站，讲解让位给卡（同屏只有一个主讲人，见上方预算法则）。
@@ -427,9 +475,23 @@ export function mountTour(sectionEl, hostOf) {
     const rs = gets.flatMap((g) => [].concat(g() || [])).filter(Boolean);
     if (!rs.length) return;
     const M = 22, KEEP_MIN = 130;
+    // 目标是**可见带**的下缘而不是视口下缘：带外那一截被讲解坞与卡片盖着，
+    // 送到那里等于没送（用户实测：洞落在卡片背后，打光看着像照了个空）
+    const vb = visibleBand();
+    const top = Math.min(...rs.map((r) => r.y));
     const bot = Math.max(...rs.map((r) => r.y + r.h));
-    if (bot <= innerHeight - M) return;
-    const dy = bot - (innerHeight - M);
+    // 内容整个在带子上方（被坞挡住）——往回拉
+    if (bot < vb.top + M) {
+      const up = vb.top + M - bot;
+      await glide(() => scrollY, (v) => scrollTo({ top: v, behavior: 'instant' }),
+        Math.max(0, scrollY - up), { min: 240, max: 620 });
+      return;
+    }
+    if (bot <= vb.bot - M) return;
+    let dy = bot - (vb.bot - M);
+    // 但别把它的头也推出带外：够不下时以「头留在带内」为先
+    if (top - dy < vb.top + M) dy = Math.max(0, top - (vb.top + M));
+    if (dy < 4) return;
     const ks = keep.flatMap((g) => [].concat(g() || [])).filter(Boolean);
     if (ks.length) {
       // 卡片下缘减去要留的那一截,就是还能往上推多少
@@ -456,6 +518,7 @@ export function mountTour(sectionEl, hostOf) {
   }
   function stop(done) {
     document.body.classList.remove('tour-card-on');
+    dock.classList.remove('dock-bottom');
     on = false;
     if (raf) { cancelAnimationFrame(raf); raf = null; }   // 不清掉,下次 kick 会被它挡住
     holes = [];
