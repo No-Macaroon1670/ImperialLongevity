@@ -81,9 +81,10 @@ const STOPS = [
     t: '南宋与元：交接期有七十三年',
     b: '蒙古已立国，南宋还在临安——两条带子并排走了七十三年。',
     b2: '一二〇六年铁木真建大蒙古国，一二七一年忽必烈改国号为元，直到一二七九年南宋亡。',
-    cta: '看这段重叠：改朝换代不是一刀两断，明与清并立二十八年，陈与隋并立八年。泳道敢让它们重叠，正是因为那几十年里两边真的都还在。',
+    cta: '光只落在这两条泳道上：改朝换代不是一刀两断，明与清并立二十八年，陈与隋并立八年。泳道敢让它们重叠，正是因为那几十年里两边真的都还在。',
     set: { panoramaMode: 'lanes', laneStrands: true },
     span: [1206, 1279],
+    bands: ['ssong', 'yuan'],
   },
   {
     t: '段正严：段誉真有其人',
@@ -385,6 +386,10 @@ export function mountTour(sectionEl, hostOf) {
     next.textContent = i === STOPS.length - 1 ? '结束导览' : '下一站 →';
 
     holes = [];
+    // 切站即清场：上一站开的卡不该跟到下一站——讲段正严，屏下却还挂着
+    // 隋末民变的卡（用户实测）。用卡自己的关闭钮，与读者手动关一模一样；
+    // 这一站若要开卡，navigate 稍后会开它自己那张
+    for (const b of document.querySelectorAll('.kp.on .kp-close, .kp-solo.on .kp-close')) b.click();
     scrim.classList.add('moving');           // 飞行途中减淡,好看得见掠过的两千年
 
     // 一、改状态。走 S + render 这条路,与用户自己点控件完全一致
@@ -408,7 +413,11 @@ export function mountTour(sectionEl, hostOf) {
     // 注意取的是**当帧的** __locate,不是这里这一个:读者中途点了控件,
     // 图会整张重画,闭包里扣着的旧比例尺连的是一棵已经脱离文档的树
     const live = () => hostOf() && hostOf().__locate;
-    if (st.span) holes.push(() => { const l = live(); return l && l.rect ? l.rect(st.span[0], st.span[1]) : null; });
+    // span 兼两职：跳转的落点，以及「照这一段年份」的洞。点名了泳道就只留前者
+    // ——否则整列连同无关政权一起被照亮（见 st.bands 的注）
+    if (st.span && !st.bands) {
+      holes.push(() => { const l = live(); return l && l.rect ? l.rect(st.span[0], st.span[1]) : null; });
+    }
     if (st.ev) {
       const k = evIdx(st.ev);
       const e = k >= 0 ? EVENTS[k] : null;
@@ -427,6 +436,10 @@ export function mountTour(sectionEl, hostOf) {
         });
       }
     }
+    // 只照点名的那几条泳道／河道。此前这类站按年份区间挖洞，整列从上到下
+    // 都被罩进去，无关的政权与底下的空白一并「照亮」（用户实测：讲南宋与元，
+    // 金、大理连同空白全在光里）。两个视图的带都带 data-dyn，可直接点名。
+    if (st.bands) holes.push(nodeHole(st.bands.map((k) => `[data-dyn="${k}"]`).join(',')));
     if (st.emp) holes.push(nodeHole(() => empBox.node));
 
     // 三、走过去
@@ -439,6 +452,10 @@ export function mountTour(sectionEl, hostOf) {
     // (以及图例)重建一遍,扣住的那个节点当场脱离文档,洞随之消失——
     // 而消失的正好是第一站请他去点的那个开关
     const late = [], wantVisible = [];
+    // **这一站真正指着的那个东西**必须看得见。泳道里 loc.emperor 只管横滚，
+    // 而那条泳道可能整行落在视口下方；河流侧同理。此前 wantVisible 只收了
+    // 控件，于是「讲段正严，屏上一个光框都没有」（用户实测）
+    wantVisible.push(() => { const l = live(); return l ? targetRect(st, l) : null; });
     if (st.ctrl) {
       const g = nodeHole(() => [...sectionEl.querySelectorAll('.local-controls label')]
         .find((l) => l.textContent.includes(st.ctrl)));
@@ -475,16 +492,19 @@ export function mountTour(sectionEl, hostOf) {
     // 卡片/图片回来后尺寸会变,再补几帧,免得洞停在旧尺寸上
     // 到站自检。切换视图会整块重挂载（河两万八千像素 ↔ 泳道八百），页面滚动
     // 因此被浏览器夹紧，视图自己的落点恢复又在导览的跳转之后跑——结果是
-    // 「讲的是三国，屏上停在夏初」（用户实测：河流那一站根本没滚过去）。
-    // 故隔几拍复查：目标若还在视口之外，就地再跳一次（不带缓动，这是纠偏不是旅程）
+    // 「讲的是三国，屏上停在夏初」「讲段正严，格子在屏外」（用户两度实测）。
+    // 故隔几拍复查**这一站真正指着的那个东西**：还在视口外就地再跳一次
+    //（不带缓动，这是纠偏不是旅程）
     for (const d of [180, 500, 1100, 1800]) setTimeout(() => {
       if (me !== seq || !on) return;
       kick();
       const l = live();
-      if (!l || !l.rect || !st.span) return;
-      const r = l.rect(st.span[0], st.span[1]);
-      if (!r) return;
-      const off = r.y + r.h < 0 || r.y > innerHeight;      // 整块在屏外
+      if (!l) return;
+      const r = targetRect(st, l);
+      // 解析不出也算「没到」：跳转发生在重排完成之前时，君主格还不在 empRefs
+      // 里，loc.emperor 返回 false、empBox.node 留空，自检若就此放弃，这一站
+      // 就永远没有光（用户实测：段正严那站一个光框都没有）
+      const off = !r || r.y + r.h < 0 || r.y > innerHeight || r.x + r.w < 0 || r.x > innerWidth;
       if (off) navigate(st, l, {});
     }, d);
   }
@@ -494,6 +514,27 @@ export function mountTour(sectionEl, hostOf) {
    * 读者点一下「全部承继关系」或改一下时间缩放,整张图连同横向滚动位置一起重置,
    * 人就被扔回公元前——导览却还在讲五代十国。
    */
+  /**
+   * 这一站真正指着的那个东西的矩形——自检据此判断「到没到」。
+   * 与 navigate 的分支一一对应：年份段看视图算出的区间，君主看他的格子，
+   * 事件看它画出来的标记，搜索看那个框。
+   */
+  function targetRect(st, loc) {
+    const one = (n) => {
+      if (!n || !n.isConnected) return null;
+      const b = n.getBoundingClientRect();
+      return b.width && b.height ? { x: b.left, y: b.top, w: b.width, h: b.height } : null;
+    };
+    if (st.emp) return one(empBox.node);
+    if (st.ev) {
+      const k = evIdx(st.ev);
+      return k >= 0 ? one(document.querySelector(`[data-evi="${k}"]`)) : null;
+    }
+    if (st.search) return one(sectionEl.querySelector('.tl-search'));
+    if (st.span && loc.rect) return loc.rect(st.span[0], st.span[1]);
+    return null;
+  }
+
   function navigate(st, loc, o) {
     if (st.span) {
       loc.year((st.span[0] + st.span[1]) / 2, o);
@@ -506,10 +547,9 @@ export function mountTour(sectionEl, hostOf) {
       const k = evIdx(st.ev);
       if (k >= 0) loc.event(k, o);
     } else if (st.search) {
-      // 角卡是绝对定位、层级低于**吸顶后**的搜索框;而这一站要滚回页首,
-      // 那时搜索框还没吸顶,卡片正好压在它上面(用户实测)。这一站本就在交还
-      // 控制权,顺手把卡收掉——用的是卡自己的关闭钮,和读者手动关一模一样
-      for (const b of document.querySelectorAll('.kp.on .kp-close, .kp-solo.on .kp-close')) b.click();
+      // 卡已在切站时统一清掉（见 goto 的清场）。这一站尤其要干净：角卡是绝对
+      // 定位、层级低于**吸顶后**的搜索框，而这一站要滚回页首，那时搜索框还没
+      // 吸顶，卡片正好压在它上面（用户实测）
       const box = sectionEl.querySelector('.tl-search');
       if (box) {
         box.scrollIntoView({ block: 'center', behavior: 'instant' });

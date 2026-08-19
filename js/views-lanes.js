@@ -701,7 +701,7 @@ export function renderLaneTimeline(host, list, opts) {
       gparts.push({ x0: px0, x1: px1, top: y0 + g.y, bot: y0 + g.y + g.h });
       const track = el('rect', {
         x: px0 + 1, y: y0 + g.y, width: Math.max(2, px1 - px0 - 2), height: g.h, rx: 4,
-        fill: col, opacity: 0.14, class: 'mark',
+        fill: col, opacity: 0.14, class: 'mark', 'data-dyn': b.d.key,
       });
       hoverable(track, trackTip, () => b.d.name);
       gBase.appendChild(track);
@@ -1153,8 +1153,8 @@ export function renderLaneTimeline(host, list, opts) {
       // 卡片立刻开:摘要要向维基取,趁着滚动这一路把请求发出去,到站时正好读得上。
       // 窄屏角卡摆不下、点击处理器直接早退,骰子/搜索跳到君主就什么也不开
       // ——改走贴底词条单卡,与跳到事件一致(河流侧同款修法)
-      if (kClean.soloMode && kClean.soloMode() && kClean.showEmperor) {
-        kClean.showEmperor(r);
+      if (kp && kp.soloMode && kp.soloMode() && kp.showEmperor) {
+        kp.showEmperor(r);
       } else {
         r.node.dispatchEvent(new MouseEvent('click', { bubbles: true }));
       }
