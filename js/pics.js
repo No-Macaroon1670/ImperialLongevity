@@ -25,7 +25,7 @@ export const PICS = {
    "作者": "Daderot",
    "署名": "Daderot",
    "说明页": "https://commons.wikimedia.org/wiki/File:Fragments_of_Buddhist_Wall_Painting,_Kyzil,_Sinkiang,_China,_Central_Asian_art,_6th_century_-_Nelson-Atkins_Museum_of_Art_-_DSC09161.JPG",
-   "说明": "克孜尔壁画残片，现藏堪萨斯城纳尔逊-阿特金斯艺术博物馆",
+   "说明": "克孜尔壁画残片，今藏堪萨斯城纳尔逊-阿特金斯艺术博物馆",
    "卡": true,
    "整幅": false
   },
@@ -49,7 +49,7 @@ export const PICS = {
    "作者": "MarsmanRom",
    "署名": "MarsmanRom",
    "说明页": "https://commons.wikimedia.org/wiki/File:Majishan_huge_sculptures_20090226.jpg",
-   "说明": "麦积山崖面上的大型造像",
+   "说明": "麦积山崖面大型造像",
    "卡": true,
    "整幅": true
   },
@@ -61,7 +61,7 @@ export const PICS = {
    "作者": "Dudva",
    "署名": "Dudva",
    "说明页": "https://commons.wikimedia.org/wiki/File:Cave_20,_Yungang_Grottoes.jpg",
-   "说明": "云冈第二十窟大佛，前壁已塌，坐在露天里",
+   "说明": "云冈第二十窟大佛，前壁久塌，故露天而坐",
    "卡": true,
    "整幅": false
   },
@@ -85,7 +85,7 @@ export const PICS = {
    "作者": "Hiroki Ogawa",
    "署名": "Hiroki Ogawa",
    "说明页": "https://commons.wikimedia.org/wiki/File:Yulin_Caves_Jiuquan_Gansu_China_%E9%85%92%E6%B3%89_%E6%A5%A1%E6%9E%97%E7%AA%9F_-_panoramio_(1).jpg",
-   "说明": "榆林河峡谷。文中所述第三窟取经图未见于可用许可的图源",
+   "说明": "榆林河峡谷。文中所述第三窟取经图，未得许可可用之图源",
    "卡": false,
    "整幅": false
   },
@@ -109,7 +109,7 @@ export const PICS = {
    "作者": null,
    "署名": "the British Library",
    "说明页": "https://commons.wikimedia.org/wiki/File:Diamond_Sutra_of_868_AD_-_The_Diamond_Sutra_(868),_frontispiece_and_text_-_BL_Or._8210-P.2.jpg",
-   "说明": "咸通九年《金刚经》卷首扉画与经文，大英图书馆 Or.8210/P.2",
+   "说明": "咸通九年《金刚经》卷首扉画及经文，大英图书馆藏 Or.8210/P.2",
    "卡": true,
    "整幅": true
   },
@@ -133,7 +133,7 @@ export const PICS = {
    "作者": "Aurel Stein",
    "署名": "Aurel Stein",
    "说明页": "https://commons.wikimedia.org/wiki/File:Photo_showing_Cave_16_and_the_manuscripts_piled_up_for_Stein_to_examine_near_the_entrance_to_Cave_17,_the_%E2%80%9Clibrary_cave.jpg",
-   "说明": "第十六窟，写本堆在第十七窟入口外待检。斯坦因摄于一九〇七年",
+   "说明": "第十六窟，写本堆于第十七窟口外待检，斯坦因摄于 1907 年",
    "卡": true,
    "整幅": false
   },
@@ -141,7 +141,7 @@ export const PICS = {
    "文件": "baimasi-stone-horse-2023.jpg",
    "署名": "No-Macaroon1670 摄，2023 年 12 月",
    "许可": "作者本人拍摄",
-   "说明": "白马寺山门外的石马。相传是汉代驮经的那匹，实为北宋魏咸信墓前的石像，一九三五年才迁到这里",
+   "说明": "白马寺外石马，讹传为汉代驮经之马，实为北宋魏咸信墓前石像，1935 年方迁至此",
    "卡": true,
    "整幅": true,
    "缩略图": "img/shiku/baimasi-stone-horse-2023.jpg",

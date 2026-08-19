@@ -31,30 +31,30 @@ PICKS = {
         # 现在在堪萨斯城。图与文说的是同一件事
         '克孜尔石窟': ('Fragments of Buddhist Wall Painting, Kyzil, Sinkiang, China, '
                        'Central Asian art, 6th century - Nelson-Atkins Museum of Art - DSC09161.JPG',
-                       True, '克孜尔壁画残片，现藏堪萨斯城纳尔逊-阿特金斯艺术博物馆'),
+                       True, '克孜尔壁画残片，今藏堪萨斯城纳尔逊-阿特金斯艺术博物馆'),
         '敦煌石窟': ('莫高窟九层楼 - panoramio.jpg', False, '莫高窟九层楼'),
         # **进卡**：崖面与泥塑同框，正是「石太酥、改塑泥」「洞开在离地数十米处」那两句
-        '麦积山石窟': ('Majishan huge sculptures 20090226.jpg', True, '麦积山崖面上的大型造像'),
+        '麦积山石窟': ('Majishan huge sculptures 20090226.jpg', True, '麦积山崖面大型造像'),
         # **进卡**：文里点名第二十窟，图就是它
-        '云冈石窟': ('Cave 20, Yungang Grottoes.jpg', True, '云冈第二十窟大佛，前壁已塌，坐在露天里'),
+        '云冈石窟': ('Cave 20, Yungang Grottoes.jpg', True, '云冈第二十窟大佛，前壁久塌，故露天而坐'),
         # **进卡**：文里点名奉先寺卢舍那
         '龙门石窟': ('Ancient Buddhist Grottoes at Longmen- Fengxian Temple, '
                      'Colossal Statue of Vairocana.jpg', True, '龙门奉先寺卢舍那大像'),
         # **不进卡**：那一段讲的是第三窟的取经图（猴形行者与白马），
         # 而 Commons 上没有那铺壁画。拿峡谷外景去配会误导，故只作长文页的地景
         '榆林窟': ('Yulin Caves Jiuquan Gansu China 酒泉 楡林窟 - panoramio (1).jpg',
-                   False, '榆林河峡谷。文中所述第三窟取经图未见于可用许可的图源'),
+                   False, '榆林河峡谷。文中所述第三窟取经图，未得许可可用之图源'),
         '峨眉山乐山大佛': ('Giant Buddha of Leshan.jpg', True, '乐山大佛'),
         # **进卡**：整条线上最该有图的一站——文里点到编号，图就是那一卷的卷首
         '金刚经印本': ('Diamond Sutra of 868 AD - The Diamond Sutra (868), '
                        'frontispiece and text - BL Or. 8210-P.2.jpg',
-                       True, '咸通九年《金刚经》卷首扉画与经文，大英图书馆 Or.8210/P.2'),
+                       True, '咸通九年《金刚经》卷首扉画及经文，大英图书馆藏 Or.8210/P.2'),
         # **不进卡**：文里讲的是《父母恩重经变相》那一龛，手上只有宝顶山泛拍
         '大足石刻': ('Baodingshan Cliff Carvings (50620551337).jpg', False, '大足宝顶山摩崖造像'),
         # **进卡**：斯坦因自己拍的，洞口堆着待检的写本——文里那一刻的现场
         '藏经洞发现': ('Photo showing Cave 16 and the manuscripts piled up for Stein '
                        'to examine near the entrance to Cave 17, the “library cave.jpg',
-                       True, '第十六窟，写本堆在第十七窟入口外待检。斯坦因摄于一九〇七年'),
+                       True, '第十六窟，写本堆于第十七窟口外待检，斯坦因摄于 1907 年'),
     },
 }
 
@@ -67,8 +67,7 @@ OWN = {
             '文件': 'baimasi-stone-horse-2023.jpg',
             '署名': 'No-Macaroon1670 摄，2023 年 12 月',
             '许可': '作者本人拍摄',
-            '说明': '白马寺山门外的石马。相传是汉代驮经的那匹，实为北宋魏咸信墓前的石像，'
-                    '一九三五年才迁到这里',
+            '说明': '白马寺外石马，讹传为汉代驮经之马，实为北宋魏咸信墓前石像，1935 年方迁至此',
             '卡': True,
             # 竖幅：裁成横条会把马头切掉，故整幅显示
             '整幅': True,
