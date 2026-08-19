@@ -13,8 +13,8 @@ export const PICS = {
    "作者": "Gary Todd",
    "署名": "Gary Todd",
    "说明页": "https://commons.wikimedia.org/wiki/File:2011-06_White_Horse_Temple_03.jpg",
-   "说明": "洛阳白马寺",
-   "卡": false,
+   "说明": "洛阳白马寺山门",
+   "卡": true,
    "整幅": false
   },
   "克孜尔石窟": {
@@ -37,8 +37,8 @@ export const PICS = {
    "作者": "guan",
    "署名": "guan",
    "说明页": "https://commons.wikimedia.org/wiki/File:%E8%8E%AB%E9%AB%98%E7%AA%9F%E4%B9%9D%E5%B1%82%E6%A5%BC_-_panoramio.jpg",
-   "说明": "莫高窟九层楼",
-   "卡": false,
+   "说明": "莫高窟崖面与九层楼",
+   "卡": true,
    "整幅": true
   },
   "麦积山石窟": {
@@ -86,7 +86,7 @@ export const PICS = {
    "署名": "Hiroki Ogawa",
    "说明页": "https://commons.wikimedia.org/wiki/File:Yulin_Caves_Jiuquan_Gansu_China_%E9%85%92%E6%B3%89_%E6%A5%A1%E6%9E%97%E7%AA%9F_-_panoramio_(1).jpg",
    "说明": "榆林河峡谷。文中所述第三窟取经图，未得许可可用之图源",
-   "卡": false,
+   "卡": true,
    "整幅": false
   },
   "峨眉山乐山大佛": {
@@ -122,7 +122,7 @@ export const PICS = {
    "署名": "Hugh Llewelyn from Keynsham, UK",
    "说明页": "https://commons.wikimedia.org/wiki/File:Baodingshan_Cliff_Carvings_(50620551337).jpg",
    "说明": "大足宝顶山摩崖造像",
-   "卡": false,
+   "卡": true,
    "整幅": false
   },
   "藏经洞发现": {

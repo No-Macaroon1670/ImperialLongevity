@@ -11,8 +11,11 @@
 照片（不是洞窟外观），克孜尔那站配一块**已经在美国博物馆里**的壁画残片
 ——那正是那一段在讲的事。
 
-`卡` 决定这张图进不进讲解卡：不是每站都进，只有图即主语的站才进（用户指定）。
-长文页不受这个限制，那是读物，图多一些无妨。
+`卡` 决定这张图进不进讲解卡。**默认全给**——同一条线上有的卡有图有的没有，
+读者无从知道为什么，那种不齐本身就是毛病（用户实测指出）。
+图与文对不上的（如榆林窟：文讲第三窟取经图，图只有峡谷），**照给，让图注去认账**：
+写明「图源未得」比整站空着诚实——空着只让人以为没有图，写明才告诉他
+那铺壁画存在、只是拿不到。留 False 是给真没有合适图源的站备用。
 
 用法：python tools/mining/build_pics.py <key>
 读：tools/mining/pic_candidates.json（许可与署名）
@@ -25,14 +28,15 @@ ROOT = r"C:/Users/ziyi_/Claude/imperial-longevity"
 # 站 → (Commons 文件名, 进不进讲解卡, 一句配文/替代文本)
 PICKS = {
     'shiku': {
-        # 传说那一段，图只能给寺——故不进卡，只进长文页
-        '白马寺': ('2011-06 White Horse Temple 03.jpg', False, '洛阳白马寺'),
+        '白马寺': ('2011-06 White Horse Temple 03.jpg', True, '洛阳白马寺山门'),
         # **进卡**：这一段讲壁画被从墙上割走运往欧美，而这就是其中一块，
         # 现在在堪萨斯城。图与文说的是同一件事
         '克孜尔石窟': ('Fragments of Buddhist Wall Painting, Kyzil, Sinkiang, China, '
                        'Central Asian art, 6th century - Nelson-Atkins Museum of Art - DSC09161.JPG',
                        True, '克孜尔壁画残片，今藏堪萨斯城纳尔逊-阿特金斯艺术博物馆'),
-        '敦煌石窟': ('莫高窟九层楼 - panoramio.jpg', False, '莫高窟九层楼'),
+        # 一度判成「只是外景」而不进卡，是判严了：乐僔在崖壁上凿下第一龛，
+        # 此后一代接一代——图上那片崖就是被凿了一千年的地方
+        '敦煌石窟': ('莫高窟九层楼 - panoramio.jpg', True, '莫高窟崖面与九层楼'),
         # **进卡**：崖面与泥塑同框，正是「石太酥、改塑泥」「洞开在离地数十米处」那两句
         '麦积山石窟': ('Majishan huge sculptures 20090226.jpg', True, '麦积山崖面大型造像'),
         # **进卡**：文里点名第二十窟，图就是它
@@ -40,17 +44,19 @@ PICKS = {
         # **进卡**：文里点名奉先寺卢舍那
         '龙门石窟': ('Ancient Buddhist Grottoes at Longmen- Fengxian Temple, '
                      'Colossal Statue of Vairocana.jpg', True, '龙门奉先寺卢舍那大像'),
-        # **不进卡**：那一段讲的是第三窟的取经图（猴形行者与白马），
-        # 而 Commons 上没有那铺壁画。拿峡谷外景去配会误导，故只作长文页的地景
+        # 这一站的图与文对不上（文讲第三窟取经图，Commons 上没有那铺壁画），
+        # 但**照给，让图注去认账**：写明「图源未得」比整站空着诚实——
+        # 空着只让人以为没有图，写明才告诉他那铺壁画存在、只是拿不到
         '榆林窟': ('Yulin Caves Jiuquan Gansu China 酒泉 楡林窟 - panoramio (1).jpg',
-                   False, '榆林河峡谷。文中所述第三窟取经图，未得许可可用之图源'),
+                   True, '榆林河峡谷。文中所述第三窟取经图，未得许可可用之图源'),
         '峨眉山乐山大佛': ('Giant Buddha of Leshan.jpg', True, '乐山大佛'),
         # **进卡**：整条线上最该有图的一站——文里点到编号，图就是那一卷的卷首
         '金刚经印本': ('Diamond Sutra of 868 AD - The Diamond Sutra (868), '
                        'frontispiece and text - BL Or. 8210-P.2.jpg',
                        True, '咸通九年《金刚经》卷首扉画及经文，大英图书馆藏 Or.8210/P.2'),
-        # **不进卡**：文里讲的是《父母恩重经变相》那一龛，手上只有宝顶山泛拍
-        '大足石刻': ('Baodingshan Cliff Carvings (50620551337).jpg', False, '大足宝顶山摩崖造像'),
+        # 文里讲的是《父母恩重经变相》那一龛，手上只有宝顶山泛拍；
+        # 图注写明是「宝顶山摩崖」而非那一龛，读者不会被误导
+        '大足石刻': ('Baodingshan Cliff Carvings (50620551337).jpg', True, '大足宝顶山摩崖造像'),
         # **进卡**：斯坦因自己拍的，洞口堆着待检的写本——文里那一刻的现场
         '藏经洞发现': ('Photo showing Cave 16 and the manuscripts piled up for Stein '
                        'to examine near the entrance to Cave 17, the “library cave.jpg',
