@@ -115,6 +115,13 @@ details.app li{margin-bottom:.7rem}
 .src a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule);font-size:12px}
 .src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
 .note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
+/* 配图。图注里那半行是**署名**，CC-BY／CC-BY-SA 要求给出作者与许可 */
+figure.pic{margin:0 0 2rem}
+figure.pic img{display:block;width:100%;height:auto;border-radius:3px}
+figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
+  line-height:1.8;color:var(--faint)}
+figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
+figure.pic figcaption a:hover{color:var(--dim)}
 footer{padding:5rem 0 7rem;font-family:var(--sans);font-size:12.5px;color:var(--faint);line-height:2}
 footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--rule)}
 footer a:hover{color:var(--ink)}
@@ -150,6 +157,9 @@ def main():
     pro, long_text, epi = load_long(key)
     srcs = load_sources(key)
     per = srcs.get('站', {})
+    pics_path = os.path.join(ROOT, 'docs/pics-%s.json' % key)
+    pics = (json.load(io.open(pics_path, encoding='utf-8')).get('站', {})
+            if os.path.exists(pics_path) else {})
 
     # 站表以 lines.js 为准（图上走的就是它），长文按 ev 挂上
     O = []
@@ -194,6 +204,21 @@ def main():
     A('</div></header>')
 
     quoted = set()
+
+    def picfig(name):
+        """配图。图注恒有一行**署名**：CC-BY／CC-BY-SA 是法律要求，CC0 与
+        公有领域不要求但本库照署。自摄的图没有 Commons 文件页，只留署名不加链。"""
+        pic = pics.get(name)
+        if not (pic and pic.get('缩略图')):
+            return
+        A('<figure class="pic">')
+        A('<img src="%s" alt="%s" loading="lazy">' % (esc(pic['缩略图']), esc(pic.get('说明'))))
+        who = ' · '.join([x for x in [pic.get('署名') or pic.get('作者'), pic.get('许可')] if x])
+        link = pic.get('说明页')
+        tail = ('<a href="%s" target="_blank" rel="noopener">%s</a>' % (esc(link), esc(who))
+                if link else esc(who))
+        A('<figcaption>%s　%s</figcaption>' % (esc(pic.get('说明') or ''), tail or '图片来源'))
+        A('</figure>')
 
     recheck = {}
     for r in srcs.get('复核', []):
@@ -246,6 +271,7 @@ def main():
         A('<section id="s0" class="tone"><div class="wrap">')
         A('<div class="num">序</div>')
         A('<h2>%s</h2>' % esc(pro['t'].split('·')[-1].strip()))
+        picfig('序')          # 序也可配图（石窟线：门前那匹石马）
         paras_of('序', pro['p'])
         app_block('序')
         A('</div></section>')
@@ -266,6 +292,7 @@ def main():
                             KIND.get(e.get('k'))] if x]
         if bits:
             A('<p class="sub">%s</p>' % esc('　·　'.join(bits)))
+        picfig(name)
         paras_of(name, long_text.get(name) or [s['b'] + (s.get('b2') or '')])
         A('<a class="go" href="timeline.html#line=%s&amp;at=%d">在图上看这一站 →</a>' % (key, i))
         if e.get('yc'):

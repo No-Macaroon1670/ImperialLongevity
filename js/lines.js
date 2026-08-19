@@ -18,6 +18,7 @@
 import { PROLOGUE, TEXT, EPILOGUE } from './line-text-shiku.js';
 import { PROLOGUE as CB_PRO, TEXT as CB_TEXT, EPILOGUE as CB_EPI } from './line-text-chibi.js';
 import { GEO } from './geo.js';
+import { PICS } from './pics.js';
 
 /** 石窟线：佛教东传与中国化的实物轴，一千八百年凿在山壁上。 */
 const SHIKU = [
@@ -175,7 +176,7 @@ const CHIBI = [
   {
     t: '赤壁图：画的是赋，不是仗',
     b: '金代武元直照着苏轼的赋作画，画上没有火，没有船阵，没有两军。',
-    b2: '取材是《赤壁赋》里「苏子与客泛游赤壁之下」那一幕，画的是一次夜游。'
+    b2: '取材是《赤壁赋》里「蘇子與客泛舟游於赤壁之下」那一幕，画的是一次夜游。'
       + '这是目前已知最早的赤壁主题山水画，台北故宫博物院藏国宝。'
       + '从战役到赋隔了八百七十四年；画本身没有纪年，相隔多少年说不准。',
     ev: '赤壁图',
@@ -206,10 +207,15 @@ export const LINES = {
     // 图上什么都不亮，整屏压暗——开场与收尾本来就不该有别的东西在动
     // `read` 指向长文页的对应一节：窄屏读不到全文，给个去处
     stops: [
-      { t: PROLOGUE.t, b: PROLOGUE.p[0], long: PROLOGUE.p, full: true, read: 'story-shiku.html#s0' },
+      // 序也配图：那一段说三匹白马都是后人编的，而门前那匹石马是实的
+      { t: PROLOGUE.t, b: PROLOGUE.p[0], long: PROLOGUE.p, full: true, read: 'story-shiku.html#s0',
+        ...(PICS.shiku['序'] ? { pic: PICS.shiku['序'] } : {}) },
       ...SHIKU.map((s, i) => ({
         ...s, read: `story-shiku.html#s${i + 1}`,
         ...(TEXT[s.ev] ? { long: TEXT[s.ev] } : {}),
+        // 只有「图即主语」的站才把图带进讲解卡（`卡` 由 build_pics.py 定）。
+        // 长文页不受这个限制，那是读物
+        ...(PICS.shiku[s.ev] && PICS.shiku[s.ev]['卡'] ? { pic: PICS.shiku[s.ev] } : {}),
       })),
       { t: EPILOGUE.t, b: EPILOGUE.p[0], long: EPILOGUE.p, full: true, read: 'story-shiku.html#s12' },
     ],

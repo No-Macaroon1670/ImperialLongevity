@@ -30,7 +30,7 @@ CATS = {
     '白马寺': ['White Horse Temple (Luoyang)'],
     '克孜尔石窟': ['Kizil Caves'],
     '敦煌石窟': ['Mogao Caves'],
-    '麦积山石窟': ['Maijishan Grottoes'],
+    '麦积山石窟': ['Maijishan'],
     '云冈石窟': ['Yungang Grottoes'],
     '龙门石窟': ['Longmen Grottoes'],
     '榆林窟': ['Yulin Caves'],
@@ -142,14 +142,18 @@ def main():
                     seen.add(t)
                     files.append(t)
             time.sleep(1.0)
+        # **两路都走，不是二选一**。实测：分类救了麦积山与藏经洞（全文检索
+        # 命中的是政府公文 PDF 与图书馆展柜照），却弄丢了云冈与龙门
+        # ——关键词检索本来精确命中「Cave 20」与「奉先寺卢舍那」，
+        # 而分类里那两处的文件名是「Caves 1-4」「2010 CHINE (459...)」这类，
+        # 排序无从下手。合起来再排，命中叙述关键词的排前面
+        for q in qs:
+            for t in search('%s %s' % (CATS.get(stop, [stop])[0], q)):
+                if t not in seen and not BAD_EXT.search(t):
+                    seen.add(t)
+                    files.append(t)
+            time.sleep(1.0)
         files = rank(files, qs)
-        if len(files) < 4:                     # 分类太空，退回全文检索
-            for q in qs:
-                for t in search('%s %s' % (stop, q)):
-                    if t not in seen and not BAD_EXT.search(t):
-                        seen.add(t)
-                        files.append(t)
-                time.sleep(1.2)
         m = meta(files[:12])
         cands = []
         for f in files[:12]:

@@ -1144,3 +1144,28 @@ section.card.river-mode .chart-host.full-bleed > .notes {
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 @media (max-width: 1000px) { .minimap { display: none !important; } }
+
+/* ── 讲解卡里的配图 ──────────────────────────────────────────────
+   只在「这张图就是这段话在讲的那个东西」的站出现。放在最上面：
+   读者的眼睛先落在那儿，图给的是文字给不了的那一层。
+   下面那行小字是**署名**，不是装饰——CC-BY／CC-BY-SA 要求给出作者与许可，
+   点进去是 Commons 的文件页。 */
+.tour-pic { display: none; margin: 0 0 9px; }
+.tour-pic.on { display: block; }
+.tour-pic-img {
+  display: block; width: 100%; height: 132px; object-fit: cover;
+  border-radius: 6px; background: var(--surface-2);
+}
+/* 横卷与画心不裁：cover 会把《金刚经》扉画的上下切掉 */
+.tour-pic-img.whole { object-fit: contain; background: var(--surface-2); }
+.tour-pic-credit {
+  display: block; margin-top: 3px; font-size: .66rem; line-height: 1.5;
+  color: var(--muted); text-decoration: none;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tour-pic-credit:hover { color: var(--seq-500); text-decoration: underline; }
+/* 定调卡（序与落点）本来一律不配图，后来开了口子：石窟线的序讲「三匹白马
+   都是后人编的」，而门前那匹石马正是这句话的实物。有图就给，没图照旧只有字。
+   定调卡本来就近乎满屏，图给高一点 */
+.tour-dock.dock-full .tour-pic-img { height: 168px; }
+@media (max-width: 720px) { .tour-pic-img { height: 112px; } }

@@ -207,11 +207,32 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   // 「读长文」：**只在读不到全文的屏上出现**。宽屏面板里整段散文已经在了，
   // 再挂一条去别处读的链接等于说「这儿的不算数」
   const readLink = h('a', { class: 'tour-read', href: '#', text: '读长文 →' });
+  // ── 配图 ──────────────────────────────────────────────────────────
+  // **不是每站都配**，只配「这张图就是这段话在讲的那个东西」的站
+  //（用户指定）：金刚经那站配卷首扉画，藏经洞那站配伯希和在洞中挑卷的照片。
+  // 条目首图不算——那张事件卡上已经有了，再来一张是重复。
+  //
+  // 署名是硬要求，不是装饰：CC-BY / CC-BY-SA 要求给出作者与许可。
+  // 故图下恒有一行小字，链到 Commons 的文件页；抓不到许可的图一律不用
+  //（见 tools/mining/pick_pics.py）。
+  const picImg = h('img', { class: 'tour-pic-img', alt: '', loading: 'lazy' });
+  const picCredit = h('a', { class: 'tour-pic-credit', target: '_blank', rel: 'noopener' });
+  const picBox = h('figure', { class: 'tour-pic' }, [picImg, picCredit]);
+  const fillPic = (st) => {
+    const p = st && st.pic;
+    if (!p || !p.缩略图) { picBox.classList.remove('on'); picImg.removeAttribute('src'); return; }
+    picImg.src = p.缩略图;
+    picImg.classList.toggle('whole', !!p.整幅);   // 横卷不裁
+    picImg.alt = p.说明 || '';
+    picCredit.href = p.说明页 || '#';
+    picCredit.textContent = [p.作者, p.许可].filter(Boolean).join(' · ') || '图片来源';
+    picBox.classList.add('on');
+  };
   const panel = h('div', {
     class: 'tour-panel', role: 'dialog', 'aria-live': 'polite', 'aria-label': '导览',
   }, [
     h('div', { class: 'tour-head' }, [h('span', { class: 'tour-tag', text: TAG }), step, closeBtn]),
-    title, body, cta, more,
+    picBox, title, body, cta, more,
     h('div', { class: 'tour-nav' }, [readLink, prev, next]),
   ]);
   // 讲解与副卡装在同一个坞里,由 flex 排上下——各自 position:fixed 的话
@@ -451,6 +472,7 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     readLink.style.display = canRead ? '' : 'none';
     dock.classList.toggle('dock-full', !!st.full);
     if (mmap) mmap.show(st.ev);
+    fillPic(st);
     body2.textContent = (wideProse || longOn) ? '' : (st.b2 || '');
     body2.style.display = (!wideProse && !longOn && st.b2) ? '' : 'none';
     more.classList.toggle('flat', wideProse);
