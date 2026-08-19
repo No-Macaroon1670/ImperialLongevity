@@ -303,7 +303,8 @@ export function mountTour(sectionEl, hostOf) {
       const box = { x: r.x - pad, y: r.y - pad, width: r.w + pad * 2, height: r.h + pad * 2, rx: 8 };
       // 与可见带、与视口求交；交完太薄就整块不画——宁可不打光，也不打在看不见的地方
       const x0 = Math.max(box.x, 0), x1 = Math.min(box.x + box.width, W);
-      const y0 = Math.max(box.y, band.top), y1 = Math.min(box.y + box.height, band.bot);
+      const yLo = r.noClip ? 0 : band.top, yHi = r.noClip ? H : band.bot;
+      const y0 = Math.max(box.y, yLo), y1 = Math.min(box.y + box.height, yHi);
       if (x1 - x0 < 8 || y1 - y0 < 8) continue;
       box.x = x0; box.width = x1 - x0;
       box.y = y0; box.height = y1 - y0;
@@ -332,12 +333,16 @@ export function mountTour(sectionEl, hostOf) {
   // 选择器给回**全部**匹配:宽屏的知识卡是左右两张(朝代一张、君主一张),
   // 只亮第一张,读者看到的是被点名的那位君主还在灯外。
   // 传函数则每帧现取(君主段那种会被换掉的节点走这条路)
-  const nodeHole = (sel) => () => {
+  const nodeHole = (sel, opts = {}) => () => {
     const ns = typeof sel === 'string' ? [...document.querySelectorAll(sel)]
       : [typeof sel === 'function' ? sel() : sel];
     return ns.filter((n) => n && n.isConnected).map((n) => {
       const r = n.getBoundingClientRect();
-      return r.width && r.height ? { x: r.left, y: r.top, w: r.width, h: r.height } : null;
+      // noClip：这个洞照的东西**本来就长在遮挡物里**（卡片，或卡片上的链接行）。
+      // 可见带是拿来挡「被卡片盖住的图」的，若连卡片自己也一并裁掉，
+      // 「照亮卡上的 YouTube 与 B 站按钮」这类站就一点光都没有（用户实测）
+      return r.width && r.height
+        ? { x: r.left, y: r.top, w: r.width, h: r.height, ...(opts.noClip ? { noClip: 1 } : {}) } : null;
     }).filter(Boolean);
   };
 
@@ -427,8 +432,14 @@ export function mountTour(sectionEl, hostOf) {
       // （用户实测）。找得到节点就照节点，找不到（该事件在当前视图未画出、
       // 或被筛掉）才退回年份区间，至少还指得出「在这一段里」。
       if (k >= 0) {
+        // 只照**画出来的墨**（标记与标签的字）：命中区为了好点做得比字高出
+        // 一大截，照它就等于照了一片空白（用户实测）。墨找不到才退回命中区
+        const inkSel = `[data-evi="${k}"]:not(.kp-hit)`;
+        const byInk = nodeHole(inkSel);
         const byNode = nodeHole(`[data-evi="${k}"]`);
         holes.push(() => {
+          const ink = byInk();
+          if (ink.length) return ink;
           const hit = byNode();
           if (hit.length) return hit;
           const l = live();
@@ -477,7 +488,7 @@ export function mountTour(sectionEl, hostOf) {
         ? '.kp-ev.on, .kp-corner-dyn.on, .kp-solo.on'
         : '.kp.on:not(.kp-ev), .kp-solo.on';
       const sel = st.links ? base.split(', ').map((s) => `${s} .kp-links`).join(', ') : base;
-      cardGets.push(nodeHole(sel));
+      cardGets.push(nodeHole(sel, { noClip: true }));
     }
     holes.push(...late, ...cardGets);
     scrim.classList.remove('moving');
@@ -500,6 +511,15 @@ export function mountTour(sectionEl, hostOf) {
       kick();
       const l = live();
       if (!l) return;
+      // 这一站要照卡上的链接行，就得先把卡滚到看得见它的地方——手机上卡被
+      // 限在 27vh（一屏预算法则），内容 280、可视 217，链接行正好落在卡外，
+      // 光框于是照在卡背后的东西上（用户实测：说好要高亮 B 站与 YouTube，
+      // 那儿却什么也没有）
+      if (st.links) {
+        for (const c of document.querySelectorAll('.kp-solo.on, .kp.on')) {
+          if (c.scrollHeight > c.clientHeight + 2) c.scrollTop = c.scrollHeight;
+        }
+      }
       const r = targetRect(st, l);
       // 解析不出也算「没到」：跳转发生在重排完成之前时，君主格还不在 empRefs
       // 里，loc.emperor 返回 false、empBox.node 留空，自检若就此放弃，这一站

@@ -523,7 +523,8 @@ export function renderLaneTimeline(host, list, opts) {
       // 图上不硬画我们本就画不好的东西。起点用方块、时点用圆点,以示区别
       const g = layer[rk(ev)];
       const rad = R[rk(ev)];
-      const dot = evMark(ev.k, ex, evTop, rad, { class: 'mark ev-dot' });
+      // 标记也挂 data-evi：导览打光照「墨」，标记与标签的字都是墨
+      const dot = evMark(ev.k, ex, evTop, rad, { class: 'mark ev-dot', 'data-evi': String(EVENTS.indexOf(ev)) });
       dot.dataset.evN = ev.n;
       g.appendChild(dot);
       // 名字竖写:汉字本来的排法,横向只占一个字宽,于是几乎不再互相挤——
@@ -583,8 +584,10 @@ export function renderLaneTimeline(host, list, opts) {
           if (!seg.length) continue;
           // 竖排多列依汉字传统自右向左:首列在右
           const cx2 = cx0 + halfW - colW * (c + 0.5);
+          // 字也挂 data-evi：导览打光要照的是**画出来的墨**，不是为了好点而
+          // 做得很高的命中区（用户实测：光框比字高出一大截）
           const t2 = el('text', { x: cx2, y: y0, 'font-size': LAB_FS, 'text-anchor': 'middle',
-            fill: 'var(--text-2)', 'pointer-events': 'none' });
+            fill: 'var(--text-2)', 'pointer-events': 'none', 'data-evi': String(EVENTS.indexOf(ev)) });
           seg.forEach((ch, i) => t2.appendChild(el('tspan', { x: cx2, dy: i ? LAB_DY : 0 }, ch)));
           g.appendChild(t2);
         }

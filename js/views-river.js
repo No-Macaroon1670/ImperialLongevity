@@ -852,7 +852,8 @@ export function renderRiver(host, list, opts) {
       const bank = left ? RX0 : RX1;
       const dir = left ? -1 : 1;
       const rad = R[rk(ev)];
-      gEvents.appendChild(evMark(ev.k, bank + dir * 7, ty, rad, { class: 'mark ev-dot' }));
+      gEvents.appendChild(evMark(ev.k, bank + dir * 7, ty, rad,
+        { class: 'mark ev-dot', 'data-evi': String(EVENTS.indexOf(ev)) }));
       // 短引线搭到岸上:眼睛不必拿尺子量「这条名字对着哪一年」
       gEvents.appendChild(el('line', {
         x1: bank + dir * 3, x2: bank + dir * (7 - rad - 1), y1: ty, y2: ty,
@@ -867,7 +868,8 @@ export function renderRiver(host, list, opts) {
         gEvents.appendChild(el('text', {
           x: bank + dir * 14, y: ty + 3.6, 'font-size': FS,
           'text-anchor': left ? 'end' : 'start',
-          fill: 'var(--text-2)', 'pointer-events': 'none' }, txt));
+          fill: 'var(--text-2)', 'pointer-events': 'none',
+          'data-evi': String(EVENTS.indexOf(ev)) }, txt));
       }
       const hit = el('rect', {
         x: left ? bank - EV_STRIP - 2 : bank + 2, y: ty - ROW / 2,
@@ -1268,7 +1270,8 @@ export function renderRiver(host, list, opts) {
       // 形状分类、页色细边分图地:标记压在饱和的君主色块上，而河道本身正是用
       // 同一套色板着色的——蓝点落在蓝河上就等于没画（见 views-lanes 的 evMark）
       g.appendChild(evMark(ev.k, mx, ty, rad,
-        { class: 'mark ev-dot', stroke: 'var(--page)', 'stroke-width': 0.8 }));
+        { class: 'mark ev-dot', stroke: 'var(--page)', 'stroke-width': 0.8,
+          'data-evi': String(EVENTS.indexOf(ev)) }));
       if (lab) {
         // 名字压在君主色块之上，故以页色描边作衬——与朝代名同一套写法。
         // 贴右岸者名字右对齐(自河心向岸边收),两侧于是各成一列齐整的边
