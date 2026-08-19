@@ -1055,3 +1055,13 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 
 /* 宽屏：讲解坞挪到卡那一侧，免得话在左、东西在右，眼睛横跨整屏（见 tour.js paint 注） */
 @media (min-width: 721px) { .tour-dock.dock-right { left: auto; right: 16px; } }
+
+/* 页脚的反馈入口。站上此前没有任何一个仓库链接——数据与文案都逐条注了出处，
+   却没给读者一条指出「这一条不对」的路。按 docs/idea-community.md 的结论：
+   走 GitHub Issue 而非表单（投稿一落地就在版本库里、能被现成的管线接住），
+   且先只开勘误这一档——它能指到具体某行某字段，核验成本最低、收益最直接。 */
+.foot-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+.foot-btn { text-decoration: none; }
+.foot-btn:hover { background: var(--surface-2); }
+.foot-btn-2 { color: var(--text-2); }
+.foot-note { font-size: .78rem; color: var(--muted); flex: 1 1 260px; line-height: 1.5; }
