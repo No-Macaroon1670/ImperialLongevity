@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>石窟线 · 从洛阳的一场梦，到一九〇〇年洞开：一千八百年凿在山壁上。</title>
+<meta name="description" content="佛教东传与中国化的实物轴。共 11 站。">
+<link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/story-shiku.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="石窟线">
+<meta property="og:description" content="从洛阳的一场梦，到一九〇〇年洞开：一千八百年凿在山壁上。">
+<meta property="og:url" content="https://no-macaroon1670.github.io/ImperialLongevity/story-shiku.html">
+<style>
+:root{
+  --bg:#0e0d0c; --bg2:#161311; --ink:#e9e3d7; --dim:#9a9187; --faint:#5d564e;
+  --rule:#2a2622; --accent:#c0603f; --gold:#c9a959;
+  --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+  font-size:18px;line-height:2.05;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50}
+/* 导轨：宽屏才有。窄屏那点横向空间要留给正文 */
+#rail{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
+  z-index:40;display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
+#rail a{display:flex;align-items:center;gap:.5rem;color:var(--faint);text-decoration:none;
+  letter-spacing:.04em;transition:color .25s}
+#rail .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;transition:transform .25s}
+#rail a .lbl{opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap}
+#rail a:hover{color:var(--dim)} #rail a:hover .lbl{opacity:1;transform:none}
+#rail a.on{color:var(--accent)} #rail a.on .dot{transform:scale(1.5)}
+#rail a.on .lbl{opacity:1;transform:none}
+@media(max-width:1180px){#rail{display:none}}
+.wrap{max-width:40rem;margin:0 auto;padding:0 1.5rem}
+header.cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
+  padding:6rem 0 4rem;border-bottom:1px solid var(--rule)}
+.kicker{font-family:var(--sans);font-size:12px;letter-spacing:.34em;color:var(--faint);margin-bottom:2.4rem}
+h1{font-size:clamp(2.4rem,8vw,4rem);line-height:1.14;margin:0 0 1.6rem;font-weight:500;letter-spacing:.06em}
+.lede{font-size:1.06rem;color:var(--dim);line-height:2;max-width:30rem;margin:0}
+.meta{margin-top:3.4rem;font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.08em}
+.meta a{color:var(--gold);text-decoration:none;border-bottom:1px solid transparent}
+.meta a:hover{border-bottom-color:var(--gold)}
+section{padding:5.5rem 0;border-bottom:1px solid var(--rule)}
+section.tone{background:var(--bg2)}
+.num{font-family:var(--sans);font-size:11px;letter-spacing:.3em;color:var(--faint)}
+.yr{font-family:var(--sans);font-size:2.6rem;line-height:1;color:var(--rule);margin:.4rem 0 .8rem;
+  font-variant-numeric:tabular-nums;font-weight:700}
+h2{font-size:1.75rem;line-height:1.35;margin:0 0 .5rem;font-weight:500;letter-spacing:.04em}
+.sub{font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.1em;margin:0 0 2rem}
+section p{margin:0 0 1.35rem}
+p.beat{color:var(--gold)}
+blockquote{margin:2rem 0;padding-left:1.2rem;border-left:2px solid var(--accent);color:var(--ink)}
+blockquote small{display:block;margin-top:.5rem;font-family:var(--sans);font-size:11px;
+  letter-spacing:.08em;color:var(--faint)}
+.go{display:inline-block;margin:.4rem 0 1.6rem;font-family:var(--sans);font-size:12px;
+  letter-spacing:.08em;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:2px}
+.go:hover{border-bottom-color:var(--gold)}
+details.app{margin-top:2rem;font-family:var(--sans);font-size:13px;line-height:1.85;color:var(--dim)}
+details.app summary{cursor:pointer;color:var(--faint);letter-spacing:.14em;font-size:11px;
+  padding:.5rem 0;border-top:1px solid var(--rule)}
+details.app ul{margin:.8rem 0;padding-left:1.1rem}
+details.app li{margin-bottom:.7rem}
+.tag{display:inline-block;font-size:10px;letter-spacing:.08em;padding:1px 6px;margin-right:.5rem;
+  border-radius:3px;border:1px solid currentColor;vertical-align:.08em}
+.t-ok{color:#7d9b6e} .t-trad{color:var(--gold)} .t-new{color:#6e8a9b}
+.t-infer{color:#9b8a6e} .t-doubt{color:var(--accent)}
+.src{margin-top:.9rem;display:flex;flex-wrap:wrap;gap:.9rem}
+.src a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule);font-size:12px}
+.src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
+.note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
+footer{padding:5rem 0 7rem;font-family:var(--sans);font-size:12.5px;color:var(--faint);line-height:2}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--rule)}
+footer a:hover{color:var(--ink)}
+footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
+@media(max-width:640px){
+  body{font-size:17px;line-height:1.98}
+  section{padding:4rem 0}
+  .yr{font-size:2rem}
+  h1{letter-spacing:.03em}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<nav id="rail" aria-label="节次">
+<a href="#s0"><span class="dot"></span><span class="lbl">三匹白马</span></a>
+<a href="#s1"><span class="dot"></span><span class="lbl">白马驮经</span></a>
+<a href="#s2"><span class="dot"></span><span class="lbl">克孜尔比敦煌</span></a>
+<a href="#s3"><span class="dot"></span><span class="lbl">莫高窟凿了一</span></a>
+<a href="#s4"><span class="dot"></span><span class="lbl">麦积山</span></a>
+<a href="#s5"><span class="dot"></span><span class="lbl">云冈</span></a>
+<a href="#s6"><span class="dot"></span><span class="lbl">龙门</span></a>
+<a href="#s7"><span class="dot"></span><span class="lbl">榆林窟</span></a>
+<a href="#s8"><span class="dot"></span><span class="lbl">乐山</span></a>
+<a href="#s9"><span class="dot"></span><span class="lbl">咸通九年</span></a>
+<a href="#s10"><span class="dot"></span><span class="lbl">大足</span></a>
+<a href="#s11"><span class="dot"></span><span class="lbl">一九〇〇年</span></a>
+<a href="#s12"><span class="dot"></span><span class="lbl">或曰</span></a>
+</nav>
+<header class="cover"><div class="wrap">
+<div class="kicker">佛教东传与中国化的实物轴</div>
+<h1>石窟线</h1>
+<p class="lede">从洛阳的一场梦，到一九〇〇年洞开：一千八百年凿在山壁上。</p>
+<div class="meta">共 11 站　·　<a href="timeline.html#line=shiku">在图上走一遍 →</a>　·　<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-shiku.md">资料与出处 ↗</a></div>
+</div></header>
+<section id="s0" class="tone"><div class="wrap">
+<div class="num">序</div>
+<h2>三匹白马</h2>
+<p>一匹白马，驮着经书，从西边走进洛阳。这是中国人讲了一千五百年的开场。</p>
+<p>但《洛阳伽蓝记》说马驮的是经；《水经注》说驮的是图，用的是「白马负图表之中夏」；《高僧传》里的白马根本没有进洛阳——它绕着一座塔悲鸣，与洛阳无关。</p>
+<p>三部书，三匹白马。</p>
+<p>它们有一个共同点：都成书于这件事发生的四百年之后。</p>
+<p>这条线从这匹并不存在的白马开始，走一千八百年，十一站。中间没有一处是白来的——每一站都是有人在山壁上，一凿一凿凿出来的。</p>
+</div></section>
+<section id="s1" data-year="68" data-name="白马寺"><div class="wrap">
+<div class="num">一 / 十一</div>
+<div class="yr">68</div>
+<h2>白马寺</h2>
+<p class="sub">洛阳　·　68　·　东汉　·　遗址·建筑</p>
+<p>永平十一年，汉明帝夜里梦见一个金人。他遣使西行求法，摄摩腾、竺法兰以白马负经像东来。中国第一座寺院由此而立。</p>
+<p>这是传统叙述，不是信史。佛教入华应更早，且循商路渐进，并非一次奉旨迎请。荷兰学者许理和指出：白马寺在公元二八九年之前，不见于任何同时代的记载。从它据说被建成，到它第一次被人写下来，中间隔着二百二十一年。</p>
+<p>《四十二章经》的译出年代同样聚讼已久。能确认的最早引用，是公元一六六年襄楷给汉桓帝的一封奏疏——距那场梦，已近百年。</p>
+<p>但传说的下游是实的。此后一千八百年，石头上刻的，正是这个传说如何变成中国自己的东西。</p>
+<a class="go" href="timeline.html#line=shiku&amp;at=1">在图上看这一站 →</a>
+<p class="note">本库简注：永平十一年建于洛阳，佛教传入中国后所建第一座寺院。「白马驮经」出汉明帝夜梦金人、遣使求法、摄摩腾竺法兰以白马负经像东来之说——此为传统叙述，非信史：佛教入华当更早且循商路渐进，《四十二章经》的译出年代亦聚讼已久。但下游是实的：本库自敦煌石窟(366)、云冈(460)、龙门(493)至玄奘译经(645)、六祖坛经(713)，皆自此而下</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-trad">传统叙述</span>永平十一年（68）建寺、白马驮经，出汉明帝夜梦金人求法之说。本库既有简注已注明「此为传统叙述，非信史」。</li>
+<li><span class="tag t-new">补研究</span>「二八九年之前不见于同时代记载」出许理和《佛教征服中国》（1972）第 31 页，转引自英文维基。多数现代学者视白马驮经为佛教寓言而非史实。</li>
+<li><span class="tag t-new">补研究</span>《四十二章经》最早可考引用为 166 年襄楷上汉桓帝疏；学界对其成书于印度、中亚还是中国仍无定论。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/白马寺" target="_blank" rel="noopener">中文维基 · 白马寺</a>
+<a href="https://en.wikipedia.org/wiki/White_Horse_Temple" target="_blank" rel="noopener">EN Wikipedia · White Horse Temple</a>
+<a href="https://en.wikipedia.org/wiki/Sutra_of_Forty-two_Chapters" target="_blank" rel="noopener">EN Wikipedia · 四十二章经</a>
+</div>
+</details>
+</div></section>
+<section id="s2" data-year="280" data-name="克孜尔石窟"><div class="wrap">
+<div class="num">二 / 十一</div>
+<div class="yr">280</div>
+<h2>克孜尔石窟</h2>
+<p class="sub">拜城　·　280–850　·　遗址·建筑</p>
+<p>不在敦煌。在龟兹。</p>
+<p>木扎提河北岸的断崖上，二百六十九个编号洞窟，约开凿于三世纪末，比莫高窟早了将近一个世纪。壁画以本生故事为主，有「故事的海洋」之称。</p>
+<p>龟兹出过鸠摩罗什。父亲是罽宾僧人，母亲是龟兹王妹。三八六年龟兹城破，吕光把他掳走，逼他破戒；他抵达长安是在四〇一年，中间隔了十五年。此后译经三十五部、二百九十四卷。</p>
+<p>二十世纪初，德国考察队把这里的壁画从墙上割下来运回柏林。一九三三年，德方公布过一份清单，精确到小数点后两位：二百五十二块，三百二十八点零七平方米，出自三十七个洞窟。</p>
+<p>这是一份账单。它在这条线上不是最后一次出现。</p>
+<a class="go" href="timeline.html#line=shiku&amp;at=2">在图上看这一站 →</a>
+<p class="note">本库简注：拜城木扎提河北岸断崖上的龟兹石窟，编号洞窟二百六十九个，连未编号者近四百个。约开凿于公元 3 世纪末，止于 8–9 世纪，是中国开凿最早的大型石窟群，早于莫高窟（366）近一个世纪。第 47 窟主室高十六点五米，为现存最早的大像窟。壁画以本生、因缘、佛传故事为主，有「故事的海洋」之称，部分被 20 世纪初的德国考察队割运欧洲。2014 年以「丝绸之路：长安—天山廊道的路网」列入世界遗产</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">库内既有</span>二百六十九个编号洞窟、约三世纪末开凿、早于莫高窟近一个世纪、德国考察队割运——皆本库原有简注。</li>
+<li><span class="tag t-new">补研究</span>「252 块／328.07 平方米／37 窟」为德方 1933 年公布数字。今存柏林亚洲艺术博物馆 225 块，另有 127 块经二战后苏军转入艾尔米塔什博物馆。</li>
+<li><span class="tag t-new">补研究</span>柏林民族学博物馆在二战轰炸中被毁，壁画因已被水泥固定于墙上无法转移而损失惨重。常见的「28 幅最精者全毁」一说指整个吐鲁番收藏，非克孜尔专指——本文因此未采用该数字。</li>
+<li><span class="tag t-doubt">存疑</span>洞窟总数各源差异大（236–349）、壁画面积 5,000–16,000 ㎡ 不等；鸠摩罗什生年有 344 与 334 两说。本文只用各源一致的部分。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/克孜尔千佛洞" target="_blank" rel="noopener">中文维基 · 克孜尔千佛洞</a>
+<a href="https://en.wikipedia.org/wiki/German_Turfan_expeditions" target="_blank" rel="noopener">EN Wikipedia · 德国吐鲁番考察队</a>
+<a href="https://idp.bl.uk/blog/idp-collections-in-germany/" target="_blank" rel="noopener">IDP · 德国藏品</a>
+<a href="https://whc.unesco.org/zh/list/1442" target="_blank" rel="noopener">世界遗产（2014）</a>
+</div>
+</details>
+</div></section>
+<section id="s3" data-year="366" data-name="敦煌石窟"><div class="wrap">
+<div class="num">三 / 十一</div>
+<div class="yr">366</div>
+<h2>敦煌石窟</h2>
+<p class="sub">敦煌　·　366–1368　·　前秦　·　遗址·建筑</p>
+<p>前秦建元二年，僧人乐僔走到三危山下，忽见金光，状有千佛。他在崖壁上凿下第一龛。</p>
+<p>这一年是三六六。</p>
+<p>但记下这句话的碑立于六九八年——距离它所记的那一刻，已经过去三百三十二年。另一份《莫高窟记》说法略有不同：他是「遥礼其山，见金光如千佛之状」，并提到西晋索靖曾题壁于此，号仙岩寺。有学者据此认为，这座山的开凿要早于三六六。</p>
+<p>本库把莫高窟记成一条起讫一千年的长条，不是一个点。十六国、北朝、隋唐、西夏、元，一代接一代往下凿，最后叠成一处：四百九十二个存有壁画的洞窟，四万五千平方米壁画。</p>
+<p>凡横贯的长条，都是这个意思——没有一个人凿完过一座石窟。</p>
+<a class="go" href="timeline.html#line=shiku&amp;at=3">在图上看这一站 →</a>
+<p class="note">本库简注：前秦建元二年僧乐僔始凿，历十六国至元续修千年；藏经洞所出约五万卷文书另为一事，非此窟营造年代</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-trad">传统叙述</span>乐僔见金光而始凿，出《李君修莫高窟佛龛碑》（武周圣历元年，698 立）：「忽见金光，状有千佛……遂架空凿岩，造窟一龛。」记录晚于所记事件 332 年。</li>
+<li><span class="tag t-new">补研究</span>《莫高窟记》另有「遥礼其山，见金光如千佛之状」及「晋司空索靖题壁，号仙岩寺」之说；有学者据此主张开凿早于 366——属具名少数说，非共识。</li>
+<li><span class="tag t-ok">信史</span>联合国教科文组织登录数据：现存 492 个有壁画洞窟、约 45,000 ㎡ 壁画、2,000 余身彩塑。另有 1988–95 年在北区新发现的 248 个无装饰洞窟（僧房、作坊、瘗窟），故亦有「735 窟」之说——两个数字统计对象不同。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/莫高窟" target="_blank" rel="noopener">中文维基 · 莫高窟</a>
+<a href="https://whc.unesco.org/en/list/440/" target="_blank" rel="noopener">UNESCO · Mogao Caves</a>
+<a href="https://www.dha.ac.cn/info/1425/3659.htm" target="_blank" rel="noopener">敦煌研究院</a>
+</div>
+</details>
+</div></section>
+<section id="s4" data-year="400" data-name="麦积山石窟"><div class="wrap">
+<div class="num">四 / 十一</div>
+<div class="yr">400</div>
+<h2>麦积山石窟</h2>
+<p class="sub">天水　·　400–1400　·　后秦　·　遗址·建筑</p>
+<p>秦岭西端这座山是紫红色砂岩，太酥，刻不住细节。</p>
+<p>于是这里不凿，改塑。后秦始凿，北魏、西魏、北周至隋唐续修。官方现存计数：造像三千九百三十八件、一万零六百三十二身，壁画九百七十九点五四平方米。少数几个洞里确有石雕，但那些石头不是本地的——是从别处运进来的。</p>
+<p>第四窟叫散花楼，横宽三十一点七米，是崖上位置最高、体量最大的一窟。北周一位姓李的秦州都督为亡故的长辈所造，落成时请庾信写了碑铭。</p>
+<p>中国的记载说，开元二十二年那场地震震塌了崖面中部，窟群从此分成东西两崖。洞开在离地三十到八十米的崖壁上。</p>
+<a class="go" href="timeline.html#line=shiku&amp;at=4">在图上看这一站 →</a>
+<p class="note">本库简注：四大石窟之末一处，后秦始凿，北魏西魏北周至隋唐续修；2014 年以丝绸之路：长安—天山廊道路网列入世界遗产</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>紫红色砂岩质地松散、造像以泥塑为主；少数石雕（117、127、133、135 窟）所用砂岩非本地产。见英文维基。</li>
+<li><span class="tag t-ok">信史</span>「3,938 件／10,632 身／壁画 979.54 ㎡／窟龛 221 个」为麦积山石窟艺术研究所现行官方数字；旧普查数为「窟龛 194 个、造像 7,800 余尊」——两组统计口径不同，本文只用官方现行数。</li>
+<li><span class="tag t-doubt">存疑</span>734 年地震致崖面塌毁分为东西崖，中文史料与地方志普遍如此记载，英文学术著述未作此因果连结，故行文写作「中国的记载说」。</li>
+<li><span class="tag t-doubt">存疑</span>散花楼施主，一作李允信为亡父，一作李充信为祖父；通高一作 16 米、一作 15 米。本文因此只写「一位姓李的秦州都督」与已一致的横宽 31.7 米。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/麦积山石窟" target="_blank" rel="noopener">中文维基 · 麦积山石窟</a>
+<a href="https://mjssk.cn/#/descLSYYS" target="_blank" rel="noopener">麦积山石窟艺术研究所</a>
+<a href="https://en.wikipedia.org/wiki/Maijishan_Grottoes" target="_blank" rel="noopener">EN Wikipedia · Maijishan</a>
+</div>
+</details>
+</div></section>
+<section id="s5" data-year="460" data-name="云冈石窟"><div class="wrap">
+<div class="num">五 / 十一</div>
+<div class="yr">460</div>
+<h2>云冈石窟</h2>
+<p class="sub">大同　·　460–524　·　北魏　·　遗址·建筑</p>
+<p>四四六年，太武帝下诏灭佛，前后持续七年。四五二年文成帝即位，复法。</p>
+<p>复法的第一件事是造像，诏令「令如帝身」。《魏书》记了一个细节：像成之后，脸上和脚下各有一块黑石，位置与皇帝身上的黑痣完全对应。当时的人认为，这是至诚所感。</p>
+<p>和平初年，沙门昙曜奏请在武州塞开窟五所，「高者七十尺，次六十尺」。这是中国第一处由皇室主持营建的石窟。</p>
+<p>《魏书》并没有写这五尊大像对应五位先帝——那是二十世纪学者重建出来的推断，如今大体被接受。</p>
+<p>真正被写下来的是另一句。道人统法果说，太祖明睿好道，即是当今如来。他每次跪拜，都对人说：</p>
+<blockquote>我非拜天子，乃是礼佛耳<small>《魏书 · 释老志》</small></blockquote>
+<p>第二十窟的大佛高十三点七米，坐在露天里——它的前壁塌了。</p>
+<a class="go" href="timeline.html#line=shiku&amp;at=5">在图上看这一站 →</a>
+<p class="note">本库简注：北魏和平初年沙门昙曜开五窟（今第16–20窟），迁洛后续凿至正光年间</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>法果语见《魏书·释老志》：「法果每言太祖明叡好道，即是当今如来……我非拜天子，乃是礼佛耳。」</li>
+<li><span class="tag t-ok">信史</span>昙曜奏开五窟、「高者七十尺，次六十尺」同出《释老志》。须注意此为北魏文本自身的尺寸记述，非现代实测。</li>
+<li><span class="tag t-ok">信史</span>「令如帝身」造像与像成后黑石对应帝身黑痣，见《释老志》所记兴安元年（452）事。</li>
+<li><span class="tag t-infer">推断</span>「昙曜五窟对应五位先帝」不见于北魏文献，是二十世纪学者的重建。今通行者为塚本善隆之说（20 窟太武帝、19 道武、18 明元、17 景穆、16 文成）；关野贞、常盘大定另有异说。故本文明写这是学者推断。</li>
+<li><span class="tag t-new">补研究</span>第 20 窟主佛高 13.7 米（官方数字，另有「约 13 米」「14 米」等约数）；前壁坍塌一般归因于延昌元年（512）大地震及后世继续崩落。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/云冈石窟" target="_blank" rel="noopener">中文维基 · 云冈石窟</a>
+<a href="https://whc.unesco.org/en/list/1039/" target="_blank" rel="noopener">UNESCO · Yungang</a>
+<a href="https://www.yungangmeta.cn/dzb/encyclopedias/introduce.html" target="_blank" rel="noopener">云冈研究院</a>
+</div>
+</details>
+</div></section>
+<section id="s6" data-year="493" data-name="龙门石窟"><div class="wrap">
+<div class="num">六 / 十一</div>
+<div class="yr">493</div>
+<h2>龙门石窟</h2>
+<p class="sub">洛阳　·　493–750　·　北魏　·　遗址·建筑</p>
+<p>同一座山上凿了四百年，佛像的脸跟着朝代变。</p>
+<p>宾阳中洞的北魏造像清癯瘦削，衣纹像中原士大夫的褒衣博带。《魏书》记下了这三个洞的账：从景明元年到正光四年六月，用功八十万二千三百六十六。那是工，不是人。三个洞里，只有中洞真正完工。</p>
+<p>中间还改过一次图：最初计划窟顶离地三百一十尺，凿到正始二年已斩山二十三丈；大长秋卿王质上奏说太高、费功、难成，请求整体下移到离地一百尺。</p>
+<p>奉先寺的卢舍那成于上元二年，通高十七点一四米。碑上写着「皇后武氏助脂粉钱二万贯」——但那块碑是开元十年重刻的，距造像完工已过去四十七年。至于这张脸是不是照着武则天刻的，龙门石窟研究院院长说得很清楚：史书上没有明确记载。</p>
+<p>宾阳中洞的帝后礼佛图，现在不在洞里。皇帝那一幅在纽约，皇后那一幅在堪萨斯城。洞壁上留着凿痕。</p>
+<a class="go" href="timeline.html#line=shiku&amp;at=6">在图上看这一站 →</a>
+<p class="note">本库简注：孝文帝迁洛前后始凿，历东西魏、北齐至唐；宾阳中洞属北魏，奉先寺卢舍那大像成于唐高宗上元二年</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>《魏书·释老志》：「从景明元年至正光四年六月已前，用功八十万二千三百六十六。」此数为用工（人日）而非人数，且涵盖宾阳三洞全体（500–523），非中洞单计；三洞中仅中洞完工。英文维基误作「八十万工人」，本文不采。</li>
+<li><span class="tag t-ok">信史</span>窟顶原拟去地三百一十尺、正始二年已斩山二十三丈、王质奏请下移至去地一百尺，同出《释老志》该段。</li>
+<li><span class="tag t-new">补研究</span>《河洛上都龙门山之阳大卢舍那像龛记》载「皇后武氏助脂粉钱二万贯」，咸亨三年（672）始、上元二年（675）毕功。惟今存者为开元十年（722）重刻，晚于完工 47 年。「二万贯」为二万串钱，非布帛。</li>
+<li><span class="tag t-doubt">存疑</span>卢舍那以武则天为容貌所本——史无明载。龙门石窟研究院院长史家珍表示并非「完全按照她的相貌雕刻」，至多「糅进去一部分」。本文据此改写了库内原简注中「相传」一语的分量。</li>
+<li><span class="tag t-ok">信史</span>帝后礼佛图：帝像现藏纽约大都会艺术博物馆（1935 年入藏，编号 35.146），后像现藏堪萨斯城纳尔逊-阿特金斯艺术博物馆。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/龙门石窟" target="_blank" rel="noopener">中文维基 · 龙门石窟</a>
+<a href="https://www.metmuseum.org/art/collection/search/42707" target="_blank" rel="noopener">大都会 · 帝后礼佛图</a>
+<a href="https://whoseculture.hsites.harvard.edu/longmen-binyang-central-cave" target="_blank" rel="noopener">Harvard · Whose Culture?</a>
+<a href="https://lmsk.cn/Gywm_id_5.html" target="_blank" rel="noopener">龙门石窟研究院</a>
+</div>
+</details>
+</div></section>
+<section id="s7" data-year="700" data-name="榆林窟"><div class="wrap">
+<div class="num">七 / 十一</div>
+<div class="yr">700</div>
+<h2>榆林窟</h2>
+<p class="sub">瓜州　·　700–1368　·　唐　·　遗址·建筑</p>
+<p>瓜州榆林河峡谷两岸，四十三个洞窟：东崖三十二，西崖十一。</p>
+<p>第三窟西壁那铺普贤变里，山水之间站着一个人：光头，披袈裟，脚蹬麻鞋。他身后跟着一个猴脸的行者，合掌而立；再后面是一匹白马，驮着经卷。</p>
+<p>马头朝东。这是回程。</p>
+<p>这铺壁画属西夏，比吴承恩的《西游记》早了三百多年。在它之前还有一部《大唐三藏取经诗话》，南宋刊本，里面已经出现了「猴行者」。</p>
+<p>故事在成为小说之前，先在河西的崖壁上画了一遍。</p>
+<p>开场那匹白马是后人编的。这一匹画在墙上，驮着经往回走。</p>
+<a class="go" href="timeline.html#line=shiku&amp;at=7">在图上看这一站 →</a>
+<p class="note">本库简注：甘肃瓜州榆林河峡谷两岸崖壁上的石窟，又称万佛峡，现存四十三窟，属敦煌石窟体系，与莫高窟并称姊妹窟。无创建题记，学界能确认的最早遗存属唐代，第 25 窟约建于 8 世纪后期吐蕃占瓜州前后；此后历五代、宋、回鹘、西夏至元持续营建，第 3 窟西夏壁画中的唐僧取经图是现存最早的取经图像之一</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>敦煌研究院对第 3 窟西壁普贤变的描述：僧人「光着头，身披袈裟，脚蹬麻鞋」，身后猴面行者合掌，白马负经卷——即取经归程。</li>
+<li><span class="tag t-ok">信史</span>现存 43 窟（东崖 32、西崖 11）；壁画早于《西游记》三百余年。</li>
+<li><span class="tag t-new">补研究</span>《大唐三藏取经诗话》今存本有「中瓦子张家印」牌记，王国维定为南宋临安刊行；书中已出现「猴行者」「深沙神」。</li>
+<li><span class="tag t-doubt">存疑</span>河西一带取经图究竟几铺，各家统计为四、五、六不等；本文因此不给总数。另：全国已知最早有纪年的取经图在陕西子长钟山石窟第 2 窟（1112 年），不在榆林窟。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/榆林窟" target="_blank" rel="noopener">中文维基 · 榆林窟</a>
+<a href="https://www.dha.ac.cn/info/1426/3640.htm" target="_blank" rel="noopener">敦煌研究院 · 榆林窟第 3 窟</a>
+</div>
+</details>
+</div></section>
+<section id="s8" data-year="713" data-name="峨眉山乐山大佛"><div class="wrap">
+<div class="num">八 / 十一</div>
+<div class="yr">713</div>
+<h2>峨眉山乐山大佛</h2>
+<p class="sub">嘉州　·　713–803　·　唐　·　遗址·建筑</p>
+<p>三江汇流处水急舟覆。开元元年，僧人海通发愿凿山造佛。这既是祈愿也是工程——落下的石料填了江滩，水势因此稍缓。</p>
+<p>韦皋写的碑记里有一段：郡吏来向海通索贿。海通说——</p>
+<blockquote>自目可剜，佛财难得<small>韦皋《嘉州凌云寺大弥勒石像记》</small></blockquote>
+<p>郡吏说，那你试试。海通剜下自己的眼睛，捧在盘子里递过去。</p>
+<p>这是九十年后一位在任官员写下的，不是当时的记录。</p>
+<p>海通死时佛像尚未凿完。章仇兼琼捐俸钱二十万接着凿，韦皋捐俸钱五十万，贞元十九年完工。前后九十年，三个人，没有一个看见过全程。</p>
+<p>大佛通高七十一米，脚背宽八点五米。头上一千零五十一块石头砌成十八层螺髻，其中第四层、第九层、第十八层里各藏着一条横向排水沟。</p>
+<p>一千二百年了，它还在排水。</p>
+<a class="go" href="timeline.html#line=shiku&amp;at=8">在图上看这一站 →</a>
+<p class="note">本库简注：峨眉山是中国四大佛教名山之一，相传为普贤菩萨道场，山中古刹林立；毗邻的乐山大佛依山凿成，两处于1996年一并列入世界文化与自然双重遗产。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-trad">传统叙述</span>「自目可剜，佛财难得」及自剜双目一节，见韦皋《嘉州凌云寺大弥勒石像记》。该碑为完工前后在任官员所撰，晚于事发约九十年，非当时记录；英文维基亦以「据说」处理。</li>
+<li><span class="tag t-ok">信史</span>开元元年（713）始凿，贞元十九年（803）完工，历时九十年；章仇兼琼捐俸钱二十万、韦皋捐俸钱五十万，另有麻盐之税拨充。</li>
+<li><span class="tag t-doubt">存疑</span>海通去世时工程停在何处，各源不一（一说至头部，一说至胸、膝）。本文因此只写「尚未凿完」。</li>
+<li><span class="tag t-ok">信史</span>通高 71 米（UNESCO 中文页）；脚背宽 8.5 米；螺髻十八层、共 1,051 块石块，第 4、9、18 层内各设横向排水廊道，另有耳后、胸背、衣褶排水系统，区分山体地下水与像身表面水。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/峨眉山" target="_blank" rel="noopener">中文维基 · 峨眉山</a>
+<a href="https://whc.unesco.org/zh/list/779" target="_blank" rel="noopener">世界遗产（1996）</a>
+<a href="https://www.chinanews.com.cn/cul/2020/09-23/9297626.shtml" target="_blank" rel="noopener">中新网 · 大佛排水系统</a>
+</div>
+</details>
+</div></section>
+<section id="s9" data-year="868" data-name="金刚经印本"><div class="wrap">
+<div class="num">九 / 十一</div>
+<div class="yr">868</div>
+<h2>金刚经印本</h2>
+<p class="sub">敦煌　·　868　·　唐　·　文化·科技</p>
+<p>咸通九年四月十五日，公历八六八年五月十一日。</p>
+<p>一卷《金刚经》印成。卷末题记只有一行：</p>
+<blockquote>咸通九年四月十五日王玠为二亲敬造普施<small>Or.8210/P.2 卷末</small></blockquote>
+<p>王玠是谁，没有人知道。正史里没有他，敦煌文书里也没有他。他做的事只有一件：花钱印了一卷经，为他的父母，免费散给所有人。</p>
+<p>这是现存最早、有确切纪年的雕版印刷品，早于古腾堡将近六百年。全卷约五米，由数张纸粘接而成。</p>
+<p>它出自莫高窟第十七窟。同一个洞里还封着五万余件写本、绢画与文书。</p>
+<p>它现在的编号是 Or.8210/P.2。这个编号属于大英图书馆。</p>
+<a class="go" href="timeline.html#line=shiku&amp;at=9">在图上看这一站 →</a>
+<p class="note">本库简注：现存最早有确切纪年的雕版印刷品，出土于敦煌莫高窟藏经洞，卷末题记标明年代，现藏于大英图书馆。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>题记原文「咸通九年四月十五日王玠为二亲敬造普施」，英译作 “Reverently made for universal free distribution by Wang Jie on behalf of his two parents”。咸通九年四月十五日折公历 868 年 5 月 11 日。</li>
+<li><span class="tag t-ok">信史</span>王玠其人史无可考——大英图书馆与牛津 Cabinet 项目均只能确认他是出资施印者。</li>
+<li><span class="tag t-doubt">存疑</span>尺寸各源不一：IDP 著录高 27.6 cm、长 499.5 cm；方广锠记长 496.1 cm、高 26.8 cm、八纸；IDP 教学页作七纸。本文因此只写「约五米，由数张纸粘接」。</li>
+<li><span class="tag t-ok">信史</span>斯坦因编号 Ch.ciii.014，1906–08 年考察所得，今编 Or.8210/P.2，藏大英图书馆。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/金刚经" target="_blank" rel="noopener">中文维基 · 金刚经</a>
+<a href="https://idp.bl.uk/collection/51FDAEAFB4A24E2E9981692A98130BC8/" target="_blank" rel="noopener">IDP · Or.8210/P.2</a>
+<a href="https://www.cabinet.ox.ac.uk/worlds-earliest-dated-printed-book-diamond-sutra-868-ce" target="_blank" rel="noopener">Oxford Cabinet</a>
+</div>
+</details>
+</div></section>
+<section id="s10" data-year="892" data-name="大足石刻"><div class="wrap">
+<div class="num">十 / 十一</div>
+<div class="yr">892</div>
+<h2>大足石刻</h2>
+<p class="sub">重庆　·　892–1252　·　唐　·　遗址·建筑</p>
+<p>唐末到南宋，题材变了。</p>
+<p>宝顶山大佛湾第十五号龛，高六点九米，宽十四点五米，刻的是《父母恩重经变相》。中间一层十一幅：先是投佛祈求嗣息，然后是怀胎守护、临产受苦、生子忘忧、咽苦吐甘、推干就湿、哺乳养育、洗濯不净、为造恶业、远行忆念、究竟怜悯。一组连环画，讲的是怎么把一个孩子养大。</p>
+<p>右下角是阿鼻地狱，刻着不孝之人身死命终堕入此处。</p>
+<p>主持这片崖的是赵智凤。他五岁出家，十六岁西行去弥牟学密法，回来后在宝顶山组织工匠，凿了七十多年。他死于哪一年，没有记载。</p>
+<p>更早一些，石篆山上依次刻了三龛：一〇八二年佛，一〇八三年老君，一〇八八年孔子和他的十大弟子。一一四四年，妙高山第二窟把释迦、老子、孔子并排放进了同一个洞。</p>
+<p>一千二百年前从西域进来的东西，到这里已经在讲中国人自己的孝道。</p>
+<a class="go" href="timeline.html#line=shiku&amp;at=10">在图上看这一站 →</a>
+<p class="note">本库简注：位于重庆大足区的摩崖石刻群，开凿于唐末至宋，以宝顶山、北山造像最著名，题材多为佛教造像，1999年列入世界文化遗产。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>《父母恩重经变相》为宝顶山大佛湾第 15 号龛，高 690 cm、宽 1450 cm；中层十一幅，首为投佛祈求嗣息，余为「十恩」，每幅附颂。右下为阿鼻地狱变。</li>
+<li><span class="tag t-ok">信史</span>赵智凤生于绍兴二十九年（1159），五岁出家，十六岁西往弥牟学密法，归后主持宝顶山营造七十余年；卒年与工程竣年皆无记载。北山则由昌州刺史韦君靖于景福元年（892）首开。</li>
+<li><span class="tag t-ok">信史</span>三教并存有二处可具体指认：石篆山第 7 龛佛（1082）、第 8 龛老君（1083）、第 6 龛孔子及十哲（1088）；妙高山第 2 窟（1144）释迦、老子、孔子同窟。</li>
+<li><span class="tag t-doubt">存疑</span>造像总数各源差异大：重庆地方志与《光明日报》作「五万余尊」，UNESCO 登录文本作「一万余」——统计范围不同，本文未采用总数。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/大足石刻" target="_blank" rel="noopener">中文维基 · 大足石刻</a>
+<a href="https://whc.unesco.org/zh/list/912" target="_blank" rel="noopener">世界遗产（1999）</a>
+<a href="https://www.dazu.gov.cn/rsdz/dzwh/dzsk/202202/t20220225_10434462.html" target="_blank" rel="noopener">大足区 · 赵智凤</a>
+</div>
+</details>
+</div></section>
+<section id="s11" data-year="1900" data-name="藏经洞发现"><div class="wrap">
+<div class="num">十一 / 十一</div>
+<div class="yr">1900</div>
+<h2>藏经洞发现</h2>
+<p class="sub">敦煌　·　1900　·　清　·　文化·科技</p>
+<p>一九〇〇年六月，莫高窟第十七窟的墙被打开。</p>
+<p>那是一间约十九立方米的小屋，原本是唐代僧人洪辩的影堂。里面码着约五万件东西：写本、绢画、印本、法器，年代跨四到十一世纪，七百年。</p>
+<p>发现它的是王圆箓，一个自封看管的道士。他报了县里，没有回音。</p>
+<p>一九〇七年，斯坦因来了。他不识中文。他的中文秘书蒋孝琬对王圆箓说，是玄奘把这批东西留给这位「从印度远道而来的弟子」的。斯坦因带走了二十四箱写本，五箱绢画与刺绣。</p>
+<p>一九〇八年三月三日，伯希和进洞。他读得懂古汉语。他在洞里蹲了三个星期，点着蜡烛一卷一卷地挑。</p>
+<p>此后是大谷探险队、奥登堡、华尔纳。华尔纳用胶布从四个洞里粘走二十六块唐代壁画，如今只有五块还能展出。</p>
+<p>一九一〇年，清政府终于下令把剩下的运进北京。八千多件到了，路上还丢了一些。</p>
+<p>当年白马驮来的经，一千八百年后被驮走了。</p>
+<a class="go" href="timeline.html#line=shiku&amp;at=11">在图上看这一站 →</a>
+<p class="note">本库简注：莫高窟第17窟内密藏历代文书典籍逾五万件，近代重新发现后引来外国探险家相继掠取，文物由此散落多国，同时也催生出专门研究敦煌文献与艺术的敦煌学。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-doubt">存疑</span>发现日期有 1900 年 6 月 22 日、25 日、26 日三说，故本文只写「一九〇〇年六月」。</li>
+<li><span class="tag t-ok">信史</span>第 17 窟为唐大中—咸通间（851–862）河西都僧统洪辩之影堂，开于第 16 窟甬道北壁，容积约十九立方米，出土约五万件，年代跨四至十一世纪。</li>
+<li><span class="tag t-doubt">存疑</span>斯坦因所付代价各源不一（四十锭马蹄银／约 500 卢比、£130、£220 等）；伯希和所获数量亦有 4,000+3,000、约万件、6,000 余等说。本文只用各源一致的情节，不给金额。</li>
+<li><span class="tag t-ok">信史</span>蒋孝琬以玄奘遗留说服王圆箓，见斯坦因本人记述；伯希和 1908 年 3 月 3 日入洞、于洞中工作三周、通古汉语而能择取，见法国国家图书馆专题页。</li>
+<li><span class="tag t-ok">信史</span>华尔纳 1924 年以胶布法自第 320、321、323、335 窟粘取壁画二十六块，今仅五块尚可展出；跪姿供养菩萨像今藏哈佛艺术博物馆（1924.70）。</li>
+<li><span class="tag t-ok">信史</span>1910 年清学部下令解运进京，八千余件抵达，途中另有官员私取。陈垣后于北平图书馆编目得 8,679 号，成《敦煌劫余录》。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/藏经洞" target="_blank" rel="noopener">中文维基 · 藏经洞</a>
+<a href="https://www.dha.ac.cn/info/1425/3608.htm" target="_blank" rel="noopener">敦煌研究院 · 第 17 窟</a>
+<a href="https://idp.bl.uk/blog/shaping-the-stein-collections-dunhuang-corpus-1-wang-yuanlu-the-first-curator/" target="_blank" rel="noopener">IDP · 王圆箓</a>
+<a href="https://heritage.bnf.fr/france-chine/paul-pelliot-1878-1945-et-dunhuang" target="_blank" rel="noopener">BnF · 伯希和与敦煌</a>
+</div>
+</details>
+</div></section>
+<section id="s12" class="tone"><div class="wrap">
+<div class="num">落点</div>
+<h2>或曰</h2>
+<p>一九三〇年，陈寅恪为陈垣的《敦煌劫余录》作序。序里有一句话，此后被引用了无数次：</p>
+<blockquote>敦煌者，吾国学术之伤心史也</blockquote>
+<p>引用的人几乎都漏掉了它前面两个字：<strong>或曰</strong>。</p>
+<p>这句话不是陈寅恪说的，是他转述别人说的。转述完，他不同意。他说留在北京的这八千多卷不是残渣，接着写下另一句：</p>
+<blockquote>敦煌学者，今日世界学术之新潮流也<small>陈寅恪《陈垣敦煌劫余录序》，1930</small></blockquote>
+<p>这门学问因流散而成立。这是事实，不是安慰。</p>
+<p>这条线走了十一站，一千八百年。开头是一场梦，一匹并不存在的白马；结尾是一个洞被打开，五万件东西散到十几个国家。中间那一千八百年，是有人一凿一凿把它凿成了中国自己的东西。</p>
+<p>八六八年那卷经还在。王玠是谁，仍然没有人知道。他为父母印的那卷纸，编号 Or.8210/P.2，现藏伦敦。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-doubt">重要更正</span>「敦煌者，吾国学术之伤心史也」在原文中前有「或曰」二字，是陈寅恪转述他人之语，随即予以反驳——他认为留存北京的八千余卷并非劫余残渣。此句长期被当作陈氏本人的哀叹引用，荣新江等学者已多次指出这一误引。</li>
+<li><span class="tag t-ok">信史</span>「敦煌学者，今日世界学术之新潮流也」方为陈寅恪本人在同一篇序中的主张。序刊于 1930 年《中央研究院历史语言研究所集刊》第一本第二分。</li>
+<li><span class="tag t-new">补研究</span>「敦煌学」一词，日本学者石滨纯太郎 1925 年在大阪讲演中已用，但流传不广；使其通行者为陈寅恪此序。</li>
+</ul>
+</details>
+</div></section>
+<footer><div class="wrap">
+本页由 <code>tools/mining/build_line_page.py</code> 从库内数据生成，不手改。长文出自纪录片叙事稿，考据随文写就；凡各源不一致的数字，做法是一个都不给。
+<div class="row">
+<a href="timeline.html#line=shiku">在图上走一遍 →</a>
+<a href="index.html">中国帝王寿命数据库</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-shiku.md" target="_blank" rel="noopener">资料与出处 ↗</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%%E5%%8B%%98%%E8%%AF%%AF&amp;title=%%E5%%8B%%98%%E8%%AF%%AF%%EF%%BC%%9A" target="_blank" rel="noopener">报个错 ↗</a>
+</div></div></footer>
+<script>
+// 进度条与导轨高亮。整页只有这一段脚本，无依赖、无外链。
+var bar=document.getElementById('bar'),links=[].slice.call(document.querySelectorAll('#rail a')),
+    secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+function tick(){
+  var h=document.documentElement,y=h.scrollTop||document.body.scrollTop,
+      m=(h.scrollHeight-h.clientHeight)||1;
+  bar.style.width=(100*y/m)+'%';
+  var at=0;
+  for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].getBoundingClientRect().top<h.clientHeight*0.42) at=i; }
+  for(var j=0;j<links.length;j++) links[j].className=(j===at?'on':'');
+}
+addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
+</script>
+</body></html>

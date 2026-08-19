@@ -123,11 +123,20 @@ export const LINES = {
     name: '石窟线',
     sub: '佛教东传与中国化的实物轴',
     lede: '从洛阳的一场梦，到一九〇〇年洞开：一千八百年凿在山壁上。',
-    // 长文（js/line-text-shiku.js）按站点的 ev 挂上：宽屏右侧另开一张读物卡，
-    // 面板仍只放一句主旨——两种读法，一种给「走一遍」，一种给「读进去」
-    stops: SHIKU.map((s) => (TEXT[s.ev] ? { ...s, long: TEXT[s.ev] } : s)),
-    prologue: PROLOGUE,
-    epilogue: EPILOGUE,
+    // 长文（js/line-text-shiku.js）按站点的 ev 挂上：宽屏面板里读整段散文，
+    // 窄屏仍读 b/b2 那两句——一屏预算装不下六百字。
+    // 序与落点没有落点可打光，故做成**首尾两张定调卡**：`full` 让它们
+    // 在手机上也近乎满屏、也读全文（用户指定：正好可以 set tone）。
+    // 图上什么都不亮，整屏压暗——开场与收尾本来就不该有别的东西在动
+    // `read` 指向长文页的对应一节：窄屏读不到全文，给个去处
+    stops: [
+      { t: PROLOGUE.t, b: PROLOGUE.p[0], long: PROLOGUE.p, full: true, read: 'story-shiku.html#s0' },
+      ...SHIKU.map((s, i) => ({
+        ...s, read: `story-shiku.html#s${i + 1}`,
+        ...(TEXT[s.ev] ? { long: TEXT[s.ev] } : {}),
+      })),
+      { t: EPILOGUE.t, b: EPILOGUE.p[0], long: EPILOGUE.p, full: true, read: 'story-shiku.html#s12' },
+    ],
     // 长文里那些硬数字（尺寸、件数、工时、引文、编号）的逐条出处另有一份，
     // 挂在目录里而不是站点卡上：读者走线时要的是故事，要查的时候才去翻账
     doc: 'line-shiku',

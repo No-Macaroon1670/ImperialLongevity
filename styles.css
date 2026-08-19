@@ -1076,9 +1076,30 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .foot-btn-2 { color: var(--text-2); }
 .foot-note { font-size: .78rem; color: var(--muted); flex: 1 1 260px; line-height: 1.5; }
 
-/* 目录里每条线下挂一行出处链接：查账的入口，不是走线的一部分 */
+/* 目录里每条线下挂两条链接：读长文（另一种读法）与查账入口。
+   都不进站点卡——走线时不该被脚注打断 */
+.lc-links { display: flex; gap: 14px; margin: -2px 0 10px; padding: 0 2px; }
 .lc-doc {
-  display: block; margin: -2px 0 10px; padding: 0 2px;
   font-size: .76rem; color: var(--muted); text-decoration: none;
 }
 .lc-doc:hover { color: var(--seq-500); text-decoration: underline; }
+
+/* 定调卡（序、落点）：没有落点可打光，整屏压暗，卡自己占住视野。
+   手机上给到近乎满屏——开场与收尾读的是气氛，不是一行提要（用户指定）。 */
+.tour-dock.dock-full { max-height: min(88vh, 100vh - 24px); }
+@media (max-width: 720px) {
+  .tour-dock.dock-full { top: 12px; bottom: 12px; max-height: none; width: calc(100vw - 24px); }
+  .tour-dock.dock-full .tour-body { font-size: .86rem; line-height: 1.8; }
+}
+@media (min-width: 721px) {
+  .tour-dock.dock-full { width: min(460px, calc(100vw - 32px)); }
+  .tour-dock.dock-full .tour-body { font-size: .88rem; line-height: 1.8; }
+}
+.tour-dock.dock-full .tour-title { font-size: 1.1rem; letter-spacing: .04em; }
+
+/* 窄屏才出现的去处：这一站的全文在长文页上 */
+.tour-read {
+  margin-right: auto; align-self: center;
+  font-size: .78rem; color: var(--muted); text-decoration: none;
+}
+.tour-read:hover { color: var(--seq-500); text-decoration: underline; }

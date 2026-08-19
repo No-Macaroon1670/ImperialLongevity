@@ -54,6 +54,17 @@ def main():
             continue
         order.append(key)
         rec = {'考据': [], '出处': [], '引文': []}
+        # 地点：库内 events.js 没有这一项，只有原稿的副题里写着（「拜城　·　280–850　·　遗址 · 建筑」）。
+        # 长文页要它做每节的定位，且它是将来地图模式的第一批坐标候选
+        # 序与落点的副题写的不是地名（「冷开场」「1930」），故只认真站点
+        sub = re.search(r'<p class="sub">(.*?)</p>', body, re.S) if nm else None
+        if sub:
+            head = txt(sub.group(1)).split('·')[0].strip()
+            if head:
+                rec['地点'] = head
+        yr = re.search(r'data-year="(\d+)"', attrs)
+        if yr:
+            rec['年'] = int(yr.group(1))
         app = re.search(r'<details class="app">(.*?)</details>', body, re.S)
         if app:
             for tag, rest in TAGGED.findall(app.group(1)):
@@ -79,8 +90,10 @@ def main():
     nk = sum(len(v['考据']) for v in stops.values())
     nl = sum(len(v['出处']) for v in stops.values())
     nq = sum(len(v['引文']) for v in stops.values())
+    np_ = sum(1 for v in stops.values() if v.get('地点'))
     print('写出 %s：%d 站，考据 %d 条，出处链接 %d 条，带出处的引文 %d 条'
           % (OUT, len(stops), nk, nl, nq))
+    print('  另抽出地点 %d 处（库内 events.js 无此字段）' % np_)
     for k in order:
         v = stops[k]
         print('  %-10s 考据%2d 出处%2d 引文%d' % (k, len(v['考据']), len(v['出处']), len(v['引文'])))

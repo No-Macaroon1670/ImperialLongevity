@@ -24,14 +24,17 @@ mountTour(panorama, chartHost);
 // 导览教你怎么读这张图，故事线用这张图讲一件事。目录 UI 留待第二条线，
 // 眼下先把深链打通——一条线本来就该是「发得出去的一个链接」。
 let lineTour = null;
-function openLine(key) {
+function openLine(key, at) {
   const line = lineOf(key);
   if (!line) return false;
   if (lineTour) lineTour.stop(false);
   lineTour = mountTour(panorama, chartHost, {
     stops: line.stops, tag: line.name, key: `il.line.${line.key}`, launch: false,
   });
-  lineTour.start(0);
+  // at 是**长文页里的节号**（一起算，序＝0），故直接当下标用。
+  // 长文那边每节挂着「在图上看这一站 →」，落到哪一站得说得准
+  const n = Number.isFinite(at) ? Math.max(0, Math.min(line.stops.length - 1, at)) : 0;
+  lineTour.start(n);
   return true;
 }
 const REPO = 'https://github.com/No-Macaroon1670/ImperialLongevity';
@@ -83,12 +86,21 @@ const closeCatalog = () => { catalog.classList.remove('on'); document.body.class
     // 出处链接单挂一行，不进站点卡：走线时不该被脚注打断，
     // 但「这些数字哪来的」必须随时查得到（用户：链接到某处就行）
     if (line.doc) {
+      const row2 = document.createElement('div');
+      row2.className = 'lc-links';
+      // 两种读法并排：走图在上面那颗大按钮，读文在这儿。
+      // 长文页是同一份数据的另一个出口（story-<key>.html，深色）
+      const rd = document.createElement('a');
+      rd.className = 'lc-doc';
+      rd.href = `story-${line.key}.html`;
+      rd.textContent = '读长文 →';
       const a = document.createElement('a');
       a.className = 'lc-doc';
       a.href = `${REPO}/blob/main/docs/${line.doc}.md`;
       a.target = '_blank'; a.rel = 'noopener';
       a.textContent = '资料与出处 ↗';
-      sheet.appendChild(a);
+      row2.append(rd, a);
+      sheet.appendChild(row2);
     }
   }
   catalog.appendChild(sheet);
@@ -121,13 +133,15 @@ const closeCatalog = () => { catalog.classList.remove('on'); document.body.class
 
 const lineFromHash = () => {
   const m = /(?:^|[#&])line=([a-z0-9_-]+)/i.exec(location.hash || '');
-  return m ? m[1].toLowerCase() : null;
+  if (!m) return null;
+  const a = /(?:^|[#&])at=(\d+)/i.exec(location.hash || '');
+  return { key: m[1].toLowerCase(), at: a ? Number(a[1]) : undefined };
 };
-addEventListener('hashchange', () => { const k = lineFromHash(); if (k) openLine(k); });
+addEventListener('hashchange', () => { const k = lineFromHash(); if (k) openLine(k.key, k.at); });
 // 首屏：等图渲染完再拉线，否则第一站落位时还没有可量的图
 {
   const k = lineFromHash();
-  if (k) setTimeout(() => openLine(k), 400);
+  if (k) setTimeout(() => openLine(k.key, k.at), 400);
 }
 
 // 搜索与深链:两千年的长卷,得能搜得到、也发得出(见 js/search.js)

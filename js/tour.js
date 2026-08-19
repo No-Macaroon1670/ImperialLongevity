@@ -203,12 +203,15 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   const more = h('details', { class: 'tour-more' }, [
     h('summary', { class: 'tour-more-sum', text: '详解' }), body2, cta2, extra, mnote,
   ]);
+  // 「读长文」：**只在读不到全文的屏上出现**。宽屏面板里整段散文已经在了，
+  // 再挂一条去别处读的链接等于说「这儿的不算数」
+  const readLink = h('a', { class: 'tour-read', href: '#', text: '读长文 →' });
   const panel = h('div', {
     class: 'tour-panel', role: 'dialog', 'aria-live': 'polite', 'aria-label': '导览',
   }, [
     h('div', { class: 'tour-head' }, [h('span', { class: 'tour-tag', text: TAG }), step, closeBtn]),
     title, body, cta, more,
-    h('div', { class: 'tour-nav' }, [prev, next]),
+    h('div', { class: 'tour-nav' }, [readLink, prev, next]),
   ]);
   // 讲解与副卡装在同一个坞里,由 flex 排上下——各自 position:fixed 的话
   // 两块会抢同一个角,还得手算偏移
@@ -219,12 +222,19 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   // 落的地方，右边再摆一张，等于要人左右横跳（用户实测：放这里也没事）。
   // 故长文取代 b/b2 长在面板里，坞自己会滚，读进度条已经在了。
   // 窄屏不给：一屏预算里塞不下六百字，手机仍读 b/b2 那两句。
+  // `full` 的站（序、落点）例外：那两张本来就是拿来定调的，图上没有东西可打光，
+  // 手机上索性给近乎满屏，全文照读
   const LONG_MIN_W = 1000;
-  const wantLong = (st) => !!(st && st.long && st.long.length && innerWidth > LONG_MIN_W);
+  const wantLong = (st) => !!(st && st.long && st.long.length && (st.full || innerWidth > LONG_MIN_W));
   const fillLong = (st) => {
     body.innerHTML = '';
     for (const t of st.long) {
-      body.appendChild(h('p', { class: 'tour-p' + (/^「/.test(t) ? ' tour-q' : ''), text: t }));
+      // **粗体** 转 <strong>，与 cta 同一条路径（文案是本库里的字面量，非外来输入）。
+      // 落点那段的「**或曰**」就靠它——那两个字是整条线的钥匙，不能让星号露出来
+      const el = h('p', { class: 'tour-p' + (/^「/.test(t) ? ' tour-q' : '') });
+      el.innerHTML = t.replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      body.appendChild(el);
     }
   };
   // 常驻的读进度条。系统的浮动滚动条滚完就淡出，读者于是不知道「下面还有」
@@ -330,7 +340,9 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     //（用户实测：这里其实有空间让导览卡全显示）。故按目标的实际身量算：
     // 需要给图的 = 目标高 + 上下各留一口气，夹在 25%–45% 之间；
     // 讲解坞拿走剩下的（22%–46%），卡不动。
-    if (innerWidth <= 720) {
+    if (innerWidth <= 720 && STOPS[i] && STOPS[i].full) {
+      dock.style.maxHeight = '';          // 定调卡：满屏由 CSS 给，不按留白算
+    } else if (innerWidth <= 720) {
       const cardEl = document.querySelector('.kp-solo.on');
       const cardH = cardEl ? cardEl.getBoundingClientRect().height : 0;
       const solid = raw.filter((r) => !r.noClip);          // 卡上的洞不算「图」
@@ -425,6 +437,10 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     const longOn = wantLong(st);
     if (longOn) fillLong(st); else body.textContent = wideProse && st.b2 ? st.b + st.b2 : st.b;
     dock.classList.toggle('dock-long', longOn);
+    const canRead = !!(st.read && st.long && !longOn);
+    readLink.href = canRead ? st.read : '#';
+    readLink.style.display = canRead ? '' : 'none';
+    dock.classList.toggle('dock-full', !!st.full);
     body2.textContent = (wideProse || longOn) ? '' : (st.b2 || '');
     body2.style.display = (!wideProse && !longOn && st.b2) ? '' : 'none';
     more.classList.toggle('flat', wideProse);
@@ -776,6 +792,7 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   }
   function stop(done) {
     dock.classList.remove('dock-long');
+    dock.classList.remove('dock-full');
     dock.classList.remove('dock-right');
     {   // 自动跟随还给读者：导览关掉它只为这一程，不该留下后遗症
       const kc = hostOf() && hostOf().__kp;
