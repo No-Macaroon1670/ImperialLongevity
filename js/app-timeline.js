@@ -28,8 +28,21 @@ function openLine(key, at) {
   const line = lineOf(key);
   if (!line) return false;
   if (lineTour) lineTour.stop(false);
+  // 故事线一开就转深色，结束再放回去（用户定的通例：叙事默认深色）。
+  // 存的是**读者原来的那个值**而不是「浅色」——他若本来就在深色，
+  // 结束时不该被推到浅色去；他若从没选过（属性缺席），就把属性摘掉，
+  // 交还给系统的 prefers-color-scheme
+  const root = document.documentElement;
+  const themeWas = root.getAttribute('data-theme');
+  root.setAttribute('data-theme', 'dark');
+  syncThemeLabel();
   lineTour = mountTour(panorama, chartHost, {
     stops: line.stops, tag: line.name, key: `il.line.${line.key}`, launch: false,
+    onStop: () => {
+      if (themeWas) root.setAttribute('data-theme', themeWas);
+      else root.removeAttribute('data-theme');
+      syncThemeLabel();
+    },
   });
   // at 是**长文页里的节号**（一起算，序＝0），故直接当下标用。
   // 长文那边每节挂着「在图上看这一站 →」，落到哪一站得说得准
@@ -38,6 +51,14 @@ function openLine(key, at) {
   return true;
 }
 const REPO = 'https://github.com/No-Macaroon1670/ImperialLongevity';
+// 主题按钮的字要跟着走，否则读者看到「🌙 深色」而页面已经是深色的了
+function syncThemeLabel() {
+  const tt = document.getElementById('theme-toggle');
+  if (!tt) return;
+  const cur = document.documentElement.getAttribute('data-theme');
+  const dark = cur === 'dark' || (!cur && matchMedia('(prefers-color-scheme: dark)').matches);
+  tt.textContent = dark ? '☀ 浅色' : '🌙 深色';
+}
 // ── 故事目录 ────────────────────────────────────────────────────────
 // 书的按钮开的是**目录**而不是某一条线：线会越来越多，而「有哪些线可走」
 // 本身就是读者要先看见的东西（用户指出）。目录只列名字、一句话与站数，

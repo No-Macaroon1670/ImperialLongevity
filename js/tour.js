@@ -821,6 +821,7 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
       render();
     }
     saved = null;
+    if (opts.onStop) opts.onStop();      // 故事线借它把主题放回读者原来的样子
   }
 
   // 导览已结束就不再响应：面板收了，可导航钮还在 DOM 里，再点会把副卡与

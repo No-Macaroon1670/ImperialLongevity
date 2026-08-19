@@ -23,19 +23,40 @@ UA = {"User-Agent": "ImperialLongevity-picprobe/1.0 (storyline illustration lice
 FREE = re.compile(r'(cc0|公有领域|public domain|^pd|cc[- ]by([- ]sa)?)', re.I)
 
 # 检索词出自长文那一句，不是站名。每站给两三组，中英各试
-QUERIES = {
-    '白马寺': ['White Horse Temple Luoyang', '白马寺 洛阳'],
-    '克孜尔石窟': ['Kizil Caves mural', 'Kizil Berlin Museum wall painting'],
-    '敦煌石窟': ['Mogao Caves nine storey', '莫高窟 九层楼'],
-    '麦积山石窟': ['Maijishan Grottoes cliff', '麦积山 栈道'],
-    '云冈石窟': ['Yungang Grottoes Cave 20', 'Yungang seated Buddha open air'],
-    '龙门石窟': ['Longmen Vairocana Fengxian', 'Empress donors Northern Wei relief'],
-    '榆林窟': ['Yulin Caves Xuanzang', 'Xuanzang monkey pilgrim mural', '榆林窟 取经图'],
-    '峨眉山乐山大佛': ['Leshan Giant Buddha', '乐山大佛'],
-    '金刚经印本': ['Diamond Sutra 868 frontispiece', 'Jingangjing printed 868'],
-    '大足石刻': ['Dazu Rock Carvings Baodingshan', 'Dazu parental kindness sutra'],
-    '藏经洞发现': ['Mogao Library Cave 17', 'Dunhuang library cave Stein'],
+# 分类比全文检索准得多：Commons 的全文会命中扫描古籍的描述文字，
+# 头一版就因此抓回一堆政府公文 PDF 与港大图书馆展柜照。故先走分类，
+# 再用关键词在分类内部排序；分类空了才退回全文检索。
+CATS = {
+    '白马寺': ['White Horse Temple (Luoyang)'],
+    '克孜尔石窟': ['Kizil Caves'],
+    '敦煌石窟': ['Mogao Caves'],
+    '麦积山石窟': ['Maijishan Grottoes'],
+    '云冈石窟': ['Yungang Grottoes'],
+    '龙门石窟': ['Longmen Grottoes'],
+    '榆林窟': ['Yulin Caves'],
+    '峨眉山乐山大佛': ['Leshan Giant Buddha'],
+    '金刚经印本': ['Diamond Sutra'],
+    '大足石刻': ['Dazu Rock Carvings'],
+    '藏经洞发现': ['Library Cave', 'Mogao Caves'],
 }
+# 叙述里那句话的关键词。命中它的候选排前面——图要贴着这一段文字，
+# 不是贴着站名（用户：我想要的是那铺悟空唐僧的壁画）
+WANT = {
+    '白马寺': ['gate', 'temple', 'hall', '山门'],
+    '克孜尔石窟': ['mural', 'painting', 'jataka', 'berlin'],
+    '敦煌石窟': ['nine', '九层', 'exterior', 'cliff', 'facade'],
+    '麦积山石窟': ['cliff', 'walkway', 'stair', 'exterior', 'clay', 'sculpture'],
+    '云冈石窟': ['cave 20', 'cave20', 'seated', 'colossal'],
+    '龙门石窟': ['vairocana', 'fengxian', 'losana', 'colossal'],
+    '榆林窟': ['xuanzang', 'monkey', 'pilgrim', 'mural', '取经'],
+    '峨眉山乐山大佛': ['giant buddha', 'leshan'],
+    '金刚经印本': ['frontispiece', '868'],
+    '大足石刻': ['baoding', 'parental', 'filial', '父母'],
+    '藏经洞发现': ['cave 17', 'cave17', 'library cave', 'stein', 'wang'],
+}
+QUERIES = {k: WANT[k] for k in CATS}
+# 只要照片。djvu/pdf 是扫描古籍与公文，tif/svg/ogv 不适合直接上页
+BAD_EXT = re.compile(r'\.(djvu|pdf|tif|tiff|svg|ogv|webm|ogg|mid|xcf)$', re.I)
 
 
 def get(url, tries=5):
@@ -54,11 +75,36 @@ def get(url, tries=5):
     return {}
 
 
-def search(q, limit=6):
+def search(q, limit=8):
     d = get('https://commons.wikimedia.org/w/api.php?action=query&format=json'
             '&formatversion=2&list=search&srnamespace=6&srlimit=%d&srsearch=%s'
             % (limit, urllib.parse.quote(q)))
     return [r['title'] for r in ((d.get('query') or {}).get('search') or [])]
+
+
+def in_category(cat, limit=200):
+    """分类里的全部文件（含一层子分类）。比全文检索准得多。"""
+    out, subs = [], []
+    d = get('https://commons.wikimedia.org/w/api.php?action=query&format=json'
+            '&formatversion=2&list=categorymembers&cmtype=file|subcat&cmlimit=%d'
+            '&cmtitle=%s' % (limit, urllib.parse.quote('Category:' + cat)))
+    for m in ((d.get('query') or {}).get('categorymembers') or []):
+        (subs if m['title'].startswith('Category:') else out).append(m['title'])
+    for sc in subs[:6]:
+        time.sleep(0.8)
+        d2 = get('https://commons.wikimedia.org/w/api.php?action=query&format=json'
+                 '&formatversion=2&list=categorymembers&cmtype=file&cmlimit=%d'
+                 '&cmtitle=%s' % (limit, urllib.parse.quote(sc)))
+        out += [m['title'] for m in ((d2.get('query') or {}).get('categorymembers') or [])]
+    return [t for t in out if not BAD_EXT.search(t)]
+
+
+def rank(files, want):
+    """命中叙述关键词的排前面。命中数相同则保持分类里的原序。"""
+    def score(t):
+        low = t.lower()
+        return -sum(1 for w in want if w.lower() in low)
+    return sorted(files, key=score)
 
 
 def meta(files):
@@ -90,12 +136,20 @@ def main():
     rows = []
     for stop, qs in QUERIES.items():
         files, seen = [], set()
-        for q in qs:
-            for t in search(q):
+        for cat in CATS.get(stop, []):
+            for t in in_category(cat):
                 if t not in seen:
                     seen.add(t)
                     files.append(t)
-            time.sleep(1.2)
+            time.sleep(1.0)
+        files = rank(files, qs)
+        if len(files) < 4:                     # 分类太空，退回全文检索
+            for q in qs:
+                for t in search('%s %s' % (stop, q)):
+                    if t not in seen and not BAD_EXT.search(t):
+                        seen.add(t)
+                        files.append(t)
+                time.sleep(1.2)
         m = meta(files[:12])
         cands = []
         for f in files[:12]:
