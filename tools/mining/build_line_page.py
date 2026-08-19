@@ -23,7 +23,7 @@
 
 用法：python tools/mining/build_line_page.py [key]     # 缺省 shiku
 """
-import io, json, os, re, sys
+import io, json, math, os, re, sys
 
 ROOT = r"C:/Users/ziyi_/Claude/imperial-longevity"
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -68,8 +68,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
 a{color:inherit}
 #bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50}
 /* 导轨：宽屏才有。窄屏那点横向空间要留给正文 */
-#rail{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
-  z-index:40;display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
+/* 左栏：导轨在上，小地图在下。两者同住一个固定列——读者眼睛一抬，
+   既知道读到第几节，也知道那一节在地上哪儿 */
+#side{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
+  z-index:40;width:11rem}
+#rail{display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
 #rail a{display:flex;align-items:center;gap:.5rem;color:var(--faint);text-decoration:none;
   letter-spacing:.04em;transition:color .25s}
 #rail .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;transition:transform .25s}
@@ -77,7 +80,7 @@ a{color:inherit}
 #rail a:hover{color:var(--dim)} #rail a:hover .lbl{opacity:1;transform:none}
 #rail a.on{color:var(--accent)} #rail a.on .dot{transform:scale(1.5)}
 #rail a.on .lbl{opacity:1;transform:none}
-@media(max-width:1180px){#rail{display:none}}
+@media(max-width:1180px){#side{display:none}}
 .wrap{max-width:40rem;margin:0 auto;padding:0 1.5rem}
 header.cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
   padding:6rem 0 4rem;border-bottom:1px solid var(--rule)}
@@ -129,6 +132,51 @@ figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
   line-height:1.8;color:var(--faint)}
 figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
 figure.pic figcaption a:hover{color:var(--dim)}
+
+/* ── 地图 ────────────────────────────────────────────────────────
+   开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
+   底图只有海岸线与黄河长江，没有国界（理由见 tools/mining/build_basemap.py）。
+   全程的点一律画出、只是淡；当前那一站才亮——读者要能看见自己走到哪儿，
+   也要能看见还剩多少。 */
+#smap{padding:4rem 0 3.5rem}
+svg.hmap,svg.gmap{display:block;width:100%;height:auto}
+svg.hmap{margin:1.6rem 0 1rem}
+svg.gmap{margin-top:1.1rem;opacity:.9}
+svg *{vector-effect:non-scaling-stroke}
+.m-coast{fill:none;stroke:var(--rule);stroke-width:1.1}
+.m-river{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.42}
+.m-city{fill:var(--faint);opacity:.75}
+.m-city-t{fill:var(--faint);opacity:.85;font-family:var(--sans)}
+.m-river-t{fill:var(--accent);opacity:.65;font-family:var(--sans)}
+.m-dot{fill:var(--dim);opacity:.5}
+.m-maybe{fill:none;stroke:var(--dim);stroke-width:1.2;opacity:.55;stroke-dasharray:3 2.5}
+.m-held{fill:none;stroke:var(--gold);stroke-width:1.2;opacity:.5}
+/* 贴在框边的方块：东西已经出了这张图的范围（伦敦） */
+.m-off{stroke-dasharray:3 2.5}
+.m-flow{stroke:var(--gold);stroke-width:1;opacity:.35;stroke-dasharray:4 3}
+.m-stop-t{fill:var(--dim);opacity:.8;font-family:var(--sans)}
+/* 当前这一节：亮起来 */
+.m-stop.on .m-dot{fill:var(--accent);opacity:1}
+.m-stop.on .m-maybe{stroke:var(--accent);opacity:1}
+.m-stop.on .m-held,.m-stop.on .m-flow{stroke:var(--gold);opacity:1}
+.m-stop.on .m-stop-t{fill:var(--ink);opacity:1}
+#gname{margin-top:.5rem;font-family:var(--sans);font-size:10.5px;color:var(--faint);
+  line-height:1.6;min-height:2.6em}
+
+/* 点开放大。用 <dialog>：Esc 与背景遮罩都是它自带的，不必自己写一套 */
+button.zoom{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in}
+button.zoom img{transition:opacity .18s}
+button.zoom:hover img{opacity:.86}
+dialog#lb{border:0;padding:0;background:none;max-width:96vw;max-height:96vh;color:var(--ink)}
+dialog#lb::backdrop{background:rgba(8,7,6,.92)}
+#lbi{display:block;max-width:min(96vw,900px);max-height:82vh;width:auto;height:auto;
+  margin:0 auto;border-radius:3px}
+#lbc{max-width:min(96vw,900px);margin:.8rem auto 0;font-family:var(--sans);font-size:12px;
+  line-height:1.8;color:var(--dim)}
+#lbc a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule)}
+#lbx{position:fixed;top:1.1rem;right:1.4rem;width:2.2rem;height:2.2rem;border:0;border-radius:50%;
+  background:rgba(255,255,255,.1);color:var(--ink);font-size:1rem;cursor:pointer}
+#lbx:hover{background:rgba(255,255,255,.2)}
 footer{padding:5rem 0 7rem;font-family:var(--sans);font-size:12.5px;color:var(--faint);line-height:2}
 footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--rule)}
 footer a:hover{color:var(--ink)}
@@ -152,9 +200,190 @@ function tick(){
   var at=0;
   for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].getBoundingClientRect().top<h.clientHeight*0.42) at=i; }
   for(var j=0;j<links.length;j++) links[j].className=(j===at?'on':'');
+  // 小地图跟着走：全程的点一直都在，只把当前这一节点亮
+  var g=document.querySelectorAll('svg.gmap .m-stop'),nm='';
+  for(var k=0;k<g.length;k++){
+    var on=(g[k].id==='gm-'+at);
+    g[k].setAttribute('class','m-stop'+(on?' on':''));
+    if(on) nm=g[k].getAttribute('data-name')||'';
+  }
+  var gn=document.getElementById('gname'); if(gn) gn.textContent=nm;
 }
 addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
+
+// 点开放大。图注与署名跟着进去——放大了更该说清这是谁的
+var lb=document.getElementById('lb'),lbi=document.getElementById('lbi'),lbc=document.getElementById('lbc');
+[].forEach.call(document.querySelectorAll('button.zoom'),function(b){
+  b.addEventListener('click',function(){
+    lbi.src=b.getAttribute('data-src'); lbi.alt=b.getAttribute('data-cap')||'';
+    var cap=b.getAttribute('data-cap')||'', who=b.getAttribute('data-who')||'',
+        full=b.getAttribute('data-full')||'';
+    lbc.innerHTML='';
+    var t=document.createElement('div'); t.textContent=cap+(cap&&who?'　':'')+who; lbc.appendChild(t);
+    if(full){var a=document.createElement('a'); a.href=full; a.target='_blank'; a.rel='noopener';
+      a.textContent='在 Commons 看原尺寸 ↗'; var d=document.createElement('div');
+      d.style.marginTop='.4rem'; d.appendChild(a); lbc.appendChild(d);}
+    if(lb.showModal) lb.showModal(); else lb.setAttribute('open','');
+  });
+});
+document.getElementById('lbx').addEventListener('click',function(){lb.close?lb.close():lb.removeAttribute('open')});
+lb.addEventListener('click',function(e){ if(e.target===lb) lb.close&&lb.close(); });
 """
+
+
+
+# ── 地图 ────────────────────────────────────────────────────────────
+# 长文页的地图在**生成时**画进 HTML：这一页只有一段内联脚本、不引模块，
+# 而地图的几何是死的（一条线的站点不会变），没有理由留到运行时算。
+# 两张：开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
+# 底图与 js/basemap.js 同源（海岸线与黄河长江，没有国界，理由见 build_basemap.py）。
+ANCHORS = [
+    ('北京', 39.90, 116.40), ('西安', 34.27, 108.95), ('成都', 30.66, 104.07),
+    ('广州', 23.13, 113.26), ('上海', 31.23, 121.47), ('乌鲁木齐', 43.83, 87.62),
+    ('昆明', 25.04, 102.72), ('兰州', 36.06, 103.83), ('武汉', 30.59, 114.31),
+    ('台北', 25.03, 121.57), ('重庆', 29.56, 106.55), ('南京', 32.06, 118.80),
+]
+RIVER_TAGS = [('黄河', 37.4, 110.5), ('长江', 30.2, 108.6)]
+
+
+def load_basemap():
+    """从 js/basemap.js 取几何。它是生成物，形状固定，正则够用。"""
+    src = io.open(os.path.join(ROOT, 'js/basemap.js'), encoding='utf-8').read()
+    g = lambda p: re.search(p, src).group(1)
+    bbox = [float(x) for x in g(r'bbox: \[([^\]]+)\]').split(',')]
+    return {'bbox': bbox, 'lat0': float(g(r'lat0: ([\d.]+)')),
+            'h': float(g(r'w: 1000, h: ([\d.]+)')),
+            'coast': g(r"coast: '([^']*)'"), 'rivers': g(r"rivers: '([^']*)'")}
+
+
+def load_geo(key):
+    p = os.path.join(ROOT, 'docs/geo-%s.json' % key)
+    return (json.load(io.open(p, encoding='utf-8')).get('站', {})
+            if os.path.exists(p) else {})
+
+
+def mapper(bm):
+    w, s0, e, n = bm['bbox']
+    k = math.cos(math.radians(bm['lat0']))
+    W = (e - w) * k
+    return lambda lon, lat: (1000.0 * (lon - w) * k / W, 1000.0 * (n - lat) / W)
+
+
+def fit_box(pts, bm, pad=1.30, minspan=150.0):
+    """按本线全部点定取景框。石窟线铺开全国，赤壁线自动收到长江中游。"""
+    if not pts:
+        return [0, 0, 1000, bm['h']]
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    w0 = max(max(xs) - min(xs), minspan)
+    h0 = max(max(ys) - min(ys), minspan * 0.62)
+    cx, cy = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2
+    W, H = w0 * pad, h0 * pad
+    if W / H < 1000 / 630.0:
+        W = H * (1000 / 630.0)
+    else:
+        H = W * (630.0 / 1000)
+    return [cx - W / 2, cy - H / 2, W, H]
+
+
+
+def clamp(p, vb, m):
+    """出了取景框就贴到边上。地图放不下不等于那件事没发生。"""
+    return (min(max(p[0], vb[0] + m), vb[0] + vb[2] - m),
+            min(max(p[1], vb[1] + m), vb[1] + vb[3] - m))
+
+
+def map_svg(bm, proj, vb, marks, cls, labels=True, anchors=True):
+    """一张地图。marks 逐项：{i, pts:[(x,y)], held:(x,y)|None, 名}
+
+    `i` 是它在导轨里的序号，前端据此高亮当前一节。
+    全程的点一律画出、只是淡；当前那一站才亮——**读者要能看见自己走到哪儿了，
+    也要能看见还剩多少**（用户指定）。
+    """
+    u = lambda px: px * vb[2] / 1000.0 * (1000.0 / 640)      # 640 是长文栏宽
+    out = ['<svg class="%s" viewBox="%.1f %.1f %.1f %.1f" preserveAspectRatio="xMidYMid meet" aria-hidden="true">'
+           % (cls, vb[0], vb[1], vb[2], vb[3])]
+    out.append('<path class="m-coast" d="%s"/>' % bm['coast'])
+    out.append('<path class="m-river" d="%s"/>' % bm['rivers'])
+    inside = lambda p: (vb[0] < p[0] < vb[0] + vb[2]) and (vb[1] < p[1] < vb[1] + vb[3])
+    if anchors:
+        for nm, lat, lon in ANCHORS:
+            p = proj(lon, lat)
+            if not inside(p):
+                continue
+            out.append('<circle class="m-city" cx="%.1f" cy="%.1f" r="%.1f"/>' % (p[0], p[1], u(2.2)))
+            out.append('<text class="m-city-t" x="%.1f" y="%.1f" font-size="%.1f">%s</text>'
+                       % (p[0] + u(4), p[1] + u(3.4), u(8.4), esc(nm)))
+        for nm, lat, lon in RIVER_TAGS:
+            p = proj(lon, lat)
+            if inside(p):
+                out.append('<text class="m-river-t" x="%.1f" y="%.1f" font-size="%.1f">%s</text>'
+                           % (p[0], p[1], u(9), esc(nm)))
+    for mk in marks:
+        gid = (' id="gm-%d" data-name="%s"' % (mk['i'], esc(mk.get('名') or ''))
+               if cls == 'gmap' else '')
+        out.append('<g class="m-stop"%s>' % gid)
+        if mk.get('held'):
+            h = clamp(mk['held'], vb, u(9))
+            if mk['pts']:
+                a = clamp(mk['pts'][0], vb, u(9))
+                out.append('<line class="m-flow" x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f"/>'
+                           % (a[0], a[1], h[0], h[1]))
+            out.append('<rect class="m-held%s" x="%.1f" y="%.1f" width="%.1f" height="%.1f"/>'
+                       % (' m-off' if mk.get('外') else '', h[0] - u(4), h[1] - u(4), u(8), u(8)))
+        for p0 in mk['pts']:
+            p = clamp(p0, vb, u(9))
+            k = 'm-maybe' if len(mk['pts']) > 1 else 'm-dot'
+            out.append('<circle class="%s" cx="%.1f" cy="%.1f" r="%.1f"/>' % (k, p[0], p[1], u(4.4)))
+        if labels and mk['pts'] and mk.get('名'):
+            p = clamp(mk['pts'][0], vb, u(9))
+            out.append('<text class="m-stop-t" x="%.1f" y="%.1f" font-size="%.1f">%s</text>'
+                       % (p[0] + u(6.5), p[1] + u(3.2), u(9.6), esc(mk['名'])))
+        out.append('</g>')
+    out.append('</svg>')
+    return ''.join(out)
+
+
+def build_marks(stops, geo, proj, bm):
+    """站表 → 地图标记。导轨序号：序＝0，各站从 1 起。
+
+    **境外的现藏地不参与取景**：《金刚经》现藏伦敦，若把它算进包围盒，
+    整张图会被拉成欧亚大陆、中国这边挤成一小团（实测踩过）。
+    它照画，只是贴到图框边上并标「图外」——那卷经**离境**这件事正是这条线的结尾，
+    不能因为放不下就抹掉。
+    """
+    w, s0, e, n = bm['bbox']
+    in_box = lambda lat, lon: (w <= lon <= e and s0 <= lat <= n)
+    marks, pts = [], []
+    for i, st in enumerate(stops, 1):
+        g = geo.get(st['ev'] or '')
+        if not g:
+            continue
+        ps, keep = [], []
+        if g.get('点'):
+            p = proj(g['点'][1], g['点'][0])
+            ps.append(p)
+            if in_box(*g['点']):
+                keep.append(p)
+        for x in (g.get('诸说') or []):
+            if x.get('点'):
+                p = proj(x['点'][1], x['点'][0])
+                ps.append(p)
+                if in_box(*x['点']):
+                    keep.append(p)
+        held = off = None
+        if g.get('现藏'):
+            held = proj(g['现藏'][1], g['现藏'][0])
+            off = not in_box(*g['现藏'])
+            if not off:
+                keep.append(held)
+        if not ps and not held:
+            continue
+        name = g.get('地名') or (('%d 说' % len(g['诸说'])) if g.get('诸说') else g.get('藏于'))
+        if off:
+            name = (name or '') + '（图外）' if not g.get('地名') else name
+        marks.append({'i': i, 'pts': ps, 'held': held, '外': bool(off), '名': name})
+        pts += keep
+    return marks, pts
 
 
 def main():
@@ -164,6 +393,11 @@ def main():
     pro, long_text, epi = load_long(key)
     srcs = load_sources(key)
     per = srcs.get('站', {})
+    bm = load_basemap()
+    proj = mapper(bm)
+    geo = load_geo(key)
+    marks, mpts = build_marks(stops, geo, proj, bm)
+    vb = fit_box(mpts, bm)
     pics_path = os.path.join(ROOT, 'docs/pics-%s.json' % key)
     pics = (json.load(io.open(pics_path, encoding='utf-8')).get('站', {})
             if os.path.exists(pics_path) else {})
@@ -195,11 +429,18 @@ def main():
         rail.append(('s%d' % i, s['t']))
     if epi:
         rail.append(('s%d' % (len(stops) + 1), epi['t']))
+    # 左栏：导轨 ＋ 小地图。两者同住一个固定列，读者眼睛一抬就知道
+    # 「读到第几节」与「那一节在地上哪儿」
+    A('<div id="side">')
     A('<nav id="rail" aria-label="节次">')
     for sid, label in rail:
         short = label.split('：')[0].split(' · ')[-1][:6]
         A('<a href="#%s"><span class="dot"></span><span class="lbl">%s</span></a>' % (sid, esc(short)))
     A('</nav>')
+    if marks:
+        A(map_svg(bm, proj, vb, marks, 'gmap', labels=False, anchors=False))
+        A('<div id="gname"></div>')
+    A('</div>')
 
     A('<header class="cover"><div class="wrap">')
     A('<div class="kicker">%s</div>' % esc(meta.get('sub')))
@@ -209,6 +450,14 @@ def main():
       '　·　<a href="%s/blob/main/docs/line-%s.md">资料与出处 ↗</a></div>'
       % (len(stops), key, 'https://github.com/No-Macaroon1670/ImperialLongevity', key))
     A('</div></header>')
+    if marks:
+        A('<section id="smap"><div class="wrap">')
+        A('<div class="num">这条线在地上</div>')
+        A(map_svg(bm, proj, vb, marks, 'hmap'))
+        A('<p class="note">只有海岸线与黄河、长江，没有国界——这不是政区图。'
+          '空心圈是各源不一致、至今没有定论的地点；方块是文物现藏之处，'
+          '连着的虚线就是它离开的那段路。坐标取自 Wikidata（CC0）。</p>')
+        A('</div></section>')
 
     quoted = set()
 
@@ -219,7 +468,17 @@ def main():
         if not (pic and pic.get('缩略图')):
             return
         A('<figure class="pic">')
+        # 可点开放大。**不去取 Commons 原图**——那等于把刚去掉的外部依赖请回来；
+        # 仓库里这份 880px 相对页面上的 260px 已是 3.4 倍，够看了。
+        # 原尺寸给外链，想要的人自己去 Commons
+        A('<button class="zoom" type="button" data-src="%s" data-cap="%s" data-who="%s" '
+          'data-full="%s" aria-label="放大看：%s">'
+          % (esc(pic['缩略图']), esc(pic.get('说明') or ''),
+             esc(' · '.join([x for x in [pic.get('署名') or pic.get('作者'),
+                                         pic.get('许可')] if x])),
+             esc(pic.get('说明页') or ''), esc(pic.get('说明') or '图片')))
         A('<img src="%s" alt="%s" loading="lazy">' % (esc(pic['缩略图']), esc(pic.get('说明'))))
+        A('</button>')
         who = ' · '.join([x for x in [pic.get('署名') or pic.get('作者'), pic.get('许可')] if x])
         link = pic.get('说明页')
         tail = ('<a href="%s" target="_blank" rel="noopener">%s</a>' % (esc(link), esc(who))
@@ -327,6 +586,8 @@ def main():
     A('<a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%%E5%%8B%%98%%E8%%AF%%AF&amp;title=%%E5%%8B%%98%%E8%%AF%%AF%%EF%%BC%%9A" '
       'target="_blank" rel="noopener">报个错 ↗</a>')
     A('</div></div></footer>')
+    A('<dialog id="lb"><button id="lbx" type="button" aria-label="关闭">✕</button>'
+      '<img id="lbi" alt=""><div id="lbc"></div></dialog>')
     A('<script>%s</script>' % JS)
     A('</body></html>')
 

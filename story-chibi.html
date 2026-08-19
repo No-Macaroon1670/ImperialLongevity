@@ -25,8 +25,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
 a{color:inherit}
 #bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50}
 /* 导轨：宽屏才有。窄屏那点横向空间要留给正文 */
-#rail{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
-  z-index:40;display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
+/* 左栏：导轨在上，小地图在下。两者同住一个固定列——读者眼睛一抬，
+   既知道读到第几节，也知道那一节在地上哪儿 */
+#side{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
+  z-index:40;width:11rem}
+#rail{display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
 #rail a{display:flex;align-items:center;gap:.5rem;color:var(--faint);text-decoration:none;
   letter-spacing:.04em;transition:color .25s}
 #rail .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;transition:transform .25s}
@@ -34,7 +37,7 @@ a{color:inherit}
 #rail a:hover{color:var(--dim)} #rail a:hover .lbl{opacity:1;transform:none}
 #rail a.on{color:var(--accent)} #rail a.on .dot{transform:scale(1.5)}
 #rail a.on .lbl{opacity:1;transform:none}
-@media(max-width:1180px){#rail{display:none}}
+@media(max-width:1180px){#side{display:none}}
 .wrap{max-width:40rem;margin:0 auto;padding:0 1.5rem}
 header.cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
   padding:6rem 0 4rem;border-bottom:1px solid var(--rule)}
@@ -72,6 +75,65 @@ details.app li{margin-bottom:.7rem}
 .src a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule);font-size:12px}
 .src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
 .note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
+/* 配图。图注里那半行是**署名**，CC-BY／CC-BY-SA 要求给出作者与许可 */
+/* 文绕图。竖幅整幅摆着时两侧全空，绕排把那块空白还给文字；
+   窄屏不绕——一栏劈两半两边都读不成 */
+figure.pic{margin:0 0 2rem}
+figure.pic img{display:block;width:100%;height:auto;border-radius:3px}
+@media(min-width:820px){
+  figure.pic{float:left;width:44%;margin:.4rem 1.6rem .8rem 0}
+  section p,section h2,details.app{clear:none}
+  details.app,.go{clear:both}
+}
+figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
+  line-height:1.8;color:var(--faint)}
+figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
+figure.pic figcaption a:hover{color:var(--dim)}
+
+/* ── 地图 ────────────────────────────────────────────────────────
+   开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
+   底图只有海岸线与黄河长江，没有国界（理由见 tools/mining/build_basemap.py）。
+   全程的点一律画出、只是淡；当前那一站才亮——读者要能看见自己走到哪儿，
+   也要能看见还剩多少。 */
+#smap{padding:4rem 0 3.5rem}
+svg.hmap,svg.gmap{display:block;width:100%;height:auto}
+svg.hmap{margin:1.6rem 0 1rem}
+svg.gmap{margin-top:1.1rem;opacity:.9}
+svg *{vector-effect:non-scaling-stroke}
+.m-coast{fill:none;stroke:var(--rule);stroke-width:1.1}
+.m-river{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.42}
+.m-city{fill:var(--faint);opacity:.75}
+.m-city-t{fill:var(--faint);opacity:.85;font-family:var(--sans)}
+.m-river-t{fill:var(--accent);opacity:.65;font-family:var(--sans)}
+.m-dot{fill:var(--dim);opacity:.5}
+.m-maybe{fill:none;stroke:var(--dim);stroke-width:1.2;opacity:.55;stroke-dasharray:3 2.5}
+.m-held{fill:none;stroke:var(--gold);stroke-width:1.2;opacity:.5}
+/* 贴在框边的方块：东西已经出了这张图的范围（伦敦） */
+.m-off{stroke-dasharray:3 2.5}
+.m-flow{stroke:var(--gold);stroke-width:1;opacity:.35;stroke-dasharray:4 3}
+.m-stop-t{fill:var(--dim);opacity:.8;font-family:var(--sans)}
+/* 当前这一节：亮起来 */
+.m-stop.on .m-dot{fill:var(--accent);opacity:1}
+.m-stop.on .m-maybe{stroke:var(--accent);opacity:1}
+.m-stop.on .m-held,.m-stop.on .m-flow{stroke:var(--gold);opacity:1}
+.m-stop.on .m-stop-t{fill:var(--ink);opacity:1}
+#gname{margin-top:.5rem;font-family:var(--sans);font-size:10.5px;color:var(--faint);
+  line-height:1.6;min-height:2.6em}
+
+/* 点开放大。用 <dialog>：Esc 与背景遮罩都是它自带的，不必自己写一套 */
+button.zoom{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in}
+button.zoom img{transition:opacity .18s}
+button.zoom:hover img{opacity:.86}
+dialog#lb{border:0;padding:0;background:none;max-width:96vw;max-height:96vh;color:var(--ink)}
+dialog#lb::backdrop{background:rgba(8,7,6,.92)}
+#lbi{display:block;max-width:min(96vw,900px);max-height:82vh;width:auto;height:auto;
+  margin:0 auto;border-radius:3px}
+#lbc{max-width:min(96vw,900px);margin:.8rem auto 0;font-family:var(--sans);font-size:12px;
+  line-height:1.8;color:var(--dim)}
+#lbc a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule)}
+#lbx{position:fixed;top:1.1rem;right:1.4rem;width:2.2rem;height:2.2rem;border:0;border-radius:50%;
+  background:rgba(255,255,255,.1);color:var(--ink);font-size:1rem;cursor:pointer}
+#lbx:hover{background:rgba(255,255,255,.2)}
 footer{padding:5rem 0 7rem;font-family:var(--sans);font-size:12.5px;color:var(--faint);line-height:2}
 footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--rule)}
 footer a:hover{color:var(--ink)}
@@ -86,6 +148,7 @@ footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
 </head>
 <body>
 <div id="bar"></div>
+<div id="side">
 <nav id="rail" aria-label="节次">
 <a href="#s0"><span class="dot"></span><span class="lbl">三十一个字</span></a>
 <a href="#s1"><span class="dot"></span><span class="lbl">隆中对</span></a>
@@ -98,12 +161,20 @@ footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
 <a href="#s8"><span class="dot"></span><span class="lbl">三国演义</span></a>
 <a href="#s9"><span class="dot"></span><span class="lbl">人道是</span></a>
 </nav>
+<svg class="gmap" viewBox="546.2 311.9 320.1 201.7" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path class="m-coast" d="M795.1 625.5L793.2 628.8M766.2 626.9L767.7 620.1L775.0 618.0L789.5 624.5L793.9 620.2L795.1 625.5M970.0 309.1L962.2 310.2L956.7 308.6L954.0 318.2L947.4 314.0L934.2 315.5L933.7 309.9L935.6 307.3L941.2 306.9L966.5 285.3L981.6 285.6L998.1 282.3M998.9 302.0L995.8 300.0L987.9 301.0L983.4 304.7L970.0 309.1M995.1 316.5L995.1 316.5M951.2 337.8L951.2 337.8M788.8 491.1L788.8 491.1M612.4 593.0L612.4 593.0M663.5 545.6L663.5 545.6M866.1 307.2L866.1 307.2M986.8 304.8L986.8 304.8M788.5 610.6L788.5 610.6M777.4 609.4L777.4 609.4M780.5 602.5L780.5 602.5M788.9 583.6L788.9 583.6M787.0 576.0L787.0 576.0M825.3 503.0L825.3 503.0M818.6 505.1L818.6 505.1M843.8 495.2L843.8 495.2M891.2 455.2L891.2 455.2M902.4 434.9L902.4 434.9M912.9 423.8L912.9 423.8M907.4 429.7L907.4 429.7M927.4 384.6L927.4 384.6M934.6 380.6L934.6 380.6M900.6 339.4L900.6 339.4M919.5 344.1L919.5 344.1M923.3 345.3L923.3 345.3M971.1 269.9L971.1 269.9M997.3 305.7L994.9 310.2L997.2 311.0L998.9 309.4L998.5 307.2M999.4 304.3L997.3 305.7M905.2 333.4L905.2 333.4M910.7 328.2L910.7 328.2M914.8 317.8L914.8 317.8M906.7 308.7L906.7 308.7M910.5 301.5L910.5 301.5M960.9 312.8L960.9 312.8M957.4 318.1L957.4 318.1M731.3 502.7L731.3 502.7M727.0 502.1L727.0 502.1M898.7 295.1L898.7 295.1M884.4 297.8L884.4 297.8M882.9 302.6L882.9 302.6M867.1 323.8L867.1 323.8M860.4 304.3L860.4 304.3M863.2 241.5L863.2 241.5M783.5 361.6L783.5 361.6M794.9 392.5L794.9 392.5M792.3 398.1L792.3 398.1M796.8 394.8L796.8 394.8M754.8 480.0L754.8 480.0M605.2 569.4L605.2 569.4M556.1 565.7L556.1 565.7M556.1 571.9L556.1 571.9M549.1 574.2L549.1 574.2M545.1 572.4L545.1 572.4M334.6 613.0L334.6 613.0M330.5 592.8L330.5 592.8M321.2 589.0L321.2 589.0M336.7 600.9L336.7 600.9M304.0 552.8L304.0 552.8M305.0 556.8L305.0 556.8M291.6 541.1L291.6 541.1M297.0 542.0L297.0 542.0M283.5 530.9L283.5 530.9M285.2 535.9L285.2 535.9M914.6 360.0L914.6 360.0M861.1 264.4L861.1 264.4M836.9 204.7L836.9 204.7M777.5 429.2L777.5 429.2M652.7 533.5L652.7 533.5M641.6 555.8L641.6 555.8M638.0 557.7L638.0 557.7M661.3 547.2L661.3 547.2M857.6 298.7L857.6 298.7M932.9 245.4L932.9 245.4M1.8 556.2L0.4 557.2M170.5 630.0L179.1 624.3L189.9 607.9L200.7 598.1L199.5 597.0L196.5 598.7L197.6 595.5L201.7 592.9L202.6 595.6L201.6 596.7L202.8 596.7L213.2 592.7L214.7 590.9L213.6 589.7L215.8 590.6L221.8 584.5L225.4 576.9L223.5 566.3L227.4 561.1L236.7 558.1L241.1 554.8L244.5 548.9L241.3 546.3L241.0 543.9L245.1 548.6L242.9 557.3L243.9 558.5L246.0 558.8L246.6 556.1L249.1 558.9L251.4 558.0L252.3 548.9L253.9 551.2L254.0 559.5L255.8 556.3L256.6 558.1L258.9 558.1L257.2 552.5L258.5 552.6L258.9 549.5L259.6 553.8L263.8 556.8L266.1 553.0L265.9 545.9L267.2 555.9L271.2 551.6L272.3 543.7L274.0 542.1L272.9 549.0L273.5 550.9L277.6 548.2L275.3 553.5L277.9 554.7L284.1 544.2L281.2 536.5L283.1 533.5L281.7 530.6L283.8 529.0L283.7 526.4L278.5 522.7L283.2 523.3L283.9 520.0L284.8 531.1L289.4 539.6L293.8 538.7L298.1 533.9L303.2 545.5L304.2 544.4L307.4 567.6L318.1 584.9L317.9 579.6L320.2 582.5L319.2 586.5L320.7 587.7L323.2 582.7L322.8 587.0L324.1 587.1L322.6 589.2L324.7 593.5L325.8 592.7L325.1 589.9L326.6 589.3L334.0 592.4L332.4 595.1L338.7 601.7L338.1 603.9L335.9 605.7L331.9 602.5L330.5 603.1L334.0 609.9L337.6 612.4L339.4 604.7L339.8 612.5L342.7 615.5L341.5 615.7L345.7 626.1M538.9 629.0L530.5 620.2L526.2 611.1L532.0 591.9L540.6 585.0L541.1 580.3L544.4 576.2L543.3 571.0L551.0 572.0L554.1 569.9L555.0 565.4L561.4 561.2L568.5 560.0L569.8 557.4L572.6 558.5L572.3 553.2L574.1 553.3L577.0 558.6L582.3 559.4L582.0 562.3L589.4 560.4L589.1 557.4L591.7 560.7L595.7 561.5L591.6 568.4L591.3 572.6L596.3 581.9L594.9 582.6L595.8 584.9L602.3 584.9L605.0 580.5L601.8 577.5L602.7 574.2L599.7 573.8L599.3 572.1L602.8 567.6L603.4 564.3L605.9 566.8L613.2 560.9L622.6 560.0L628.1 554.3L634.0 556.4L635.3 555.2L634.8 551.8L638.5 555.7L642.1 552.4L644.4 553.1L646.6 547.2L647.6 549.8L654.0 546.9L654.1 539.6L650.5 533.4L653.5 529.6L655.2 529.1L655.2 534.4L661.5 541.2L659.7 543.5L665.6 545.5L666.7 543.5L665.6 540.7L670.2 540.9L671.8 536.4L675.1 539.2L680.6 535.2L685.5 537.2L687.7 534.5L691.2 535.5L697.6 532.0L701.1 532.7L702.2 528.1L704.8 526.2L703.7 524.7L707.4 522.7L708.2 518.9L711.0 520.2L714.4 517.6L715.6 520.0L717.2 515.1L719.8 515.2L726.7 507.1L726.2 504.5L723.3 502.6L725.9 502.4L727.2 499.6L736.4 499.7L737.4 497.2L736.1 495.5L740.5 493.6L741.6 488.1L746.5 487.7L744.8 483.4L752.0 484.5L750.6 480.6L751.9 472.5L747.3 473.6L744.2 470.2L749.4 471.5L756.1 466.0L751.4 457.1L753.4 458.2L755.2 455.9L756.2 460.5L758.8 460.1L762.6 451.0L767.9 444.7L767.5 441.4L771.5 435.3L770.1 433.0L773.5 432.4L776.5 426.7L777.7 426.4L778.6 428.8L784.0 427.4L781.9 420.5L784.9 416.4L782.9 414.8L785.2 414.4L781.4 410.9L785.8 408.4L789.0 410.8L789.8 403.8L788.5 401.1L782.4 403.9L791.7 396.4L785.1 394.2L778.4 387.8L768.3 391.2L766.0 387.8L761.2 389.0L765.3 386.2L772.5 386.1L774.2 382.8L781.0 378.2L788.4 375.7L787.7 372.9L784.8 367.8L770.8 358.0L769.6 354.7L758.6 355.7L766.5 352.3L773.8 357.0L779.9 357.2L786.5 360.3L788.2 360.3L787.6 356.4L781.5 351.4L779.7 346.0L771.8 341.4L772.1 334.4L766.2 322.2L762.4 309.6L747.6 300.3L745.2 300.3L744.6 298.3L748.9 289.4L762.7 276.0L759.6 273.3L761.0 271.7L763.4 271.2L764.4 274.6L768.4 273.1L769.5 267.5L772.5 266.9L771.1 263.2L775.1 263.6L789.2 256.8L792.9 256.8L795.8 259.3L798.7 257.0L797.5 254.6L801.1 248.0L795.8 248.0L791.2 245.6L789.8 247.2L784.5 246.9L770.2 239.5L762.2 242.6L763.1 243.7L756.2 249.1L754.2 252.9L746.6 253.2L741.2 249.4L741.8 243.3L743.4 242.2L741.0 235.4L738.7 233.8L726.0 232.7L720.3 227.9L718.6 222.7L722.3 213.9L726.5 212.1L730.6 215.3L741.6 213.0L745.6 208.6L748.2 201.8L765.8 192.4L777.0 179.2L786.0 180.2L787.7 177.7L788.0 180.3L792.6 183.3L794.6 187.1L787.1 197.9L782.5 200.0L782.5 204.0L778.5 205.9L778.6 209.0L787.4 209.0L784.3 212.3L785.2 214.4L775.9 218.1L776.8 221.9L784.7 219.2L785.1 216.5L790.0 215.5L795.7 209.4L803.9 204.8L815.8 201.1L816.9 199.2L824.3 200.0L828.2 196.7L828.2 198.7L831.6 201.0L832.9 204.5L835.1 201.7L844.5 206.2L845.3 210.9L841.4 220.4L847.7 222.8L839.8 225.3L836.7 231.7L833.7 233.7L842.0 234.7L838.5 237.6L843.7 239.4L844.5 241.7L851.1 236.6L855.6 238.8L856.7 241.3L860.8 238.7L865.1 240.6L863.9 241.9L867.6 250.2L866.9 252.2L870.6 257.2L868.9 259.4L867.5 257.0L862.7 255.8L857.4 260.5L857.8 262.0L862.7 262.0L863.6 272.4L867.0 278.2L862.7 282.6L864.7 284.1L859.5 292.3L861.6 298.8L864.4 298.8L862.5 300.1L863.3 301.3L859.1 301.8L862.6 305.3L863.4 308.9L867.0 305.0L869.3 306.4L875.0 300.2L873.8 304.3L876.2 305.9L878.7 302.7L877.5 298.8L882.5 300.8L881.3 297.5L882.5 296.2L887.7 294.9L888.6 296.7L894.3 297.9L893.9 295.0L895.3 293.4L906.7 291.8L910.0 285.5L912.5 274.7L909.7 274.6L910.9 261.1L908.6 250.6L892.4 222.9L883.6 214.9L877.3 212.5L877.8 209.2L879.8 207.5L880.1 201.2L886.6 197.0L895.3 194.3L908.7 182.6L914.7 180.0L915.6 171.2L914.3 165.5L915.4 163.2L923.2 153.9L931.1 151.1L932.8 147.2L930.8 144.6L938.0 145.2L948.3 132.8L951.8 132.3L949.5 136.0L950.8 136.0L956.6 131.7L956.5 140.1L963.0 140.3L970.3 143.8L984.0 138.9L998.7 129.4M834.5 237.3L832.8 236.7L834.1 237.6"/><path class="m-river" d="M647.2 404.4L656.4 394.8L659.0 394.3L661.2 392.8L661.5 391.3L659.4 389.0L661.8 388.8L667.7 380.7L674.9 382.7L674.7 384.3L675.6 385.5L678.4 387.2L679.1 389.3L685.6 396.2L689.5 397.2L691.0 398.4L697.0 398.0M696.7 398.7L697.0 398.0M697.0 398.0L700.8 396.4L706.1 391.9L708.0 388.4L708.1 385.9L713.1 382.9L713.7 380.5L719.4 378.5L721.4 376.3L723.3 371.7L724.5 372.1L725.8 370.1L730.8 367.4L732.2 361.3L737.0 353.0L741.3 350.4L752.3 349.8L754.4 350.3L759.3 355.2"/><g class="m-stop" id="gm-1" data-name="2 说"><circle class="m-maybe" cx="629.5" cy="354.5" r="2.2"/><circle class="m-maybe" cx="637.1" cy="335.1" r="2.2"/></g><g class="m-stop" id="gm-2" data-name="7 说"><circle class="m-maybe" cx="655.4" cy="396.1" r="2.2"/><circle class="m-maybe" cx="660.1" cy="394.3" r="2.2"/><circle class="m-maybe" cx="666.3" cy="382.8" r="2.2"/><circle class="m-maybe" cx="665.6" cy="383.0" r="2.2"/><circle class="m-maybe" cx="658.5" cy="381.0" r="2.2"/><circle class="m-maybe" cx="675.4" cy="384.9" r="2.2"/><circle class="m-maybe" cx="638.5" cy="370.8" r="2.2"/></g><g class="m-stop" id="gm-3" data-name="岳阳市"><circle class="m-dot" cx="647.3" cy="406.3" r="2.2"/></g><g class="m-stop" id="gm-5" data-name="黄冈市"><line class="m-flow" x1="675.4" y1="384.9" x2="783.0" y2="490.2"/><rect class="m-held" x="781.0" y="488.2" width="4.0" height="4.0"/><circle class="m-dot" cx="675.4" cy="384.9" r="2.2"/></g><g class="m-stop" id="gm-6" data-name="黄冈市"><line class="m-flow" x1="675.4" y1="384.9" x2="783.0" y2="490.2"/><rect class="m-held" x="781.0" y="488.2" width="4.0" height="4.0"/><circle class="m-dot" cx="675.4" cy="384.9" r="2.2"/></g><g class="m-stop" id="gm-7" data-name="国立故宫博物院"><rect class="m-held" x="781.0" y="488.2" width="4.0" height="4.0"/></g></svg>
+<div id="gname"></div>
+</div>
 <header class="cover"><div class="wrap">
 <div class="kicker">一场战役如何变成一件件文物</div>
 <h1>赤壁线</h1>
 <p class="lede">正史里只有三十一个字。火、东风、华容道，是后来一层层加上去的。</p>
 <div class="meta">共 8 站　·　<a href="timeline.html#line=chibi">在图上走一遍 →</a>　·　<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-chibi.md">资料与出处 ↗</a></div>
 </div></header>
+<section id="smap"><div class="wrap">
+<div class="num">这条线在地上</div>
+<svg class="hmap" viewBox="546.2 311.9 320.1 201.7" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path class="m-coast" d="M795.1 625.5L793.2 628.8M766.2 626.9L767.7 620.1L775.0 618.0L789.5 624.5L793.9 620.2L795.1 625.5M970.0 309.1L962.2 310.2L956.7 308.6L954.0 318.2L947.4 314.0L934.2 315.5L933.7 309.9L935.6 307.3L941.2 306.9L966.5 285.3L981.6 285.6L998.1 282.3M998.9 302.0L995.8 300.0L987.9 301.0L983.4 304.7L970.0 309.1M995.1 316.5L995.1 316.5M951.2 337.8L951.2 337.8M788.8 491.1L788.8 491.1M612.4 593.0L612.4 593.0M663.5 545.6L663.5 545.6M866.1 307.2L866.1 307.2M986.8 304.8L986.8 304.8M788.5 610.6L788.5 610.6M777.4 609.4L777.4 609.4M780.5 602.5L780.5 602.5M788.9 583.6L788.9 583.6M787.0 576.0L787.0 576.0M825.3 503.0L825.3 503.0M818.6 505.1L818.6 505.1M843.8 495.2L843.8 495.2M891.2 455.2L891.2 455.2M902.4 434.9L902.4 434.9M912.9 423.8L912.9 423.8M907.4 429.7L907.4 429.7M927.4 384.6L927.4 384.6M934.6 380.6L934.6 380.6M900.6 339.4L900.6 339.4M919.5 344.1L919.5 344.1M923.3 345.3L923.3 345.3M971.1 269.9L971.1 269.9M997.3 305.7L994.9 310.2L997.2 311.0L998.9 309.4L998.5 307.2M999.4 304.3L997.3 305.7M905.2 333.4L905.2 333.4M910.7 328.2L910.7 328.2M914.8 317.8L914.8 317.8M906.7 308.7L906.7 308.7M910.5 301.5L910.5 301.5M960.9 312.8L960.9 312.8M957.4 318.1L957.4 318.1M731.3 502.7L731.3 502.7M727.0 502.1L727.0 502.1M898.7 295.1L898.7 295.1M884.4 297.8L884.4 297.8M882.9 302.6L882.9 302.6M867.1 323.8L867.1 323.8M860.4 304.3L860.4 304.3M863.2 241.5L863.2 241.5M783.5 361.6L783.5 361.6M794.9 392.5L794.9 392.5M792.3 398.1L792.3 398.1M796.8 394.8L796.8 394.8M754.8 480.0L754.8 480.0M605.2 569.4L605.2 569.4M556.1 565.7L556.1 565.7M556.1 571.9L556.1 571.9M549.1 574.2L549.1 574.2M545.1 572.4L545.1 572.4M334.6 613.0L334.6 613.0M330.5 592.8L330.5 592.8M321.2 589.0L321.2 589.0M336.7 600.9L336.7 600.9M304.0 552.8L304.0 552.8M305.0 556.8L305.0 556.8M291.6 541.1L291.6 541.1M297.0 542.0L297.0 542.0M283.5 530.9L283.5 530.9M285.2 535.9L285.2 535.9M914.6 360.0L914.6 360.0M861.1 264.4L861.1 264.4M836.9 204.7L836.9 204.7M777.5 429.2L777.5 429.2M652.7 533.5L652.7 533.5M641.6 555.8L641.6 555.8M638.0 557.7L638.0 557.7M661.3 547.2L661.3 547.2M857.6 298.7L857.6 298.7M932.9 245.4L932.9 245.4M1.8 556.2L0.4 557.2M170.5 630.0L179.1 624.3L189.9 607.9L200.7 598.1L199.5 597.0L196.5 598.7L197.6 595.5L201.7 592.9L202.6 595.6L201.6 596.7L202.8 596.7L213.2 592.7L214.7 590.9L213.6 589.7L215.8 590.6L221.8 584.5L225.4 576.9L223.5 566.3L227.4 561.1L236.7 558.1L241.1 554.8L244.5 548.9L241.3 546.3L241.0 543.9L245.1 548.6L242.9 557.3L243.9 558.5L246.0 558.8L246.6 556.1L249.1 558.9L251.4 558.0L252.3 548.9L253.9 551.2L254.0 559.5L255.8 556.3L256.6 558.1L258.9 558.1L257.2 552.5L258.5 552.6L258.9 549.5L259.6 553.8L263.8 556.8L266.1 553.0L265.9 545.9L267.2 555.9L271.2 551.6L272.3 543.7L274.0 542.1L272.9 549.0L273.5 550.9L277.6 548.2L275.3 553.5L277.9 554.7L284.1 544.2L281.2 536.5L283.1 533.5L281.7 530.6L283.8 529.0L283.7 526.4L278.5 522.7L283.2 523.3L283.9 520.0L284.8 531.1L289.4 539.6L293.8 538.7L298.1 533.9L303.2 545.5L304.2 544.4L307.4 567.6L318.1 584.9L317.9 579.6L320.2 582.5L319.2 586.5L320.7 587.7L323.2 582.7L322.8 587.0L324.1 587.1L322.6 589.2L324.7 593.5L325.8 592.7L325.1 589.9L326.6 589.3L334.0 592.4L332.4 595.1L338.7 601.7L338.1 603.9L335.9 605.7L331.9 602.5L330.5 603.1L334.0 609.9L337.6 612.4L339.4 604.7L339.8 612.5L342.7 615.5L341.5 615.7L345.7 626.1M538.9 629.0L530.5 620.2L526.2 611.1L532.0 591.9L540.6 585.0L541.1 580.3L544.4 576.2L543.3 571.0L551.0 572.0L554.1 569.9L555.0 565.4L561.4 561.2L568.5 560.0L569.8 557.4L572.6 558.5L572.3 553.2L574.1 553.3L577.0 558.6L582.3 559.4L582.0 562.3L589.4 560.4L589.1 557.4L591.7 560.7L595.7 561.5L591.6 568.4L591.3 572.6L596.3 581.9L594.9 582.6L595.8 584.9L602.3 584.9L605.0 580.5L601.8 577.5L602.7 574.2L599.7 573.8L599.3 572.1L602.8 567.6L603.4 564.3L605.9 566.8L613.2 560.9L622.6 560.0L628.1 554.3L634.0 556.4L635.3 555.2L634.8 551.8L638.5 555.7L642.1 552.4L644.4 553.1L646.6 547.2L647.6 549.8L654.0 546.9L654.1 539.6L650.5 533.4L653.5 529.6L655.2 529.1L655.2 534.4L661.5 541.2L659.7 543.5L665.6 545.5L666.7 543.5L665.6 540.7L670.2 540.9L671.8 536.4L675.1 539.2L680.6 535.2L685.5 537.2L687.7 534.5L691.2 535.5L697.6 532.0L701.1 532.7L702.2 528.1L704.8 526.2L703.7 524.7L707.4 522.7L708.2 518.9L711.0 520.2L714.4 517.6L715.6 520.0L717.2 515.1L719.8 515.2L726.7 507.1L726.2 504.5L723.3 502.6L725.9 502.4L727.2 499.6L736.4 499.7L737.4 497.2L736.1 495.5L740.5 493.6L741.6 488.1L746.5 487.7L744.8 483.4L752.0 484.5L750.6 480.6L751.9 472.5L747.3 473.6L744.2 470.2L749.4 471.5L756.1 466.0L751.4 457.1L753.4 458.2L755.2 455.9L756.2 460.5L758.8 460.1L762.6 451.0L767.9 444.7L767.5 441.4L771.5 435.3L770.1 433.0L773.5 432.4L776.5 426.7L777.7 426.4L778.6 428.8L784.0 427.4L781.9 420.5L784.9 416.4L782.9 414.8L785.2 414.4L781.4 410.9L785.8 408.4L789.0 410.8L789.8 403.8L788.5 401.1L782.4 403.9L791.7 396.4L785.1 394.2L778.4 387.8L768.3 391.2L766.0 387.8L761.2 389.0L765.3 386.2L772.5 386.1L774.2 382.8L781.0 378.2L788.4 375.7L787.7 372.9L784.8 367.8L770.8 358.0L769.6 354.7L758.6 355.7L766.5 352.3L773.8 357.0L779.9 357.2L786.5 360.3L788.2 360.3L787.6 356.4L781.5 351.4L779.7 346.0L771.8 341.4L772.1 334.4L766.2 322.2L762.4 309.6L747.6 300.3L745.2 300.3L744.6 298.3L748.9 289.4L762.7 276.0L759.6 273.3L761.0 271.7L763.4 271.2L764.4 274.6L768.4 273.1L769.5 267.5L772.5 266.9L771.1 263.2L775.1 263.6L789.2 256.8L792.9 256.8L795.8 259.3L798.7 257.0L797.5 254.6L801.1 248.0L795.8 248.0L791.2 245.6L789.8 247.2L784.5 246.9L770.2 239.5L762.2 242.6L763.1 243.7L756.2 249.1L754.2 252.9L746.6 253.2L741.2 249.4L741.8 243.3L743.4 242.2L741.0 235.4L738.7 233.8L726.0 232.7L720.3 227.9L718.6 222.7L722.3 213.9L726.5 212.1L730.6 215.3L741.6 213.0L745.6 208.6L748.2 201.8L765.8 192.4L777.0 179.2L786.0 180.2L787.7 177.7L788.0 180.3L792.6 183.3L794.6 187.1L787.1 197.9L782.5 200.0L782.5 204.0L778.5 205.9L778.6 209.0L787.4 209.0L784.3 212.3L785.2 214.4L775.9 218.1L776.8 221.9L784.7 219.2L785.1 216.5L790.0 215.5L795.7 209.4L803.9 204.8L815.8 201.1L816.9 199.2L824.3 200.0L828.2 196.7L828.2 198.7L831.6 201.0L832.9 204.5L835.1 201.7L844.5 206.2L845.3 210.9L841.4 220.4L847.7 222.8L839.8 225.3L836.7 231.7L833.7 233.7L842.0 234.7L838.5 237.6L843.7 239.4L844.5 241.7L851.1 236.6L855.6 238.8L856.7 241.3L860.8 238.7L865.1 240.6L863.9 241.9L867.6 250.2L866.9 252.2L870.6 257.2L868.9 259.4L867.5 257.0L862.7 255.8L857.4 260.5L857.8 262.0L862.7 262.0L863.6 272.4L867.0 278.2L862.7 282.6L864.7 284.1L859.5 292.3L861.6 298.8L864.4 298.8L862.5 300.1L863.3 301.3L859.1 301.8L862.6 305.3L863.4 308.9L867.0 305.0L869.3 306.4L875.0 300.2L873.8 304.3L876.2 305.9L878.7 302.7L877.5 298.8L882.5 300.8L881.3 297.5L882.5 296.2L887.7 294.9L888.6 296.7L894.3 297.9L893.9 295.0L895.3 293.4L906.7 291.8L910.0 285.5L912.5 274.7L909.7 274.6L910.9 261.1L908.6 250.6L892.4 222.9L883.6 214.9L877.3 212.5L877.8 209.2L879.8 207.5L880.1 201.2L886.6 197.0L895.3 194.3L908.7 182.6L914.7 180.0L915.6 171.2L914.3 165.5L915.4 163.2L923.2 153.9L931.1 151.1L932.8 147.2L930.8 144.6L938.0 145.2L948.3 132.8L951.8 132.3L949.5 136.0L950.8 136.0L956.6 131.7L956.5 140.1L963.0 140.3L970.3 143.8L984.0 138.9L998.7 129.4M834.5 237.3L832.8 236.7L834.1 237.6"/><path class="m-river" d="M647.2 404.4L656.4 394.8L659.0 394.3L661.2 392.8L661.5 391.3L659.4 389.0L661.8 388.8L667.7 380.7L674.9 382.7L674.7 384.3L675.6 385.5L678.4 387.2L679.1 389.3L685.6 396.2L689.5 397.2L691.0 398.4L697.0 398.0M696.7 398.7L697.0 398.0M697.0 398.0L700.8 396.4L706.1 391.9L708.0 388.4L708.1 385.9L713.1 382.9L713.7 380.5L719.4 378.5L721.4 376.3L723.3 371.7L724.5 372.1L725.8 370.1L730.8 367.4L732.2 361.3L737.0 353.0L741.3 350.4L752.3 349.8L754.4 350.3L759.3 355.2"/><circle class="m-city" cx="781.8" cy="369.6" r="1.1"/><text class="m-city-t" x="783.8" y="371.3" font-size="4.2">上海</text><circle class="m-city" cx="666.3" cy="382.2" r="1.1"/><text class="m-city-t" x="668.3" y="383.9" font-size="4.2">武汉</text><circle class="m-city" cx="783.4" cy="491.7" r="1.1"/><text class="m-city-t" x="785.4" y="493.4" font-size="4.2">台北</text><circle class="m-city" cx="738.7" cy="353.2" r="1.1"/><text class="m-city-t" x="740.7" y="354.9" font-size="4.2">南京</text><text class="m-river-t" x="574.2" y="389.9" font-size="4.5">长江</text><g class="m-stop"><circle class="m-maybe" cx="629.5" cy="354.5" r="2.2"/><circle class="m-maybe" cx="637.1" cy="335.1" r="2.2"/><text class="m-stop-t" x="632.7" y="356.1" font-size="4.8">2 说</text></g><g class="m-stop"><circle class="m-maybe" cx="655.4" cy="396.1" r="2.2"/><circle class="m-maybe" cx="660.1" cy="394.3" r="2.2"/><circle class="m-maybe" cx="666.3" cy="382.8" r="2.2"/><circle class="m-maybe" cx="665.6" cy="383.0" r="2.2"/><circle class="m-maybe" cx="658.5" cy="381.0" r="2.2"/><circle class="m-maybe" cx="675.4" cy="384.9" r="2.2"/><circle class="m-maybe" cx="638.5" cy="370.8" r="2.2"/><text class="m-stop-t" x="658.6" y="397.7" font-size="4.8">7 说</text></g><g class="m-stop"><circle class="m-dot" cx="647.3" cy="406.3" r="2.2"/><text class="m-stop-t" x="650.5" y="407.9" font-size="4.8">岳阳市</text></g><g class="m-stop"><line class="m-flow" x1="675.4" y1="384.9" x2="783.0" y2="490.2"/><rect class="m-held" x="781.0" y="488.2" width="4.0" height="4.0"/><circle class="m-dot" cx="675.4" cy="384.9" r="2.2"/><text class="m-stop-t" x="678.7" y="386.5" font-size="4.8">黄冈市</text></g><g class="m-stop"><line class="m-flow" x1="675.4" y1="384.9" x2="783.0" y2="490.2"/><rect class="m-held" x="781.0" y="488.2" width="4.0" height="4.0"/><circle class="m-dot" cx="675.4" cy="384.9" r="2.2"/><text class="m-stop-t" x="678.7" y="386.5" font-size="4.8">黄冈市</text></g><g class="m-stop"><rect class="m-held" x="781.0" y="488.2" width="4.0" height="4.0"/></g></svg>
+<p class="note">只有海岸线与黄河、长江，没有国界——这不是政区图。空心圈是各源不一致、至今没有定论的地点；方块是文物现藏之处，连着的虚线就是它离开的那段路。坐标取自 Wikidata（CC0）。</p>
+</div></section>
 <section id="s0" class="tone"><div class="wrap">
 <div class="num">序</div>
 <h2>三十一个字</h2>
@@ -332,6 +403,7 @@ footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
 <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-chibi.md" target="_blank" rel="noopener">资料与出处 ↗</a>
 <a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%%E5%%8B%%98%%E8%%AF%%AF&amp;title=%%E5%%8B%%98%%E8%%AF%%AF%%EF%%BC%%9A" target="_blank" rel="noopener">报个错 ↗</a>
 </div></div></footer>
+<dialog id="lb"><button id="lbx" type="button" aria-label="关闭">✕</button><img id="lbi" alt=""><div id="lbc"></div></dialog>
 <script>
 // 进度条与导轨高亮。整页只有这一段脚本，无依赖、无外链。
 var bar=document.getElementById('bar'),links=[].slice.call(document.querySelectorAll('#rail a')),
@@ -343,7 +415,33 @@ function tick(){
   var at=0;
   for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].getBoundingClientRect().top<h.clientHeight*0.42) at=i; }
   for(var j=0;j<links.length;j++) links[j].className=(j===at?'on':'');
+  // 小地图跟着走：全程的点一直都在，只把当前这一节点亮
+  var g=document.querySelectorAll('svg.gmap .m-stop'),nm='';
+  for(var k=0;k<g.length;k++){
+    var on=(g[k].id==='gm-'+at);
+    g[k].setAttribute('class','m-stop'+(on?' on':''));
+    if(on) nm=g[k].getAttribute('data-name')||'';
+  }
+  var gn=document.getElementById('gname'); if(gn) gn.textContent=nm;
 }
 addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
+
+// 点开放大。图注与署名跟着进去——放大了更该说清这是谁的
+var lb=document.getElementById('lb'),lbi=document.getElementById('lbi'),lbc=document.getElementById('lbc');
+[].forEach.call(document.querySelectorAll('button.zoom'),function(b){
+  b.addEventListener('click',function(){
+    lbi.src=b.getAttribute('data-src'); lbi.alt=b.getAttribute('data-cap')||'';
+    var cap=b.getAttribute('data-cap')||'', who=b.getAttribute('data-who')||'',
+        full=b.getAttribute('data-full')||'';
+    lbc.innerHTML='';
+    var t=document.createElement('div'); t.textContent=cap+(cap&&who?'　':'')+who; lbc.appendChild(t);
+    if(full){var a=document.createElement('a'); a.href=full; a.target='_blank'; a.rel='noopener';
+      a.textContent='在 Commons 看原尺寸 ↗'; var d=document.createElement('div');
+      d.style.marginTop='.4rem'; d.appendChild(a); lbc.appendChild(d);}
+    if(lb.showModal) lb.showModal(); else lb.setAttribute('open','');
+  });
+});
+document.getElementById('lbx').addEventListener('click',function(){lb.close?lb.close():lb.removeAttribute('open')});
+lb.addEventListener('click',function(e){ if(e.target===lb) lb.close&&lb.close(); });
 </script>
 </body></html>

@@ -215,7 +215,9 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   // 署名是硬要求，不是装饰：CC-BY / CC-BY-SA 要求给出作者与许可。
   // 故图下恒有一行小字，链到 Commons 的文件页；抓不到许可的图一律不用
   //（见 tools/mining/pick_pics.py）。
-  const picImg = h('img', { class: 'tour-pic-img', alt: '', loading: 'lazy' });
+  // 卡上的图也点得开：卡里只有 132px 高的一条，而仓库里那份是 880px。
+  // 放大只用本地那份，不去取 Commons 原图——那等于把外部依赖请回来
+  const picImg = h('img', { class: 'tour-pic-img', alt: '', loading: 'lazy', title: '点开放大' });
   const picCap = h('figcaption', { class: 'tour-pic-cap' });
   const picCredit = h('a', { class: 'tour-pic-credit', target: '_blank', rel: 'noopener' });
   const picBox = h('figure', { class: 'tour-pic' }, [picImg, picCap, picCredit]);
@@ -275,6 +277,25 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   // （用户实测：讲解被夹在坞里，右缘那道细线一闪就没了）。自绘一条：坞一旦
   // 装不下就现身，位置与高度逐帧跟着坞走（paint 本就在跑，不额外开循环）。
   // 故事线的站点卡沿用同一条。
+  // 放大层。故事线的图值得看清，而讲解卡里放不下
+  const zoomImg = h('img', { class: 'tour-zoom-img', alt: '' });
+  const zoomCap = h('div', { class: 'tour-zoom-cap' });
+  const zoomBox = h('div', { class: 'tour-zoom', role: 'dialog', 'aria-modal': 'true' },
+    [h('button', { class: 'tour-zoom-x', type: 'button', 'aria-label': '关闭', text: '✕' }),
+     zoomImg, zoomCap]);
+  document.body.appendChild(zoomBox);
+  const closeZoom = () => zoomBox.classList.remove('on');
+  zoomBox.addEventListener('click', (e) => {
+    if (e.target === zoomBox || e.target.classList.contains('tour-zoom-x')) closeZoom();
+  });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') closeZoom(); });
+  picImg.addEventListener('click', () => {
+    if (!picImg.src) return;
+    zoomImg.src = picImg.src;
+    zoomImg.alt = picImg.alt;
+    zoomCap.textContent = [picCap.textContent, picCredit.textContent].filter(Boolean).join('　');
+    zoomBox.classList.add('on');
+  });
   const sbarThumb = h('div', { class: 'tour-sbar-thumb' });
   const sbar = h('div', { class: 'tour-sbar' }, [sbarThumb]);
   document.body.appendChild(sbar);

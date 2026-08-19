@@ -155,11 +155,11 @@ export function mountMinimap(geoOf, allOf) {
       const p = g['点'] || (g['诸说'] && g['诸说'][0] && g['诸说'][0]['点']);
       if (p) {
         const [x, y] = xy(p);
-        gAll.appendChild(el('circle', { cx: x, cy: y, r: u(2.6) }));
+        gAll.appendChild(el('circle', { cx: x, cy: y, r: u(3.2) }));
       }
       if (g['现藏']) {
         const [x, y] = xy(g['现藏']);
-        gAll.appendChild(el('circle', { cx: x, cy: y, r: u(2.6) }));
+        gAll.appendChild(el('circle', { cx: x, cy: y, r: u(3.2) }));
       }
     }
   };
