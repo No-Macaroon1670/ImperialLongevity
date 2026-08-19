@@ -34,6 +34,7 @@ function openLine(key) {
   lineTour.start(0);
   return true;
 }
+const REPO = 'https://github.com/No-Macaroon1670/ImperialLongevity';
 // ── 故事目录 ────────────────────────────────────────────────────────
 // 书的按钮开的是**目录**而不是某一条线：线会越来越多，而「有哪些线可走」
 // 本身就是读者要先看见的东西（用户指出）。目录只列名字、一句话与站数，
@@ -79,6 +80,16 @@ const closeCatalog = () => { catalog.classList.remove('on'); document.body.class
       openLine(line.key);
     });
     sheet.appendChild(row);
+    // 出处链接单挂一行，不进站点卡：走线时不该被脚注打断，
+    // 但「这些数字哪来的」必须随时查得到（用户：链接到某处就行）
+    if (line.doc) {
+      const a = document.createElement('a');
+      a.className = 'lc-doc';
+      a.href = `${REPO}/blob/main/docs/${line.doc}.md`;
+      a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = '资料与出处 ↗';
+      sheet.appendChild(a);
+    }
   }
   catalog.appendChild(sheet);
   catalog.addEventListener('click', (e) => { if (e.target === catalog) closeCatalog(); });

@@ -128,6 +128,9 @@ export const LINES = {
     stops: SHIKU.map((s) => (TEXT[s.ev] ? { ...s, long: TEXT[s.ev] } : s)),
     prologue: PROLOGUE,
     epilogue: EPILOGUE,
+    // 长文里那些硬数字（尺寸、件数、工时、引文、编号）的逐条出处另有一份，
+    // 挂在目录里而不是站点卡上：读者走线时要的是故事，要查的时候才去翻账
+    doc: 'line-shiku',
   },
 };
 

@@ -1075,3 +1075,10 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .foot-btn:hover { background: var(--surface-2); }
 .foot-btn-2 { color: var(--text-2); }
 .foot-note { font-size: .78rem; color: var(--muted); flex: 1 1 260px; line-height: 1.5; }
+
+/* 目录里每条线下挂一行出处链接：查账的入口，不是走线的一部分 */
+.lc-doc {
+  display: block; margin: -2px 0 10px; padding: 0 2px;
+  font-size: .76rem; color: var(--muted); text-decoration: none;
+}
+.lc-doc:hover { color: var(--seq-500); text-decoration: underline; }
