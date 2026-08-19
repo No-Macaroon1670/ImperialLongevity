@@ -57,10 +57,22 @@ const CULTURE_ONLY = ['war', 'gov', 'rev', 'out', 'dis', 'era', 'inst', 'her', '
  */
 const STOPS = [
   {
+    // 头一站给**河**：手机的默认视图是河，页面也叫「王朝之河」，
+    // 而此前导览开口就把人切到泳道、再没回来（用户实测指出）。
+    // 先在读者已经在看的那张图上把核心变量讲清，再谈换一种读法
+    t: '河宽就是那一年的天下',
+    b: '一股满宽＝天下一统，裂成几股＝几家并立，重新统一时再合成一条。',
+    b2: '这一段是三国：东汉的大河在建安末裂成魏蜀吴三股，各自着色并流六十年，二八〇年西晋灭吴，三股重新合成一条满宽的河。河宽恒定、只按当时并存的政权数均分——本库没有疆域与人口数据，若让分叉的宽窄去编码「谁更大」，那是在画我们并不掌握的东西。宽度只回答一个问题：那一年有几家。',
+    cta: '这一节有两种读法，控件第一行随时可换：**竖向河流**顺着页面滚，读的是分合的形状；**横向泳道**并排铺开，读的是谁承谁。下一站换泳道看看。',
+    set: { panoramaMode: 'river', laneEvents: true, evOff: [] },
+    span: [220, 280],
+    ctrl: '视图',
+  },
+  {
     t: '五代十国：全图最挤的一段',
     b: '七十二年里北方换了五姓十三君，南方十国并峙——这是整张图最挤的一段。',
     b2: '九〇七年朱温废唐，到九七九年北汉降宋。泳道被占满，河也分成最多股。',
-    cta: '已替你打开下方的「全部承继关系」：粗实线＝法统相承，细实线＝亡入，虚线＝裂自。哪一国是从哪一国裂出来的，只有这些细丝说得出。',
+    cta: '我把视图换成了**横向泳道**，并打开「全部承继关系」：粗实线＝法统相承，细实线＝亡入，虚线＝裂自。哪一国是从哪一国裂出来的，只有这些细丝说得出——这是河画不出来的一层。',
     set: { panoramaMode: 'lanes', laneStrands: true, laneEvents: true, evOff: [] },
     span: [907, 979],
     ctrl: '全部承继关系',
@@ -346,7 +358,9 @@ export function mountTour(sectionEl, hostOf) {
     body.textContent = st.b;
     body2.textContent = st.b2 || '';
     body2.style.display = st.b2 ? '' : 'none';
-    cta.textContent = st.cta || '';
+    // 与 cta2 同一条路径：**粗体** 转 <strong>（文案是本文件的字面量，非外来输入）
+    cta.innerHTML = (st.cta || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     cta.style.display = st.cta ? '' : 'none';
     // **粗体** 转 <strong>。文案是本文件里的字面量,不是外来输入
     cta2.innerHTML = (st.cta2 || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -459,7 +473,20 @@ export function mountTour(sectionEl, hostOf) {
     await ensureVisible(wantVisible, cardGets);
     if (me !== seq) return;
     // 卡片/图片回来后尺寸会变,再补几帧,免得洞停在旧尺寸上
-    for (const d of [180, 500, 1100]) setTimeout(() => { if (me === seq) kick(); }, d);
+    // 到站自检。切换视图会整块重挂载（河两万八千像素 ↔ 泳道八百），页面滚动
+    // 因此被浏览器夹紧，视图自己的落点恢复又在导览的跳转之后跑——结果是
+    // 「讲的是三国，屏上停在夏初」（用户实测：河流那一站根本没滚过去）。
+    // 故隔几拍复查：目标若还在视口之外，就地再跳一次（不带缓动，这是纠偏不是旅程）
+    for (const d of [180, 500, 1100, 1800]) setTimeout(() => {
+      if (me !== seq || !on) return;
+      kick();
+      const l = live();
+      if (!l || !l.rect || !st.span) return;
+      const r = l.rect(st.span[0], st.span[1]);
+      if (!r) return;
+      const off = r.y + r.h < 0 || r.y > innerHeight;      // 整块在屏外
+      if (off) navigate(st, l, {});
+    }, d);
   }
 
   /**
