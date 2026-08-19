@@ -1182,7 +1182,11 @@ export function renderLaneTimeline(host, list, opts) {
     event(i, o) {
       const ev = EVENTS[i];
       if (!ev) return false;
-      this.year(ev.y2 ? (ev.y + ev.y2) / 2 : ev.y, o);
+      // 跳**起点**而不是区间中点：跨度长的条目（莫高窟 366–1368、麦积山
+      // 400–1400）图上只画起点那一个标记（见 events.js 头注），跳中点等于
+      // 把人送到一片空地上——石窟线讲麦积山，屏幕却停在 900，那里什么也没有
+      //（用户实测）。跨度另有跨度线可显，不该由跳转来表达
+      this.year(ev.y, o);
       if (host.__showSpan) host.__showSpan(ev);      // 跳过去的也把跨度拉出来
       if (kp && kp.showEvent) {
         kp.showEvent(evSpec(ev));
