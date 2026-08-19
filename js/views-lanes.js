@@ -1115,6 +1115,7 @@ export function renderLaneTimeline(host, list, opts) {
   // 挂在 __riverCleanup 上——app 的全景包装器在每次重绘前统一调用,
   // 切去河流视图或改筛选重绘时,角卡与滚动监听一并撤走
   kp = mountKnowledgeCorner(empRefs, bandRefs, scroller, host.closest('section.card'));
+  host.__kp = kp;                        // 导览要用它的 setAuto／setContext
   host.__riverCleanup = kp;
 
   // 定位接口:搜索跳转与深链共用同一套入口(见 js/search.js)。

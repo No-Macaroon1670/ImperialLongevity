@@ -424,6 +424,10 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
   // 下一张，观感是「✕ 没用」（用户实测：关掉康熙，滚一格回来顺治）。
   // 静音到明确点选（钉卡）或跳转（releasePins）为止。
   const muted = { dyn: false, emp: false, evL: false, evR: false };
+  // 自动跟随的总闸。导览与故事线开着时关掉——那两样的意思是「此刻看这一处」，
+  // 而自动卡每滚一屏换一批，正好在拆台（用户实测：讲龙门石窟，旁边摆着南梁、
+  // 萧衍、三省六部制，桌面同时五张卡）。关的只是自动跟随，声明要开的照开
+  let auto = true;
   // 同侧两张都开着才叠成上下两行;只开一张时仍居中,免得半屏空着
   const syncStack = () => {
     const on = (k) => cards[k].el.classList.contains('on');
@@ -478,7 +482,7 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
     }
     const y0 = -r.top + innerHeight * 0.2, y1 = -r.top + innerHeight * 0.8;
     // 右翼:中带里权重最高的名君
-    if (!pinned.emp && !muted.emp) {
+    if (auto && !pinned.emp && !muted.emp) {
       const cand = empNodes
         .filter((n) => NOTABLE.has(n.e.name) && !dismissed.emp.has(n.e.id) && n.y1 > y0 && n.y0 < y1)
         .sort((a, b) => (NOTABLE.get(b.e.name) - NOTABLE.get(a.e.name)) || ((b.y1 - b.y0) - (a.y1 - a.y0)))[0];
@@ -488,7 +492,7 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
     // 左翼:同朝优先——皇帝卡在场时给他的朝(两张卡是一对);皇帝卡空着时
     // 退回「中带里可见时长最长的朝代」作时代锚(大一统时即那条大河,
     // 分裂期通常是贯穿最久的主线)
-    if (!pinned.dyn && !muted.dyn && mqLeft.matches) {
+    if (auto && !pinned.dyn && !muted.dyn && mqLeft.matches) {
       const cur = empNodes.find((n) => n.e.id === cards.emp.el.dataset.key);
       let best = cur ? cur.band : null;
       if (!best || dismissed.dyn.has(`dyn:${best.d.key}`)) {
@@ -511,7 +515,7 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
     // 成了走马灯;锚点全程约五十个,几屏才换一次,正是「读到哪一段了」的答案。
     // 且**只在当前那个滚出视野后才换**:还看得见就不动,免得边缘处来回跳。
     for (const [which, side] of [['evL', true], ['evR', false]]) {
-      if (pinned[which]) continue;
+      if (pinned[which] || !auto) continue;
       if (which === 'evL' && !mqLeft.matches) { hide(which); continue; }
       const inBand = evNodes.filter((n) => n.left === side && (n.ev.r || 2) === 1
         && n.y > y0 && n.y < y1 && !dismissed[which].has(`evt:${n.ev.w}`));
@@ -544,6 +548,23 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
   cleanup.releasePins = () => {
     for (const k of Object.keys(pinned)) pinned[k] = null;
     for (const k of Object.keys(muted)) muted[k] = false;   // 跳转即新语境，静音解除
+  };
+  cleanup.setAuto = (on) => { auto = on !== false; if (auto) onScroll(); };
+  /**
+   * 把两翼的**背景卡**设成这一站该配的朝代与君主，并钉住。
+   * 导览关掉自动跟随之后，这两格不该空着也不该乱填——讲龙门就配北魏与当时那位
+   * 君主，而不是碰巧滚到的萧衍（用户指出：背景该在 relevant 的时候才开）。
+   */
+  cleanup.setContext = ({ dynKey, empId } = {}) => {
+    if (!mq.matches) return false;
+    const it = empId ? empNodes.find((n) => n.e.id === empId) : null;
+    if (it) { const es = empSpec(it); pinned.emp = es.id; muted.emp = false; fillCard(cards.emp, es); }
+    else hide('emp');
+    const bn = dynKey ? empNodes.find((n) => n.band.d.key === dynKey) : null;
+    if (bn && mqLeft.matches) { const ds = dynSpec(bn.band); pinned.dyn = ds.id; muted.dyn = false; fillCard(cards.dyn, ds); }
+    else hide('dyn');
+    syncStack();
+    return true;
   };
   cleanup.showEvent = (spec, side) => {
     if (!mq.matches) { solo.show(spec); return true; }
@@ -602,6 +623,7 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
   // 关闭即静音整个卡位（同河流侧注）：不静音的话 dismissed 只除名当前主角，
   // 下一帧自动跟随立刻补位下一张，观感是「✕ 没用」
   const muted = { dyn: false, emp: false };
+  let auto = true;                 // 自动跟随总闸（同河流侧，见 setAuto）
   // 让位按**最外侧被占的槽**算,不是按卡数:朝代卡的槽在右起 352–674px,
   // 皇帝卡在 16–338px。只剩朝代卡时(视窗里没有名君、或皇帝卡被关掉——
   // 唐中晚期、明中期、清中期这类长段常驻此态)若按「一张卡」只让 356px,
@@ -669,14 +691,14 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
     if (!mq.matches) { hide('dyn'); hide('emp'); return; }
     const x0 = scroller.scrollLeft + scroller.clientWidth * 0.12;
     const x1 = scroller.scrollLeft + scroller.clientWidth * 0.88;
-    if (!pinned.emp && !muted.emp) {
+    if (auto && !pinned.emp && !muted.emp) {
       const cand = items
         .filter((it) => NOTABLE.has(it.e.name) && !dismissed.emp.has(it.e.id) && it.cx > x0 && it.cx < x1)
         .sort((a, b) => NOTABLE.get(b.e.name) - NOTABLE.get(a.e.name))[0];
       if (cand) show('emp', empSpec(cand));
       else hide('emp');
     }
-    if (!pinned.dyn && !muted.dyn && mqBoth.matches) {
+    if (auto && !pinned.dyn && !muted.dyn && mqBoth.matches) {
       // 同朝优先:皇帝卡在场时,朝代卡给他的朝——两张卡是一对(秦始皇配秦),
       // 而不是各说各话(旁边挂着按可见宽度最长算出的西汉)。
       // 皇帝卡空着时才退回「视窗里可见宽度最长的朝代」作时代锚
@@ -732,6 +754,17 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
   cleanup.releasePins = () => {
     for (const k of Object.keys(pinned)) pinned[k] = null;
     for (const k of Object.keys(muted)) muted[k] = false;   // 跳转即新语境，静音解除
+  };
+  cleanup.setAuto = (on) => { auto = on !== false; if (auto) onScroll(); };
+  cleanup.setContext = ({ dynKey, empId } = {}) => {
+    if (!mq.matches) return false;
+    const it = empId ? items.find((q) => q.e.id === empId) : null;
+    if (it) { const es = empSpec(it); pinned.emp = es.id; muted.emp = false; show('emp', es); }
+    else hide('emp');
+    const br = dynKey ? bands.find((q) => q.band.d.key === dynKey) : null;
+    if (br && mqBoth.matches) { const ds = dynSpec(br.band); pinned.dyn = ds.id; muted.dyn = false; show('dyn', ds); }
+    else hide('dyn');
+    return true;
   };
   // 窄屏的君主词条出口：与河流侧同名同义（骰子/搜索跳转用；角卡在窄屏摆不下）
   cleanup.soloMode = () => !mq.matches;

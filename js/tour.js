@@ -40,7 +40,7 @@ const memo = {
 };
 
 // 按名字找,不按下标:两者都会随数据增补而移位,名字至少改动时会被 lint 拦下
-const empId = (name) => (EMPERORS.find((e) => e.name === name || e.temple === name) || {}).id;
+const empIdOf = (name) => (EMPERORS.find((e) => e.name === name || e.temple === name) || {}).id;
 const evIdx = (name) => EVENTS.findIndex((e) => e.n === name);
 
 // 只留「文化·科技」与「文物」两类时要关掉的其余各类
@@ -294,6 +294,17 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     // 东西也在顶部（第 7 站的搜索框就在坞底下）——那就把坞挪到下缘去。
     // 贴底卡在场时下缘已被占，坞留在顶上（此时坞已收成一行，遮挡有限）。
     const raw = holes.flatMap((get) => [].concat(get() || [])).filter((r) => r && r.w > 0 && r.h > 0);
+    // 宽屏：**讲解坞去卡那一侧**。事件卡贴着它自己那条岸（左岸政事、右岸文教）
+    // 是有意义的，不该为了排版把卡搬走；该动的是讲解——它跟卡一左一右分踞两端，
+    // 读者的眼睛要横跨整屏才能把话和东西对上（用户实测截图）。
+    if (innerWidth > 720) {
+      const open = [...document.querySelectorAll('.kp.on')].map((c) => c.getBoundingClientRect())
+        .filter((r) => r.width && r.height);
+      if (open.length) {
+        const cx = open.reduce((a, r) => a + r.left + r.width / 2, 0) / open.length;
+        dock.classList.toggle('dock-right', cx > W * 0.55);
+      }
+    } else dock.classList.remove('dock-right');
     if (raw.length && innerWidth <= 720) {
       const c = raw.reduce((a, r) => a + r.y + r.h / 2, 0) / raw.length;
       const cardOn = !!document.querySelector('.kp-solo.on, .river-card.on');
@@ -415,6 +426,15 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
       extra.appendChild(h('a', { class: 'chip tour-go2', href: st.go2.href, text: st.go2.text }));
     }
     dock.scrollTop = 0;          // 每站从头讲起：上一站滚过的位置不该带到下一站
+    // 背景卡：**只在 relevant 的时候开**（用户指出）。导览开着时自动跟随已关，
+    // 这两格改由本站的事件决定——事件的 d 就是「这事发生在谁家」，那是归属审计
+    // 一条条判过的（286 条补 d、165 条确认留空）；君主取那一年在位的那位。
+    // 事件没有 d 的（两国之间的事、库外政权的器物，如龟兹的克孜尔石窟），
+    // 背景卡就空着——本库判过它没有归属，卡片不该替它编一个
+    {
+      const kc = hostOf() && hostOf().__kp;
+      if (kc && kc.setAuto) kc.setAuto(false);
+    }
     // 详解的默认态每站重置：宽屏摆得下就直接摊开，手机收起（点开即看）。
     // 「这一站有没有藏着东西」交给 summary 的字样说，免得读者以为没了
     const hasMore = !!(st.b2 || st.cta || st.cta2 || st.go2);
@@ -501,6 +521,8 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
 
     // 三、走过去
     navigate(st, loc, { smooth: true });
+    // 背景卡在这之后设：设早了会被随后的重绘与本站自己的事件卡冲掉
+    setStopContext(st);
     await (loc.pending || Promise.resolve());
     if (me !== seq) return;
 
@@ -559,6 +581,9 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     for (const d of [180, 500, 1100, 1800]) setTimeout(() => {
       if (me !== seq || !on) return;
       kick();
+      const kc2 = hostOf() && hostOf().__kp;
+      if (kc2 && kc2.setAuto) kc2.setAuto(false);
+      setStopContext(st);
       const l = live();
       if (!l) return;
       // 这一站要照卡上的链接行，就得先把卡滚到看得见它的地方——手机上卡被
@@ -617,7 +642,7 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     if (st.span) {
       loc.year((st.span[0] + st.span[1]) / 2, o);
     } else if (st.emp) {
-      const id = empId(st.emp);
+      const id = empIdOf(st.emp);
       // 节点存进盒子而不是扣进闭包:重画后旧节点作废,盒子里换成新树上的那一个,
       // 洞的取值函数不必跟着改
       empBox.node = (id && loc.emperor(id, o)) || null;
@@ -653,6 +678,27 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     for (const d of [120, 420, 900]) setTimeout(() => {
       if (on) document.body.classList.toggle('tour-card-on', has());
     }, d);
+  }
+
+  /**
+   * 把两翼的背景卡（朝代／君主）设成这一站该配的那一对。
+   * 朝代取事件的 d；君主取该朝在事件那一年在位的那位——找不到就让它空着。
+   */
+  function setStopContext(st) {
+    const kc = hostOf() && hostOf().__kp;
+    if (!kc || !kc.setContext) return;
+    const dynKey = st.dyn || (st.ev ? (EVENTS[evIdx(st.ev)] || {}).d : null) || null;
+    let empId = null;
+    if (dynKey && st.ev) {
+      const y = (EVENTS[evIdx(st.ev)] || {}).y;
+      const r = EMPERORS.filter((e) => e.dynKey === dynKey).find((e) => {
+        const a = e.reigns[0] && e.reigns[0].s, z = e.reignEnd;
+        return a && z && a.t <= y + 1 && z.t >= y;
+      });
+      empId = r ? r.id : null;
+    }
+    if (st.emp) empId = empIdOf(st.emp) || empId;   // 站自己点名的君主优先
+    kc.setContext({ dynKey, empId });
   }
 
   /** 图被重画后就地归位。不带缓动:这不是一段旅程,是把人放回他刚才站的地方 */
@@ -711,6 +757,11 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     goto(at === undefined ? Number(memo.get(AT_KEY, 0)) || 0 : at);
   }
   function stop(done) {
+    dock.classList.remove('dock-right');
+    {   // 自动跟随还给读者：导览关掉它只为这一程，不该留下后遗症
+      const kc = hostOf() && hostOf().__kp;
+      if (kc && kc.setAuto) kc.setAuto(true);
+    }
     document.body.classList.remove('tour-card-on');
     dock.classList.remove('dock-bottom');
     sbar.classList.remove('on');

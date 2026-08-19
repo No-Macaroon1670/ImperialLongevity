@@ -1052,3 +1052,6 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .lc-name { display: flex; align-items: baseline; gap: 8px; font-size: .92rem; font-weight: 600; }
 .lc-count { font-size: .74rem; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
 .lc-sub { margin-top: 3px; font-size: .78rem; line-height: 1.5; color: var(--text-2); }
+
+/* 宽屏：讲解坞挪到卡那一侧，免得话在左、东西在右，眼睛横跨整屏（见 tour.js paint 注） */
+@media (min-width: 721px) { .tour-dock.dock-right { left: auto; right: 16px; } }

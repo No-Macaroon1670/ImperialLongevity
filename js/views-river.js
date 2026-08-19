@@ -1317,6 +1317,7 @@ export function renderRiver(host, list, opts) {
 
   // 桌面两翼知识卡:上行左朝代、右皇帝,下行接住两岸事件轨(见 knowledge.js)
   const kClean = mountKnowledge(empNodes, wrap, evNodes);
+  host.__kp = kClean;                    // 导览要用它的 setAuto／setContext
   // 点事件:哪岸点的就落哪栏。左岸政事落左栏、右岸文教落右栏——
   // 卡片正在它那条轨的下方,眼睛不必横跨整条河去找刚点的那件事。
   // 窄屏没有两翼,落到底部的手机单卡(一次只开一张)
