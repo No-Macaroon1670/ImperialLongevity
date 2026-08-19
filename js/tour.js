@@ -30,6 +30,7 @@ import { S, render } from './shell.js';
 import { eventLegend } from './views-lanes.js';
 import { EMPERORS } from './data.js';
 import { EVENTS } from './events.js';
+import { mountMinimap } from './minimap.js';
 
 // 走到第几站也要记:面板右上角就是个 ✕,误触一下就没了,
 // 再从第一站走一遍是惩罚读者手滑
@@ -224,6 +225,12 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   // 窄屏不给：一屏预算里塞不下六百字，手机仍读 b/b2 那两句。
   // `full` 的站（序、落点）例外：那两张本来就是拿来定调的，图上没有东西可打光，
   // 手机上索性给近乎满屏，全文照读
+  // 叙事小地图：只有带地理档的线才挂（新手导览不挂——它教的是怎么读这张图，
+  // 不是走一条路）。贴在讲解坞对角的那个角上
+  const mmap = opts.geo ? mountMinimap(
+    (ev) => opts.geo[ev] || null,
+    () => STOPS.map((s) => (s.ev ? opts.geo[s.ev] : null)),
+  ) : null;
   const LONG_MIN_W = 1000;
   const wantLong = (st) => !!(st && st.long && st.long.length && (st.full || innerWidth > LONG_MIN_W));
   const fillLong = (st) => {
@@ -328,6 +335,8 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
         dock.classList.toggle('dock-right', cx > W * 0.55);
       }
     } else dock.classList.remove('dock-right');
+    // 小地图始终待在讲解坞的对角：两块都挤在同一侧就等于把图盖掉一半
+    if (mmap) mmap.side(!dock.classList.contains('dock-right'));
     if (raw.length && innerWidth <= 720) {
       const c = raw.reduce((a, r) => a + r.y + r.h / 2, 0) / raw.length;
       const cardOn = !!document.querySelector('.kp-solo.on, .river-card.on');
@@ -441,6 +450,7 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     readLink.href = canRead ? st.read : '#';
     readLink.style.display = canRead ? '' : 'none';
     dock.classList.toggle('dock-full', !!st.full);
+    if (mmap) mmap.show(st.ev);
     body2.textContent = (wideProse || longOn) ? '' : (st.b2 || '');
     body2.style.display = (!wideProse && !longOn && st.b2) ? '' : 'none';
     more.classList.toggle('flat', wideProse);
@@ -793,6 +803,7 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   function stop(done) {
     dock.classList.remove('dock-long');
     dock.classList.remove('dock-full');
+    if (mmap) mmap.hide();
     dock.classList.remove('dock-right');
     {   // 自动跟随还给读者：导览关掉它只为这一程，不该留下后遗症
       const kc = hostOf() && hostOf().__kp;

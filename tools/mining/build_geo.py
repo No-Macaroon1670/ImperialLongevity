@@ -1,0 +1,234 @@
+# -*- coding: utf-8 -*-
+"""给一条故事线做地理档：docs/geo-<key>.json。
+
+**一站一个点是错的模型**，两条线都立刻证明了这一点：
+
+  · 赤壁线的「赤壁之战」有七说（嘉鱼、蒲圻、武昌、汉阳、汉川、黄冈、钟祥），
+    「隆中对」有两说（南阳卧龙岗、襄阳古隆中）。按本库通例，各源不一致就
+    一个都不给——但地图上「不给」不等于空白，而是**把几个候选一起画出来**。
+    读者看见三个空心点，就知道这地方至今没定论，比给他一个实心点诚实。
+  · 文物在地图上是两个点：《前赤壁赋》写于黄州，真迹在台北；
+    《金刚经》出自莫高窟第十七窟，现藏伦敦。「出→藏」这条线本身就是叙事。
+
+故每站的地理项有四种形态：
+    {"点": [lat, lon]}                 确定的一处
+    {"诸说": [{"名": ..., "点": [..]}]}  争议，全部画出，不选边
+    {"现藏": [lat, lon], "藏于": "..."}  文物的第二个点，可与上二者并存
+    null                                 本站没有地点（如《三国演义》成书）
+
+坐标来源：Wikidata P625（CC0）。条目名先经 zhwiki 归一（本库的 `w` 存的是
+维基正题，含繁体与消歧义后缀，wbgetentities 对重定向并不宽容——实测
+「云冈石窟」直接查会落空）。查不到的写进 MANUAL 并注明依据，不许瞎填。
+
+用法：python tools/mining/build_geo.py <key>
+"""
+import io, json, os, re, sys, time
+import urllib.parse, urllib.request
+
+ROOT = r"C:/Users/ziyi_/Claude/imperial-longevity"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from build_line_doc import load_line, load_events  # noqa: E402
+
+UA = {"User-Agent": "ImperialLongevity-geo/1.0 (storyline minimap)"}
+
+# 每条线的地理映射。键是站点的 ev，值说明「拿哪个（些）实体的坐标」。
+#   str          → 查这一个 zhwiki 条目
+#   [str, ...]   → 诸说，全部查、全部画
+#   {'藏': str}  → 只有现藏地（书成于何处不可考者，如《三国演义》不给）
+# 写在这里而不是自动推断：一站落在哪儿是**策展判断**，不是数据属性。
+PLACES = {
+    'shiku': {
+        '白马寺': '白马寺',
+        '克孜尔石窟': '克孜尔千佛洞',
+        '敦煌石窟': '莫高窟',
+        '麦积山石窟': '麦积山石窟',
+        '云冈石窟': '云冈石窟',
+        '龙门石窟': '龙门石窟',
+        '榆林窟': '榆林窟',
+        '峨眉山乐山大佛': '乐山大佛',
+        # 出自莫高窟第十七窟，今藏大英图书馆——两个点
+        '金刚经印本': {'出': '莫高窟', '藏': '大英图书馆'},
+        '大足石刻': '大足石刻',
+        '藏经洞发现': '莫高窟',
+    },
+    'chibi': {
+        # 躬耕地两说，自清代争到今天：两个空心点，不选边
+        '隆中对': ['古隆中', '南阳武侯祠'],
+        # 七说。地图上照数画七个，那才是「今人统计七说」的样子
+        '赤壁之战': ['赤壁市', '嘉鱼县', '武昌区', '汉阳区', '汉川市', '黄冈市', '钟祥市'],
+        '刮目相看': '岳阳市',            # 周瑜卒于巴丘，裴注谓即今巴陵（岳阳）
+        '三国志': None,                  # 陈寿成书之地不可考，不给
+        '前赤壁赋': {'出': '黄冈市', '藏': '国立故宫博物院'},
+        '寒食帖': {'出': '黄冈市', '藏': '国立故宫博物院'},
+        '赤壁图': {'藏': '国立故宫博物院'},   # 武元直作画之地不可考
+        '三国演义': None,                # 成书地与年代皆无定论
+    },
+}
+
+# 查不到坐标时的人工补录。**每条都要写依据**，宁可留空也不许估
+MANUAL = {}
+
+
+def qids(titles):
+    """zhwiki 条目名（含重定向）→ QID。pageprops 一次解决归一与取号。"""
+    out = {}
+    for i in range(0, len(titles), 20):
+        u = ('https://zh.wikipedia.org/w/api.php?action=query&format=json&formatversion=2'
+             '&redirects=1&prop=pageprops&ppprop=wikibase_item&titles='
+             + urllib.parse.quote('|'.join(titles[i:i + 20])))
+        try:
+            d = json.load(urllib.request.urlopen(urllib.request.Request(u, headers=UA), timeout=40))
+        except Exception as e:
+            print('  取失败：%s' % str(e)[:50], file=sys.stderr)
+            continue
+        norm = {r['from']: r['to'] for r in (d.get('query', {}).get('normalized') or [])}
+        redir = {r['from']: r['to'] for r in (d.get('query', {}).get('redirects') or [])}
+        back = {}
+        for a in titles:
+            b = norm.get(a, a)
+            back.setdefault(redir.get(b, b), []).append(a)
+        for p in d.get('query', {}).get('pages', []):
+            q = (p.get('pageprops') or {}).get('wikibase_item')
+            for orig in back.get(p.get('title'), []):
+                if q:
+                    out[orig] = q
+        time.sleep(0.5)
+    return out
+
+
+def coords(ids):
+    """QID → (lat, lon)，取 P625。"""
+    out = {}
+    ids = list(dict.fromkeys(ids))
+    for i in range(0, len(ids), 40):
+        u = ('https://www.wikidata.org/w/api.php?action=wbgetentities&format=json'
+             '&props=claims&ids=' + '|'.join(ids[i:i + 40]))
+        try:
+            d = json.load(urllib.request.urlopen(urllib.request.Request(u, headers=UA), timeout=40))
+        except Exception as e:
+            print('  取失败：%s' % str(e)[:50], file=sys.stderr)
+            continue
+        for q, ent in (d.get('entities') or {}).items():
+            cl = ((ent.get('claims') or {}).get('P625') or [])
+            if cl:
+                v = cl[0].get('mainsnak', {}).get('datavalue', {}).get('value', {})
+                if 'latitude' in v:
+                    out[q] = [round(v['latitude'], 4), round(v['longitude'], 4)]
+        time.sleep(0.5)
+    return out
+
+
+def main():
+    key = sys.argv[1] if len(sys.argv) > 1 else 'chibi'
+    spec = PLACES.get(key)
+    if not spec:
+        sys.exit('没有 %s 的地理映射，先写进 PLACES' % key)
+    _, stops = load_line(key)
+
+    want = []
+    for v in spec.values():
+        if isinstance(v, str):
+            want.append(v)
+        elif isinstance(v, list):
+            want += v
+        elif isinstance(v, dict):
+            want += [x for x in v.values() if x]
+    qs = qids(sorted(set(want)))
+    cs = coords(list(qs.values()))
+
+    def pt(title):
+        q = qs.get(title)
+        c = cs.get(q) if q else None
+        return c or MANUAL.get(title)
+
+    geo, miss = {}, []
+    for s in stops:
+        ev = s['ev']
+        if not ev or ev not in spec:
+            continue
+        v = spec[ev]
+        rec = {}
+        if v is None:
+            geo[ev] = None
+            continue
+        if isinstance(v, str):
+            c = pt(v)
+            if c:
+                rec['点'] = c
+                rec['地名'] = v
+            else:
+                miss.append((ev, v))
+        elif isinstance(v, list):
+            says = [{'名': t, '点': pt(t)} for t in v]
+            got = [x for x in says if x['点']]
+            miss += [(ev, x['名']) for x in says if not x['点']]
+            if got:
+                rec['诸说'] = got
+        elif isinstance(v, dict):
+            if v.get('出'):
+                c = pt(v['出'])
+                if c:
+                    rec['点'] = c
+                    rec['地名'] = v['出']
+                else:
+                    miss.append((ev, v['出']))
+            if v.get('藏'):
+                c = pt(v['藏'])
+                if c:
+                    rec['现藏'] = c
+                    rec['藏于'] = v['藏']
+                else:
+                    miss.append((ev, v['藏']))
+        geo[ev] = rec or None
+
+    out = os.path.join(ROOT, 'docs/geo-%s.json' % key)
+    io.open(out, 'w', encoding='utf-8', newline='\n').write(json.dumps({
+        '说明': ('坐标取自 Wikidata P625（CC0）。**一站不一定一个点**：'
+                 '争议地写「诸说」全部画出、不选边；文物另有「现藏」，'
+                 '「出→藏」那条线本身就是流散叙事；无地点者为 null。'),
+        '站': geo,
+    }, ensure_ascii=False, indent=1))
+
+    n1 = sum(1 for v in geo.values() if v and '点' in v)
+    n2 = sum(1 for v in geo.values() if v and '诸说' in v)
+    n3 = sum(1 for v in geo.values() if v and '现藏' in v)
+    print('写出 %s：%d 站｜确定点 %d｜诸说 %d｜带现藏 %d｜无地点 %d'
+          % (out, len(geo), n1, n2, n3, sum(1 for v in geo.values() if not v)))
+    for ev, v in geo.items():
+        if v is None:
+            print('  %-10s —' % ev)
+        elif '诸说' in v:
+            print('  %-10s 诸说 %d：%s' % (ev, len(v['诸说']), '、'.join(x['名'] for x in v['诸说'])))
+        else:
+            print('  %-10s %s%s' % (ev, v.get('地名', ''),
+                                    ('　→ 现藏 ' + v['藏于']) if v.get('藏于') else ''))
+    if miss:
+        print('  ⚠ 没查到坐标（写进 MANUAL 并注明依据，别估）：', miss)
+    emit_js()
+
+
+def emit_js():
+    """把各线的地理档并成 js/geo.js。前端不能直接 import JSON，
+    而多开一个 fetch 又等于给一张角落里的小图加一次网络往返。"""
+    import glob
+    rows = {}
+    for f in sorted(glob.glob(os.path.join(ROOT, 'docs/geo-*.json'))):
+        k = os.path.basename(f)[4:-5]
+        rows[k] = json.load(io.open(f, encoding='utf-8')).get('站', {})
+    head = [
+        '// geo.js — 各故事线的地理档。**生成物，不要手改**：',
+        '// 改了去跑 tools/mining/build_geo.py。',
+        '//',
+        '// 一站不一定一个点：`诸说` 是争议地（全部画出，不选边），',
+        '// `现藏` 是文物的第二个点（「出→藏」那条线本身就是流散叙事），',
+        '// null 是没有地点。坐标取自 Wikidata P625（CC0）。',
+        'export const GEO = %s;' % json.dumps(rows, ensure_ascii=False, indent=1),
+        '',
+    ]
+    js = chr(10).join(head)
+    io.open(os.path.join(ROOT, 'js/geo.js'), 'w', encoding='utf-8', newline=chr(10)).write(js)
+    print('  写出 js/geo.js：%s' % '、'.join('%s %d 站' % (k, len(v)) for k, v in rows.items()))
+
+
+if __name__ == '__main__':
+    main()
