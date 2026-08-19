@@ -1,0 +1,186 @@
+[
+ {
+  "站": "白马寺",
+  "维基正题": "白马寺",
+  "地点": "洛阳",
+  "年": 68,
+  "qid": "Q1264618",
+  "lat": 34.7239,
+  "lon": 112.5997,
+  "图": {
+   "文件": "27467-Luoyang_(49085730123).jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=original",
+   "图片URL": null,
+   "宽": null,
+   "高": null,
+   "许可": null,
+   "许可码": null,
+   "作者": null,
+   "说明页": null,
+   "要求署名": false
+  }
+ },
+ {
+  "站": "克孜尔石窟",
+  "维基正题": "克孜尔千佛洞",
+  "地点": "拜城",
+  "年": 280,
+  "qid": "Q1234019",
+  "lat": 41.7844,
+  "lon": 82.5047,
+  "图": {
+   "文件": "QizilDonors.jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=original",
+   "图片URL": null,
+   "宽": null,
+   "高": null,
+   "许可": null,
+   "许可码": null,
+   "作者": null,
+   "说明页": null,
+   "要求署名": false
+  }
+ },
+ {
+  "站": "敦煌石窟",
+  "维基正题": "莫高窟",
+  "地点": "敦煌",
+  "年": 366,
+  "qid": "Q43286",
+  "lat": 40.0372,
+  "lon": 94.8042,
+  "图": {
+   "文件": "Dunhuang_Mogao_Ku_2013.12.31_12-30-18.jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=original",
+   "图片URL": null,
+   "宽": null,
+   "高": null,
+   "许可": null,
+   "许可码": null,
+   "作者": null,
+   "说明页": null,
+   "要求署名": false
+  }
+ },
+ {
+  "站": "麦积山石窟",
+  "维基正题": "麦积山石窟",
+  "地点": "天水",
+  "年": 400,
+  "qid": "Q1885375",
+  "lat": 34.3501,
+  "lon": 106.006,
+  "图": {
+   "文件": "Bodhisattva2_at_MaiJiShan.jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=original",
+   "图片URL": null,
+   "宽": null,
+   "高": null,
+   "许可": null,
+   "许可码": null,
+   "作者": null,
+   "说明页": null,
+   "要求署名": false
+  }
+ },
+ {
+  "站": "云冈石窟",
+  "维基正题": "云冈石窟",
+  "地点": "大同",
+  "年": 460,
+  "qid": null,
+  "图": null
+ },
+ {
+  "站": "龙门石窟",
+  "维基正题": "龙门石窟",
+  "地点": "洛阳",
+  "年": 493,
+  "qid": "Q273834",
+  "lat": 34.5556,
+  "lon": 112.4697,
+  "图": {
+   "文件": "27427-Luoyang_(49067744628).jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=original",
+   "图片URL": null,
+   "宽": null,
+   "高": null,
+   "许可": null,
+   "许可码": null,
+   "作者": null,
+   "说明页": null,
+   "要求署名": false
+  }
+ },
+ {
+  "站": "榆林窟",
+  "维基正题": "榆林窟",
+  "地点": "瓜州",
+  "年": 700,
+  "qid": "Q751622",
+  "lat": 40.0592,
+  "lon": 95.9361,
+  "图": {
+   "文件": "榆林窟.jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=original",
+   "图片URL": null,
+   "宽": null,
+   "高": null,
+   "许可": null,
+   "许可码": null,
+   "作者": null,
+   "说明页": null,
+   "要求署名": false
+  }
+ },
+ {
+  "站": "峨眉山乐山大佛",
+  "维基正题": "峨眉山",
+  "地点": "嘉州",
+  "年": 713,
+  "qid": "Q134927",
+  "lat": 29.5197,
+  "lon": 103.3325,
+  "图": {
+   "文件": "EmeiShanTop.jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=original",
+   "图片URL": null,
+   "宽": null,
+   "高": null,
+   "许可": null,
+   "许可码": null,
+   "作者": null,
+   "说明页": null,
+   "要求署名": false
+  }
+ },
+ {
+  "站": "金刚经印本",
+  "维基正题": "金刚经",
+  "地点": "敦煌",
+  "年": 868,
+  "qid": null,
+  "图": null
+ },
+ {
+  "站": "大足石刻",
+  "维基正题": "大足石刻",
+  "地点": "重庆",
+  "年": 892,
+  "qid": "Q651278",
+  "lat": 29.7133,
+  "lon": 105.7069,
+  "图": {
+   "文件": "大足石刻.JPG?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=original",
+   "图片URL": null,
+   "宽": null,
+   "高": null,
+   "许可": null,
+   "许可码": null,
+   "作者": null,
+   "说明页": null,
+   "要求署名": false
+  }
+ },
+ {
+  "站": "藏经洞发现",
+  "维基正题": "藏经洞",
+  "地点": "敦煌",
+  "年": 1900,
+  "qid": null,
+  "图": null
+ }
+]
