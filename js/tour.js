@@ -104,7 +104,7 @@ const STOPS = [
     cta: '点任一标记即开卡；导览另给了一排类别开关，可逐类筛。卡片里有 YouTube 与 B 站两个视频按钮——这一段在 B 站能找到几部讲得不错的。',
     ev: '隋末民变',
     card: true,
-    links: true,
+    links: 'vids',
     legend: true,
   },
   {
@@ -487,7 +487,11 @@ export function mountTour(sectionEl, hostOf) {
       const base = st.ev
         ? '.kp-ev.on, .kp-corner-dyn.on, .kp-solo.on'
         : '.kp.on:not(.kp-ev), .kp-solo.on';
-      const sel = st.links ? base.split(', ').map((s) => `${s} .kp-links`).join(', ') : base;
+      // links: 'vids' 只照两个视频按钮（卡上正有 .kp-vids 裹着它俩）；
+      // links: true 照整行。此前一律照整行，连维基与百度也圈了进去，
+      // 而这一站讲的是「B 站能找到几部讲得不错的」（用户实测）
+      const part = st.links === 'vids' ? '.kp-vids' : '.kp-links';
+      const sel = st.links ? base.split(', ').map((s) => `${s} ${part}`).join(', ') : base;
       cardGets.push(nodeHole(sel, { noClip: true }));
     }
     holes.push(...late, ...cardGets);
