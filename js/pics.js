@@ -39,7 +39,7 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:%E8%8E%AB%E9%AB%98%E7%AA%9F%E4%B9%9D%E5%B1%82%E6%A5%BC_-_panoramio.jpg",
    "说明": "莫高窟九层楼",
    "卡": false,
-   "整幅": false
+   "整幅": true
   },
   "麦积山石窟": {
    "文件": "Majishan huge sculptures 20090226.jpg",
@@ -51,7 +51,7 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Majishan_huge_sculptures_20090226.jpg",
    "说明": "麦积山崖面上的大型造像",
    "卡": true,
-   "整幅": false
+   "整幅": true
   },
   "云冈石窟": {
    "文件": "Cave 20, Yungang Grottoes.jpg",
@@ -75,7 +75,7 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Ancient_Buddhist_Grottoes_at_Longmen-_Fengxian_Temple,_Colossal_Statue_of_Vairocana.jpg",
    "说明": "龙门奉先寺卢舍那大像",
    "卡": true,
-   "整幅": false
+   "整幅": true
   },
   "榆林窟": {
    "文件": "Yulin Caves Jiuquan Gansu China 酒泉 楡林窟 - panoramio (1).jpg",
@@ -136,6 +136,17 @@ export const PICS = {
    "说明": "第十六窟，写本堆在第十七窟入口外待检。斯坦因摄于一九〇七年",
    "卡": true,
    "整幅": false
+  },
+  "序": {
+   "文件": "baimasi-stone-horse-2023.jpg",
+   "署名": "No-Macaroon1670 摄，2023 年 12 月",
+   "许可": "作者本人拍摄",
+   "说明": "白马寺山门外的石马。相传是汉代驮经的那匹，实为北宋魏咸信墓前的石像，一九三五年才迁到这里",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/shiku/baimasi-stone-horse-2023.jpg",
+   "作者": "No-Macaroon1670 摄，2023 年 12 月",
+   "说明页": ""
   }
  }
 };

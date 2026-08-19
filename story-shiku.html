@@ -73,8 +73,15 @@ details.app li{margin-bottom:.7rem}
 .src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
 .note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
 /* 配图。图注里那半行是**署名**，CC-BY／CC-BY-SA 要求给出作者与许可 */
+/* 文绕图。竖幅整幅摆着时两侧全空，绕排把那块空白还给文字；
+   窄屏不绕——一栏劈两半两边都读不成 */
 figure.pic{margin:0 0 2rem}
 figure.pic img{display:block;width:100%;height:auto;border-radius:3px}
+@media(min-width:820px){
+  figure.pic{float:left;width:44%;margin:.4rem 1.6rem .8rem 0}
+  section p,section h2,details.app{clear:none}
+  details.app,.go{clear:both}
+}
 figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
   line-height:1.8;color:var(--faint)}
 figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
@@ -117,11 +124,24 @@ footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
 <section id="s0" class="tone"><div class="wrap">
 <div class="num">序</div>
 <h2>三匹白马</h2>
+<figure class="pic">
+<img src="img/shiku/baimasi-stone-horse-2023.jpg" alt="白马寺山门外的石马。相传是汉代驮经的那匹，实为北宋魏咸信墓前的石像，一九三五年才迁到这里" loading="lazy">
+<figcaption>白马寺山门外的石马。相传是汉代驮经的那匹，实为北宋魏咸信墓前的石像，一九三五年才迁到这里　No-Macaroon1670 摄，2023 年 12 月 · 作者本人拍摄</figcaption>
+</figure>
 <p>一匹白马，驮着经书，从西边走进洛阳。这是中国人讲了一千五百年的开场。</p>
 <p>但《洛阳伽蓝记》说马驮的是经；《水经注》说驮的是图，用的是「白马负图，表之中夏」；《高僧传》里的白马根本没有进洛阳——它绕着一座塔悲鸣，与洛阳无关。</p>
 <p>三部书，三匹白马。</p>
 <p>它们有一个共同点：都成书于这件事发生的四百年之后。</p>
 <p>这条线从这匹并不存在的白马开始，走一千八百年，十一站。中间没有一处是白来的——每一站都是有人在山壁上，一凿一凿凿出来的。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-doubt">重要更正</span>白马寺山门外那对青石马，相传为汉代驮经之马，实为北宋太师太保魏咸信墓前的石像，1935 年迁移至此。序里配的那张照片即其一——人人当作「驮经白马」来拍的东西，本身就是后来搬到这儿的。</li>
+</ul>
+<p class="note">另有 1 条经事后独立复核后须留意（数字打架、引文出入、出处只到二手）。逐条见 <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-shiku.md" target="_blank" rel="noopener">资料与出处</a>。</p>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/白马寺" target="_blank" rel="noopener">中文维基 · 白马寺</a>
+</div>
+</details>
 </div></section>
 <section id="s1" data-year="68" data-name="白马寺"><div class="wrap">
 <div class="num">一 / 十一</div>

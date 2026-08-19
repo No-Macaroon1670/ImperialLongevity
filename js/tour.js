@@ -216,15 +216,21 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   // 故图下恒有一行小字，链到 Commons 的文件页；抓不到许可的图一律不用
   //（见 tools/mining/pick_pics.py）。
   const picImg = h('img', { class: 'tour-pic-img', alt: '', loading: 'lazy' });
+  const picCap = h('figcaption', { class: 'tour-pic-cap' });
   const picCredit = h('a', { class: 'tour-pic-credit', target: '_blank', rel: 'noopener' });
-  const picBox = h('figure', { class: 'tour-pic' }, [picImg, picCredit]);
+  const picBox = h('figure', { class: 'tour-pic' }, [picImg, picCap, picCredit]);
   const fillPic = (st) => {
     const p = st && st.pic;
     if (!p || !p.缩略图) { picBox.classList.remove('on'); picImg.removeAttribute('src'); return; }
     picImg.src = p.缩略图;
     picImg.classList.toggle('whole', !!p.整幅);   // 横卷不裁
     picImg.alt = p.说明 || '';
-    picCredit.href = p.说明页 || '#';
+    // 配文有时本身就是内容：那张石马照的配文说的是「相传是汉代驮经的那匹，
+    // 实为北宋墓前石像」——序整段的论点就落在这句上，藏进 alt 里可惜了
+    picCap.textContent = p.说明 || '';
+    picCap.style.display = p.说明 ? '' : 'none';
+    if (p.说明页) { picCredit.href = p.说明页; picCredit.removeAttribute('aria-disabled'); }
+    else { picCredit.removeAttribute('href'); }   // 自摄图没有 Commons 页，不给死链
     picCredit.textContent = [p.作者, p.许可].filter(Boolean).join(' · ') || '图片来源';
     picBox.classList.add('on');
   };

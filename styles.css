@@ -1158,8 +1158,13 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 }
 /* 横卷与画心不裁：cover 会把《金刚经》扉画的上下切掉 */
 .tour-pic-img.whole { object-fit: contain; background: var(--surface-2); }
+/* 配文。有的配文本身就是内容（石马那张：相传汉代驮经，实为北宋墓前石像），
+   故给正常字号、允许换行；署名另起一行、更小、更淡 */
+.tour-pic-cap {
+  margin-top: 5px; font-size: .72rem; line-height: 1.6; color: var(--text-2);
+}
 .tour-pic-credit {
-  display: block; margin-top: 3px; font-size: .66rem; line-height: 1.5;
+  display: block; margin-top: 2px; font-size: .64rem; line-height: 1.5;
   color: var(--muted); text-decoration: none;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
@@ -1167,5 +1172,25 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 /* 定调卡（序与落点）本来一律不配图，后来开了口子：石窟线的序讲「三匹白马
    都是后人编的」，而门前那匹石马正是这句话的实物。有图就给，没图照旧只有字。
    定调卡本来就近乎满屏，图给高一点 */
-.tour-dock.dock-full .tour-pic-img { height: 168px; }
+/* ── 文绕图（维基条目那种） ────────────────────────────────────────
+   宽屏上让图浮到左边、正文绕着走。理由有二：竖幅照片整幅摆着时两侧全是空的，
+   而 420px 的栏宽本来就紧；绕排等于把那块空白还给文字。
+   窄屏不绕——一栏三百多像素再劈两半，两边都读不成。
+   图不定高、只封顶：绕排的图按原比例走，裁切在这里没有意义。 */
+@media (min-width: 1001px) {
+  .tour-dock.dock-long .tour-pic,
+  .tour-dock.dock-full .tour-pic {
+    float: left; width: 46%; margin: 2px 12px 6px 0;
+  }
+  .tour-dock.dock-long .tour-pic-img,
+  .tour-dock.dock-full .tour-pic-img {
+    height: auto; max-height: 320px; object-fit: contain;
+  }
+  /* 按钮与详解要清浮动，否则会挤到图的右边去 */
+  .tour-dock.dock-long .tour-nav, .tour-dock.dock-full .tour-nav,
+  .tour-dock.dock-long .tour-more, .tour-dock.dock-full .tour-more { clear: both; }
+}
+/* 窄屏仍是整块横图，定调卡给足高度 */
+.tour-dock.dock-full .tour-pic-img { height: 190px; }
+.tour-dock.dock-full .tour-pic-img.whole { height: 260px; }
 @media (max-width: 720px) { .tour-pic-img { height: 112px; } }

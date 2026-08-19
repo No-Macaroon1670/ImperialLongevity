@@ -116,8 +116,15 @@ details.app li{margin-bottom:.7rem}
 .src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
 .note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
 /* 配图。图注里那半行是**署名**，CC-BY／CC-BY-SA 要求给出作者与许可 */
+/* 文绕图。竖幅整幅摆着时两侧全空，绕排把那块空白还给文字；
+   窄屏不绕——一栏劈两半两边都读不成 */
 figure.pic{margin:0 0 2rem}
 figure.pic img{display:block;width:100%;height:auto;border-radius:3px}
+@media(min-width:820px){
+  figure.pic{float:left;width:44%;margin:.4rem 1.6rem .8rem 0}
+  section p,section h2,details.app{clear:none}
+  details.app,.go{clear:both}
+}
 figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
   line-height:1.8;color:var(--faint)}
 figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
