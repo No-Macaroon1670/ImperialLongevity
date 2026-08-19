@@ -294,8 +294,12 @@ export function mountTour(sectionEl, hostOf) {
       // 洞比屏还宽就等于没熄灯。七女为父报仇跨一百二十年,按 14px/年是 1680px——
       // 照原样挖,整屏全亮,读者不知道在看哪儿。超过屏宽七成即绕中心收窄:
       // 这是聚光灯,不是量尺,读者要的是「在这儿」而不是「有多长」
+      // 收窄只对**按年份算出来的**洞：那种洞可以宽达一千七百像素，照原样挖
+      // 就是整屏全亮。从 DOM 节点量来的洞（卡片、按钮、标签）本身就是一个
+      // 具体的东西，宽一点也该照全——卡片 345px 被收成 285px 再居中，看着
+      // 就是「框歪了」（用户实测）
       const cap = W * 0.76;
-      if (r.w > cap) { r = { ...r, x: r.x + (r.w - cap) / 2, w: cap }; }
+      if (!r.tight && r.w > cap) { r = { ...r, x: r.x + (r.w - cap) / 2, w: cap }; }
       // 留白按框的尺寸缩放：事件标记的命中区只有 14×18，一律加 6px 就会把
       // 相邻十四像素外的另一件事的圆点也圈进来，看着像「这个圈位置不对」
       // （用户实测）。小框收紧到 2–6px，大框照旧
@@ -342,7 +346,7 @@ export function mountTour(sectionEl, hostOf) {
       // 可见带是拿来挡「被卡片盖住的图」的，若连卡片自己也一并裁掉，
       // 「照亮卡上的 YouTube 与 B 站按钮」这类站就一点光都没有（用户实测）
       return r.width && r.height
-        ? { x: r.left, y: r.top, w: r.width, h: r.height, ...(opts.noClip ? { noClip: 1 } : {}) } : null;
+        ? { x: r.left, y: r.top, w: r.width, h: r.height, tight: 1, ...(opts.noClip ? { noClip: 1 } : {}) } : null;
     }).filter(Boolean);
   };
 
