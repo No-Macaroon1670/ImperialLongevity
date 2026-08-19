@@ -166,18 +166,23 @@ export function mountTour(sectionEl, hostOf) {
   // 82.7%，留给图的只剩 17%（用户实测截图）。可导览的整个意思就是「看这里」，
   // 图小到看不见，打光就白打了。故立三条预算，往后每条故事线照此排版：
   //   · 图 ≥ 45vh —— 低于此数打光无意义，这是硬底线；
-  //   · 卡（若这一站开卡）≤ 30vh —— 缩略图与摘要都压一压；
-  //   · 讲解面板：开卡的站 ≤ 22vh（标题＋主旨＋导航），不开卡的站 ≤ 38vh。
+  //   · 卡（若这一站开卡）≤ 27vh —— 缩略图与摘要都压一压；
+  //   · 讲解面板：开卡的站 ≤ 28vh，不开卡的站 ≤ 38vh。
   // 派生出的两条做法：**同屏只有一个主讲人**（开卡即让位），
-  // **文案分三级**（标题／一句主旨／详解折叠）。
+  // **文案分三级**——但切分轴是「史／法」而不是「概要／细节」：
+  //   `b`   一句**史**：这地方为什么值得看（永远显示）
+  //   `cta` 一句**法**：这一站教你图上的哪件事（永远显示）
+  //   详解  其余（b2 补史、cta2 补法、宽窄屏差异说明）
+  // 折进详解的只能是「补充」。**功能句绝不能折**——每一站的存在理由就是
+  // 介绍一个读图的方法，把它折起来等于把这一站的意义折没了（用户实测指出）。
   const more = h('details', { class: 'tour-more' }, [
-    h('summary', { class: 'tour-more-sum', text: '详解' }), body2, cta, cta2, extra, mnote,
+    h('summary', { class: 'tour-more-sum', text: '详解' }), body2, cta2, extra, mnote,
   ]);
   const panel = h('div', {
     class: 'tour-panel', role: 'dialog', 'aria-live': 'polite', 'aria-label': '导览',
   }, [
     h('div', { class: 'tour-head' }, [h('span', { class: 'tour-tag', text: '导览' }), step, closeBtn]),
-    title, body, more,
+    title, body, cta, more,
     h('div', { class: 'tour-nav' }, [prev, next]),
   ]);
   // 讲解与副卡装在同一个坞里,由 flex 排上下——各自 position:fixed 的话
@@ -348,6 +353,7 @@ export function mountTour(sectionEl, hostOf) {
     if (st.go2) {
       extra.appendChild(h('a', { class: 'chip tour-go2', href: st.go2.href, text: st.go2.text }));
     }
+    dock.scrollTop = 0;          // 每站从头讲起：上一站滚过的位置不该带到下一站
     // 详解的默认态每站重置：宽屏摆得下就直接摊开，手机收起（点开即看）。
     // 「这一站有没有藏着东西」交给 summary 的字样说，免得读者以为没了
     const hasMore = !!(st.b2 || st.cta || st.cta2 || st.go2);
@@ -577,8 +583,13 @@ export function mountTour(sectionEl, hostOf) {
     saved = null;
   }
 
-  prev.addEventListener('click', () => goto(i - 1));
-  next.addEventListener('click', () => (i === STOPS.length - 1 ? stop(true) : goto(i + 1)));
+  // 导览已结束就不再响应：面板收了，可导航钮还在 DOM 里，再点会把副卡与
+  // 让位记号重新装出来，屏上于是留下一排没有讲解的类别开关（实测）
+  prev.addEventListener('click', () => { if (on) goto(i - 1); });
+  next.addEventListener('click', () => {
+    if (!on) return;
+    if (i === STOPS.length - 1) stop(true); else goto(i + 1);
+  });
   closeBtn.addEventListener('click', () => stop(false));
   addEventListener('keydown', (e) => {
     if (!on) return;
