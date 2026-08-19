@@ -151,11 +151,23 @@ export function mountTour(sectionEl, hostOf) {
   // 而窄屏上卡只剩贴底一张、泳道要横滑着看。功能都在,观感是打折的,
   // 与其让读者自己觉得「怎么和说的不一样」,不如直说。窄屏才显示(CSS 控)
   const mnote = h('p', { class: 'tour-mnote', text: '这条导览在电脑上看得更完整：宽屏能同时摆下两翼的知识卡与并排的泳道，手机只剩贴底一张卡。' });
+  // ── 一屏预算法则（导览与将来的故事线通用） ─────────────────────────
+  // 手机上量过一次实况：讲解面板 40vh ＋ 贴底知识卡 42.7vh ＝ chrome 吃掉
+  // 82.7%，留给图的只剩 17%（用户实测截图）。可导览的整个意思就是「看这里」，
+  // 图小到看不见，打光就白打了。故立三条预算，往后每条故事线照此排版：
+  //   · 图 ≥ 45vh —— 低于此数打光无意义，这是硬底线；
+  //   · 卡（若这一站开卡）≤ 30vh —— 缩略图与摘要都压一压；
+  //   · 讲解面板：开卡的站 ≤ 22vh（标题＋主旨＋导航），不开卡的站 ≤ 38vh。
+  // 派生出的两条做法：**同屏只有一个主讲人**（开卡即让位），
+  // **文案分三级**（标题／一句主旨／详解折叠）。
+  const more = h('details', { class: 'tour-more' }, [
+    h('summary', { class: 'tour-more-sum', text: '详解' }), cta, cta2, extra, mnote,
+  ]);
   const panel = h('div', {
     class: 'tour-panel', role: 'dialog', 'aria-live': 'polite', 'aria-label': '导览',
   }, [
     h('div', { class: 'tour-head' }, [h('span', { class: 'tour-tag', text: '导览' }), step, closeBtn]),
-    title, body, cta, cta2, extra, mnote,
+    title, body, more,
     h('div', { class: 'tour-nav' }, [prev, next]),
   ]);
   // 讲解与副卡装在同一个坞里,由 flex 排上下——各自 position:fixed 的话
@@ -265,6 +277,16 @@ export function mountTour(sectionEl, hostOf) {
     if (st.go2) {
       extra.appendChild(h('a', { class: 'chip tour-go2', href: st.go2.href, text: st.go2.text }));
     }
+    // 详解的默认态每站重置：宽屏摆得下就直接摊开，手机收起（点开即看）。
+    // 「这一站有没有藏着东西」交给 summary 的字样说，免得读者以为没了
+    const hasMore = !!(st.cta || st.cta2 || st.go2);
+    more.style.display = hasMore ? '' : 'none';
+    more.open = hasMore && innerWidth > 720;
+    // 开卡的站，讲解让位给卡（同屏只有一个主讲人，见上方预算法则）。
+    // 先按本站声明置位，稍后再按**屏上实况**复核一次——上一站开的卡会留到
+    // 下一站，只认声明的话那一站就成了「面板照常摊开 ＋ 卡还赖在屏上」
+    document.body.classList.toggle('tour-card-on', !!(st.card || st.links));
+    syncCardYield();
     prev.disabled = i === 0;
     next.textContent = i === STOPS.length - 1 ? '结束导览' : '下一站 →';
 
@@ -379,6 +401,18 @@ export function mountTour(sectionEl, hostOf) {
     }
   }
 
+  /**
+   * 让位复核：屏上真有贴底卡就让位，没有就把整屏还给讲解。
+   * 卡是异步开的（摘要要向维基取），故在几个时点各查一次而不是只查一次。
+   */
+  function syncCardYield() {
+    const has = () => !!document.querySelector('.kp-solo.on, .river-card.on');
+    document.body.classList.toggle('tour-card-on', has());
+    for (const d of [120, 420, 900]) setTimeout(() => {
+      if (on) document.body.classList.toggle('tour-card-on', has());
+    }, d);
+  }
+
   /** 图被重画后就地归位。不带缓动:这不是一段旅程,是把人放回他刚才站的地方 */
   function reacquire() {
     if (!on || !curLoc) return;
@@ -421,6 +455,7 @@ export function mountTour(sectionEl, hostOf) {
     goto(at === undefined ? Number(memo.get(AT_KEY, 0)) || 0 : at);
   }
   function stop(done) {
+    document.body.classList.remove('tour-card-on');
     on = false;
     if (raf) { cancelAnimationFrame(raf); raf = null; }   // 不清掉,下次 kick 会被它挡住
     holes = [];

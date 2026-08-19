@@ -956,3 +956,30 @@ section.card.river-mode .chart-host.full-bleed > .notes {
   padding-left: max(44px, 3vw);
   padding-right: max(16px, 3vw);
 }
+
+/* ── 导览「详解」折叠（与将来的故事线共用） ───────────────────────────
+   文案分三级：标题／一句主旨（永远在）／详解（折叠）。宽屏摆得下就默认摊开，
+   手机默认收起——手机上这几段合计一百八十像素，正是把图挤到 17% 的元凶。 */
+.tour-more { margin: 0; }
+.tour-more[open] > .tour-more-sum { margin-bottom: 7px; }
+.tour-more-sum {
+  cursor: pointer; list-style: none; font-size: .76rem; color: var(--muted);
+  padding: 2px 0; user-select: none;
+}
+.tour-more-sum::-webkit-details-marker { display: none; }
+.tour-more-sum::before { content: '▸ '; }
+.tour-more[open] > .tour-more-sum::before { content: '▾ '; }
+.tour-more-sum:hover { color: var(--text-2); }
+
+@media (max-width: 720px) {
+  /* 一屏预算法则（见 tour.js 的长注）：图 ≥45vh、卡 ≤30vh、面板开卡时 ≤22vh。
+     开卡的那一站，讲解收成「标题＋主旨两行＋导航」，把屏让给卡与图。 */
+  body.tour-card-on .tour-dock { max-height: 22vh; }
+  body.tour-card-on .tour-body {
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+  }
+  /* 导览期间的贴底单卡走精简版：缩略图减半、摘要限三行 */
+  body.tour-on .kp-solo { max-height: 30vh; }
+  body.tour-on .kp-solo .kp-thumb { max-height: 72px; }
+  body.tour-on .kp-solo .kp-ext { -webkit-line-clamp: 3; }
+}
