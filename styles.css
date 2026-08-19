@@ -1110,7 +1110,7 @@ section.card.river-mode .chart-host.full-bleed > .notes {
    底图只有海岸线与黄河长江，没有国界（见 tools/mining/build_basemap.py）。 */
 .minimap {
   position: fixed; z-index: 901; right: 16px; bottom: 16px;
-  width: 232px; padding: 8px 9px 6px;
+  width: 258px; padding: 8px 9px 6px;
   background: var(--surface-1); border: 1px solid var(--border);
   border-radius: var(--radius); box-shadow: 0 10px 34px rgba(0, 0, 0, .34);
   display: none; pointer-events: none;      /* 只读的图，不抢下面图的点击 */
@@ -1132,6 +1132,13 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 /* 贴在图框边上的那个方块：东西已经出了这张图的范围（伦敦、柏林）。
    用虚线告诉读者「它不在这儿，只是往那个方向」 */
 .mm-off { stroke-dasharray: 3 2.5; }
+/* 参照层：今天的城市与两条河的名字。画得极淡——它们是坐标纸，不是内容。
+   没有它们，读者只看见一段海岸线，认不出哪儿是哪儿（用户实测指出） */
+.mm-city { fill: var(--muted); opacity: .5; }
+.mm-city-t { fill: var(--muted); opacity: .62; font-weight: 400; }
+.mm-river-t { fill: var(--seq-400); opacity: .8; }
+.mm-here-t { fill: var(--seq-500); font-weight: 700; paint-order: stroke;
+  stroke: var(--surface-1); stroke-width: 3px; }
 .mm-note {
   margin-top: 4px; font-size: .72rem; color: var(--muted);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;

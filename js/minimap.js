@@ -21,6 +21,20 @@
 
 import { BASEMAP, project } from './basemap.js';
 
+// 参照点。只有海岸线与两条河，读者认不出哪儿是哪儿（用户实测指出）。
+// 这些是**今天的城市**，只用来定位，不参与叙事——故画得极淡，且不进
+// 任何数据文件：它们不是史料，是给眼睛的坐标纸。
+// 取在视野内的才画，所以全国尺度上出七八个，放大到长江中游只剩两三个。
+const ANCHORS = [
+  ['北京', 39.90, 116.40], ['西安', 34.27, 108.95], ['成都', 30.66, 104.07],
+  ['广州', 23.13, 113.26], ['上海', 31.23, 121.47], ['乌鲁木齐', 43.83, 87.62],
+  ['昆明', 25.04, 102.72], ['沈阳', 41.80, 123.43], ['兰州', 36.06, 103.83],
+  ['武汉', 30.59, 114.31], ['台北', 25.03, 121.57], ['重庆', 29.56, 106.55],
+  ['长沙', 28.23, 112.94], ['南京', 32.06, 118.80],
+];
+// 河名贴在河上：黄河与长江是中国人心里最硬的两条参照线
+const RIVER_TAGS = [['黄河', 37.4, 110.5], ['长江', 30.2, 108.6]];
+
 const NS = 'http://www.w3.org/2000/svg';
 const el = (n, a = {}) => {
   const e = document.createElementNS(NS, n);
@@ -43,9 +57,10 @@ export function mountMinimap(geoOf, allOf) {
   let VB = [0, 0, BASEMAP.w, BASEMAP.h];      // 定好之后放点、算半径都用它
   svg.appendChild(el('path', { class: 'mm-coast', d: BASEMAP.coast }));
   svg.appendChild(el('path', { class: 'mm-river', d: BASEMAP.rivers }));
+  const gRef = el('g', { class: 'mm-ref' });     // 参照：城市与河名
   const gAll = el('g', { class: 'mm-all' });     // 全程：淡点
   const gNow = el('g', { class: 'mm-now' });     // 本站：亮
-  svg.append(gAll, gNow);
+  svg.append(gRef, gAll, gNow);
   const note = document.createElement('div');
   note.className = 'mm-note';
   wrap.append(svg, note);
@@ -85,7 +100,7 @@ export function mountMinimap(geoOf, allOf) {
 
   // 屏上想要多大就写多大，再折算回视图单位——viewBox 一缩放，
   // 写死的半径就会跟着变；点在石窟线上正好，到赤壁线上就成了一团
-  const PX = 232;                              // 与 CSS 里的宽度一致
+  const PX = 258;                              // 与 CSS 里的宽度一致
   const u = (px) => (px * VB[2]) / PX;
 
   const fit = () => {
@@ -103,6 +118,33 @@ export function mountMinimap(geoOf, allOf) {
     if (w / h < 1000 / 630) w = h * (1000 / 630); else h = w * (630 / 1000);
     VB = [cx - w / 2, cy - h / 2, w, h];
     svg.setAttribute('viewBox', VB.join(' '));
+  };
+
+  const inView = ([x, y]) => {
+    const [vx, vy, vw, vh] = VB;
+    const m = vw * 0.04;
+    return x > vx + m && x < vx + vw - m && y > vy + m && y < vy + vh - m;
+  };
+
+  /** 参照层：视野内的城市与河名。只画一次，随取景定。 */
+  const drawRef = () => {
+    gRef.innerHTML = '';
+    for (const [name, lat, lon] of ANCHORS) {
+      const p = project(lon, lat);
+      if (!inView(p)) continue;
+      gRef.appendChild(el('circle', { class: 'mm-city', cx: p[0], cy: p[1], r: u(1.6) }));
+      const t = el('text', { class: 'mm-city-t', x: p[0] + u(3), y: p[1] + u(2.6),
+        'font-size': u(6.4) });
+      t.textContent = name;
+      gRef.appendChild(t);
+    }
+    for (const [name, lat, lon] of RIVER_TAGS) {
+      const p = project(lon, lat);
+      if (!inView(p)) continue;
+      const t = el('text', { class: 'mm-river-t', x: p[0], y: p[1], 'font-size': u(6.8) });
+      t.textContent = name;
+      gRef.appendChild(t);
+    }
   };
 
   // 全程底稿只画一次：每站取一个代表点（诸说取第一个，只为让读者看见全程的展布）
@@ -127,7 +169,7 @@ export function mountMinimap(geoOf, allOf) {
     if (innerWidth <= 1000) { wrap.classList.remove('on'); return; }
     const g = ev ? geoOf(ev) : null;
     if (!g) { wrap.classList.remove('on'); return; }      // 没地点就不硬造一个
-    if (!drawn) { fit(); drawAll(); drawn = true; }
+    if (!drawn) { fit(); drawRef(); drawAll(); drawn = true; }
     gNow.innerHTML = '';
     let msg = '';
     if (g['诸说']) {
@@ -140,6 +182,13 @@ export function mountMinimap(geoOf, allOf) {
     if (g['点']) {
       const [x, y] = xy(g['点']);
       gNow.appendChild(el('circle', { class: 'mm-here', cx: x, cy: y, r: u(4.5) }));
+      // 地名直接标在点旁：底下那行小字要跨到眼睛外面去才读得到
+      if (g['地名']) {
+        const t = el('text', { class: 'mm-here-t', x: x + u(6), y: y + u(3),
+          'font-size': u(7.6) });
+        t.textContent = g['地名'];
+        gNow.appendChild(t);
+      }
       msg = g['地名'] || '';
     }
     if (g['现藏']) {
