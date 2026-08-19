@@ -1150,8 +1150,14 @@ export function renderLaneTimeline(host, list, opts) {
       const r = empRefs.find((q) => q.e.id === id);
       if (!r) return false;
       goX(r.cx, o);
-      // 卡片立刻开:摘要要向维基取,趁着滚动这一路把请求发出去,到站时正好读得上
-      r.node.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      // 卡片立刻开:摘要要向维基取,趁着滚动这一路把请求发出去,到站时正好读得上。
+      // 窄屏角卡摆不下、点击处理器直接早退,骰子/搜索跳到君主就什么也不开
+      // ——改走贴底词条单卡,与跳到事件一致(河流侧同款修法)
+      if (kClean.soloMode && kClean.soloMode() && kClean.showEmperor) {
+        kClean.showEmperor(r);
+      } else {
+        r.node.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      }
       return r.node;
     },
     dynasty(key, o) {

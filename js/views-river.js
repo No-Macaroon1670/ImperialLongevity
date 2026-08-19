@@ -1598,8 +1598,16 @@ export function renderRiver(host, list, opts) {
       const n = empNodes.find((q) => q.e.id === id);
       if (!n) return false;
       goY(y.invert((n.y0 + n.y1) / 2), o);
-      // 卡片立刻开:摘要要向维基取,趁着滚动这一路把请求发出去,到站时正好读得上
-      select(n);
+      // 卡片立刻开:摘要要向维基取,趁着滚动这一路把请求发出去,到站时正好读得上。
+      // 窄屏走词条单卡,与跳到事件一致——此前开的是底部数据卡,同一个骰子
+      // 掷出君主与大事两种卡(用户实测)。图上双击选中仍走数据卡(查数入口,
+      // 卡上有「读词条」可换),这里只管骰子/搜索/深链这类「读一读」的跳转
+      if (kClean.soloMode && kClean.soloMode() && kClean.showEmperor) {
+        clearSel();
+        kClean.showEmperor(n);
+      } else {
+        select(n);
+      }
       return n.node;
     },
     dynasty(key, o) {

@@ -733,6 +733,9 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
     for (const k of Object.keys(pinned)) pinned[k] = null;
     for (const k of Object.keys(muted)) muted[k] = false;   // 跳转即新语境，静音解除
   };
+  // 窄屏的君主词条出口：与河流侧同名同义（骰子/搜索跳转用；角卡在窄屏摆不下）
+  cleanup.soloMode = () => !mq.matches;
+  cleanup.showEmperor = (item) => { if (mq.matches) return false; solo.show(empSpec(item)); return true; };
   cleanup.showEvent = (spec) => {
     if (!mqBoth.matches) { solo.show(spec); return true; }   // 窄屏落贴底的手机单卡
     pinned.dyn = spec.id;
