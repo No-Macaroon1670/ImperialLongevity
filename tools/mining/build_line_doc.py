@@ -99,8 +99,14 @@ def load_long(key):
     text = {}
     tb = re.search(r'export const TEXT = \{(.*?)\n\};', src, re.S)
     if tb:
-        for m in re.finditer(r'\n  ([^\s:{}]+): \[(.*?)\n  \],', tb.group(1), re.S):
-            text[m.group(1)] = paras(m.group(2))
+        # 键有两种写法：裸键 `石鼓:` 与**带引号的** `'孝文帝汉化·迁都洛阳':`——
+        # 条目名含「·」「（」一类字符时 JS 不许裸写，必须加引号。
+        # 旧正则只认裸键，于是那一站的长文**静悄悄丢掉**，build 只报「无长文的站」
+        # 而不说为什么（勘合线实测踩到）。两种都收。
+        for m in re.finditer(r"\n  (?:'([^']+)'|\"([^\"]+)\"|([^\s:{}'\"]+)): \[(.*?)\n  \],",
+                             tb.group(1), re.S):
+            name = m.group(1) or m.group(2) or m.group(3)
+            text[name] = paras(m.group(4))
     return named('PROLOGUE'), text, named('EPILOGUE')
 
 

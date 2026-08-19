@@ -40,6 +40,16 @@ def main():
                       'urls': URL.findall(where)}
 
     # ── 解说词：每站的标记 ──────────────────────────────────────────
+    # 站表里的真 `ev`，用来把被「·」腰斩的站名接回去（见下）
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from build_line_doc import load_line  # noqa: E402
+        _meta, _stops = load_line(key)          # 返回 (meta, stops) 两元组
+        EVS = [st['ev'] for st in _stops if st.get('ev')]
+    except Exception as e:
+        print('  ⚠ 读不到站表（%r），站名不做反查' % e)
+        EVS = []
+
     body = md.split('## 三、解说词', 1)[1].split('## 四、出处表', 1)[0]
     stops, order = {}, []
     cur = None
@@ -50,6 +60,16 @@ def main():
         # 「① 隆中对 · 207 · 一场还没发生的战争」→ 隆中对；「序 · 三十个字」→ 序
         parts = [p.strip() for p in head.split('·')]
         name = re.sub(r'^[①②③④⑤⑥⑦⑧⑨⑩⑪⑫]\s*', '', parts[0]).strip()
+        # **条目名自己可能含「·」**——如「孝文帝汉化·迁都洛阳」「庚子事变·八国联军」。
+        # 按「·」切标题会把它腰斩，于是这一站与站表对不上，长文**静悄悄丢掉**
+        # （勘合线实测踩到：build 时只报「无长文的站」，不报为什么）。
+        # 故切完再拿站表的真 ev 反查：唯一以此为前缀者，取回全名。
+        if EVS and name not in EVS:
+            hit = [e for e in EVS if e.startswith(name)]
+            if len(hit) == 1:
+                name = hit[0]
+            elif len(hit) > 1:
+                print('  ⚠ 站名「%s」前缀相符者不止一个：%s，未能定夺' % (name, hit))
         cur = name
         order.append(name)
         rec = {'考据': [], '出处': [], '引文': []}

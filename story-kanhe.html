@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>勘合线 · 一千年里没有人指得出哪一件是秘色瓷。走十二站，看记录如何立、如何失效、如何救回一件东西。</title>
+<meta name="description" content="把东西和它的记录对上。共 12 站。">
+<link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/story-kanhe.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="勘合线">
+<meta property="og:description" content="一千年里没有人指得出哪一件是秘色瓷。走十二站，看记录如何立、如何失效、如何救回一件东西。">
+<meta property="og:url" content="https://no-macaroon1670.github.io/ImperialLongevity/story-kanhe.html">
+<style>
+:root{
+  --bg:#0e0d0c; --bg2:#161311; --ink:#e9e3d7; --dim:#9a9187; --faint:#5d564e;
+  --rule:#2a2622; --accent:#c0603f; --gold:#c9a959;
+  --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+  font-size:18px;line-height:2.05;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50}
+/* 导轨：宽屏才有。窄屏那点横向空间要留给正文 */
+/* 左栏：导轨在上，小地图在下。两者同住一个固定列——读者眼睛一抬，
+   既知道读到第几节，也知道那一节在地上哪儿 */
+#side{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
+  z-index:40;width:11rem}
+#rail{display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
+#rail a{display:flex;align-items:center;gap:.5rem;color:var(--faint);text-decoration:none;
+  letter-spacing:.04em;transition:color .25s}
+#rail .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;transition:transform .25s}
+#rail a .lbl{opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap}
+#rail a:hover{color:var(--dim)} #rail a:hover .lbl{opacity:1;transform:none}
+#rail a.on{color:var(--accent)} #rail a.on .dot{transform:scale(1.5)}
+#rail a.on .lbl{opacity:1;transform:none}
+@media(max-width:1180px){#side{display:none}}
+.wrap{max-width:40rem;margin:0 auto;padding:0 1.5rem}
+header.cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
+  padding:6rem 0 4rem;border-bottom:1px solid var(--rule)}
+.kicker{font-family:var(--sans);font-size:12px;letter-spacing:.34em;color:var(--faint);margin-bottom:2.4rem}
+h1{font-size:clamp(2.4rem,8vw,4rem);line-height:1.14;margin:0 0 1.6rem;font-weight:500;letter-spacing:.06em}
+.lede{font-size:1.06rem;color:var(--dim);line-height:2;max-width:30rem;margin:0}
+.meta{margin-top:3.4rem;font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.08em}
+.meta a{color:var(--gold);text-decoration:none;border-bottom:1px solid transparent}
+.meta a:hover{border-bottom-color:var(--gold)}
+section{padding:5.5rem 0;border-bottom:1px solid var(--rule)}
+section.tone{background:var(--bg2)}
+.num{font-family:var(--sans);font-size:11px;letter-spacing:.3em;color:var(--faint)}
+.yr{font-family:var(--sans);font-size:2.6rem;line-height:1;color:var(--rule);margin:.4rem 0 .8rem;
+  font-variant-numeric:tabular-nums;font-weight:700}
+h2{font-size:1.75rem;line-height:1.35;margin:0 0 .5rem;font-weight:500;letter-spacing:.04em}
+.sub{font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.1em;margin:0 0 2rem}
+section p{margin:0 0 1.35rem}
+p.beat{color:var(--gold)}
+blockquote{margin:2rem 0;padding-left:1.2rem;border-left:2px solid var(--accent);color:var(--ink)}
+blockquote small{display:block;margin-top:.5rem;font-family:var(--sans);font-size:11px;
+  letter-spacing:.08em;color:var(--faint)}
+.go{display:inline-block;margin:.4rem 0 1.6rem;font-family:var(--sans);font-size:12px;
+  letter-spacing:.08em;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:2px}
+.go:hover{border-bottom-color:var(--gold)}
+details.app{margin-top:2rem;font-family:var(--sans);font-size:13px;line-height:1.85;color:var(--dim)}
+details.app summary{cursor:pointer;color:var(--faint);letter-spacing:.14em;font-size:11px;
+  padding:.5rem 0;border-top:1px solid var(--rule)}
+details.app ul{margin:.8rem 0;padding-left:1.1rem}
+details.app li{margin-bottom:.7rem}
+.tag{display:inline-block;font-size:10px;letter-spacing:.08em;padding:1px 6px;margin-right:.5rem;
+  border-radius:3px;border:1px solid currentColor;vertical-align:.08em}
+.t-ok{color:#7d9b6e} .t-trad{color:var(--gold)} .t-new{color:#6e8a9b}
+.t-infer{color:#9b8a6e} .t-doubt{color:var(--accent)}
+.src{margin-top:.9rem;display:flex;flex-wrap:wrap;gap:.9rem}
+.src a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule);font-size:12px}
+.src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
+.note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
+/* 配图。图注里那半行是**署名**，CC-BY／CC-BY-SA 要求给出作者与许可 */
+/* 文绕图。竖幅整幅摆着时两侧全空，绕排把那块空白还给文字；
+   窄屏不绕——一栏劈两半两边都读不成 */
+figure.pic{margin:0 0 2rem}
+figure.pic img{display:block;width:100%;height:auto;border-radius:3px}
+@media(min-width:820px){
+  figure.pic{float:left;width:44%;margin:.4rem 1.6rem .8rem 0}
+  section p,section h2,details.app{clear:none}
+  details.app,.go{clear:both}
+}
+figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
+  line-height:1.8;color:var(--faint)}
+figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
+figure.pic figcaption a:hover{color:var(--dim)}
+
+/* ── 地图 ────────────────────────────────────────────────────────
+   开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
+   底图只有海岸线与黄河长江，没有国界（理由见 tools/mining/build_basemap.py）。
+   全程的点一律画出、只是淡；当前那一站才亮——读者要能看见自己走到哪儿，
+   也要能看见还剩多少。 */
+#smap{padding:4rem 0 3.5rem}
+svg.hmap,svg.gmap{display:block;width:100%;height:auto}
+svg.hmap{margin:1.6rem 0 1rem}
+svg.gmap{margin-top:1.1rem;opacity:.9}
+svg *{vector-effect:non-scaling-stroke}
+.m-coast{fill:none;stroke:var(--rule);stroke-width:1.1}
+.m-river{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.42}
+.m-city{fill:var(--faint);opacity:.75}
+.m-city-t{fill:var(--faint);opacity:.85;font-family:var(--sans)}
+.m-river-t{fill:var(--accent);opacity:.65;font-family:var(--sans)}
+.m-dot{fill:var(--dim);opacity:.5}
+.m-maybe{fill:none;stroke:var(--dim);stroke-width:1.2;opacity:.55;stroke-dasharray:3 2.5}
+.m-held{fill:none;stroke:var(--gold);stroke-width:1.2;opacity:.5}
+/* 贴在框边的方块：东西已经出了这张图的范围（伦敦） */
+.m-off{stroke-dasharray:3 2.5}
+.m-flow{stroke:var(--gold);stroke-width:1;opacity:.35;stroke-dasharray:4 3}
+.m-stop-t{fill:var(--dim);opacity:.8;font-family:var(--sans)}
+/* 当前这一节：亮起来 */
+.m-stop.on .m-dot{fill:var(--accent);opacity:1}
+.m-stop.on .m-maybe{stroke:var(--accent);opacity:1}
+.m-stop.on .m-held,.m-stop.on .m-flow{stroke:var(--gold);opacity:1}
+.m-stop.on .m-stop-t{fill:var(--ink);opacity:1}
+#gname{margin-top:.5rem;font-family:var(--sans);font-size:10.5px;color:var(--faint);
+  line-height:1.6;min-height:2.6em}
+
+/* 点开放大。用 <dialog>：Esc 与背景遮罩都是它自带的，不必自己写一套 */
+button.zoom{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in}
+button.zoom img{transition:opacity .18s}
+button.zoom:hover img{opacity:.86}
+dialog#lb{border:0;padding:0;background:none;max-width:96vw;max-height:96vh;color:var(--ink)}
+dialog#lb::backdrop{background:rgba(8,7,6,.92)}
+#lbi{display:block;max-width:min(96vw,900px);max-height:82vh;width:auto;height:auto;
+  margin:0 auto;border-radius:3px}
+#lbc{max-width:min(96vw,900px);margin:.8rem auto 0;font-family:var(--sans);font-size:12px;
+  line-height:1.8;color:var(--dim)}
+#lbc a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule)}
+#lbx{position:fixed;top:1.1rem;right:1.4rem;width:2.2rem;height:2.2rem;border:0;border-radius:50%;
+  background:rgba(255,255,255,.1);color:var(--ink);font-size:1rem;cursor:pointer}
+#lbx:hover{background:rgba(255,255,255,.2)}
+footer{padding:5rem 0 7rem;font-family:var(--sans);font-size:12.5px;color:var(--faint);line-height:2}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--rule)}
+footer a:hover{color:var(--ink)}
+footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
+@media(max-width:640px){
+  body{font-size:17px;line-height:1.98}
+  section{padding:4rem 0}
+  .yr{font-size:2rem}
+  h1{letter-spacing:.03em}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="side">
+<nav id="rail" aria-label="节次">
+<a href="#s0"><span class="dot"></span><span class="lbl">千峰翠色</span></a>
+<a href="#s1"><span class="dot"></span><span class="lbl">最早的一批字</span></a>
+<a href="#s2"><span class="dot"></span><span class="lbl">标准不是发现</span></a>
+<a href="#s3"><span class="dot"></span><span class="lbl">第一件为「被</span></a>
+<a href="#s4"><span class="dot"></span><span class="lbl">碑上那个姓，</span></a>
+<a href="#s5"><span class="dot"></span><span class="lbl">先编号，后盗</span></a>
+<a href="#s6"><span class="dot"></span><span class="lbl">碑短，是因为</span></a>
+<a href="#s7"><span class="dot"></span><span class="lbl">一百一十四座</span></a>
+<a href="#s8"><span class="dot"></span><span class="lbl">一张清单，让</span></a>
+<a href="#s9"><span class="dot"></span><span class="lbl">一式两份，用</span></a>
+<a href="#s10"><span class="dot"></span><span class="lbl">「真石家」—</span></a>
+<a href="#s11"><span class="dot"></span><span class="lbl">日志被下一任</span></a>
+<a href="#s12"><span class="dot"></span><span class="lbl">它没有败给火</span></a>
+<a href="#s13"><span class="dot"></span><span class="lbl">指得出</span></a>
+</nav>
+</div>
+<header class="cover"><div class="wrap">
+<div class="kicker">把东西和它的记录对上</div>
+<h1>勘合线</h1>
+<p class="lede">一千年里没有人指得出哪一件是秘色瓷。走十二站，看记录如何立、如何失效、如何救回一件东西。</p>
+<div class="meta">共 12 站　·　<a href="timeline.html#line=kanhe">在图上走一遍 →</a>　·　<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-kanhe.md">资料与出处 ↗</a></div>
+</div></header>
+<section id="s0" class="tone"><div class="wrap">
+<div class="num">序</div>
+<h2>千峰翠色</h2>
+<p>唐人陆龟蒙写过一句诗：「九秋风露越窑开，夺得千峰翠色来。」他写的是秘色瓷。</p>
+<p>宋代以后，这四个字变成了一个谜。它到底是什么釉色、哪个窑口、凭什么叫「秘」，文献各说各的，学界与藏界争了几百年。有人指着一件青瓷说这就是，别人不服，也拿不出办法让他服。</p>
+<p>问题不在于没有实物。问题在于：没有任何东西能把一件瓷器和「秘色」这两个字绑在一起。</p>
+<p>一千年里，没有人指得出哪一件是。</p>
+<p>这条线走十二站，追一个动作：把东西和它的记录对上。每一站都是一次勘合——成，或者不成。</p>
+</div></section>
+<section id="s1" data-year="-575" data-name="石鼓"><div class="wrap">
+<div class="num">一 / 十二</div>
+<div class="yr">前576</div>
+<h2>石鼓</h2>
+<p class="sub">前576　·　秦国　·　文物</p>
+<p>十座花岗岩石墩，形如鼓，刻着中国现存最早的刻石文字。</p>
+<p>它自己的年代却定不下来。韩愈、欧阳修主周宣王，罗振玉主秦文公，郭沫若主秦襄公，唐兰考定为秦献公十一年（前 374），马衡只肯说「先秦」而不给具体年代——诸说之间相差四百年。</p>
+<p>字也在减少。原有七百余，今存不足五百。十鼓之一「乍原」曾于 814 年失踪，1052 年在一户屠家寻回时已被切去上半、充作磨刀石，字只剩四个。</p>
+<p>它最有名的三种拓本也不可靠。先锋本、中权本、后劲本，1921 年为三井高坚购藏，郭沫若据其照片写成《石鼓文研究》；2018 年经安思远旧藏元明间拓本比对，证明为伪作，关键在「黄帛」二字间有无缺损。上海图书馆 2019 年的展览随即撤下所谓宋拓本。</p>
+<p>最早的一批字，自己没有年份，连它的影子也有假的。这一千多年里，人们要做的事从这里开始：不是把东西找出来，是把东西和一个说法对上。</p>
+<a class="go" href="timeline.html#line=kanhe&amp;at=1">在图上看这一站 →</a>
+<p class="note">本库简注：先秦十座刻字石墩，又称陈仓石碣，627年发现于陕西宝鸡荒野，是中国现存最早的石刻文字。刻凿年代自唐以来无定论：韩愈、欧阳修主周宣王，罗振玉主秦文公，郭沫若主秦襄公，唐兰考定为秦献公十一年（前374），马衡《石鼓文秦刻石考》只定为先秦而不定具体年代。806年韩愈上书请移石鼓入太学未被采纳，814年郑余庆才将其移入凤翔文庙，而十鼓之一「乍原」已于此时失踪；1052年向传师在一户屠家寻回，鼓已被切去上半充作磨刀石，字仅余四个。宋徽宗以黄金填注鼓文，1125年金人运至燕京剔金弃于荒野，1300年元人虞集自淤泥中重新发现。字原有七百余，今存不足五百。1790年乾隆将御制《再题石鼓》刻在那只当过石臼的鼓口沿上。1936年随故宫文物南迁，途中在天津、湖南酉阳两次翻车而完好。现藏北京故宫博物院珍宝馆石鼓馆。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>石鼓为现存最早刻石文字；年代四说（韩愈欧阳修／罗振玉／郭沫若／唐兰／马衡）；「乍原」814 年失踪、1052 年在屠家寻回已作磨刀石、字余四个；原有七百余字今存不足五百；三种「宋拓」2018 年经安思远旧藏元明间拓本比对证为伪作，关键在「黄帛」二字间缺损</li>
+</ul>
+</details>
+</div></section>
+<section id="s2" data-year="-221" data-name="书同文"><div class="wrap">
+<div class="num">二 / 十二</div>
+<div class="yr">前222</div>
+<h2>书同文</h2>
+<p class="sub">前222　·　秦　·　制度</p>
+<p>秦并六国后，废关东六国原有文字，以自西周籀文演化的小篆为全国通用字体，令李斯作《仓颉》七章、赵高作《爰历》六章、太史令胡毋敬作《博学》七章，作全国规范字帖。</p>
+<p>同时做的还有统一度量衡、车同轨、行同伦。货币则废六国的珠玉、龟贝、银锡，以黄金为上币、圆形方孔铜钱为下币，文曰「半两」。</p>
+<p>两处常被说错：「半两」只是秦铜钱的统称，不指实际重量，《史记·平准书》说秦钱「既重，又轻重不一」，并不好用；圆形方孔也不是秦始皇首创，《汉书·食货志下》记秦钱「质如周钱」。</p>
+<p>标准不是发现的，是规定的。规定完了，接下来的一千年都在处理一个问题：怎么让抄的人不抄错。</p>
+<a class="go" href="timeline.html#line=kanhe&amp;at=2">在图上看这一站 →</a>
+<p class="note">本库简注：统一六国后废除关东六国原有文字，以自西周籀文演化的小篆（秦篆）为全国通用字体，令李斯作《仓颉》七章、赵高作《爰历》六章、太史令胡毋敬作《博学》七章为全国规范字帖。与之同时者尚有统一度量衡、车同轨、行同伦。货币则废关东六国的珠玉、龟贝、银锡，以黄金为上币、镒（二十两）为单位，圆形方孔铜钱为下币，文曰「半两」，直径一寸二分，重十二铢。**两处常见的误解**：「半两」只是秦铜钱的统称，不指实际重量，《史记·平准书》记秦钱既重又轻重不一、难以使用；圆形方孔亦非秦始皇首创，《汉书·食货志下》记秦钱「质如周钱」，统一前已有类似设计。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>废六国文字行小篆；李斯《仓颉》、赵高《爰历》、胡毋敬《博学》；统一度量衡、车同轨、行同伦；废珠玉龟贝银锡，黄金为上币、圆形方孔铜钱文曰半两；《史记·平准书》记秦钱既重又轻重不一；《汉书·食货志下》记秦钱「质如周钱」</li>
+</ul>
+</details>
+</div></section>
+<section id="s3" data-year="175" data-name="熹平石经"><div class="wrap">
+<div class="num">三 / 十二</div>
+<div class="yr">175</div>
+<h2>熹平石经</h2>
+<p class="sub">175–183　·　东汉　·　文化·科技</p>
+<p>东汉灵帝熹平四年动工，光和六年告成，立于洛阳城南太学门外，蔡邕、堂溪典、杨赐、马日磾等书写。这是中国历史上最早的官定本儒家经书。</p>
+<p>做法很朴素：朝廷把校定过的七经刻在石上，天下传抄的本子拿来一对，便知正误。</p>
+<p>石经后来碎了。1929 年在河南洛阳故城大郊村发掘出残石，大部分 1952 年入藏西安碑林博物馆，上海博物馆、中国国家博物馆、洛阳博物馆等也有零星收藏。</p>
+<p>一块可以让人拿去对的石头。这是这条线上第一件为「勘合」而造的东西——它存在的全部理由，就是被别人拿来核对。</p>
+<a class="go" href="timeline.html#line=kanhe&amp;at=3">在图上看这一站 →</a>
+<p class="note">本库简注：又称一字石经、一体石经，东汉灵帝熹平四年（175）始刻、光和六年（183）告成，立于洛阳城南太学门外，由蔡邕、颍川堂溪典、光禄大夫杨赐、谏议大夫马日磾等书写，**是中国历史上最早的官定本儒家经书**——朝廷把校定过的七经刻在石上，天下传抄的本子拿来一对便知正误。1929年河南洛阳故城大郊村发掘出残石，大部分1952年入藏西安碑林博物馆，上海博物馆、中国国家博物馆、洛阳博物馆等亦有零星收藏。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>熹平四年（175）始刻、光和六年（183）告成，立洛阳城南太学门外，蔡邕等书；为最早官定本儒家经书；1929 年洛阳故城大郊村发掘残石，1952 年大部入西安碑林</li>
+</ul>
+</details>
+</div></section>
+<section id="s4" data-year="494" data-name="孝文帝汉化·迁都洛阳"><div class="wrap">
+<div class="num">四 / 十二</div>
+<div class="yr">494</div>
+<h2>孝文帝汉化·迁都洛阳</h2>
+<p class="sub">494　·　北魏　·　制度</p>
+<p>北魏孝文帝的汉化改革里有一条：改鲜卑姓氏与籍贯。这道令在一块石头上留下了回执。</p>
+<p>1918 年河南洛阳出土的元羽墓志，北魏景明二年（501）刻，志文十三行一百七十七字，首题「侍中司徒公广陵王墓志铭」。墓主元羽是孝文帝之弟、改革的支持者。碑上他姓「元」不姓「拓跋」，籍贯写中原的「河南」郡而非代北——改姓与改籍两项，都由这方墓志自身的写法坐实。</p>
+<p>首题用的是追赠衔：元羽生前官居司空，卒后朝廷赠使持节、侍中、骠骑大将军、司徒公、冀州刺史，谥惠。</p>
+<p>而这方墓志不写的那一半更值得一提。《魏书》系统记元羽与员外郎冯俊兴之妻私通，景明二年五月夜赴约途中被冯俊兴拦住殴打，十八日卒，虚岁三十二。</p>
+<p>这一段，碑上只字不提。</p>
+<a class="go" href="timeline.html#line=kanhe&amp;at=4">在图上看这一站 →</a>
+<p class="note">本库简注：北魏孝文帝推行的全面汉化改革，包括迁都洛阳、推行均田制与租调制、改革官制律令、改用汉俗汉语等，大力促进民族融合，深刻重塑北魏政治文化格局。**这条政令在一块石头上留下了回执**：1918年河南洛阳出土的元羽墓志（北魏景明二年，501），志文十三行一百七十七字，首题「侍中司徒公广陵王墓志铭」。墓主是孝文帝之弟、改革的支持者，而志上他姓「元」不姓「拓跋」，籍贯写中原的「河南」郡而非代北——**改姓与改籍两项，都由这方墓志自身的写法坐实**。（首题作「侍中司徒公」而非其生前所任司空，因墓志用的是追赠官衔：元羽卒后朝廷赠使持节、侍中、骠骑大将军、司徒公、冀州刺史，谥惠。）**而这方墓志不写的那一半更值得一提**：《魏书》系统记元羽与员外郎冯俊兴之妻私通，景明二年五月夜赴约途中被冯俊兴拦住殴打，十八日卒，虚岁三十二——碑上只字不提。与独孤信墓志恰成一对：一方因政治而简，一方因丑闻而讳。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>元羽墓志：北魏景明二年（501），1918 年河南洛阳出土，志文十三行一百七十七字，首题「侍中司徒公广陵王墓志铭」；元羽为孝文帝之弟；碑上姓「元」、籍贯「河南」；生前官司空、卒后追赠司徒公谥惠；与冯俊兴之妻私通、赴约途中被殴、五月十八日卒虚岁三十二</li>
+</ul>
+</details>
+</div></section>
+<section id="s5" data-year="550" data-name="天龙山石窟"><div class="wrap">
+<div class="num">五 / 十二</div>
+<div class="yr">550</div>
+<h2>天龙山石窟</h2>
+<p class="sub">550–584　·　遗址·建筑</p>
+<p>天龙山约始凿于北魏末至东魏，东西两峰崖壁延伸约五百米，现存造像五百余尊。</p>
+<p>近代它是中国被凿得最惨的石窟群之一。而它被记录下来，比它被凿走更早。</p>
+<p>1918 年日本建筑史学家关野贞考察，1921 年在《国华》发表，自此受国际收藏界注目。1922 年田中俊逸系统调查、摄影、编号，同行者外村太治郎出版《天龙山石窟》图集，记下了造像被盗凿前的样子。</p>
+<p>二十年代遭大规模盗凿。日本古董商山中定次郎及山中商会为主要参与者，佛首、佛手自窟壁切割，有时佛身与佛首分开出售。据近年调查逾二百四十件遭凿，至少一百五十余件流入境外数十家机构。</p>
+<p>2020 年 9 月，国家文物局发现日本一家拍卖行拟拍一尊佛首。经历史照片比对、石材检测与造型研究，确认属第八窟北壁主尊、约 1924 年前后被凿，遂停拍；旅日华侨张荣洽购后捐赠，同年 12 月运抵北京。</p>
+<p>是同一批照片，先把它推到了买家眼前，又在一百年后成了要回来的凭据。</p>
+<p>而另有一部分造像因早期交易记录不完整，原属洞窟至今存争议。没有清单的那些，还在原地。</p>
+<a class="go" href="timeline.html#line=kanhe&amp;at=5">在图上看这一站 →</a>
+<p class="note">本库简注：山西太原西侧天龙山南向崖壁，东西延伸约五百米，东峰十二窟、西峰十三窟，现存造像五百余尊。约始凿于北魏末至东魏，北齐建都邺城而长期经营晋阳，此地遂成皇室贵族开窟之所；史籍与后世碑刻记文宣帝高洋营「佛岩石窟寺」、孝昭帝营「天龙石窟寺」（传统叙述）。隋开皇四年（584）所凿第八窟有窟前碑刻纪年，是窟群中少数系年明确者。唐代造像丰腴写实，被概括为「天龙山样式」。**近代它是中国被凿得最惨的石窟群之一**：1908年柏石曼调查，1918年关野贞考察、1921年在《国华》发表，自此受国际收藏界注目；1922年田中俊逸系统调查摄影编号，外村太治郎《天龙山石窟》图集**记下了造像被盗凿前的样子**。二十年代遭大规模盗凿，日本古董商山中定次郎及山中商会为主要参与者，佛首、菩萨头、佛手被从窟壁切割，**有时佛身与佛首分开出售**；据近年调查逾二百四十件遭凿，至少一百五十余件流入美日英法德瑞等国数十家机构，部分因早期交易记录不全，原属洞窟至今存争议。**而那批照片后来成了追回的凭据**：2020年9月国家文物局发现日本拍卖行拟拍一尊佛首，经历史照片比对、石材检测与造型研究，确认属第八窟北壁主尊、约1924年前后被盗凿，遂停拍；旅日华侨张荣洽购后捐赠，同年12月运抵北京，为近百年来第一件自日本追索回国的天龙山造像。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>天龙山约始凿北魏末至东魏，东西两峰延伸约五百米，东峰十二窟西峰十三窟，现存造像五百余尊；1908 柏石曼调查，1918 关野贞考察、1921 于《国华》发表，1922 田中俊逸系统调查摄影编号、外村太治郎出《天龙山石窟》图集记录盗凿前状态；二十年代大规模盗凿，山中定次郎及山中商会为主要参与者，佛首佛手自窟壁切割、有时佛身与佛首分开出售；逾 240 件遭凿、至少 150 余件流入境外数十家机构；部分因早期交易记录不完整原属洞窟仍存争议；2020-09 国家文物局据历史照片比对、石材检测与造型研究确认拍卖佛首属第八窟北壁主尊约 1924 年被凿并要求停拍，张荣洽购捐赠、2020-12 运抵北京，为近百年来第一件自日本追索回国者</li>
+</ul>
+</details>
+</div></section>
+<section id="s6" data-year="557" data-name="独孤信之死"><div class="wrap">
+<div class="num">六 / 十二</div>
+<div class="yr">557</div>
+<h2>独孤信之死</h2>
+<p class="sub">557　·　名人轶事</p>
+<p>1953 年陕西咸阳底张湾出土的独孤信墓志，志盖已佚，志文十六行二百二十字，首题「周故柱国大将军雍州刺史河内戾公墓志」，只记姓名、籍贯、家世、卒葬，以及夫人和三个儿子的名字。</p>
+<p>写它的人有充分的材料可写。独孤信是北周明帝、隋文帝、唐世祖三人的岳父，隋炀帝与唐高祖的外祖父；九个女儿里，长女为北周明敬皇后，七女独孤伽罗为隋文献皇后，四女由唐追封元贞皇后。《周书》《北史》评此事自古未有。</p>
+<p>碑上却只字不提。周孝闵帝元年，他与赵贵谋除权臣宇文护，事泄，被逼在家中自尽，虚岁五十四，谥「戾」。写这方碑的时候，他还是那个刚被赐死的戾公。</p>
+<p>隋文帝即位后追赠太师、上柱国、赵国公，改谥「景」；唐朝再追封梁王。谥号往上改了两次，碑却只有一方。</p>
+<a class="go" href="timeline.html#line=kanhe&amp;at=6">在图上看这一站 →</a>
+<p class="note">本库简注：西魏柱国大将军之一，匈奴裔鲜卑人，本名如愿，鲜卑名期弥头，官至太保、大宗伯、卫国公。（**称谓两说**：中文维基作「八柱国之一」，中国国家博物馆展签作「六柱国之一」，并注明宇文泰共设八位柱国大将军、其中六人分领全国军队——两说各有所指，不择一。）周孝闵帝元年（557）与赵贵谋除权臣宇文护，事泄，被逼于家中自尽，虚岁五十四，**谥「戾」**。隋文帝即位后追赠太师、上柱国、赵国公，**改谥「景」**；唐朝再追封梁王——谥号往上改了两次。**他是北周明帝宇文毓、隋文帝杨坚、唐世祖李昞三人的岳父**，亦即隋炀帝杨广与唐高祖李渊的外祖父：九女之中，长女为北周明敬皇后，七女独孤伽罗为隋文献皇后，四女由唐追封元贞皇后，《周书》《北史》评此事自古未有。1953年陕西咸阳底张湾发掘其墓，出墓志一方——志盖已佚，志文十六行二百二十字，首题「周故柱国大将军雍州刺史河内戾公墓志」（据实物首行与展签双重核对，非「襄州」），只记姓名、籍贯、家世、卒葬与夫人及三子之名。**内容之简略与其身份极不相称**：写它的时候，他还是那个刚被赐死的戾公。其「多面体煤精组印」另于1981年在旬阳县寻获。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>独孤信墓志：北周元年（557），1953 年陕西咸阳出土，志盖已佚，志文十六行二百二十字，首题「周故柱国大将军雍州刺史河内戾公墓志」；独孤信为北周明帝、隋文帝、唐世祖岳父，三女分别为北周明敬后、隋文献后、唐追封元贞后，《周书》《北史》评自古未有；与赵贵谋除宇文护事泄被逼自尽，虚岁五十四谥戾；隋追赠改谥景，唐追封梁王</li>
+</ul>
+</details>
+</div></section>
+<section id="s7" data-year="833" data-name="开成石经"><div class="wrap">
+<div class="num">七 / 十二</div>
+<div class="yr">833</div>
+<h2>开成石经</h2>
+<p class="sub">833–837　·　唐　·　文化·科技</p>
+<p>唐文宗大和七年始刻，开成二年刻毕，艾居晦、陈玠等书。《周易》《尚书》《毛诗》《周礼》《仪礼》《礼记》《春秋左氏传》《公羊传》《穀梁传》《孝经》《论语》《尔雅》十二种儒家经典，刻于一百一十四座碑石，立于长安国子监。</p>
+<p>它是唐代所作的标准楷书。北宋年间数次迁置，最终安置于西安府学北墉——今天的西安碑林第一室，碑林正是由它聚起来的。</p>
+<p>与东汉熹平石经、曹魏正始石经（三体石经）并称中国古代三大石经。</p>
+<p>五代后蜀又刻广政石经，始于广政元年，至南宋绍熙末年方毕，石碑一千多方、十三部经典，并在经文下附注文，为历代石经所独有。</p>
+<a class="go" href="timeline.html#line=kanhe&amp;at=7">在图上看这一站 →</a>
+<p class="note">本库简注：又称唐石经，唐文宗大和七年（833）始刻、开成二年（837）刻毕，由艾居晦、陈玠等书，将《周易》《尚书》《毛诗》《周礼》《仪礼》《礼记》《春秋左氏传》《公羊传》《穀梁传》《孝经》《论语》《尔雅》十二种儒家经典刻于一百一十四座碑石，立于长安国子监，是唐代所作的标准楷书。北宋年间数次迁置，最终安置于西安府学北墉，**即今西安碑林第一室——碑林正是由它聚起来的**。与东汉熹平石经、曹魏正始石经（三体石经）并称中国古代三大石经。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>开成石经：大和七年（833）始刻、开成二年（837）毕，艾居晦陈玠等书，十二经刻于一百一十四座碑石，立长安国子监，后安置西安府学北墉即今西安碑林第一室；与熹平石经、正始石经并称三大石经。广政石经：始刻广政元年，至南宋绍熙末年毕，石碑一千多方十三部经典，经文下附注文为历代石经所独有</li>
+</ul>
+</details>
+</div></section>
+<section id="s8" data-year="874" data-name="秘色瓷"><div class="wrap">
+<div class="num">八 / 十二</div>
+<div class="yr">874</div>
+<h2>秘色瓷</h2>
+<p class="sub">874–978　·　唐　·　文化·科技</p>
+<p>1987 年，考古工作者发掘陕西扶风法门寺塔基唐代地宫。地宫封闭于咸通十五年（874）。</p>
+<p>出土文物中有十三件越窑青瓷。同封在地宫里的，还有一方碑刻——《监送真身使随真身供养道具及恩赐金银衣物帐》。</p>
+<p>帐上写着三个字：瓷秘色。</p>
+<p>十三件瓷与帐文一一对应。争了几百年的事，就此有了标准器。</p>
+<p>窑口也随之坐实。1977 年上林湖出土唐光启三年凌倜墓志罐，志文点明该处有「贡窑」，位置指向后司岙；2015 至 2017 年发掘后司岙窑址，器型与法门寺地宫所出一致，2017 年更出一件瓷质匣钵，上书「罗湖师秘色椀」——「秘色」二字出自晚唐窑场自己的生产用具，不是宋人事后追加的雅称。</p>
+<p>至于「秘色」何以得名，后世三说并存：宋周辉《清波杂志》谓臣民不得用故曰秘色；一说烧制技术高度保密；另有学者认为是秘草的颜色。</p>
+<a class="go" href="timeline.html#line=kanhe&amp;at=8">在图上看这一站 →</a>
+<p class="note">本库简注：越窑烧造的青瓷精品，属贡瓷一类，主要供皇室及贵族使用，但并非完全专供宫廷。**它是先有名、后有物的一件**：宋代以后其真实面貌逐渐模糊，学界与藏界长期争论不休，世人只能凭唐人陆龟蒙《秘色越器》「九秋风露越窑开，夺得千峰翠色来」一句去想象。直到1987年发掘陕西扶风法门寺塔基唐代地宫，出土十三件越窑青瓷，**与地宫内《监送真身使随真身供养道具及恩赐金银衣物帐》碑文所记的「瓷秘色」一一对应**，实物才得以确认。窑口亦已坐实：1977年上林湖出土唐光启三年凌倜墓志罐，志文点明该处有「贡窑」，位置指向后司岙；2015—2017年发掘后司岙窑址，器型与法门寺地宫及吴越钱氏家族墓所出一致，**2017年更出一件瓷质匣钵，上书「罗湖师秘色椀」——「秘色」二字出自晚唐窑场自身的生产用具，并非宋人事后追加的雅称**。其法在于用与坯件同材的瓷质匣钵、以釉料封口造还原气氛，天青色由此而来。至于「秘色」何以得名，后世三说并存，不择一：宋周辉《清波杂志》谓「越上秘色器，钱氏有国日，供奉之物，不得臣下用，故曰秘色」；一说烧制技术高度保密；另有学者认为是秘草的颜色。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>1987 年发掘法门寺塔基唐代地宫，出十三件越窑青瓷，与地宫内《监送真身使随真身供养道具及恩赐金银衣物帐》碑文所记「瓷秘色」对应；此前世人只能凭陆龟蒙《秘色越器》「九秋风露越窑开，夺得千峰翠色来」想象；1977 年上林湖出唐光启三年凌倜墓志罐志文点明「贡窑」指向后司岙；2015-10 至 2017-01 发掘后司岙，器型与法门寺地宫所出一致，2017 年出瓷质匣钵书「罗湖师秘色椀」；得名三说（周辉《清波杂志》臣民不得用／技术保密／秘草之色）</li>
+</ul>
+</details>
+</div></section>
+<section id="s9" data-year="897" data-name="钱镠铁券"><div class="wrap">
+<div class="num">九 / 十二</div>
+<div class="yr">897</div>
+<h2>钱镠铁券</h2>
+<p class="sub">897　·　唐　·　文物</p>
+<p>唐昭宗乾宁四年八月制，赐给后来的吴越国建立者钱镠。形如覆瓦，上嵌金字诏书，写明钱镠本人可免九次死罪，子孙可免三次；若触犯国家其他法律，有关官员也不得过问。</p>
+<p>铁券的做法从汉代就定下了。王佐《铁券考》记：「汉高帝平定天下，剖符封功臣，申以丹书之信，重以白马之盟，始作铁券，其内镂字，以金涂之，故名曰金书铁券。」而与功臣剖符作誓之后，是「丹书、铁契、金匮、石室，藏於宗廟」——一半给人，一半存档，用时两半合起来对。</p>
+<p>字数却对不上。中国国家博物馆藏品页称此券「上嵌金字诏书三百三十三字」，而同页引《十国春秋》作「券文凡三百二十二字」。</p>
+<a class="go" href="timeline.html#line=kanhe&amp;at=9">在图上看这一站 →</a>
+<p class="note">本库简注：是唐朝颁予吴越王钱镠的丹书铁券，为中国现存年代最早的铁券实物，一级文物，现藏中国国家博物馆。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>钱镠铁券唐昭宗乾宁四年（897）八月制，形如覆瓦，长 52 厘米宽 29.8 厘米厚 0.4 厘米，为中国现存唯一唐代铁券实物；免钱镠九死、子孙三死，触犯他律有关官员不得过问；馆方作「三百三十三字」，同页引《十国春秋》作「三百二十二字」；王佐《铁券考》「汉高帝平定天下，剖符封功臣，申以丹书之信……故名曰金书铁券」；汉初「丹书、铁契、金匮、石室，藏於宗廟」</li>
+</ul>
+<div class="src">
+<a href="https://www.chnmuseum.cn/zp/zpml/kgfjp/202111/t20211116_252287.shtml" target="_blank" rel="noopener">中国国家博物馆藏品页  ；中文维基「丹書鐵券」</a>
+</div>
+</details>
+</div></section>
+<section id="s10" data-year="1114" data-name="湖州镜"><div class="wrap">
+<div class="num">十 / 十二</div>
+<div class="yr">1114</div>
+<h2>湖州镜</h2>
+<p class="sub">1114　·　北宋　·　文物</p>
+<p>宋代湖州所铸铜镜，多作葵花形，素背无纹，只在背上铸一行铭记：「湖州石家青铜照子」「湖州真石家念二叔照子」「湖州薛晋侯造」。</p>
+<p>那是商标。标出产地与作坊，而铭文里那个「真」字说明当时已经有人仿冒。</p>
+<p>两宋湖州有名有姓的私人镜坊有石、李、徐、丁、陆、黄、韩、蒋、冯、符、刘、万等家，石家的号排到石十五郎，另有官营的湖州铸鉴局。</p>
+<p>「照子」即镜，是宋镜特有的叫法，或因避宋太祖祖父赵敬的「敬」字讳。</p>
+<p>纹饰减省是为省工时——镜子此时已从贵族整容的高档器变成平民日用的商品，远销朝鲜、日本。一件日用品开始自己说明自己是谁做的，这在这条线上是第一次。</p>
+<a class="go" href="timeline.html#line=kanhe&amp;at=10">在图上看这一站 →</a>
+<p class="note">本库简注：宋代湖州（今浙江吴兴）所铸铜镜，多作葵花形，**素背无纹，只在背上铸一行商标性质的铭记**——「湖州石家青铜照子」「湖州真石家念二叔照子」「湖州薛晋侯造」之类，标出产地与作坊，铭文里那个「真」字说明当时已有人仿冒。「照子」即镜，为宋镜特有的叫法，或因避宋太祖祖父赵敬的「敬」字讳。两宋湖州有名有姓的私人镜坊有石、李、徐、丁、陆、黄、韩、蒋、冯、符、刘、万等家，石家铭文见石二郎、石三郎、石十郎、石十五郎、石念二叔，另有官营的湖州铸鉴局。纹饰减省是为省工时——**镜子此时已从贵族整容的高档器变成平民日用的商品**，远销朝鲜、日本。明清薛家镜为第二高峰，乾隆间列为贡镜，嘉庆十九年（1814）清廷废止「岁贡嘉炉湖镜」之例；此后玻璃镜以质量与价格胜出，传统铸镜业退出市场。（系年取江西北宋政和四年陈天若墓——最早有确切纪年、出标准湖州镜的墓葬。《宋会要辑稿》另有至道二年禁私铸铜器点名湖州一条，可上溯至996年，但中文维基该条把至道二年折成「956年」，与年号不合，故不采其公元数。）</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>湖州镜多作葵花形素背无纹，背铸「湖州石家青铜照子」「湖州真石家念二叔照子」「湖州薛晋侯造」等商标性铭记；「照子」为宋镜特有叫法，或与避宋太祖祖父赵敬讳有关；两宋湖州私人镜坊有石李徐丁陆黄韩蒋冯符刘万等家，石家铭文见石二郎至石十五郎、石念二叔；另有官营湖州铸鉴局；镜由贵族高档器转为平民日用商品，远销朝鲜日本</li>
+</ul>
+</details>
+</div></section>
+<section id="s11" data-year="1405" data-name="郑和下西洋"><div class="wrap">
+<div class="num">十一 / 十二</div>
+<div class="yr">1405</div>
+<h2>郑和下西洋</h2>
+<p class="sub">1405–1433　·　明　·　外患·外交</p>
+<p>明成祖命郑和七下西洋，历时近三十年。第七次人数据祝允明《前闻记》为二万七千五百五十人。宣德八年四月，郑和于返航途中在印度西海岸古里去世。</p>
+<p>一手记录已不存。仁宗即位后以下西洋耗费庞大为由下令停航，并烧毁宫中郑和下西洋的日志与文件。</p>
+<p>于是宝船有多大，今天说不准。《明史》作长四十四丈四尺、广十八丈；质疑派据南京静海寺残碑与出土舵杆估为长四十五至五十五米。而现存最早的尺度记载，出自罗懋登的演义小说《西洋记》，其余文献多转录自它。</p>
+<p>记录失效还有第三种方式：由后人重排。「龙门二十品」的篇目不是北朝人所定，而是清人康有为在《广艺舟双楫》中，自龙门数千方造像记里拈出的二十方。</p>
+<a class="go" href="timeline.html#line=kanhe&amp;at=11">在图上看这一站 →</a>
+<p class="note">本库简注：明成祖命郑和率庞大船队七下西洋，历时近三十年，航迹远及印度洋、阿拉伯半岛与东非沿岸，是当时世界规模最大的远洋航海活动。第七次人数据祝允明《前闻记》为二万七千五百五十人。宣德八年（1433）四月郑和于返航途中在印度西海岸古里去世，船队由王景弘率返，七月初六抵南京，朝廷在南京牛首山为他设衣冠冢。**一手记录已不存**：仁宗即位后以下西洋耗费庞大为由下令停航，并烧毁宫中郑和下西洋的日志与文件——宝船尺度之所以至今各源不一（《明史》作长四十四丈四尺、广十八丈，质疑派据南京静海寺残碑与出土舵杆估为长四十五至五十五米），正因原始档案被销毁，而现存最早的尺度记载出自罗懋登的演义小说《西洋记》，其余文献多转录自它。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>第七次下西洋人数据祝允明《前闻记》二万七千五百五十人；宣德八年四月郑和卒于古里；仁宗以耗费庞大下令停航并烧毁宫中下西洋日志与文件；《明史》作长四十四丈四尺广十八丈，质疑派据静海寺残碑与出土舵杆估长四十五至五十五米；现存最早尺度记载出自罗懋登《西洋记》</li>
+<li><span class="tag t-ok">信史</span>「龙门二十品」篇目由清人康有为在《广艺舟双楫》中首先提出，自龙门数千方造像记中拈出二十方；《杨大眼为孝文皇帝造像题记》为其一，亦在「龙门四品」之列</li>
+</ul>
+</details>
+</div></section>
+<section id="s12" data-year="1534" data-name="皇史宬"><div class="wrap">
+<div class="num">十二 / 十二</div>
+<div class="yr">1534</div>
+<h2>皇史宬</h2>
+<p class="sub">1534–1536　·　明　·　遗址·建筑</p>
+<p>明清皇家档案库，又称表章库，专藏实录、圣训、玉牒，明代曾在此存《永乐大典》副本。嘉靖十三年动工，初名神御阁，十五年竣工敕赐今名。</p>
+<p>造它的人把木头去尽。主殿为拱券式无梁建筑，墙身以特制磨砖砌成、厚五米，额枋斗拱门窗皆汉白玉雕成，山墙南北对开窗以通气，兼防火、防潮、防虫蛀、防鼠咬。殿内一点二米高的汉白玉须弥座上，置雕云龙纹镀金铜皮樟木柜一百五十二具。</p>
+<p>这是史书所称「石室金匮」的典范——跟汉高帝剖符封功臣时那八个字，是同一句话。</p>
+<p>1955 年后，皇史宬的归属权在国家档案局与故宫博物院之间数度往返。南院渐迁入两家单位职工二十余户，做饭取暖使用明火，照明使用裸露电线。两家单位都想争产权，都不愿先迁走居民，搬迁腾退因此无法进行。2005 年北京市文物局下发《责令限期改正通知书》；2019 年底腾退方告完成。</p>
+<p>它没有败给火。</p>
+<a class="go" href="timeline.html#line=kanhe&amp;at=12">在图上看这一站 →</a>
+<p class="note">本库简注：明清皇家档案库，又称表章库，专藏实录、圣训、玉牒，明代曾存《永乐大典》副本；是中国现存最古老、最完整的皇家档案库建筑群。嘉靖十三年（1534）动工，初名神御阁，十五年竣工敕赐今名。主殿为拱券式无梁建筑，墙身以特制磨砖砌成、厚五米，额枋斗拱门窗皆汉白玉雕成，山墙南北对开窗以通气，兼防火、防潮、防虫蛀、防鼠咬——史书所称「石室金匮」的典范。殿内一点二米高的汉白玉须弥座上，置雕云龙纹镀金铜皮樟木柜一百五十二具。1955年后归属权在国家档案局与故宫博物院之间数度往返，南院渐迁入两单位职工二十余户，明火做饭、裸线照明数十年；两家争产权而搬迁屡议不行，2019年底腾退方告完成。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>皇史宬嘉靖十三年（1534）动工初名神御阁、十五年竣工赐名；专藏实录圣训玉牒，明代曾存《永乐大典》副本；主殿拱券式无梁，墙身特制磨砖厚五米，额枋斗拱门窗皆汉白玉，山墙南北对开窗，防火防潮防虫蛀防鼠咬，为「石室金匮」典范；殿内 1.2 米高汉白玉须弥座上置雕云龙纹镀金铜皮樟木柜 152 具；1955 年后归属权在国家档案局与故宫博物院之间往返，南院迁入两单位职工二十余户明火做饭裸线照明，2005 年北京市文物局下发责令限期改正通知书，2019 年底腾退完成</li>
+<li><span class="tag t-ok">信史</span>钱镠铁券唐昭宗乾宁四年（897）八月制，形如覆瓦，长 52 厘米宽 29.8 厘米厚 0.4 厘米，为中国现存唯一唐代铁券实物；免钱镠九死、子孙三死，触犯他律有关官员不得过问；馆方作「三百三十三字」，同页引《十国春秋》作「三百二十二字」；王佐《铁券考》「汉高帝平定天下，剖符封功臣，申以丹书之信……故名曰金书铁券」；汉初「丹书、铁契、金匮、石室，藏於宗廟」</li>
+</ul>
+<div class="src">
+<a href="https://www.chnmuseum.cn/zp/zpml/kgfjp/202111/t20211116_252287.shtml" target="_blank" rel="noopener">中国国家博物馆藏品页  ；中文维基「丹書鐵券」</a>
+</div>
+</details>
+</div></section>
+<section id="s13" class="tone"><div class="wrap">
+<div class="num">落点</div>
+<h2>指得出</h2>
+<p>法门寺地宫开启之前，没有人指得出哪一件是秘色。《衣物帐》一对上，全世界都指得出了。</p>
+</div></section>
+<footer><div class="wrap">
+本页由 <code>tools/mining/build_line_page.py</code> 从库内数据生成，不手改。长文出自纪录片叙事稿，考据随文写就；凡各源不一致的数字，做法是一个都不给。
+<div class="row">
+<a href="timeline.html#line=kanhe">在图上走一遍 →</a>
+<a href="index.html">中国帝王寿命数据库</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-kanhe.md" target="_blank" rel="noopener">资料与出处 ↗</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%%E5%%8B%%98%%E8%%AF%%AF&amp;title=%%E5%%8B%%98%%E8%%AF%%AF%%EF%%BC%%9A" target="_blank" rel="noopener">报个错 ↗</a>
+</div></div></footer>
+<dialog id="lb"><button id="lbx" type="button" aria-label="关闭">✕</button><img id="lbi" alt=""><div id="lbc"></div></dialog>
+<script>
+// 进度条与导轨高亮。整页只有这一段脚本，无依赖、无外链。
+var bar=document.getElementById('bar'),links=[].slice.call(document.querySelectorAll('#rail a')),
+    secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+function tick(){
+  var h=document.documentElement,y=h.scrollTop||document.body.scrollTop,
+      m=(h.scrollHeight-h.clientHeight)||1;
+  bar.style.width=(100*y/m)+'%';
+  var at=0;
+  for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].getBoundingClientRect().top<h.clientHeight*0.42) at=i; }
+  for(var j=0;j<links.length;j++) links[j].className=(j===at?'on':'');
+  // 小地图跟着走：全程的点一直都在，只把当前这一节点亮
+  var g=document.querySelectorAll('svg.gmap .m-stop'),nm='';
+  for(var k=0;k<g.length;k++){
+    var on=(g[k].id==='gm-'+at);
+    g[k].setAttribute('class','m-stop'+(on?' on':''));
+    if(on) nm=g[k].getAttribute('data-name')||'';
+  }
+  var gn=document.getElementById('gname'); if(gn) gn.textContent=nm;
+}
+addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
+
+// 点开放大。图注与署名跟着进去——放大了更该说清这是谁的
+var lb=document.getElementById('lb'),lbi=document.getElementById('lbi'),lbc=document.getElementById('lbc');
+[].forEach.call(document.querySelectorAll('button.zoom'),function(b){
+  b.addEventListener('click',function(){
+    lbi.src=b.getAttribute('data-src'); lbi.alt=b.getAttribute('data-cap')||'';
+    var cap=b.getAttribute('data-cap')||'', who=b.getAttribute('data-who')||'',
+        full=b.getAttribute('data-full')||'';
+    lbc.innerHTML='';
+    var t=document.createElement('div'); t.textContent=cap+(cap&&who?'　':'')+who; lbc.appendChild(t);
+    if(full){var a=document.createElement('a'); a.href=full; a.target='_blank'; a.rel='noopener';
+      a.textContent='在 Commons 看原尺寸 ↗'; var d=document.createElement('div');
+      d.style.marginTop='.4rem'; d.appendChild(a); lbc.appendChild(d);}
+    if(lb.showModal) lb.showModal(); else lb.setAttribute('open','');
+  });
+});
+document.getElementById('lbx').addEventListener('click',function(){lb.close?lb.close():lb.removeAttribute('open')});
+lb.addEventListener('click',function(e){ if(e.target===lb) lb.close&&lb.close(); });
+</script>
+</body></html>
