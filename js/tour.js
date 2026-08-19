@@ -389,7 +389,20 @@ export function mountTour(sectionEl, hostOf) {
     if (st.ev) {
       const k = evIdx(st.ev);
       const e = k >= 0 ? EVENTS[k] : null;
-      if (e) holes.push(() => { const l = live(); return l && l.rect ? l.rect(e.y, e.y2 || e.y + 1) : null; });
+      // **先照实际画出来的那个东西**：事件在图上只是一个标记＋一行字（命中区
+      // 即 [data-evi]），而按年份区间画出来的框跨的是它「持续了多少年」——
+      // 七女为父报仇横跨一百二十年，框宽得离谱，真正的标签反倒挤在框边上
+      // （用户实测）。找得到节点就照节点，找不到（该事件在当前视图未画出、
+      // 或被筛掉）才退回年份区间，至少还指得出「在这一段里」。
+      if (k >= 0) {
+        const byNode = nodeHole(`[data-evi="${k}"]`);
+        holes.push(() => {
+          const hit = byNode();
+          if (hit.length) return hit;
+          const l = live();
+          return e && l && l.rect ? l.rect(e.y, e.y2 || e.y + 1) : null;
+        });
+      }
     }
     if (st.emp) holes.push(nodeHole(() => empBox.node));
 
