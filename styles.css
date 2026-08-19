@@ -1003,3 +1003,8 @@ section.card.river-mode .chart-host.full-bleed > .notes {
   width: 100%; border-radius: 999px;
   background: color-mix(in srgb, var(--text-1) 52%, transparent);
 }
+
+/* 宽屏把「详解」摊平：折叠是手机一屏预算的产物，桌面摆得下就照原样连排，
+   免得同一段叙述被功能句劈成两半（用户实测：桌面还是原来的全文更好读）。 */
+.tour-more.flat > .tour-more-sum { display: none; }
+.tour-more.flat { margin-top: 0; }

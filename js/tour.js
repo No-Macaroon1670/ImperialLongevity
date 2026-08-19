@@ -381,9 +381,15 @@ export function mountTour(sectionEl, hostOf) {
 
     step.textContent = `${i + 1} / ${STOPS.length}`;
     title.textContent = st.t;
-    body.textContent = st.b;
-    body2.textContent = st.b2 || '';
-    body2.style.display = st.b2 ? '' : 'none';
+    // 宽屏摆得下就**恢复原来的整段**：折叠是为手机的一屏预算而设，桌面
+    // 没有这个约束，却因此把同一段叙述劈成两半——主旨在上、其余被功能句
+    // 隔到下面（用户实测：桌面还是原来的全文更好读）。
+    // 故宽屏合成一段、详解摊平（无折叠头），窄屏才走三级折叠
+    const wideProse = innerWidth > 720;
+    body.textContent = wideProse && st.b2 ? st.b + st.b2 : st.b;
+    body2.textContent = wideProse ? '' : (st.b2 || '');
+    body2.style.display = !wideProse && st.b2 ? '' : 'none';
+    more.classList.toggle('flat', wideProse);
     // 与 cta2 同一条路径：**粗体** 转 <strong>（文案是本文件的字面量，非外来输入）
     cta.innerHTML = (st.cta || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
       .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -707,6 +713,12 @@ export function mountTour(sectionEl, hostOf) {
 
   // 导览已结束就不再响应：面板收了，可导航钮还在 DOM 里，再点会把副卡与
   // 让位记号重新装出来，屏上于是留下一排没有讲解的类别开关（实测）
+  // 宽窄档切换（转屏、拉窗）要重排文案：宽屏整段、窄屏三级折叠
+  let proseWide = innerWidth > 720;
+  addEventListener('resize', () => {
+    const w = innerWidth > 720;
+    if (on && w !== proseWide) { proseWide = w; goto(i); }
+  });
   prev.addEventListener('click', () => { if (on) goto(i - 1); });
   next.addEventListener('click', () => {
     if (!on) return;
