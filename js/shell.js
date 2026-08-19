@@ -20,7 +20,7 @@ const S = {
   yearFrom: null, yearTo: null,
 
   timelineMode: 'dual', timelineSort: 'birth',
-  // 全景视图的两种读法：竖向河流（顺着页面滚，看分合的形状）与横向泳道（看谁在何时统治）。
+  // 全景视图的两种读法：竖向河流（顺着页面滚，看分合之势）与横向泳道（看谁在何时统治）。
   // 默认按屏宽选：手机竖屏顺着拇指的方向读河流；宽屏一屏并列看得到更多政权，泳道更强。
   panoramaMode: matchMedia('(max-width: 720px)').matches ? 'river' : 'lanes',
   riverPx: 7,
