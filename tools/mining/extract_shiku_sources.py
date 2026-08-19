@@ -77,13 +77,20 @@ def main():
             rec['引文'].append({'文': txt(q), '出处': txt(attr)})
         stops[key] = rec
 
+    # 复核是另一条来路（merge_recheck.py 并进来的），重跑抽取不该把它抹掉
+    keep = []
+    if os.path.exists(OUT):
+        try:
+            keep = json.load(io.open(OUT, encoding='utf-8')).get('复核', [])
+        except Exception:
+            keep = []
     data = {
         '说明': ('石窟线长文的考据与出处。抽自 docs/line-shiku-original.html'
                  '（documentary-narrative skill 的原稿），非事后重查。'
                  '「复核」一节是另派人手独立核过的结果，与原稿并列而不覆盖它。'),
         '顺序': order,
         '站': stops,
-        '复核': [],
+        '复核': keep,
     }
     io.open(OUT, 'w', encoding='utf-8', newline='\n').write(
         json.dumps(data, ensure_ascii=False, indent=1))
@@ -94,6 +101,8 @@ def main():
     print('写出 %s：%d 站，考据 %d 条，出处链接 %d 条，带出处的引文 %d 条'
           % (OUT, len(stops), nk, nl, nq))
     print('  另抽出地点 %d 处（库内 events.js 无此字段）' % np_)
+    if keep:
+        print('  保留原有复核 %d 条' % len(keep))
     for k in order:
         v = stops[k]
         print('  %-10s 考据%2d 出处%2d 引文%d' % (k, len(v['考据']), len(v['出处']), len(v['引文'])))

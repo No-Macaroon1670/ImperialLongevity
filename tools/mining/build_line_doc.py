@@ -219,8 +219,15 @@ def main():
             L.append('')
         if chk:
             chk = sorted(chk, key=lambda r: VERDICT.get(r.get('verdict', ''), ('', 9))[1])
-            L.append('独立复核（另派人手事后重查，与上表并列）：')
+            ok = [r for r in chk if r.get('verdict') == '证实']
+            chk = [r for r in chk if r.get('verdict') != '证实']
+            L.append('独立复核（另派人手事后重查，与上表并列）：本站核 %d 条，'
+                     '其中 %d 条证实（不逐条列），余下这些读的时候请留意——'
+                     % (len(ok) + len(chk), len(ok)))
             L.append('')
+            if not chk:
+                L.append('（本站无待留意者。）')
+                L.append('')
             L.append('| 断言 | 结论 | 出处 | 备注 |')
             L.append('|---|---|---|---|')
             for r in chk:

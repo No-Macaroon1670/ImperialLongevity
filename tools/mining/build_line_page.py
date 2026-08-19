@@ -195,10 +195,15 @@ def main():
 
     quoted = set()
 
+    recheck = {}
+    for r in srcs.get('复核', []):
+        recheck.setdefault(r.get('stop', ''), []).append(r)
+
     def app_block(name):
-        """考据折叠：分级条目 ＋ 出处外链。两样都没有就不出这一块。"""
+        """考据折叠：分级条目 ＋ 出处外链 ＋ 复核提示。三样都没有就不出这一块。"""
         rec = per.get(name) or {}
         kao, lnk = rec.get('考据', []), rec.get('出处', [])
+        chk = [r for r in (recheck.get(name) or []) if r.get('verdict') != '证实']
         if not (kao or lnk):
             return
         A('<details class="app"><summary>考据</summary>')
@@ -208,6 +213,12 @@ def main():
                 cls = TAGCLS.get(k.get('级'), 'new')
                 A('<li><span class="tag t-%s">%s</span>%s</li>' % (cls, esc(k.get('级')), esc(k.get('文'))))
             A('</ul>')
+        if chk:
+            # 复核不逐条抄进读物——那是账本的事。这里只报个数，指路
+            A('<p class="note">另有 %d 条经事后独立复核后须留意（数字打架、引文出入、'
+              '出处只到二手）。逐条见 <a href="https://github.com/No-Macaroon1670/'
+              'ImperialLongevity/blob/main/docs/line-%s.md" target="_blank" '
+              'rel="noopener">资料与出处</a>。</p>' % (len(chk), key))
         if lnk:
             A('<div class="src">')
             for x in lnk:
