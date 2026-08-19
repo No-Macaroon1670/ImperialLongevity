@@ -1149,6 +1149,15 @@ export function renderLaneTimeline(host, list, opts) {
       const x1 = sr.left + x(b) - scroller.scrollLeft;
       return { x: x0, y: sr.top, w: Math.max(x1 - x0, 10), h: sr.height };
     },
+    /**
+     * 同上，但**只算泳道那一片**：顶上 HEAD_H 那条是事件轴（大事记的标记与
+     * 竖排标签），讲「这一段年份里有几家并立」时不该把它也照进去
+     *（用户实测：五代十国那站，光把事件轴连同泳道一起罩住了）。
+     */
+    rectBody(a, b) {
+      const r = this.rect(a, b);
+      return { ...r, y: r.y + HEAD_H, h: Math.max(10, r.h - HEAD_H) };
+    },
     emperor(id, o) {
       const r = empRefs.find((q) => q.e.id === id);
       if (!r) return false;

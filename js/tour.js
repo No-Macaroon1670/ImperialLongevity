@@ -425,7 +425,14 @@ export function mountTour(sectionEl, hostOf) {
     // span 兼两职：跳转的落点，以及「照这一段年份」的洞。点名了泳道就只留前者
     // ——否则整列连同无关政权一起被照亮（见 st.bands 的注）
     if (st.span && !st.bands) {
-      holes.push(() => { const l = live(); return l && l.rect ? l.rect(st.span[0], st.span[1]) : null; });
+      // 优先 rectBody：泳道视图里它跳过顶上的事件轴，只照政权那一片——
+      // 「这一段年份里有几家并立」问的是泳道，不是大事记（用户实测）
+      holes.push(() => {
+        const l = live();
+        if (!l) return null;
+        const f = l.rectBody || l.rect;
+        return f ? f.call(l, st.span[0], st.span[1]) : null;
+      });
     }
     if (st.ev) {
       const k = evIdx(st.ev);
