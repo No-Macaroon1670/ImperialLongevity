@@ -6,7 +6,7 @@ import { mountApp } from './shell.js';
 import { SECTIONS } from './sections-panorama.js';
 import { mountSearch } from './search.js';
 import { mountTour } from './tour.js';
-import { lineOf } from './lines.js';
+import { lineOf, LINES } from './lines.js';
 import { EMPERORS, DYNASTIES } from './data.js';
 import { EVENTS } from './events.js';
 
@@ -34,6 +34,80 @@ function openLine(key) {
   lineTour.start(0);
   return true;
 }
+// ── 故事目录 ────────────────────────────────────────────────────────
+// 书的按钮开的是**目录**而不是某一条线：线会越来越多，而「有哪些线可走」
+// 本身就是读者要先看见的东西（用户指出）。目录只列名字、一句话与站数，
+// 点一条才进去——选择在读者手里，不在按钮上。
+const catalog = document.createElement('div');
+catalog.className = 'line-catalog';
+catalog.setAttribute('role', 'dialog');
+catalog.setAttribute('aria-label', '故事线目录');
+const closeCatalog = () => { catalog.classList.remove('on'); document.body.classList.remove('line-catalog-on'); };
+{
+  const sheet = document.createElement('div');
+  sheet.className = 'lc-sheet';
+  const head = document.createElement('div');
+  head.className = 'lc-head';
+  const h = document.createElement('h3');
+  h.textContent = '故事线';
+  const x = document.createElement('button');
+  x.type = 'button'; x.className = 'kp-close'; x.textContent = '✕';
+  x.setAttribute('aria-label', '关闭');
+  x.addEventListener('click', closeCatalog);
+  head.append(h, x);
+  const intro = document.createElement('p');
+  intro.className = 'lc-intro';
+  intro.textContent = '一条线是穿过这张图的一种读法：跨越时代的一串站点，逐站打光、逐站讲。';
+  sheet.append(head, intro);
+  for (const line of Object.values(LINES)) {
+    const row = document.createElement('button');
+    row.type = 'button'; row.className = 'lc-row';
+    const nm = document.createElement('div');
+    nm.className = 'lc-name';
+    nm.textContent = line.name;
+    const cnt = document.createElement('span');
+    cnt.className = 'lc-count';
+    cnt.textContent = `${line.stops.length} 站`;
+    nm.appendChild(cnt);
+    const sub = document.createElement('div');
+    sub.className = 'lc-sub';
+    sub.textContent = line.lede;
+    row.append(nm, sub);
+    row.addEventListener('click', () => {
+      closeCatalog();
+      history.replaceState(null, '', `#line=${line.key}`);
+      openLine(line.key);
+    });
+    sheet.appendChild(row);
+  }
+  catalog.appendChild(sheet);
+  catalog.addEventListener('click', (e) => { if (e.target === catalog) closeCatalog(); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCatalog(); });
+  document.body.appendChild(catalog);
+}
+{
+  const head = panorama.querySelector('.head') || panorama;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'chip tour-launch line-launch';
+  // 两段结构与骰子一致：钉进顶栏时只留图标，展开时带名字
+  const face = document.createElement('span');
+  face.className = 'line-face';
+  face.textContent = '📖';
+  const label = document.createElement('span');
+  label.textContent = '故事线';
+  btn.append(face, label);
+  btn.title = '故事线目录：穿过这张图的几种读法';
+  btn.setAttribute('aria-label', '故事线目录');
+  btn.addEventListener('click', () => {
+    catalog.classList.add('on');
+    document.body.classList.add('line-catalog-on');
+    const first = catalog.querySelector('.lc-row');
+    if (first) first.focus();
+  });
+  head.appendChild(btn);
+}
+
 const lineFromHash = () => {
   const m = /(?:^|[#&])line=([a-z0-9_-]+)/i.exec(location.hash || '');
   return m ? m[1].toLowerCase() : null;

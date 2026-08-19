@@ -155,6 +155,8 @@ export function mountSearch(sectionEl, hostOf) {
     const on = headGone && sectionHere;
     box.classList.toggle('pinned', on);
     dice.classList.toggle('pinned', on);    // 窄屏时骰子跟着钉进顶部黑条（CSS 侧只在窄屏生效）
+    // 故事线入口同理：顶栏左边还空着一格，正好放它（用户实测指出）
+    for (const b of document.querySelectorAll('.line-launch')) b.classList.toggle('pinned', on);
   };
   new IntersectionObserver(([e]) => {
     headGone = !e.isIntersecting && e.boundingClientRect.top < 0;   // 标题栏滚到上方去了

@@ -503,6 +503,17 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
     right: calc(8px + min(260px, 46vw) + 6px);
   }
   .tl-dice.pinned span:not(.tl-dice-face) { display: none; }
+  /* 故事线：钉在骰子左边那一格（顶栏原本空着，用户实测指出） */
+  .line-launch.pinned {
+    position: fixed; z-index: 70; margin: 0; padding: 0;
+    width: 34px; height: 34px; min-height: 0; box-sizing: border-box;
+    align-items: center; justify-content: center; line-height: 1; overflow: hidden;
+    top: calc(var(--filters-h, 45px) + 7px);
+    right: calc(8px + min(260px, 46vw) + 6px + 34px + 6px);
+  }
+  .line-launch.pinned span:not(.line-face) { display: none; }
+  /* 黑条左侧按钮再让出一格 */
+  .sec-nav.up .sn-btn { max-width: calc(100vw - min(260px, 46vw) - 140px); }
   /* 黑条左侧按钮给右边的骰子＋搜索留位 */
   .sec-nav.up .sn-btn { max-width: calc(100vw - min(260px, 46vw) - 96px); }
 }
@@ -1008,3 +1019,36 @@ section.card.river-mode .chart-host.full-bleed > .notes {
    免得同一段叙述被功能句劈成两半（用户实测：桌面还是原来的全文更好读）。 */
 .tour-more.flat > .tour-more-sum { display: none; }
 .tour-more.flat { margin-top: 0; }
+
+/* 故事线入口：与导览按钮同族，但不抢它的「第一次来？」那一档注意力 */
+.line-launch { margin-left: 6px; gap: 5px; }
+.line-face { display: inline-block; font-size: .95rem; line-height: 1; }
+
+/* 故事目录：书的按钮开这个，不直接开线——线会越来越多，「有哪些线可走」
+   本身就是读者该先看见的东西。一层薄幕＋一张卡，点外面或 Esc 即关。 */
+.line-catalog {
+  /* 压过导览的熄灯层与讲解坞（901/902）：目录是新的焦点，开着时它说了算 */
+  position: fixed; inset: 0; z-index: 950; display: none;
+  align-items: center; justify-content: center; padding: 16px;
+  background: color-mix(in srgb, var(--page) 55%, transparent);
+  backdrop-filter: blur(3px);
+}
+.line-catalog.on { display: flex; animation: kp-in-flat .18s ease; }
+.lc-sheet {
+  width: min(420px, 100%); max-height: min(76vh, 560px); overflow-y: auto;
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .18); padding: 14px 16px 12px;
+}
+.lc-head { display: flex; align-items: center; gap: 8px; }
+.lc-head h3 { margin: 0; font-size: 1rem; flex: 1; }
+.lc-intro { margin: 6px 0 12px; font-size: .8rem; line-height: 1.55; color: var(--text-2); }
+.lc-row {
+  display: block; width: 100%; text-align: left; cursor: pointer;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface-2); color: inherit; font: inherit;
+  padding: 9px 11px; margin-bottom: 8px;
+}
+.lc-row:hover, .lc-row:focus-visible { border-color: var(--seq-400); background: var(--surface-1); }
+.lc-name { display: flex; align-items: baseline; gap: 8px; font-size: .92rem; font-weight: 600; }
+.lc-count { font-size: .74rem; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
+.lc-sub { margin-top: 3px; font-size: .78rem; line-height: 1.5; color: var(--text-2); }
