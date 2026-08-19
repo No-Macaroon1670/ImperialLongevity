@@ -288,6 +288,22 @@ export function mountTour(sectionEl, hostOf) {
       dock.classList.toggle('dock-bottom', !cardOn && c < H * 0.42);
     }
     syncSbar();
+    // ── 活预算 ────────────────────────────────────────────────────────
+    // 底线不是「图必须占 45%」，而是**这一站打光的目标看得见且有余裕**。
+    // 段正严那格只有三十九像素高，却照样按 45% 给图留白，把讲解挤得露不全
+    //（用户实测：这里其实有空间让导览卡全显示）。故按目标的实际身量算：
+    // 需要给图的 = 目标高 + 上下各留一口气，夹在 25%–45% 之间；
+    // 讲解坞拿走剩下的（22%–46%），卡不动。
+    if (innerWidth <= 720) {
+      const cardEl = document.querySelector('.kp-solo.on');
+      const cardH = cardEl ? cardEl.getBoundingClientRect().height : 0;
+      const solid = raw.filter((r) => !r.noClip);          // 卡上的洞不算「图」
+      const tgtH = solid.length
+        ? Math.max(...solid.map((r) => r.y + r.h)) - Math.min(...solid.map((r) => r.y)) : 0;
+      const needMap = Math.min(H * 0.45, Math.max(H * 0.25, tgtH + 96));
+      const maxDock = Math.max(H * 0.22, Math.min(H * 0.46, H - cardH - needMap));
+      dock.style.maxHeight = `${Math.round(maxDock)}px`;
+    } else dock.style.maxHeight = '';
     const band = visibleBand();
     // 一个 getter 可以给回多块(宽屏的知识卡是左右两张,该一起亮)
     for (let r of raw) {
@@ -667,6 +683,7 @@ export function mountTour(sectionEl, hostOf) {
     document.body.classList.remove('tour-card-on');
     dock.classList.remove('dock-bottom');
     sbar.classList.remove('on');
+    dock.style.maxHeight = '';
     on = false;
     if (raf) { cancelAnimationFrame(raf); raf = null; }   // 不清掉,下次 kick 会被它挡住
     holes = [];
