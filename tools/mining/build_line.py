@@ -25,9 +25,12 @@ def run(script, *a):
 
 def main():
     key = sys.argv[1] if len(sys.argv) > 1 else 'shiku'
-    # 抽取脚本目前只认石窟线的原稿；别的线还没有 HTML 原件，跳过即可
-    if os.path.exists(os.path.join(HERE, '..', '..', 'docs', 'line-%s-original.html' % key)):
-        run('extract_%s_sources.py' % key if key == 'shiku' else 'extract_shiku_sources.py')
+    # 两种叙事稿形态各有抽取脚本：石窟线是一页 HTML（原稿），此后各线是 Markdown
+    docs = os.path.join(HERE, '..', '..', 'docs')
+    if os.path.exists(os.path.join(docs, 'line-%s-original.html' % key)):
+        run('extract_shiku_sources.py')
+    elif os.path.exists(os.path.join(docs, 'line-%s-craft.md' % key)):
+        run('craft_to_sources.py', key)
     run('build_line_doc.py', key)
     run('build_line_page.py', key)
     print('全部重出完毕。别忘了 sh tools/lint-js.sh，以及浏览器里走一遍。')

@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>赤壁线 · 正史里只有三十个字。火、东风、华容道，是后来一层层加上去的。</title>
+<meta name="description" content="一场战役如何变成一件件文物。共 8 站。">
+<link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/story-chibi.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="赤壁线">
+<meta property="og:description" content="正史里只有三十个字。火、东风、华容道，是后来一层层加上去的。">
+<meta property="og:url" content="https://no-macaroon1670.github.io/ImperialLongevity/story-chibi.html">
+<style>
+:root{
+  --bg:#0e0d0c; --bg2:#161311; --ink:#e9e3d7; --dim:#9a9187; --faint:#5d564e;
+  --rule:#2a2622; --accent:#c0603f; --gold:#c9a959;
+  --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+  font-size:18px;line-height:2.05;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50}
+/* 导轨：宽屏才有。窄屏那点横向空间要留给正文 */
+#rail{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
+  z-index:40;display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
+#rail a{display:flex;align-items:center;gap:.5rem;color:var(--faint);text-decoration:none;
+  letter-spacing:.04em;transition:color .25s}
+#rail .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;transition:transform .25s}
+#rail a .lbl{opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap}
+#rail a:hover{color:var(--dim)} #rail a:hover .lbl{opacity:1;transform:none}
+#rail a.on{color:var(--accent)} #rail a.on .dot{transform:scale(1.5)}
+#rail a.on .lbl{opacity:1;transform:none}
+@media(max-width:1180px){#rail{display:none}}
+.wrap{max-width:40rem;margin:0 auto;padding:0 1.5rem}
+header.cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
+  padding:6rem 0 4rem;border-bottom:1px solid var(--rule)}
+.kicker{font-family:var(--sans);font-size:12px;letter-spacing:.34em;color:var(--faint);margin-bottom:2.4rem}
+h1{font-size:clamp(2.4rem,8vw,4rem);line-height:1.14;margin:0 0 1.6rem;font-weight:500;letter-spacing:.06em}
+.lede{font-size:1.06rem;color:var(--dim);line-height:2;max-width:30rem;margin:0}
+.meta{margin-top:3.4rem;font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.08em}
+.meta a{color:var(--gold);text-decoration:none;border-bottom:1px solid transparent}
+.meta a:hover{border-bottom-color:var(--gold)}
+section{padding:5.5rem 0;border-bottom:1px solid var(--rule)}
+section.tone{background:var(--bg2)}
+.num{font-family:var(--sans);font-size:11px;letter-spacing:.3em;color:var(--faint)}
+.yr{font-family:var(--sans);font-size:2.6rem;line-height:1;color:var(--rule);margin:.4rem 0 .8rem;
+  font-variant-numeric:tabular-nums;font-weight:700}
+h2{font-size:1.75rem;line-height:1.35;margin:0 0 .5rem;font-weight:500;letter-spacing:.04em}
+.sub{font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.1em;margin:0 0 2rem}
+section p{margin:0 0 1.35rem}
+p.beat{color:var(--gold)}
+blockquote{margin:2rem 0;padding-left:1.2rem;border-left:2px solid var(--accent);color:var(--ink)}
+blockquote small{display:block;margin-top:.5rem;font-family:var(--sans);font-size:11px;
+  letter-spacing:.08em;color:var(--faint)}
+.go{display:inline-block;margin:.4rem 0 1.6rem;font-family:var(--sans);font-size:12px;
+  letter-spacing:.08em;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:2px}
+.go:hover{border-bottom-color:var(--gold)}
+details.app{margin-top:2rem;font-family:var(--sans);font-size:13px;line-height:1.85;color:var(--dim)}
+details.app summary{cursor:pointer;color:var(--faint);letter-spacing:.14em;font-size:11px;
+  padding:.5rem 0;border-top:1px solid var(--rule)}
+details.app ul{margin:.8rem 0;padding-left:1.1rem}
+details.app li{margin-bottom:.7rem}
+.tag{display:inline-block;font-size:10px;letter-spacing:.08em;padding:1px 6px;margin-right:.5rem;
+  border-radius:3px;border:1px solid currentColor;vertical-align:.08em}
+.t-ok{color:#7d9b6e} .t-trad{color:var(--gold)} .t-new{color:#6e8a9b}
+.t-infer{color:#9b8a6e} .t-doubt{color:var(--accent)}
+.src{margin-top:.9rem;display:flex;flex-wrap:wrap;gap:.9rem}
+.src a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule);font-size:12px}
+.src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
+.note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
+footer{padding:5rem 0 7rem;font-family:var(--sans);font-size:12.5px;color:var(--faint);line-height:2}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--rule)}
+footer a:hover{color:var(--ink)}
+footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
+@media(max-width:640px){
+  body{font-size:17px;line-height:1.98}
+  section{padding:4rem 0}
+  .yr{font-size:2rem}
+  h1{letter-spacing:.03em}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<nav id="rail" aria-label="节次">
+<a href="#s0"><span class="dot"></span><span class="lbl">三十个字</span></a>
+<a href="#s1"><span class="dot"></span><span class="lbl">隆中对</span></a>
+<a href="#s2"><span class="dot"></span><span class="lbl">赤壁之战</span></a>
+<a href="#s3"><span class="dot"></span><span class="lbl">赢了的人，两</span></a>
+<a href="#s4"><span class="dot"></span><span class="lbl">写得少的人，</span></a>
+<a href="#s5"><span class="dot"></span><span class="lbl">八百七十四年</span></a>
+<a href="#s6"><span class="dot"></span><span class="lbl">同一年，同一</span></a>
+<a href="#s7"><span class="dot"></span><span class="lbl">赤壁图</span></a>
+<a href="#s8"><span class="dot"></span><span class="lbl">三国演义</span></a>
+<a href="#s9"><span class="dot"></span><span class="lbl">人道是</span></a>
+</nav>
+<header class="cover"><div class="wrap">
+<div class="kicker">一场战役如何变成一件件文物</div>
+<h1>赤壁线</h1>
+<p class="lede">正史里只有三十个字。火、东风、华容道，是后来一层层加上去的。</p>
+<div class="meta">共 8 站　·　<a href="timeline.html#line=chibi">在图上走一遍 →</a>　·　<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-chibi.md">资料与出处 ↗</a></div>
+</div></header>
+<section id="s0" class="tone"><div class="wrap">
+<div class="num">序</div>
+<h2>三十个字</h2>
+<p>《三国志·武帝纪》记赤壁之战，全文如下：</p>
+<blockquote>公至赤壁，與備戰，不利。於是大疫，吏士多死者，乃引軍還。備遂有荊州、江南諸郡</blockquote>
+<p>三十个字。没有火，没有东风，没有草船，没有华容道，没有诸葛亮。连对手都不是周瑜。陈寿写的是「与备战」。</p>
+<p>这一战之后一千八百年里，它长成了中国人最熟的一个故事。多出来的那些，是一层一层加上去的：先是注，再是赋，再是画，最后是小说。</p>
+<p>这条线走那八层。每一层都比上一层更具体、更好看，也离那三十个字更远。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>「公至赤壁，與備戰，不利。於是大疫，吏士多死者，乃引軍還。備遂有荊州、江南諸郡」逐字，及其为《武帝纪》记赤壁之全文</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/三國志/卷01" target="_blank" rel="noopener">《三國志·魏書·武帝紀》，维基文库</a>
+</div>
+</details>
+</div></section>
+<section id="s1" data-year="207" data-name="隆中对"><div class="wrap">
+<div class="num">一 / 八</div>
+<div class="yr">207</div>
+<h2>隆中对</h2>
+<p class="sub">207　·　东汉　·　制度</p>
+<p>战略比战役早一年。</p>
+<p>建安十二年冬，刘备三次登门，见到诸葛亮。诸葛亮把天下摊开讲了一遍：曹操不可与争锋，孙权可以为援不可图，先取荆州为家，再取益州，成鼎足之势。</p>
+<p>刘备听完，说了一个字：善。</p>
+<p>这段话后来叫《隆中对》。它把赤壁之战的结局提前一年写好了：联孙抗曹，四个字。</p>
+<p>这场谈话发生在哪儿，至今没有定论。《汉晋春秋》说「亮家於南陽之鄧縣，在襄陽城西二十里，號曰隆中」；清代起，河南南阳的卧龙岗与湖北襄阳的古隆中各执一词，两边都说是躬耕之地。二〇〇三年《隆中对》重回中学课本，注释写「在现在的湖北襄樊」，南阳方面为此不满。</p>
+<p>这条线上第一个说不清的地方，出现在第一站。</p>
+<a class="go" href="timeline.html#line=chibi&amp;at=1">在图上看这一站 →</a>
+<p class="note">本库简注：刘备三次拜访诸葛亮，诸葛亮就天下形势提出联孙抗曹、先取荆益再图中原的战略构想，此后成为刘备集团及蜀汉建国的基本方针。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>隆中对内容与「凡三往，乃見」「善」</li>
+<li><span class="tag t-doubt">存疑</span>「亮家於南陽之鄧縣，在襄陽城西二十里，號曰隆中」；清代起南阳卧龙岗与襄阳古隆中之争；2003 年课本注释引发不满</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/隆中對" target="_blank" rel="noopener">中文维基 · 隆中對（引《三国志》）</a>
+</div>
+</details>
+</div></section>
+<section id="s2" data-year="208" data-name="赤壁之战"><div class="wrap">
+<div class="num">二 / 八</div>
+<div class="yr">208</div>
+<h2>赤壁之战</h2>
+<p class="sub">208　·　东汉　·　战事</p>
+<p>曹操南下，孙刘联军在长江迎击。</p>
+<p>火攻不在《三国志》正文里。它在裴松之的注里。刘宋人裴松之引《山阳公载记》：</p>
+<blockquote>公船艦爲備所燒，引軍從華容道步歸，遇泥濘，道不通，天又大風，悉使羸兵負草填之，騎乃得過</blockquote>
+<p>这句话里烧船的人是备。刘备。华容道也在这里，泥泞、大风、用弱兵背草填路。这些细节全部出自注，不出自正文，而且成文比事发晚了两百多年。</p>
+<p>至于赤壁在哪儿，最早记录的是刘宋人盛弘之《荆州记》，说在蒲圻县沿江一百里南岸；郦道元《水经注》指的是另一处；《太平寰宇记》引的又是汉阳临漳山；唐李吉甫《元和郡县图志》说汉川县西八十里有「赤壁草市」，「古今地书多言此是曹公败处」。今人统计，嘉鱼、蒲圻、武昌、汉阳、汉川、黄冈、钟祥，七说。</p>
+<p>三十个字里没有的东西，从这时候开始往上长。</p>
+<a class="go" href="timeline.html#line=chibi&amp;at=2">在图上看这一站 →</a>
+<p class="note">本库简注：曹操率大军南下追击刘备并进逼孙权，孙刘联军在长江赤壁以火攻大破曹军，曹操北还，此后三方分荆州，奠定三国鼎立的雏形。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>赤壁之战本事、孙刘联军、曹操北还、三方分荆州</li>
+<li><span class="tag t-ok">信史</span>「公船艦爲備所燒，引軍從華容道步歸……」逐字</li>
+<li><span class="tag t-new">各源不一致故不给定论</span>赤壁地点七说（嘉鱼、蒲圻、武昌、汉阳、汉川、黄冈、钟祥）；盛弘之《荆州记》《水经注》《太平寰宇记》《元和郡县图志》各指一处</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/赤壁之戰" target="_blank" rel="noopener">本库 events.js「赤壁之战」简注；中文维基 · 赤壁之戰</a>
+<a href="https://zh.wikisource.org/wiki/三國志/卷01" target="_blank" rel="noopener">《三國志·魏書·武帝紀》裴松之注引《山陽公載記》，维基文库</a>
+</div>
+</details>
+</div></section>
+<section id="s3" data-year="210" data-name="刮目相看"><div class="wrap">
+<div class="num">三 / 八</div>
+<div class="yr">210</div>
+<h2>刮目相看</h2>
+<p class="sub">210　·　东汉　·　名人轶事</p>
+<p>赢的那个人两年后就死了。</p>
+<p>建安十五年，周瑜从京口回江陵整装，准备取蜀，病卒于道，年三十六。裴松之在这里加了一条注，说他病死的巴丘，不是他先前镇守的那个巴丘，「名同處異也」。</p>
+<p>这条线上第二个搞错了的地方。差别在于，这一个当场就有人指出来了。</p>
+<p>周瑜死后，鲁肃接任，路过吕蒙驻地。他本来轻看这个行伍出身的人，一谈之下大惊：「吾謂大弟但有武略耳，至於今者，學識英博，非復吳下阿蒙。」吕蒙答：「士別三日，即更刮目相待。」</p>
+<p>一段对话出两个成语。它也在裴注里，引的是《江表传》。</p>
+<a class="go" href="timeline.html#line=chibi&amp;at=3">在图上看这一站 →</a>
+<p class="note">本库简注：建安十五年周瑜死、鲁肃接任屯陆口，路过吕蒙驻地，本轻视这个行伍出身的人，一谈之下大惊：「卿今者才略，非复吴下阿蒙」，吕蒙答「士别三日，即更刮目相待」。一段对话出两个成语；起因是孙权此前劝他读书，《资治通鉴》摘的这一段就是中学课文《孙权劝学》</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>「瑜還江陵為行裝，而道於巴丘病卒……時年三十六」逐字</li>
+<li><span class="tag t-ok">信史</span>「所卒之處，應在今之巴陵，與前所鎮巴丘，名同處異也」</li>
+<li><span class="tag t-ok">信史</span>「非復吳下阿蒙」「士別三日，即更刮目相待」逐字</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/三國志/卷54" target="_blank" rel="noopener">《三國志·吳書·周瑜傳》，维基文库</a>
+</div>
+</details>
+</div></section>
+<section id="s4" data-year="285" data-name="三国志"><div class="wrap">
+<div class="num">四 / 八</div>
+<div class="yr">285</div>
+<h2>三国志</h2>
+<p class="sub">285　·　西晋　·　文化·科技</p>
+<p>陈寿是蜀汉人，蜀亡后入晋，写了《三国志》。</p>
+<p>他写得极省。赤壁三十个字，很多传里的大事也不过百余言。省到什么程度：赤壁之战的火，他的正文里一个字没有。</p>
+<p>一百三十多年后，宋文帝命裴松之为《三国志》作注。裴松之引书二百余种，补进大量陈寿没收或不肯收的材料，火攻、华容道、「士别三日」都在其中。注的篇幅超过了正文。</p>
+<p>于是同一部书里出现了两种密度：陈寿负责「有据可查的部分」，裴松之负责「还有人这么说」。今天我们讲赤壁时脱口而出的细节，多半来自后者。</p>
+<p>这个分工在这条线上会一直延续下去。往后每加一层，加的人离那场战争就更远一点。</p>
+<a class="go" href="timeline.html#line=chibi&amp;at=4">在图上看这一站 →</a>
+<p class="note">本库简注：西晋史学家陈寿所著纪传体断代史，记载三国史事，与《史记》《汉书》《后汉书》并称前四史中评价最高者，后经南朝裴松之详加注释。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>陈寿其人、《三国志》成书、裴松之奉宋文帝命作注</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/三國志" target="_blank" rel="noopener">本库 events.js「三国志」简注；中文维基 · 三國志</a>
+</div>
+</details>
+</div></section>
+<section id="s5" data-year="1082" data-name="前赤壁赋"><div class="wrap">
+<div class="num">五 / 八</div>
+<div class="yr">1082</div>
+<h2>前赤壁赋</h2>
+<p class="sub">1082　·　北宋　·　文物</p>
+<p>元丰五年七月，一个被贬到黄州的人在江上泛舟。</p>
+<p>他写：「壬戌之秋，七月既望，蘇子与客泛舟游于赤壁之下。」</p>
+<p>赤壁之战是二〇八年。这一年是一〇八二年。中间隔着八百七十四年。</p>
+<p>赋里那句最著名的认定，其实不是苏轼说的。是同船的客人说的，而且是一个问句：</p>
+<blockquote>西望夏口，東望武昌，山川相繆，鬱乎蒼蒼，此非孟德之困於周郎者乎？</blockquote>
+<p>苏轼把地点的认定放进别人嘴里，用了问号。同一年他写《念奴娇》，那句更直接：「故壘西邊，人道是、三國周郎赤壁。」人道是。人们说是。</p>
+<p>他站的地方是黄州赤鼻矶。黄冈说确实是七说之一，南宋王象之《舆地纪胜》说它出自《齐安拾遗》，以赤鼻山为赤壁。但苏轼自己两次都没把话说死。</p>
+<p>这篇赋的书法真迹，今藏台北故宫博物院。</p>
+<a class="go" href="timeline.html#line=chibi&amp;at=5">在图上看这一站 →</a>
+<p class="note">本库简注：北宋苏轼被贬黄州期间所作辞赋名篇，与《后赤壁赋》为姊妹篇，其书法真迹现藏台北国立故宫博物院，并被列为中华民国国宝。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>「壬戌之秋，七月既望，蘇子与客泛舟游于赤壁之下」逐字</li>
+<li><span class="tag t-ok">信史</span>「西望夏口……此非孟德之困於周郎者乎？」为**客**语且为问句；《念奴嬌·赤壁懷古》「故壘西邊，人道是、三國周郎赤壁」逐字</li>
+<li><span class="tag t-ok">信史</span>「黄州之说盖出于《齐安拾遗》以赤鼻山为赤壁」（南宋王象之《舆地纪胜》）</li>
+<li><span class="tag t-ok">信史</span>《前赤壁赋》书法真迹藏台北国立故宫博物院</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/前赤壁賦" target="_blank" rel="noopener">苏轼《前赤壁賦》，维基文库（据《古文观止》卷十一）</a>
+<a href="https://zh.wikisource.org/wiki/念奴嬌_(蘇軾" target="_blank" rel="noopener">同上；及维基文库《念奴嬌 (蘇軾)》据《御定詞譜》卷28</a>
+<a href="https://digitalarchive.npm.gov.tw/Collection/Detail/882?dep=P" target="_blank" rel="noopener">本库 events.js 外链：</a>
+</div>
+</details>
+</div></section>
+<section id="s6" data-year="1082" data-name="寒食帖"><div class="wrap">
+<div class="num">六 / 八</div>
+<div class="yr">1082</div>
+<h2>寒食帖</h2>
+<p class="sub">1082　·　北宋　·　文物</p>
+<p>同一年，同一个地方，同一个人，写了另一张纸。</p>
+<p>《黄州寒食诗帖》，苏轼贬黄州第三年所书。卷末有黄庭坚的跋。后世称它「天下第三行书」。今亦藏台北故宫博物院。</p>
+<p>纸上写的是那三年怎么过的：寒食，雨，空庖煮寒菜，破灶烧湿苇。</p>
+<p>这一站不推进任何事实。它只是让人看一眼：写下「大江东去」的那只手，和写下这张纸的是同一只。同一年。</p>
+<a class="go" href="timeline.html#line=chibi&amp;at=6">在图上看这一站 →</a>
+<p class="note">本库简注：全名《黄州寒食诗帖》，是苏轼被贬黄州第三年所书的行书代表作，卷末有黄庭坚跋文，被誉“天下第三行书”，现藏台北国立故宫博物院。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>《黄州寒食诗帖》贬黄州第三年所书、黄庭坚跋、天下第三行书、藏台北故宫</li>
+</ul>
+<div class="src">
+<a href="https://digitalarchive.npm.gov.tw/Collection/Detail/14714?dep=P" target="_blank" rel="noopener">本库 events.js「寒食帖」简注；外链</a>
+</div>
+</details>
+</div></section>
+<section id="s7" data-year="1169" data-name="赤壁图"><div class="wrap">
+<div class="num">七 / 八</div>
+<div class="yr">1169</div>
+<h2>赤壁图</h2>
+<p class="sub">1169　·　金　·　文物</p>
+<p>八十多年后，一个金国人拿起笔。</p>
+<p>武元直，字善夫，号广漠道人，活动于金代海陵王与世宗年间。他画了一卷《赤壁图》，取材是苏轼《赤壁赋》里「苏子与客泛游赤壁之下」的那一幕。</p>
+<p>所以这幅画画的不是战争。画上没有火，没有船阵，没有两军。有的是水、崖、一叶小舟、舟中几个人。它画的是那次夜游。</p>
+<p>这是目前已知最早的赤壁主题山水画，台北故宫博物院藏，国宝级。</p>
+<p>从战役到赋，隔了八百七十四年；从赋到这幅画，又隔了八十七年。画的人是女真政权治下的画家，画的是宋人的一次泛舟，而那次泛舟所在的地方是七说之一。</p>
+<p>层数已经三层了。</p>
+<a class="go" href="timeline.html#line=chibi&amp;at=7">在图上看这一站 →</a>
+<p class="note">本库简注：金代画家武元直所绘，取材苏轼《赤壁赋》，是现存最早的赤壁主题山水画，台北故宫博物院藏国宝级文物，也是金代绘画的重要代表。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>武元直字善夫、号广漠道人、活动于 1149–1189；取材「蘇子與客泛游赤壁之下」；目前已知最早的赤壁主题山水画；台北故宫国宝</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/赤壁圖；本库外链" target="_blank" rel="noopener">中文维基 · 赤壁圖</a>
+<a href="https://digitalarchive.npm.gov.tw/Collection/Detail/32?dep=P" target="_blank" rel="noopener">中文维基 · 赤壁圖</a>
+</div>
+</details>
+</div></section>
+<section id="s8" data-year="1522" data-name="三国演义"><div class="wrap">
+<div class="num">八 / 八</div>
+<div class="yr">1522</div>
+<h2>三国演义</h2>
+<p class="sub">1522　·　文化·科技</p>
+<p>最后一层是小说。</p>
+<p>《三国演义》相传为元末明初罗贯中据《三国志》《三国志平话》改写。现存最早刊本，是明嘉靖元年序刊的《三国志通俗演义》，二十四卷。成书年代本身没有定论，故此处只标现存最早刊本这一年。</p>
+<p>今天绝大多数人知道的赤壁，是它写的那一版：借东风、草船借箭、华容道义释曹操。这三件在正史里都没有。</p>
+<p>小说还重接了因果。本库另有一条「鸡肋」：曹操以鸡肋为口令、杨修断定要撤军，见《三国志·武帝纪》裴注引《九州春秋》；但正史里杨修不是因此被杀，他是当年秋天以「漏泄言教、交关诸侯」处死的。「因鸡肋而杀杨修」是小说接上去的因果。「六出祁山」也是小说的算法，正史载诸葛亮北伐五次，且非皆出祁山。</p>
+<p>一四〇〇年前后到一五二二年，离那场仗一千三百年。</p>
+<a class="go" href="timeline.html#line=chibi&amp;at=8">在图上看这一站 →</a>
+<p class="note">本库简注：相传元末明初罗贯中据《三国志》《三国志平话》改写而成，是中国文学史上第一部长篇历史演义章回小说，位列四大名著与四大奇书。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>现存最早刊本为明嘉靖元年（1522）序刊《三国志通俗演义》，二十四卷；成书年代无定论</li>
+<li><span class="tag t-ok">信史</span>「鸡肋」出《三国志·武帝纪》裴注引《九州春秋》，杨修实以「漏泄言教、交关诸侯」处死；北伐五次非皆出祁山，「六出」为小说算法</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/三國演義" target="_blank" rel="noopener">中文维基 · 三國演義「版本」节</a>
+<a href="https://zh.wikisource.org/wiki/三國志/卷01" target="_blank" rel="noopener">本库 events.js「鸡肋」「诸葛亮北伐」简注；《三國志·魏書·武帝紀》裴注</a>
+</div>
+</details>
+</div></section>
+<section id="s9" class="tone"><div class="wrap">
+<div class="num">落点</div>
+<h2>人道是</h2>
+<p>回到那三个字。</p>
+<p>苏轼在黄州写了两篇赋、一首词。词里那句是「故壘西邊，人道是、三國周郎赤壁」。赋里那句认定，他写成客人的问话。</p>
+<p>他没有说那是赤壁。他说的是：人们说那是。</p>
+<p>这条线走了八站，一千三百年。起点是正史里三十个字，终点是一部人人能背几段的小说。中间每一层都添了东西：裴松之添了火，苏轼添了月亮和箫声，武元直添了山水，罗贯中添了东风。</p>
+<p>添的人里最谨慎的那一个，恰恰是最后被拿来当地点证据的那一个。</p>
+<p>赤壁在哪儿，今天仍是七说。而《三国志·武帝纪》那三十个字，一个也没变。</p>
+</div></section>
+<footer><div class="wrap">
+本页由 <code>tools/mining/build_line_page.py</code> 从库内数据生成，不手改。长文出自纪录片叙事稿，考据随文写就；凡各源不一致的数字，做法是一个都不给。
+<div class="row">
+<a href="timeline.html#line=chibi">在图上走一遍 →</a>
+<a href="index.html">中国帝王寿命数据库</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-chibi.md" target="_blank" rel="noopener">资料与出处 ↗</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%%E5%%8B%%98%%E8%%AF%%AF&amp;title=%%E5%%8B%%98%%E8%%AF%%AF%%EF%%BC%%9A" target="_blank" rel="noopener">报个错 ↗</a>
+</div></div></footer>
+<script>
+// 进度条与导轨高亮。整页只有这一段脚本，无依赖、无外链。
+var bar=document.getElementById('bar'),links=[].slice.call(document.querySelectorAll('#rail a')),
+    secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+function tick(){
+  var h=document.documentElement,y=h.scrollTop||document.body.scrollTop,
+      m=(h.scrollHeight-h.clientHeight)||1;
+  bar.style.width=(100*y/m)+'%';
+  var at=0;
+  for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].getBoundingClientRect().top<h.clientHeight*0.42) at=i; }
+  for(var j=0;j<links.length;j++) links[j].className=(j===at?'on':'');
+}
+addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
+</script>
+</body></html>

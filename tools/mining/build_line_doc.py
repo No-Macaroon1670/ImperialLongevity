@@ -112,7 +112,11 @@ def load_line(key):
         for f in ('name', 'sub', 'lede'):
             mm = re.search(FIELD % f, blk.group(1))
             meta[f] = mm.group(1) if mm else ''
-    const = re.search(r'const [A-Z_]+ = \[(.*?)\n\];', src, re.S).group(1)
+    # 按 key 找站表，别抓文件里第一个数组——多条线共处一个文件之后，
+    # 「第一个」永远是石窟线，赤壁线于是拿到了别人的站（实测踩过）
+    m0 = (re.search(r'const %s = \[(.*?)\n\];' % key.upper(), src, re.S)
+          or re.search(r'const [A-Z_]+ = \[(.*?)\n\];', src, re.S))
+    const = m0.group(1)
     stops = []
     for m in re.finditer(r'\n  \{(.*?)\n  \},', const, re.S):
         body = m.group(1)
