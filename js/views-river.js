@@ -947,6 +947,7 @@ export function renderRiver(host, list, opts) {
       { label: '历时', value: `${st.span} 年` },
       { label: '皇帝', value: `${st.n} 位（当前筛选 ${b.n} 位）` },
       { label: 'DSI', value: st.dsi === null ? '—' : `${fmt1(st.dsi)} 年/帝` },
+      ...(b.d.bio ? [b.d.bio] : []),
       ...(b.d.note ? [b.d.note] : []),
     ], () => b.d.name);
     gBeds.appendChild(bed);
