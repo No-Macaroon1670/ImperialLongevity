@@ -1510,8 +1510,12 @@ export function renderRiver(host, list, opts) {
     const box = wrap.getBoundingClientRect();
     const top = -box.top + (parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0) + 44;
     const bottom = top + window.innerHeight;
-    // 纪年滑杆：本节跨过视口中线才出现，滑块标出视口中部对应的年份
-    const inView = box.top < innerHeight * 0.5 && box.bottom > innerHeight * 0.5;
+    // 纪年滑杆：**河面盖住滑杆自己那一段**才出现，滑块标出视口中部对应的年份。
+    // 原先只判「越过视口中线」，可滑杆是定高居中的（46vh，即中线上下各 23vh）：
+    // 河一到结尾，杆的下半截就悬在图外，压住底下的说明文字（用户实测）。
+    // 改判杆的上下缘：河面退出杆所在的那一段，杆即收起——出没与它自己的身量一致
+    const half = Math.min(innerHeight * 0.46, 340) / 2 + 6;   // +6 给读数药丸留余量
+    const inView = box.top < innerHeight * 0.5 - half && box.bottom > innerHeight * 0.5 + half;
     scrub.classList.toggle('on', inView);
     // 有没有卡在场交给 CSS 判（body 上的 kp-solo-on / river-card-on）：
     // 卡是点开的、不是滚出来的，用类名比在滚动回调里轮询干净

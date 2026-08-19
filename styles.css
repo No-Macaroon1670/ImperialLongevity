@@ -946,3 +946,13 @@ body.tour-on .sec-nav { display: none !important; }
   .masthead .lede-desk { display: none; }
   .lede-touch { display: inline; }
 }
+
+/* 河流模式下方的说明文字：让开左缘纪年滑杆那一列，两侧也给出正常的读字边距。
+   全出血（full-bleed）是给河面用的，文字跟着出血就贴到了屏幕边上，左边还正压在
+   滑杆的轨道下（用户实测）。滑杆轨占 3+30px，故左侧留 44px 起步。 */
+section.card.river-mode .chart-host.full-bleed > p,
+section.card.river-mode .chart-host.full-bleed > .legend,
+section.card.river-mode .chart-host.full-bleed > .notes {
+  padding-left: max(44px, 3vw);
+  padding-right: max(16px, 3vw);
+}
