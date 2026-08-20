@@ -32,6 +32,7 @@ import { GEO_EVENTS } from './geo-events.js';
 import { GEO_DYN } from './geo-dynasties.js';
 import { EVENT_KINDS, EVENTS } from './events.js';
 import { LINES } from './lines.js';
+import { DYNASTIES } from './dynasties.js';
 
 const W = BASEMAP.w, H = BASEMAP.h;
 const $ = (id) => document.getElementById(id);
@@ -229,16 +230,29 @@ const ANCHORS_FAR = [
   ['扬州', 32.39, 119.41],
 ];
 
-// 悬停浮签：名字直接跟在点上出现，不必点、也不必低头看读数面板（用户提的）。
-// 读数面板仍然给全信息，浮签只给「这是谁」
+// 悬停浮卡：照时间轴那张迷你知识卡的样子（用户定的）——名、年、类别，
+// 加一段简注摘要，直接跟在点上出现，不必点、也不必低头看读数面板。
+// 读数面板仍然给行迹链那类结构信息，浮卡给「这是谁、讲什么」
+const YC = new Map(EVENTS.map((e) => [e.n, e.yc || '']));
+const BIO = new Map(DYNASTIES.map((d) => [d.key, d.bio || '']));
 const tip = document.createElement('div');
 tip.className = 'pl-tip';
+tip.innerHTML = '<div class="pl-tip-t"></div><div class="pl-tip-m"></div><div class="pl-tip-b"></div>';
 $('plate').appendChild(tip);
-function tipShow(x, y, text) {
+function tipShow(x, y, title, meta, body) {
   const b = svg.getBoundingClientRect(), pb = $('plate').getBoundingClientRect();
-  tip.textContent = text;
-  tip.style.left = `${((x - VB[0]) / VB[2]) * b.width + b.left - pb.left}px`;
-  tip.style.top = `${((y - VB[1]) / VB[3]) * b.height + b.top - pb.top - 8}px`;
+  tip.querySelector('.pl-tip-t').textContent = title;
+  tip.querySelector('.pl-tip-m').textContent = meta || '';
+  const bd = tip.querySelector('.pl-tip-b');
+  bd.textContent = body || '';
+  bd.style.display = body ? '' : 'none';
+  const px = ((x - VB[0]) / VB[2]) * b.width + b.left - pb.left;
+  const py = ((y - VB[1]) / VB[3]) * b.height + b.top - pb.top;
+  tip.style.left = `${px}px`;
+  // 靠上就翻到点的下方，别让卡被图框裁掉
+  const flip = py < 190;
+  tip.style.top = `${py + (flip ? 14 : -8)}px`;
+  tip.classList.toggle('pl-tip-below', flip);
   tip.classList.add('on');
 }
 const tipHide = () => tip.classList.remove('on');
@@ -582,7 +596,8 @@ function draw() {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
       });
       hit.addEventListener('mouseenter', () => {
-        tipShow(g.cx, g.cy - R, `${g.rows.length} 条 · 点一下摊开`);
+        tipShow(g.cx, g.cy - R, `${g.rows.length} 条挤在一处`, '点一下摊开',
+          `${g.rows.slice(0, 5).map((m) => m.r.n).join('、')}${g.rows.length > 5 ? '…' : ''}`);
         rd.hover('此处密集', `${g.rows.length} 条挤在一处`,
           `${g.rows.slice(0, 6).map((m) => m.r.n).join('、')}${g.rows.length > 6 ? ' 等' : ''}　·　点一下摊开`);
       });
@@ -625,7 +640,9 @@ function draw() {
       });
       gHit.appendChild(hit);
       const enter = () => {
-        tipShow(m.px, m.py - rad, `${r.n}　${yr(r.y)}`);
+        const meta = r['层'] === 'dyn' ? `${yr(r.y)} – ${yr(r.e)}　政权` : `${yr(r.y)}　${kindLabel(r)}`;
+        const body = r['层'] === 'dyn' ? BIO.get(r.key) : YC.get(r.n);
+        tipShow(m.px, m.py - rad, r.n, meta, body);
         if (!state.sel) { dot.classList.add('hot'); say(r, false); }
       };
       const leave = () => {
@@ -905,7 +922,8 @@ function drawLn() {
     hit.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); lnGoto(i); }
     });
-    hit.addEventListener('mouseenter', () => tipShow(p[0], p[1] - 10, LN.stops[i].t || ''));
+    hit.addEventListener('mouseenter', () => tipShow(p[0], p[1] - 10,
+      LN.stops[i].t || '', `第 ${lnLabel(i)} 站`, ''));
     hit.addEventListener('mouseleave', tipHide);
   }
   // 当前站的细节，照小地图那套读法：诸说空心、现藏一条虚线牵出去

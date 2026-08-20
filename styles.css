@@ -1438,12 +1438,20 @@ section.card.river-mode .chart-host.full-bleed > .notes {
   .pl-zoomctl, .pl-eye { display: none !important; }
 }
 
-/* 悬停浮签：只答「这是谁」，全信息仍在读数面板 */
+/* 悬停浮卡：照时间轴那张迷你知识卡——名、年、类别、简注摘要。
+   贴着点出现；点太靠上就翻到下方，别被图框裁掉 */
 .pl-tip {
   position: absolute; z-index: 6; display: none; pointer-events: none;
-  transform: translate(-50%, -100%); white-space: nowrap;
-  background: var(--surface-1); border: 1px solid var(--border); border-radius: 5px;
-  padding: 2px 8px; font-size: .78rem; color: var(--text-1);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, .18);
+  transform: translate(-50%, -100%); width: max-content; max-width: 300px;
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 7px;
+  padding: 8px 11px; font-size: .78rem; color: var(--text-1);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, .22);
 }
 .pl-tip.on { display: block; }
+.pl-tip-below { transform: translate(-50%, 0); }
+.pl-tip-t { font-weight: 700; font-size: .88rem; }
+.pl-tip-m { color: var(--text-2); font-size: .72rem; margin: 1px 0 3px; }
+.pl-tip-b {
+  color: var(--text-2); line-height: 1.55;
+  display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden;
+}
