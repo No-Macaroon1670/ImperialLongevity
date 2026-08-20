@@ -350,7 +350,7 @@ const ROLE_GLOSS = {
   说: '诸说之一', 颁: '颁行地',
 };
 const IDLE = ['这张图', '一条目一个点',
-  '指到点上看名字，点一下展开它去过的地方。半透明的点是今地不确定；带数字的大点是挤在一处的一簇，点开会散开；双击下方类别芯片只看那一类，「全开」复原。'];
+  '指到点上看名字，点一下展开它去过的地方。半透明的点是今地不确定；带数字的大点是挤在一处的一簇——大簇点一下先拉近，贴近了再点就地散开；双击下方类别芯片只看那一类，「全开」复原。'];
 const rd = reader($('plate-read'), IDLE);
 // 嵌入条卡(用户提议的 meld):钉住一条时在元信息行下长出河页同款条卡。
 const EMB = mountEmbedCard($('plate-read'));
@@ -815,22 +815,33 @@ function draw() {
         }
         where = `${best}一带`;
       }
+      // 百来条的洋葱在 1× 下摊开盖半个华北——这图本不该在那个高度细看。
+      // 大簇在低倍率下点一下先**拉近**（分组会自然裂细），贴近了再点才就地摊开
+      const zoomFirst = !isDynG && g.rows.length > 25 && VIEW.z < 3;
       const hit = el('circle', {
         class: 'pl-hit', cx: g.cx, cy: g.cy, r: R + (isDynG ? 2 : 3) / VIEW.z, tabindex: '0', role: 'button',
-        'aria-label': isDynG ? `${where}，${cnum(g.rows.length)}朝古都，展开` : `${where}，${g.rows.length} 条，展开`,
+        'aria-label': isDynG ? `${where}，${cnum(g.rows.length)}朝古都，展开`
+          : `${where}，${g.rows.length} 条，${zoomFirst ? '拉近' : '展开'}`,
       });
       gHit.appendChild(hit);
       clusterHits.push(hit);
-      const open = () => { state.open.add(gid); draw(); };
+      const open = () => {
+        if (zoomFirst) {
+          VIEW.cx = g.cx; VIEW.cy = g.cy;
+          setZoom(Math.min(3, VIEW.z * 1.9));
+          return;
+        }
+        state.open.add(gid); draw();
+      };
       hit.addEventListener('click', (e) => { e.stopPropagation(); open(); });
       hit.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
       });
       hit.addEventListener('mouseenter', () => {
-        tipShow(g.cx, g.cy - R, isDynG ? `${where} · ${cnum(g.rows.length)}朝古都` : `${where} · ${g.rows.length} 条`, '点一下摊开',
+        tipShow(g.cx, g.cy - R, isDynG ? `${where} · ${cnum(g.rows.length)}朝古都` : `${where} · ${g.rows.length} 条`, zoomFirst ? '点一下拉近' : '点一下摊开',
           `${g.rows.slice(0, 5).map((m) => m.r.n).join('、')}${g.rows.length > 5 ? '…' : ''}`);
         rd.hover(where, isDynG ? `${cnum(g.rows.length)}朝古都` : `${g.rows.length} 条`,
-          `${g.rows.slice(0, 6).map((m) => m.r.n).join('、')}${g.rows.length > 6 ? ' 等' : ''}　·　点一下摊开`);
+          `${g.rows.slice(0, 6).map((m) => m.r.n).join('、')}${g.rows.length > 6 ? ' 等' : ''}　·　${zoomFirst ? '点一下拉近' : '点一下摊开'}`);
       });
       hit.addEventListener('mouseleave', () => { tipHide(); if (!state.sel) rd.leave(); });
       continue;
