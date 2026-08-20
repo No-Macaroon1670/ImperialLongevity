@@ -12,4 +12,8 @@ export const OWN_PIC = {
   龙门二十品: 'img/own/longmen-yangdayan-zaoxiangji-taben-01.jpg',
   独孤信之死: 'img/own/guobo-nzhou-duguxin-epitaph.jpg',
   景德镇瓷业: 'img/own/shoudu-qinghua-yuyaochang-tuciban.jpg',
+  人面鱼纹彩陶盆: 'img/own/guobo-renmianyuwen-caitaopen.jpg',
+  鹳鱼石斧图彩陶缸: 'img/own/guobo-guanyushifutu-taogang.jpg',
+  红山文化玉龙: 'img/own/guobo-hongshan-yulong.jpg',
+  舞蹈纹彩陶盆: 'img/own/guobo-wudaowen-caitaopen.jpg',
 };
