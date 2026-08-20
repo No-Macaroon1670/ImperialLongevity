@@ -751,6 +751,62 @@ function draw() {
   // 并排让位（用户方案）：都城组若压在折叠事件簇的圆上，平移到簇边并排站——
   // 实测不让位时十个簇心有八个的点击被都城命中区抢走（杭州簇点出越国）
   const gs2 = gs.filter((g) => g.rows.length).concat(gsDyn);
+  // ── 簇名两遍算 ──────────────────────────────────────────────────
+  // 先各自起名（众数落点名，不足四成兜底「最近参照城＋一带」），再解**汇合**：
+  // 「北京市 34 条」与「北京一带 52 条」并立时读者分不清谁是谁（用户指出）。
+  // 实核：北京市那摞落点 100% 在城内（北京市25＋北京9）——城里已立门户，
+  // 兜底簇改「北京周边」（用户裁定）；两个兜底簇撞同一锚时近者留名、远者按方位
+  const NAMES = new Map();
+  {
+    const folded = [];
+    for (const g of gs2) {
+      const fc = g.rows[0].r['层'] === 'dyn' ? DCAP : CAP;
+      if (g.rows.length > fc && !state.open.has(gidOf(g))) folded.push(g);
+    }
+    const stub = (n) => n.replace(/[市省县区區]$/, '');
+    for (const g of folded) {
+      const cnt = {};
+      for (const m2 of g.rows) {
+        const nm = m2.r['链'][m2.r['主']]['名'];
+        cnt[nm] = (cnt[nm] || 0) + 1;
+      }
+      const top = Object.entries(cnt).sort((a2, b2) => b2[1] - a2[1])[0];
+      if (top && top[1] >= g.rows.length * 0.4) {
+        NAMES.set(gidOf(g), top[0]);
+      } else {
+        let best = null, bd = Infinity, bxy = null;
+        for (const [nm, lat, lon] of ANCHORS.concat(ANCHORS_FAR)) {
+          const [ax, ay] = project(lon, lat);
+          const d2 = (ax - g.cx) ** 2 + (ay - g.cy) ** 2;
+          if (d2 < bd) { bd = d2; best = nm; bxy = [ax, ay]; }
+        }
+        NAMES.set(gidOf(g), `${best}一带`);
+        g.anc = best; g.ad = bd; g.axy = bxy;
+      }
+    }
+    const modeStubs = new Set(folded.map((g) => NAMES.get(gidOf(g)))
+      .filter((n) => !/[一带周边]$/.test(n)).map(stub));
+    const byAnchor = new Map();
+    for (const g of folded) {
+      if (!g.anc) continue;
+      if (!byAnchor.has(g.anc)) byAnchor.set(g.anc, []);
+      byAnchor.get(g.anc).push(g);
+    }
+    for (const [anc, list] of byAnchor) {
+      if (modeStubs.has(stub(anc))) {
+        for (const g of list) NAMES.set(gidOf(g), `${anc}周边`);
+      }
+      if (list.length > 1) {
+        list.sort((a2, b2) => a2.ad - b2.ad);
+        for (let i = 1; i < list.length; i++) {
+          const g = list[i];
+          const dx = g.cx - g.axy[0], dy = g.cy - g.axy[1];
+          const dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? '以东' : '以西') : (dy > 0 ? '以南' : '以北');
+          NAMES.set(gidOf(g), `${anc}${dir}`);
+        }
+      }
+    }
+  }
   let packed = 0, folded = 0, selAt = null;
   const dynHits = [];   // 都城命中区收尾抬顶：不抬会被后画的事件命中圈压住（用户实测点不中）
   const openHits = [];  // 点开的簇成员也抬顶：洋葱脚下常压着别组散点的大命中圈，
@@ -800,24 +856,7 @@ function draw() {
       clusterVis.push(t);
       // 聚合点报「这是哪儿」，不报「挤在一处」——挤不挤看得见，用不着说
       // （用户指出）。地名取簇内主点地名的众数；分散得没有众数就用最近的参照城市
-      const cnt = {};
-      for (const m2 of g.rows) {
-        const nm = m2.r['链'][m2.r['主']]['名'];
-        cnt[nm] = (cnt[nm] || 0) + 1;
-      }
-      const top = Object.entries(cnt).sort((a2, b2) => b2[1] - a2[1])[0];
-      let where;
-      if (top && top[1] >= g.rows.length * 0.4) {
-        where = top[0];
-      } else {
-        let best = null, bd = Infinity;
-        for (const [nm, lat, lon] of ANCHORS.concat(ANCHORS_FAR)) {
-          const [ax, ay] = project(lon, lat);
-          const d2 = (ax - g.cx) ** 2 + (ay - g.cy) ** 2;
-          if (d2 < bd) { bd = d2; best = nm; }
-        }
-        where = `${best}一带`;
-      }
+      const where = NAMES.get(gid) || '此地';
       // 百来条的洋葱在 1× 下摊开盖半个华北——这图本不该在那个高度细看。
       // 大簇在低倍率下点一下先**拉近**（分组会自然裂细），贴近了再点才就地摊开
       // 拉近得裂得开才有意义：士林區 38 条全在台北故宫**同一个点**上，
