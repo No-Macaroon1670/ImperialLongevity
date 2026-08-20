@@ -844,6 +844,24 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   function start(at) {
     if (on) return;
     saved = Object.fromEntries(TOUCHED.map((k) => [k, structuredClone(S[k])]));
+    // **开场先把本线用到的事件类别打开。** 读者若早把「文化·科技」关了，
+    // 走到那一站时事件根本没画在图上，高亮框就框住一片空（用户实测指出）。
+    // 只开本线需要的那几类，读者关掉的其余类别不动；结束时 TOUCHED 原样放回
+    {
+      const need = new Set();
+      for (const st of STOPS) {
+        if (!st.ev) continue;
+        const e2 = EVENTS[evIdx(st.ev)];
+        if (e2) need.add(e2.k);
+      }
+      if (need.size) {
+        S.laneEvents = true;
+        if (S.evOff && S.evOff.some((k) => need.has(k))) {
+          S.evOff = S.evOff.filter((k) => !need.has(k));
+        }
+        render();
+      }
+    }
     document.body.classList.add('tour-on');
     panel.classList.add('on');
     scrim.classList.add('on');
