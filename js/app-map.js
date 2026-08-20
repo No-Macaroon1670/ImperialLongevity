@@ -24,6 +24,7 @@
 //   读者看不出他回来过。故来回两程各自向外错开一点，各带一个箭头。
 
 import { BASEMAP, project } from './basemap.js';
+import { norm as searchNorm, withPy as searchWithPy, scoreKeys as searchScore } from './search-core.js';
 import {
   el, softStroke, haloText, LabelSolver, placeCandidates, NUDGES,
   graticulePath, reader, ANCHORS, RIVER_TAGS,
@@ -1469,12 +1470,32 @@ function mountLineChips() {
   // 选中即定位：挪视野、拉近、种下选中态——坞与嵌卡随 say() 一起到位
   const sbox = document.createElement('div');
   sbox.className = 'pl-search';
+  const sidx = [];   // 懒建：首次敲键时按 ALL 铺（含拼音键）
   const sin = document.createElement('input');
   sin.type = 'search'; sin.placeholder = '搜图上的条目 / 政权…';
   sin.autocomplete = 'off'; sin.setAttribute('aria-label', '搜索并定位');
   const slist = document.createElement('div');
   slist.className = 'pl-search-list';
-  sbox.append(sin, slist);
+  // 骰子照搬时间轴（用户指令带到地图）：解决「不知道该搜什么」。
+  // 池取 ALL——地图上政权有都城点，落点不虚，不照时间轴排除政权
+  let lastPick = null;
+  const dice = document.createElement('button');
+  dice.type = 'button'; dice.className = 'pl-dice'; dice.title = '随机跳到图上一条';
+  dice.setAttribute('aria-label', '随机跳到图上一条');
+  dice.textContent = '🎲';
+  dice.addEventListener('click', () => {
+    if (ALL.length < 2) return;
+    let pick = null;
+    for (let a2 = 0; a2 < 8 && (!pick || pick === lastPick); a2 += 1) {
+      pick = ALL[Math.floor(Math.random() * ALL.length)];
+    }
+    lastPick = pick;
+    dice.classList.remove('rolling');
+    void dice.offsetWidth;               // 重启动画：不回流的话连按第二下不动（时间轴同注）
+    dice.classList.add('rolling');
+    locate(pick);
+  });
+  sbox.append(dice, sin, slist);
   wrap.after(sbox);
   const locate = (r) => {
     slist.innerHTML = ''; sin.value = r.n;
@@ -1491,11 +1512,20 @@ function mountLineChips() {
     const q = sin.value.trim();
     slist.innerHTML = '';
     if (q.length < 1) return;
-    // 排序：精确命中→前缀→包含，短名优先——不然查「元」时含元的事件把
-    // 八个坑全占了，政权「元」自己反而挤不进候选（实测踩到）
-    const score = (r) => (r.n === q ? 0 : r.n.startsWith(q) ? 1 : 2) * 100 + r.n.length;
-    const hitRows = ALL.filter((r) => r.n.includes(q))
-      .sort((x, y2) => score(x) - score(y2)).slice(0, 8);
+    // 检索核与时间轴同源（search-core.js，用户指令合体）：拼音全拼与首字母
+    // 从此可搜（yuan→元、wdwcaitaopen 不行但 wudaowen 行）。排序仍是
+    // 精确→前缀→包含、短名优先——不然查「元」时含元的事件把八个坑全占了，
+    // 政权「元」自己反而挤不进候选（实测踩到）
+    if (!sidx.length) {
+      for (const r of ALL) sidx.push({ r, keys: searchWithPy([r.n, r.ya, r.w].filter(Boolean).map(searchNorm)) });
+    }
+    const nq = searchNorm(q);
+    const hitRows = sidx
+      .map((it) => ({ r: it.r, s: searchScore(it.keys, nq) }))
+      .filter((x) => x.s < 99)
+      .sort((a2, b2) => (a2.s * 100 + a2.r.n.length) - (b2.s * 100 + b2.r.n.length))
+      .slice(0, 8)
+      .map((x) => x.r);
     for (const r of hitRows) {
       const b = document.createElement('button');
       b.type = 'button';

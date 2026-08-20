@@ -1443,6 +1443,10 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-set-why { color: var(--muted); }
 
 /* 图页搜索:轻装版,结果即点即定位 */
+.pl-dice { border: none; background: none; cursor: pointer; font-size: 1.05rem;
+  padding: 0 .2rem; line-height: 1; }
+.pl-dice.rolling { animation: pl-roll .5s ease; }
+@keyframes pl-roll { from { transform: rotate(0) } to { transform: rotate(360deg) } }
 .pl-search { position: relative; margin-top: 8px; max-width: 340px; }
 .pl-search input { width: 100%; padding: 5px 10px; border: 1px solid var(--border);
   border-radius: 8px; background: var(--surface-1); color: inherit; font-size: .85rem; }

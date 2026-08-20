@@ -15,32 +15,9 @@
 import { h, fmtYearAxis } from './charts.js';
 import { EMPERORS, DYNASTIES } from './data.js';
 import { EVENTS, EVENT_KINDS } from './events.js';
-import PY from './data-pinyin.js';
+import { norm, withPy, scoreKeys } from './search-core.js';
 
-const norm = (s) => (s || '').toLowerCase().replace(/[·・\s（）()]/g, '');
-
-/**
- * 拼音键：每个中文键另生成全拼与首字母两个 ascii 键（破釜沉舟 →
- * pofuchenzhou / pfcz），与既有的前缀/子串匹配天然兼容。此前政权能被拼音
- * 搜到纯属巧合——索引里恰好有 d.key（'tang'）；君主与大事一直搜不到
- * （用户实测）。字级映射由 tools/mining/gen_pinyin.py 生成，多音字取常读
- * ——冒顿会拼成 maodun，这是搜索容错，不是注音。
- */
-const pyKeys = (list) => {
-  const out = [];
-  for (const s of list) {
-    let full = '', ini = '';
-    for (const ch of s) {
-      const p = PY[ch];
-      if (p) { full += p; ini += p[0]; }
-      else if (/[a-z0-9]/.test(ch)) { full += ch; ini += ch; }
-    }
-    if (full && full !== s) out.push(full);
-    if (ini.length > 1 && ini !== full) out.push(ini);
-  }
-  return out;
-};
-const withPy = (keys) => keys.concat(pyKeys(keys));
+// 匹配核（norm/withPy/scoreKeys）在 search-core.js——地图搜索同用，只此一份。
 
 /** 建索引：君主、政权、大事记各成一类，按名字的多种写法建关键词 */
 function buildIndex() {
@@ -89,12 +66,7 @@ function search(idx, q) {
   if (yr !== null) hits.push({ kind: 'year', id: yr, label: `${q.trim()} 年`, sub: '跳到这一年', y: yr });
   const scored = [];
   for (const it of idx) {
-    let best = 99;
-    for (const k of it.keys) {
-      if (k === n) best = Math.min(best, 0);
-      else if (k.startsWith(n)) best = Math.min(best, 1);
-      else if (k.includes(n)) best = Math.min(best, 2);
-    }
+    const best = scoreKeys(it.keys, n);
     if (best < 99) scored.push({ ...it, score: best });
   }
   // 同分时按「君主 → 政权 → 大事」排，再按年份
