@@ -543,8 +543,9 @@ function mountYear() {
   sl.min = String(Y_LO); sl.max = String(Y_HI); sl.value = String(Y_HI);
   const sync = () => {
     state.upto = Number(sl.value);
-    out.textContent = state.upto >= Y_HI ? '全部'
-      : `${yr(state.upto)} 年（事件截至此年，政权取当时并存的）`;
+    // 只写年份，解释是静态的另一行。之前把整句解释塞在这儿，
+    // 拖动时文字变宽把滑杆挤得跳（用户实测指出）——动态文字必须定宽
+    out.textContent = state.upto >= Y_HI ? '全部' : `${yr(state.upto)} 年`;
     draw();
   };
   sl.addEventListener('input', sync);

@@ -1300,7 +1300,10 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-year { display: flex; align-items: center; gap: 8px; margin-left: auto; }
 .pl-year-lab { font-size: .78rem; color: var(--text-2); }
 .pl-year input { width: 190px; }
-.pl-year output { font-size: .78rem; color: var(--text-2); min-width: 6.5em; }
+/* 定宽：拖动时这里的字会变（「全部」↔「前 2496 年」），不定宽的话
+   一变就把滑杆挤得跳（用户实测指出）。取最长值「前 2496 年」的宽度 */
+.pl-year output { font-size: .78rem; color: var(--text-2); width: 6.2em; flex: none; }
+.pl-year-note { font-size: .72rem; color: var(--muted); }
 
 /* 读数面板：图上放不下的话都归这块。悬停读，点击钉住 */
 .pl-read {
