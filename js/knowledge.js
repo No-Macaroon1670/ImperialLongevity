@@ -816,3 +816,19 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
   };
   return cleanup;
 }
+
+/**
+ * 嵌入式条卡(时光舆图的阅读坞用,用户 2026-08-20 提议「meld」):与河页同一张卡、
+ * 同一套取数(evSpec→fillCard),只是不再悬浮——嵌在坞的元信息行下面。
+ * 坞的元信息行(几说、主说、半透明缘由)保留在上:那是地理层特有的据,卡上没有;
+ * 上半说「它怎么落在图上」,下半说「它是什么」,合成一块。
+ * 悬停不建卡:摘要是实时抓维基的,悬停即抓太吵,钉住才建。
+ */
+export function mountEmbedCard(container) {
+  const card = mkCard('kp-embed');
+  container.appendChild(card.el);
+  return {
+    show: (spec) => fillCard(card, spec),
+    hide: () => { card.el.classList.remove('on'); card.el.dataset.key = ''; },
+  };
+}

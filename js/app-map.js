@@ -31,6 +31,7 @@ import {
 import { GEO_EVENTS } from './geo-events.js';
 import { GEO_DYN } from './geo-dynasties.js';
 import { EVENT_KINDS, EVENTS } from './events.js';
+import { evSpec, mountEmbedCard } from './knowledge.js';
 import { LINES } from './lines.js';
 import { DYNASTIES } from './dynasties.js';
 
@@ -270,6 +271,9 @@ const tipHide = () => tip.classList.remove('on');
 const IDLE = ['这张图', '一条目一个点',
   '指到点上看名字，点一下展开它去过的地方。半透明的点是今地不确定；带数字的大点是挤在一处的一簇，点开会散开；双击下方类别芯片只看那一类，「全开」复原。'];
 const rd = reader($('plate-read'), IDLE);
+// 嵌入条卡(用户提议的 meld):钉住一条时在元信息行下长出河页同款条卡。
+const EMB = mountEmbedCard($('plate-read'));
+const EV_BY_N = new Map(EVENTS.map((e) => [e.n, e]));
 const go = $('plate-go');
 const goTo = (r) => {
   go.href = r['层'] === 'dyn'
@@ -495,7 +499,14 @@ function say(row, pin) {
   const kick = row['层'] === 'dyn'
     ? `${yr(row.y)} – ${yr(row.e)}　政权`
     : `${yr(row.y)}　${kindLabel(row)}`;
-  if (pin) rd.pin(kick, row.n, bits.join('　·　')); else rd.hover(kick, row.n, bits.join('　·　'));
+  if (pin) {
+    const ev = row['层'] === 'dyn' ? null : EV_BY_N.get(row.n);
+    // meld 去重:卡的头两行(年份类别、标题)已由 CSS 藏掉,坞行代任;
+    // 卡头本来更全的起讫年并回坞行,别把 892–1252 缩成 892
+    const kick2 = ev && ev.y2 ? `${yr(ev.y)} – ${yr(ev.y2)}　${kindLabel(row)}` : kick;
+    rd.pin(kick2, row.n, bits.join('　·　'));
+    if (ev) EMB.show(evSpec(ev)); else EMB.hide();
+  } else rd.hover(kick, row.n, bits.join('　·　'));
   goTo(row);
 }
 
@@ -732,7 +743,11 @@ function draw() {
     say(selAt.r, true);
   } else if (state.sel) {
     state.sel = null;               // 选中的那条被筛掉了：松开，别留个指着空处的链
-    rd.unpin(); goOff();
+    rd.unpin(); goOff(); EMB.hide();
+  } else if (rd.pinned && !LN.key) {
+    // 再点一下或点空白取消选中,此前只清 state.sel、坞一直钉着旧文案(嵌卡让这
+    // 个滞留显了形);走线模式的钉住不走 state.sel,故要避开
+    rd.unpin(); goOff(); EMB.hide();
   }
 
   for (const j of jobs) {
@@ -1040,6 +1055,7 @@ function lnGoto(i) {
   const kick = `${name}　第 ${lnLabel(LN.at)} / ${LN.stops.length - 2} 站`;
   const body = [st.b, st.b2].filter(Boolean).join('　');
   rd.pin(kick, st.t, body + (st.g ? '' : '　·　这一站没有地点，图上不硬造一个'));
+  { const ev = EV_BY_N.get(st.t); if (ev) EMB.show(evSpec(ev)); else EMB.hide(); }
   goOff();
   if (LN.bar) {
     const read = LN.bar.querySelector('[data-a=read]');
@@ -1093,7 +1109,7 @@ function exitLine() {
   gLn.innerHTML = '';
   svg.classList.remove('pl-lining');
   if (LN.bar) { LN.bar.remove(); LN.bar = null; }
-  rd.unpin(); goOff();
+  rd.unpin(); goOff(); EMB.hide();
   draw();
 }
 
