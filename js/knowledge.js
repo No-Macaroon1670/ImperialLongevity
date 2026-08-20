@@ -353,11 +353,17 @@ async function fillCard(card, spec) {
   card.head.textContent = spec.head;
   card.title.textContent = spec.display || spec.title;
   card.ext.textContent = '…';
-  card.img.style.display = 'none';
+  // 图片显隐统一走这里:嵌入卡的宽屏两栏只在真有图时启用(kp-haspic),
+  // 否则空图轨会给文字凭空让出一条左沟
+  const pic = (on) => {
+    card.img.style.display = on ? '' : 'none';
+    card.el.classList.toggle('kp-haspic', !!on);
+  };
+  pic(false);
   // 自摄图优先(手选表 pics-own-cards.js):立即上图,不等维基;维基缩略图退居替补
   if (spec.ownPic) {
     card.img.src = spec.ownPic;
-    card.img.style.display = '';
+    pic(true);
     card.src.textContent = '图为本库自摄；摘要实时取自中文维基百科';
   } else {
     card.src.textContent = '摘要实时取自中文维基百科';
@@ -440,7 +446,7 @@ async function fillCard(card, spec) {
   if (s && s.extract && s.type !== 'disambiguation') {
     card.title.textContent = spec.display || s.title || spec.title;
     card.ext.textContent = s.extract;
-    if (!spec.ownPic && s.thumbnail && s.thumbnail.source) { card.img.src = s.thumbnail.source; card.img.style.display = ''; }
+    if (!spec.ownPic && s.thumbnail && s.thumbnail.source) { card.img.src = s.thumbnail.source; pic(true); }
     if (s.content_urls && s.content_urls.desktop) {
       card.wiki.href = s.content_urls.desktop.page + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
     }

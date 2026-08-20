@@ -450,7 +450,21 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 /* 卡的年份类别行与标题行由坞行代任,不重复念一遍(用户指出);起讫年并回坞行 */
 .kp-embed .kp-sub, .kp-embed .kp-title { display: none; }
 .kp-embed { background: transparent; }  /* 底色随坞:自带 surface-1 会成一块异色补丁(用户指出) */
-.kp-embed .kp-thumb { max-height: 140px; border-radius: 8px; border: 1px solid var(--border); }
+/* 嵌卡缩略图:基类的 cover+top 在千像素宽的坞里只剩个头(用户实测)——
+   嵌入态改等比完整显示,竖构图不再被拦腰 */
+.kp-embed .kp-thumb { width: auto; max-width: 100%; max-height: 240px;
+  object-fit: contain; object-position: center; display: block; margin: 0 auto;
+  border-radius: 8px; border: 1px solid var(--border); }
+
+/* 宽屏图文两栏:图占自然比例的左栏,文字吃满右侧——只在真有图时启用 */
+@media (min-width: 760px) {
+  /* 锁 .on:不锁的话这条特异度会把尚未打开的卡顶成可见 */
+  .kp-embed.on.kp-haspic { display: grid; grid-template-columns: minmax(160px, 300px) 1fr;
+    column-gap: 16px; align-items: start; }
+  .kp-embed.on.kp-haspic .kp-thumb { grid-row: 1 / span 4; width: 100%; max-height: 280px; margin: 0; }
+  .kp-embed.on.kp-haspic .kp-ext, .kp-embed.on.kp-haspic .kp-links,
+  .kp-embed.on.kp-haspic .kp-src { grid-column: 2; }
+}
 
 /* 工具条里的设置折叠块:与地图页同款形态,挤在一行控件之间 */
 .local-controls .lc-set { display: inline-block; }
