@@ -1145,6 +1145,8 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 /* 衬底改由 js/plate.js 的 haloText 画（同一段字画两遍），故这里不再描边——
    两处都描会让笔画糊掉一圈 */
 .mm-here-t { fill: var(--seq-500); font-weight: 700; }
+/* 现藏地的名字：跟那条「出→藏」的虚线同色，读者一眼看出这两样是一件事 */
+.mm-held-t { fill: var(--ev-art, var(--seq-500)); font-weight: 600; opacity: .92; }
 .mm-note {
   margin-top: 4px; font-size: .72rem; color: var(--muted);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;

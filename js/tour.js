@@ -288,7 +288,8 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   zoomBox.addEventListener('click', (e) => {
     if (e.target === zoomBox || e.target.classList.contains('tour-zoom-x')) closeZoom();
   });
-  addEventListener('keydown', (e) => { if (e.key === 'Escape') closeZoom(); });
+  const onZoomKey = (e) => { if (e.key === 'Escape') closeZoom(); };
+  addEventListener('keydown', onZoomKey);
   picImg.addEventListener('click', () => {
     if (!picImg.src) return;
     zoomImg.src = picImg.src;
@@ -888,22 +889,24 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   // 让位记号重新装出来，屏上于是留下一排没有讲解的类别开关（实测）
   // 宽窄档切换（转屏、拉窗）要重排文案：宽屏整段、窄屏三级折叠
   let proseWide = innerWidth > 720;
-  addEventListener('resize', () => {
+  const onResize = () => {
     const w = innerWidth > 720;
     if (on && w !== proseWide) { proseWide = w; goto(i); }
-  });
+  };
+  addEventListener('resize', onResize);
   prev.addEventListener('click', () => { if (on) goto(i - 1); });
   next.addEventListener('click', () => {
     if (!on) return;
     if (i === STOPS.length - 1) stop(true); else goto(i + 1);
   });
   closeBtn.addEventListener('click', () => stop(false));
-  addEventListener('keydown', (e) => {
+  const onKey = (e) => {
     if (!on) return;
     if (e.key === 'Escape') stop(false);
     else if (e.key === 'ArrowRight' && i < STOPS.length - 1) goto(i + 1);
     else if (e.key === 'ArrowLeft' && i > 0) goto(i - 1);
-  });
+  };
+  addEventListener('keydown', onKey);
 
   // ── 入口按钮 ─────────────────────────────────────────────────────────
   // 就搁在版块标题旁边。曾想过在目录行里也放一个,但全景页的目录只有一个条目
@@ -923,5 +926,18 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   }
   syncLaunch();
   if (opts.launch !== false) (sectionEl.querySelector('.head') || sectionEl).appendChild(launch);
-  return { start, stop, stops: STOPS };
+  /** 整套拆掉：坞、幕、放大框、进度条、小地图，以及三处挂在 window 上的监听。
+   *
+   * 有这个是因为**换线会漏**：故事线目录里从石窟线点到勘合线，openLine 只调
+   * stop()——而 stop() 只是把东西藏起来，节点还在。于是页面上叠着两个坞、
+   * 两张小地图，两套键盘监听同时抢方向键。实测每换一次线漏一整套。 */
+  function destroy() {
+    stop(false);
+    removeEventListener('keydown', onKey);
+    removeEventListener('keydown', onZoomKey);
+    removeEventListener('resize', onResize);
+    if (mmap) mmap.destroy();
+    [scrim, dock, zoomBox, sbar, launch].forEach((n) => n && n.remove());
+  }
+  return { start, stop, destroy, stops: STOPS };
 }

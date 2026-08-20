@@ -27,7 +27,9 @@ let lineTour = null;
 function openLine(key, at) {
   const line = lineOf(key);
   if (!line) return false;
-  if (lineTour) lineTour.stop(false);
+  // **拆掉，不是藏起来**：从目录里换线时旧的那套还挂在 DOM 上——
+  // 两个坞、两张小地图、两套键盘监听同时抢方向键。实测每换一次线漏一整套
+  if (lineTour) { lineTour.destroy(); lineTour = null; }
   // 故事线一开就转深色，结束再放回去（用户定的通例：叙事默认深色）。
   // 存的是**读者原来的那个值**而不是「浅色」——他若本来就在深色，
   // 结束时不该被推到浅色去；他若从没选过（属性缺席），就把属性摘掉，

@@ -238,6 +238,12 @@ export function mountMinimap(geoOf, allOf) {
         class: 'mm-held' + (off ? ' mm-off' : ''),
         x: hx - u(4), y: hy - u(4), width: u(8), height: u(8),
       }));
+      // 现藏地也标名字。**图外的不标**：名字钉在框边上，读者会以为东西就在那儿；
+      // 虚线方块只说「往那个方向」，那行小字里的「（图外）」才说清楚
+      if (!off && g['藏于']) {
+        nowJobs.push({ ...tag(gNow, g['藏于'], 'mm-held-t', u(6.8), 80,
+          placeCandidates('e', u(1))), p: [hx, hy] });
+      }
       const where = g['藏于'] + (off ? '（图外）' : '');
       msg = msg ? `${msg} → 现藏${where}` : `现藏${where}`;
     }
