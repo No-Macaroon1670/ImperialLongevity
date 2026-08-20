@@ -655,7 +655,11 @@ function draw() {
     }
   }
 
-  const gs = group(rows);
+  // 政权都城不进事件聚簇（用户实测：都城被吸进数字大簇后不再单独画，
+  // 永远点不出来）——事件照旧聚簇，都城自己跟自己分组（同城多朝互相散开），
+  // 永不折叠成数字圆。93 个都城是独立图层，理应永远可点
+  const gs = group(rows.filter((r) => r['层'] !== 'dyn'));
+  const gsDyn = group(rows.filter((r) => r['层'] === 'dyn'));
   // ── 聚合点把压在它圆下面的邻居一并吸进来 ──────────────────────
   // 不吸的话必然叠：聚合圆的半径（最大 26）比分组距离（11）大，
   // 圆边底下的散点没进组、却被圆压着（用户截图里 40、26 旁边正是这样）。
@@ -694,7 +698,7 @@ function draw() {
       }
     }
   }
-  const gs2 = gs.filter((g) => g.rows.length);
+  const gs2 = gs.filter((g) => g.rows.length).concat(gsDyn);
   let packed = 0, folded = 0, selAt = null;
   const dynHits = [];   // 都城命中区收尾抬顶：不抬会被后画的事件命中圈压住（用户实测点不中）
 
