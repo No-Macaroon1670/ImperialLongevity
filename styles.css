@@ -1447,8 +1447,9 @@ section.card.river-mode .chart-host.full-bleed > .notes {
   padding: 0 .2rem; line-height: 1; }
 .pl-dice.rolling { animation: pl-roll .5s ease; }
 @keyframes pl-roll { from { transform: rotate(0) } to { transform: rotate(360deg) } }
-.pl-search { position: relative; margin-top: 8px; max-width: 340px; }
-.pl-search input { width: 100%; padding: 5px 10px; border: 1px solid var(--border);
+.pl-search { position: relative; margin-top: 8px; max-width: 340px;
+  display: flex; align-items: center; gap: 4px; flex-wrap: nowrap; }
+.pl-search input { flex: 1; min-width: 0; padding: 5px 10px; border: 1px solid var(--border);
   border-radius: 8px; background: var(--surface-1); color: inherit; font-size: .85rem; }
 .pl-search-list { position: absolute; z-index: 30; left: 0; right: 0; top: 100%;
   background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px;

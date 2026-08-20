@@ -1495,7 +1495,7 @@ function mountLineChips() {
     dice.classList.add('rolling');
     locate(pick);
   });
-  sbox.append(dice, sin, slist);
+  sbox.append(sin, dice, slist);   // 骰子居右（用户指定：不另起一行）
   wrap.after(sbox);
   const locate = (r) => {
     slist.innerHTML = ''; sin.value = r.n;
