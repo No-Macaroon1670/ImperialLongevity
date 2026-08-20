@@ -1419,6 +1419,8 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 
 /* 链：一段一个箭头。图外那一程画到视口边为止，虚线——位置不敢说，方向是真的 */
 .pl-leg { stroke-width: 1.7; opacity: .85; fill: none; }
+/* 陪都连线：虚线、无箭头——陪与正都并存，实线箭头会读成迁都 */
+.pl-leg-pei { stroke-dasharray: 4 4; opacity: .7; }
 .pl-leg-out { stroke-dasharray: 5 4; }
 .pl-arrow { stroke: none; opacity: .9; }
 .pl-step { stroke: var(--surface-2); stroke-width: 1.4; }

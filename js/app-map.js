@@ -346,7 +346,7 @@ const ROLE_GLOSS = {
   生: '出生地', 造: '制作地', 显: '显赫、成事之地', 立: '建立、树立之地',
   卒: '逝世地', 发: '出土、发现地', 葬: '埋葬、原置之地', 现: '现藏、现陈之地',
   贬: '贬所', 址: '遗址本体所在', 行: '行迹中途', 战: '交战地',
-  都: '都城', 起: '起事地', 迁: '迁都之后的都城', 灾: '受灾中心',
+  都: '都城', 起: '起事地', 迁: '迁都之后的都城', 陪: '与正都并存的陪都', 灾: '受灾中心',
   说: '诸说之一', 颁: '颁行地',
 };
 const IDLE = ['这张图', '一条目一个点',
@@ -506,7 +506,10 @@ function drawChain(row, ax, ay) {
   // 链：逐段画，段末一个箭头。**同一段路来回走的，两程各自向外错开**，
   // 否则第二程盖在第一程上，读者看不出他回来过
   const legs = [];
-  for (let i = 0; i + 1 < chain.length; i += 1) legs.push([i, i + 1]);
+  // 时序骨干剔除陪都：陪与正都**并存**，进了箭头序列会被读成迁都
+  const seq = [];
+  chain.forEach((c, i) => { if (c['角'] !== '陪') seq.push(i); });
+  for (let i = 0; i + 1 < seq.length; i += 1) legs.push([seq[i], seq[i + 1]]);
   const seen = new Map();
   const keyOf = (a, b) => [chain[a]['名'], chain[b]['名']].sort().join(' ');
   legs.forEach(([a, b]) => seen.set(keyOf(a, b), (seen.get(keyOf(a, b)) || 0) + 1));
@@ -550,6 +553,20 @@ function drawChain(row, ax, ay) {
   });
 
   chain.forEach((c, i) => {
+    if (c['角'] !== '陪' || c['外']) return;
+    let j = i - 1;
+    while (j >= 0 && chain[j]['角'] === '陪') j -= 1;
+    if (j < 0) j = row['主'];
+    const [px, py] = at(j);
+    const [rx, ry] = at(i);
+    const seg = clipSeg(px, py, rx, ry);
+    if (!seg) return;
+    gChain.appendChild(el('line', {
+      class: `pl-leg pl-leg-pei ${cls}`, x1: seg[0], y1: seg[1], x2: seg[2], y2: seg[3],
+    }));
+  });
+
+  chain.forEach((c, i) => {
     if (c['外']) return;
     const [x, y] = at(i);
     if (i !== row['主']) {
@@ -577,7 +594,11 @@ function say(row, pin) {
     bits.push(`${chain.length} 说并存，主说 ${here['名']}`);
     if (others.length) bits.push(`另有：${others.join('、')}`);
   } else if (chain.length > 1) {
-    bits.push(chain.map((c) => `${c['名']}·${c['角']}${c['外'] ? '（图外）' : ''}`).join(' → '));
+    const seqC = chain.filter((c) => c['角'] !== '陪');
+    const peiC = chain.filter((c) => c['角'] === '陪');
+    let t = seqC.map((c) => `${c['名']}·${c['角']}${c['外'] ? '（图外）' : ''}`).join(' → ');
+    if (peiC.length) t += `；陪都：${peiC.map((c) => `${c['名']}${c['外'] ? '（图外）' : ''}`).join('、')}`;
+    bits.push(t);
   } else {
     bits.push(`${here['名']}·${here['角']}`);
   }
