@@ -40,6 +40,43 @@ TOL = 0.06                                 # 抽稀容差（度）；越大越�
 # 别的 Huang 什么江也捞进来
 RIVERS = {'Huang', 'Chang Jiang', 'Yangtze'}
 
+# ── 地形骨架 ──────────────────────────────────────────────────────────
+# 山脉、高原、盆地是这张图缺的定位锚：点为什么密在中原、稀在高原，
+# 山画出来自己会说话。只做「骨架版」——山脉淡淡填一层、其余只标名字，
+# 不做高程渐变（会跟四百个彩点抢颜色带宽，也会把底图吹成几百 KB）。
+# 数据同样来自 Natural Earth（geography_regions_polys，公共领域），
+# 按英文 NAME 挑，**中文名自己给**：NE 的 NAME_ZH 混着繁体（天山山脈）
+# 和怪译（GOBI 作「大漠」），不如自己写十几个名字踏实。
+# mtn = 画填充＋标名；flat = 只标名（平原一填就压在点堆底下）
+TERRAIN = {
+    'Qinling Mountains': ('秦岭', 'mtn'),
+    'Taihang Mts.': ('太行山', 'mtn'),
+    'TIAN SHAN': ('天山', 'mtn'),
+    'KUNLUN MOUNTAINS': ('昆仑山', 'mtn'),
+    'QUILIAN MOUNTAINS': ('祁连山', 'mtn'),
+    'GREATER KHINGAN RANGE': ('大兴安岭', 'mtn'),
+    'Nan Ling Mts.': ('南岭', 'mtn'),
+    'Wuyi Mts.': ('武夷山', 'mtn'),
+    'HIMALAYAS': ('喜马拉雅山', 'mtn'),
+    'Dabie Mts.': ('大别山', 'mtn'),
+    'Lüliang Mts.': ('吕梁山', 'mtn'),
+    'Helan Mts.': ('贺兰山', 'mtn'),
+    'Yin Mts.': ('阴山', 'mtn'),
+    'Hengduan Mts.': ('横断山', 'mtn'),
+    'Changbai Mts.': ('长白山', 'mtn'),
+    'PLATEAU OF TIBET': ('青藏高原', 'flat'),
+    'Loess Plateau': ('黄土高原', 'flat'),
+    'YUNGUI PLATEAU': ('云贵高原', 'flat'),
+    'MONGOLIAN PLATEAU': ('蒙古高原', 'flat'),
+    'GOBI DESERT': ('戈壁', 'flat'),
+    'TAKLIMAKAN DESERT': ('塔克拉玛干沙漠', 'flat'),
+    'TARIM BASIN': ('塔里木盆地', 'flat'),
+    'SICHUAN BASIN': ('四川盆地', 'flat'),
+    'Junggar Basin': ('准噶尔盆地', 'flat'),
+    'NORTH CHINA PLAIN': ('华北平原', 'flat'),
+    'MANCHURIAN PLAIN': ('东北平原', 'flat'),
+}
+
 
 def fetch(name):
     u = BASE + name
@@ -125,6 +162,35 @@ def main():
             for seg in clip([(p[0], p[1]) for p in ln]):
                 rivers.append(dp(seg, TOL / 2))       # 河是主角，留细一点
 
+    # 地形骨架。环不做 bbox 裁剪：越界部分由 viewBox 裁掉即可，
+    # 几何裁剪反而会把闭合环切开
+    terrain = []
+    for feat in fetch('ne_50m_geography_regions_polys.geojson')['features']:
+        pr = feat.get('properties') or {}
+        hit = TERRAIN.get((pr.get('NAME') or '').strip())
+        if not hit:
+            continue
+        nm, cls = hit
+        g = feat['geometry']
+        polys = [g['coordinates']] if g['type'] == 'Polygon' else g['coordinates']
+        ring = max((pl[0] for pl in polys), key=len)
+        pts = dp([(q[0], q[1]) for q in ring], 0.12)
+        if len(pts) < 6:
+            continue
+        cx = sum(q[0] for q in pts) / len(pts)
+        cy = sum(q[1] for q in pts) / len(pts)
+        pj = [project(x0, y0) for x0, y0 in pts]
+        d = 'M' + 'L'.join('%.1f %.1f' % q for q in pj) + 'Z'
+        c = project(cx, cy)
+        terrain.append({'n': nm, 'cls': cls, 'd': d if cls == 'mtn' else '',
+                        'c': [round(c[0], 1), round(c[1], 1)],
+                        'rank': int(pr.get('SCALERANK') or 4)})
+    print('  地形 %d 处（要 %d 处，缺的是 NE 里没有的名字）'
+          % (len(terrain), len(TERRAIN)))
+    missing = set(v[0] for v in TERRAIN.values()) - set(t['n'] for t in terrain)
+    if missing:
+        print('  缺：', '、'.join(sorted(missing)))
+
     w, s, e, n = BBOX
     k = math.cos(math.radians(LAT0))
     H = 1000.0 * (n - s) / ((e - w) * k)
@@ -148,6 +214,8 @@ export const BASEMAP = {
   src: 'Natural Earth 1:50m physical（公共领域）',
   coast: '%s',
   rivers: '%s',
+  // 地形骨架：mtn 画填充＋标名，flat 只标名。见 build_basemap.py 的 TERRAIN
+  terrain: %s,
 };
 
 /** 经纬 → 视图坐标。与 tools/mining/build_basemap.py 的 project() 必须一致。 */
@@ -157,7 +225,8 @@ export function project(lon, lat) {
   const W = (e - w) * k;
   return [(1000 * (lon - w) * k) / W, (1000 * (n - lat)) / W];
 }
-''' % (LAT0, w, s, e, n, LAT0, H, TOL, path(coast), path(rivers))
+''' % (LAT0, w, s, e, n, LAT0, H, TOL, path(coast), path(rivers),
+       json.dumps(terrain, ensure_ascii=False))
     io.open(OUT, 'w', encoding='utf-8', newline='\n').write(src)
     print('写出 %s：海岸 %d 段、河 %d 段，共 %.1f KB'
           % (OUT, len(coast), len(rivers), len(src.encode('utf-8')) / 1024))

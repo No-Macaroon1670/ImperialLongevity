@@ -1455,3 +1455,7 @@ section.card.river-mode .chart-host.full-bleed > .notes {
   color: var(--text-2); line-height: 1.55;
   display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden;
 }
+
+/* 地形骨架：山体一层淡墨，名字斜体极淡——布景，不是内容 */
+.pl-terr path { fill: var(--muted); fill-opacity: .05; stroke: var(--muted); stroke-opacity: .16; stroke-width: 1; }
+.pl-terr-t { fill: var(--muted); opacity: .78; font-style: italic; letter-spacing: .1em; }

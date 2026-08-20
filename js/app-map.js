@@ -62,6 +62,7 @@ const state = {
   open: new Set(),         // 已展开的聚合点
   // 设置（见页面上的「设置」折叠块），都默认开
   aliveOnly: true,         // 都城只画滑块所指年份仍存续的政权
+  showTerr: true,          // 画地形骨架（山脉填充与山川名）
   showLow: true,           // 画低置信的点
   showAuto: true,          // 画自动取的坐标（据 'w'，没人逐条核过）
 };
@@ -95,6 +96,11 @@ const svg = el('svg', {
 });
 const gGrid = el('g', { class: 'pl-grid' });
 gGrid.appendChild(el('path', { d: graticulePath(project, BASEMAP.bbox, 10) }));
+// 地形骨架：山脉淡淡填一层。名字在 draw() 里跟其他标签一起走排版器
+const gTerr = el('g', { class: 'pl-terr' });
+for (const t of (BASEMAP.terrain || [])) {
+  if (t.d) gTerr.appendChild(el('path', { d: t.d }));
+}
 const gCoast = el('g');
 // 柔边用叠描边，**不用滤镜**：feGaussianBlur 的滤镜区域跨整张图，实测滚动时
 // 浏览器重绘不过来——图上内容钉住不动、底下的灰块自己在走，上半截被撕掉一条白带
@@ -108,7 +114,7 @@ const gDot = el('g', { class: 'pl-dots' });
 const gLab = el('g', { class: 'pl-labs' });
 const gHit = el('g', { class: 'pl-hits' });     // 看不见的命中区，压在最上面
 const gLn = el('g', { class: 'pl-ln' });        // 地图走线：路线与站点，压在一切之上
-svg.append(gGrid, gCoast, gRef, gLead, gChain, gDot, gLab, gHit, gLn);
+svg.append(gGrid, gTerr, gCoast, gRef, gLead, gChain, gDot, gLab, gHit, gLn);
 $('plate').appendChild(svg);
 
 /* ── 缩放与平移 ─────────────────────────────────────────────────────────
@@ -520,6 +526,22 @@ function draw() {
     jobs.push({ h, p: [x, y], pri: 200,
       cands: NUDGES.tight.map(([a, b]) => [a * iz, b * iz, 'middle']) });
   }
+  // 地形的名字：斜体、极淡，排版优先级垫底——山名是布景，谁都可以压过它。
+  // 面状名不许跑远（跑远了就指着别的山了），只用小步挪的候选
+  gTerr.style.display = state.showTerr ? '' : 'none';
+  if (state.showTerr) {
+    for (const t of (BASEMAP.terrain || [])) {
+      if (t.rank > 2 && VIEW.z < 1.4) continue;   // 小地物的名字放大了才给
+      const h = haloText(gRef, t.n, {
+        size: (t.cls === 'flat' ? 11.5 : 10.5) * iz, italic: true,
+        halo: 'var(--surface-2)', haloWidth: 3 * iz,
+      });
+      h.over.setAttribute('class', 'pl-terr-t');
+      jobs.push({ h, p: t.c, pri: 60,
+        cands: NUDGES.open.map(([a2, b2]) => [a2 * iz, b2 * iz, 'middle']) });
+    }
+  }
+
   // 放大后沿边标经纬度：没有政区界线的图，数字是最不含糊的扶手
   if (VIEW.z >= 1.6) {
     const [w0, , e0, n0] = BASEMAP.bbox;
@@ -1088,6 +1110,7 @@ function mountSettings() {
   wire('pl-set-alive', 'aliveOnly');
   wire('pl-set-low', 'showLow');
   wire('pl-set-auto', 'showAuto');
+  wire('pl-set-terr', 'showTerr');
 }
 
 fillCoverage();
