@@ -25,5 +25,7 @@ img/processing/*
 __pycache__/
 *.pyc
 
-# 桌面工作件（圈选单、任务卡、临时清单）——本地专用不入库
-docs/desk/
+# docs 整层是本地工作区（用户 2026-08-20 定：docs 是 local）。
+# 唯一例外：line-*.md 是故事页「资料与出处」按钮的公开链接目标，保持入库。
+docs/*
+!docs/line-*.md
