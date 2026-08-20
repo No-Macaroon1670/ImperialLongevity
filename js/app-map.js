@@ -734,6 +734,7 @@ function draw() {
     for (const c of gs) {
       if (c.rows.length > CAP && !state.open.has(gidOf(c))
           && c.rows.some((m) => idOf(m.r) === state.sel)) {
+        state.open.clear();
         state.open.add(gidOf(c));
       }
     }
@@ -742,6 +743,7 @@ function draw() {
     for (const c of gsDyn) {
       if (c.rows.length > DCAP && !state.open.has(gidOf(c))
           && c.rows.some((m) => idOf(m.r) === state.sel)) {
+        state.open.clear();
         state.open.add(gidOf(c));
       }
     }
@@ -831,6 +833,7 @@ function draw() {
           setZoom(Math.min(3, VIEW.z * 1.9));
           return;
         }
+        state.open.clear();   // 展开态独占（用户拍板）：开新簇收旧簇
         state.open.add(gid); draw();
       };
       hit.addEventListener('click', (e) => { e.stopPropagation(); open(); });
