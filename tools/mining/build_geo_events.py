@@ -153,9 +153,15 @@ def _fetch_coords(titles, host, pace=0.4, chunk=50, log=None, fallback=True):
         time.sleep(pace)
     miss = [t for t in titles if t not in out]
     if miss and fallback:
-        # 第二遍：非主坐标（寿县、宾大博物馆的坐标都标成了非主）
-        for i in range(0, len(miss), chunk):
-            ch = miss[i:i + chunk]
+        # 第二遍：Wikidata P625——**先于**非主坐标盲取。旧序先盲取
+        # coordinates[0]：北京市条目六条坐标全非主，第一条是东北市界极点，
+        # 偏出城区约一百三十公里，金元明清四朝主点跟着钉错（陪都终审实测抓出）；
+        # P625 是单点canonical，可信得多，P625 也没有的才轮到盲取
+        out.update(_wikidata_fallback(miss, pace=pace, host=host))
+        miss2 = [t for t in miss if t not in out]
+        # 第三遍：非主坐标盲取（寿县、宾大博物馆当年即此路）
+        for i in range(0, len(miss2), chunk):
+            ch = miss2[i:i + chunk]
             d = get('https://%s/w/api.php?action=query&format=json'
                     '&formatversion=2&redirects=1&prop=coordinates&coprimary=all'
                     '&colimit=max&titles=' % host
@@ -170,10 +176,7 @@ def _fetch_coords(titles, host, pace=0.4, chunk=50, log=None, fallback=True):
                 if 'lat' in co:
                     out[c] = (round(co['lat'], 4), round(co['lon'], 4))
             time.sleep(pace)
-        # 第三遍：Wikidata P625（国立故宫博物院只在这儿有）
-        still = [t for t in miss if t not in out]
-        if still:
-            out.update(_wikidata_fallback(still, pace=pace, host=host))
+        still = [t for t in miss2 if t not in out]
         # 第四遍：拿全文检索找正题。zhwiki 的繁简变体不是重定向——
         # 「南汉山城」是缺页，「南漢山城」才有坐标。`converttitles` 实测不管用，
         # 检索管用。**只认字数相同的结果**，免得检索把「寿县」找成别的地方；
