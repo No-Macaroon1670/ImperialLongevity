@@ -40,12 +40,20 @@ def get(url):
     return "?"
 
 def wiki_counts(title):
-    """一次请求同时取语言链接与入链(各封顶 500,排序用足够)"""
+    """一次请求同时取语言链接与入链(各封顶 500,排序用足够)。
+
+    `en:` 前缀分流到英文站(先例:build_geo_events.coords_of 按前缀分流)。
+    此前这些标题原样丢给 zh 站,回的是 query.interwiki 没有 query.pages,
+    被当「无条目」记零或算 missing——脚本末尾 sys.exit(1) 恒真,合成永远
+    走不到,signals.json 长期停在旧快照(文库终审 2026-08-20 记账)。"""
+    host, t = "zh.wikipedia.org", title
+    if title.startswith("en:"):
+        host, t = "en.wikipedia.org", title[3:]
     q = urllib.parse.urlencode({
-        "action": "query", "format": "json", "redirects": "1", "titles": title,
+        "action": "query", "format": "json", "redirects": "1", "titles": t,
         "prop": "langlinks|linkshere", "lllimit": "500",
         "lhlimit": "500", "lhnamespace": "0"})
-    d = get("https://zh.wikipedia.org/w/api.php?" + q)
+    d = get("https://%s/w/api.php?" % host + q)
     if d in (None, "?"):
         return d
     # `w` 带 `en:` 前缀的条目(树色平远图、捣练图…)在 zh 站上是**跨语言链接**不是页面,
@@ -57,14 +65,23 @@ def wiki_counts(title):
     p = list(d["query"]["pages"].values())[0]
     if "missing" in p:
         return None
-    return {"ll": len(p.get("langlinks", [])), "lh": len(p.get("linkshere", [])),
-            "title": p["title"]}
+    # en 站条目把前缀带回,pageviews 才知道该查哪个项目;
+    # 注意 en 访问量与 zh 不同池,z 分会偏高——库里带 en: 的仅四条,
+    # apply 前过目一等名单时人工留意即可,不为四条建双池
+    out = {"ll": len(p.get("langlinks", [])), "lh": len(p.get("linkshere", [])),
+           "title": p["title"]}
+    if host.startswith("en."):
+        out["title"] = "en:" + out["title"]
+    return out
 
 def pageviews(title):
-    """近十二个月访问量之和(user 流量,排除爬虫)"""
+    """近十二个月访问量之和(user 流量,排除爬虫)。en: 前缀查英文项目"""
+    project = "zh.wikipedia"
+    if title.startswith("en:"):
+        project, title = "en.wikipedia", title[3:]
     t = urllib.parse.quote(title.replace(" ", "_"), safe="")
     url = ("https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/"
-           "zh.wikipedia/all-access/user/%s/monthly/2025070100/2026070100" % t)
+           "%s/all-access/user/%s/monthly/2025070100/2026070100" % (project, t))
     d = get(url)
     if d in (None, "?"):
         return 0 if d is None else "?"
