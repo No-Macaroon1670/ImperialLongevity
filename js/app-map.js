@@ -31,6 +31,7 @@ import {
 import { GEO_EVENTS } from './geo-events.js';
 import { GEO_DYN } from './geo-dynasties.js';
 import { EVENT_KINDS, EVENTS } from './events.js';
+import { LINES } from './lines.js';
 
 const W = BASEMAP.w, H = BASEMAP.h;
 const $ = (id) => document.getElementById(id);
@@ -105,7 +106,8 @@ const gChain = el('g', { class: 'pl-chain' });  // 选中时展开的链
 const gDot = el('g', { class: 'pl-dots' });
 const gLab = el('g', { class: 'pl-labs' });
 const gHit = el('g', { class: 'pl-hits' });     // 看不见的命中区，压在最上面
-svg.append(gGrid, gCoast, gRef, gLead, gChain, gDot, gLab, gHit);
+const gLn = el('g', { class: 'pl-ln' });        // 地图走线：路线与站点，压在一切之上
+svg.append(gGrid, gCoast, gRef, gLead, gChain, gDot, gLab, gHit, gLn);
 $('plate').appendChild(svg);
 
 const IDLE = ['这张图', '一条目一个点',
@@ -451,7 +453,8 @@ function draw() {
       // 其余靠悬停。链展开时全部让位——那时读者要看的是这一条去过哪儿
       /* 只标一等的条目。**但若读者把大事记关了、只留政权这一层**，就给都城全标上
          ——那时它们正是要读的东西，九十三个名字也铺得开 */
-      const dynOnly = state.layers.size === 1 && state.layers.has('dyn');
+      const dynOnly = state.layers.has('dyn')
+        && (!state.layers.has('ev') || state.off.size >= KINDS.length);
       if (!state.sel && (r.r === 1 || (r['层'] === 'dyn' && dynOnly))) {
         const h = haloText(gLab, r.n, {
           size: r['层'] === 'dyn' ? 11.5 : 12.5, halo: 'var(--surface-2)',
@@ -512,30 +515,49 @@ function centreOnce(rows) {
 
 function mountKinds() {
   const bar = $('plate-kinds');
-  for (const k of KINDS) {
-    const n = EV_ROWS.filter((r) => r.k === k).length;
+  const syncs = [];
+  const refresh = () => { syncs.forEach((f) => f()); draw(); };
+  /* 单击开关一类；**双击只看这一类**（类别多了之后逐个关太费手，用户提的）。
+     双击前浏览器会先派发两次单击，把这一类翻了两遍等于没翻，净效果正好是独显 */
+  const chip = (cls, html, isOn, toggle, solo) => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = `chip pl-chip k-${k} on`;
-    b.innerHTML = `<span class="pl-swatch"></span>${(EVENT_KINDS[k] || {}).label || k} ${n}`;
-    b.addEventListener('click', () => {
-      if (state.off.has(k)) state.off.delete(k); else state.off.add(k);
-      b.classList.toggle('on', !state.off.has(k));
-      draw();
-    });
+    b.className = `chip pl-chip ${cls}`;
+    b.title = '单击开关；双击只看这一类';
+    b.innerHTML = html;
+    syncs.push(() => b.classList.toggle('on', isOn()));
+    b.addEventListener('click', () => { toggle(); refresh(); });
+    b.addEventListener('dblclick', () => { solo(); refresh(); });
     bar.appendChild(b);
+  };
+  for (const k of KINDS) {
+    const n = EV_ROWS.filter((r) => r.k === k).length;
+    chip(`k-${k}`, `<span class="pl-swatch"></span>${(EVENT_KINDS[k] || {}).label || k} ${n}`,
+      () => state.layers.has('ev') && !state.off.has(k),
+      () => {
+        if (!state.layers.has('ev')) { state.layers.add('ev'); state.off = new Set(KINDS.filter((x) => x !== k)); return; }
+        if (state.off.has(k)) state.off.delete(k); else state.off.add(k);
+      },
+      () => { state.layers = new Set(['ev']); state.off = new Set(KINDS.filter((x) => x !== k)); });
   }
-  if (!HAS_DYN) return;
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.className = 'chip pl-chip k-dyn on';
-  b.innerHTML = `<span class="pl-swatch"></span>政权都城 ${DYN_ROWS.length}`;
-  b.addEventListener('click', () => {
-    if (state.layers.has('dyn')) state.layers.delete('dyn'); else state.layers.add('dyn');
-    b.classList.toggle('on', state.layers.has('dyn'));
-    draw();
+  if (HAS_DYN) {
+    chip('k-dyn', `<span class="pl-swatch"></span>政权都城 ${DYN_ROWS.length}`,
+      () => state.layers.has('dyn'),
+      () => { if (state.layers.has('dyn')) state.layers.delete('dyn'); else state.layers.add('dyn'); },
+      () => { state.layers = new Set(['dyn']); });
+  }
+  // 全开：一键回到什么都画的状态。类别一多，逐个点开比逐个点关还费手
+  const all = document.createElement('button');
+  all.type = 'button';
+  all.className = 'chip pl-chip pl-chip-all';
+  all.textContent = '全开';
+  all.addEventListener('click', () => {
+    state.off.clear();
+    state.layers = new Set(HAS_DYN ? ['ev', 'dyn'] : ['ev']);
+    refresh();
   });
-  bar.appendChild(b);
+  bar.appendChild(all);
+  refresh();
 }
 
 function mountYear() {
@@ -560,7 +582,16 @@ const collapse = () => {
   state.sel = null; state.open.clear(); draw();
 };
 svg.addEventListener('click', collapse);
-addEventListener('keydown', (e) => { if (e.key === 'Escape') collapse(); });
+addEventListener('keydown', (e) => {
+  if (LN.key) {
+    // 走线时方向键翻站，Esc 退出走线
+    if (e.key === 'ArrowRight') lnGoto(LN.at + 1);
+    else if (e.key === 'ArrowLeft') lnGoto(LN.at - 1);
+    else if (e.key === 'Escape') { exitLine(); history.replaceState(null, '', location.pathname); }
+    return;
+  }
+  if (e.key === 'Escape') collapse();
+});
 
 /** 各类落得下多少，现算现填。
  *
@@ -617,6 +648,218 @@ tt.addEventListener('click', () => {
   tt.textContent = next === 'dark' ? '☀ 浅色' : '🌙 深色';
 });
 
+/* ── 地图走法：同一条故事线，在地图上走 ─────────────────────────────
+   与时间轴的走法（tour.js）**共用同一份数据**：站表在 js/lines.js、
+   每站的地理档在它的 geo 字段（js/geo.js）。两边只是各自的薄适配器——
+   时间轴那边高亮河道与泳道，这边点亮落点、画出全程的路线。
+   深链也对称：timeline.html#line=<key> 走图，map.html#line=<key> 走地。
+
+   基础图层在走线时压暗但不撤：读者仍看得见「这条线穿过一个多热闹的地方」，
+   而路线自己压在最上面。 */
+
+const LN = { key: null, at: 0, stops: [], bar: null };
+
+const lnRep = (g) => (g
+  ? (g['点'] || (g['诸说'] && g['诸说'][0] && g['诸说'][0]['点']) || null)
+  : null);
+
+function lnLabel(i) {
+  if (i === 0) return '序';
+  if (i === LN.stops.length - 1) return '终';
+  return String(i);
+}
+
+function drawLn() {
+  gLn.innerHTML = '';
+  if (!LN.key) return;
+  const jobs = [];
+  const pts = [];
+  LN.stops.forEach((st, i) => {
+    const rp = lnRep(st.g);
+    if (rp) pts.push({ i, p: xy(rp) });
+  });
+  // 顺次相连的淡虚线：石窟线在地上是一条自西向东的路，读者要看见全程。
+  // 勘合线是一片散点——那这条弯来弯去的线本身就是「散」的证据
+  for (let i = 0; i + 1 < pts.length; i += 1) {
+    gLn.appendChild(el('line', {
+      class: 'pl-ln-route', x1: pts[i].p[0], y1: pts[i].p[1],
+      x2: pts[i + 1].p[0], y2: pts[i + 1].p[1],
+    }));
+  }
+  for (const { i, p } of pts) {
+    const cur = i === LN.at;
+    gLn.appendChild(el('circle', {
+      class: `pl-ln-stop${cur ? ' cur' : ''}`, cx: p[0], cy: p[1], r: cur ? 10 : 7.5,
+    }));
+    const t = el('text', {
+      class: `pl-ln-n${cur ? ' cur' : ''}`, x: p[0], y: p[1] + 3.4,
+      'text-anchor': 'middle', 'font-size': cur ? 10 : 8.5,
+    });
+    t.textContent = lnLabel(i);
+    gLn.appendChild(t);
+    const hit = el('circle', {
+      class: 'pl-hit', cx: p[0], cy: p[1], r: 14,
+      tabindex: '0', role: 'button', 'aria-label': `第 ${lnLabel(i)} 站`,
+    });
+    gLn.appendChild(hit);
+    hit.addEventListener('click', (e) => { e.stopPropagation(); lnGoto(i); });
+    hit.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); lnGoto(i); }
+    });
+  }
+  // 当前站的细节，照小地图那套读法：诸说空心、现藏一条虚线牵出去
+  const st = LN.stops[LN.at];
+  const g = st && st.g;
+  if (g) {
+    const rp = lnRep(g);
+    if (g['诸说']) {
+      for (const sc of g['诸说']) {
+        const [x, y] = xy(sc['点']);
+        gLn.appendChild(el('circle', { class: 'pl-ln-maybe', cx: x, cy: y, r: 5.5 }));
+        const h = haloText(gLn, sc['名'], { size: 10.5, halo: 'var(--surface-2)', haloWidth: 3.2 });
+        h.over.setAttribute('class', 'pl-ln-t');
+        jobs.push({ h, p: [x, y], pri: 250, cands: placeCandidates('e') });
+      }
+    }
+    if (g['地名'] && rp) {
+      const [x, y] = xy(rp);
+      const h = haloText(gLn, g['地名'], { size: 12, halo: 'var(--surface-2)', haloWidth: 3.4 });
+      h.over.setAttribute('class', 'pl-ln-t cur');
+      jobs.push({ h, p: [x, y], pri: 300, cands: placeCandidates('e') });
+    }
+    if (g['现藏'] && rp) {
+      // 现藏可能在图外（《金刚经》在伦敦）：照链的规矩，朝真实大圆方位画到边上
+      const [px, py] = xy(rp);
+      let [qx, qy] = xy(g['现藏']);
+      const [w0, s0, e0, n0] = BASEMAP.bbox;
+      const out = !(g['现藏'][1] >= w0 && g['现藏'][1] <= e0
+        && g['现藏'][0] >= s0 && g['现藏'][0] <= n0);
+      if (out) {
+        const th = bearing(rp, g['现藏']);
+        qx = px + (W + H) * 2 * Math.sin(th);
+        qy = py - (W + H) * 2 * Math.cos(th);
+      }
+      const seg = clipSeg(px, py, qx, qy);
+      if (seg) {
+        gLn.appendChild(el('line', {
+          class: 'pl-ln-flow', x1: seg[0], y1: seg[1], x2: seg[2], y2: seg[3],
+        }));
+        gLn.appendChild(el('rect', {
+          class: `pl-ln-held${out ? ' out' : ''}`,
+          x: seg[2] - 4.5, y: seg[3] - 4.5, width: 9, height: 9,
+        }));
+        const h = haloText(gLn, `${g['藏于'] || '现藏'}${out ? '（图外）' : ''}`,
+          { size: 10.5, halo: 'var(--surface-2)', haloWidth: 3.2 });
+        h.over.setAttribute('class', 'pl-ln-t');
+        jobs.push({ h, p: [seg[2], seg[3]], pri: 260, cands: placeCandidates(out ? 'w' : 'e') });
+      }
+    }
+  }
+  const solver = new LabelSolver();
+  gLn.querySelectorAll('circle, rect').forEach((n) => solver.obstacle(n));
+  for (const j of jobs) {
+    solver.job({
+      nodes: j.h.nodes, priority: j.pri, candidates: j.cands,
+      apply: ([dx, dy, anchor]) => j.h.at(j.p[0] + dx, j.p[1] + dy, anchor || 'middle'),
+    });
+  }
+  solver.solve();
+}
+
+function lnGoto(i) {
+  LN.at = Math.max(0, Math.min(LN.stops.length - 1, i));
+  const st = LN.stops[LN.at];
+  drawLn();
+  const name = LINES[LN.key].name;
+  const kick = `${name}　第 ${lnLabel(LN.at)} / ${LN.stops.length - 2} 站`;
+  const body = [st.b, st.b2].filter(Boolean).join('　');
+  rd.pin(kick, st.t, body + (st.g ? '' : '　·　这一站没有地点，图上不硬造一个'));
+  goOff();
+  if (LN.bar) {
+    const read = LN.bar.querySelector('[data-a=read]');
+    const tl = LN.bar.querySelector('[data-a=tl]');
+    if (read) read.href = st.read || `story-${LN.key}.html`;
+    if (tl) tl.href = `timeline.html#line=${LN.key}&at=${LN.at}`;
+    LN.bar.querySelector('[data-a=prev]').disabled = LN.at === 0;
+    const nx = LN.bar.querySelector('[data-a=next]');
+    nx.textContent = LN.at === LN.stops.length - 1 ? '走完了' : '下一站 →';
+    nx.disabled = LN.at === LN.stops.length - 1;
+  }
+  // 窄屏：把视口挪到当前站
+  const box = $('plate');
+  const rp = st.g && lnRep(st.g);
+  if (rp && box.scrollWidth > box.clientWidth + 1) {
+    box.scrollLeft = Math.max(0, (xy(rp)[0] / W) * box.scrollWidth - box.clientWidth / 2);
+  }
+}
+
+function enterLine(key, at) {
+  const L = LINES[key];
+  if (!L || !L.geo) return false;
+  if (LN.key) exitLine();
+  LN.key = key;
+  LN.stops = L.stops.map((st) => ({ ...st, g: st.ev ? (L.geo[st.ev] || null) : null }));
+  state.sel = null; state.open.clear();
+  svg.classList.add('pl-lining');
+  draw();
+  const bar = document.createElement('div');
+  bar.className = 'pl-ln-bar';
+  bar.innerHTML = '<button type="button" class="chip" data-a="prev">← 上一站</button>'
+    + '<button type="button" class="chip" data-a="next">下一站 →</button>'
+    + '<a class="chip" data-a="read" target="_self">读全文 ↗</a>'
+    + '<a class="chip" data-a="tl" target="_self">到时间轴上走这一站 ↗</a>'
+    + '<button type="button" class="chip" data-a="exit">退出走线 ✕</button>';
+  $('plate-read').after(bar);
+  bar.addEventListener('click', (e) => {
+    const act = e.target.dataset && e.target.dataset.a;
+    if (act === 'prev') lnGoto(LN.at - 1);
+    else if (act === 'next') lnGoto(LN.at + 1);
+    else if (act === 'exit') { exitLine(); history.replaceState(null, '', location.pathname); }
+  });
+  LN.bar = bar;
+  lnGoto(Number.isFinite(at) ? at : 0);
+  return true;
+}
+
+function exitLine() {
+  if (!LN.key) return;
+  LN.key = null; LN.stops = [];
+  gLn.innerHTML = '';
+  svg.classList.remove('pl-lining');
+  if (LN.bar) { LN.bar.remove(); LN.bar = null; }
+  rd.unpin(); goOff();
+  draw();
+}
+
+function lnFromHash() {
+  const m = /(?:^|[#&])line=([a-z0-9_-]+)/i.exec(location.hash || '');
+  if (!m) return null;
+  const a2 = /(?:^|[#&])at=(\d+)/.exec(location.hash || '');
+  return { key: m[1], at: a2 ? Number(a2[1]) : 0 };
+}
+
+addEventListener('hashchange', () => {
+  const k = lnFromHash();
+  if (k) enterLine(k.key, k.at);
+  else exitLine();
+});
+
+/** 入口：故事线的启动链接，跟在类别行后面。 */
+function mountLineChips() {
+  const bar = $('plate-kinds');
+  const wrap = document.createElement('span');
+  wrap.className = 'pl-ln-launch';
+  wrap.append('走一条线：');
+  Object.values(LINES).filter((L) => L.geo).forEach((L, i, arr) => {
+    const a2 = document.createElement('a');
+    a2.href = `#line=${L.key}`;
+    a2.textContent = L.name;
+    wrap.appendChild(a2);
+    if (i < arr.length - 1) wrap.append(' · ');
+  });
+  bar.after(wrap);
+}
+
 function mountSettings() {
   const wire = (id, key) => {
     const box = $(id);
@@ -630,5 +873,10 @@ function mountSettings() {
 
 fillCoverage();
 mountKinds();
+mountLineChips();
 mountYear();
 mountSettings();
+{
+  const k0 = lnFromHash();
+  if (k0) enterLine(k0.key, k0.at);
+}
