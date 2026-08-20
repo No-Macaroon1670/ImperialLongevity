@@ -228,7 +228,7 @@ function fetchSummary(title) {
 export function evSpec(ev) {
   const span = ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y);
   return {
-    id: `evt:${ev.w}${ev.ws || ''}`, head: `${span} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
+    id: `evt:${ev.w || ev.n}${ev.ws || ''}`, head: `${span} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
     title: ev.w, sec: ev.ws, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
     // b：百度自己的正名（维基与百度的条目名常不一致，实测 75 条要另写）
     // nb：百度确实没有这个词条，藏掉按钮而不是给个 404
@@ -346,6 +346,20 @@ async function fillCard(card, spec) {
   card.title.textContent = spec.display || spec.title;
   card.ext.textContent = '…';
   card.img.style.display = 'none';
+  // 无维基条目的条目(2026-08-21 起允许):收起维基栏与摘要抓取,不空转、
+  // 不 404。考据由库内简注与馆藏页承担——馆藏页按钮因此照常走
+  if (!spec.title) {
+    card.wiki.style.display = 'none';
+    card.baidu.style.display = spec.baidu ? '' : 'none';
+    if (spec.baidu) card.baidu.href = /^https?:/.test(spec.baidu) ? spec.baidu
+      : `https://baike.baidu.com/item/${encodeURIComponent(spec.baidu)}`;
+    card.museum.href = spec.museum || '#';
+    card.museum.style.display = spec.museum ? '' : 'none';
+    card.yt.style.display = card.bili.style.display = 'none';
+    card.ext.textContent = '中文维基无此条目；本条考据见库内简注与馆藏页。';
+    card.el.classList.add('on');
+    return;
+  }
   // 有些事**没有独立条目**,只是某篇通史里的一节(东汉末那串大疫见《中國瘟疫史·漢朝》)。
   // 与其因此不收,不如链到那一节:摘要仍取母条目(泛些,但对得上题),链接直达段落。
   {
