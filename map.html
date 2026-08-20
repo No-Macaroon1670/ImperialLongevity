@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>地上的库：哪些条目查得到一个地点 · 中国帝王寿命数据库</title>
+<meta name="description" content="把本库能落到地上的条目画成一张图：全库 874 条，查得到主坐标的只有 82 条。遗址·建筑落得下八成，战事、民变、名人轶事一条都落不下——图上的留白说的是记录的形状。">
+<link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/map.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="中国帝王寿命数据库 · 王朝之河">
+<meta property="og:title" content="地上的库：哪些条目查得到一个地点">
+<meta property="og:description" content="全库 874 条大事记里，能落到地上的只有 82 条。图上稀疏的地方不是没发生过事，是那些条目没有地点可查——差别本身就是内容。">
+<meta property="og:url" content="https://no-macaroon1670.github.io/ImperialLongevity/map.html">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🗺%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="kicker">Geographic Coverage · What the Record Can Locate</div>
+    <h1>地上的库</h1>
+    <p class="lede">
+      本库有 <span data-il-count="ev">874</span> 条大事记。把它们一条条拿去查地点，
+      <strong>只有八十二条查得出来</strong>。这张图画的就是那八十二条。
+      <span class="lede-desk">
+        它回答的不是「中国历史发生在哪」——那是另一个问题，也不是一个数据库答得了的。
+        它回答的是<strong>哪一种历史留下了地址</strong>：一座窟、一段墙、一处窑，它的条目页开头就写着经纬度；
+        一场仗、一次民变、一个人的死，写的是事，没有那一行。
+        所以图上留白的地方不是没发生过事，是那些条目没有地点可查。
+      </span>
+      <button id="theme-toggle" class="linkish theme-toggle">🌙 深色</button>
+    </p>
+    <p class="small" style="color:var(--text-2);margin-top:6px">
+      同一份数据的另外两种读法：<a href="timeline.html"><strong>王朝之河</strong></a>按时间铺开，
+      <a href="index.html">中国帝王寿命数据库</a>按人算命数。
+    </p>
+  </header>
+</div>
+
+<div class="wrap">
+  <section class="card">
+    <div class="head"><h2>八十二条落点</h2></div>
+
+    <div class="pl-controls">
+      <div class="pl-kinds" id="plate-kinds"></div>
+      <label class="pl-year">
+        <span class="pl-year-lab">年代</span>
+        <input type="range" id="plate-year" aria-label="只看这一年之前的落点">
+        <output id="plate-year-out">全部</output>
+      </label>
+    </div>
+
+    <div class="plate" id="plate"></div>
+    <p class="pl-scroll-hint">图比屏幕宽，左右拖着看——缩到一屏宽的话字就糊了。</p>
+
+    <div class="pl-read" id="plate-read">
+      <div class="pl-read-k" data-read="kicker"></div>
+      <div class="pl-read-t" data-read="title"></div>
+      <div class="pl-read-n" data-read="note"></div>
+      <a class="pl-read-go" id="plate-go" hidden>在时间轴上看这一条 →</a>
+    </div>
+
+    <p class="small pl-tally" id="plate-tally" style="color:var(--text-2)"></p>
+
+    <div class="notice" style="margin-top:14px">
+      <strong>这张图不画什么。</strong>
+      <strong>没有国界</strong>——底图只有海岸线与黄河、长江。国界的画法有争议，一张小图没必要卷进去；
+      页名叫「王朝之河」，两条河本来就是主角。
+      <strong>没有疆域</strong>——本库没有历代疆域数据，画出来的每一条线都会是我们并不掌握的东西。
+      <strong>落在图框外的整条不收</strong>：《金刚经》现藏伦敦、宝船去过东非，硬贴到图边上会让读者以为它就在那儿。
+      <strong>八十二条里，十三个点的地名是人挑的</strong>（该落在出土地还是现藏地，是判断），
+      <strong>坐标一律从维基抓、不手打</strong>（坐标是事实）。这条分界与本库「选图是策展判断、许可与署名从 Commons 抓」是同一条。
+    </div>
+
+    <div class="grid2" style="margin-top:14px">
+      <div>
+        <h3>为什么这么空</h3>
+        <p class="small" style="color:var(--text-2)">
+          落得下与落不下，几乎完全由<strong>类别</strong>决定，而不是由重要程度决定：
+        </p>
+        <ul class="small" style="color:var(--text-2)">
+          <li><strong>遗址·建筑</strong>　69 条落得下 56 条（81%）</li>
+          <li><strong>灾疫</strong>　13 条落得下 3 条（23%）</li>
+          <li><strong>文化·科技</strong>　148 条落得下 9 条（6%）</li>
+          <li><strong>文物</strong>　159 条落得下 5 条（3%）</li>
+          <li><strong>战事 103 条、民变 65 条、名人轶事 132 条、治世·中兴 26 条</strong>　一条都落不下</li>
+        </ul>
+        <p class="small" style="color:var(--text-2)">
+          赤壁、淝水、土木堡当然都有地方。落不下是因为讲一场仗的条目页写的是事，
+          页首没有那一行经纬度；讲一座窟的页面写的是地，有。
+          <strong>这张图的稀疏，说的是记录的形状，不是历史的形状。</strong>
+        </p>
+      </div>
+      <div>
+        <h3>点与线怎么读</h3>
+        <ul class="small" style="color:var(--text-2)">
+          <li><strong>大小是分量</strong>，与本库时间轴上同一套（据维基三项指标定）。一等的点先挑名字的位置。</li>
+          <li><strong>颜色是类别</strong>，与时间轴同色。</li>
+          <li><strong>一条目两个点之间连一条细线</strong>：熹平石经立于洛阳太学，残石今在西安碑林等处；
+            秘色瓷烧在上林湖，一千年后在法门寺地宫才被认出来。那条线本身就是那一条要说的事。</li>
+          <li><strong>名字标不下就不标。</strong>八十多个点挤一张图，能标的名字远少于点数：
+            排版器按分量逐个试位置，撞上已占的地方就换一个，全撞就不画。
+            宁可少标一个地名，也不要两个叠在一起。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p>地上的库 · 中国帝王寿命数据库的地理视图。纯静态单页，无外部依赖、无构建步骤。
+      底图取自 Natural Earth 1:50m physical（公共领域），只留海岸线与黄河、长江；
+      落点坐标取自中文维基百科条目的主坐标（P625，CC0）。</p>
+    <p>覆盖率是实测的，不是估的：见 <code>tools/mining/probe_geo_coverage.py</code> 与
+      <code>docs/geo-events-probe.json</code>。查不到坐标的条目一条也不硬填。</p>
+    <p class="foot-cta">
+      <a class="chip foot-btn" href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%E5%8B%98%E8%AF%AF&amp;title=%E5%8B%98%E8%AF%AF%EF%BC%9A"
+         target="_blank" rel="noopener">发现错漏？来提一条 ↗</a>
+      <a class="chip foot-btn foot-btn-2" href="https://github.com/No-Macaroon1670/ImperialLongevity" target="_blank" rel="noopener">源码与数据 ↗</a>
+      <span class="foot-note">数据与文案都在版本库里，逐条注了出处；指出哪一条不对，比笼统说「有错」有用得多。</span>
+    </p>
+  </footer>
+</div>
+
+<script type="module" src="js/app-map.js"></script>
+</body>
+</html>

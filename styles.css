@@ -1223,3 +1223,116 @@ section.card.river-mode .chart-host.full-bleed > .notes {
   color: #fff; font-size: 1rem; cursor: pointer;
 }
 .tour-zoom-x:hover { background: rgba(255, 255, 255, .22); }
+
+/* ── 地图页（map.html） ─────────────────────────────────────────────
+   一张大图，手法与叙事小地图同源（js/plate.js）：糊开的海岸、halo 衬底、
+   贪心排版器。区别在密度——那边一次只亮一站，这边八十多个点同时在场，
+   于是排版器在这里才真正吃劲：能标的名字远少于点数，标不下的就不标。 */
+.plate {
+  margin: 12px 0 0; border: 1px solid var(--border); border-radius: var(--radius);
+  /* 纸色而非纯白：白底上一根浅灰海岸线几乎看不见，点像浮在空处 */
+  background: var(--surface-2); overflow: hidden;
+}
+.plate-svg { display: block; width: 100%; height: auto; }
+/* 线宽不随 viewBox 缩放：窄屏上图缩了，海岸线不该跟着变成发丝 */
+.plate-svg * { vector-effect: non-scaling-stroke; }
+
+.pl-grid path { fill: none; stroke: var(--muted); stroke-width: .5; opacity: .3; }
+/* 海岸两道：底下一道糊开的宽边说「这儿是海」，上面一根细线说「边在哪」。
+   两道都用 --muted 而非 --border：边框色是给方框用的，在大片留白上太浅 */
+.pl-coast-fuzz { fill: none; stroke: var(--muted); stroke-width: 6; opacity: .3; }
+.pl-coast { fill: none; stroke: var(--muted); stroke-width: 1.2; opacity: .85; }
+.pl-river { fill: none; stroke: var(--seq-400); stroke-width: 2; opacity: .8; }
+
+/* 参照层是坐标纸，不是内容，故极淡 */
+.pl-city { fill: var(--muted); opacity: .45; }
+.pl-city-t { fill: var(--muted); opacity: .8; font-weight: 400; }
+.pl-river-t { fill: var(--seq-400); opacity: .8; font-weight: 500; }
+
+/* 一条目两个点之间那条线：出处 → 现在。虚线，因为它不是一条路径，是一段身世 */
+.pl-link line { stroke: var(--muted); stroke-width: 1.1; stroke-dasharray: 4 3; opacity: .6; }
+
+.pl-dot { stroke: var(--surface-2); stroke-width: 1.4; cursor: pointer; }
+
+/* 坐标是从条目自己的维基页自动取的（没有人挑过），画成空心；
+   `p` 那一路是有人看过、挑过出土地还是现藏地的，画成实心 */
+.pl-auto { fill: none !important; stroke-width: 1.9; }
+.pl-second { stroke-dasharray: 2.5 2; }
+
+.pl-lab { font-weight: 500; }
+
+.k-her { fill: var(--ev-her); stroke: var(--ev-her); }
+.k-art { fill: var(--ev-art); stroke: var(--ev-art); }
+.k-cul { fill: var(--ev-cul); stroke: var(--ev-cul); }
+.k-gov { fill: var(--ev-gov); stroke: var(--ev-gov); }
+.k-war { fill: var(--ev-war); stroke: var(--ev-war); }
+.k-rev { fill: var(--ev-rev); stroke: var(--ev-rev); }
+.k-out { fill: var(--ev-out); stroke: var(--ev-out); }
+.k-fig { fill: var(--ev-fig); stroke: var(--ev-fig); }
+.k-dis { fill: var(--ev-dis); stroke: var(--ev-dis); }
+.k-era { fill: var(--ev-era); stroke: var(--ev-era); }
+.k-inst { fill: var(--ev-inst); stroke: var(--ev-inst); }
+/* 点的描边一律是纸色（拿来把挤在一起的点分开），故盖掉上面那份 stroke。
+   纸色是 --surface-2，与 .plate 的底一致——描成 --surface-1 会在点周围留一圈亮边 */
+.pl-dot { stroke: var(--surface-2); }
+/* 名字用类别色但不描边——衬底由 haloText 画 */
+.pl-lab { stroke: none; }
+
+.pl-controls {
+  display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; margin-top: 10px;
+}
+.pl-kinds { display: flex; flex-wrap: wrap; gap: 6px; }
+.pl-chip { display: inline-flex; align-items: center; gap: 6px; opacity: .42; }
+.pl-chip.on { opacity: 1; }
+.pl-swatch { width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.pl-chip.k-her { color: var(--ev-her); }
+.pl-chip.k-art { color: var(--ev-art); }
+.pl-chip.k-cul { color: var(--ev-cul); }
+.pl-chip.k-gov { color: var(--ev-gov); }
+.pl-chip.k-out { color: var(--ev-out); }
+.pl-chip.k-fig { color: var(--ev-fig); }
+.pl-chip.k-dis { color: var(--ev-dis); }
+
+.pl-year { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.pl-year-lab { font-size: .78rem; color: var(--text-2); }
+.pl-year input { width: 190px; }
+.pl-year output { font-size: .78rem; color: var(--text-2); min-width: 6.5em; }
+
+/* 读数面板：图上放不下的话都归这块。悬停读，点击钉住 */
+.pl-read {
+  margin-top: 10px; padding: 10px 12px; border-left: 3px solid var(--seq-500);
+  background: var(--surface-2); border-radius: 0 var(--radius) var(--radius) 0;
+  min-height: 68px;
+}
+.pl-read-k { font-size: .72rem; letter-spacing: .06em; color: var(--text-2); }
+.pl-read-t { font-size: 1.02rem; font-weight: 600; margin: 2px 0 3px; }
+.pl-read-n { font-size: .82rem; color: var(--text-2); line-height: 1.55; }
+.pl-read-n.idle { font-style: italic; opacity: .85; }
+.pl-tally { margin-top: 8px; }
+
+/* 这条得写在媒体查询**之前**：写在后面会把窄屏那句 display:block 盖掉 */
+.pl-scroll-hint { display: none; margin: 6px 0 0; font-size: .74rem; color: var(--text-2); }
+
+@media (max-width: 720px) {
+  .pl-year { margin-left: 0; width: 100%; }
+  .pl-year input { flex: 1; width: auto; }
+  /* 窄屏上整张图缩到 320px 宽，字全糊掉、点也点不中——那等于没有这张图。
+     故不缩，改成在框里左右拖：宁可要读者拖一下，也不要给他一张读不了的图 */
+  .plate { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .plate-svg { width: 760px; max-width: none; }
+  .pl-scroll-hint { display: block; }
+}
+.pl-read-go {
+  display: inline-block; margin-top: 6px; font-size: .8rem;
+  color: var(--seq-500); text-decoration: none; border-bottom: 1px solid transparent;
+}
+.pl-read-go:hover { border-bottom-color: currentColor; }
+.pl-read-go[hidden] { display: none; }
+
+/* 命中区：看不见的一圈，专管点选。三等的点半径 3.4，鼠标都难点中，手指更不必说 */
+.pl-hit { fill: transparent; stroke: none; cursor: pointer; }
+.pl-hit:focus { outline: none; }
+.pl-hit:focus-visible { outline: 2px solid var(--seq-500); outline-offset: 1px; border-radius: 50%; }
+/* 字是画给人看的，不是拿来点的——让它别挡在命中区前面 */
+.pl-labs, .pl-ref { pointer-events: none; }
+.pl-dot.on { stroke: var(--text-1); stroke-width: 2; }

@@ -110,8 +110,12 @@ def load_events():
             mm = re.search(r"%s: '([^']*)'" % k, b)
             return mm.group(1) if mm else None
         p = re.search(r"p: (\[[^\]]*\]|'[^']*')", b)
+        # `r`（分量）是数字不是字符串。上一版拿读字符串的 f() 去读它，永远读不到，
+        # 于是全库 82 条的 r 一律落成默认值 3——图上按分量分大小就成了一样大
+        rr = re.search(r", r: (\d+)", b)
         evs.append({
-            'y': int(m.group(1)), 'n': f('n'), 'w': f('w'), 'k': f('k'), 'r': f('r'),
+            'y': int(m.group(1)), 'n': f('n'), 'w': f('w'), 'k': f('k'),
+            'r': int(rr.group(1)) if rr else 3,
             'p': re.findall(r"'([^']+)'", p.group(1)) if p else None,
         })
     return [e for e in evs if e['n']]
@@ -153,7 +157,7 @@ def main():
             stat['outside'] += 1
             continue
         stat['p' if pts[0]['据'] == 'p' else 'auto'] += 1
-        out[e['n']] = {'y': e['y'], 'k': e['k'], 'r': int(e['r'] or 3), '点': keep}
+        out[e['n']] = {'y': e['y'], 'k': e['k'], 'r': e['r'], '点': keep}
 
     js = [
         '// geo-events.js — 库内条目的地点。**生成物，不要手改**：',

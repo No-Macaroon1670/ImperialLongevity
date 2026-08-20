@@ -3,6 +3,8 @@
 **▶ 在线访问：<https://no-macaroon1670.github.io/ImperialLongevity/>**（统计核心）
 **▶ 王朝之河（全景时间轴）：<https://no-macaroon1670.github.io/ImperialLongevity/timeline.html>**
 
+**▶ 地上的库（地图）：<https://no-macaroon1670.github.io/ImperialLongevity/map.html>**
+
 两张页面共用同一份数据与同一套外壳（`js/shell.js`），但各有各的读者，连筛选器也各归各：统计页需要按死因、丹药组、入库范围切样本；全景页要的是「看全部」——筛掉一半政权就读不出分裂的形状，故不设全局筛选器，只保留视图／缩放／配色／承继／大事记这些真正相关的章节控件。
 统计页回答「帝王的寿命由什么决定」，全景页回答「谁在何时统治、天下有多分裂、谁承谁」。
 全景已长成一件独立的作品（河流／泳道／知识卡／承继细丝／改朝换代事件），
@@ -42,6 +44,7 @@ no-cache 逼每次回源revalidate，未改文件仍走 304。生产的 GitHub P
 ```
 index.html                     统计核心页：页面骨架、数据来源声明、方法与局限
 timeline.html                  王朝全景页「王朝之河」：竖向河流 + 横向泳道
+map.html                       地图页「地上的库」：大事记里查得到地点的那八十二条
 js/shell.js                    两页共用的外壳：状态、筛选、渲染循环、章节导航、后台自愈
 js/sections-stats.js           统计页的章节表
 js/sections-panorama.js        全景页的章节表
@@ -60,6 +63,11 @@ js/events.js                   大事记：634 条事件（战事/制度/民变/
 js/search.js                   文本搜索跳转与深链（#y=755 / #e=李世民 / #d=tang / #ev=安史之乱）
 js/knowledge.js                知识卡：朝代＋皇帝两张（河流两翼／泳道三栏），实时维基摘要
 js/app.js / js/app-timeline.js 两页的入口（各自装配 shell + 自己的章节表）
+js/app-map.js                  地图页的入口（不走 shell：没有筛选、章节、渲染循环要它管）
+js/plate.js                    制图共享零件：糊开的海岸、halo 衬底、贪心标签排版器、经纬网、读数面板
+js/basemap.js                  底图（生成物）：Natural Earth 1:50m 海岸线 + 黄河长江，无国界
+js/geo.js                      各故事线的站点地理档（生成物）
+js/geo-events.js               库内条目的地点（生成物）：手写 `p` 地名 11 条 + 自动取维基主坐标 72 条
 tools/validate_palette.js      配色六项检查（来自 dataviz 技能）
 tools/validate.html            在浏览器内跑该校验
 ```
