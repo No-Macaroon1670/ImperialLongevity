@@ -371,7 +371,7 @@ async function fillCard(card, spec) {
       : `https://baike.baidu.com/item/${encodeURIComponent(spec.baidu)}`;
     card.museum.href = spec.museum || '#';
     card.museum.style.display = spec.museum ? '' : 'none';
-    card.wsrc.href = spec.wsrc ? 'https://zh.wikisource.org/wiki/' + encodeURIComponent(spec.wsrc) : '#';
+    card.wsrc.href = spec.wsrc ? 'https://zh.wikisource.org/wiki/' + spec.wsrc.split('/').map(encodeURIComponent).join('/') : '#';
     card.wsrc.style.display = spec.wsrc ? '' : 'none';
     card.yt.style.display = card.bili.style.display = 'none';
     card.ext.textContent = '中文维基无此条目；本条考据见库内简注与馆藏页。';
@@ -415,7 +415,7 @@ async function fillCard(card, spec) {
   card.baidu.style.display = (spec.noBaidu || enOnly) ? 'none' : '';
   card.museum.href = spec.museum || '#';
   card.museum.style.display = spec.museum ? '' : 'none';
-  card.wsrc.href = spec.wsrc ? 'https://zh.wikisource.org/wiki/' + encodeURIComponent(spec.wsrc) : '#';
+  card.wsrc.href = spec.wsrc ? 'https://zh.wikisource.org/wiki/' + spec.wsrc.split('/').map(encodeURIComponent).join('/') : '#';
   card.wsrc.style.display = spec.wsrc ? '' : 'none';
   // 少数条目手挑了片子。搜索对它们并不友好——搜《清明上河图》出来的多是
   // 商品、仿作与短视频切片,而这几部讲得确实好,与其让读者自己淘,不如直接给。
