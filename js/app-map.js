@@ -132,21 +132,32 @@ function group(rows) {
   return gs;
 }
 
-/** 一组 n 个点摆在哪儿。一个不动；少数摆一圈；七个以上中间留一个。 */
+/** 一组 n 个点摆在哪儿。一个不动；少数摆一圈；多了一圈套一圈。
+ *
+ * 半径收着给：初版 n=2 也推到十一单位开外，两个点隔着中心遥遥相对，
+ * 两根引线连成一条直线，看上去像「这两条有关系」——而它们只是碰巧挨着。
+ *
+ * **多了就套环**，不要摊成一个大圈：聚合点展开时常有二三十条，
+ * 一圈塞二十二个，圈会大到跨过半个华北，而里头的点仍然挨着。
+ * 每环最多十个，一环装满再往外开一环。
+ */
 function spread(g) {
   const n = g.rows.length;
   if (n === 1) { g.rows[0].px = g.rows[0].x; g.rows[0].py = g.rows[0].y; return; }
-  // 半径收着给。初版 n=2 也推到十一单位开外，两个点隔着中心遥遥相对，
-  // 两根引线连成一条直线，看上去像「这两条有关系」——而它们只是碰巧挨着
-  const ringN = n <= 6 ? n : n - 1;
-  const rad = 4.6 + 1.45 * ringN;
   const rest = g.rows.slice();
   if (n > 6) { const c = rest.shift(); c.px = g.cx; c.py = g.cy; }
-  rest.forEach((m, i) => {
-    const a = (-Math.PI / 2) + (2 * Math.PI * i) / ringN;
-    m.px = g.cx + rad * Math.cos(a);
-    m.py = g.cy + rad * Math.sin(a);
-  });
+  let ring = 0, i = 0;
+  while (i < rest.length) {
+    const cap = Math.min(rest.length - i, 6 + ring * 4);
+    const rad = 4.6 + 1.45 * Math.min(cap, 6) + ring * 11;
+    for (let j = 0; j < cap; j += 1) {
+      const th = (-Math.PI / 2) + (2 * Math.PI * j) / cap + (ring % 2 ? Math.PI / cap : 0);
+      rest[i + j].px = g.cx + rad * Math.cos(th);
+      rest[i + j].py = g.cy + rad * Math.sin(th);
+    }
+    i += cap;
+    ring += 1;
+  }
 }
 
 /* ── 链 ───────────────────────────────────────────────────────────────── */
@@ -172,6 +183,21 @@ function clipSeg(px, py, qx, qy) {
   if (!test(-dx, px - M) || !test(dx, (W - M) - px)
       || !test(-dy, py - M) || !test(dy, (H - M) - py)) return null;
   return [px + dx * t0, py + dy * t0, px + dx * t1, py + dy * t1, t0 > 0, t1 < 1];
+}
+
+/** 从 A 到 B 的**真实初始方位角**（大圆），0 = 正北，顺时针。
+ *
+ * 图外那一程不能照投影里的方向画。这张图是等距圆柱：费城在经度 −75°，
+ * 投影下落在图框左边很远处，于是「西安 → 宾大博物馆」的线指向**正西**
+ * ——而从西安去费城，真实的初始方位是东北偏北，从北边过去。
+ * 投影里的方向是投影的假象，大圆方位角才是真的。
+ * 近处（贝加尔湖在正北）两者一致，远处差得离谱，故一律用后者。
+ */
+function bearing([lat1, lon1], [lat2, lon2]) {
+  const R = Math.PI / 180;
+  const f1 = lat1 * R, f2 = lat2 * R, dl = (lon2 - lon1) * R;
+  return Math.atan2(Math.sin(dl) * Math.cos(f2),
+    Math.cos(f1) * Math.sin(f2) - Math.sin(f1) * Math.cos(f2) * Math.cos(dl));
 }
 
 /** 一个箭头，画在 (x,y)，指向角 a。 */
@@ -222,7 +248,15 @@ function drawChain(row, ax, ay) {
     used.set(key, idx + 1);
     const total = seen.get(key);
     const [px, py] = at(a);
-    const [rx, ry] = at(b);
+    let [rx, ry] = at(b);
+    if (chain[b]['外']) {
+      // 图外：按**真实大圆方位角**指出去，不照投影里的方向。屏上北是 −y，
+      // 故方位角 θ 对应的方向向量是 (sinθ, −cosθ)。长度取够穿出图框即可
+      const th = bearing(chain[a]['点'], chain[b]['点']);
+      const far = (W + H) * 2;
+      rx = px + far * Math.sin(th);
+      ry = py - far * Math.cos(th);
+    }
     const ang = Math.atan2(ry - py, rx - px);
     const off = total > 1 ? (idx - (total - 1) / 2) * 7 : 0;   // 只有一程时不挪
     const ox = -Math.sin(ang) * off, oy = Math.cos(ang) * off;
