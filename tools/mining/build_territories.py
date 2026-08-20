@@ -70,8 +70,13 @@ def main():
         if len(pts) < 3:
             print('✗ %s 可解析锚点不足（%d），整朝跳过' % (f['name'], len(pts)))
             continue
-        out[key] = {'名': f['name'], 'y': f['peak']['y'], 'span': f['peak']['span'],
-                    'note': f['caveats'], 'pts': pts}
+        snap = {'y': f['peak']['y'], 'span': f['peak']['span'],
+                '盛': bool(f['peak'].get('sheng', True)), 'note': f['caveats'], 'pts': pts}
+        if key in out:
+            out[key]['snaps'].append(snap)
+            out[key]['snaps'].sort(key=lambda x: x['y'])
+        else:
+            out[key] = {'名': f['name'], 'snaps': [snap]}
         print('· %s：%d 锚点%s' % (f['name'], len(pts),
               '，查不到坐标弃 %s' % '、'.join(miss) if miss else ''))
         doc.append('## %s ｜ 锚定年 %s（%s）\n' % (f['name'], f['peak']['y'], f['peak']['span']))

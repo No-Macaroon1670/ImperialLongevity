@@ -131,11 +131,21 @@ svg.append(gGrid, gTerr, gCoast, gExt, gRef, gLead, gChain, gDot, gLab, gHit, gL
 
 /** 画/清 盛时疆域毛边色块。轮廓点经 project() 落图，中点二次曲线抹圆——
  *  粗描本来就是示意，棱角只会让它看起来假精确 */
+/** 多切片挑选：跟年代滑杆走，滑到哪年看哪年的疆域；「全部」用带 盛 标的默认切片 */
+function pickSnap(t) {
+  if (!t || !t.snaps || !t.snaps.length) return null;
+  if (state.upto >= Y_HI) return t.snaps.find((sn) => sn['盛']) || t.snaps[t.snaps.length - 1];
+  let best = t.snaps[0];
+  for (const sn of t.snaps) {
+    if (Math.abs(sn.y - state.upto) < Math.abs(best.y - state.upto)) best = sn;
+  }
+  return best;
+}
 function drawExtent(key) {
   gExt.innerHTML = '';
-  const t = TERR[key];
-  if (!t || !t.pts || t.pts.length < 3) return;
-  const q = t.pts.map(([lon, lat]) => project(lon, lat));
+  const snap = pickSnap(TERR[key]);
+  if (!snap || !snap.pts || snap.pts.length < 3) return null;
+  const q = snap.pts.map(([lon, lat]) => project(lon, lat));
   let d = '';
   for (let i = 0; i < q.length; i += 1) {
     const a2 = q[i], b2 = q[(i + 1) % q.length];
@@ -146,6 +156,7 @@ function drawExtent(key) {
     d += `${((b2[0] + c2[0]) / 2).toFixed(1)} ${((b2[1] + c2[1]) / 2).toFixed(1)}`;
   }
   gExt.appendChild(el('path', { class: 'pl-extent-blob', d: d + 'Z' }));
+  return snap;
 }
 const clearExtent = () => { gExt.innerHTML = ''; };
 $('plate').appendChild(svg);
@@ -567,9 +578,8 @@ function say(row, pin) {
     const ev = row['层'] === 'dyn' ? null : EV_BY_N.get(row.n);
     // 政权钉住时铺盛时疆域示意；示警随坞行走（与「今地属推定」同一层级语言）
     if (row['层'] === 'dyn' && state.showExtent && TERR[row.key]) {
-      drawExtent(row.key);
-      const t = TERR[row.key];
-      bits.push(`底色为疆域约略示意，据${yr(t.y)}前后（${t.span}）——四至锚点粗描，非精确边界，古之疆域本非线状`);
+      const snap = drawExtent(row.key);
+      if (snap) bits.push(`底色为疆域约略示意，据${yr(snap.y)}前后（${snap.span}）——四至锚点粗描，非精确边界，古之疆域本非线状`);
     } else if (row['层'] !== 'dyn') clearExtent();
     // meld 去重:卡的头两行(年份类别、标题)已由 CSS 藏掉,坞行代任;
     // 卡头本来更全的起讫年并回坞行,别把 892–1252 缩成 892
@@ -914,6 +924,13 @@ function mountYear() {
     // 只写年份，解释是静态的另一行。之前把整句解释塞在这儿，
     // 拖动时文字变宽把滑杆挤得跳（用户实测指出）——动态文字必须定宽
     out.textContent = state.upto >= Y_HI ? '全部' : `${yr(state.upto)} 年`;
+    // 疆域层跟滑杆换切片：钉着的政权若有多张图，滑到哪年换哪张（坞行年份暂不追改，
+    // 下次钉住时自然对齐——追改要重排 bits，代价大于收益）
+    if (state.sel && state.sel.startsWith('dyn:') && state.showExtent) {
+      const nm = state.sel.slice(4);
+      const kk = Object.keys(TERR).find((x) => TERR[x]['名'] === nm);
+      if (kk) drawExtent(kk);
+    }
     draw();
   };
   sl.addEventListener('input', sync);
