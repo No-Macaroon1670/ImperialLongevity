@@ -7,10 +7,8 @@
 import { mountApp } from './shell.js';
 import { SECTIONS } from './sections-stats.js';
 import { GEO_STATS } from './geo-stats.js';
+import { syncCounts } from './counts.js';
 
 mountApp({ sections: SECTIONS, hero: true });
 
-/** 文案里的落点数由脚本按实际覆盖——写死的数字每次增补都会再错一次。 */
-for (const node of document.querySelectorAll('[data-il-count=geo]')) {
-  node.textContent = String(GEO_STATS.ev);
-}
+syncCounts({ geo: GEO_STATS.ev });

@@ -32,6 +32,7 @@ import { GEO_EVENTS } from './geo-events.js';
 import { GEO_DYN } from './geo-dynasties.js';
 import { EVENT_KINDS, EVENTS } from './events.js';
 import { evSpec, mountEmbedCard } from './knowledge.js';
+import { syncCounts } from './counts.js';
 import { LINES } from './lines.js';
 import { DYNASTIES } from './dynasties.js';
 
@@ -903,16 +904,7 @@ function fillCoverage() {
   }
 }
 
-/** 文里那些数字由脚本按实际数覆盖——手工写死的每次增补都会再错一次。 */
-for (const node of document.querySelectorAll('[data-il-count=ev]')) {
-  node.textContent = String(EVENTS.length);
-}
-for (const node of document.querySelectorAll('[data-il-count=geo]')) {
-  node.textContent = String(EV_ROWS.length);
-}
-for (const node of document.querySelectorAll('[data-il-count=dyn]')) {
-  node.textContent = String(DYN_ROWS.length);
-}
+syncCounts({ ev: EVENTS.length, geo: EV_ROWS.length, dyn: DYN_ROWS.length });
 
 // 主题按钮。本页不走 shell.js（没有筛选、章节、渲染循环要它管），故这几行是自己的
 const tt = $('theme-toggle');

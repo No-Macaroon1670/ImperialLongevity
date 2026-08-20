@@ -196,11 +196,16 @@ export function evMark(kind, cx, cy, r, extra = {}) {
  * `skip` 去掉本视图根本不画的类:治世·中兴在泳道里是皇帝格子外的虚线外套,
  * 河流没有这一层,那个色标点了也不会有任何变化——按不动的开关比没有开关更糟。
  */
+// 双击检测记在模块级:每次点击都整段重绘,原生 dblclick 在重建后的新节点上
+// 永远凑不齐两击,只能自己拿时间戳判(与地图页的双击=只看一类行为对齐)
+let lastChip = { k: null, t: 0 };
+
 export function eventLegend(opts, { skip = [] } = {}) {
   const off = new Set(opts.evOff || []);
   const row = h('div', { class: 'ev-legend' });
   const counts = {};
   for (const ev of EVENTS) counts[ev.k] = (counts[ev.k] || 0) + 1;
+  const kinds = Object.keys(EVENT_KINDS).filter((k) => counts[k] && !skip.includes(k));
   for (const [k, meta] of Object.entries(EVENT_KINDS)) {
     if (!counts[k] || skip.includes(k)) continue;
     const chip = h('button', {
@@ -208,6 +213,14 @@ export function eventLegend(opts, { skip = [] } = {}) {
       'aria-pressed': String(!off.has(k)),
       title: off.has(k) ? '点按显示这一类' : '点按隐藏这一类',
       onclick: () => {
+        const now = Date.now();
+        if (lastChip.k === k && now - lastChip.t < 350) {
+          // 双击＝只看这一类(第一击已切过一次,这里直接以「独看」覆盖)
+          lastChip = { k: null, t: 0 };
+          opts.setOpt('evOff', kinds.filter((x) => x !== k));
+          return;
+        }
+        lastChip = { k, t: now };
         const next = new Set(off);
         if (next.has(k)) next.delete(k); else next.add(k);
         opts.setOpt('evOff', [...next]);
@@ -220,7 +233,13 @@ export function eventLegend(opts, { skip = [] } = {}) {
     chip.appendChild(h('span', { text: `${meta.label} ${counts[k]}` }));
     row.appendChild(chip);
   }
-  return [h('p', { class: 'muted small', style: 'margin:10px 0 2px', text: '大事记（点色标可按类筛选）' }), row];
+  // 类别多到十二种之后,一类类点回来太费手——全开一键复位(与地图页同名同位)
+  row.appendChild(h('button', {
+    type: 'button', class: 'chip ev-chip' + (off.size ? '' : ' off'),
+    title: '重新点亮全部类别', text: '全开',
+    onclick: () => opts.setOpt('evOff', []),
+  }));
+  return [h('p', { class: 'muted small', style: 'margin:10px 0 2px', text: '大事记（点色标可按类筛选，双击只看一类）' }), row];
 }
 
 // ── 主渲染 ───────────────────────────────────────────────────────────────
