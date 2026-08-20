@@ -24,3 +24,6 @@ img/processing/*
 # Python 缓存
 __pycache__/
 *.pyc
+
+# 桌面工作件（圈选单、任务卡、临时清单）——本地专用不入库
+docs/desk/
