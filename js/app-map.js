@@ -175,6 +175,7 @@ let panning = null, suppressClick = false;
 svg.addEventListener('pointerdown', (e) => {
   if (VIEW.z <= 1) return;
   if (e.target.classList && e.target.classList.contains('pl-hit')) return;
+  e.preventDefault();     // 掐掉浏览器的文本选择：不掐，拖图就是满图蓝色选区
   panning = { x: e.clientX, y: e.clientY, cx: VIEW.cx, cy: VIEW.cy, moved: false };
   if (svg.setPointerCapture) svg.setPointerCapture(e.pointerId);
 });
