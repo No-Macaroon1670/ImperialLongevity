@@ -18,8 +18,14 @@
 //   · 没有地点的站（《三国演义》成书）→ 整块淡出，不硬编一个点。
 //
 // 底图只有海岸线与黄河长江，没有国界（理由见 tools/mining/build_basemap.py）。
+//
+// 图上的字全部走 js/plate.js：**衬底**（同一段字画两遍，底下那遍描一圈纸色粗边）
+// 与**排版器**（按优先级逐个试位置，撞上就换，全撞就不画）。
+// 之前这两样都没有：城市名压在海岸线上糊成一片，站名又跟城市名叠在一起。
+// 排版顺序即优先级——站名 > 河名 > 城市名。城市名是坐标纸，让位是它的本分。
 
 import { BASEMAP, project } from './basemap.js';
+import { el, plateFilters, haloText, LabelSolver, placeCandidates, NUDGES } from './plate.js';
 
 // 参照点。只有海岸线与两条河，读者认不出哪儿是哪儿（用户实测指出）。
 // 这些是**今天的城市**，只用来定位，不参与叙事——故画得极淡，且不进
@@ -35,13 +41,6 @@ const ANCHORS = [
 // 河名贴在河上：黄河与长江是中国人心里最硬的两条参照线
 const RIVER_TAGS = [['黄河', 37.4, 110.5], ['长江', 30.2, 108.6]];
 
-const NS = 'http://www.w3.org/2000/svg';
-const el = (n, a = {}) => {
-  const e = document.createElementNS(NS, n);
-  for (const k in a) e.setAttribute(k, a[k]);
-  return e;
-};
-
 /**
  * @param geoOf  (ev) => 该站的地理项（js/geo.js 的一条），可返回 null
  * @param allOf  () => 本线全部站的地理项数组，用来画淡淡的全程底稿
@@ -55,6 +54,14 @@ export function mountMinimap(geoOf, allOf) {
   // 而「七说」正是那一站要给读者看的东西。故按本线全部点算包围盒再留边。
   const svg = el('svg', { preserveAspectRatio: 'xMidYMid meet' });
   let VB = [0, 0, BASEMAP.w, BASEMAP.h];      // 定好之后放点、算半径都用它
+  // 海岸画两道：底下一道糊开的宽描边，上面一根细线。只留细线的话，
+  // 硬边会跟字打架；只留糊边又认不出海岸在哪。stdDeviation 随取景现调（见 fit）
+  const defs = el('defs');
+  const FLT = plateFilters(defs, 'mm');
+  svg.appendChild(defs);
+  svg.appendChild(el('path', {
+    class: 'mm-coast-fuzz', d: BASEMAP.coast, filter: `url(#${FLT.coast})`,
+  }));
   svg.appendChild(el('path', { class: 'mm-coast', d: BASEMAP.coast }));
   svg.appendChild(el('path', { class: 'mm-river', d: BASEMAP.rivers }));
   const gRef = el('g', { class: 'mm-ref' });     // 参照：城市与河名
@@ -118,6 +125,10 @@ export function mountMinimap(geoOf, allOf) {
     if (w / h < 1000 / 630) w = h * (1000 / 630); else h = w * (630 / 1000);
     VB = [cx - w / 2, cy - h / 2, w, h];
     svg.setAttribute('viewBox', VB.join(' '));
+    // 糊的程度写在用户单位里，viewBox 一缩放就会跟着变。描边有
+    // non-scaling-stroke 顶着，滤镜没有，故这里现折算回去
+    const b = defs.querySelector('feGaussianBlur');
+    if (b) b.setAttribute('stdDeviation', u(0.85).toFixed(2));
   };
 
   const inView = ([x, y]) => {
@@ -126,25 +137,51 @@ export function mountMinimap(geoOf, allOf) {
     return x > vx + m && x < vx + vw - m && y > vy + m && y < vy + vh - m;
   };
 
-  /** 参照层：视野内的城市与河名。只画一次，随取景定。 */
+  // 待排的字。每条记：把手、锚点、优先级、可选位置。
+  // 位置由 solve() 一次性定——各画各的必然叠，这是 eco-web 那次的教训
+  const refJobs = [], nowJobs = [];
+  const tag = (g2, name, cls, size, pri, cands) => {
+    const h = haloText(g2, name, {
+      size, halo: 'var(--surface-1)', haloWidth: u(2.6),
+    });
+    h.over.setAttribute('class', cls);        // 颜色交给样式表，class 压得过属性
+    return { h, pri, cands };
+  };
+
+  /** 参照层：视野内的城市与河名。节点只造一次，摆哪儿每次重排。 */
   const drawRef = () => {
-    gRef.innerHTML = '';
+    gRef.innerHTML = ''; refJobs.length = 0;
     for (const [name, lat, lon] of ANCHORS) {
       const p = project(lon, lat);
       if (!inView(p)) continue;
       gRef.appendChild(el('circle', { class: 'mm-city', cx: p[0], cy: p[1], r: u(1.6) }));
-      const t = el('text', { class: 'mm-city-t', x: p[0] + u(3), y: p[1] + u(2.6),
-        'font-size': u(6.4) });
-      t.textContent = name;
-      gRef.appendChild(t);
+      refJobs.push({ ...tag(gRef, name, 'mm-city-t', u(6.4), 10,
+        placeCandidates('e', u(1))), p });
     }
+    // 河名贴在河上，**不能跑远**——跑远了就指着别的地方了，故只微挪
     for (const [name, lat, lon] of RIVER_TAGS) {
       const p = project(lon, lat);
       if (!inView(p)) continue;
-      const t = el('text', { class: 'mm-river-t', x: p[0], y: p[1], 'font-size': u(6.8) });
-      t.textContent = name;
-      gRef.appendChild(t);
+      const nudge = NUDGES.tight.map(([dx, dy]) => [u(dx * 0.6), u(dy * 0.6), 'middle']);
+      refJobs.push({ ...tag(gRef, name, 'mm-river-t', u(6.8), 50, nudge), p });
     }
+  };
+
+  /** 一次把图上所有的字摆好。站名最先落座，城市名最后，撞满了就不画。 */
+  const layout = () => {
+    const sv = new LabelSolver();
+    gNow.querySelectorAll('circle, rect').forEach((n) => sv.obstacle(n));
+    gRef.querySelectorAll('circle').forEach((n) => sv.obstacle(n));
+    for (const j of refJobs.concat(nowJobs)) {
+      j.h.nodes.forEach((n) => n.removeAttribute('display'));   // 上一站藏起来的，这一站重新给机会
+      sv.job({
+        nodes: j.h.nodes,
+        priority: j.pri,
+        candidates: j.cands,
+        apply: ([dx, dy, anchor]) => j.h.at(j.p[0] + dx, j.p[1] + dy, anchor || 'middle'),
+      });
+    }
+    sv.solve();
   };
 
   // 全程底稿只画一次：每站取一个代表点（诸说取第一个，只为让读者看见全程的展布）
@@ -170,7 +207,7 @@ export function mountMinimap(geoOf, allOf) {
     const g = ev ? geoOf(ev) : null;
     if (!g) { wrap.classList.remove('on'); return; }      // 没地点就不硬造一个
     if (!drawn) { fit(); drawRef(); drawAll(); drawn = true; }
-    gNow.innerHTML = '';
+    gNow.innerHTML = ''; nowJobs.length = 0;
     let msg = '';
     if (g['诸说']) {
       for (const s of g['诸说']) {
@@ -182,12 +219,11 @@ export function mountMinimap(geoOf, allOf) {
     if (g['点']) {
       const [x, y] = xy(g['点']);
       gNow.appendChild(el('circle', { class: 'mm-here', cx: x, cy: y, r: u(4.5) }));
-      // 地名直接标在点旁：底下那行小字要跨到眼睛外面去才读得到
+      // 地名直接标在点旁：底下那行小字要跨到眼睛外面去才读得到。
+      // 优先级给到最高——这一站的名字是**必须**画出来的那个
       if (g['地名']) {
-        const t = el('text', { class: 'mm-here-t', x: x + u(6), y: y + u(3),
-          'font-size': u(7.6) });
-        t.textContent = g['地名'];
-        gNow.appendChild(t);
+        nowJobs.push({ ...tag(gNow, g['地名'], 'mm-here-t', u(7.6), 100,
+          placeCandidates('e', u(1))), p: [x, y] });
       }
       msg = g['地名'] || '';
     }
@@ -206,7 +242,8 @@ export function mountMinimap(geoOf, allOf) {
       msg = msg ? `${msg} → 现藏${where}` : `现藏${where}`;
     }
     note.textContent = msg;
-    wrap.classList.add('on');
+    wrap.classList.add('on');      // **必须先显示再排版**：display:none 的字量出来是 0×0
+    layout();
   };
 
   const hide = () => wrap.classList.remove('on');

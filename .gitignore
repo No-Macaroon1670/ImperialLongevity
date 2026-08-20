@@ -19,3 +19,7 @@ desktop.ini
 # agent 顺手写出来的提亮图（一次 7.5 MB 差点推上 GitHub）。
 img/inbox/*
 !img/inbox/README.md
+
+# Python 缓存
+__pycache__/
+*.pyc
