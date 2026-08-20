@@ -53,6 +53,15 @@
         <input type="range" id="plate-year" aria-label="只看这一年之前的落点">
         <output id="plate-year-out">全部</output>
       </label>
+      <details class="pl-settings">
+        <summary>设置</summary>
+        <label><input type="checkbox" id="pl-set-alive" checked>
+          都城只画滑块所指年份仍存续的政权<span class="pl-set-why">——关掉则亡了的政权的都城也一直留着（「截至」逻辑）</span></label>
+        <label><input type="checkbox" id="pl-set-low" checked>
+          画低置信的点<span class="pl-set-why">——半透明那些：今地属传统比定、推定。关掉只留查得实的</span></label>
+        <label><input type="checkbox" id="pl-set-auto" checked>
+          画自动取的坐标<span class="pl-set-why">——从条目自己的维基页顺手拿的、没人逐条核过。关掉只留人核过的</span></label>
+      </details>
     </div>
 
     <div class="plate" id="plate"></div>

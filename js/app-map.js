@@ -58,11 +58,26 @@ const state = {
   layers: new Set(HAS_DYN ? ['ev', 'dyn'] : ['ev']),
   sel: null,               // 选中的条目（链展开）
   open: new Set(),         // 已展开的聚合点
+  // 设置（见页面上的「设置」折叠块），都默认开
+  aliveOnly: true,         // 都城只画滑块所指年份仍存续的政权
+  showLow: true,           // 画低置信的点
+  showAuto: true,          // 画自动取的坐标（据 'w'，没人逐条核过）
 };
 
+/** 年代滑块对两层的意思不一样，这是有意的：
+ *
+ * **事件用「截至」**——发生过就发生过了，滑到 1000 年，赤壁之战当然还在图上。
+ * **政权用「当时」**——滑到哪年只画那一年还活着的政权。用「截至」的话，
+ * 亡了一千年的都城会一直留在图上堆着（商周之际的图上挤满后世方块，
+ * 用户实测看见的就是这个），而「此刻并存的政权」正是本站时间轴
+ * 「河宽即并存政权数」的同一个读法。滑块拉满（＝不筛）时两层都全画。 */
 const shown = () => ALL.filter((r) => state.layers.has(r['层'])
   && (r['层'] !== 'ev' || !state.off.has(r.k))
-  && r.y <= state.upto
+  && (r['层'] === 'dyn' && state.aliveOnly && state.upto < Y_HI
+    ? (r.y <= state.upto && r.e >= state.upto)
+    : r.y <= state.upto)
+  && (state.showLow || !r['链'][r['主']]['约'])
+  && (state.showAuto || r['据'] !== 'w')
   && r['主'] >= 0);
 
 const idOf = (r) => `${r['层']}:${r.n}`;
@@ -528,7 +543,8 @@ function mountYear() {
   sl.min = String(Y_LO); sl.max = String(Y_HI); sl.value = String(Y_HI);
   const sync = () => {
     state.upto = Number(sl.value);
-    out.textContent = state.upto >= Y_HI ? '全部' : `截至 ${yr(state.upto)} 年`;
+    out.textContent = state.upto >= Y_HI ? '全部'
+      : `${yr(state.upto)} 年（事件截至此年，政权取当时并存的）`;
     draw();
   };
   sl.addEventListener('input', sync);
@@ -600,6 +616,18 @@ tt.addEventListener('click', () => {
   tt.textContent = next === 'dark' ? '☀ 浅色' : '🌙 深色';
 });
 
+function mountSettings() {
+  const wire = (id, key) => {
+    const box = $(id);
+    if (!box) return;
+    box.addEventListener('change', () => { state[key] = box.checked; draw(); });
+  };
+  wire('pl-set-alive', 'aliveOnly');
+  wire('pl-set-low', 'showLow');
+  wire('pl-set-auto', 'showAuto');
+}
+
 fillCoverage();
 mountKinds();
 mountYear();
+mountSettings();

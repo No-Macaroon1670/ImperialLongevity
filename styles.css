@@ -1373,3 +1373,11 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 /* 政权都城这一层：与大事记同图不同色 */
 .k-dyn { fill: var(--text-2); stroke: var(--text-2); }
 .pl-chip.k-dyn { color: var(--text-2); }
+
+/* 地图设置：折叠块，不占常驻版面。三个开关都默认开 */
+.pl-settings { font-size: .78rem; color: var(--text-2); }
+.pl-settings summary { cursor: pointer; user-select: none; }
+.pl-settings[open] summary { margin-bottom: 4px; }
+.pl-settings label { display: block; margin: 3px 0; cursor: pointer; }
+.pl-settings input { vertical-align: -1px; margin-right: 5px; }
+.pl-set-why { color: var(--muted); }
