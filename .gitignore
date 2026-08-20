@@ -18,6 +18,7 @@ desktop.ini
 # 相机不叫那个名的（20240104_140825.jpg 就漏过了），也挡不住
 # agent 顺手写出来的提亮图（一次 7.5 MB 差点推上 GitHub）。
 img/inbox/*
+img/processing/*
 !img/inbox/README.md
 
 # Python 缓存

@@ -21,6 +21,11 @@
     python tools/mining/crop.py <图> --auto                     # 提亮＋拉对比＋锐化
     python tools/mining/crop.py <图> --box ... --keep-orig no  # 不留原图
 
+三层文件夹（用户 2026-08-20 定）：
+  img/inbox/       只放没动过的原始存入——它的文件数就是欠账数
+  img/processing/  案头：处理中的工作稿、-orig 原图、重做的中间产物（不进 git）
+  img/own/         只放成品（进 git）。成品核过之后，processing 里的原图可清
+
 管线规矩（越攒越多，都是实测立下的）：
   · **先 EXIF 转正再裁**——否则竖拍的裁框方向全错（勾践剑那张实测踩到）。
   · **裁人群优于逐个打码**（用户 2026-08-20 定）：能用构图把观众裁出画面就裁，
