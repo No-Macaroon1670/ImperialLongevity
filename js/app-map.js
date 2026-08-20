@@ -60,7 +60,8 @@ const Y_LO = Math.min(...YEARS), Y_HI = Math.max(...YEARS);
 const state = {
   off: new Set(),          // 关掉的类别
   upto: Y_HI,
-  layers: new Set(HAS_DYN ? ['ev', 'dyn'] : ['ev']),
+  // 都城层默认关（用户拍板）：初见先读事件；点图例「政权都城」或选中政权时再亮
+  layers: new Set(['ev']),
   sel: null,               // 选中的条目（链展开）
   open: new Set(),         // 已展开的聚合点
   // 设置（见页面上的「设置」折叠块），都默认开
@@ -340,6 +341,14 @@ function tipShow(x, y, title, meta, body) {
 }
 const tipHide = () => tip.classList.remove('on');
 
+// 链点的单字角标（洛阳·显）在坞里就地释义——全表在 docs/geo-model.md，这里逐字照抄
+const ROLE_GLOSS = {
+  生: '出生地', 造: '制作地', 显: '显赫、成事之地', 立: '建立、树立之地',
+  卒: '逝世地', 发: '出土、发现地', 葬: '埋葬、原置之地', 现: '现藏、现陈之地',
+  贬: '贬所', 址: '遗址本体所在', 行: '行迹中途', 战: '交战地',
+  都: '都城', 起: '起事地', 迁: '迁都之后的都城', 灾: '受灾中心',
+  说: '诸说之一', 颁: '颁行地',
+};
 const IDLE = ['这张图', '一条目一个点',
   '指到点上看名字，点一下展开它去过的地方。半透明的点是今地不确定；带数字的大点是挤在一处的一簇，点开会散开；双击下方类别芯片只看那一类，「全开」复原。'];
 const rd = reader($('plate-read'), IDLE);
@@ -361,6 +370,10 @@ const goOff = () => { go.hidden = true; };
 
 const NEAR = 11;        // 视图单位。约合桌面上 12px、窄屏上 8px
 const CAP = 8;          // 一处超过这么多条就收成一个聚合点
+const DCAP = 1;               // 朝簇阈值：同城只要 >1 朝就直接折成一个方块（用户拍板，不设起步线）
+// 朝簇文案直接说「几朝古都」（用户定的口径）；数字转汉字只做到十九，再往上照用数字
+const cnum = (n) => (n === 2 ? '两' : n <= 10 ? '一二三四五六七八九十'[n - 1]
+  : n < 20 ? `十${'一二三四五六七八九'[n - 11]}` : String(n));
 
 function group(rows) {
   const gs = [];
@@ -565,6 +578,11 @@ function say(row, pin) {
   } else {
     bits.push(`${here['名']}·${here['角']}`);
   }
+  if (row['式'] !== '诸说') {
+    const tags = [...new Set((chain.length > 1 ? chain : [here]).map((c) => c['角']))]
+      .filter((t) => ROLE_GLOSS[t]);
+    if (tags.length) bits.push(tags.map((t) => `${t}＝${ROLE_GLOSS[t]}`).join('，'));
+  }
   if (row['外主'] >= 0) bits.push(`主点其实在${chain[row['外主']]['名']}，出了这张图的范围`);
   if (here['约']) bits.push('今地属推定，故画成半透明');
   if (row['据'] === 'w') bits.push('坐标取自该条目的维基页，没有人核过它是不是这件事发生的地方');
@@ -577,7 +595,7 @@ function say(row, pin) {
     if (row['层'] === 'dyn' && state.showExtent && TERR[row.key]) {
       const snap = drawExtent(row.key);
       if (snap) bits.push(`底色为疆域约略示意，据${yr(snap.y)}前后（${snap.span}）——四至锚点粗描，非精确边界，古之疆域本非线状`);
-    } else if (row['层'] !== 'dyn') clearExtent();
+    } else clearExtent();   // 无疆域数据的政权也要清——否则明→东晋换选时明的大块滞留（实测踩到）
     // meld 去重:卡的头两行(年份类别、标题)已由 CSS 藏掉,坞行代任;
     // 卡头本来更全的起讫年并回坞行,别把 892–1252 缩成 892
     const kick2 = ev && ev.y2 ? `${yr(ev.y)} – ${yr(ev.y2)}　${kindLabel(row)}` : kick;
@@ -657,7 +675,7 @@ function draw() {
 
   // 政权都城不进事件聚簇（用户实测：都城被吸进数字大簇后不再单独画，
   // 永远点不出来）——事件照旧聚簇，都城自己跟自己分组（同城多朝互相散开），
-  // 永不折叠成数字圆。93 个都城是独立图层，理应永远可点
+  // 同城超过 DCAP 朝折成一个「朝簇」方块（点开摊开）。93 个都城是独立图层，理应永远可点
   const gs = group(rows.filter((r) => r['层'] !== 'dyn'));
   const gsDyn = group(rows.filter((r) => r['层'] === 'dyn'));
   // ── 聚合点把压在它圆下面的邻居一并吸进来 ──────────────────────
@@ -690,6 +708,25 @@ function draw() {
   // 选中的那条若被吸进簇里，替读者把簇打开——否则 draw 会把它当「被筛掉」，
   // 选中态连坞带疆域块一起自毁。注意 group() 存的是 {r,x,y} 包装对象，
   // 判成员要拆 m.r（第一版拿包装喂 idOf，永远比不中，实测踩过）
+  // 让位平移必须在自动展开**之前**：gid 由组心坐标算出，先展开后平移的话，
+  // 自动展开记下的 gid 与渲染时算出的对不上，朝簇照旧折着，选中的政权
+  // 画不出来又被当「被筛掉」清掉（搜索定位东晋，实测踩到）
+  const EVF = gs.filter((g) => g.rows.length > CAP && !state.open.has(gidOf(g)))
+    .map((g) => ({ cx: g.cx, cy: g.cy, R: clusterR(g.rows.length) }));
+  for (const dg of gsDyn) {
+    // 让位量要算**双方**半径：朝簇自己也有个大方块（南京十朝反手压住杭州簇心，实测）
+    const selfR = 11 / VIEW.z;
+    for (const ef of EVF) {
+      const dx = dg.cx - ef.cx, dy = dg.cy - ef.cy;
+      const d0 = Math.hypot(dx, dy);
+      const want = ef.R + selfR + 8 / VIEW.z;
+      if (d0 < want) {
+        const ux = d0 > 0.001 ? dx / d0 : 1, uy = d0 > 0.001 ? dy / d0 : 0;
+        dg.cx = ef.cx + ux * want;
+        dg.cy = ef.cy + uy * want;
+      }
+    }
+  }
   if (state.sel) {
     for (const c of gs) {
       if (c.rows.length > CAP && !state.open.has(gidOf(c))
@@ -697,24 +734,50 @@ function draw() {
         state.open.add(gidOf(c));
       }
     }
+    // 朝簇的折叠阈值是 DCAP 不是 CAP——搜索定位到 4–8 朝的朝簇（明在北京组）时，
+    // 少了这一扫成员画不出来，selAt 落空，选中态又会被当「被筛掉」自毁（实测踩到）
+    for (const c of gsDyn) {
+      if (c.rows.length > DCAP && !state.open.has(gidOf(c))
+          && c.rows.some((m) => idOf(m.r) === state.sel)) {
+        state.open.add(gidOf(c));
+      }
+    }
   }
+  // 并排让位（用户方案）：都城组若压在折叠事件簇的圆上，平移到簇边并排站——
+  // 实测不让位时十个簇心有八个的点击被都城命中区抢走（杭州簇点出越国）
   const gs2 = gs.filter((g) => g.rows.length).concat(gsDyn);
   let packed = 0, folded = 0, selAt = null;
   const dynHits = [];   // 都城命中区收尾抬顶：不抬会被后画的事件命中圈压住（用户实测点不中）
 
   for (const g of gs2) {
     const gid = gidOf(g);
-    if (g.rows.length > CAP && !state.open.has(gid)) {
+    const isDynG = g.rows.length > 0 && g.rows[0].r['层'] === 'dyn';
+    // 都城组阈值收紧（用户方案：十朝古都折成一个「N朝」方点，与事件簇并排）
+    const foldCap = isDynG ? DCAP : CAP;
+    if (g.rows.length > foldCap && !state.open.has(gid)) {
       // 收成一个点，标上条数。**半径随条数长**——点大即那地方事多，
       // 这本身是条信息，不只是「这儿挤」。点开才展成一环
       folded += g.rows.length;
-      const R = clusterR(g.rows.length);
-      const c = el('circle', { class: 'pl-cluster', cx: g.cx, cy: g.cy, r: R });
+      // 朝簇＝默认尺寸的都城方块，**不随朝数缩放**（用户拍板）——朝数写在块里，
+      // 「一叠」的感觉靠背后错位垫两个叠影方块给出来
+      const R = isDynG ? 6.6 / VIEW.z : clusterR(g.rows.length);
+      if (isDynG) {
+        for (const off of [4.4, 2.2]) {
+          const o = off / VIEW.z;
+          gDot.appendChild(el('rect', {
+            class: 'pl-dyn-ghost',
+            x: g.cx - R + o, y: g.cy - R - o, width: R * 2, height: R * 2,
+          }));
+        }
+      }
+      const c = isDynG
+        ? el('rect', { class: 'pl-cluster pl-dyn', x: g.cx - R, y: g.cy - R, width: R * 2, height: R * 2 })
+        : el('circle', { class: 'pl-cluster', cx: g.cx, cy: g.cy, r: R });
       gDot.appendChild(c);
       solver.obstacle(c);
       const t = el('text', {
-        class: 'pl-cluster-n', x: g.cx, y: g.cy + R * 0.34, 'text-anchor': 'middle',
-        'font-size': Math.max(10 / VIEW.z, R * 0.82),
+        class: 'pl-cluster-n', x: g.cx, y: g.cy + R * (isDynG ? 0.42 : 0.34), 'text-anchor': 'middle',
+        'font-size': isDynG ? R * 1.15 : Math.max(10 / VIEW.z, R * 0.82),
       });
       t.textContent = String(g.rows.length);
       gDot.appendChild(t);
@@ -739,8 +802,8 @@ function draw() {
         where = `${best}一带`;
       }
       const hit = el('circle', {
-        class: 'pl-hit', cx: g.cx, cy: g.cy, r: R + 3 / VIEW.z, tabindex: '0', role: 'button',
-        'aria-label': `${where}，${g.rows.length} 条，展开`,
+        class: 'pl-hit', cx: g.cx, cy: g.cy, r: R + (isDynG ? 6 : 3) / VIEW.z, tabindex: '0', role: 'button',
+        'aria-label': isDynG ? `${where}，${cnum(g.rows.length)}朝古都，展开` : `${where}，${g.rows.length} 条，展开`,
       });
       gHit.appendChild(hit);
       const open = () => { state.open.add(gid); draw(); };
@@ -749,9 +812,9 @@ function draw() {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
       });
       hit.addEventListener('mouseenter', () => {
-        tipShow(g.cx, g.cy - R, `${where} · ${g.rows.length} 条`, '点一下摊开',
+        tipShow(g.cx, g.cy - R, isDynG ? `${where} · ${cnum(g.rows.length)}朝古都` : `${where} · ${g.rows.length} 条`, '点一下摊开',
           `${g.rows.slice(0, 5).map((m) => m.r.n).join('、')}${g.rows.length > 5 ? '…' : ''}`);
-        rd.hover(where, `${g.rows.length} 条`,
+        rd.hover(where, isDynG ? `${cnum(g.rows.length)}朝古都` : `${g.rows.length} 条`,
           `${g.rows.slice(0, 6).map((m) => m.r.n).join('、')}${g.rows.length > 6 ? ' 等' : ''}　·　点一下摊开`);
       });
       hit.addEventListener('mouseleave', () => { tipHide(); if (!state.sel) rd.leave(); });
@@ -759,6 +822,20 @@ function draw() {
     }
 
     spread(g);
+    // 成员级二次驱离：spread() 会把都城成员甩回事件簇圆里（燕国压北京簇心，实测）
+    if (g.rows.length && g.rows[0].r['层'] === 'dyn') {
+      for (const m2 of g.rows) {
+        for (const ef of EVF) {
+          const dx = m2.px - ef.cx, dy = m2.py - ef.cy;
+          const dd = Math.hypot(dx, dy), want = ef.R + 8 / VIEW.z;
+          if (dd < want) {
+            const ux = dd > 0.001 ? dx / dd : 1, uy = dd > 0.001 ? dy / dd : 0;
+            m2.px = ef.cx + ux * want;
+            m2.py = ef.cy + uy * want;
+          }
+        }
+      }
+    }
     if (g.rows.length > 1) packed += g.rows.length;
 
     for (const m of g.rows) {
@@ -788,7 +865,8 @@ function draw() {
       solver.obstacle(dot);
 
       const hit = el('circle', {
-        class: 'pl-hit', cx: m.px, cy: m.py, r: Math.max(rad * 2.4, 11 / VIEW.z),
+        class: 'pl-hit', cx: m.px, cy: m.py,
+        r: r['层'] === 'dyn' ? Math.max(rad * 1.8, 9 / VIEW.z) : Math.max(rad * 2.4, 11 / VIEW.z),
         tabindex: '0', role: 'button', 'aria-label': `${r.n}，${yr(r.y)}`,
       });
       gHit.appendChild(hit);

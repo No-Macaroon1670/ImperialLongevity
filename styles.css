@@ -1384,7 +1384,10 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-hit:focus { outline: none; }
 .pl-hit:focus-visible { outline: 2px solid var(--seq-500); outline-offset: 1px; border-radius: 50%; }
 /* 字是画给人看的，不是拿来点的——让它别挡在命中区前面 */
-.pl-labs, .pl-ref { pointer-events: none; }
+/* 引线与链是装饰，不是控件——SVG 默认 visiblePainted，有描边的线会吃点击：
+   压过命中圈中心的那根引线把点击吞掉再冒泡到背景，等于替读者按了「取消选中」
+   （真坐标实测：视口内 28 个都城 13 个这样被抢） */
+.pl-labs, .pl-ref, .pl-leads, .pl-chain { pointer-events: none; }
 .pl-dot.on { stroke: var(--text-1); stroke-width: 2; }
 
 /* ── 地图页：链、散开、聚合 ────────────────────────────────────────
@@ -1396,6 +1399,8 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 
 /* 聚合点：半径随条数长，点大即那地方事多。这本身是条信息 */
 .pl-cluster { fill: var(--surface-1); stroke: var(--muted); stroke-width: 1.6; cursor: pointer; }
+.pl-cluster.pl-dyn { stroke-width: 1.9; }
+.pl-dyn-ghost { fill: var(--surface-1); stroke: var(--muted); stroke-width: 1.3; opacity: 0.5; pointer-events: none; }
 .pl-cluster-n { fill: var(--text-2); font-weight: 600; pointer-events: none; }
 
 /* 低置信：今地属传统比定、推定，或只由国别推出。与本库先秦年代用斜纹
