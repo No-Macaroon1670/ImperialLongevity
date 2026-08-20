@@ -449,7 +449,12 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 .kp-embed .kp-close { display: none; }  /* 收起归地图的取消选中,不另设叉 */
 /* 卡的年份类别行与标题行由坞行代任,不重复念一遍(用户指出);起讫年并回坞行 */
 .kp-embed .kp-sub, .kp-embed .kp-title { display: none; }
-.kp-embed .kp-thumb { max-height: 140px; }
+.kp-embed { background: transparent; }  /* 底色随坞:自带 surface-1 会成一块异色补丁(用户指出) */
+.kp-embed .kp-thumb { max-height: 140px; border-radius: 8px; border: 1px solid var(--border); }
+
+/* 工具条里的设置折叠块:与地图页同款形态,挤在一行控件之间 */
+.local-controls .lc-set { display: inline-block; }
+.local-controls .lc-set .lc-set-body { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
 .kp-solo .kp-ext { -webkit-line-clamp: 5; }
 
 /* 事件层的六个类别色:全部取自既有槽位,不新造色相。

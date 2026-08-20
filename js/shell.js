@@ -196,11 +196,26 @@ const seg = (key, label, options, when) => ({ type: 'seg', key, label, options, 
 // 你正在看哪一段，三档常常没有一档正好；滑杆让读者自己定，并且看得见量纲。
 const rng = (key, label, { min, max, step = 1, fmt }, when) =>
   ({ type: 'range', key, label, min, max, step, fmt, when });
+// 设置折叠块:低频开关收进来,与地图页「设置」同一形态。改一次管很久的叠加
+// 不值得常驻工具条——窄屏上它们会把条杆挤断行。
+const grp = (label, items) => ({ type: 'group', label, items });
 
 function buildControls(sec) {
   const wrap = h('div', { class: 'local-controls' });
   for (const c of sec.controls) {
     if (c.when && !c.when(S)) continue;
+    if (c.type === 'group') {
+      const det = h('details', { class: 'pl-settings lc-set' });
+      // render() 每改一个开关就整条重建;不记开合状态的话,勾一下块就合上了
+      if (S._lcSetOpen) det.open = true;
+      det.addEventListener('toggle', () => { S._lcSetOpen = det.open; });
+      det.appendChild(h('summary', { text: c.label }));
+      const inner = buildControls({ controls: c.items });   // 递归复用同一台机器
+      inner.classList.add('lc-set-body');
+      det.appendChild(inner);
+      wrap.appendChild(det);
+      continue;
+    }
     if (c.type === 'select') {
       const s = h('select');
       for (const [v, lab] of c.options) {
@@ -533,5 +548,5 @@ export function mountApp({ sections, hero }) {
   });
 }
 
-export { S, filtered, render, sel, seg, rng, tog };
+export { S, filtered, render, sel, seg, rng, tog, grp };
 window.__DB__ = { EMPERORS, DYNASTIES, DYN_STATS, S, filtered };

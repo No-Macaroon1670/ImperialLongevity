@@ -1,5 +1,5 @@
 // 王朝全景页(timeline.html)的章节表：竖向河流与横向泳道。
-import { sel, seg, rng, tog } from './shell.js';
+import { sel, seg, rng, tog, grp } from './shell.js';
 import { renderLaneTimeline } from './views-lanes.js';
 import { renderRiver } from './views-river.js';
 
@@ -32,11 +32,14 @@ export const SECTIONS = [
           return `一屏 ≈ ${Math.max(5, Math.round(w / v / 5) * 5)} 年`; } },
         (st) => st.panoramaMode !== 'river'),
       seg('laneColor', '配色', [['dynasty', '具体朝代'], ['unified', '大一统 / 分裂']]),
-      tog('laneViolent', '标记非正常死亡'),
-      tog('laneStrands', '全部承继关系', (st) => st.panoramaMode !== 'river'),
       // 大事记开关此前只给泳道:河流的事件轨在两岸(宽屏)与河道里(窄屏),
       // 两处都吃这个开关,故两个视图都该给得出
       tog('laneEvents', '大事记'),
+      // 低频叠加收进设置(用户裁定):这两个改一次管很久,常驻只会挤断条杆
+      grp('设置', [
+        tog('laneViolent', '标记非正常死亡'),
+        tog('laneStrands', '全部承继关系', (st) => st.panoramaMode !== 'river'),
+      ]),
     ],
     render: (host, l, o) => {
       // 切换视图时先撤掉河流留在 body 上的固定卡片，否则它会挂在泳道图上
