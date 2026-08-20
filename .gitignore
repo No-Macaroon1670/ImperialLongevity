@@ -25,7 +25,10 @@ img/processing/*
 __pycache__/
 *.pyc
 
-# docs 整层是本地工作区（用户 2026-08-20 定：docs 是 local）。
-# 唯一例外：line-*.md 是故事页「资料与出处」按钮的公开链接目标，保持入库。
-docs/*
-!docs/line-*.md
+# WIP 工作档本地专用（用户 2026-08-20 定）：候选暂存、圈选单、点子与计划稿不上库。
+# 军规/台账/line-*.md 资料页/sources与geo构建输入 照旧入库。
+docs/desk/
+docs/holding/
+docs/idea-*.md
+docs/plan-*.md
+docs/video-brief*.md
