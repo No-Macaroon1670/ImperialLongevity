@@ -11,6 +11,7 @@
 // 永远不会烂,搜索结果也天然比三年前存的某支视频新鲜。
 import { h, fmtYearAxis } from './charts.js';
 import { EVENT_KINDS } from './events.js';
+import { OWN_PIC } from './pics-own-cards.js';
 
 /**
  * 值得自动弹卡的名君(姓名 → 权重 1–3):滚动经过时自动打开,权重高者优先。
@@ -232,7 +233,7 @@ export function evSpec(ev) {
     title: ev.w, sec: ev.ws, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
     // b：百度自己的正名（维基与百度的条目名常不一致，实测 75 条要另写）
     // nb：百度确实没有这个词条，藏掉按钮而不是给个 404
-    baidu: ev.b, noBaidu: !!ev.nb, museum: ev.m,
+    baidu: ev.b, noBaidu: !!ev.nb, museum: ev.m, ownPic: OWN_PIC[ev.n],
     q: ev.ya || ev.n, yt: true,
   };
 }
@@ -286,7 +287,7 @@ function mkCard(sideClass) {
   const el = h('div', { class: `kp ${sideClass}` }, [
     close, img, head, title, ext, h('div', { class: 'kp-links' }, [wiki, baidu, museum, h('span', { class: 'kp-vids' }, [yt, bili])]), src,
   ]);
-  return { el, img, head, title, ext, wiki, baidu, museum, yt, bili, close };
+  return { el, img, head, title, ext, wiki, baidu, museum, yt, bili, close, src };
 }
 
 /** 皇帝卡的取数说明书。库内 387 位君主全有姓名,故标题恒为人名 */
@@ -346,6 +347,14 @@ async function fillCard(card, spec) {
   card.title.textContent = spec.display || spec.title;
   card.ext.textContent = '…';
   card.img.style.display = 'none';
+  // 自摄图优先(手选表 pics-own-cards.js):立即上图,不等维基;维基缩略图退居替补
+  if (spec.ownPic) {
+    card.img.src = spec.ownPic;
+    card.img.style.display = '';
+    card.src.textContent = '图为本库自摄；摘要实时取自中文维基百科';
+  } else {
+    card.src.textContent = '摘要实时取自中文维基百科';
+  }
   // 无维基条目的条目(2026-08-21 起允许):收起维基栏与摘要抓取,不空转、
   // 不 404。考据由库内简注与馆藏页承担——馆藏页按钮因此照常走
   if (!spec.title) {
@@ -357,6 +366,7 @@ async function fillCard(card, spec) {
     card.museum.style.display = spec.museum ? '' : 'none';
     card.yt.style.display = card.bili.style.display = 'none';
     card.ext.textContent = '中文维基无此条目；本条考据见库内简注与馆藏页。';
+    card.src.textContent = spec.ownPic ? '图为本库自摄' : '';
     card.el.classList.add('on');
     return;
   }
@@ -419,7 +429,7 @@ async function fillCard(card, spec) {
   if (s && s.extract && s.type !== 'disambiguation') {
     card.title.textContent = spec.display || s.title || spec.title;
     card.ext.textContent = s.extract;
-    if (s.thumbnail && s.thumbnail.source) { card.img.src = s.thumbnail.source; card.img.style.display = ''; }
+    if (!spec.ownPic && s.thumbnail && s.thumbnail.source) { card.img.src = s.thumbnail.source; card.img.style.display = ''; }
     if (s.content_urls && s.content_urls.desktop) {
       card.wiki.href = s.content_urls.desktop.page + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
     }

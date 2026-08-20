@@ -1,0 +1,15 @@
+// pics-own-cards.js — 条卡直挂自摄图的**手选表**（用户 2026-08-22 定）。
+// 准入即判断：内库照片质量够硬才进——主体清晰、糊块不碍观、说明牌不喧宾。
+// 宁缺勿滥；这张表永远手工维护，不自动生成。卡片优先用这里的图，
+// 维基缩略图退居替补；无维基条目（绿松石龙一类）从此也能有脸。
+// 图注一律「图为本库自摄」，署名规矩照旧只记年月（见账册 docs/pics-own.md）。
+export const OWN_PIC = {
+  秘色瓷: 'img/own/famensi-mise-kuikou-pan.jpg',
+  越王勾践剑: 'img/own/hubei-goujianjian.jpg',
+  天坛: 'img/own/tiantan-danbiqiao.jpg',
+  避暑山庄: 'img/own/chengde-puningsi-dachengzhige-fukan.jpg',
+  唐三彩: 'img/own/bowuguan-tangdai-sancai-luotuo-yongju.jpg',
+  龙门二十品: 'img/own/longmen-yangdayan-zaoxiangji-taben-01.jpg',
+  独孤信之死: 'img/own/guobo-nzhou-duguxin-epitaph.jpg',
+  景德镇瓷业: 'img/own/shoudu-qinghua-yuyaochang-tuciban.jpg',
+};
