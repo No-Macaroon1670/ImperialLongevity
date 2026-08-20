@@ -6,6 +6,7 @@
 - **docs/storyline-prose-checklist.md**——故事线文案十六条错型（事实/结构/语言/声口四层，每条都在自己线上真实出过）
 - **docs/sourcing-heritage.md**——景点/遗产类出处次序（国保→世遗文本→方志→考古；维基作索引、百度永不引证）
 - **docs/geo-model.md**——落点模型：链/诸说/单点、十九个角色字、陪都三规
+- **docs/anchor-policy.md**——系年锚法：锚软不等于出局，六法试尽才许踢（u1/u2 窗口、两说并记、cf 三级、换锚、y/y2 跨度、非系年分歧同理）
 - **tools/mining/crop.py 档头**——照片管线全规（三级阶梯/翻拍件/一图多产/裁人群优于打码）
 - **docs/pics-own.md**——自摄照片账册＋准入规（OWN_PIC 手选、宁缺勿滥）
 
