@@ -1298,6 +1298,10 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .k-liv { fill: var(--ev-liv); stroke: var(--ev-liv); }
 /* 点的描边一律是纸色（拿来把挤在一起的点分开），故盖掉上面那份 stroke。
    纸色是 --surface-2，与 .plate 的底一致——描成 --surface-1 会在点周围留一圈亮边 */
+/* 盛时疆域示意：毛边靠高斯模糊、低透明度靠 opacity——形状说有这回事，
+   两者一起说「别拿它当准」。pointer-events 关掉：它是背景，不抢点击 */
+.pl-extent-blob { fill: #8a6d3b; opacity: .12; filter: url(#pl-extent-blur); pointer-events: none; }
+
 .pl-dot { stroke: var(--surface-2); }
 /* 名字用类别色但不描边——衬底由 haloText 画 */
 .pl-lab { stroke: none; }

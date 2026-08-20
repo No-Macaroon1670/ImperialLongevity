@@ -32,6 +32,7 @@ import { GEO_EVENTS } from './geo-events.js';
 import { GEO_DYN } from './geo-dynasties.js';
 import { EVENT_KINDS, EVENTS } from './events.js';
 import { evSpec, mountEmbedCard } from './knowledge.js';
+import { TERR } from './territories.js';
 import { syncCounts } from './counts.js';
 import { LINES } from './lines.js';
 import { DYNASTIES } from './dynasties.js';
@@ -65,6 +66,7 @@ const state = {
   // 设置（见页面上的「设置」折叠块），都默认开
   aliveOnly: true,         // 都城只画滑块所指年份仍存续的政权
   showTerr: true,          // 画地形骨架（山脉填充与山川名）
+  showExtent: true,        // 政权选中时画盛时疆域示意（毛边色块，四至锚点法）
   showLow: true,           // 画低置信的点
   showAuto: true,          // 画自动取的坐标（据 'w'，没人逐条核过）
 };
@@ -116,7 +118,36 @@ const gDot = el('g', { class: 'pl-dots' });
 const gLab = el('g', { class: 'pl-labs' });
 const gHit = el('g', { class: 'pl-hits' });     // 看不见的命中区，压在最上面
 const gLn = el('g', { class: 'pl-ln' });        // 地图走线：路线与站点，压在一切之上
-svg.append(gGrid, gTerr, gCoast, gRef, gLead, gChain, gDot, gLab, gHit, gLn);
+// 盛时疆域示意层：压在海岸之上、一切点线之下——它是背景色块，不是数据
+const gExt = el('g', { class: 'pl-extent' });
+{
+  const defs = el('defs');
+  const f = el('filter', { id: 'pl-extent-blur', x: '-20%', y: '-20%', width: '140%', height: '140%' });
+  f.appendChild(el('feGaussianBlur', { stdDeviation: 7 }));
+  defs.appendChild(f);
+  svg.appendChild(defs);
+}
+svg.append(gGrid, gTerr, gCoast, gExt, gRef, gLead, gChain, gDot, gLab, gHit, gLn);
+
+/** 画/清 盛时疆域毛边色块。轮廓点经 project() 落图，中点二次曲线抹圆——
+ *  粗描本来就是示意，棱角只会让它看起来假精确 */
+function drawExtent(key) {
+  gExt.innerHTML = '';
+  const t = TERR[key];
+  if (!t || !t.pts || t.pts.length < 3) return;
+  const q = t.pts.map(([lon, lat]) => project(lon, lat));
+  let d = '';
+  for (let i = 0; i < q.length; i += 1) {
+    const a2 = q[i], b2 = q[(i + 1) % q.length];
+    const mx = (a2[0] + b2[0]) / 2, my = (a2[1] + b2[1]) / 2;
+    d += (i === 0 ? `M${mx.toFixed(1)} ${my.toFixed(1)}` : '')
+      + `Q${b2[0].toFixed(1)} ${b2[1].toFixed(1)} `;
+    const c2 = q[(i + 2) % q.length];
+    d += `${((b2[0] + c2[0]) / 2).toFixed(1)} ${((b2[1] + c2[1]) / 2).toFixed(1)}`;
+  }
+  gExt.appendChild(el('path', { class: 'pl-extent-blob', d: d + 'Z' }));
+}
+const clearExtent = () => { gExt.innerHTML = ''; };
 $('plate').appendChild(svg);
 
 /* ── 缩放与平移 ─────────────────────────────────────────────────────────
@@ -534,6 +565,12 @@ function say(row, pin) {
     : `${yr(row.y)}　${kindLabel(row)}`;
   if (pin) {
     const ev = row['层'] === 'dyn' ? null : EV_BY_N.get(row.n);
+    // 政权钉住时铺盛时疆域示意；示警随坞行走（与「今地属推定」同一层级语言）
+    if (row['层'] === 'dyn' && state.showExtent && TERR[row.key]) {
+      drawExtent(row.key);
+      const t = TERR[row.key];
+      bits.push(`底色为疆域约略示意，据${yr(t.y)}前后（${t.span}）——四至锚点粗描，非精确边界，古之疆域本非线状`);
+    } else if (row['层'] !== 'dyn') clearExtent();
     // meld 去重:卡的头两行(年份类别、标题)已由 CSS 藏掉,坞行代任;
     // 卡头本来更全的起讫年并回坞行,别把 892–1252 缩成 892
     const kick2 = ev && ev.y2 ? `${yr(ev.y)} – ${yr(ev.y2)}　${kindLabel(row)}` : kick;
@@ -776,11 +813,11 @@ function draw() {
     say(selAt.r, true);
   } else if (state.sel) {
     state.sel = null;               // 选中的那条被筛掉了：松开，别留个指着空处的链
-    rd.unpin(); goOff(); EMB.hide();
+    rd.unpin(); goOff(); EMB.hide(); clearExtent();
   } else if (rd.pinned && !LN.key) {
     // 再点一下或点空白取消选中,此前只清 state.sel、坞一直钉着旧文案(嵌卡让这
     // 个滞留显了形);走线模式的钉住不走 state.sel,故要避开
-    rd.unpin(); goOff(); EMB.hide();
+    rd.unpin(); goOff(); EMB.hide(); clearExtent();
   }
 
   for (const j of jobs) {
@@ -1133,7 +1170,7 @@ function exitLine() {
   gLn.innerHTML = '';
   svg.classList.remove('pl-lining');
   if (LN.bar) { LN.bar.remove(); LN.bar = null; }
-  rd.unpin(); goOff(); EMB.hide();
+  rd.unpin(); goOff(); EMB.hide(); clearExtent();
   draw();
 }
 
@@ -1199,6 +1236,9 @@ function mountSettings() {
   wire('pl-set-low', 'showLow');
   wire('pl-set-auto', 'showAuto');
   wire('pl-set-terr', 'showTerr');
+  wire('pl-set-ext', 'showExtent');
+  const ext = $('pl-set-ext');
+  if (ext) ext.addEventListener('change', () => { if (!ext.checked) clearExtent(); });
 }
 
 fillCoverage();
