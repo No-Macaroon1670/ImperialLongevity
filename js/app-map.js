@@ -88,6 +88,9 @@ const shown = () => ALL.filter((r) => state.layers.has(r['层'])
   && r['主'] >= 0);
 
 const idOf = (r) => `${r['层']}:${r.n}`;
+// 调试窗：个人站，留着便宜（终端里 window.__map 直接看内脏）
+window.__map = { state, ALL, TERR, idOf: null };
+window.__map.idOf = idOf;
 const trueXY = (r) => xy(r['链'][r['主']]['点']);
 const kindLabel = (r) => (r['层'] === 'dyn' ? '政权' : (EVENT_KINDS[r.k] || {}).label || r.k);
 
@@ -123,7 +126,7 @@ const gExt = el('g', { class: 'pl-extent' });
 {
   const defs = el('defs');
   const f = el('filter', { id: 'pl-extent-blur', x: '-20%', y: '-20%', width: '140%', height: '140%' });
-  f.appendChild(el('feGaussianBlur', { stdDeviation: 7 }));
+  f.appendChild(el('feGaussianBlur', { stdDeviation: 2.5 }));
   defs.appendChild(f);
   svg.appendChild(defs);
 }
@@ -145,16 +148,10 @@ function drawExtent(key) {
   gExt.innerHTML = '';
   const snap = pickSnap(TERR[key]);
   if (!snap || !snap.pts || snap.pts.length < 3) return null;
+  // 折线过**真锚点**（用户 2026-08-22 纠：中点平滑曲线从不经过任何一个研核
+  // 顶点，等于形状背叛了取值）。「非精确」由毛边与透明度表达，不由变形表达
   const q = snap.pts.map(([lon, lat]) => project(lon, lat));
-  let d = '';
-  for (let i = 0; i < q.length; i += 1) {
-    const a2 = q[i], b2 = q[(i + 1) % q.length];
-    const mx = (a2[0] + b2[0]) / 2, my = (a2[1] + b2[1]) / 2;
-    d += (i === 0 ? `M${mx.toFixed(1)} ${my.toFixed(1)}` : '')
-      + `Q${b2[0].toFixed(1)} ${b2[1].toFixed(1)} `;
-    const c2 = q[(i + 2) % q.length];
-    d += `${((b2[0] + c2[0]) / 2).toFixed(1)} ${((b2[1] + c2[1]) / 2).toFixed(1)}`;
-  }
+  const d = q.map(([x, y2], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y2.toFixed(1)}`).join('');
   gExt.appendChild(el('path', { class: 'pl-extent-blob', d: d + 'Z' }));
   return snap;
 }
@@ -228,14 +225,14 @@ svg.addEventListener('pointerdown', (e) => {
     pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), z: VIEW.z };
     panning = null;                        // 第二指落下，单指平移让位
     e.preventDefault();
-    if (svg.setPointerCapture) svg.setPointerCapture(e.pointerId);
+    try { svg.setPointerCapture(e.pointerId); } catch (_) { /* 合成指针无捕获权，忽略 */ }
     return;
   }
   if (e.target.classList && e.target.classList.contains('pl-hit')) return;
   if (VIEW.z <= 1) return;                 // 全图态单指留给页面滚动
   e.preventDefault();     // 掐掉浏览器的文本选择：不掐，拖图就是满图蓝色选区
   panning = { x: e.clientX, y: e.clientY, cx: VIEW.cx, cy: VIEW.cy, moved: false };
-  if (svg.setPointerCapture) svg.setPointerCapture(e.pointerId);
+  try { svg.setPointerCapture(e.pointerId); } catch (_) { /* 合成指针无捕获权，忽略 */ }
 });
 svg.addEventListener('pointermove', (e) => {
   if (PTRS.has(e.pointerId)) PTRS.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -683,8 +680,23 @@ function draw() {
       }
     }
   }
+  // 选中的那条若被吸进簇里，替读者把簇打开——否则 draw 会把它当「被筛掉」，
+  // 选中态连坞带疆域块一起自毁（搜索定位到北京簇里的元大都，实测踩到）。
+  // 必须放在吸收循环**之后**：吸收前它所在的小组可能还不足 CAP，检查会放过它
+  // 选中的那条若被吸进簇里，替读者把簇打开——否则 draw 会把它当「被筛掉」，
+  // 选中态连坞带疆域块一起自毁。注意 group() 存的是 {r,x,y} 包装对象，
+  // 判成员要拆 m.r（第一版拿包装喂 idOf，永远比不中，实测踩过）
+  if (state.sel) {
+    for (const c of gs) {
+      if (c.rows.length > CAP && !state.open.has(gidOf(c))
+          && c.rows.some((m) => idOf(m.r) === state.sel)) {
+        state.open.add(gidOf(c));
+      }
+    }
+  }
   const gs2 = gs.filter((g) => g.rows.length);
   let packed = 0, folded = 0, selAt = null;
+  const dynHits = [];   // 都城命中区收尾抬顶：不抬会被后画的事件命中圈压住（用户实测点不中）
 
   for (const g of gs2) {
     const gid = gidOf(g);
@@ -776,6 +788,7 @@ function draw() {
         tabindex: '0', role: 'button', 'aria-label': `${r.n}，${yr(r.y)}`,
       });
       gHit.appendChild(hit);
+      if (r['层'] === 'dyn') dynHits.push(hit);
       const enter = () => {
         const meta = r['层'] === 'dyn' ? `${yr(r.y)} – ${yr(r.e)}　政权` : `${yr(r.y)}　${kindLabel(r)}`;
         const body = r['层'] === 'dyn' ? BIO.get(r.key) : YC.get(r.n);
@@ -818,6 +831,8 @@ function draw() {
     }
   }
 
+  // 都城命中区整体抬到命中层最上：方块比圆点少、又常与事件同城，被压住就点不中
+  for (const h of dynHits) gHit.appendChild(h);
   if (selAt) {
     jobs.push(...drawChain(selAt.r, selAt.x, selAt.y));
     say(selAt.r, true);
@@ -1269,7 +1284,11 @@ function mountLineChips() {
     const q = sin.value.trim();
     slist.innerHTML = '';
     if (q.length < 1) return;
-    const hitRows = ALL.filter((r) => r.n.includes(q)).slice(0, 8);
+    // 排序：精确命中→前缀→包含，短名优先——不然查「元」时含元的事件把
+    // 八个坑全占了，政权「元」自己反而挤不进候选（实测踩到）
+    const score = (r) => (r.n === q ? 0 : r.n.startsWith(q) ? 1 : 2) * 100 + r.n.length;
+    const hitRows = ALL.filter((r) => r.n.includes(q))
+      .sort((x, y2) => score(x) - score(y2)).slice(0, 8);
     for (const r of hitRows) {
       const b = document.createElement('button');
       b.type = 'button';
