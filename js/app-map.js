@@ -144,6 +144,9 @@ function applyView() {
   VIEW.cy = Math.min(Math.max(VIEW.cy, vh / 2), H - vh / 2);
   VB = [VIEW.cx - vw / 2, VIEW.cy - vh / 2, vw, vh];
   svg.setAttribute('viewBox', VB.join(' '));
+  // 触屏让权：全图态单指放行给页面滚动（pan-y），放大后地图独占手势。
+  // 捏合任何时候都归我们——不设 none/pan-y 的话浏览器会拿去缩整页
+  svg.style.touchAction = VIEW.z > 1 ? 'none' : 'pan-y';
   eyeSync();
 }
 
@@ -173,15 +176,37 @@ svg.addEventListener('wheel', (e) => {
 }, { passive: false });
 
 // 拖着平移。拖过就不算点击——否则松手时会把选中的链顺手关掉
-let panning = null, suppressClick = false;
+let panning = null, suppressClick = false, pinch = null;
+const PTRS = new Map();   // pointerId → 屏坐标；两个成员即捏合态
 svg.addEventListener('pointerdown', (e) => {
-  if (VIEW.z <= 1) return;
+  // 先入册再分流：第一指落在点上也不妨碍第二指进来变成捏合（手机上点大，很常见）
+  PTRS.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (PTRS.size === 2) {
+    const [a, b] = [...PTRS.values()];
+    pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), z: VIEW.z };
+    panning = null;                        // 第二指落下，单指平移让位
+    e.preventDefault();
+    if (svg.setPointerCapture) svg.setPointerCapture(e.pointerId);
+    return;
+  }
   if (e.target.classList && e.target.classList.contains('pl-hit')) return;
+  if (VIEW.z <= 1) return;                 // 全图态单指留给页面滚动
   e.preventDefault();     // 掐掉浏览器的文本选择：不掐，拖图就是满图蓝色选区
   panning = { x: e.clientX, y: e.clientY, cx: VIEW.cx, cy: VIEW.cy, moved: false };
   if (svg.setPointerCapture) svg.setPointerCapture(e.pointerId);
 });
 svg.addEventListener('pointermove', (e) => {
+  if (PTRS.has(e.pointerId)) PTRS.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pinch && PTRS.size === 2) {
+    const [a, b] = [...PTRS.values()];
+    const d = Math.hypot(a.x - b.x, a.y - b.y);
+    if (d > 8 && pinch.d > 8) {
+      // 以两指中点为锚：捏合缩放，双指同移即顺带平移
+      const pt = clientToView({ clientX: (a.x + b.x) / 2, clientY: (a.y + b.y) / 2 });
+      setZoom(pinch.z * (d / pinch.d), pt[0], pt[1]);
+    }
+    return;
+  }
   if (!panning) return;
   const b = svg.getBoundingClientRect();
   if (Math.abs(e.clientX - panning.x) + Math.abs(e.clientY - panning.y) > 4) panning.moved = true;
@@ -189,10 +214,17 @@ svg.addEventListener('pointermove', (e) => {
   VIEW.cy = panning.cy - (e.clientY - panning.y) * (VB[3] / b.height);
   applyView();
 });
-svg.addEventListener('pointerup', () => {
+const endPtr = (e) => {
+  PTRS.delete(e.pointerId);
+  if (pinch && PTRS.size < 2) { pinch = null; suppressClick = true; scheduleDraw(); }
   if (panning && panning.moved) { suppressClick = true; scheduleDraw(); }
-  panning = null;
-});
+  if (!PTRS.size) panning = null;
+};
+svg.addEventListener('pointerup', endPtr);
+svg.addEventListener('pointercancel', endPtr);
+// 指头在图外抬起时本地收不到 up：window 兜底清册，别让幽灵指针卡死捏合态
+window.addEventListener('pointerup', endPtr);
+window.addEventListener('pointercancel', endPtr);
 
 // 控件：＋ － 全。滚轮不是人人都想得到，按钮谁都看得见
 const zctl = document.createElement('div');
