@@ -398,12 +398,9 @@ def main():
     print('写出 js/geo-dynasties.js：%d / %d 个政权有都城；迁过都的 %d 个'
           % (len(dout), len(dyns), len(moved)))
     # 轻量计数产物:河页/首页的 data-il-count=geo 用它,不必 import 全量地理表
-    io.open('js/geo-stats.js', 'w', encoding='utf-8', newline='
-').write(
-        '// geo-stats.js — 生成物,勿手改;跑 tools/mining/build_geo_events.py。
-'
-        'export const GEO_STATS = { ev: %d, dyn: %d };
-' % (len(out), len(dout)))
+    io.open('js/geo-stats.js', 'w', encoding='utf-8', newline='\n').write(
+        '// geo-stats.js — 生成物,勿手改;跑 tools/mining/build_geo_events.py。\n'
+        'export const GEO_STATS = { ev: %d, dyn: %d };\n' % (len(out), len(dout)))
     print('写出 js/geo-stats.js')
 
 
