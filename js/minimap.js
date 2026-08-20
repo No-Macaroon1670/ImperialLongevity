@@ -95,11 +95,14 @@ export function mountMinimap(geoOf, allOf) {
   };
 
   // 屏上想要多大就写多大，再折算回视图单位——viewBox 一缩放，
-  // 写死的半径就会跟着变；点在石窟线上正好，到赤壁线上就成了一团
-  const PX = 258;                              // 与 CSS 里的宽度一致
+  // 写死的半径就会跟着变；点在石窟线上正好，到赤壁线上就成了一团。
+  // 宽度**现量**，不写死：CSS 里改成了 clamp()（用户嫌 258px 太小），
+  // 这儿再留个 258 就会字号失配，而且下次调 CSS 还得记得来改这行
+  let PX = 258;
   const u = (px) => (px * VB[2]) / PX;
 
   const fit = () => {
+    PX = wrap.clientWidth || PX;               // 此刻已显示，量得到真宽
     const pts = everyPoint().map(xy);
     if (!pts.length) return;
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
@@ -195,6 +198,7 @@ export function mountMinimap(geoOf, allOf) {
     if (innerWidth <= 1000) { wrap.classList.remove('on'); return; }
     const g = ev ? geoOf(ev) : null;
     if (!g) { wrap.classList.remove('on'); return; }      // 没地点就不硬造一个
+    wrap.classList.add('on');      // **先显示再画**：量宽度、量字框都要它可见
     if (!drawn) { fit(); drawRef(); drawAll(); drawn = true; }
     gNow.innerHTML = ''; nowJobs.length = 0;
     let msg = '';
@@ -237,7 +241,6 @@ export function mountMinimap(geoOf, allOf) {
       msg = msg ? `${msg} → 现藏${where}` : `现藏${where}`;
     }
     note.textContent = msg;
-    wrap.classList.add('on');      // **必须先显示再排版**：display:none 的字量出来是 0×0
     layout();
   };
 
