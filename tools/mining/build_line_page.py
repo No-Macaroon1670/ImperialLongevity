@@ -66,6 +66,9 @@ html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
   font-size:18px;line-height:2.05;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 a{color:inherit}
+.epi-verse{padding:3rem 1.2rem 0;text-align:center}
+.epi-verse .vl{font-size:21px;letter-spacing:.38em;line-height:2.35;text-indent:.38em}
+.epi-verse .vby{margin-top:1rem;font-family:var(--sans);font-size:11px;color:var(--faint);letter-spacing:.24em}
 #bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50}
 /* 导轨：宽屏才有。窄屏那点横向空间要留给正文 */
 /* 左栏：导轨在上，小地图在下。两者同住一个固定列——读者眼睛一抬，
@@ -391,6 +394,18 @@ def main():
     meta, stops = load_line(key)
     ev, dyn = load_events(), load_dyn()
     pro, long_text, epi = load_long(key)
+    # 题辞（可选）：line-text 里有 EPIGRAPH 就在封面下渲染一首短诗（免正则，纯 find）
+    _src = io.open(os.path.join(ROOT, 'js/line-text-%s.js' % key), encoding='utf-8').read()
+    epigraph = None
+    _i = _src.find('export const EPIGRAPH = {')
+    if _i >= 0:
+        _blk = _src[_i:_src.find('};', _i)]
+        _vseg = _blk[_blk.find('v: [') + 4:_blk.find(']', _blk.find('v: ['))]
+        _v = _vseg.split("'")[1::2]
+        _j = _blk.find("by: '")
+        _by = _blk[_j + 5:_blk.find("'", _j + 5)] if _j >= 0 else ''
+        if _v:
+            epigraph = {'v': _v, 'by': _by}
     srcs = load_sources(key)
     per = srcs.get('站', {})
     bm = load_basemap()
@@ -450,6 +465,13 @@ def main():
       '　·　<a href="%s/blob/main/docs/line-%s.md">资料与出处 ↗</a></div>'
       % (len(stops), key, 'https://github.com/No-Macaroon1670/ImperialLongevity', key))
     A('</div></header>')
+    if epigraph:
+        A('<section class="epi-verse"><div class="wrap">')
+        for _vl in epigraph['v']:
+            A('<div class="vl">%s</div>' % esc(_vl))
+        if epigraph['by']:
+            A('<div class="vby">%s</div>' % esc(epigraph['by']))
+        A('</div></section>')
     if marks:
         A('<section id="smap"><div class="wrap">')
         A('<div class="num">这条线在地上</div>')
