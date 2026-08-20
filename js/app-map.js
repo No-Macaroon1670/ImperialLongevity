@@ -131,7 +131,10 @@ $('plate').appendChild(svg);
 const VIEW = { z: 1, cx: W / 2, cy: H / 2 };
 let VB = [0, 0, W, H];
 let drawTimer = 0;
-const scheduleDraw = () => { clearTimeout(drawTimer); drawTimer = setTimeout(draw, 140); };
+const scheduleDraw = () => {
+  clearTimeout(drawTimer);
+  drawTimer = setTimeout(() => { draw(); if (LN.key) drawLn(); }, 140);
+};
 
 function applyView() {
   const vw = W / VIEW.z, vh = H / VIEW.z;
@@ -910,6 +913,7 @@ function lnLabel(i) {
 function drawLn() {
   gLn.innerHTML = '';
   if (!LN.key) return;
+  const iz = 1 / VIEW.z;          // 走线层的尺寸同样跟着缩放走，别吹大
   const jobs = [];
   const pts = [];
   LN.stops.forEach((st, i) => {
@@ -927,16 +931,16 @@ function drawLn() {
   for (const { i, p } of pts) {
     const cur = i === LN.at;
     gLn.appendChild(el('circle', {
-      class: `pl-ln-stop${cur ? ' cur' : ''}`, cx: p[0], cy: p[1], r: cur ? 10 : 7.5,
+      class: `pl-ln-stop${cur ? ' cur' : ''}`, cx: p[0], cy: p[1], r: (cur ? 10 : 7.5) * iz,
     }));
     const t = el('text', {
-      class: `pl-ln-n${cur ? ' cur' : ''}`, x: p[0], y: p[1] + 3.4,
-      'text-anchor': 'middle', 'font-size': cur ? 10 : 8.5,
+      class: `pl-ln-n${cur ? ' cur' : ''}`, x: p[0], y: p[1] + 3.4 * iz,
+      'text-anchor': 'middle', 'font-size': (cur ? 10 : 8.5) * iz,
     });
     t.textContent = lnLabel(i);
     gLn.appendChild(t);
     const hit = el('circle', {
-      class: 'pl-hit', cx: p[0], cy: p[1], r: 14,
+      class: 'pl-hit', cx: p[0], cy: p[1], r: 14 * iz,
       tabindex: '0', role: 'button', 'aria-label': `第 ${lnLabel(i)} 站`,
     });
     gLn.appendChild(hit);
@@ -944,7 +948,7 @@ function drawLn() {
     hit.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); lnGoto(i); }
     });
-    hit.addEventListener('mouseenter', () => tipShow(p[0], p[1] - 10,
+    hit.addEventListener('mouseenter', () => tipShow(p[0], p[1] - 10 * iz,
       LN.stops[i].t || '', `第 ${lnLabel(i)} 站`, ''));
     hit.addEventListener('mouseleave', tipHide);
   }
@@ -956,17 +960,17 @@ function drawLn() {
     if (g['诸说']) {
       for (const sc of g['诸说']) {
         const [x, y] = xy(sc['点']);
-        gLn.appendChild(el('circle', { class: 'pl-ln-maybe', cx: x, cy: y, r: 5.5 }));
-        const h = haloText(gLn, sc['名'], { size: 10.5, halo: 'var(--surface-2)', haloWidth: 3.2 });
+        gLn.appendChild(el('circle', { class: 'pl-ln-maybe', cx: x, cy: y, r: 5.5 * iz }));
+        const h = haloText(gLn, sc['名'], { size: 10.5 * iz, halo: 'var(--surface-2)', haloWidth: 3.2 * iz });
         h.over.setAttribute('class', 'pl-ln-t');
-        jobs.push({ h, p: [x, y], pri: 250, cands: placeCandidates('e') });
+        jobs.push({ h, p: [x, y], pri: 250, cands: placeCandidates('e', iz) });
       }
     }
     if (g['地名'] && rp) {
       const [x, y] = xy(rp);
-      const h = haloText(gLn, g['地名'], { size: 12, halo: 'var(--surface-2)', haloWidth: 3.4 });
+      const h = haloText(gLn, g['地名'], { size: 12 * iz, halo: 'var(--surface-2)', haloWidth: 3.4 * iz });
       h.over.setAttribute('class', 'pl-ln-t cur');
-      jobs.push({ h, p: [x, y], pri: 300, cands: placeCandidates('e') });
+      jobs.push({ h, p: [x, y], pri: 300, cands: placeCandidates('e', iz) });
     }
     if (g['现藏'] && rp) {
       // 现藏可能在图外（《金刚经》在伦敦）：照链的规矩，朝真实大圆方位画到边上
@@ -987,12 +991,12 @@ function drawLn() {
         }));
         gLn.appendChild(el('rect', {
           class: `pl-ln-held${out ? ' out' : ''}`,
-          x: seg[2] - 4.5, y: seg[3] - 4.5, width: 9, height: 9,
+          x: seg[2] - 4.5 * iz, y: seg[3] - 4.5 * iz, width: 9 * iz, height: 9 * iz,
         }));
         const h = haloText(gLn, `${g['藏于'] || '现藏'}${out ? '（图外）' : ''}`,
-          { size: 10.5, halo: 'var(--surface-2)', haloWidth: 3.2 });
+          { size: 10.5 * iz, halo: 'var(--surface-2)', haloWidth: 3.2 * iz });
         h.over.setAttribute('class', 'pl-ln-t');
-        jobs.push({ h, p: [seg[2], seg[3]], pri: 260, cands: placeCandidates(out ? 'w' : 'e') });
+        jobs.push({ h, p: [seg[2], seg[3]], pri: 260, cands: placeCandidates(out ? 'w' : 'e', iz) });
       }
     }
   }
