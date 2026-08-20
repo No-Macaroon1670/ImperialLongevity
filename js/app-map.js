@@ -110,6 +110,139 @@ const gLn = el('g', { class: 'pl-ln' });        // 地图走线：路线与站�
 svg.append(gGrid, gCoast, gRef, gLead, gChain, gDot, gLab, gHit, gLn);
 $('plate').appendChild(svg);
 
+/* ── 缩放与平移 ─────────────────────────────────────────────────────────
+   435 条挤一张全国图，中原那片在任何静态画法下都是地毯——结构解法只有缩放：
+   **聚合按屏上的距离算，放大了自然散开**。三条配套的规矩：
+
+   · 所有尺寸（点半径、字号、聚合半径、散开距离）除以缩放系数，
+     屏上大小恒定；描边靠 non-scaling-stroke，本来就恒定。
+   · **这张图没有政区界线，放大就会迷路**（用户指出），故配三样定位锚：
+     二级参照城市放大后才出现、角落一张鹰眼小图框出当前视口、
+     沿边标经纬度数字。
+   · 窄屏不上缩放：那边已经是「图比屏宽、左右拖」的模型，两套手势会打架。 */
+
+const VIEW = { z: 1, cx: W / 2, cy: H / 2 };
+let VB = [0, 0, W, H];
+let drawTimer = 0;
+const scheduleDraw = () => { clearTimeout(drawTimer); drawTimer = setTimeout(draw, 140); };
+
+function applyView() {
+  const vw = W / VIEW.z, vh = H / VIEW.z;
+  VIEW.cx = Math.min(Math.max(VIEW.cx, vw / 2), W - vw / 2);
+  VIEW.cy = Math.min(Math.max(VIEW.cy, vh / 2), H - vh / 2);
+  VB = [VIEW.cx - vw / 2, VIEW.cy - vh / 2, vw, vh];
+  svg.setAttribute('viewBox', VB.join(' '));
+  eyeSync();
+}
+
+function setZoom(nz, ax, ay) {
+  nz = Math.min(8, Math.max(1, nz));
+  if (ax !== undefined) {
+    // 光标底下那一点在缩放前后钉住不动
+    VIEW.cx = ax - (ax - VIEW.cx) * (VIEW.z / nz);
+    VIEW.cy = ay - (ay - VIEW.cy) * (VIEW.z / nz);
+  }
+  VIEW.z = nz;
+  state.open.clear();           // 缩放变了，聚合从头分组，展开态没有意义了
+  applyView();
+  scheduleDraw();               // viewBox 先生效（便宜），重画欠着一拍再算
+}
+
+const clientToView = (e) => {
+  const b = svg.getBoundingClientRect();
+  return [VB[0] + ((e.clientX - b.left) / b.width) * VB[2],
+    VB[1] + ((e.clientY - b.top) / b.height) * VB[3]];
+};
+
+svg.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const pt = clientToView(e);
+  setZoom(VIEW.z * Math.pow(1.0018, -e.deltaY), pt[0], pt[1]);
+}, { passive: false });
+
+// 拖着平移。拖过就不算点击——否则松手时会把选中的链顺手关掉
+let panning = null, suppressClick = false;
+svg.addEventListener('pointerdown', (e) => {
+  if (VIEW.z <= 1) return;
+  if (e.target.classList && e.target.classList.contains('pl-hit')) return;
+  panning = { x: e.clientX, y: e.clientY, cx: VIEW.cx, cy: VIEW.cy, moved: false };
+  if (svg.setPointerCapture) svg.setPointerCapture(e.pointerId);
+});
+svg.addEventListener('pointermove', (e) => {
+  if (!panning) return;
+  const b = svg.getBoundingClientRect();
+  if (Math.abs(e.clientX - panning.x) + Math.abs(e.clientY - panning.y) > 4) panning.moved = true;
+  VIEW.cx = panning.cx - (e.clientX - panning.x) * (VB[2] / b.width);
+  VIEW.cy = panning.cy - (e.clientY - panning.y) * (VB[3] / b.height);
+  applyView();
+});
+svg.addEventListener('pointerup', () => {
+  if (panning && panning.moved) { suppressClick = true; scheduleDraw(); }
+  panning = null;
+});
+
+// 控件：＋ － 全。滚轮不是人人都想得到，按钮谁都看得见
+const zctl = document.createElement('div');
+zctl.className = 'pl-zoomctl';
+zctl.innerHTML = '<button type="button" data-z="in" title="放大">＋</button>'
+  + '<button type="button" data-z="out" title="缩小">－</button>'
+  + '<button type="button" data-z="reset" title="回到全图">全</button>';
+$('plate').appendChild(zctl);
+zctl.addEventListener('click', (e) => {
+  const a = e.target.dataset && e.target.dataset.z;
+  if (a === 'in') setZoom(VIEW.z * 1.6);
+  else if (a === 'out') setZoom(VIEW.z / 1.6);
+  else if (a === 'reset') { VIEW.cx = W / 2; VIEW.cy = H / 2; setZoom(1); }
+});
+
+// 鹰眼：全图轮廓 + 当前视口框。放大了才出现——全图状态下它就是废话
+const eye = document.createElement('div');
+eye.className = 'pl-eye';
+const esvg = el('svg', { viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: 'xMidYMid meet' });
+esvg.appendChild(el('path', { class: 'pl-eye-coast', d: BASEMAP.coast }));
+esvg.appendChild(el('path', { class: 'pl-eye-river', d: BASEMAP.rivers }));
+const eyeRect = el('rect', { class: 'pl-eye-rect', x: 0, y: 0, width: W, height: H });
+esvg.appendChild(eyeRect);
+eye.appendChild(esvg);
+$('plate').appendChild(eye);
+function eyeSync() {
+  eye.classList.toggle('on', VIEW.z > 1.01);
+  eyeRect.setAttribute('x', VB[0]); eyeRect.setAttribute('y', VB[1]);
+  eyeRect.setAttribute('width', VB[2]); eyeRect.setAttribute('height', VB[3]);
+}
+esvg.addEventListener('pointerdown', (e) => {
+  const b = esvg.getBoundingClientRect();
+  VIEW.cx = ((e.clientX - b.left) / b.width) * W;
+  VIEW.cy = ((e.clientY - b.top) / b.height) * H;
+  applyView(); scheduleDraw();
+});
+
+// 二级参照城市：全图状态下画它们只会添乱，放大后正是读者要抓的扶手
+const ANCHORS_FAR = [
+  ['洛阳', 34.62, 112.45], ['开封', 34.80, 114.31], ['郑州', 34.75, 113.63],
+  ['济南', 36.65, 117.12], ['太原', 37.87, 112.55], ['大同', 40.08, 113.30],
+  ['杭州', 30.27, 120.16], ['福州', 26.07, 119.30], ['南昌', 28.68, 115.86],
+  ['贵阳', 26.65, 106.63], ['桂林', 25.27, 110.29], ['南宁', 22.82, 108.32],
+  ['银川', 38.49, 106.23], ['西宁', 36.62, 101.78], ['呼和浩特', 40.84, 111.75],
+  ['哈尔滨', 45.80, 126.53], ['敦煌', 40.14, 94.66], ['喀什', 39.47, 75.99],
+  ['拉萨', 29.65, 91.14], ['徐州', 34.26, 117.19], ['安阳', 36.10, 114.35],
+  ['扬州', 32.39, 119.41],
+];
+
+// 悬停浮签：名字直接跟在点上出现，不必点、也不必低头看读数面板（用户提的）。
+// 读数面板仍然给全信息，浮签只给「这是谁」
+const tip = document.createElement('div');
+tip.className = 'pl-tip';
+$('plate').appendChild(tip);
+function tipShow(x, y, text) {
+  const b = svg.getBoundingClientRect(), pb = $('plate').getBoundingClientRect();
+  tip.textContent = text;
+  tip.style.left = `${((x - VB[0]) / VB[2]) * b.width + b.left - pb.left}px`;
+  tip.style.top = `${((y - VB[1]) / VB[3]) * b.height + b.top - pb.top - 8}px`;
+  tip.classList.add('on');
+}
+const tipHide = () => tip.classList.remove('on');
+
 const IDLE = ['这张图', '一条目一个点',
   '把指针放到任一点上；点一下展开它去过的地方。留白的地方不是没发生过事，是那些条目没有地点可查。'];
 const rd = reader($('plate-read'), IDLE);
@@ -131,12 +264,13 @@ const CAP = 8;          // 一处超过这么多条就收成一个聚合点
 
 function group(rows) {
   const gs = [];
+  const nz = NEAR / VIEW.z;      // 按屏上的距离聚，放大了自然散开
   // 分量大的先占位，小的往它身边靠——聚合点落在哪儿由重要的那几条决定
   for (const r of rows.slice().sort((a, b) => a.r - b.r)) {
     const [x, y] = trueXY(r);
     let hit = null;
     for (const g of gs) {
-      if ((g.cx - x) ** 2 + (g.cy - y) ** 2 <= NEAR * NEAR) { hit = g; break; }
+      if ((g.cx - x) ** 2 + (g.cy - y) ** 2 <= nz * nz) { hit = g; break; }
     }
     if (hit) {
       hit.rows.push({ r, x, y });
@@ -163,10 +297,11 @@ function spread(g) {
   if (n === 1) { g.rows[0].px = g.rows[0].x; g.rows[0].py = g.rows[0].y; return; }
   const rest = g.rows.slice();
   if (n > 6) { const c = rest.shift(); c.px = g.cx; c.py = g.cy; }
+  const k = 1 / VIEW.z;
   let ring = 0, i = 0;
   while (i < rest.length) {
     const cap = Math.min(rest.length - i, 6 + ring * 4);
-    const rad = 4.6 + 1.45 * Math.min(cap, 6) + ring * 11;
+    const rad = (4.6 + 1.45 * Math.min(cap, 6) + ring * 11) * k;
     for (let j = 0; j < cap; j += 1) {
       const th = (-Math.PI / 2) + (2 * Math.PI * j) / cap + (ring % 2 ? Math.PI / cap : 0);
       rest[i + j].px = g.cx + rad * Math.cos(th);
@@ -186,7 +321,8 @@ function spread(g) {
  * 屏上看只剩半截凭空出现的线。返回 [x1,y1,x2,y2,起点被截,终点被截]，
  * 整段都在框外则返回 null。 */
 function clipSeg(px, py, qx, qy) {
-  const M = 7;                       // 留一点边，箭头不至于被裁掉
+  const M = 7 / VIEW.z;              // 留一点边，箭头不至于被裁掉
+  const [bx, by, bw, bh] = VB;       // 截到**当前视口**：放大后图框就是视口
   const dx = qx - px, dy = qy - py;
   let t0 = 0, t1 = 1;
   const test = (p, q) => {
@@ -197,8 +333,8 @@ function clipSeg(px, py, qx, qy) {
     }
     return true;
   };
-  if (!test(-dx, px - M) || !test(dx, (W - M) - px)
-      || !test(-dy, py - M) || !test(dy, (H - M) - py)) return null;
+  if (!test(-dx, px - (bx + M)) || !test(dx, (bx + bw - M) - px)
+      || !test(-dy, py - (by + M)) || !test(dy, (by + bh - M) - py)) return null;
   return [px + dx * t0, py + dy * t0, px + dx * t1, py + dy * t1, t0 > 0, t1 < 1];
 }
 
@@ -219,7 +355,7 @@ function bearing([lat1, lon1], [lat2, lon2]) {
 
 /** 一个箭头，画在 (x,y)，指向角 a。 */
 function arrow(g, x, y, a, cls) {
-  const L = 9, Wd = 4.4;
+  const L = 9 / VIEW.z, Wd = 4.4 / VIEW.z;
   const p = [[x, y],
     [x - L * Math.cos(a) + Wd * Math.sin(a), y - L * Math.sin(a) - Wd * Math.cos(a)],
     [x - L * Math.cos(a) - Wd * Math.sin(a), y - L * Math.sin(a) + Wd * Math.cos(a)]];
@@ -241,11 +377,12 @@ function drawChain(row, ax, ay) {
       if (c['外']) return;
       const [x, y] = at(i);
       if (i !== row['主']) {
-        gChain.appendChild(el('circle', { class: `pl-claim ${cls}`, cx: x, cy: y, r: 5 }));
+        gChain.appendChild(el('circle', { class: `pl-claim ${cls}`, cx: x, cy: y, r: 5 / VIEW.z }));
       }
-      const h = haloText(gChain, c['名'], { size: 10.5, halo: 'var(--surface-2)', haloWidth: 3.2 });
+      const h = haloText(gChain, c['名'],
+        { size: 10.5 / VIEW.z, halo: 'var(--surface-2)', haloWidth: 3.2 / VIEW.z });
       h.over.setAttribute('class', 'pl-chain-t');
-      jobs.push({ h, p: [x, y], pri: 300 - i, cands: placeCandidates('e') });
+      jobs.push({ h, p: [x, y], pri: 300 - i, cands: placeCandidates('e', 1 / VIEW.z) });
     });
     return jobs;
   }
@@ -275,7 +412,7 @@ function drawChain(row, ax, ay) {
       ry = py - far * Math.cos(th);
     }
     const ang = Math.atan2(ry - py, rx - px);
-    const off = total > 1 ? (idx - (total - 1) / 2) * 7 : 0;   // 只有一程时不挪
+    const off = total > 1 ? ((idx - (total - 1) / 2) * 7) / VIEW.z : 0;   // 只有一程时不挪
     const ox = -Math.sin(ang) * off, oy = Math.cos(ang) * off;
     // 图外：朝真方向画到视口边为止。位置不敢说，方向是真的
     const seg = clipSeg(px + ox, py + oy, rx + ox, ry + oy);
@@ -289,10 +426,10 @@ function drawChain(row, ax, ay) {
       // 只在**走出去**那一程的边上标去处；走回来那一程的起点是同一个地方，
       // 再标一遍就是重复
       const h = haloText(gChain, `${chain[b]['名']}（图外）`, {
-        size: 10, halo: 'var(--surface-2)', haloWidth: 3.2,
+        size: 10 / VIEW.z, halo: 'var(--surface-2)', haloWidth: 3.2 / VIEW.z,
       });
       h.over.setAttribute('class', 'pl-chain-t pl-out-t');
-      jobs.push({ h, p: [x2, y2], pri: 290, cands: placeCandidates('w') });
+      jobs.push({ h, p: [x2, y2], pri: 290, cands: placeCandidates('w', 1 / VIEW.z) });
     }
   });
 
@@ -301,14 +438,14 @@ function drawChain(row, ax, ay) {
     const [x, y] = at(i);
     if (i !== row['主']) {
       gChain.appendChild(el('circle', {
-        class: `pl-step ${cls}${c['约'] ? ' pl-low' : ''}`, cx: x, cy: y, r: 4.6,
+        class: `pl-step ${cls}${c['约'] ? ' pl-low' : ''}`, cx: x, cy: y, r: 4.6 / VIEW.z,
       }));
     }
     const h = haloText(gChain, `${c['名']}·${c['角']}`, {
-      size: 10.5, halo: 'var(--surface-2)', haloWidth: 3.2,
+      size: 10.5 / VIEW.z, halo: 'var(--surface-2)', haloWidth: 3.2 / VIEW.z,
     });
     h.over.setAttribute('class', 'pl-chain-t');
-    jobs.push({ h, p: [x, y], pri: 300 - i, cands: placeCandidates('e') });
+    jobs.push({ h, p: [x, y], pri: 300 - i, cands: placeCandidates('e', 1 / VIEW.z) });
   });
   return jobs;
 }
@@ -351,43 +488,91 @@ function draw() {
   // 参照层：极淡的今日城市与两条河名。**坐标纸先落座**——初版把它排在条目名
   // 之后，八十多个条目名一拥而上，北京、成都、上海连同黄河、长江全被挤掉，
   // 读者面对一堆彩点认不出哪儿是哪儿，而这正是当初加参照层要解决的事
-  for (const [name, lat, lon] of ANCHORS) {
+  const iz = 1 / VIEW.z;
+  const cities = VIEW.z >= 1.8 ? ANCHORS.concat(ANCHORS_FAR) : ANCHORS;
+  for (const [name, lat, lon] of cities) {
     const [x, y] = project(lon, lat);
-    const c = el('circle', { class: 'pl-city', cx: x, cy: y, r: 2 });
+    const c = el('circle', { class: 'pl-city', cx: x, cy: y, r: 2 * iz });
     gRef.appendChild(c);
     solver.obstacle(c);
-    const h = haloText(gRef, name, { size: 10.5, halo: 'var(--surface-2)', haloWidth: 3 });
+    const h = haloText(gRef, name, { size: 10.5 * iz, halo: 'var(--surface-2)', haloWidth: 3 * iz });
     h.over.setAttribute('class', 'pl-city-t');
-    jobs.push({ h, p: [x, y], pri: 150, cands: placeCandidates('e') });
+    jobs.push({ h, p: [x, y], pri: 150, cands: placeCandidates('e', iz) });
   }
   for (const [name, lat, lon] of RIVER_TAGS) {
     const [x, y] = project(lon, lat);
-    const h = haloText(gRef, name, { size: 12, halo: 'var(--surface-2)', haloWidth: 3.4 });
+    const h = haloText(gRef, name, { size: 12 * iz, halo: 'var(--surface-2)', haloWidth: 3.4 * iz });
     h.over.setAttribute('class', 'pl-river-t');
-    jobs.push({ h, p: [x, y], pri: 200, cands: NUDGES.tight.map(([a, b]) => [a, b, 'middle']) });
+    jobs.push({ h, p: [x, y], pri: 200,
+      cands: NUDGES.tight.map(([a, b]) => [a * iz, b * iz, 'middle']) });
+  }
+  // 放大后沿边标经纬度：没有政区界线的图，数字是最不含糊的扶手
+  if (VIEW.z >= 1.6) {
+    const [w0, , e0, n0] = BASEMAP.bbox;
+    for (let lon = 80; lon <= 130; lon += 10) {
+      const [x] = project(lon, n0);
+      if (x < VB[0] + 8 * iz || x > VB[0] + VB[2] - 8 * iz) continue;
+      const t = el('text', { class: 'pl-grid-t', x, y: VB[1] + 12 * iz,
+        'text-anchor': 'middle', 'font-size': 9 * iz });
+      t.textContent = `${lon}°E`;
+      gRef.appendChild(t);
+    }
+    for (let lat = 20; lat <= 50; lat += 10) {
+      const [, y] = project(w0, lat);
+      if (y < VB[1] + 10 * iz || y > VB[1] + VB[3] - 6 * iz) continue;
+      const t = el('text', { class: 'pl-grid-t', x: VB[0] + 5 * iz, y: y - 3 * iz,
+        'text-anchor': 'start', 'font-size': 9 * iz });
+      t.textContent = `${lat}°N`;
+      gRef.appendChild(t);
+    }
   }
 
   const gs = group(rows);
+  // ── 聚合点把压在它圆下面的邻居一并吸进来 ──────────────────────
+  // 不吸的话必然叠：聚合圆的半径（最大 26）比分组距离（11）大，
+  // 圆边底下的散点没进组、却被圆压着（用户截图里 40、26 旁边正是这样）。
+  // 吸进来会让圆更大、可能又压到新邻居，故循环到不再变为止
+  const gidOf = (g) => `${Math.round(g.cx)},${Math.round(g.cy)}`;
+  const clusterR = (n) => Math.min(26, 9 + Math.sqrt(n) * 2.4) / VIEW.z;
+  let moved = true;
+  while (moved) {
+    moved = false;
+    for (const c of gs) {
+      if (c.rows.length <= CAP || state.open.has(gidOf(c))) continue;
+      const R = clusterR(c.rows.length) + 9 / VIEW.z;   // 圆本身 + 散点自己的半径
+      for (const g of gs) {
+        if (g === c || !g.rows.length) continue;
+        if ((g.cx - c.cx) ** 2 + (g.cy - c.cy) ** 2 < R * R) {
+          c.rows.push(...g.rows);
+          g.rows.length = 0;
+          c.cx = c.rows.reduce((s2, m) => s2 + m.x, 0) / c.rows.length;
+          c.cy = c.rows.reduce((s2, m) => s2 + m.y, 0) / c.rows.length;
+          moved = true;
+        }
+      }
+    }
+  }
+  const gs2 = gs.filter((g) => g.rows.length);
   let packed = 0, folded = 0, selAt = null;
 
-  for (const g of gs) {
-    const gid = `${Math.round(g.cx)},${Math.round(g.cy)}`;
+  for (const g of gs2) {
+    const gid = gidOf(g);
     if (g.rows.length > CAP && !state.open.has(gid)) {
       // 收成一个点，标上条数。**半径随条数长**——点大即那地方事多，
       // 这本身是条信息，不只是「这儿挤」。点开才展成一环
       folded += g.rows.length;
-      const R = Math.min(26, 9 + Math.sqrt(g.rows.length) * 2.4);
+      const R = clusterR(g.rows.length);
       const c = el('circle', { class: 'pl-cluster', cx: g.cx, cy: g.cy, r: R });
       gDot.appendChild(c);
       solver.obstacle(c);
       const t = el('text', {
         class: 'pl-cluster-n', x: g.cx, y: g.cy + R * 0.34, 'text-anchor': 'middle',
-        'font-size': Math.max(10, R * 0.82),
+        'font-size': Math.max(10 / VIEW.z, R * 0.82),
       });
       t.textContent = String(g.rows.length);
       gDot.appendChild(t);
       const hit = el('circle', {
-        class: 'pl-hit', cx: g.cx, cy: g.cy, r: R + 3, tabindex: '0', role: 'button',
+        class: 'pl-hit', cx: g.cx, cy: g.cy, r: R + 3 / VIEW.z, tabindex: '0', role: 'button',
         'aria-label': `此处 ${g.rows.length} 条，展开`,
       });
       gHit.appendChild(hit);
@@ -396,11 +581,12 @@ function draw() {
       hit.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
       });
-      hit.addEventListener('mouseenter', () => rd.hover(
-        '此处密集', `${g.rows.length} 条挤在一处`,
-        `${g.rows.slice(0, 6).map((m) => m.r.n).join('、')}${g.rows.length > 6 ? ' 等' : ''}　·　点一下摊开`,
-      ));
-      hit.addEventListener('mouseleave', () => { if (!state.sel) rd.leave(); });
+      hit.addEventListener('mouseenter', () => {
+        tipShow(g.cx, g.cy - R, `${g.rows.length} 条 · 点一下摊开`);
+        rd.hover('此处密集', `${g.rows.length} 条挤在一处`,
+          `${g.rows.slice(0, 6).map((m) => m.r.n).join('、')}${g.rows.length > 6 ? ' 等' : ''}　·　点一下摊开`);
+      });
+      hit.addEventListener('mouseleave', () => { tipHide(); if (!state.sel) rd.leave(); });
       continue;
     }
 
@@ -417,11 +603,13 @@ function draw() {
       // 只在挪得够远时才拉引线：挪不到一个点的直径，引线给不出信息，
       // 只添乱——两个点之间的短线会被读成「这两条有关系」
       const moved = Math.hypot(m.px - m.x, m.py - m.y);
-      if (moved > 9) {
+      if (moved > 9 / VIEW.z) {
         gLead.appendChild(el('line', { x1: m.x, y1: m.y, x2: m.px, y2: m.py }));
       }
-      const rad = (r.r === 1 ? 5.4 : r.r === 2 ? 4.2 : 3.4) + (r['层'] === 'dyn' ? 0.6 : 0);
-      const kls = `pl-dot ${cls}${low ? ' pl-low' : ''}`
+      // 三等占全库大半，跟一等抢同样的墨量整张图就是一张地毯——
+      // 小一号、淡一点，眼睛先看见大点，凑近才读小点
+      const rad = ((r.r === 1 ? 5.8 : r.r === 2 ? 4.2 : 3) + (r['层'] === 'dyn' ? 0.8 : 0)) / VIEW.z;
+      const kls = `pl-dot ${cls}${low ? ' pl-low' : ''}${r.r === 3 ? ' pl-r3' : ''}`
         + `${r['层'] === 'dyn' ? ' pl-dyn' : ''}${state.sel === id ? ' on' : ''}`;
       /* **政权都城画成方块。** 都城是一座城、一个座位，方的一眼读得出是另一层；
          再说圆的深灰点跟聚合点撞脸——那也是个深灰的圈 */
@@ -432,12 +620,19 @@ function draw() {
       solver.obstacle(dot);
 
       const hit = el('circle', {
-        class: 'pl-hit', cx: m.px, cy: m.py, r: Math.max(rad * 2.4, 11),
+        class: 'pl-hit', cx: m.px, cy: m.py, r: Math.max(rad * 2.4, 11 / VIEW.z),
         tabindex: '0', role: 'button', 'aria-label': `${r.n}，${yr(r.y)}`,
       });
       gHit.appendChild(hit);
-      const enter = () => { if (!state.sel) { dot.classList.add('hot'); say(r, false); } };
-      const leave = () => { dot.classList.remove('hot'); if (!state.sel) { rd.leave(); goOff(); } };
+      const enter = () => {
+        tipShow(m.px, m.py - rad, `${r.n}　${yr(r.y)}`);
+        if (!state.sel) { dot.classList.add('hot'); say(r, false); }
+      };
+      const leave = () => {
+        tipHide();
+        dot.classList.remove('hot');
+        if (!state.sel) { rd.leave(); goOff(); }
+      };
       hit.addEventListener('mouseenter', enter);
       hit.addEventListener('focus', enter);
       hit.addEventListener('mouseleave', leave);
@@ -455,13 +650,16 @@ function draw() {
          ——那时它们正是要读的东西，九十三个名字也铺得开 */
       const dynOnly = state.layers.has('dyn')
         && (!state.layers.has('ev') || state.off.size >= KINDS.length);
-      if (!state.sel && (r.r === 1 || (r['层'] === 'dyn' && dynOnly))) {
+      // 放大了名字就该多：全图只标一等，放到 2.5 倍后二等也标，
+      // 4 倍后三等也标——那时视口里没剩几个点，标得下
+      const labOk = r.r === 1 || (VIEW.z >= 2.5 && r.r === 2) || VIEW.z >= 4;
+      if (!state.sel && (labOk || (r['层'] === 'dyn' && dynOnly))) {
         const h = haloText(gLab, r.n, {
-          size: r['层'] === 'dyn' ? 11.5 : 12.5, halo: 'var(--surface-2)',
-          haloWidth: 3.6, weight: 600,
+          size: (r['层'] === 'dyn' ? 11.5 : 12.5) / VIEW.z, halo: 'var(--surface-2)',
+          haloWidth: 3.6 / VIEW.z, weight: 600,
         });
         h.over.setAttribute('class', `pl-lab ${cls}`);
-        jobs.push({ h, p: [m.px, m.py + 1], pri: 90, cands: placeCandidates('e') });
+        jobs.push({ h, p: [m.px, m.py + 1 / VIEW.z], pri: 90, cands: placeCandidates('e', 1 / VIEW.z) });
       }
     }
   }
@@ -481,7 +679,7 @@ function draw() {
     });
   }
   const { hidden } = solver.solve();
-  tally(rows, gs, packed, folded, hidden);
+  tally(rows, gs2, packed, folded, hidden);
   centreOnce(rows);
 }
 
@@ -502,7 +700,7 @@ function tally(rows, gs, packed, folded, hidden) {
 // 窄屏上图比框宽，进来时默认停在最左边——而最左边是新疆以西的空海。
 // 故第一次画完把视口挪到点最密处。**只做一次**：之后读者拖到哪儿是他的事
 function centreOnce(rows) {
-  if (centred || !rows.length) return;
+  if (centred || !rows.length || VIEW.z > 1) return;
   const box = $('plate');
   if (box.scrollWidth <= box.clientWidth + 1) { centred = true; return; }
   const xs = rows.map((r) => trueXY(r)[0]).sort((a, b) => a - b);
@@ -578,6 +776,7 @@ function mountYear() {
 // 「松开之后图没变回原样」是用户实测指出的——展开的那一环一直留着，
 // 读者以为自己没退出来
 const collapse = () => {
+  if (suppressClick) { suppressClick = false; return; }   // 刚拖完图，不是点空白
   if (!state.sel && !state.open.size) return;
   state.sel = null; state.open.clear(); draw();
 };
@@ -706,6 +905,8 @@ function drawLn() {
     hit.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); lnGoto(i); }
     });
+    hit.addEventListener('mouseenter', () => tipShow(p[0], p[1] - 10, LN.stops[i].t || ''));
+    hit.addEventListener('mouseleave', tipHide);
   }
   // 当前站的细节，照小地图那套读法：诸说空心、现藏一条虚线牵出去
   const st = LN.stops[LN.at];

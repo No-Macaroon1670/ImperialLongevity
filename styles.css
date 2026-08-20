@@ -1361,7 +1361,9 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-dot.pl-low { fill-opacity: .35; }
 /* 政权都城是方块：一眼读得出是另一层，也不跟聚合点（深灰的圈）撞脸 */
 .pl-dot.pl-dyn { fill: none; stroke-width: 1.9; }
-.pl-dot.on, .pl-dot.hot { stroke: var(--text-1); stroke-width: 2; }
+.pl-dot.on, .pl-dot.hot { stroke: var(--text-1); stroke-width: 2; opacity: 1; }
+/* 三等让墨：全库大半是三等，跟一等一样浓就是一张地毯 */
+.pl-dot.pl-r3 { opacity: .68; }
 
 /* 链：一段一个箭头。图外那一程画到视口边为止，虚线——位置不敢说，方向是真的 */
 .pl-leg { stroke-width: 1.7; opacity: .85; fill: none; }
@@ -1408,3 +1410,40 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-ln-launch a { color: var(--seq-500); text-decoration: none; }
 .pl-ln-launch a:hover { text-decoration: underline; }
 .pl-chip-all { font-weight: 600; }
+
+/* ── 缩放控件与鹰眼 ──────────────────────────────────────────────
+   窄屏不上缩放：那边已经是「图比屏宽、左右拖」的模型，两套手势会打架 */
+.plate { position: relative; }
+.pl-zoomctl {
+  position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 4px;
+}
+.pl-zoomctl button {
+  width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--surface-1); color: var(--text-1); font-size: 1rem; cursor: pointer;
+  line-height: 1; padding: 0;
+}
+.pl-zoomctl button:hover { background: var(--surface-2); }
+.pl-eye {
+  position: absolute; left: 10px; bottom: 10px; width: 132px;
+  border: 1px solid var(--border); border-radius: 6px; background: var(--surface-1);
+  padding: 3px; display: none; cursor: crosshair;
+}
+.pl-eye.on { display: block; }
+.pl-eye svg { display: block; width: 100%; height: auto; }
+.pl-eye-coast { fill: none; stroke: var(--muted); stroke-width: 2.5; opacity: .6; }
+.pl-eye-river { fill: none; stroke: var(--seq-400); stroke-width: 2.5; opacity: .5; }
+.pl-eye-rect { fill: var(--seq-500); fill-opacity: .13; stroke: var(--seq-500); stroke-width: 3; }
+.pl-grid-t { fill: var(--muted); opacity: .75; font-weight: 400; }
+@media (max-width: 720px) {
+  .pl-zoomctl, .pl-eye { display: none !important; }
+}
+
+/* 悬停浮签：只答「这是谁」，全信息仍在读数面板 */
+.pl-tip {
+  position: absolute; z-index: 6; display: none; pointer-events: none;
+  transform: translate(-50%, -100%); white-space: nowrap;
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 5px;
+  padding: 2px 8px; font-size: .78rem; color: var(--text-1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .18);
+}
+.pl-tip.on { display: block; }
