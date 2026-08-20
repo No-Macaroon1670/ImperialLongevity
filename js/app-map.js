@@ -610,9 +610,29 @@ function draw() {
       });
       t.textContent = String(g.rows.length);
       gDot.appendChild(t);
+      // 聚合点报「这是哪儿」，不报「挤在一处」——挤不挤看得见，用不着说
+      // （用户指出）。地名取簇内主点地名的众数；分散得没有众数就用最近的参照城市
+      const cnt = {};
+      for (const m2 of g.rows) {
+        const nm = m2.r['链'][m2.r['主']]['名'];
+        cnt[nm] = (cnt[nm] || 0) + 1;
+      }
+      const top = Object.entries(cnt).sort((a2, b2) => b2[1] - a2[1])[0];
+      let where;
+      if (top && top[1] >= g.rows.length * 0.4) {
+        where = top[0];
+      } else {
+        let best = null, bd = Infinity;
+        for (const [nm, lat, lon] of ANCHORS.concat(ANCHORS_FAR)) {
+          const [ax, ay] = project(lon, lat);
+          const d2 = (ax - g.cx) ** 2 + (ay - g.cy) ** 2;
+          if (d2 < bd) { bd = d2; best = nm; }
+        }
+        where = `${best}一带`;
+      }
       const hit = el('circle', {
         class: 'pl-hit', cx: g.cx, cy: g.cy, r: R + 3 / VIEW.z, tabindex: '0', role: 'button',
-        'aria-label': `此处 ${g.rows.length} 条，展开`,
+        'aria-label': `${where}，${g.rows.length} 条，展开`,
       });
       gHit.appendChild(hit);
       const open = () => { state.open.add(gid); draw(); };
@@ -621,9 +641,9 @@ function draw() {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
       });
       hit.addEventListener('mouseenter', () => {
-        tipShow(g.cx, g.cy - R, `${g.rows.length} 条挤在一处`, '点一下摊开',
+        tipShow(g.cx, g.cy - R, `${where} · ${g.rows.length} 条`, '点一下摊开',
           `${g.rows.slice(0, 5).map((m) => m.r.n).join('、')}${g.rows.length > 5 ? '…' : ''}`);
-        rd.hover('此处密集', `${g.rows.length} 条挤在一处`,
+        rd.hover(where, `${g.rows.length} 条`,
           `${g.rows.slice(0, 6).map((m) => m.r.n).join('、')}${g.rows.length > 6 ? ' 等' : ''}　·　点一下摊开`);
       });
       hit.addEventListener('mouseleave', () => { tipHide(); if (!state.sel) rd.leave(); });

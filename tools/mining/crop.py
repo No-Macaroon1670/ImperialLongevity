@@ -21,6 +21,13 @@
     python tools/mining/crop.py <图> --auto                     # 提亮＋拉对比＋锐化
     python tools/mining/crop.py <图> --box ... --keep-orig no  # 不留原图
 
+管线规矩（越攒越多，都是实测立下的）：
+  · **先 EXIF 转正再裁**——否则竖拍的裁框方向全错（勾践剑那张实测踩到）。
+  · **裁人群优于逐个打码**（用户 2026-08-20 定）：能用构图把观众裁出画面就裁，
+    比十个模糊块干净；糊脸是裁不掉时的退路。
+  · 重存即剥 EXIF（含 GPS）；署名只写年月，不写日子。
+  · 说明牌以 inbox 放大重读为准，对话里的初判不算定案。
+
 --auto 是给**博物馆内景**用的（用户 2026-08-19 要求：内景常需处理，主体要更突出）。
 展厅普遍照度低、玻璃压一层灰、手机又降噪抹细节，原片往往灰扁。三步：
   1 autocontrast(cutoff=0.4)——只掐掉最暗最亮各 0.4%，**不碰说明牌的白**，
@@ -59,6 +66,10 @@ def main():
             blurs.append(v)
 
     im = Image.open(path)
+    # **先转正再动刀**（管线规矩，2026-08-20 立）：手机竖拍常靠 EXIF 方向标记
+    # 而像素本身是横的。不转正，--box 的「上下左右」就全是错的方向，
+    # 出来的片还躺着。转正后 EXIF 随重存丢弃，正好也把定位等隐私字段一并剥掉。
+    im = ImageOps.exif_transpose(im)
     w0, h0 = im.size
     if keep:
         stem, ext = os.path.splitext(path)
