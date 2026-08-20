@@ -1292,6 +1292,10 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-chip.k-out { color: var(--ev-out); }
 .pl-chip.k-fig { color: var(--ev-fig); }
 .pl-chip.k-dis { color: var(--ev-dis); }
+.pl-chip.k-war { color: var(--ev-war); }
+.pl-chip.k-rev { color: var(--ev-rev); }
+.pl-chip.k-era { color: var(--ev-era); }
+.pl-chip.k-inst { color: var(--ev-inst); }
 
 .pl-year { display: flex; align-items: center; gap: 8px; margin-left: auto; }
 .pl-year-lab { font-size: .78rem; color: var(--text-2); }
@@ -1351,7 +1355,8 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 /* 低置信：今地属传统比定、推定，或只由国别推出。与本库先秦年代用斜纹
    表低置信是同一个语汇——形状说有这回事，透明度说别拿它当准 */
 .pl-dot.pl-low { fill-opacity: .35; }
-.pl-dot.pl-dyn { stroke-dasharray: none; stroke-width: 2; }
+/* 政权都城是方块：一眼读得出是另一层，也不跟聚合点（深灰的圈）撞脸 */
+.pl-dot.pl-dyn { fill: none; stroke-width: 1.9; }
 .pl-dot.on, .pl-dot.hot { stroke: var(--text-1); stroke-width: 2; }
 
 /* 链：一段一个箭头。图外那一程画到视口边为止，虚线——位置不敢说，方向是真的 */

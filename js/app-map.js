@@ -369,12 +369,14 @@ function draw() {
       if (moved > 9) {
         gLead.appendChild(el('line', { x1: m.x, y1: m.y, x2: m.px, y2: m.py }));
       }
-      const rad = (r.r === 1 ? 5.4 : r.r === 2 ? 4.2 : 3.4) + (r['层'] === 'dyn' ? 1 : 0);
-      const dot = el('circle', {
-        class: `pl-dot ${cls}${low ? ' pl-low' : ''}${r['层'] === 'dyn' ? ' pl-dyn' : ''}`
-          + `${state.sel === id ? ' on' : ''}`,
-        cx: m.px, cy: m.py, r: rad,
-      });
+      const rad = (r.r === 1 ? 5.4 : r.r === 2 ? 4.2 : 3.4) + (r['层'] === 'dyn' ? 0.6 : 0);
+      const kls = `pl-dot ${cls}${low ? ' pl-low' : ''}`
+        + `${r['层'] === 'dyn' ? ' pl-dyn' : ''}${state.sel === id ? ' on' : ''}`;
+      /* **政权都城画成方块。** 都城是一座城、一个座位，方的一眼读得出是另一层；
+         再说圆的深灰点跟聚合点撞脸——那也是个深灰的圈 */
+      const dot = r['层'] === 'dyn'
+        ? el('rect', { class: kls, x: m.px - rad, y: m.py - rad, width: rad * 2, height: rad * 2 })
+        : el('circle', { class: kls, cx: m.px, cy: m.py, r: rad });
       gDot.appendChild(dot);
       solver.obstacle(dot);
 
@@ -398,9 +400,13 @@ function draw() {
       if (state.sel === id) selAt = { r, x: m.px, y: m.py };
       // 只给一等的条目标名字：八十多个名字同时铺开等于一个都读不进去，
       // 其余靠悬停。链展开时全部让位——那时读者要看的是这一条去过哪儿
-      if (r.r === 1 && !state.sel) {
+      /* 只标一等的条目。**但若读者把大事记关了、只留政权这一层**，就给都城全标上
+         ——那时它们正是要读的东西，九十三个名字也铺得开 */
+      const dynOnly = state.layers.size === 1 && state.layers.has('dyn');
+      if (!state.sel && (r.r === 1 || (r['层'] === 'dyn' && dynOnly))) {
         const h = haloText(gLab, r.n, {
-          size: 12.5, halo: 'var(--surface-2)', haloWidth: 3.6, weight: 600,
+          size: r['层'] === 'dyn' ? 11.5 : 12.5, halo: 'var(--surface-2)',
+          haloWidth: 3.6, weight: 600,
         });
         h.over.setAttribute('class', `pl-lab ${cls}`);
         jobs.push({ h, p: [m.px, m.py + 1], pri: 90, cands: placeCandidates('e') });
@@ -505,12 +511,48 @@ const collapse = () => {
 svg.addEventListener('click', collapse);
 addEventListener('keydown', (e) => { if (e.key === 'Escape') collapse(); });
 
+/** 各类落得下多少，现算现填。
+ *
+ * 这一节原本是手写的一串数字，补了一批数据之后**整段全错**——
+ * 「文物 159 条落得下 5 条」变成了落得下 7 条，而页上还写着 5。
+ * 凡是会随数据变的数字都不该手写，这是本库的通例。 */
+function fillCoverage() {
+  const host = $('plate-cover');
+  if (!host) return;
+  const total = {}, got = {};
+  for (const e of EVENTS) {
+    if (e.k === 'era' && !EVENT_KINDS[e.k]) continue;
+    total[e.k] = (total[e.k] || 0) + 1;
+  }
+  for (const r of EV_ROWS) got[r.k] = (got[r.k] || 0) + 1;
+  const rows = Object.keys(total)
+    .map((k) => ({ k, t: total[k], g: got[k] || 0 }))
+    .sort((a2, b2) => (b2.g / b2.t) - (a2.g / a2.t) || b2.t - a2.t);
+  const none = rows.filter((x) => !x.g);
+  host.innerHTML = '';
+  for (const x of rows.filter((y) => y.g)) {
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>${(EVENT_KINDS[x.k] || {}).label || x.k}</strong>　`
+      + `${x.t} 条落得下 ${x.g} 条（${Math.round((100 * x.g) / x.t)}%）`;
+    host.appendChild(li);
+  }
+  if (none.length) {
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>${none.map((x) => `${(EVENT_KINDS[x.k] || {}).label || x.k} ${x.t} 条`).join('、')}</strong>`
+      + '　一条都落不下';
+    host.appendChild(li);
+  }
+}
+
 /** 文里那些数字由脚本按实际数覆盖——手工写死的每次增补都会再错一次。 */
 for (const node of document.querySelectorAll('[data-il-count=ev]')) {
   node.textContent = String(EVENTS.length);
 }
 for (const node of document.querySelectorAll('[data-il-count=geo]')) {
   node.textContent = String(EV_ROWS.length);
+}
+for (const node of document.querySelectorAll('[data-il-count=dyn]')) {
+  node.textContent = String(DYN_ROWS.length);
 }
 
 // 主题按钮。本页不走 shell.js（没有筛选、章节、渲染循环要它管），故这几行是自己的
@@ -524,5 +566,6 @@ tt.addEventListener('click', () => {
   tt.textContent = next === 'dark' ? '☀ 浅色' : '🌙 深色';
 });
 
+fillCoverage();
 mountKinds();
 mountYear();

@@ -172,6 +172,27 @@ def coords_of(titles, pace=0.4, chunk=50, log=None, fallback=True):
         still = [t for t in miss if t not in out]
         if still:
             out.update(_wikidata_fallback(still, pace=pace))
+        # 第四遍：拿全文检索找正题。zhwiki 的繁简变体不是重定向——
+        # 「南汉山城」是缺页，「南漢山城」才有坐标。`converttitles` 实测不管用，
+        # 检索管用。**只认字数相同的结果**，免得检索把「寿县」找成别的地方；
+        # 换过的名字全部打出来，好让人回去核
+        left = [t for t in still if t not in out]
+        for t in left:
+            d = get('https://zh.wikipedia.org/w/api.php?action=query&format=json'
+                    '&formatversion=2&list=search&srlimit=3&srsearch='
+                    + urllib.parse.quote(t))
+            for hit in (d.get('query') or {}).get('search') or []:
+                title = hit['title']
+                if len(title) != len(t):
+                    continue
+                got = coords_of([title], pace=pace, fallback=False)
+                if not got:
+                    got = _wikidata_fallback([title], pace=pace)
+                if got:
+                    out[t] = list(got.values())[0]
+                    print('  · 「%s」查不到，检索到正题「%s」，用它' % (t, title))
+                    break
+            time.sleep(pace)
     return out
 
 

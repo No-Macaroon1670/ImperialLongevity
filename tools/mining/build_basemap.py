@@ -32,8 +32,13 @@ UA = {"User-Agent": "ImperialLongevity-basemap/1.0"}
 BBOX = (73.0, 18.0, 135.0, 50.0)          # 西 南 东 北
 LAT0 = 35.0                                # x 压缩取的中纬
 TOL = 0.06                                 # 抽稀容差（度）；越大越简，越省字节
-# 只留这几条河。Natural Earth 的 name 字段用英文
-RIVERS = {'Yangtze', 'Yangtze Kiang', 'Huang He', 'Yellow'}
+# 只留这两条河。**Natural Earth 的 name 字段要照它自己的写法**：
+# 黄河在里面叫 `Huang`（不是 Huang He，更不是 Yellow），长江上游叫
+# `Chang Jiang`、下游才叫 `Yangtze`。上一版写的是 {'Yangtze','Yangtze Kiang',
+# 'Huang He','Yellow'}，于是黄河一段没有、长江只剩下游三段——图上「黄河」
+# 两个字底下空空如也（用户实测指出）。**用全等匹配**，子串匹配会把
+# 别的 Huang 什么江也捞进来
+RIVERS = {'Huang', 'Chang Jiang', 'Yangtze'}
 
 
 def fetch(name):
@@ -111,8 +116,8 @@ def main():
             for seg in clip([(p[0], p[1]) for p in ln]):
                 coast.append(dp(seg, TOL))
     for feat in fetch('ne_50m_rivers_lake_centerlines.geojson')['features']:
-        nm = (feat.get('properties') or {}).get('name') or ''
-        if not any(r.lower() in nm.lower() for r in RIVERS):
+        nm = ((feat.get('properties') or {}).get('name') or '').strip()
+        if nm not in RIVERS:
             continue
         g = feat['geometry']
         lines = [g['coordinates']] if g['type'] == 'LineString' else g['coordinates']

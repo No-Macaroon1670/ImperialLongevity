@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>地上的库：哪些条目查得到一个地点 · 中国帝王寿命数据库</title>
-<meta name="description" content="把本库能落到地上的条目画成一张图：全库 874 条，查得到主坐标的只有 82 条。遗址·建筑落得下八成，战事、民变、名人轶事一条都落不下——图上的留白说的是记录的形状。">
+<title>地上的库：一条目一个点，点开看它去过哪儿 · 中国帝王寿命数据库</title>
+<meta name="description" content="一条目记全部地方，图上只出主点，点选才展开它去过的地方：苏武从长安到北海再回长安，昭陵六骏四骏在西安碑林、两骏在费城。另叠一层九十三个政权的都城与迁都链。">
 <link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/map.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="中国帝王寿命数据库 · 王朝之河">
-<meta property="og:title" content="地上的库：哪些条目查得到一个地点">
-<meta property="og:description" content="全库 874 条大事记里，能落到地上的只有 82 条。图上稀疏的地方不是没发生过事，是那些条目没有地点可查——差别本身就是内容。">
+<meta property="og:title" content="地上的库：一条目一个点，点开看它去过哪儿">
+<meta property="og:description" content="把本库查得到地点的条目画成一张图。一条目只出一个点，点它一下，它去过的地方才连成一条线——去与回各带一个箭头，出了图框的那一程画到视口边缘为止。">
 <meta property="og:url" content="https://no-macaroon1670.github.io/ImperialLongevity/map.html">
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary">
@@ -44,7 +44,7 @@
 
 <div class="wrap">
   <section class="card">
-    <div class="head"><h2>八十二条落点</h2></div>
+    <div class="head"><h2><span data-il-count="geo">185</span> 条落点，加 <span data-il-count="dyn">93</span> 个政权的都城</h2></div>
 
     <div class="pl-controls">
       <div class="pl-kinds" id="plate-kinds"></div>
@@ -73,27 +73,24 @@
       页名叫「王朝之河」，两条河本来就是主角。
       <strong>没有疆域</strong>——本库没有历代疆域数据，画出来的每一条线都会是我们并不掌握的东西。
       <strong>落在图框外的整条不收</strong>：《金刚经》现藏伦敦、宝船去过东非，硬贴到图边上会让读者以为它就在那儿。
-      <strong>八十二条里，十三个点的地名是人挑的</strong>（该落在出土地还是现藏地，是判断），
-      <strong>坐标一律从维基抓、不手打</strong>（坐标是事实）。这条分界与本库「选图是策展判断、许可与署名从 Commons 抓」是同一条。
+      <strong>地名是判断，坐标是事实</strong>：落在出土地还是现藏地由人挑，
+      挑定之后坐标一律从维基抓、不手打。这条分界与本库「选图是策展判断、许可与署名从 Commons 抓」是同一条。
+      <strong>今地不确定的画成半透明</strong>——涿鹿、鸣条这些上古战场的今地属传统比定，
+      形状说有这回事，透明度说别拿它当准。
     </div>
 
     <div class="grid2" style="margin-top:14px">
       <div>
-        <h3>为什么这么空</h3>
+        <h3>哪一类落得下，哪一类落不下</h3>
         <p class="small" style="color:var(--text-2)">
           落得下与落不下，几乎完全由<strong>类别</strong>决定，而不是由重要程度决定：
         </p>
-        <ul class="small" style="color:var(--text-2)">
-          <li><strong>遗址·建筑</strong>　69 条落得下 56 条（81%）</li>
-          <li><strong>灾疫</strong>　13 条落得下 3 条（23%）</li>
-          <li><strong>文化·科技</strong>　148 条落得下 9 条（6%）</li>
-          <li><strong>文物</strong>　159 条落得下 5 条（3%）</li>
-          <li><strong>战事 103 条、民变 65 条、名人轶事 132 条、治世·中兴 26 条</strong>　一条都落不下</li>
-        </ul>
+        <ul class="small" id="plate-cover" style="color:var(--text-2)"></ul>
         <p class="small" style="color:var(--text-2)">
-          赤壁、淝水、土木堡当然都有地方。落不下是因为讲一场仗的条目页写的是事，
-          页首没有那一行经纬度；讲一座窟的页面写的是地，有。
-          <strong>这张图的稀疏，说的是记录的形状，不是历史的形状。</strong>
+          制度类大多不落点，这是有意的：<strong>全境施行的诏令没有一个发生地</strong>。
+          「书同文」「推恩令」颁行天下，落在都城不是「它在那儿发生」，是「诏书从那儿发出去」
+          ——两回事，混起来会让读者以为制度史集中在几座城里。只有记载明指一地的才落
+          （盘庚迁殷、官办交子行于四川、昭勋阁二十四功臣就在昭勋阁）。
         </p>
       </div>
       <div>
