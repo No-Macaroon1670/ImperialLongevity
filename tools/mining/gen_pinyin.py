@@ -20,7 +20,11 @@ for s in strings:
         if '\u3400'<=ch<='\u9fff': chars.add(ch)
 pairs=[]
 for ch in sorted(chars):
-    py=lazy_pinyin(ch)[0]
+    MANUAL={'㝬':'hu'}  # Ext-A 等 pypinyin 不载之字，手工补遗（㝬=周厉王名，读胡）
+    if ch in MANUAL:
+        py=MANUAL[ch]
+    else:
+        py=lazy_pinyin(ch)[0]
     if re.fullmatch(r'[a-z]+',py): pairs.append((ch,py))
 lines=["// data-pinyin.js —— 检索字段用字的字级拼音表。**由 tools/mining/gen_pinyin.py 生成**，手改会被覆盖。",
        "// 多音字取 pypinyin 常读（搜索容错场景，不追注音正确性）；search.js 据此为每个键生成全拼＋首字母。",
