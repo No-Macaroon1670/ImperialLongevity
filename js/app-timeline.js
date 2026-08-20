@@ -9,6 +9,7 @@ import { mountTour } from './tour.js';
 import { lineOf, LINES } from './lines.js';
 import { EMPERORS, DYNASTIES } from './data.js';
 import { EVENTS } from './events.js';
+import { GEO_STATS } from './geo-stats.js';
 
 mountApp({ sections: SECTIONS, hero: false });
 
@@ -178,7 +179,7 @@ mountSearch(panorama, chartHost);
  * HTML 里仍留着一个值作兜底（脚本没跑起来时不至于空着），运行时按实际覆盖。
  */
 function syncCounts() {
-  const n = { emp: EMPERORS.length, dyn: DYNASTIES.length, ev: EVENTS.length };
+  const n = { emp: EMPERORS.length, dyn: DYNASTIES.length, ev: EVENTS.length, geo: GEO_STATS.ev };
   for (const el of document.querySelectorAll('[data-il-count]')) {
     const v = n[el.dataset.ilCount];
     if (v !== undefined) el.textContent = String(v);
