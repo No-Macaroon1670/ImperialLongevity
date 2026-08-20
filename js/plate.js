@@ -74,6 +74,24 @@ export function plateFilters(defs, prefix = 'pl') {
   return ids;
 }
 
+/** 不用滤镜的柔边：同一条路径叠几道由宽到窄、由淡到浓的描边。
+ *
+ * **大图上不要用 feGaussianBlur。** 那个滤镜的区域跨了整张图，实测滚动时
+ * 浏览器重绘不过来：图上的内容钉在原地不动，底下那块灰底自己在走，
+ * 上半截被撕掉一条白带。小地图（258px）没事，一千单位宽的整页图必出。
+ * 叠描边是纯几何，没有滤镜区域，效果差不多而哪儿都不会翻车。
+ *
+ * `layers` 从宽到窄，每层 [宽度, 不透明度]。
+ */
+export function softStroke(g, d, cls, layers = [[7, 0.13], [4.4, 0.17], [2.6, 0.22]]) {
+  for (const [w, o] of layers) {
+    g.appendChild(el('path', {
+      class: cls, d, fill: 'none', 'stroke-width': w, 'stroke-opacity': o,
+      'stroke-linejoin': 'round', 'stroke-linecap': 'round',
+    }));
+  }
+}
+
 /* ── halo 标签 ───────────────────────────────────────────────────────────
    返回一个把两遍文字当一个东西挪的把手。                                   */
 

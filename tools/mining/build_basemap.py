@@ -58,17 +58,25 @@ def clip(line):
 
 
 def dp(pts, tol):
-    """Douglas–Peucker 抽稀。自己写十几行，省得为一张小图引一个库。"""
+    """Douglas–Peucker 抽稀。自己写十几行，省得为一张小图引一个库。
+
+    **闭合环要单独处理**：岛屿的首尾是同一个点，弦退化成零长，
+    点到「线」的距离公式分母为零、分子也为零，于是 far 恒等于 0 ≤ tol，
+    整个环被压成两个重合的点。实测因此丢掉了台湾与海南——图上只剩
+    「M788.8 491.1L788.8 491.1」这样的残段，而台北故宫的点就孤零零
+    浮在海里。弦退化时改量到那个点的距离即可。
+    """
     if len(pts) < 3:
         return pts
     x0, y0 = pts[0]
     x1, y1 = pts[-1]
     dx, dy = x1 - x0, y1 - y0
-    den = math.hypot(dx, dy) or 1e-9
+    den = math.hypot(dx, dy)
     far, fi = -1.0, 0
     for i in range(1, len(pts) - 1):
         x, y = pts[i]
-        d = abs(dy * x - dx * y + x1 * y0 - y1 * x0) / den
+        d = (math.hypot(x - x0, y - y0) if den < 1e-12
+             else abs(dy * x - dx * y + x1 * y0 - y1 * x0) / den)
         if d > far:
             far, fi = d, i
     if far <= tol:

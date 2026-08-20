@@ -1336,3 +1336,35 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 /* 字是画给人看的，不是拿来点的——让它别挡在命中区前面 */
 .pl-labs, .pl-ref { pointer-events: none; }
 .pl-dot.on { stroke: var(--text-1); stroke-width: 2; }
+
+/* ── 地图页：链、散开、聚合 ────────────────────────────────────────
+   模型见 docs/geo-model.md。一条目一个点，点选才展开它去过的地方。 */
+
+/* 散开之后拉回真位置的细线。散开是为了点得中，这根线是为了别让读者
+   忘了它本来在哪儿——这张图上挪二十单位就是一百多公里 */
+.pl-leads line { stroke: var(--muted); stroke-width: .7; opacity: .38; }
+
+/* 聚合点：半径随条数长，点大即那地方事多。这本身是条信息 */
+.pl-cluster { fill: var(--surface-1); stroke: var(--muted); stroke-width: 1.6; cursor: pointer; }
+.pl-cluster-n { fill: var(--text-2); font-weight: 600; pointer-events: none; }
+
+/* 低置信：今地属传统比定、推定，或只由国别推出。与本库先秦年代用斜纹
+   表低置信是同一个语汇——形状说有这回事，透明度说别拿它当准 */
+.pl-dot.pl-low { fill-opacity: .35; }
+.pl-dot.pl-dyn { stroke-dasharray: none; stroke-width: 2; }
+.pl-dot.on, .pl-dot.hot { stroke: var(--text-1); stroke-width: 2; }
+
+/* 链：一段一个箭头。图外那一程画到视口边为止，虚线——位置不敢说，方向是真的 */
+.pl-leg { stroke-width: 1.7; opacity: .85; fill: none; }
+.pl-leg-out { stroke-dasharray: 5 4; }
+.pl-arrow { stroke: none; opacity: .9; }
+.pl-step { stroke: var(--surface-2); stroke-width: 1.4; }
+.pl-step.pl-low { fill-opacity: .35; }
+/* 诸说：空心。读者看见几个圈就知道这地方至今没定论 */
+.pl-claim { fill: none; stroke-width: 1.7; stroke-dasharray: 3.5 2.8; }
+.pl-chain-t { font-weight: 600; }
+.pl-out-t { font-weight: 500; font-style: italic; }
+
+/* 政权都城这一层：与大事记同图不同色 */
+.k-dyn { fill: var(--text-2); stroke: var(--text-2); }
+.pl-chip.k-dyn { color: var(--text-2); }
