@@ -282,9 +282,13 @@ function mkCard(sideClass) {
   // 尺寸、出土时间、出土地点这类事实,博物馆比任何百科都可靠,
   // 且它是 `tier: primary` 那一级(见 tools/mining/sources.json)。无则不显示。
   const museum = h('a', { class: 'kp-a kp-museum', target: '_blank', rel: 'noopener', text: '馆藏页 ↗' });
-  // 维基文库直达原书(用户 2026-08-22 定):典籍条目不该只让人读「关于书的介绍」,
-  // 一步就能翻开书本身。字段 wsrc(区别于 ws——那是维基条目的段锚)
-  const wsrc = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '维基文库原文 ↗' });
+  // 维基文库直达原书(用户 2026-08-22 定):典籍条目不该只让人读「关于书的介绍」。
+  // 但别把话说满(用户纠的):文库是志愿者转录本,信任链多出两环——转录者与
+  // 他选的底本。熹平石经立石的理由「天下传抄的本子各异」比维基早一千八百年;
+  // 文库的可取处是这两环留了账(底本声明、校对等级、修订历史)。
+  // 字段 wsrc(区别于 ws——那是维基条目的段锚)
+  const wsrc = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '维基文库原文 ↗',
+    title: '文库为志愿者转录本——底本与校对状态见其页面说明' });
   const close = h('button', { class: 'kp-close', type: 'button', text: '✕' });
   const src = h('div', { class: 'kp-src', text: '摘要实时取自中文维基百科' });
   const el = h('div', { class: `kp ${sideClass}` }, [
