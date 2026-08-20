@@ -1053,6 +1053,10 @@ export function renderLaneTimeline(host, list, opts) {
     // 点丝:朝代卡改讲那一场改朝换代;丝本身不改选中态,免得一点就散
     const evKey = ev.target && ev.target.dataset && ev.target.dataset.ev;
     if (evKey && kp && kp.showEvent) {
+      // 带 tr 的事件在时间轴让位给箭头（视图分工），它的考据由箭头卡代言：
+      // 点箭头先找认领此键的事件条目（如 天京陷落 tr:'taiping>qing'），有则出它的卡
+      const te = EVENTS.find((e) => e.tr === evKey);
+      if (te && kp.showEvent(evSpec(te))) return;
       const tr = TRANSITIONS[evKey];
       const [f, t] = evKey.split('>');
       const nm = (k) => (geo.get(k) ? geo.get(k).b.d.name : k);
