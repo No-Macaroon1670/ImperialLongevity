@@ -23,6 +23,8 @@
 
 ## 工作流（可复用流水线）
 - 侦察（sonnet 广撒网）→ 终审（opus 判断题）→ 落库（单写者）三段式
+- 落库后勤（每批终审落地必做，2026-08-20 欠账 26 个搜不到的新字立此规）：
+  重跑 tools/mining/gen_pinyin.py 更新 data-pinyin.js→lint-events 过一遍→再 commit
 - verify-line（.claude/workflows/verify-line.js）：claims.py 抽硬断言→分层核验
 - 三镜头评审（AI腔/纪录片纪律/生硬拗口→逐条对抗复核）
 - 覆盖方法十一套：类层扫描/英文独占/文库典籍/教材正典/引用图谱/照片漏斗/
