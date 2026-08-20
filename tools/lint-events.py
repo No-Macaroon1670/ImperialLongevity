@@ -30,6 +30,9 @@ for i, line in enumerate(body.splitlines(), 1):
         err("行尾不是 },")
     m = re.search(r"\by: (-?\d+)", t); n = re.search(r"n: '([^']+)'", t)
     w = re.search(r"w: '([^']+)'", t); k = re.search(r"k: '(\w+)'", t)
+    NO_W_OK = {'绿松石龙形器', '三道岗沉船'}  # 无维基条判例：维基锚是服务不是门槛
+    if not w and n and n.group(1) in NO_W_OK:
+        w = True
     if not (m and n and w and k):
         err("缺 y / n / w / k")
         continue
