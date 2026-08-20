@@ -48,6 +48,12 @@ def wiki_counts(title):
     d = get("https://zh.wikipedia.org/w/api.php?" + q)
     if d in (None, "?"):
         return d
+    # `w` 带 `en:` 前缀的条目(树色平远图、捣练图…)在 zh 站上是**跨语言链接**不是页面,
+    # API 回的是 query.interwiki 而没有 query.pages ——原先直接下标取 pages,
+    # 一撞上就 KeyError 整轮中断,而已缓存的部分照旧写回,看不出是谁绊的。
+    # 当作「zh 站无此条目」处理:信号取零,与 missing 同路。
+    if "pages" not in d.get("query", {}):
+        return None
     p = list(d["query"]["pages"].values())[0]
     if "missing" in p:
         return None
