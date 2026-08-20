@@ -1381,6 +1381,11 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 
 /* 命中区：看不见的一圈，专管点选。三等的点半径 3.4，鼠标都难点中，手指更不必说 */
 .pl-hit { fill: transparent; stroke: none; cursor: pointer; }
+/* 摊开簇的托盘：折叠圆充气成盘，把盘下杂点视觉盖住、点击吃掉（所见即所点）。
+   虚线边示意临时态——收起即散 */
+.pl-plate { fill: var(--surface-1); opacity: .93; stroke: var(--muted); stroke-width: 1.1; stroke-dasharray: 5 4; }
+.pl-lead2 { stroke: var(--muted); stroke-width: .7; opacity: .38; }
+.pl-plate-hit { cursor: default; }
 .pl-hit:focus { outline: none; }
 .pl-hit:focus-visible { outline: 2px solid var(--seq-500); outline-offset: 1px; border-radius: 50%; }
 /* 字是画给人看的，不是拿来点的——让它别挡在命中区前面 */

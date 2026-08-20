@@ -760,6 +760,7 @@ function draw() {
   const clusterVis = [];  // 簇的圆面同抬：命中层抬了画层不抬，别组的点会画在圆上——
                           // 看得见却点不中，比看不见更糟。视觉与命中必须同序
   const openVis = [];     // 展开簇的成员点面，最后压顶（层序见 draw 尾）
+  const openVisBase = []; // 展开簇的托盘与引线，压在成员点面之下、其余一切之上
 
   for (const g of gs2) {
     const gid = gidOf(g);
@@ -819,7 +820,12 @@ function draw() {
       }
       // 百来条的洋葱在 1× 下摊开盖半个华北——这图本不该在那个高度细看。
       // 大簇在低倍率下点一下先**拉近**（分组会自然裂细），贴近了再点才就地摊开
-      const zoomFirst = !isDynG && g.rows.length > 25 && VIEW.z < 3;
+      // 拉近得裂得开才有意义：士林區 38 条全在台北故宫**同一个点**上，
+      // 放大多少倍都还是一簇（用户点出的反例）——真坐标散布小到 3× 也
+      // 拆不散（全员仍在 NEAR/3 分组圈里）的共址簇，直接摊开
+      const span = Math.max(...g.rows.map((m2) => Math.hypot(m2.x - g.cx, m2.y - g.cy)));
+      const zoomFirst = !isDynG && g.rows.length > 15 && VIEW.z < 3   // 阈值 15（用户调低：15–25 档）
+        && span > NEAR / 3;
       const hit = el('circle', {
         class: 'pl-hit', cx: g.cx, cy: g.cy, r: R + (isDynG ? 2 : 3) / VIEW.z, tabindex: '0', role: 'button',
         'aria-label': isDynG ? `${where}，${cnum(g.rows.length)}朝古都，展开`
@@ -865,6 +871,20 @@ function draw() {
         }
       }
     }
+    // 摊开的簇垫一块**托盘**：折叠圆充气成盘，成员点坐在盘上（用户提出
+    // 摊开后与盘下杂点混在一起看不清；Leaflet 的 spiderfy 只拉蛛腿不垫底，
+    // 但我们的折叠圆本来就是不透明的，充气是它自然的下一步）。
+    // 盘同时按「所见即所点」吃掉盘下杂点的点击——看不见的东西不该能点中
+    if (g.rows.length > foldCap) {
+      const pr = Math.max(...g.rows.map((m2) => Math.hypot(m2.px - g.cx, m2.py - g.cy))) + 11 / VIEW.z;
+      const plate = el('circle', { class: 'pl-plate', cx: g.cx, cy: g.cy, r: pr });
+      gDot.appendChild(plate);
+      openVisBase.push(plate);
+      const blocker = el('circle', { class: 'pl-hit pl-plate-hit', cx: g.cx, cy: g.cy, r: pr, 'aria-hidden': 'true' });
+      blocker.addEventListener('click', (e) => e.stopPropagation());
+      gHit.appendChild(blocker);
+      openHits.push(blocker);   // 先于成员命中入列：垫底吃杂点，成员命中照常压其上
+    }
     if (g.rows.length > 1) packed += g.rows.length;
 
     for (const m of g.rows) {
@@ -878,7 +898,12 @@ function draw() {
       // 只添乱——两个点之间的短线会被读成「这两条有关系」
       const moved = Math.hypot(m.px - m.x, m.py - m.y);
       if (moved > 9 / VIEW.z) {
-        gLead.appendChild(el('line', { x1: m.x, y1: m.y, x2: m.px, y2: m.py }));
+        const ln = el('line', { x1: m.x, y1: m.y, x2: m.px, y2: m.py });
+        if (g.rows.length > foldCap) {
+          ln.setAttribute('class', 'pl-lead2');   // 抬到托盘上，别被盘盖掉蛛腿
+          gDot.appendChild(ln);
+          openVisBase.push(ln);
+        } else gLead.appendChild(ln);
       }
       // 三等占全库大半，跟一等抢同样的墨量整张图就是一张地毯——
       // 小一号、淡一点，眼睛先看见大点，凑近才读小点
@@ -953,6 +978,7 @@ function draw() {
   for (const h of clusterHits) gHit.appendChild(h);
   for (const h of openHits) gHit.appendChild(h);
   for (const v of clusterVis) gDot.appendChild(v);
+  for (const v of openVisBase) gDot.appendChild(v);
   for (const v of openVis) gDot.appendChild(v);
   if (selAt) {
     jobs.push(...drawChain(selAt.r, selAt.x, selAt.y));
