@@ -180,11 +180,22 @@ const revive = (v) => ({ type: 'standard', title: v.title, extract: v.extract,
   thumbnail: v.thumb ? { source: v.thumb } : null,
   content_urls: v.url ? { desktop: { page: v.url } } : null });
 
+/** `w` 允许 `en:` 前缀指英文维基（用户定的）：流散在外的东西常常只有
+ *  英文条目——ROM 的《弥勒说法图》、宾大的两骏。记录在谁手里，
+ *  条目就在谁的语言里，这件事本身就是这类条目要讲的内容之一。
+ *  约定一次铺满全部消费端：摘要、链接、坐标、探测，见各处的 wikiOf。 */
+function wikiOf(title) {
+  return title && title.startsWith('en:')
+    ? { lang: 'en', t: title.slice(3) }
+    : { lang: 'zh', t: title };
+}
+
 function fetchSummary(title) {
   if (!CACHE.has(title)) {
     const hit = diskLoad()[title];
     if (hit && hit.extract) { CACHE.set(title, Promise.resolve(revive(hit))); return CACHE.get(title); }
-    CACHE.set(title, fetch(`https://zh.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`)
+    const wk = wikiOf(title);
+    CACHE.set(title, fetch(`https://${wk.lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wk.t)}`)
       .then((r) => {
         if (!r.ok) { if (r.status !== 404) CACHE.delete(title); return null; }
         return r.json();
@@ -337,8 +348,13 @@ async function fillCard(card, spec) {
   card.img.style.display = 'none';
   // 有些事**没有独立条目**,只是某篇通史里的一节(东汉末那串大疫见《中國瘟疫史·漢朝》)。
   // 与其因此不收,不如链到那一节:摘要仍取母条目(泛些,但对得上题),链接直达段落。
-  card.wiki.href = `https://zh.wikipedia.org/wiki/${encodeURIComponent(spec.title)}`
-    + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
+  {
+    const wk = wikiOf(spec.title);
+    card.wiki.href = `https://${wk.lang}.wikipedia.org/wiki/${encodeURIComponent(wk.t)}`
+      + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
+    // 英文条目就老实写明是英文的——读者点开前该知道自己会读到什么
+    card.wiki.textContent = wk.lang === 'en' ? '维基百科全文（英文）↗' : '维基百科全文 ↗';
+  }
   // 百度这一侧此前从未被机器核过（没有 CORS，链接是盲发的），实测 725 条里
   // 坏 112 条。逐条的修法写在数据的 `b` 字段里；这里再加两道通用兜底：
   //
@@ -352,7 +368,9 @@ async function fillCard(card, spec) {
   //   四、`b` 写成完整网址时**照原样用**，并把按钮改名。有些条目百科根本没收，
   //       却有正经文献可指（七女为父报仇即一例：百科无此条，但有一篇考释论文）。
   //       按钮仍写「百度百科」就名不副实了——链接与它自称的东西必须一致。
-  const raw = spec.baidu || spec.title;
+  // en: 条目百度几乎必然没有——没手写 b 的一律当 nb，别拿英文标题去 404
+  const enOnly = wikiOf(spec.title).lang === 'en' && !spec.baidu;
+  const raw = spec.baidu || wikiOf(spec.title).t;
   if (/^https?:\/\//.test(raw)) {
     card.baidu.href = raw;
     card.baidu.textContent = '相关文献 ↗';
@@ -361,7 +379,7 @@ async function fillCard(card, spec) {
     card.baidu.href = `https://baike.baidu.com/item/${bdName.split('/').map(encodeURIComponent).join('/')}`;
     card.baidu.textContent = '百度百科 ↗';
   }
-  card.baidu.style.display = spec.noBaidu ? 'none' : '';
+  card.baidu.style.display = (spec.noBaidu || enOnly) ? 'none' : '';
   card.museum.href = spec.museum || '#';
   card.museum.style.display = spec.museum ? '' : 'none';
   // 少数条目手挑了片子。搜索对它们并不友好——搜《清明上河图》出来的多是

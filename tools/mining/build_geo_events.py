@@ -62,7 +62,7 @@ def get(url, tries=8):
     raise RuntimeError('取不到：%s' % url)
 
 
-def _wikidata_fallback(titles, pace=0.5):
+def _wikidata_fallback(titles, pace=0.5, host='zh.wikipedia.org'):
     """条目名 → (lat, lon)，绕 Wikidata 的 P625。
 
     zhwiki 的 `prop=coordinates` 读的是条目正文里的 `{{coord}}` 模板，**有条目
@@ -78,7 +78,7 @@ def _wikidata_fallback(titles, pace=0.5):
     qs = {}
     for i in range(0, len(titles), 20):
         ch = titles[i:i + 20]
-        d = get('https://zh.wikipedia.org/w/api.php?action=query&format=json&formatversion=2'
+        d = get('https://' + host + '/w/api.php?action=query&format=json&formatversion=2'
                 '&redirects=1&prop=pageprops&ppprop=wikibase_item&titles='
                 + urllib.parse.quote('|'.join(ch)))
         q = d['query']
@@ -108,7 +108,7 @@ def _wikidata_fallback(titles, pace=0.5):
     return out
 
 
-def coords_of(titles, pace=0.4, chunk=50, log=None, fallback=True):
+def _fetch_coords(titles, host, pace=0.4, chunk=50, log=None, fallback=True):
     """zhwiki 条目名 → (lat, lon)。取不到的不进结果，由调用方决定怎么办。
 
     **本项目取维基坐标只此一处**。写过两遍，第二遍（一次性的覆盖率探测）
@@ -128,9 +128,10 @@ def coords_of(titles, pace=0.4, chunk=50, log=None, fallback=True):
         ch = titles[i:i + chunk]
         cont = None
         while True:
-            u = ('https://zh.wikipedia.org/w/api.php?action=query&format=json'
+            u = ('https://%s/w/api.php?action=query&format=json'
                  '&formatversion=2&redirects=1&prop=coordinates&coprimary=primary'
-                 '&colimit=max&titles=' + urllib.parse.quote('|'.join(ch)))
+                 '&colimit=max&titles=' % host
+                 + urllib.parse.quote('|'.join(ch)))
             if cont:
                 u += '&cocontinue=' + urllib.parse.quote(cont)
             d = get(u)
@@ -155,9 +156,10 @@ def coords_of(titles, pace=0.4, chunk=50, log=None, fallback=True):
         # 第二遍：非主坐标（寿县、宾大博物馆的坐标都标成了非主）
         for i in range(0, len(miss), chunk):
             ch = miss[i:i + chunk]
-            d = get('https://zh.wikipedia.org/w/api.php?action=query&format=json'
+            d = get('https://%s/w/api.php?action=query&format=json'
                     '&formatversion=2&redirects=1&prop=coordinates&coprimary=all'
-                    '&colimit=max&titles=' + urllib.parse.quote('|'.join(ch)))
+                    '&colimit=max&titles=' % host
+                    + urllib.parse.quote('|'.join(ch)))
             q = d['query']
             norm = {x['from']: x['to'] for x in q.get('normalized', [])}
             redir = {x['from']: x['to'] for x in q.get('redirects', [])}
@@ -171,28 +173,43 @@ def coords_of(titles, pace=0.4, chunk=50, log=None, fallback=True):
         # 第三遍：Wikidata P625（国立故宫博物院只在这儿有）
         still = [t for t in miss if t not in out]
         if still:
-            out.update(_wikidata_fallback(still, pace=pace))
+            out.update(_wikidata_fallback(still, pace=pace, host=host))
         # 第四遍：拿全文检索找正题。zhwiki 的繁简变体不是重定向——
         # 「南汉山城」是缺页，「南漢山城」才有坐标。`converttitles` 实测不管用，
         # 检索管用。**只认字数相同的结果**，免得检索把「寿县」找成别的地方；
         # 换过的名字全部打出来，好让人回去核
         left = [t for t in still if t not in out]
         for t in left:
-            d = get('https://zh.wikipedia.org/w/api.php?action=query&format=json'
-                    '&formatversion=2&list=search&srlimit=3&srsearch='
+            d = get('https://%s/w/api.php?action=query&format=json'
+                    '&formatversion=2&list=search&srlimit=3&srsearch=' % host
                     + urllib.parse.quote(t))
             for hit in (d.get('query') or {}).get('search') or []:
                 title = hit['title']
                 if len(title) != len(t):
                     continue
-                got = coords_of([title], pace=pace, fallback=False)
+                got = _fetch_coords([title], host, pace=pace, fallback=False)
                 if not got:
-                    got = _wikidata_fallback([title], pace=pace)
+                    got = _wikidata_fallback([title], pace=pace, host=host)
                 if got:
                     out[t] = list(got.values())[0]
                     print('  · 「%s」查不到，检索到正题「%s」，用它' % (t, title))
                     break
             time.sleep(pace)
+    return out
+
+
+def coords_of(titles, pace=0.4, chunk=50, log=None, fallback=True):
+    """zhwiki/enwiki 条目名 → (lat, lon)。`en:` 前缀走英文维基（约定见 events.js 抬头）：
+    流散在外的东西常常只有英文条目，记录在谁手里、条目就在谁的语言里。
+    返回的键**保留调用方给的原样**（含前缀），调用方不用关心分流。"""
+    titles = list(dict.fromkeys(t for t in titles if t))
+    zh = [t for t in titles if not t.startswith('en:')]
+    en = [t[3:] for t in titles if t.startswith('en:')]
+    out = _fetch_coords(zh, 'zh.wikipedia.org', pace, chunk, log, fallback) if zh else {}
+    if en:
+        got = _fetch_coords(en, 'en.wikipedia.org', pace, chunk, None, fallback)
+        for k, v in got.items():
+            out['en:' + k] = v
     return out
 
 
