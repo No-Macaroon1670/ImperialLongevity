@@ -1132,13 +1132,36 @@ function mountLineChips() {
   const wrap = document.createElement('span');
   wrap.className = 'pl-ln-launch';
   wrap.append('走一条线：');
-  Object.values(LINES).filter((L) => L.geo).forEach((L, i, arr) => {
-    const a2 = document.createElement('a');
-    a2.href = `#line=${L.key}`;
-    a2.textContent = L.name;
-    wrap.appendChild(a2);
-    if (i < arr.length - 1) wrap.append(' · ');
-  });
+  const geoLines = Object.values(LINES).filter((L) => L.geo);
+  if (geoLines.length <= 3) {
+    geoLines.forEach((L, i, arr) => {
+      const a2 = document.createElement('a');
+      a2.href = `#line=${L.key}`;
+      a2.textContent = L.name;
+      wrap.appendChild(a2);
+      if (i < arr.length - 1) wrap.append(' · ');
+    });
+  } else {
+    // 线一多平铺就挤（用户预判于第四条上线前）：收成折叠单，
+    // 每条带 sub 一句话——顺便回答「这条线讲什么」，平铺时反而给不了
+    const det = document.createElement('details');
+    det.className = 'pl-lines-menu';
+    const sum = document.createElement('summary');
+    sum.textContent = `全部 ${geoLines.length} 条`;
+    det.appendChild(sum);
+    for (const L of geoLines) {
+      const a2 = document.createElement('a');
+      a2.href = `#line=${L.key}`;
+      a2.append(L.name);
+      const why = document.createElement('span');
+      why.className = 'pl-set-why';
+      why.textContent = `——${L.sub}`;
+      a2.appendChild(why);
+      a2.addEventListener('click', () => { det.open = false; });
+      det.appendChild(a2);
+    }
+    wrap.appendChild(det);
+  }
   bar.after(wrap);
 }
 

@@ -1412,6 +1412,11 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-settings input { vertical-align: -1px; margin-right: 5px; }
 .pl-set-why { color: var(--muted); }
 
+/* 线的折叠单:第四条线上线时自动从平铺切换过来 */
+.pl-lines-menu { display: inline-block; font-size: inherit; color: inherit; }
+.pl-lines-menu summary { cursor: pointer; user-select: none; display: inline; }
+.pl-lines-menu a { display: block; padding: 2px 0 2px 14px; }
+
 /* ── 地图走线 ────────────────────────────────────────────────────
    走线时基础图层压暗但不撤：读者仍看得见这条线穿过一个多热闹的地方 */
 .pl-lining .pl-dots, .pl-lining .pl-labs, .pl-lining .pl-leads,
