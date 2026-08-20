@@ -19,8 +19,70 @@ import { PROLOGUE, TEXT, EPILOGUE } from './line-text-shiku.js';
 import { PROLOGUE as CB_PRO, TEXT as CB_TEXT, EPILOGUE as CB_EPI } from './line-text-chibi.js';
 import { PROLOGUE as KH_PRO, TEXT as KH_TEXT, EPILOGUE as KH_EPI } from './line-text-kanhe.js';
 import { PROLOGUE as BT_PRO, TEXT as BT_TEXT, EPILOGUE as BT_EPI } from './line-text-beitie.js';
+import { PROLOGUE as SG_PRO, TEXT as SG_TEXT, EPILOGUE as SG_EPI } from './line-text-shugui.js';
 import { GEO } from './geo.js';
 import { PICS } from './pics.js';
+
+/** 书库线的站表。长文在 line-text-shugui.js，考据在 docs/line-shugui-craft.md。
+ * 键取 shugui（书柜），避开石窟线 shiku 的一字之差。 */
+const SHUGUI = [
+  {
+    t: '一万三千二百一十九卷',
+    b: '国家第一次数清天下的书——这份书单后来自己也亡佚了。',
+    b2: '成帝诏求遗书，刘向等分司校书，刘歆总成《七略》六略三十八种。原书唐后亡佚，'
+      + '赖《汉书·艺文志》转录存世；艺文志卷末数字与之出入五十卷，正是班固「删其要」的手印。',
+    ev: '七略',
+  },
+  {
+    t: '江陵的火',
+    b: '史上数得着的爱书皇帝，城破之夜烧了自己聚的书。',
+    b2: '梁元帝焚书，卷数三源三说（七万余、十余万、十四万），司马光在《通鉴考异》里'
+      + '自陈取舍。三十年后隋人牛弘上表数「五厄」——中国人连书的死亡都记了账。',
+    ev: '江陵陷落焚书',
+  },
+  {
+    t: '把书拆成零件',
+    b: '类书成形：把经史百家拆开分类抄进柜子，原书亡了零件还在。',
+    b2: '武德七年欧阳询领衔编成，事与文兼收（后世概括），唐四大类书之一。'
+      + '为作文取材而设的抽屉，无意间成了古书的备份库。',
+    ev: '艺文类聚',
+  },
+  {
+    t: '真宗划掉的那一页',
+    b: '新王朝接连修四部大书；皇帝的手也伸进了柜子。',
+    b2: '宋四大书成于太宗真宗两朝，学界通行解读兼有文治门面与安置降臣（推断层）。'
+      + '《册府元龟》整篇照录「不改旧文」，真宗却亲阅削去韦后宴饮一节。',
+    ev: '太平御览',
+  },
+  {
+    t: '只抄了两份的书',
+    b: '古代最大的类书整抄不改，正本却人间蒸发——六说并立，至今无解。',
+    b2: '凡例「用韵以统字，用字以系事」。因整抄不改，清人从中辑回《旧五代史》等亡书；'
+      + '正本下落六说各有主张者而无一实证，今存副本约四百余册散于全球。',
+    ev: '永乐大典',
+  },
+  {
+    t: '五米厚的墙',
+    b: '石室金匮落成实物：墙厚五米，鎏金铜皮樟木柜一百五十二具。',
+    b2: '嘉靖十五年建成，防火防潮防虫鼠，曾藏《大典》副本。后半场是产权拉锯数十年、'
+      + '住户明火做饭，二〇一九年才腾退——守柜子的从来是人，不是砖。',
+    ev: '皇史宬',
+  },
+  {
+    t: '被涂掉的名字',
+    b: '现存最大的类书印成时，卷首没有原编者的名字。',
+    b2: '陈梦雷编成万卷《集成》，雍正即位后再度流放，蒋廷锡奉命重校署名进呈；'
+      + '《清史稿》长期误记「蒋廷锡奉敕撰」，一九三四年影印本才署回陈名。',
+    ev: '古今图书集成',
+  },
+  {
+    t: '一边收，一边烧',
+    b: '最大的丛书与最大的禁毁，是同一项工程的两面。',
+    b2: '「寓禁于征」：访书诏与查缴违碍并行，禁毁种数三家统计互不相合（不采）。'
+      + '七阁分藏的账像书厄的续页：三阁毁于兵火，完整走到今天的三个半。',
+    ev: '四库全书',
+  },
+];
 
 /** 碑帖线的站表。长文在 line-text-beitie.js，考据在 docs/line-beitie-craft.md。 */
 const BEITIE = [
@@ -460,6 +522,26 @@ export const LINES = {
     // 宋拓在上博；欧阳修的卷子去了台北；金石录写在东莱；名单在西樵山被推红。
     // 「出→藏」的那条线，正是这条线讲的「挑选与流传」
     geo: GEO.beitie,
+  },
+  shugui: {
+    key: 'shugui',
+    name: '书库线',
+    sub: '国家修书八柜：动机、方法与无常',
+    lede: '中国第一份国家书单，自己也亡佚了。此后一千八百年，每个王朝都想把天下的书装进一个柜子。',
+    stops: [
+      { t: SG_PRO.t, b: SG_PRO.p[0], long: SG_PRO.p, full: true, read: 'story-shugui.html#s0' },
+      ...SHUGUI.map((s, i) => ({
+        ...s, read: `story-shugui.html#s${i + 1}`,
+        ...(SG_TEXT[s.ev] ? { long: SG_TEXT[s.ev] } : {}),
+      })),
+      { t: SG_EPI.t, b: SG_EPI.p[0], long: SG_EPI.p, full: true, read: 'story-shugui.html#s9' },
+    ],
+    prologue: SG_PRO,
+    epilogue: SG_EPI,
+    doc: 'line-shugui',
+    // 地理档：未央宫校书，江陵焚书，长安、开封、南京、北京修书；
+    // 大典残卷与文渊阁本各带一个「藏」点——「出→藏」那条线就是聚散本身
+    geo: GEO.shugui,
   },
 };
 
