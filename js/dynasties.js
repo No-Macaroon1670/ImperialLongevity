@@ -423,7 +423,7 @@ export const TRANSITIONS = {
   'ming>qing': { n: '萨尔浒之战', w: '薩爾滸之戰' },
   'nming>qing': { n: '清灭南明之战', w: '清滅南明之戰' },
   'qing>taiping': { n: '太平天国运动', w: '太平天國' },
-  'taiping>qing': { n: '天京陷落', w: '天京事變', b: '天京陷落' },
+  'taiping>qing': { n: '天京陷落', w: '天京之役', b: '天京陷落' },
 };
 
 /**

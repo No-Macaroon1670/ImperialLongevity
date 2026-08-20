@@ -532,6 +532,8 @@ export function renderLaneTimeline(host, list, opts) {
       // 补进数据却仍被这里拦在轨外,等于白补。承继细丝的刻痕在河身、
       // 事件点在表头,两处register不同,并存不算重复。
       if (evOff.has(ev.k) || ev.k === 'era') continue;
+      // 视图分工（2026-08-20 用户裁）：带 tr 的事件在时间轴归承继箭头表现（箭头可点出卡），此处不画点；地图不看 tr 照常画
+      if (ev.tr) continue;
       const ex = x(evAnchor(ev)) + fanOf(ev);
       if (ex < PAD_L - 40 || ex > W - PAD_L + 40) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
