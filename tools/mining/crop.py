@@ -20,6 +20,7 @@
     python tools/mining/crop.py <图> --blur 左,上,右,下 [...]  # 可给多块，先裁后模糊
     python tools/mining/crop.py <图> --auto                     # 提亮＋拉对比＋锐化
     python tools/mining/crop.py <图> --box ... --keep-orig no  # 不留原图
+    python tools/mining/crop.py <图> --box ... --out img/own/子图名.jpg  # 子图另存，母图不动
 
 三层文件夹（用户 2026-08-20 定）：
   img/inbox/       只放没动过的原始存入——它的文件数就是欠账数
@@ -32,6 +33,11 @@
     比十个模糊块干净；糊脸是裁不掉时的退路。
   · 重存即剥 EXIF（含 GPS）；署名只写年月，不写日子。
   · 说明牌以 inbox 放大重读为准，对话里的初判不算定案。
+  · **一图多产**（用户 2026-08-20 定）：群像照按需拆成单件子图；说明牌与文物本体
+    分开裁——牌是据、物是像，用途不同。子图用 --out 另存新名，母图保持不动；
+    子图优先从 processing/ 的 -orig 原图裁（880px 成品再裁会糊），无原图才裁成品。
+    子图继承母图的场馆前缀，说明牌子图一律 -shuopai 后缀（shuomingpai 已废弃归一）；
+    账册里子图行注明「出自某母图」。**按需拆**：故事线/条目用到单件才拆，不预拆囤货。
 
 --auto 是给**博物馆内景**用的（用户 2026-08-19 要求：内景常需处理，主体要更突出）。
 展厅普遍照度低、玻璃压一层灰、手机又降噪抹细节，原片往往灰扁。三步：
@@ -59,6 +65,7 @@ def main():
         if len(box) != 4:
             sys.exit('--box 要四个数：左,上,右,下（0–1 的比例）')
     keep = 'no' not in sys.argv[sys.argv.index('--keep-orig') + 1:][:1] if '--keep-orig' in sys.argv else True
+    out = sys.argv[sys.argv.index('--out') + 1] if '--out' in sys.argv else None
     auto = '--auto' in sys.argv
     blurs = []
     if '--blur' in sys.argv:
@@ -76,7 +83,7 @@ def main():
     # 出来的片还躺着。转正后 EXIF 随重存丢弃，正好也把定位等隐私字段一并剥掉。
     im = ImageOps.exif_transpose(im)
     w0, h0 = im.size
-    if keep:
+    if keep and not out:  # --out 模式母图本身就是原图,不必再另存一份
         stem, ext = os.path.splitext(path)
         orig = stem + '-orig' + ext
         if not os.path.exists(orig):
@@ -118,7 +125,10 @@ def main():
     # 浏览器多半仍能显示，但 `<img>` 之外的工具会按扩展名判类型而读错。
     # 扩展名与内容必须一致——这是出处准确性的最低一档。
     stem, ext = os.path.splitext(path)
-    if ext.lower() != '.jpg':
+    if out:
+        # 子图另存:强制 .jpg 后缀,母图一个字节都不动
+        path = os.path.splitext(out)[0] + '.jpg'
+    elif ext.lower() != '.jpg':
         out_path = stem + '.jpg'
         if os.path.exists(path) and out_path != path:
             os.remove(path)

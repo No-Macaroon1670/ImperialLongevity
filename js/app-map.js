@@ -268,7 +268,7 @@ function tipShow(x, y, title, meta, body) {
 const tipHide = () => tip.classList.remove('on');
 
 const IDLE = ['这张图', '一条目一个点',
-  '把指针放到任一点上；点一下展开它去过的地方。留白的地方不是没发生过事，是那些条目没有地点可查。'];
+  '指到点上看名字，点一下展开它去过的地方。半透明的点是今地不确定；带数字的大点是挤在一处的一簇，点开会散开；双击下方类别芯片只看那一类，「全开」复原。'];
 const rd = reader($('plate-read'), IDLE);
 const go = $('plate-go');
 const goTo = (r) => {
