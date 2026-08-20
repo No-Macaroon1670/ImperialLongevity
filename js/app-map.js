@@ -1224,6 +1224,47 @@ function mountLineChips() {
     wrap.appendChild(det);
   }
   bar.after(wrap);
+
+  // 搜索框（用户 2026-08-22 提）：轻装版——只搜图上有落点的条目与政权名，
+  // 不引河页搜索的大池子（那会把君主全表拖进图页；拼音键记在接缝清单待并）。
+  // 选中即定位：挪视野、拉近、种下选中态——坞与嵌卡随 say() 一起到位
+  const sbox = document.createElement('div');
+  sbox.className = 'pl-search';
+  const sin = document.createElement('input');
+  sin.type = 'search'; sin.placeholder = '搜图上的条目 / 政权…';
+  sin.autocomplete = 'off'; sin.setAttribute('aria-label', '搜索并定位');
+  const slist = document.createElement('div');
+  slist.className = 'pl-search-list';
+  sbox.append(sin, slist);
+  wrap.after(sbox);
+  const locate = (r) => {
+    slist.innerHTML = ''; sin.value = r.n;
+    if (r['层'] !== 'dyn' && state.off.has(r.k)) state.off.delete(r.k);   // 关着的类先点亮
+    state.layers.add(r['层'] === 'dyn' ? 'dyn' : 'ev');
+    const [x, y2] = trueXY(r);
+    VIEW.cx = x; VIEW.cy = y2;
+    setZoom(Math.max(VIEW.z, 4.5));
+    state.sel = idOf(r);
+    say(r, true);
+    scheduleDraw();
+  };
+  sin.addEventListener('input', () => {
+    const q = sin.value.trim();
+    slist.innerHTML = '';
+    if (q.length < 1) return;
+    const hitRows = ALL.filter((r) => r.n.includes(q)).slice(0, 8);
+    for (const r of hitRows) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = `${r.n}　${kindLabel(r)} · ${yr(r.y)}`;
+      b.addEventListener('click', () => locate(r));
+      slist.appendChild(b);
+    }
+  });
+  sin.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { const b = slist.querySelector('button'); if (b) b.click(); }
+    if (e.key === 'Escape') { slist.innerHTML = ''; sin.value = ''; }
+  });
 }
 
 function mountSettings() {

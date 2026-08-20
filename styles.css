@@ -1416,6 +1416,18 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-settings input { vertical-align: -1px; margin-right: 5px; }
 .pl-set-why { color: var(--muted); }
 
+/* 图页搜索:轻装版,结果即点即定位 */
+.pl-search { position: relative; margin-top: 8px; max-width: 340px; }
+.pl-search input { width: 100%; padding: 5px 10px; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--surface-1); color: inherit; font-size: .85rem; }
+.pl-search-list { position: absolute; z-index: 30; left: 0; right: 0; top: 100%;
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.12); overflow: hidden; }
+.pl-search-list:empty { display: none; }
+.pl-search-list button { display: block; width: 100%; text-align: left; padding: 6px 10px;
+  border: 0; background: none; color: inherit; font-size: .85rem; cursor: pointer; }
+.pl-search-list button:hover { background: var(--surface-2); }
+
 /* 线的折叠单:第四条线上线时自动从平铺切换过来 */
 .pl-lines-menu { display: inline-block; font-size: inherit; color: inherit; }
 .pl-lines-menu summary { cursor: pointer; user-select: none; display: inline; }
