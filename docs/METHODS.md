@@ -22,6 +22,9 @@
 - 「写者串行、读者并行」＋「只暂存自己的 INDEX 行」（并发纪律）
 - 「提交必带 pathspec」——主循环 commit 一律 `git commit -- <files>`，绝不裸 commit：
   并行判官会往暂存区放半成品，裸提交会替人剪彩（2026-08-20 e840b41 实案）
+- 上例的例外：**untrack（rm --cached）不可配 pathspec commit**——pathspec 提交绕过
+  暂存区，出库操作会被无视（2026-08-20 d1e48ea 实案：删了个寂寞）。untrack 场景
+  改用「git status 验净暂存区→裸 commit」；WIP 工作档清单见 .gitignore 注释
 - 中西历跨年、农历数字误作阳历（假分歧消解两例）
 
 ## 工作流（可复用流水线）
