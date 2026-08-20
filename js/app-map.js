@@ -414,7 +414,10 @@ function spread(g) {
   let ring = 0, i = 0;
   while (i < rest.length) {
     const cap = Math.min(rest.length - i, 6 + ring * 4);
-    const rad = (4.6 + 1.45 * Math.min(cap, 6) + ring * 11) * k;
+    // 间距版本二（用户实测「展开后不太好选」）：满环邻距 ≈17–20 屏素、环距 13.5，
+    // 配合成组命中圈收小（见画点处），点缝里不再是抽签。小组（2–3 个）仍收着，
+    // 免得两点隔心相对、引线连成一根假关系线（版本一的教训，见上）
+    const rad = (5 + 1.9 * Math.min(cap, 6) + ring * 13.5) * k;
     for (let j = 0; j < cap; j += 1) {
       const th = (-Math.PI / 2) + (2 * Math.PI * j) / cap + (ring % 2 ? Math.PI / cap : 0);
       rest[i + j].px = g.cx + rad * Math.cos(th);
@@ -748,6 +751,13 @@ function draw() {
   const gs2 = gs.filter((g) => g.rows.length).concat(gsDyn);
   let packed = 0, folded = 0, selAt = null;
   const dynHits = [];   // 都城命中区收尾抬顶：不抬会被后画的事件命中圈压住（用户实测点不中）
+  const openHits = [];  // 点开的簇成员也抬顶：洋葱脚下常压着别组散点的大命中圈，
+                        // 读者点开簇就是要选簇里的条目，簇成员优先吃点击（用户实测「不好选」）
+  const clusterHits = []; // 折叠簇钮永远最顶：簇圆不透明，读者点到的像素是圆就该开圆——
+                          // 洋葱摊得大时脚会伸到邻簇圆下，不抬簇钮，邻簇的心会被成员抢走（实测）
+  const clusterVis = [];  // 簇的圆面同抬：命中层抬了画层不抬，别组的点会画在圆上——
+                          // 看得见却点不中，比看不见更糟。视觉与命中必须同序
+  const openVis = [];     // 展开簇的成员点面，最后压顶（层序见 draw 尾）
 
   for (const g of gs2) {
     const gid = gidOf(g);
@@ -764,16 +774,19 @@ function draw() {
       if (isDynG) {
         for (const off of [4.4, 2.2]) {
           const o = off / VIEW.z;
-          gDot.appendChild(el('rect', {
+          const gh = el('rect', {
             class: 'pl-dyn-ghost',
             x: g.cx - R + o, y: g.cy - R - o, width: R * 2, height: R * 2,
-          }));
+          });
+          gDot.appendChild(gh);
+          clusterVis.push(gh);
         }
       }
       const c = isDynG
         ? el('rect', { class: 'pl-cluster pl-dyn', x: g.cx - R, y: g.cy - R, width: R * 2, height: R * 2 })
         : el('circle', { class: 'pl-cluster', cx: g.cx, cy: g.cy, r: R });
       gDot.appendChild(c);
+      clusterVis.push(c);
       solver.obstacle(c);
       const t = el('text', {
         class: 'pl-cluster-n', x: g.cx, y: g.cy + R * (isDynG ? 0.42 : 0.34), 'text-anchor': 'middle',
@@ -781,6 +794,7 @@ function draw() {
       });
       t.textContent = String(g.rows.length);
       gDot.appendChild(t);
+      clusterVis.push(t);
       // 聚合点报「这是哪儿」，不报「挤在一处」——挤不挤看得见，用不着说
       // （用户指出）。地名取簇内主点地名的众数；分散得没有众数就用最近的参照城市
       const cnt = {};
@@ -802,10 +816,11 @@ function draw() {
         where = `${best}一带`;
       }
       const hit = el('circle', {
-        class: 'pl-hit', cx: g.cx, cy: g.cy, r: R + (isDynG ? 6 : 3) / VIEW.z, tabindex: '0', role: 'button',
+        class: 'pl-hit', cx: g.cx, cy: g.cy, r: R + (isDynG ? 2 : 3) / VIEW.z, tabindex: '0', role: 'button',
         'aria-label': isDynG ? `${where}，${cnum(g.rows.length)}朝古都，展开` : `${where}，${g.rows.length} 条，展开`,
       });
       gHit.appendChild(hit);
+      clusterHits.push(hit);
       const open = () => { state.open.add(gid); draw(); };
       hit.addEventListener('click', (e) => { e.stopPropagation(); open(); });
       hit.addEventListener('keydown', (e) => {
@@ -862,15 +877,21 @@ function draw() {
         ? el('rect', { class: kls, x: m.px - rad, y: m.py - rad, width: rad * 2, height: rad * 2 })
         : el('circle', { class: kls, cx: m.px, cy: m.py, r: rad });
       gDot.appendChild(dot);
+      if (g.rows.length > foldCap) openVis.push(dot);
       solver.obstacle(dot);
 
+      // 孤点命中圈给足（图上空旷，宽命中只帮不害）；散开成组的收小到贴着
+      // 邻距的一半——展开环邻距 13.5–20 屏素，命中半径 24 会互相压掉大半，
+      // 点谁全看画序（用户实测「不太好选」）。7.5 上下，圈与圈基本互不相压
+      const baseHit = r['层'] === 'dyn' ? Math.max(rad * 1.8, 9 / VIEW.z) : Math.max(rad * 2.4, 11 / VIEW.z);
       const hit = el('circle', {
         class: 'pl-hit', cx: m.px, cy: m.py,
-        r: r['层'] === 'dyn' ? Math.max(rad * 1.8, 9 / VIEW.z) : Math.max(rad * 2.4, 11 / VIEW.z),
+        r: g.rows.length > 1 ? Math.max(rad + 1.2 / VIEW.z, 7.5 / VIEW.z) : baseHit,
         tabindex: '0', role: 'button', 'aria-label': `${r.n}，${yr(r.y)}`,
       });
       gHit.appendChild(hit);
       if (r['层'] === 'dyn') dynHits.push(hit);
+      if (g.rows.length > foldCap) openHits.push(hit);   // 走到这儿还超阈值＝展开中的簇
       const enter = () => {
         const meta = r['层'] === 'dyn' ? `${yr(r.y)} – ${yr(r.e)}　政权` : `${yr(r.y)}　${kindLabel(r)}`;
         const body = r['层'] === 'dyn' ? BIO.get(r.key) : YC.get(r.n);
@@ -915,6 +936,10 @@ function draw() {
 
   // 都城命中区整体抬到命中层最上：方块比圆点少、又常与事件同城，被压住就点不中
   for (const h of dynHits) gHit.appendChild(h);
+  for (const h of clusterHits) gHit.appendChild(h);
+  for (const h of openHits) gHit.appendChild(h);
+  for (const v of clusterVis) gDot.appendChild(v);
+  for (const v of openVis) gDot.appendChild(v);
   if (selAt) {
     jobs.push(...drawChain(selAt.r, selAt.x, selAt.y));
     say(selAt.r, true);
