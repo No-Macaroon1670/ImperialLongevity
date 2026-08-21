@@ -105,7 +105,12 @@ def main():
 
     total = 0
     tiers = {}
+    # 一站多图（列表）逐张走同一条路（2026-08-22 香火线首用；yanyi 落点那种自摄列表天然跳过）
+    flat = []
     for ev, v in doc['站'].items():
+        for one in (v if isinstance(v, list) else [v]):
+            flat.append((ev, one))
+    for ev, v in flat:
         url = v.get('远端') or v.get('缩略图')
         if not url or url.startswith('img/'):
             url = v.get('远端')
@@ -162,10 +167,13 @@ def main():
         d = json.load(io.open(f, encoding='utf-8'))
         L += ['## %s' % k, '', '| 站 | 文件 | 署名 | 许可 | 原始文件页 |', '|---|---|---|---|---|']
         for ev, v in d['站'].items():
-            L.append('| %s | `%s` | %s | %s | [Commons](%s) |'
-                     % (ev, os.path.basename(v.get('缩略图', '')),
-                        (v.get('署名') or v.get('作者') or '—').replace('|', '｜'),
-                        v.get('许可') or '—', v.get('说明页') or ''))
+            for one in (v if isinstance(v, list) else [v]):
+                page = one.get('说明页') or ''
+                link = '[Commons](%s)' % page if page else '—'
+                L.append('| %s | `%s` | %s | %s | %s |'
+                         % (ev, os.path.basename(one.get('缩略图', '')),
+                            (one.get('署名') or one.get('作者') or '—').replace('|', '｜'),
+                            one.get('许可') or '—', link))
         L.append('')
     io.open(os.path.join(ROOT, 'img/CREDITS.md'), 'w', encoding='utf-8',
             newline='\n').write(chr(10).join(L))
