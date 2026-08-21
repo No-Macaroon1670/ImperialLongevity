@@ -6,7 +6,7 @@
 
 **裁切按比例给**（0–1），不按像素：手机换了、原图尺寸变了，同一组参数照样用。
 
-宽度压到 880px，与 vendor_pics.py 收 Commons 图时同一档——版面上最宽也就
+长边压到 1600px（2026-08-21 前是宽 880，竖图吃亏、说明牌糊字，已废）——版面上最宽
 用到 640px，再大只是白占字节。**原图另存 `-orig` 一份**：裁错了能重来，
 而且原图是作者的东西，不该被工具单向吃掉。
 
@@ -85,7 +85,9 @@
 import io, os, shutil, sys
 from PIL import Image, ImageFilter, ImageOps, ImageEnhance
 
-MAXW = 880
+MAXW = 1600   # 长边上限。880 时代的病：竖构图里器物只分到三百像素、说明牌小字
+              # 到分辨率地板、高分屏灯箱再拉伸一遍（2026-08-21 用户目检定案）。
+              # 1600 = 版面最宽 800 × DPR2，灯箱与视网膜屏同时喂饱。
 
 
 def main():
@@ -127,10 +129,12 @@ def main():
         l, t, r, b = box
         im = im.crop((int(l * w0), int(t * h0), int(r * w0), int(b * h0)))
         print('裁：%dx%d → %dx%d' % (w0, h0, im.size[0], im.size[1]))
-    if im.size[0] > MAXW:
-        h = int(im.size[1] * MAXW / im.size[0])
-        im = im.resize((MAXW, h), Image.LANCZOS)
-        print('压到 %dx%d' % (MAXW, h))
+    long_edge = max(im.size)
+    if long_edge > MAXW:
+        ratio = MAXW / long_edge
+        nw, nh = int(im.size[0] * ratio), int(im.size[1] * ratio)
+        im = im.resize((nw, nh), Image.LANCZOS)
+        print('压到 %dx%d（长边 %d）' % (nw, nh, MAXW))
     if auto:
         before = im.convert('L').resize((64, 64)).getdata()
         im = ImageOps.autocontrast(im.convert('RGB'), cutoff=0.4)
@@ -167,7 +171,7 @@ def main():
         if os.path.exists(path) and out_path != path:
             os.remove(path)
         path = out_path
-    clean.save(path, 'JPEG', quality=88, optimize=True, progressive=True)
+    clean.save(path, 'JPEG', quality=90, optimize=True, progressive=True)
     print('写回 %s（%.0f KB）' % (os.path.basename(path), os.path.getsize(path) / 1024))
     return 0
 
