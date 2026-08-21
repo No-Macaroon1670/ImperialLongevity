@@ -620,7 +620,9 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 /* display 必须在 .on 态重申：.kp.on{display:block} 是双类，会压掉上面的
    单类 grid——塌成竖排后内容超高冒出纵滚条，恰好骑在 ✕ 上，「关闭失灵」
    与「版式时好时坏」同根（用户两报实为一案）。overflow 锁死：角卡定高
-   定版，宁可截断绝不出滚动条抢点击 */
+   定版，宁可截断绝不出滚动条抢点击。
+   例外见下方 .kp-corner.kp-yc-full：库内简注全文那一档改让盒子自然撑高——
+   没有滚动条，就不会重蹈这里说的那个坑，与「锁死」的初衷并不冲突 */
 .kp-corner.on { animation: none; display: grid; }
 .kp-corner { overflow: hidden; }
 .kp-corner .kp-thumb { grid-column: 1; grid-row: 1 / span 3; float: none;
@@ -680,6 +682,25 @@ section.card.has-kp:not(.desc-full) > .desc::after {
 .kp-title { font-weight: 720; font-size: 1.04rem; margin: 1px 0 6px; }
 .kp-ext { font-size: .82rem; line-height: 1.6; margin: 0;
   display: -webkit-box; -webkit-line-clamp: 10; -webkit-box-orient: vertical; overflow: hidden; }
+.kp-ext strong { font-weight: 700; }
+/* 全卡放库内简注(yc)全文时(无维基条目/拉取失败,knowledge.js 的 fillCard)：
+   解除各处的逐行截断，改由每种卡本就有的布局去接住长文——不设字数上限，
+   卡片这时在代行百科职能，掐字数等于掐正文。kp-yc-full 挂在卡身(card.el)
+   上、不挂在 .kp-ext 段落自己身上，故这里一律用「卡身.kp-yc-full 段落」
+   的祖先写法，不能写成 .kp-ext.kp-yc-full(同一元素两个类,永远不中)。
+     悬浮/贴底卡(kp 基类自带 max-height + overflow-y:auto)本就整卡可滚，
+   解除段落自身的 line-clamp 后交给外层已有的滚动条；
+     角卡/嵌入卡是文档流内的定版卡——角卡「宁可截断绝不出滚动条抢点击」
+   是给意外超长内容摆的老规矩(见下 .kp-corner 段的批注)，这里改让盒子
+   自然撑高，没有滚动条，旧坑也就无从复发。选择器逐一列出而不依赖层叠
+   顺序：要稳赢每一处已有的 line-clamp override，不看谁写在谁后面。 */
+.kp.kp-yc-full .kp-ext,
+.kp-corner.kp-yc-full .kp-ext,
+.kp-solo.kp-yc-full .kp-ext,
+body.tour-on .kp-solo.kp-yc-full .kp-ext {
+  display: block; -webkit-line-clamp: unset; overflow: visible;
+}
+.kp-corner.kp-yc-full { max-height: none; overflow: visible; }
 .kp-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; font-size: .8rem; }
 .kp-links a { text-decoration: none; }
 /* 两个视频链接绑成一组：要换行一起换，绝不把哔哩哔哩单独挤到下一行（用户实测） */
@@ -1563,8 +1584,11 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-tip-m { color: var(--text-2); font-size: .72rem; margin: 1px 0 3px; }
 .pl-tip-b {
   color: var(--text-2); line-height: 1.55;
-  display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden;
 }
+/* 句界截断已经把长度收在预览该有的范围内(app-map.js 的 truncateSentence)，
+   这里不再用逐行硬切收尾——那正是旧版「半句吊尾」的来源:字数够了就切,
+   不管切在哪个字中间 */
+.pl-tip-b strong { font-weight: 700; }
 
 /* 地形骨架：山体一层淡墨，名字斜体极淡——布景，不是内容 */
 .pl-terr path { fill: var(--muted); fill-opacity: .05; stroke: var(--muted); stroke-opacity: .16; stroke-width: 1; }

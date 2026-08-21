@@ -32,7 +32,7 @@ import {
 import { GEO_EVENTS } from './geo-events.js';
 import { GEO_DYN } from './geo-dynasties.js';
 import { EVENT_KINDS, EVENTS } from './events.js';
-import { evSpec, mountEmbedCard } from './knowledge.js';
+import { evSpec, mountEmbedCard, mdBold } from './knowledge.js';
 import { TERR } from './territories.js';
 import { syncCounts } from './counts.js';
 import { LINES } from './lines.js';
@@ -324,6 +324,25 @@ const ANCHORS_FAR = [
 // 读数面板仍然给行迹链那类结构信息，浮卡给「这是谁、讲什么」
 const YC = new Map(EVENTS.map((e) => [e.n, e.yc || '']));
 const BIO = new Map(DYNASTIES.map((d) => [d.key, d.bio || '']));
+
+// 悬停小卡是**预览**，不是全卡——那份待遇(全文、不截断)留给点开后的全卡
+// (knowledge.js 的 fillCard)。这里仍按字数截，只是把截断点从「CSS 逐行硬切、
+// 半句吊尾」改成「按句界切」：找不到整句边界才退回硬切，宁可一句读全也别
+// 齐刷刷切在同一字数上。**粗体**转 <strong> 走 mdBold，与全卡同一条约定。
+const TIP_MAX = 120, TIP_SLACK = 20;
+const SENT_END = ['。', '！', '？', '」'];
+function truncateSentence(s, max = TIP_MAX, slack = TIP_SLACK) {
+  if (!s) return '';
+  if (s.length <= max) return s;
+  const win = s.slice(0, max + slack);
+  let cut = -1;
+  for (const ch of SENT_END) { const i = win.lastIndexOf(ch); if (i > cut) cut = i; }
+  let out = cut >= 0 ? win.slice(0, cut + 1) : s.slice(0, max);
+  // 切点若落在 ** 中间会留下单只星号；宁可这一段不加粗，也不露记号
+  if ((out.match(/\*\*/g) || []).length % 2 === 1) out = out.replace(/\*\*/g, '');
+  return out + '……';
+}
+
 const tip = document.createElement('div');
 tip.className = 'pl-tip';
 tip.innerHTML = '<div class="pl-tip-t"></div><div class="pl-tip-m"></div><div class="pl-tip-b"></div>';
@@ -333,8 +352,9 @@ function tipShow(x, y, title, meta, body) {
   tip.querySelector('.pl-tip-t').textContent = title;
   tip.querySelector('.pl-tip-m').textContent = meta || '';
   const bd = tip.querySelector('.pl-tip-b');
-  bd.textContent = body || '';
-  bd.style.display = body ? '' : 'none';
+  const preview = truncateSentence(body || '');
+  bd.innerHTML = preview ? mdBold(preview) : '';
+  bd.style.display = preview ? '' : 'none';
   const px = ((x - VB[0]) / VB[2]) * b.width + b.left - pb.left;
   const py = ((y - VB[1]) / VB[3]) * b.height + b.top - pb.top;
   tip.style.left = `${px}px`;

@@ -191,6 +191,15 @@ function wikiOf(title) {
     : { lang: 'zh', t: title };
 }
 
+/** `**粗体**` 转 `<strong>`——库内简注（`yc`）的唯一标记语法，与 tour.js 的
+ *  长文栏同一条约定：先转义 &/<（数据是自己库里的字面量，非外来输入，
+ *  但走 innerHTML 前照例转义，无成本、免后患），再拆星号。给需要按
+ *  innerHTML 落地的简注文本用（fillCard 的无维基分支、地图悬停小卡）。 */
+export function mdBold(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+}
+
 function fetchSummary(title) {
   if (!CACHE.has(title)) {
     const hit = diskLoad()[title];
@@ -235,6 +244,9 @@ export function evSpec(ev) {
     // nb：百度确实没有这个词条，藏掉按钮而不是给个 404
     baidu: ev.b, noBaidu: !!ev.nb, museum: ev.m, wsrc: ev.wsrc, ownPic: OWN_PIC[ev.n],
     q: ev.ya || ev.n, yt: true,
+    // yc：库内自撰简注。无维基条目、或维基摘要抓取失败时，fillCard 拿它
+    // 顶上摘要区——对 nb/无 w 判例族而言，这条注恰恰是全库考据最厚的地方
+    yc: ev.yc,
   };
 }
 
@@ -353,6 +365,9 @@ async function fillCard(card, spec) {
   card.head.textContent = spec.head;
   card.title.textContent = spec.display || spec.title;
   card.ext.textContent = '…';
+  // 上一位主角若曾落在「全文简注」分支，这一位未必也落——每次换人都先摘帽,
+  // 别让角卡/嵌入卡的自然撑高、侧卡的段内解限跟着旧主角赖到新卡上
+  card.el.classList.remove('kp-yc-full');
   // 图片显隐统一走这里:嵌入卡的宽屏两栏只在真有图时启用(kp-haspic),
   // 否则空图轨会给文字凭空让出一条左沟
   const pic = (on) => {
@@ -369,7 +384,12 @@ async function fillCard(card, spec) {
     card.src.textContent = '摘要实时取自中文维基百科';
   }
   // 无维基条目的条目(2026-08-21 起允许):收起维基栏与摘要抓取,不空转、
-  // 不 404。考据由库内简注与馆藏页承担——馆藏页按钮因此照常走
+  // 不 404。摘要区改放库内简注(yc)全文顶上——这批条目(nb/无 w 判例族,如
+  // 三道岗沉船、绿松石龙形器)恰恰是全库考据最厚的一档,没有 yc 才退回旧的
+  // 「考据见馆藏页」占位句。全文不设字数截断(2026-08-21 用户改判:卡片在
+  // 代行百科职能,掐字数等于掐正文)——长文交给 kp-yc-full 去撑,悬浮卡靠
+  // 既有的整卡滚动(.kp overflow-y:auto)接住,角卡/嵌入卡是文档流内的定版卡,
+  // 改让盒子自然撑高(styles.css 同段有批注)
   if (!spec.title) {
     card.wiki.style.display = 'none';
     card.baidu.style.display = spec.baidu ? '' : 'none';
@@ -380,8 +400,14 @@ async function fillCard(card, spec) {
     card.wsrc.href = spec.wsrc ? 'https://zh.wikisource.org/wiki/' + spec.wsrc.split('/').map(encodeURIComponent).join('/') : '#';
     card.wsrc.style.display = spec.wsrc ? '' : 'none';
     card.yt.style.display = card.bili.style.display = 'none';
-    card.ext.textContent = '中文维基无此条目；本条考据见库内简注与馆藏页。';
-    card.src.textContent = spec.ownPic ? '图为本库自摄' : '';
+    if (spec.yc) {
+      card.ext.innerHTML = mdBold(spec.yc);
+      card.el.classList.add('kp-yc-full');
+      card.src.textContent = spec.ownPic ? '图为本库自摄；本库自撰简注' : '本库自撰简注';
+    } else {
+      card.ext.textContent = '中文维基无此条目；本条考据见库内简注与馆藏页。';
+      card.src.textContent = spec.ownPic ? '图为本库自摄' : '';
+    }
     card.el.classList.add('on');
     return;
   }
@@ -450,6 +476,12 @@ async function fillCard(card, spec) {
     if (s.content_urls && s.content_urls.desktop) {
       card.wiki.href = s.content_urls.desktop.page + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
     }
+  } else if (spec.yc) {
+    // 有词条标题,但这一次没能拉到摘要(网络、限流、条目本身缺摘要都可能):
+    // 别空手,库内简注顶上——待遇与「无维基条目」分支相同(全文、kp-yc-full)
+    card.ext.innerHTML = mdBold(spec.yc);
+    card.el.classList.add('kp-yc-full');
+    card.src.textContent = spec.ownPic ? '图为本库自摄；本库自撰简注' : '本库自撰简注';
   } else {
     card.ext.textContent = '未能实时拉取维基摘要(可能无词条或网络受限),下方链接仍可直达。';
   }
