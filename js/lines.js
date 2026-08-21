@@ -761,7 +761,8 @@ export const LINES = {
     name: '香火线',
     sub: '民间生神，朝廷上户口',
     lede: '每一尊神进编制，都有一张有日期的纸。十三站看下来：纸能发也能撕，追认还常常追不上香火。',
-    // 题辞位留空——用户诗兴到了自会来（其余五条线的 shi 由用户自作）
+    shi: ['鬼仙怪妖，自古唯凭人定', '天地神祖，向来难判谁灵'],
+    shiBy: 'No-Macaroon1670 题',
     stops: [
       { t: XH_PRO.t, b: XH_PRO.p[0], long: XH_PRO.p, full: true, read: 'story-xianghuo.html#s0' },
       ...XIANGHUO.map((s, i) => ({
