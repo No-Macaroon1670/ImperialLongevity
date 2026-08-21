@@ -23,7 +23,7 @@
 
 用法：python tools/mining/build_line_page.py [key]     # 缺省 shiku
 """
-import io, json, os, re, shutil, subprocess, sys
+import io, glob, json, os, re, shutil, subprocess, sys
 
 ROOT = r"C:/Users/ziyi_/Claude/imperial-longevity"
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -580,5 +580,49 @@ def main():
         print('  ⚠ 有出处却没在文里排成引文的：', sorted(allq - quoted))
 
 
+
+def emit_line_pics():
+    """汇出 js/line-pics.js：各线 pics-*.json 里打了「卡」标的那一张 → 导览卡主图。
+
+    通用机制（2026-08-22 库主定）：一站多图时恰有一张 卡:true 者登导览卡；
+    单图站同样须打标——「图即主语」才上卡，与石窟线 build_pics.py 旧例同义。
+    缩略图挂内容指纹（?v=md5前8），与 story 页同一防缓存策略。
+    """
+    import hashlib
+    out = {}
+    for f in sorted(glob.glob(os.path.join(ROOT, 'docs', 'pics-*.json'))):
+        key = os.path.basename(f)[5:-5]
+        d = json.load(io.open(f, encoding='utf-8'))
+        stations = {}
+        for name, v in (d.get('站') or {}).items():
+            items = v if isinstance(v, list) else [v]
+            tagged = [x for x in items if x and x.get('卡')]
+            if not tagged:
+                continue
+            if len(tagged) > 1:
+                print('  [line-pics] %s·%s 有 %d 张打「卡」标，只取第一张' % (key, name, len(tagged)))
+            p2 = dict(tagged[0])
+            src = p2.get('缩略图') or ''
+            if src and not src.startswith('http'):
+                fp = os.path.join(ROOT, src)
+                if os.path.exists(fp):
+                    h = hashlib.md5(open(fp, 'rb').read()).hexdigest()[:8]
+                    p2['缩略图'] = src + '?v=' + h
+            stations[name] = {k2: p2[k2] for k2 in
+                              ('缩略图', '说明', '作者', '署名', '许可', '说明页', '整幅') if p2.get(k2)}
+        if stations:
+            out[key] = stations
+    NL = chr(10)
+    js = NL.join([
+        '// line-pics.js — 各线导览卡主图索引。**生成物，不要手改**：',
+        '// 改 docs/pics-<线>.json 的「卡」标后跑 tools/mining/build_line_page.py <线>。',
+        '// 挑选规则见 build_line_page.py emit_line_pics 档头。',
+        'export const LINE_PICS = ' + json.dumps(out, ensure_ascii=False, indent=1) + ';',
+        ''])
+    io.open(os.path.join(ROOT, 'js', 'line-pics.js'), 'w', encoding='utf-8', newline='').write(js)
+    print('写出 js/line-pics.js（%d 条线）' % len(out))
+
+
 if __name__ == '__main__':
     main()
+    emit_line_pics()

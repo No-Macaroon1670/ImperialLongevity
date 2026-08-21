@@ -23,6 +23,7 @@ import { PROLOGUE as SG_PRO, TEXT as SG_TEXT, EPILOGUE as SG_EPI } from './line-
 import { PROLOGUE as YY_PRO, TEXT as YY_TEXT, EPILOGUE as YY_EPI } from './line-text-yanyi.js';
 import { PROLOGUE as XH_PRO, TEXT as XH_TEXT, EPILOGUE as XH_EPI } from './line-text-xianghuo.js';
 import { GEO } from './geo.js';
+import { LINE_PICS } from './line-pics.js';
 import { PICS } from './pics.js';
 
 /** 演艺线的站表。长文在 line-text-yanyi.js，考据在 docs/line-yanyi-craft.md。
@@ -783,5 +784,18 @@ export const LINES = {
     geo: GEO.xianghuo,
   },
 };
+
+// ── 导览卡主图通用挂载（2026-08-22 库主定为程序）────────────────────
+// 任何线：docs/pics-<线>.json 里打了「卡」标的那一张，经 build_line_page.py
+// 汇出 js/line-pics.js，在此统一挂到站的 pic 上——tour.js 的 fillPic 就吃这个。
+// 一站多图恰一张打标；「图即主语」才登卡。已有 pic 的站（石窟线旧管线）不覆盖。
+for (const ln of Object.values(LINES)) {
+  const lp = LINE_PICS[ln.key];
+  if (!lp || !ln.stops) continue;
+  ln.stops.forEach((s, i) => {
+    const k = s.ev || (i === 0 ? '序' : i === ln.stops.length - 1 ? '落点' : null);
+    if (k && !s.pic && lp[k]) s.pic = lp[k];
+  });
+}
 
 export const lineOf = (key) => LINES[key] || null;
