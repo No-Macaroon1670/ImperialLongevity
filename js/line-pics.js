@@ -2,6 +2,16 @@
 // 改 docs/pics-<线>.json 的「卡」标后跑 tools/mining/build_line_page.py <线>。
 // 挑选规则见 build_line_page.py emit_line_pics 档头。
 export const LINE_PICS = {
+ "beitie": {
+  "石鼓": {
+   "缩略图": "img/used/gugong-shiguguan-quanjing.jpg?v=eb5cf006",
+   "说明": "故宫石鼓馆——原石在龛里，拓本在墙上：经典的两种身体",
+   "作者": "No-Macaroon1670 摄，2024 年 1 月",
+   "署名": "No-Macaroon1670 摄，2024 年 1 月",
+   "许可": "作者本人拍摄",
+   "整幅": true
+  }
+ },
  "shiku": {
   "白马寺": {
    "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/2011-06_White_Horse_Temple_03.jpg/960px-2011-06_White_Horse_Temple_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -211,6 +221,14 @@ export const LINE_PICS = {
    "说明": "天桥广场重建的四面钟",
    "作者": "No-Macaroon1670 摄，2016 年 9 月",
    "署名": "No-Macaroon1670 摄，2016 年 9 月",
+   "许可": "作者本人拍摄",
+   "整幅": true
+  },
+  "徽班进京": {
+   "缩略图": "img/used/gugong-changyinge-zhengmian.jpg?v=2917f013",
+   "说明": "畅音阁三层大戏楼（1772 年建）——徽班进京面对的正是这套宫廷演剧体制；三匾自上而下：畅音阁、导和怡泰、壹天宣豫",
+   "作者": "No-Macaroon1670 摄，2024 年 1 月",
+   "署名": "No-Macaroon1670 摄，2024 年 1 月",
    "许可": "作者本人拍摄",
    "整幅": true
   }
