@@ -1364,7 +1364,12 @@ section.card.river-mode .chart-host.full-bleed > .notes {
    sticky 跟滚，窄屏回落回图下方原位 */
 @media (min-width: 1420px) {
   .pl-stage { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 16px; align-items: start; }
-  .pl-stage .pl-read { margin-top: 0; position: sticky; top: 14px; }
+  .pl-stage .pl-read { margin-top: 0; position: sticky; top: 14px; overflow: hidden; min-width: 0; }
+  /* 侧栏是窄柱：嵌入条卡回落竖排——760px 那套「图左文右」是给横躺底栏定制的，
+     在 330px 里会把文字挤成一线并撑出横向滚动（用户实测） */
+  .pl-stage .kp-embed.on.kp-haspic { display: block; }
+  .pl-stage .kp-embed.on.kp-haspic .kp-thumb { width: 100%; max-height: 200px;
+    object-fit: cover; margin: 0 0 8px; }
 }
 
 /* 这条得写在媒体查询**之前**：写在后面会把窄屏那句 display:block 盖掉 */
