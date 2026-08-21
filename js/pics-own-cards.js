@@ -40,6 +40,7 @@ export const OWN_PIC = {
   糖霜谱: 'img/used/suining-songci-tangshuangpu-banban.jpg',
   广德寺: 'img/used/suining-songci-guangdesi-banban.jpg',
   蜀语: 'img/used/suining-songci-lishi-fuzi-banban.jpg',
+  大封天下城隍: 'img/used/shanghai-chenghuangmiao-shenkan.jpg',
   桓温灭成汉: 'img/used/suining-songci-huanwen-pingshu-map.jpg',
   钧窑: 'img/used/guobo-junyao-tianlanyou-wan.jpg',
   龙泉窑: 'img/used/suining-songci-longquanyao-qingyou-ping.jpg',
