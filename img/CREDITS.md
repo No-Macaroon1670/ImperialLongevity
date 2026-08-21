@@ -21,3 +21,4 @@ CC-BY 与 CC-BY-SA 要求署名，这是法律义务；CC0 与公有领域不要
 | 金刚经印本 | `diamond-sutra-of-868-ad-the-diamond-sutra-868-frontispiece-a.jpg` | the British Library | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:Diamond_Sutra_of_868_AD_-_The_Diamond_Sutra_(868),_frontispiece_and_text_-_BL_Or._8210-P.2.jpg) |
 | 大足石刻 | `baodingshan-cliff-carvings-50620551337.jpg` | Hugh Llewelyn from Keynsham, UK | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Baodingshan_Cliff_Carvings_(50620551337).jpg) |
 | 藏经洞发现 | `photo-showing-cave-16-and-the-manuscripts-piled-up-for-stein.jpg` | Aurel Stein | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Photo_showing_Cave_16_and_the_manuscripts_piled_up_for_Stein_to_examine_near_the_entrance_to_Cave_17,_the_%E2%80%9Clibrary_cave.jpg) |
+| 序 | `baimasi-stone-horse-2023.jpg` | No-Macaroon1670 摄，2023 年 12 月 | 作者本人拍摄 | [Commons]() |
