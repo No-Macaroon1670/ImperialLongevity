@@ -613,7 +613,7 @@ export const LINES = {
     // 题辞：全线定场诗，用户（No-Macaroon1670）作，原挂在 line-text-shiku.js
     // 的 EPIGRAPH，2026-08-21 迁到这里——build_line_page.py 的封面诗与走线
     // 开场卡（tour.js 的 full 卡）现在读同一份，字一个没改
-    shi: ['汉帝梦金身', '西方有神灵', '马铃叮万里', '雒阳佛钟鸣'],
+    shi: ['汉帝梦金身', '西方诞神灵', '马铃叮万里', '雒阳佛钟鸣'],
     shiBy: 'No-Macaroon1670 题',
     // 长文（js/line-text-shiku.js）按站点的 ev 挂上：宽屏面板里读整段散文，
     // 窄屏仍读 b/b2 那两句——一屏预算装不下六百字。
