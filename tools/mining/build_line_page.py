@@ -414,7 +414,18 @@ def main():
 
     def one_pic(p):
         """单张配图。图注恒有一行**署名**：CC-BY／CC-BY-SA 是法律要求，CC0 与
-        公有领域不要求但本库照署。自摄的图没有 Commons 文件页，只留署名不加链。"""
+        公有领域不要求但本库照署。自摄的图没有 Commons 文件页，只留署名不加链。
+
+        本地图的 src 挂**内容指纹**（?v=md5前8位）：重供同名图时字节一变链接就变，
+        浏览器与 Pages CDN 的旧缓存自然失效（2026-08-22 天桥重裁被缓存坑过一次后立）。"""
+        p = dict(p)
+        src = p.get('缩略图') or ''
+        if src and not src.startswith('http'):
+            fp = os.path.join(ROOT, src)
+            if os.path.exists(fp):
+                import hashlib
+                h = hashlib.md5(open(fp, 'rb').read()).hexdigest()[:8]
+                p['缩略图'] = src + '?v=' + h
         A('<figure class="pic">')
         # 可点开放大。**不去取 Commons 原图**——那等于把刚去掉的外部依赖请回来；
         # 仓库里这份 880px 相对页面上的 260px 已是 3.4 倍，够看了。
