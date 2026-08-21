@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>香火线 · 每一尊神进编制，都有一张有日期的纸。十三站看下来：纸能发也能撕，追认还常常追不上香火。</title>
+<meta name="description" content="民间生神，朝廷上户口。共 11 站。">
+<link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/story-xianghuo.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="香火线">
+<meta property="og:description" content="每一尊神进编制，都有一张有日期的纸。十三站看下来：纸能发也能撕，追认还常常追不上香火。">
+<meta property="og:url" content="https://no-macaroon1670.github.io/ImperialLongevity/story-xianghuo.html">
+<style>
+:root{
+  --bg:#0e0d0c; --bg2:#161311; --ink:#e9e3d7; --dim:#9a9187; --faint:#5d564e;
+  --rule:#2a2622; --accent:#c0603f; --gold:#c9a959;
+  --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+  font-size:18px;line-height:2.05;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+.epi-verse{padding:3rem 1.2rem 0;text-align:center}
+.epi-verse .vl{font-size:21px;letter-spacing:.38em;line-height:2.35;text-indent:.38em}
+.epi-verse .vby{margin-top:1rem;font-family:var(--sans);font-size:11px;color:var(--faint);letter-spacing:.24em}
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50}
+/* 导轨：宽屏才有。窄屏那点横向空间要留给正文 */
+/* 左栏：导轨在上，小地图在下。两者同住一个固定列——读者眼睛一抬，
+   既知道读到第几节，也知道那一节在地上哪儿 */
+#side{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
+  z-index:40;width:11rem}
+#rail{display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
+#rail a{display:flex;align-items:center;gap:.5rem;color:var(--faint);text-decoration:none;
+  letter-spacing:.04em;transition:color .25s}
+#rail .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;transition:transform .25s}
+#rail a .lbl{opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap}
+#rail a:hover{color:var(--dim)} #rail a:hover .lbl{opacity:1;transform:none}
+#rail a.on{color:var(--accent)} #rail a.on .dot{transform:scale(1.5)}
+#rail a.on .lbl{opacity:1;transform:none}
+@media(max-width:1180px){#side{display:none}}
+.wrap{max-width:40rem;margin:0 auto;padding:0 1.5rem}
+header.cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
+  padding:6rem 0 4rem;border-bottom:1px solid var(--rule)}
+.kicker{font-family:var(--sans);font-size:12px;letter-spacing:.34em;color:var(--faint);margin-bottom:2.4rem}
+h1{font-size:clamp(2.4rem,8vw,4rem);line-height:1.14;margin:0 0 1.6rem;font-weight:500;letter-spacing:.06em}
+.lede{font-size:1.06rem;color:var(--dim);line-height:2;max-width:30rem;margin:0}
+.meta{margin-top:3.4rem;font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.08em}
+.meta a{color:var(--gold);text-decoration:none;border-bottom:1px solid transparent}
+.meta a:hover{border-bottom-color:var(--gold)}
+section{padding:5.5rem 0;border-bottom:1px solid var(--rule)}
+section.tone{background:var(--bg2)}
+.num{font-family:var(--sans);font-size:11px;letter-spacing:.3em;color:var(--faint)}
+.yr{font-family:var(--sans);font-size:2.6rem;line-height:1;color:var(--rule);margin:.4rem 0 .8rem;
+  font-variant-numeric:tabular-nums;font-weight:700}
+h2{font-size:1.75rem;line-height:1.35;margin:0 0 .5rem;font-weight:500;letter-spacing:.04em}
+.sub{font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.1em;margin:0 0 2rem}
+section p{margin:0 0 1.35rem}
+p.beat{color:var(--gold)}
+blockquote{margin:2rem 0;padding-left:1.2rem;border-left:2px solid var(--accent);color:var(--ink)}
+blockquote small{display:block;margin-top:.5rem;font-family:var(--sans);font-size:11px;
+  letter-spacing:.08em;color:var(--faint)}
+.go{display:inline-block;margin:.4rem 0 1.6rem;font-family:var(--sans);font-size:12px;
+  letter-spacing:.08em;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:2px}
+.go:hover{border-bottom-color:var(--gold)}
+details.app{margin-top:2rem;font-family:var(--sans);font-size:13px;line-height:1.85;color:var(--dim)}
+details.app summary{cursor:pointer;color:var(--faint);letter-spacing:.14em;font-size:11px;
+  padding:.5rem 0;border-top:1px solid var(--rule)}
+details.app ul{margin:.8rem 0;padding-left:1.1rem}
+details.app li{margin-bottom:.7rem}
+.tag{display:inline-block;font-size:10px;letter-spacing:.08em;padding:1px 6px;margin-right:.5rem;
+  border-radius:3px;border:1px solid currentColor;vertical-align:.08em}
+.t-ok{color:#7d9b6e} .t-trad{color:var(--gold)} .t-new{color:#6e8a9b}
+.t-infer{color:#9b8a6e} .t-doubt{color:var(--accent)}
+.src{margin-top:.9rem;display:flex;flex-wrap:wrap;gap:.9rem}
+.src a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule);font-size:12px}
+.src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
+.note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
+/* 配图。图注里那半行是**署名**，CC-BY／CC-BY-SA 要求给出作者与许可 */
+/* 文绕图。竖幅整幅摆着时两侧全空，绕排把那块空白还给文字；
+   窄屏不绕——一栏劈两半两边都读不成 */
+figure.pic{margin:0 0 2rem}
+figure.pic img{display:block;width:100%;height:auto;border-radius:3px}
+@media(min-width:820px){
+  figure.pic{float:left;width:44%;margin:.4rem 1.6rem .8rem 0}
+  section p,section h2,details.app{clear:none}
+  details.app,.go{clear:both}
+}
+figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
+  line-height:1.8;color:var(--faint)}
+figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
+figure.pic figcaption a:hover{color:var(--dim)}
+/* 一站多图（如落点三张）：不绕排，并排摆成一排——「能看见三样东西」，
+   图就该一次看见三样，不该被文字拆成三处零散的浮块 */
+.pic-trio{display:flex;flex-direction:column;gap:1.4rem;margin:0 0 2rem}
+.pic-trio figure.pic{margin:0}
+@media(min-width:820px){
+  .pic-trio{flex-direction:row}
+  .pic-trio figure.pic{float:none;width:calc(33.333% - .94rem)}
+}
+
+/* ── 地图 ────────────────────────────────────────────────────────
+   开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
+   底图只有海岸线与黄河长江，没有国界（理由见 tools/mining/build_basemap.py）。
+   全程的点一律画出、只是淡；当前那一站才亮——读者要能看见自己走到哪儿，
+   也要能看见还剩多少。 */
+#smap{padding:4rem 0 3.5rem}
+svg.hmap{display:block;width:100%;height:auto}
+svg.rstrip{display:block;width:100%;max-width:640px;height:auto;margin:.4rem 0 .1rem;overflow:visible}
+.rs-base{stroke:var(--rule);stroke-width:1.4}
+.rs-hop{stroke:var(--accent);stroke-width:2.2}
+.rs-done{fill:var(--dim)}
+.rs-todo{fill:none;stroke:var(--faint);stroke-width:1.2}
+.rs-cur{fill:var(--accent)}
+.rs-name{fill:var(--ink);font-family:var(--sans);font-size:11.5px;letter-spacing:.08em}
+.rs-end{fill:var(--faint);font-family:var(--sans);font-size:9.5px;letter-spacing:.04em}
+svg.hmap{margin:1.6rem 0 1rem}
+svg *{vector-effect:non-scaling-stroke}
+.m-dust{fill:#6a6259;opacity:.32}
+.m-idx{fill:var(--dim);font-family:var(--sans);letter-spacing:0}
+.m-coast{fill:none;stroke:var(--rule);stroke-width:1.1}
+.m-river{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.42}
+.m-city{fill:var(--faint);opacity:.75}
+.m-city-t{fill:var(--faint);opacity:.85;font-family:var(--sans)}
+.m-river-t{fill:var(--accent);opacity:.65;font-family:var(--sans)}
+.m-dot{fill:var(--dim);opacity:.5}
+.m-maybe{fill:none;stroke:var(--dim);stroke-width:1.2;opacity:.55;stroke-dasharray:3 2.5}
+.m-held{fill:none;stroke:var(--gold);stroke-width:1.2;opacity:.5}
+/* 贴在框边的方块：东西已经出了这张图的范围（伦敦） */
+.m-off{stroke-dasharray:3 2.5}
+.m-flow{stroke:var(--gold);stroke-width:1;opacity:.35;stroke-dasharray:4 3}
+.m-stop-t{fill:var(--dim);opacity:.8;font-family:var(--sans)}
+/* 现藏之处的馆名。金色，与那个空心方块、那条虚线同一族 */
+.m-held-t{fill:var(--gold);opacity:.75;font-family:var(--sans)}
+/* 当前这一节：亮起来 */
+.m-stop.on .m-dot{fill:var(--accent);opacity:1}
+.m-stop.on .m-maybe{stroke:var(--accent);opacity:1}
+.m-stop.on .m-held,.m-stop.on .m-flow{stroke:var(--gold);opacity:1}
+.m-stop.on .m-stop-t{fill:var(--ink);opacity:1}
+#gname{margin-top:.5rem;font-family:var(--sans);font-size:10.5px;color:var(--faint);
+  line-height:1.6;min-height:2.6em}
+
+/* 点开放大。用 <dialog>：Esc 与背景遮罩都是它自带的，不必自己写一套 */
+button.zoom{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in}
+button.zoom img{transition:opacity .18s}
+button.zoom:hover img{opacity:.86}
+dialog#lb{border:0;padding:0;background:none;max-width:96vw;max-height:96vh;color:var(--ink)}
+dialog#lb::backdrop{background:rgba(8,7,6,.92)}
+#lbi{display:block;max-width:min(96vw,900px);max-height:82vh;width:auto;height:auto;
+  margin:0 auto;border-radius:3px}
+#lbc{max-width:min(96vw,900px);margin:.8rem auto 0;font-family:var(--sans);font-size:12px;
+  line-height:1.8;color:var(--dim)}
+#lbc a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule)}
+#lbx{position:fixed;top:1.1rem;right:1.4rem;width:2.2rem;height:2.2rem;border:0;border-radius:50%;
+  background:rgba(255,255,255,.1);color:var(--ink);font-size:1rem;cursor:pointer}
+#lbx:hover{background:rgba(255,255,255,.2)}
+footer{padding:5rem 0 7rem;font-family:var(--sans);font-size:12.5px;color:var(--faint);line-height:2}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--rule)}
+footer a:hover{color:var(--ink)}
+footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
+@media(max-width:640px){
+  body{font-size:17px;line-height:1.98}
+  section{padding:4rem 0}
+  .yr{font-size:2rem}
+  h1{letter-spacing:.03em}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="side">
+<nav id="rail" aria-label="节次">
+<a href="#s0"><span class="dot"></span><span class="lbl">十万人回来，</span></a>
+<a href="#s1"><span class="dot"></span><span class="lbl">淮南王院子里</span></a>
+<a href="#s2"><span class="dot"></span><span class="lbl">十万二千钱，</span></a>
+<a href="#s3"><span class="dot"></span><span class="lbl">庙额上的两个</span></a>
+<a href="#s4"><span class="dot"></span><span class="lbl">延祐三年七月</span></a>
+<a href="#s5"><span class="dot"></span><span class="lbl">塑像换成了木</span></a>
+<a href="#s6"><span class="dot"></span><span class="lbl">除夕那天，两</span></a>
+<a href="#s7"><span class="dot"></span><span class="lbl">门上换过一次</span></a>
+<a href="#s8"><span class="dot"></span><span class="lbl">夜里的那半个</span></a>
+<a href="#s9"><span class="dot"></span><span class="lbl">洛阳城南，一</span></a>
+<a href="#s10"><span class="dot"></span><span class="lbl">二十六个字，</span></a>
+<a href="#s11"><span class="dot"></span><span class="lbl">东坝案前的那</span></a>
+<a href="#s12"><span class="dot"></span><span class="lbl">开皇没有辛酉</span></a>
+</nav>
+</div>
+<header class="cover"><div class="wrap">
+<div class="kicker">民间生神，朝廷上户口</div>
+<h1>香火线</h1>
+<p class="lede">每一尊神进编制，都有一张有日期的纸。十三站看下来：纸能发也能撕，追认还常常追不上香火。</p>
+<div class="meta">共 11 站　·　<a href="timeline.html#line=xianghuo">在图上走一遍 →</a>　·　<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-xianghuo.md">资料与出处 ↗</a></div>
+</div></header>
+<section id="smap"><div class="wrap">
+<div class="num">这条线在地上</div>
+<svg class="hmap" viewBox="349.0 155.0 602.4 379.5" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path class="m-coast" d="M795.1 625.5L793.2 628.8M766.2 626.9L767.7 620.1L775.0 618.0L789.5 624.5L793.9 620.2L795.1 625.5M970.0 309.1L962.2 310.2L956.7 308.6L954.0 318.2L947.4 314.0L934.2 315.5L933.7 309.9L935.6 307.3L941.2 306.9L966.5 285.3L981.6 285.6L998.1 282.3M998.9 302.0L995.8 300.0L987.9 301.0L983.4 304.7L970.0 309.1M995.1 316.5L994.2 310.6L983.0 308.2L977.5 310.2L977.9 313.7L975.4 315.6L969.9 316.5L966.7 313.2L964.3 315.2L962.0 321.1L952.1 328.0L958.3 326.3L958.1 328.2L959.9 329.0L958.5 333.6L959.6 336.4L963.0 336.6L962.0 339.4L965.6 339.6L972.4 327.6L977.9 324.7L983.2 325.9L986.8 329.9L990.0 322.7L995.8 318.6L995.1 316.5M951.2 337.8L950.8 333.8L949.2 332.4L949.9 329.7L944.2 329.3L946.7 322.9L938.3 322.9L932.9 316.7L927.2 318.3L925.2 322.2L916.5 326.1L916.8 328.4L913.1 328.0L912.6 330.1L919.2 337.7L914.2 333.5L914.4 337.2L916.6 340.1L915.6 343.2L920.2 339.2L924.8 340.6L924.6 337.6L922.2 337.7L921.4 332.7L923.2 331.2L928.2 338.0L927.4 341.5L929.7 342.2L925.7 350.1L922.5 352.6L922.4 359.0L924.5 362.3L924.1 365.2L921.7 366.1L922.6 368.4L928.9 370.6L929.8 368.8L928.1 366.2L928.3 363.0L929.9 360.0L931.9 360.2L930.7 362.7L932.1 368.8L930.4 373.8L937.1 369.1L936.6 365.5L940.9 366.1L946.1 345.3L951.2 337.8M788.8 491.1L782.5 486.8L774.8 491.6L760.2 518.8L759.4 529.8L763.2 540.5L767.4 544.3L770.0 552.2L771.6 552.8L773.3 541.4L780.6 528.2L787.5 501.4L788.8 491.1M612.4 593.0L607.3 588.0L606.3 591.2L599.5 589.6L584.9 593.0L583.5 595.3L585.1 595.4L575.3 604.4L575.8 619.5L589.0 625.8L597.1 621.9L604.1 615.4L607.1 604.7L610.0 599.4L613.1 597.5L612.4 593.0M663.5 545.6L665.0 547.2L663.5 545.6M866.1 307.2L865.3 308.1L867.3 309.2L866.1 307.2M986.8 304.8L987.9 306.7L989.9 304.8L986.8 304.8M788.5 610.6L788.0 613.9L790.1 611.2L788.5 610.6M777.4 609.4L777.6 606.8L777.4 609.4M780.5 602.5L782.8 605.0L780.5 602.5M788.9 583.6L790.8 581.5L788.9 583.6M787.0 576.0L788.2 574.2L787.0 576.0M825.3 503.0L823.9 503.4L824.8 505.1L826.4 504.9L827.8 500.8L825.3 503.0M818.6 505.1L817.4 506.3L819.8 506.7L821.5 504.8L818.9 503.8L818.6 505.1M843.8 495.2L843.0 497.5L845.9 497.3L843.8 495.2M891.2 455.2L888.7 459.4L885.6 458.9L886.2 460.9L882.7 464.0L881.5 470.7L883.9 469.6L883.7 467.5L885.6 466.1L885.0 463.8L892.1 458.4L891.2 455.2M902.4 434.9L901.3 436.3L902.5 439.0L903.5 437.7L902.4 434.9M912.9 423.8L905.9 428.3L909.1 430.7L914.7 424.7L914.3 423.0L912.9 423.8M907.4 429.7L906.3 429.4L907.0 431.2L908.6 431.6L907.4 429.7M927.4 384.6L925.6 386.2L926.5 388.6L929.4 388.6L930.2 386.6L927.4 384.6M934.6 380.6L933.4 386.2L934.8 386.0L936.4 381.1L936.5 377.5L934.6 380.6M900.6 339.4L897.8 339.0L897.7 342.0L901.5 341.6L900.6 339.4M919.5 344.1L919.4 350.6L922.6 347.7L922.1 343.8L919.5 344.1M923.3 345.3L925.5 346.1L926.8 344.3L923.3 345.3M971.1 269.9L971.6 272.1L973.7 271.6L972.5 269.0L971.1 269.9M997.3 305.7L994.9 310.2L997.2 311.0L998.9 309.4L998.5 307.2M999.4 304.3L997.3 305.7M905.2 333.4L903.2 335.7L904.1 338.1L906.2 334.9L905.2 333.4M910.7 328.2L909.2 331.3L911.2 330.3L912.4 327.6L910.7 328.2M914.8 317.8L914.9 320.8L916.1 320.0L914.8 317.8M906.7 308.7L906.7 313.4L908.7 309.4L906.7 308.7M910.5 301.5L908.5 303.1L907.5 307.7L909.1 309.0L910.5 301.5M960.9 312.8L960.4 311.6L959.0 313.3L960.9 312.8M957.4 318.1L958.6 316.5L955.0 316.1L955.0 317.5L957.4 318.1M731.3 502.7L733.1 503.0L732.4 501.7L731.3 502.7M727.0 502.1L728.2 503.4L728.8 502.2L727.0 502.1M898.7 295.1L895.0 298.0L897.5 300.5L899.0 299.3L898.7 295.1M884.4 297.8L885.1 300.6L888.0 301.1L887.7 297.7L884.4 297.8M882.9 302.6L883.7 303.5L883.7 301.6L882.9 302.6M867.1 323.8L860.3 325.7L857.5 328.6L859.4 330.8L866.3 329.4L869.9 326.0L867.1 323.8M860.4 304.3L858.8 303.9L856.6 307.2L860.2 306.6L860.4 304.3M863.2 241.5L860.8 240.8L862.3 244.0L863.2 241.5M783.5 361.6L781.7 359.2L777.6 358.3L782.6 363.3L788.1 364.4L783.5 361.6M794.9 392.5L789.8 391.0L790.7 393.5L794.9 394.9L794.9 392.5M792.3 398.1L791.0 399.0L793.0 400.5L792.3 398.1M796.8 394.8L795.7 395.1L796.7 396.8L796.8 394.8M754.8 480.0L753.2 480.6L754.0 484.2L755.4 482.8L754.8 480.0M605.2 569.4L601.0 570.5L604.9 571.6L605.2 569.4M556.1 565.7L554.9 569.2L558.1 566.7L556.1 565.7M556.1 571.9L557.3 570.3L556.1 571.9M549.1 574.2L546.9 574.5L548.2 576.1L549.1 574.2M545.1 572.4L546.0 575.0L545.1 572.4M334.6 613.0L330.4 613.0L333.5 616.8L334.6 613.0M330.5 592.8L329.2 591.7L329.3 593.1L330.9 595.5L330.5 592.8M321.2 589.0L323.0 594.1L321.2 589.0M336.7 600.9L334.1 599.4L333.0 600.6L335.7 604.5L337.6 603.2L336.7 600.9M304.0 552.8L303.8 556.2L304.0 552.8M305.0 556.8L304.7 561.1L305.8 559.0L305.0 556.8M291.6 541.1L291.0 549.2L293.2 545.7L291.6 541.1M297.0 542.0L299.3 543.8L297.7 539.2L297.0 542.0M283.5 530.9L284.8 533.2L283.5 530.9M285.2 535.9L282.3 534.9L285.2 544.9L282.5 550.0L287.6 548.2L288.2 541.8L285.2 535.9M914.6 360.0L915.9 358.6L914.6 360.0M861.1 264.4L860.0 263.6L861.4 267.2L861.1 264.4M836.9 204.7L836.3 206.6L836.9 204.7M777.5 429.2L776.3 431.9L778.2 431.5L777.5 429.2M652.7 533.5L654.3 536.4L652.7 533.5M641.6 555.8L640.5 557.3L641.5 559.6L642.9 556.2L641.6 555.8M638.0 557.7L637.5 558.7L639.4 558.4L639.5 557.0L638.0 557.7M661.3 547.2L662.0 544.8L658.7 546.6L661.3 547.2M857.6 298.7L856.1 297.0L855.0 298.0L856.7 301.0L857.6 298.7M932.9 245.4L934.1 246.5L932.9 245.4M1.8 556.2L0.4 557.2M170.5 630.0L179.1 624.3L189.9 607.9L200.7 598.1L199.5 597.0L196.5 598.7L197.6 595.5L201.7 592.9L202.6 595.6L201.6 596.7L202.8 596.7L213.2 592.7L214.7 590.9L213.6 589.7L215.8 590.6L221.8 584.5L225.4 576.9L223.5 566.3L227.4 561.1L236.7 558.1L241.1 554.8L244.5 548.9L241.3 546.3L241.0 543.9L245.1 548.6L242.9 557.3L243.9 558.5L246.0 558.8L246.6 556.1L249.1 558.9L251.4 558.0L252.3 548.9L253.9 551.2L254.0 559.5L255.8 556.3L256.6 558.1L258.9 558.1L257.2 552.5L258.5 552.6L258.9 549.5L259.6 553.8L263.8 556.8L266.1 553.0L265.9 545.9L267.2 555.9L271.2 551.6L272.3 543.7L274.0 542.1L272.9 549.0L273.5 550.9L277.6 548.2L275.3 553.5L277.9 554.7L284.1 544.2L281.2 536.5L283.1 533.5L281.7 530.6L283.8 529.0L283.7 526.4L278.5 522.7L283.2 523.3L283.9 520.0L284.8 531.1L289.4 539.6L293.8 538.7L298.1 533.9L303.2 545.5L304.2 544.4L307.4 567.6L318.1 584.9L317.9 579.6L320.2 582.5L319.2 586.5L320.7 587.7L323.2 582.7L322.8 587.0L324.1 587.1L322.6 589.2L324.7 593.5L325.8 592.7L325.1 589.9L326.6 589.3L334.0 592.4L332.4 595.1L338.7 601.7L338.1 603.9L335.9 605.7L331.9 602.5L330.5 603.1L334.0 609.9L337.6 612.4L339.4 604.7L339.8 612.5L342.7 615.5L341.5 615.7L345.7 626.1M538.9 629.0L530.5 620.2L526.2 611.1L532.0 591.9L540.6 585.0L541.1 580.3L544.4 576.2L543.3 571.0L551.0 572.0L554.1 569.9L555.0 565.4L561.4 561.2L568.5 560.0L569.8 557.4L572.6 558.5L572.3 553.2L574.1 553.3L577.0 558.6L582.3 559.4L582.0 562.3L589.4 560.4L589.1 557.4L591.7 560.7L595.7 561.5L591.6 568.4L591.3 572.6L596.3 581.9L594.9 582.6L595.8 584.9L602.3 584.9L605.0 580.5L601.8 577.5L602.7 574.2L599.7 573.8L599.3 572.1L602.8 567.6L603.4 564.3L605.9 566.8L613.2 560.9L622.6 560.0L628.1 554.3L634.0 556.4L635.3 555.2L634.8 551.8L638.5 555.7L642.1 552.4L644.4 553.1L646.6 547.2L647.6 549.8L654.0 546.9L654.1 539.6L650.5 533.4L653.5 529.6L655.2 529.1L655.2 534.4L661.5 541.2L659.7 543.5L665.6 545.5L666.7 543.5L665.6 540.7L670.2 540.9L671.8 536.4L675.1 539.2L680.6 535.2L685.5 537.2L687.7 534.5L691.2 535.5L697.6 532.0L701.1 532.7L702.2 528.1L704.8 526.2L703.7 524.7L707.4 522.7L708.2 518.9L711.0 520.2L714.4 517.6L715.6 520.0L717.2 515.1L719.8 515.2L726.7 507.1L726.2 504.5L723.3 502.6L725.9 502.4L727.2 499.6L736.4 499.7L737.4 497.2L736.1 495.5L740.5 493.6L741.6 488.1L746.5 487.7L744.8 483.4L752.0 484.5L750.6 480.6L751.9 472.5L747.3 473.6L744.2 470.2L749.4 471.5L756.1 466.0L751.4 457.1L753.4 458.2L755.2 455.9L756.2 460.5L758.8 460.1L762.6 451.0L767.9 444.7L767.5 441.4L771.5 435.3L770.1 433.0L773.5 432.4L776.5 426.7L777.7 426.4L778.6 428.8L784.0 427.4L781.9 420.5L784.9 416.4L782.9 414.8L785.2 414.4L781.4 410.9L785.8 408.4L789.0 410.8L789.8 403.8L788.5 401.1L782.4 403.9L791.7 396.4L785.1 394.2L778.4 387.8L768.3 391.2L766.0 387.8L761.2 389.0L765.3 386.2L772.5 386.1L774.2 382.8L781.0 378.2L788.4 375.7L787.7 372.9L784.8 367.8L770.8 358.0L769.6 354.7L758.6 355.7L766.5 352.3L773.8 357.0L779.9 357.2L786.5 360.3L788.2 360.3L787.6 356.4L781.5 351.4L779.7 346.0L771.8 341.4L772.1 334.4L766.2 322.2L762.4 309.6L747.6 300.3L745.2 300.3L744.6 298.3L748.9 289.4L762.7 276.0L759.6 273.3L761.0 271.7L763.4 271.2L764.4 274.6L768.4 273.1L769.5 267.5L772.5 266.9L771.1 263.2L775.1 263.6L789.2 256.8L792.9 256.8L795.8 259.3L798.7 257.0L797.5 254.6L801.1 248.0L795.8 248.0L791.2 245.6L789.8 247.2L784.5 246.9L770.2 239.5L762.2 242.6L763.1 243.7L756.2 249.1L754.2 252.9L746.6 253.2L741.2 249.4L741.8 243.3L743.4 242.2L741.0 235.4L738.7 233.8L726.0 232.7L720.3 227.9L718.6 222.7L722.3 213.9L726.5 212.1L730.6 215.3L741.6 213.0L745.6 208.6L748.2 201.8L765.8 192.4L777.0 179.2L786.0 180.2L787.7 177.7L788.0 180.3L792.6 183.3L794.6 187.1L787.1 197.9L782.5 200.0L782.5 204.0L778.5 205.9L778.6 209.0L787.4 209.0L784.3 212.3L785.2 214.4L775.9 218.1L776.8 221.9L784.7 219.2L785.1 216.5L790.0 215.5L795.7 209.4L803.9 204.8L815.8 201.1L816.9 199.2L824.3 200.0L828.2 196.7L828.2 198.7L831.6 201.0L832.9 204.5L835.1 201.7L844.5 206.2L845.3 210.9L841.4 220.4L847.7 222.8L839.8 225.3L836.7 231.7L833.7 233.7L842.0 234.7L838.5 237.6L843.7 239.4L844.5 241.7L851.1 236.6L855.6 238.8L856.7 241.3L860.8 238.7L865.1 240.6L863.9 241.9L867.6 250.2L866.9 252.2L870.6 257.2L868.9 259.4L867.5 257.0L862.7 255.8L857.4 260.5L857.8 262.0L862.7 262.0L863.6 272.4L867.0 278.2L862.7 282.6L864.7 284.1L859.5 292.3L861.6 298.8L864.4 298.8L862.5 300.1L863.3 301.3L859.1 301.8L862.6 305.3L863.4 308.9L867.0 305.0L869.3 306.4L875.0 300.2L873.8 304.3L876.2 305.9L878.7 302.7L877.5 298.8L882.5 300.8L881.3 297.5L882.5 296.2L887.7 294.9L888.6 296.7L894.3 297.9L893.9 295.0L895.3 293.4L906.7 291.8L910.0 285.5L912.5 274.7L909.7 274.6L910.9 261.1L908.6 250.6L892.4 222.9L883.6 214.9L877.3 212.5L877.8 209.2L879.8 207.5L880.1 201.2L886.6 197.0L895.3 194.3L908.7 182.6L914.7 180.0L915.6 171.2L914.3 165.5L915.4 163.2L923.2 153.9L931.1 151.1L932.8 147.2L930.8 144.6L938.0 145.2L948.3 132.8L951.8 132.3L949.5 136.0L950.8 136.0L956.6 131.7L956.5 140.1L963.0 140.3L970.3 143.8L984.0 138.9L998.7 129.4M834.5 237.3L832.8 236.7L834.1 237.6"/><path class="m-river" d="M391.7 298.6L391.1 297.5L388.3 296.7M399.4 293.6L398.6 296.1L395.9 297.8M497.6 420.0L499.1 420.8L505.4 420.7L512.1 417.1L515.9 417.6L517.6 418.9L525.4 415.0L528.8 415.3L530.0 416.7L530.1 413.0L534.6 411.0L534.8 409.7L536.3 408.1L540.6 405.1L541.5 401.9L545.2 401.9L549.7 398.0L550.8 399.3L554.0 399.3L555.8 396.6L558.6 396.3L562.0 392.9L569.5 382.4L572.5 376.2L589.4 373.4L601.4 373.2L615.5 377.5L621.1 385.8L621.6 388.1L626.1 385.4L628.5 387.4L633.0 388.3L632.5 391.3L634.9 393.4L635.6 398.9L637.8 397.9L639.2 398.7L640.4 397.7L641.6 398.8L644.2 398.9L643.9 403.1L647.2 404.4M391.7 298.6L395.9 297.8M399.4 293.6L402.2 293.7L406.4 297.8L409.4 299.3L409.7 301.8L408.8 303.4L412.3 307.4L414.7 307.6L414.8 306.6L416.3 305.7L419.4 306.6L421.3 316.7L424.6 320.0L425.7 318.8L431.0 319.1L438.6 322.8L440.8 319.8L447.4 316.5L450.7 319.4L451.8 319.7L452.0 318.2L453.6 318.4L459.4 321.4L462.3 321.4L464.7 322.7L468.8 327.7L475.5 325.2L471.1 317.1L456.9 309.7L453.0 304.9L450.2 303.4L449.6 301.7L445.6 301.1L441.5 298.8L439.0 290.6L439.7 289.8L438.2 287.0L438.3 284.7L439.6 281.7L450.0 272.9L457.2 274.4L463.9 272.7L467.6 275.7L468.8 277.9L470.7 278.7L477.6 278.4L483.0 279.5L486.7 279.4L488.7 278.1L489.0 277.0L487.6 276.2L490.1 272.9L492.9 272.6L499.9 274.2L501.2 271.2L502.9 269.3L511.5 263.3L510.1 259.9L505.3 257.0L505.7 252.5L509.3 249.9L516.1 246.9L529.0 244.8L530.7 243.0L532.9 237.9L539.6 228.8L542.6 220.9L546.3 215.1L544.5 207.1L544.6 201.6L543.8 196.6L550.8 189.1L552.2 185.2L560.4 180.4L565.6 179.7L570.8 180.8L575.0 184.5L578.8 186.1L585.6 187.2L590.9 186.4L591.7 187.2L598.1 186.6L601.7 187.4L607.7 191.0L612.8 191.3L614.9 192.3L619.5 196.7L619.0 201.0L619.9 205.2L618.9 207.0L615.6 208.7L616.1 211.9L612.6 217.4L611.1 225.3L604.9 234.0L605.0 236.1L609.4 243.9L607.5 247.4L606.6 251.7L603.0 255.9L606.1 284.8L601.9 292.7L601.1 302.5L604.3 303.3L609.6 302.3L614.5 299.4L622.4 297.3L626.5 293.9L642.9 299.1L651.6 295.9L659.7 297.4L660.7 296.7L668.9 297.1L672.3 296.8L674.7 295.0M373.6 292.8L383.0 294.3L388.3 296.7M674.8 295.0L675.9 290.8L677.6 288.9L682.9 285.5L684.9 281.9L691.5 278.0L691.7 276.9L695.4 272.8L702.9 267.0L705.4 262.7L710.1 260.4L715.4 254.4L719.5 251.5L727.9 249.1L732.0 244.1L741.1 239.8L742.5 240.0M647.2 404.4L656.4 394.8L659.0 394.3L661.2 392.8L661.5 391.3L659.4 389.0L661.8 388.8L667.7 380.7L674.9 382.7L674.7 384.3L675.6 385.5L678.4 387.2L679.1 389.3L685.6 396.2L689.5 397.2L691.0 398.4L697.0 398.0M696.7 398.7L697.0 398.0M697.0 398.0L700.8 396.4L706.1 391.9L708.0 388.4L708.1 385.9L713.1 382.9L713.7 380.5L719.4 378.5L721.4 376.3L723.3 371.7L724.5 372.1L725.8 370.1L730.8 367.4L732.2 361.3L737.0 353.0L741.3 350.4L752.3 349.8L754.4 350.3L759.3 355.2"/><g class="m-dusts"><circle class="m-dust" cx="779.8" cy="394.5" r="1.0"/><circle class="m-dust" cx="760.3" cy="388.8" r="1.0"/><circle class="m-dust" cx="581.5" cy="309.7" r="1.0"/><circle class="m-dust" cx="699.9" cy="198.8" r="1.0"/><circle class="m-dust" cx="642.6" cy="311.6" r="1.0"/><circle class="m-dust" cx="750.5" cy="170.6" r="1.0"/><circle class="m-dust" cx="813.7" cy="161.5" r="1.0"/><circle class="m-dust" cx="591.9" cy="306.2" r="1.0"/><circle class="m-dust" cx="757.7" cy="388.4" r="1.0"/><circle class="m-dust" cx="776.3" cy="370.7" r="1.0"/><circle class="m-dust" cx="781.8" cy="369.6" r="1.0"/><circle class="m-dust" cx="757.8" cy="386.0" r="1.0"/><circle class="m-dust" cx="462.7" cy="257.2" r="1.0"/><circle class="m-dust" cx="480.7" cy="278.3" r="1.0"/><circle class="m-dust" cx="703.2" cy="287.3" r="1.0"/><circle class="m-dust" cx="691.2" cy="307.2" r="1.0"/><circle class="m-dust" cx="688.0" cy="306.9" r="1.0"/><circle class="m-dust" cx="641.6" cy="300.8" r="1.0"/><circle class="m-dust" cx="640.2" cy="301.3" r="1.0"/><circle class="m-dust" cx="699.9" cy="196.9" r="1.0"/><circle class="m-dust" cx="656.0" cy="300.2" r="1.0"/><circle class="m-dust" cx="667.3" cy="376.6" r="1.0"/><circle class="m-dust" cx="667.1" cy="382.7" r="1.0"/><circle class="m-dust" cx="709.4" cy="283.7" r="1.0"/><circle class="m-dust" cx="666.5" cy="273.3" r="1.0"/><circle class="m-dust" cx="616.2" cy="298.6" r="1.0"/><circle class="m-dust" cx="667.6" cy="273.7" r="1.0"/><circle class="m-dust" cx="638.0" cy="426.8" r="1.0"/><circle class="m-dust" cx="645.0" cy="428.9" r="1.0"/><circle class="m-dust" cx="500.2" cy="380.3" r="1.0"/><circle class="m-dust" cx="620.6" cy="415.4" r="1.0"/><circle class="m-dust" cx="504.5" cy="374.5" r="1.0"/><circle class="m-dust" cx="658.0" cy="286.3" r="1.0"/><circle class="m-dust" cx="664.4" cy="283.4" r="1.0"/><circle class="m-dust" cx="666.9" cy="276.5" r="1.0"/><circle class="m-dust" cx="552.2" cy="307.9" r="1.0"/><circle class="m-dust" cx="662.2" cy="287.4" r="1.0"/><circle class="m-dust" cx="584.0" cy="307.7" r="1.0"/><circle class="m-dust" cx="558.4" cy="306.3" r="1.0"/><circle class="m-dust" cx="636.4" cy="302.8" r="1.0"/><circle class="m-dust" cx="694.4" cy="204.5" r="1.0"/><circle class="m-dust" cx="695.1" cy="279.6" r="1.0"/><circle class="m-dust" cx="713.2" cy="214.5" r="1.0"/><circle class="m-dust" cx="573.8" cy="299.3" r="1.0"/><circle class="m-dust" cx="579.8" cy="309.9" r="1.0"/><circle class="m-dust" cx="562.4" cy="307.9" r="1.0"/><circle class="m-dust" cx="562.0" cy="305.4" r="1.0"/><circle class="m-dust" cx="782.6" cy="490.4" r="1.0"/><circle class="m-dust" cx="554.8" cy="304.8" r="1.0"/><circle class="m-dust" cx="622.0" cy="280.9" r="1.0"/><circle class="m-dust" cx="637.5" cy="238.9" r="1.0"/><circle class="m-dust" cx="576.1" cy="310.8" r="1.0"/><circle class="m-dust" cx="616.4" cy="288.4" r="1.0"/><circle class="m-dust" cx="624.3" cy="280.8" r="1.0"/><circle class="m-dust" cx="664.1" cy="313.1" r="1.0"/><circle class="m-dust" cx="719.3" cy="272.7" r="1.0"/><circle class="m-dust" cx="740.1" cy="199.0" r="1.0"/><circle class="m-dust" cx="679.7" cy="302.2" r="1.0"/><circle class="m-dust" cx="682.3" cy="313.5" r="1.0"/><circle class="m-dust" cx="685.5" cy="284.2" r="1.0"/><circle class="m-dust" cx="623.3" cy="307.4" r="1.0"/><circle class="m-dust" cx="632.9" cy="387.2" r="1.0"/><circle class="m-dust" cx="560.4" cy="309.6" r="1.0"/><circle class="m-dust" cx="657.6" cy="310.7" r="1.0"/><circle class="m-dust" cx="651.4" cy="299.5" r="1.0"/><circle class="m-dust" cx="656.9" cy="307.2" r="1.0"/><circle class="m-dust" cx="620.8" cy="331.5" r="1.0"/><circle class="m-dust" cx="756.8" cy="360.2" r="1.0"/><circle class="m-dust" cx="726.7" cy="259.6" r="1.0"/><circle class="m-dust" cx="714.2" cy="357.1" r="1.0"/><circle class="m-dust" cx="764.9" cy="368.9" r="1.0"/><circle class="m-dust" cx="768.0" cy="368.2" r="1.0"/><circle class="m-dust" cx="677.7" cy="370.5" r="1.0"/><circle class="m-dust" cx="767.5" cy="393.9" r="1.0"/><circle class="m-dust" cx="635.7" cy="393.1" r="1.0"/><circle class="m-dust" cx="760.5" cy="370.8" r="1.0"/><circle class="m-dust" cx="730.6" cy="259.6" r="1.0"/><circle class="m-dust" cx="685.2" cy="290.8" r="1.0"/><circle class="m-dust" cx="650.7" cy="359.7" r="1.0"/><circle class="m-dust" cx="712.1" cy="293.7" r="1.0"/><circle class="m-dust" cx="666.3" cy="299.3" r="1.0"/><circle class="m-dust" cx="673.1" cy="291.2" r="1.0"/><circle class="m-dust" cx="729.4" cy="302.2" r="1.0"/><circle class="m-dust" cx="685.5" cy="278.5" r="1.0"/><circle class="m-dust" cx="679.7" cy="270.0" r="1.0"/><circle class="m-dust" cx="664.5" cy="231.3" r="1.0"/><circle class="m-dust" cx="669.6" cy="235.4" r="1.0"/><circle class="m-dust" cx="670.0" cy="263.3" r="1.0"/><circle class="m-dust" cx="632.3" cy="373.4" r="1.0"/><circle class="m-dust" cx="610.9" cy="304.8" r="1.0"/><circle class="m-dust" cx="576.0" cy="308.5" r="1.0"/><circle class="m-dust" cx="636.6" cy="304.1" r="1.0"/><circle class="m-dust" cx="697.9" cy="258.8" r="1.0"/><circle class="m-dust" cx="762.3" cy="262.2" r="1.0"/><circle class="m-dust" cx="646.2" cy="417.2" r="1.0"/><circle class="m-dust" cx="644.0" cy="279.8" r="1.0"/><circle class="m-dust" cx="675.0" cy="320.3" r="1.0"/><circle class="m-dust" cx="493.7" cy="374.0" r="1.0"/><circle class="m-dust" cx="726.5" cy="298.3" r="1.0"/><circle class="m-dust" cx="578.0" cy="304.6" r="1.0"/><circle class="m-dust" cx="712.2" cy="345.0" r="1.0"/><circle class="m-dust" cx="713.1" cy="358.3" r="1.0"/><circle class="m-dust" cx="711.4" cy="270.6" r="1.0"/><circle class="m-dust" cx="657.5" cy="372.9" r="1.0"/><circle class="m-dust" cx="607.9" cy="480.5" r="1.0"/><circle class="m-dust" cx="679.7" cy="254.6" r="1.0"/><circle class="m-dust" cx="711.1" cy="324.6" r="1.0"/><circle class="m-dust" cx="677.9" cy="251.6" r="1.0"/><circle class="m-dust" cx="554.5" cy="308.1" r="1.0"/><circle class="m-dust" cx="663.5" cy="235.7" r="1.0"/><circle class="m-dust" cx="718.6" cy="328.3" r="1.0"/><circle class="m-dust" cx="720.7" cy="438.8" r="1.0"/><circle class="m-dust" cx="650.0" cy="195.4" r="1.0"/><circle class="m-dust" cx="477.3" cy="498.8" r="1.0"/><circle class="m-dust" cx="578.3" cy="309.0" r="1.0"/><circle class="m-dust" cx="748.6" cy="346.7" r="1.0"/><circle class="m-dust" cx="491.3" cy="385.7" r="1.0"/><circle class="m-dust" cx="501.0" cy="380.8" r="1.0"/><circle class="m-dust" cx="706.1" cy="343.0" r="1.0"/><circle class="m-dust" cx="636.0" cy="210.1" r="1.0"/><circle class="m-dust" cx="649.3" cy="528.9" r="1.0"/><circle class="m-dust" cx="411.2" cy="202.1" r="1.0"/><circle class="m-dust" cx="442.8" cy="217.9" r="1.0"/><circle class="m-dust" cx="349.4" cy="194.1" r="1.0"/><circle class="m-dust" cx="478.1" cy="237.7" r="1.0"/><circle class="m-dust" cx="682.5" cy="217.6" r="1.0"/><circle class="m-dust" cx="360.2" cy="191.7" r="1.0"/><circle class="m-dust" cx="584.8" cy="283.8" r="1.0"/><circle class="m-dust" cx="479.9" cy="493.2" r="1.0"/><circle class="m-dust" cx="452.7" cy="158.3" r="1.0"/><circle class="m-dust" cx="495.6" cy="274.1" r="1.0"/><circle class="m-dust" cx="784.1" cy="491.6" r="1.0"/><circle class="m-dust" cx="857.9" cy="174.1" r="1.0"/><circle class="m-dust" cx="739.3" cy="284.0" r="1.0"/><circle class="m-dust" cx="646.9" cy="373.6" r="1.0"/><circle class="m-dust" cx="650.9" cy="322.5" r="1.0"/><circle class="m-dust" cx="703.3" cy="267.8" r="1.0"/><circle class="m-dust" cx="671.5" cy="335.6" r="1.0"/><circle class="m-dust" cx="694.9" cy="287.8" r="1.0"/><circle class="m-dust" cx="527.6" cy="303.7" r="1.0"/><circle class="m-dust" cx="640.9" cy="228.1" r="1.0"/><circle class="m-dust" cx="772.1" cy="393.4" r="1.0"/><circle class="m-dust" cx="691.7" cy="419.7" r="1.0"/><circle class="m-dust" cx="700.7" cy="316.4" r="1.0"/><circle class="m-dust" cx="695.5" cy="232.5" r="1.0"/><circle class="m-dust" cx="490.4" cy="381.2" r="1.0"/><circle class="m-dust" cx="699.1" cy="289.8" r="1.0"/><circle class="m-dust" cx="658.9" cy="314.3" r="1.0"/><circle class="m-dust" cx="496.5" cy="274.4" r="1.0"/><circle class="m-dust" cx="723.9" cy="312.8" r="1.0"/><circle class="m-dust" cx="661.5" cy="300.7" r="1.0"/><circle class="m-dust" cx="631.0" cy="354.2" r="1.0"/><circle class="m-dust" cx="638.4" cy="334.4" r="1.0"/><circle class="m-dust" cx="744.5" cy="202.7" r="1.0"/><circle class="m-dust" cx="653.9" cy="405.0" r="1.0"/><circle class="m-dust" cx="660.1" cy="394.3" r="1.0"/><circle class="m-dust" cx="675.6" cy="386.0" r="1.0"/><circle class="m-dust" cx="658.5" cy="381.0" r="1.0"/><circle class="m-dust" cx="638.5" cy="370.8" r="1.0"/><circle class="m-dust" cx="600.7" cy="304.3" r="1.0"/><circle class="m-dust" cx="727.1" cy="359.7" r="1.0"/><circle class="m-dust" cx="634.8" cy="422.3" r="1.0"/><circle class="m-dust" cx="721.5" cy="360.8" r="1.0"/><circle class="m-dust" cx="543.0" cy="332.0" r="1.0"/><circle class="m-dust" cx="631.1" cy="353.5" r="1.0"/><circle class="m-dust" cx="619.7" cy="383.4" r="1.0"/><circle class="m-dust" cx="733.7" cy="360.9" r="1.0"/><circle class="m-dust" cx="548.8" cy="333.4" r="1.0"/><circle class="m-dust" cx="519.1" cy="311.3" r="1.0"/><circle class="m-dust" cx="535.7" cy="291.1" r="1.0"/><circle class="m-dust" cx="531.9" cy="295.4" r="1.0"/><circle class="m-dust" cx="535.6" cy="295.5" r="1.0"/><circle class="m-dust" cx="532.2" cy="307.4" r="1.0"/><circle class="m-dust" cx="810.3" cy="171.9" r="1.0"/><circle class="m-dust" cx="497.8" cy="287.9" r="1.0"/><circle class="m-dust" cx="503.2" cy="367.3" r="1.0"/><circle class="m-dust" cx="733.7" cy="363.3" r="1.0"/><circle class="m-dust" cx="738.4" cy="353.6" r="1.0"/><circle class="m-dust" cx="351.7" cy="196.1" r="1.0"/><circle class="m-dust" cx="698.7" cy="198.0" r="1.0"/><circle class="m-dust" cx="673.7" cy="304.1" r="1.0"/><circle class="m-dust" cx="744.5" cy="355.2" r="1.0"/><circle class="m-dust" cx="730.6" cy="359.7" r="1.0"/><circle class="m-dust" cx="693.6" cy="399.6" r="1.0"/><circle class="m-dust" cx="669.4" cy="254.6" r="1.0"/><circle class="m-dust" cx="766.1" cy="395.2" r="1.0"/><circle class="m-dust" cx="647.1" cy="194.7" r="1.0"/><circle class="m-dust" cx="671.1" cy="269.1" r="1.0"/><circle class="m-dust" cx="565.7" cy="294.6" r="1.0"/><circle class="m-dust" cx="691.4" cy="405.0" r="1.0"/><circle class="m-dust" cx="643.2" cy="273.3" r="1.0"/><circle class="m-dust" cx="640.2" cy="185.7" r="1.0"/><circle class="m-dust" cx="657.1" cy="189.8" r="1.0"/><circle class="m-dust" cx="649.7" cy="180.4" r="1.0"/><circle class="m-dust" cx="748.8" cy="350.7" r="1.0"/><circle class="m-dust" cx="692.6" cy="401.7" r="1.0"/><circle class="m-dust" cx="496.8" cy="482.4" r="1.0"/><circle class="m-dust" cx="702.4" cy="396.2" r="1.0"/><circle class="m-dust" cx="770.4" cy="161.4" r="1.0"/><circle class="m-dust" cx="813.9" cy="163.6" r="1.0"/><circle class="m-dust" cx="484.6" cy="279.5" r="1.0"/><circle class="m-dust" cx="690.3" cy="401.5" r="1.0"/><circle class="m-dust" cx="739.3" cy="347.6" r="1.0"/><circle class="m-dust" cx="738.0" cy="375.3" r="1.0"/><circle class="m-dust" cx="645.6" cy="306.0" r="1.0"/><circle class="m-dust" cx="737.3" cy="355.2" r="1.0"/><circle class="m-dust" cx="650.9" cy="195.1" r="1.0"/><circle class="m-dust" cx="718.7" cy="337.3" r="1.0"/><circle class="m-dust" cx="575.0" cy="182.4" r="1.0"/><circle class="m-dust" cx="612.6" cy="283.5" r="1.0"/><circle class="m-dust" cx="635.1" cy="241.5" r="1.0"/><circle class="m-dust" cx="636.6" cy="241.9" r="1.0"/><circle class="m-dust" cx="673.7" cy="241.1" r="1.0"/><circle class="m-dust" cx="721.7" cy="258.7" r="1.0"/><circle class="m-dust" cx="626.1" cy="189.5" r="1.0"/><circle class="m-dust" cx="596.2" cy="162.1" r="1.0"/><circle class="m-dust" cx="644.9" cy="300.2" r="1.0"/><circle class="m-dust" cx="572.3" cy="302.6" r="1.0"/><circle class="m-dust" cx="579.1" cy="288.7" r="1.0"/><circle class="m-dust" cx="581.2" cy="313.2" r="1.0"/><circle class="m-dust" cx="850.8" cy="216.3" r="1.0"/><circle class="m-dust" cx="869.6" cy="270.1" r="1.0"/><circle class="m-dust" cx="866.3" cy="276.1" r="1.0"/><circle class="m-dust" cx="445.5" cy="270.1" r="1.0"/><circle class="m-dust" cx="872.2" cy="234.4" r="1.0"/><circle class="m-dust" cx="579.8" cy="297.4" r="1.0"/><circle class="m-dust" cx="480.3" cy="529.8" r="1.0"/><circle class="m-dust" cx="568.4" cy="304.6" r="1.0"/><circle class="m-dust" cx="654.8" cy="496.0" r="1.0"/><circle class="m-dust" cx="367.5" cy="186.7" r="1.0"/><circle class="m-dust" cx="489.2" cy="403.3" r="1.0"/><circle class="m-dust" cx="767.0" cy="356.8" r="1.0"/><circle class="m-dust" cx="572.3" cy="309.1" r="1.0"/><circle class="m-dust" cx="759.5" cy="376.2" r="1.0"/><circle class="m-dust" cx="568.0" cy="311.9" r="1.0"/><circle class="m-dust" cx="667.0" cy="334.7" r="1.0"/><circle class="m-dust" cx="779.6" cy="391.4" r="1.0"/><circle class="m-dust" cx="437.8" cy="478.3" r="1.0"/><circle class="m-dust" cx="599.7" cy="487.6" r="1.0"/><circle class="m-dust" cx="714.2" cy="311.0" r="1.0"/><circle class="m-dust" cx="684.2" cy="290.4" r="1.0"/><circle class="m-dust" cx="527.4" cy="399.7" r="1.0"/><circle class="m-dust" cx="669.7" cy="284.0" r="1.0"/><circle class="m-dust" cx="672.4" cy="246.5" r="1.0"/><circle class="m-dust" cx="677.7" cy="281.5" r="1.0"/><circle class="m-dust" cx="723.4" cy="381.2" r="1.0"/><circle class="m-dust" cx="709.7" cy="342.1" r="1.0"/><circle class="m-dust" cx="670.4" cy="233.4" r="1.0"/><circle class="m-dust" cx="668.0" cy="294.6" r="1.0"/><circle class="m-dust" cx="454.0" cy="162.1" r="1.0"/><circle class="m-dust" cx="748.7" cy="275.7" r="1.0"/><circle class="m-dust" cx="672.5" cy="224.1" r="1.0"/><circle class="m-dust" cx="728.5" cy="391.3" r="1.0"/><circle class="m-dust" cx="733.0" cy="498.0" r="1.0"/><circle class="m-dust" cx="693.4" cy="207.0" r="1.0"/><circle class="m-dust" cx="711.4" cy="272.1" r="1.0"/><circle class="m-dust" cx="536.0" cy="226.7" r="1.0"/><circle class="m-dust" cx="532.1" cy="227.7" r="1.0"/><circle class="m-dust" cx="630.5" cy="341.1" r="1.0"/><circle class="m-dust" cx="730.2" cy="348.9" r="1.0"/><circle class="m-dust" cx="725.7" cy="395.7" r="1.0"/><circle class="m-dust" cx="749.7" cy="349.7" r="1.0"/><circle class="m-dust" cx="642.9" cy="316.5" r="1.0"/><circle class="m-dust" cx="652.8" cy="311.7" r="1.0"/><circle class="m-dust" cx="770.2" cy="240.2" r="1.0"/><circle class="m-dust" cx="742.6" cy="401.6" r="1.0"/><circle class="m-dust" cx="743.9" cy="490.6" r="1.0"/><circle class="m-dust" cx="757.0" cy="252.4" r="1.0"/><circle class="m-dust" cx="624.1" cy="412.9" r="1.0"/><circle class="m-dust" cx="645.2" cy="404.8" r="1.0"/><circle class="m-dust" cx="690.5" cy="336.9" r="1.0"/><circle class="m-dust" cx="661.5" cy="323.3" r="1.0"/><circle class="m-dust" cx="744.0" cy="431.7" r="1.0"/><circle class="m-dust" cx="752.4" cy="411.9" r="1.0"/><circle class="m-dust" cx="537.8" cy="225.4" r="1.0"/><circle class="m-dust" cx="536.8" cy="227.0" r="1.0"/><circle class="m-dust" cx="760.8" cy="276.2" r="1.0"/><circle class="m-dust" cx="727.7" cy="446.3" r="1.0"/><circle class="m-dust" cx="721.0" cy="426.9" r="1.0"/><circle class="m-dust" cx="694.1" cy="403.3" r="1.0"/><circle class="m-dust" cx="673.1" cy="182.0" r="1.0"/><circle class="m-dust" cx="439.1" cy="455.2" r="1.0"/><circle class="m-dust" cx="537.3" cy="393.7" r="1.0"/><circle class="m-dust" cx="704.8" cy="442.6" r="1.0"/><circle class="m-dust" cx="925.8" cy="323.1" r="1.0"/><circle class="m-dust" cx="687.6" cy="405.4" r="1.0"/><circle class="m-dust" cx="769.3" cy="433.3" r="1.0"/><circle class="m-dust" cx="647.5" cy="307.1" r="1.0"/><circle class="m-dust" cx="763.5" cy="190.5" r="1.0"/><circle class="m-dust" cx="704.1" cy="198.7" r="1.0"/><circle class="m-dust" cx="734.5" cy="388.0" r="1.0"/><circle class="m-dust" cx="623.7" cy="270.6" r="1.0"/><circle class="m-dust" cx="711.6" cy="414.2" r="1.0"/><circle class="m-dust" cx="518.7" cy="361.6" r="1.0"/><circle class="m-dust" cx="783.0" cy="396.2" r="1.0"/><circle class="m-dust" cx="772.8" cy="377.2" r="1.0"/><circle class="m-dust" cx="712.5" cy="408.2" r="1.0"/><circle class="m-dust" cx="697.0" cy="410.2" r="1.0"/><circle class="m-dust" cx="777.8" cy="373.4" r="1.0"/><circle class="m-dust" cx="631.5" cy="252.0" r="1.0"/><circle class="m-dust" cx="406.7" cy="200.8" r="1.0"/><circle class="m-dust" cx="754.1" cy="196.7" r="1.0"/><circle class="m-dust" cx="718.5" cy="324.1" r="1.0"/><circle class="m-dust" cx="775.8" cy="366.2" r="1.0"/><circle class="m-dust" cx="750.1" cy="473.3" r="1.0"/><circle class="m-dust" cx="738.3" cy="354.2" r="1.0"/><circle class="m-dust" cx="612.9" cy="345.6" r="1.0"/><circle class="m-dust" cx="687.3" cy="189.4" r="1.0"/><circle class="m-dust" cx="598.7" cy="518.8" r="1.0"/><circle class="m-dust" cx="608.6" cy="353.3" r="1.0"/><circle class="m-dust" cx="839.2" cy="162.9" r="1.0"/><circle class="m-dust" cx="763.1" cy="364.5" r="1.0"/><circle class="m-dust" cx="541.8" cy="456.0" r="1.0"/><circle class="m-dust" cx="765.3" cy="367.9" r="1.0"/><circle class="m-dust" cx="676.3" cy="475.9" r="1.0"/><circle class="m-dust" cx="769.8" cy="376.1" r="1.0"/><circle class="m-dust" cx="759.2" cy="407.5" r="1.0"/><circle class="m-dust" cx="461.3" cy="266.2" r="1.0"/><circle class="m-dust" cx="722.8" cy="503.1" r="1.0"/><circle class="m-dust" cx="710.0" cy="523.3" r="1.0"/><circle class="m-dust" cx="704.6" cy="524.7" r="1.0"/><circle class="m-dust" cx="644.1" cy="293.6" r="1.0"/><circle class="m-dust" cx="697.0" cy="191.1" r="1.0"/><circle class="m-dust" cx="737.3" cy="328.7" r="1.0"/><circle class="m-dust" cx="684.4" cy="389.1" r="1.0"/><circle class="m-dust" cx="657.3" cy="531.2" r="1.0"/><circle class="m-dust" cx="636.5" cy="530.7" r="1.0"/><circle class="m-dust" cx="746.5" cy="469.6" r="1.0"/><circle class="m-dust" cx="699.3" cy="433.5" r="1.0"/><circle class="m-dust" cx="751.0" cy="520.5" r="1.0"/><circle class="m-dust" cx="762.3" cy="356.2" r="1.0"/><circle class="m-dust" cx="836.4" cy="163.4" r="1.0"/><circle class="m-dust" cx="821.9" cy="159.9" r="1.0"/><circle class="m-dust" cx="769.7" cy="184.7" r="1.0"/><circle class="m-dust" cx="593.8" cy="289.9" r="1.0"/><circle class="m-dust" cx="736.7" cy="494.7" r="1.0"/><circle class="m-dust" cx="635.7" cy="285.8" r="1.0"/><circle class="m-dust" cx="632.0" cy="281.7" r="1.0"/><circle class="m-dust" cx="873.9" cy="246.6" r="1.0"/><circle class="m-dust" cx="671.9" cy="435.9" r="1.0"/><circle class="m-dust" cx="776.2" cy="175.3" r="1.0"/><circle class="m-dust" cx="497.9" cy="389.9" r="1.0"/><circle class="m-dust" cx="613.0" cy="294.8" r="1.0"/><circle class="m-dust" cx="778.2" cy="366.6" r="1.0"/><circle class="m-dust" cx="760.7" cy="531.6" r="1.0"/><circle class="m-dust" cx="731.1" cy="503.3" r="1.0"/><circle class="m-dust" cx="720.0" cy="193.2" r="1.0"/><circle class="m-dust" cx="479.1" cy="491.4" r="1.0"/><circle class="m-dust" cx="610.4" cy="297.1" r="1.0"/><circle class="m-dust" cx="725.2" cy="178.1" r="1.0"/><circle class="m-dust" cx="698.3" cy="196.8" r="1.0"/><circle class="m-dust" cx="683.0" cy="209.4" r="1.0"/><circle class="m-dust" cx="390.9" cy="507.0" r="1.0"/><circle class="m-dust" cx="725.3" cy="263.0" r="1.0"/><circle class="m-dust" cx="475.6" cy="278.6" r="1.0"/><circle class="m-dust" cx="620.2" cy="386.2" r="1.0"/><circle class="m-dust" cx="625.0" cy="385.4" r="1.0"/><circle class="m-dust" cx="726.8" cy="503.1" r="1.0"/><circle class="m-dust" cx="598.6" cy="520.1" r="1.0"/><circle class="m-dust" cx="440.3" cy="478.8" r="1.0"/><circle class="m-dust" cx="434.0" cy="462.1" r="1.0"/><circle class="m-dust" cx="721.1" cy="217.0" r="1.0"/><circle class="m-dust" cx="440.4" cy="487.7" r="1.0"/><circle class="m-dust" cx="780.6" cy="361.7" r="1.0"/><circle class="m-dust" cx="621.3" cy="273.9" r="1.0"/><circle class="m-dust" cx="781.4" cy="246.8" r="1.0"/><circle class="m-dust" cx="655.0" cy="297.9" r="1.0"/><circle class="m-dust" cx="644.7" cy="533.1" r="1.0"/><circle class="m-dust" cx="793.3" cy="246.0" r="1.0"/><circle class="m-dust" cx="784.5" cy="218.1" r="1.0"/><circle class="m-dust" cx="824.9" cy="199.4" r="1.0"/><circle class="m-dust" cx="766.7" cy="510.6" r="1.0"/><circle class="m-dust" cx="763.4" cy="274.0" r="1.0"/><circle class="m-dust" cx="792.2" cy="245.9" r="1.0"/><circle class="m-dust" cx="693.7" cy="189.9" r="1.0"/><circle class="m-dust" cx="723.9" cy="325.3" r="1.0"/></g><g class="m-ref"><circle class="m-city" cx="700.0" cy="198.9" r="2.1"/><text font-size="8.94" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="693" y="202.9" text-anchor="end">北京</text><text font-size="8.94" font-family="var(--sans)" fill="currentColor" class="m-city-t" x="693" y="202.9" text-anchor="end">北京</text><circle class="m-city" cx="579.8" cy="309.7" r="2.1"/><text font-size="8.94" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="572.8" y="313.7" text-anchor="end">西安</text><text font-size="8.94" font-family="var(--sans)" fill="currentColor" class="m-city-t" x="572.8" y="313.7" text-anchor="end">西安</text><circle class="m-city" cx="501.1" cy="380.8" r="2.1"/><text font-size="8.94" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="508.1" y="384.8" text-anchor="start">成都</text><text font-size="8.94" font-family="var(--sans)" fill="currentColor" class="m-city-t" x="508.1" y="384.8" text-anchor="start">成都</text><circle class="m-city" cx="781.8" cy="369.6" r="2.1"/><text font-size="8.94" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="774.8" y="373.6" text-anchor="end">上海</text><text font-size="8.94" font-family="var(--sans)" fill="currentColor" class="m-city-t" x="774.8" y="373.6" text-anchor="end">上海</text><circle class="m-city" cx="479.4" cy="491.5" r="2.1"/><text font-size="8.94" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="486.4" y="495.5" text-anchor="start">昆明</text><text font-size="8.94" font-family="var(--sans)" fill="currentColor" class="m-city-t" x="486.4" y="495.5" text-anchor="start">昆明</text><circle class="m-city" cx="497.3" cy="274.5" r="2.1"/><text font-size="8.94" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="504.3" y="278.5" text-anchor="start">兰州</text><text font-size="8.94" font-family="var(--sans)" fill="currentColor" class="m-city-t" x="504.3" y="278.5" text-anchor="start">兰州</text><circle class="m-city" cx="666.3" cy="382.2" r="2.1"/><text font-size="8.94" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="673.3" y="386.2" text-anchor="start">武汉</text><text font-size="8.94" font-family="var(--sans)" fill="currentColor" class="m-city-t" x="673.3" y="386.2" text-anchor="start">武汉</text><circle class="m-city" cx="783.4" cy="491.7" r="2.1"/><text font-size="8.94" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="790.4" y="495.7" text-anchor="start">台北</text><text font-size="8.94" font-family="var(--sans)" fill="currentColor" class="m-city-t" x="790.4" y="495.7" text-anchor="start">台北</text><circle class="m-city" cx="541.1" cy="402.5" r="2.1"/><text font-size="8.94" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="548.1" y="406.5" text-anchor="start">重庆</text><text font-size="8.94" font-family="var(--sans)" fill="currentColor" class="m-city-t" x="548.1" y="406.5" text-anchor="start">重庆</text><circle class="m-city" cx="644.2" cy="428.6" r="2.1"/><text font-size="8.94" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="651.2" y="432.6" text-anchor="start">长沙</text><text font-size="8.94" font-family="var(--sans)" fill="currentColor" class="m-city-t" x="651.2" y="432.6" text-anchor="start">长沙</text><circle class="m-city" cx="738.7" cy="353.2" r="2.1"/><text font-size="9.41" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="604.8" y="248.1" text-anchor="middle">黄河</text><text font-size="9.41" font-family="var(--sans)" fill="currentColor" class="m-river-t" x="604.8" y="248.1" text-anchor="middle">黄河</text><text font-size="9.41" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="574.2" y="389.9" text-anchor="middle">长江</text><text font-size="9.41" font-family="var(--sans)" fill="currentColor" class="m-river-t" x="574.2" y="389.9" text-anchor="middle">长江</text></g><g class="m-stop"><circle class="m-dot" cx="706.1" cy="343.0" r="4.7"/><text font-size="11.77" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="699.1" y="347" text-anchor="end">寿春</text><text font-size="11.77" font-family="var(--sans)" fill="currentColor" class="m-stop-t" x="699.1" y="347" text-anchor="end">寿春</text><text font-size="8" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.07" stroke-linejoin="round" paint-order="stroke" x="711.1" y="346" text-anchor="start">1</text><text font-size="8" font-family="var(--sans)" fill="currentColor" class="m-idx" x="711.1" y="346" text-anchor="start">1</text></g><g class="m-stop"><line class="m-flow" x1="640.7" y1="228.1" x2="781.8" y2="369.6"/><rect class="m-held" x="778.0" y="365.8" width="7.5" height="7.5"/><text font-size="8.94" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="788.8" y="373.6" text-anchor="start">上博（中国古代玉器馆）</text><text font-size="8.94" font-family="var(--sans)" fill="currentColor" class="m-held-t" x="788.8" y="373.6" text-anchor="start">上博（中国古代玉器馆）</text><circle class="m-dot" cx="640.7" cy="228.1" r="4.7"/><text font-size="11.77" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="647.7" y="232.1" text-anchor="start">山西忻县（传出）</text><text font-size="11.77" font-family="var(--sans)" fill="currentColor" class="m-stop-t" x="647.7" y="232.1" text-anchor="start">山西忻县（传出）</text><text font-size="8" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.07" stroke-linejoin="round" paint-order="stroke" x="635.7" y="231.1" text-anchor="end">2</text><text font-size="8" font-family="var(--sans)" fill="currentColor" class="m-idx" x="635.7" y="231.1" text-anchor="end">2</text></g><g class="m-stop"><circle class="m-dot" cx="743.9" cy="490.8" r="4.7"/><text font-size="11.77" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="736.9" y="494.8" text-anchor="end">湄洲岛</text><text font-size="11.77" font-family="var(--sans)" fill="currentColor" class="m-stop-t" x="736.9" y="494.8" text-anchor="end">湄洲岛</text><text font-size="8" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.07" stroke-linejoin="round" paint-order="stroke" x="748.9" y="493.8" text-anchor="start">3</text><text font-size="8" font-family="var(--sans)" fill="currentColor" class="m-idx" x="748.9" y="493.8" text-anchor="start">3</text></g><g class="m-stop"><circle class="m-dot" cx="518.7" cy="361.6" r="4.7"/><text font-size="11.77" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="525.7" y="365.6" text-anchor="start">梓潼七曲山</text><text font-size="11.77" font-family="var(--sans)" fill="currentColor" class="m-stop-t" x="525.7" y="365.6" text-anchor="start">梓潼七曲山</text><text font-size="8" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.07" stroke-linejoin="round" paint-order="stroke" x="513.7" y="364.6" text-anchor="end">4</text><text font-size="8" font-family="var(--sans)" fill="currentColor" class="m-idx" x="513.7" y="364.6" text-anchor="end">4</text></g><g class="m-stop"><circle class="m-dot" cx="738.4" cy="353.2" r="4.7"/><text font-size="11.77" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="745.4" y="357.2" text-anchor="start">南京（洪武颁诏）</text><text font-size="11.77" font-family="var(--sans)" fill="currentColor" class="m-stop-t" x="745.4" y="357.2" text-anchor="start">南京（洪武颁诏）</text><text font-size="8" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.07" stroke-linejoin="round" paint-order="stroke" x="730.4" y="347.2" text-anchor="end">5</text><text font-size="8" font-family="var(--sans)" fill="currentColor" class="m-idx" x="730.4" y="347.2" text-anchor="end">5</text></g><g class="m-stop"><circle class="m-dot" cx="666.9" cy="299.4" r="4.7"/><text font-size="11.77" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="673.9" y="303.4" text-anchor="start">开封（除夜给赐）</text><text font-size="11.77" font-family="var(--sans)" fill="currentColor" class="m-stop-t" x="673.9" y="303.4" text-anchor="start">开封（除夜给赐）</text><text font-size="8" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.07" stroke-linejoin="round" paint-order="stroke" x="666.9" y="290.4" text-anchor="middle">6</text><text font-size="8" font-family="var(--sans)" fill="currentColor" class="m-idx" x="666.9" y="290.4" text-anchor="middle">6</text></g><g class="m-stop"><circle class="m-dot" cx="738.4" cy="353.2" r="4.7"/><text font-size="11.77" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="732.4" y="366.2" text-anchor="end">南京（世德堂刊本）</text><text font-size="11.77" font-family="var(--sans)" fill="currentColor" class="m-stop-t" x="732.4" y="366.2" text-anchor="end">南京（世德堂刊本）</text><text font-size="8" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.07" stroke-linejoin="round" paint-order="stroke" x="738.4" y="344.2" text-anchor="middle">7</text><text font-size="8" font-family="var(--sans)" fill="currentColor" class="m-idx" x="738.4" y="344.2" text-anchor="middle">7</text></g><g class="m-stop"><circle class="m-dot" cx="666.9" cy="299.4" r="4.7"/><text font-size="11.77" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="660.9" y="293.4" text-anchor="end">开封</text><text font-size="11.77" font-family="var(--sans)" fill="currentColor" class="m-stop-t" x="660.9" y="293.4" text-anchor="end">开封</text><text font-size="8" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.07" stroke-linejoin="round" paint-order="stroke" x="666.9" y="314.4" text-anchor="middle">8</text><text font-size="8" font-family="var(--sans)" fill="currentColor" class="m-idx" x="666.9" y="314.4" text-anchor="middle">8</text></g><g class="m-stop"><circle class="m-dot" cx="636.7" cy="303.1" r="4.7"/><text font-size="11.77" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="630.7" y="316.1" text-anchor="end">洛阳关林</text><text font-size="11.77" font-family="var(--sans)" fill="currentColor" class="m-stop-t" x="630.7" y="316.1" text-anchor="end">洛阳关林</text><text font-size="8" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.07" stroke-linejoin="round" paint-order="stroke" x="641.7" y="306.1" text-anchor="start">9</text><text font-size="8" font-family="var(--sans)" fill="currentColor" class="m-idx" x="641.7" y="306.1" text-anchor="start">9</text></g><g class="m-stop"><circle class="m-dot" cx="612.9" cy="294.8" r="4.7"/><text font-size="11.77" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="605.9" y="298.8" text-anchor="end">运城解州</text><text font-size="11.77" font-family="var(--sans)" fill="currentColor" class="m-stop-t" x="605.9" y="298.8" text-anchor="end">运城解州</text><text font-size="8" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.07" stroke-linejoin="round" paint-order="stroke" x="617.9" y="297.8" text-anchor="start">10</text><text font-size="8" font-family="var(--sans)" fill="currentColor" class="m-idx" x="617.9" y="297.8" text-anchor="start">10</text></g><g class="m-stop"><line class="m-flow" x1="713.0" y1="407.7" x2="699.9" y2="198.8"/><rect class="m-held" x="696.1" y="195.0" width="7.5" height="7.5"/><text font-size="8.94" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="706.9" y="202.8" text-anchor="start">国博（同款烛台在伦敦V&amp;A）</text><text font-size="8.94" font-family="var(--sans)" fill="currentColor" class="m-held-t" x="706.9" y="202.8" text-anchor="start">国博（同款烛台在伦敦V&amp;A）</text><circle class="m-dot" cx="713.0" cy="407.7" r="4.7"/><text font-size="11.77" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.45" stroke-linejoin="round" paint-order="stroke" x="720" y="411.7" text-anchor="start">景德镇御窑</text><text font-size="11.77" font-family="var(--sans)" fill="currentColor" class="m-stop-t" x="720" y="411.7" text-anchor="start">景德镇御窑</text><text font-size="8" font-family="var(--sans)" fill="var(--bg, #0e0d0c)" opacity="0.85" stroke="var(--bg, #0e0d0c)" stroke-width="2.07" stroke-linejoin="round" paint-order="stroke" x="708" y="410.7" text-anchor="end">11</text><text font-size="8" font-family="var(--sans)" fill="currentColor" class="m-idx" x="708" y="410.7" text-anchor="end">11</text></g></svg>
+<p class="note">只有海岸线与黄河、长江，没有国界——这不是政区图。空心圈是各源不一致、至今没有定论的地点；方块是文物现藏之处，连着的虚线就是它离开的那段路。坐标取自 Wikidata（CC0）。</p>
+</div></section>
+<section id="s0" class="tone"><div class="wrap">
+<div class="num">序</div>
+<h2>十万人回来，路过一座坟</h2>
+<p>前一一〇年冬天，汉武帝北巡朔方回来，带着十余万兵，在桥山祭黄帝冢。</p>
+<p>《史记·封禅书》记下了这件事：「乃遂北巡朔方，勒兵十余万，还祭黄帝冢桥山，释兵须如。」祭完，他当场问了一句。这一问一答，《封禅书》也照录了：</p>
+<blockquote>上曰：『吾闻黄帝不死，今有冢，何也？』或对曰：『黄帝已仙上天，群臣葬其衣冠。』<small>《史记 · 封禅书》</small></blockquote>
+<p>两千一百年前站在陵前的那个人，自己就问过这个问题。答案是：衣冠冢。</p>
+<p>黄帝有没有这个人，这条线自始至终不回答。它问的是另一件事：今天中国人家门上、灶前、街口、船头供着的那些神，是什么时候、凭哪一张纸进来的。</p>
+<p>黄帝陵一九六一年列第一批全国重点文物保护单位，官方名单在它的「时代」一栏是空着的；正史却给了确年。受祭的人可以查无其人，祭这件事却句句有据。</p>
+<p>十三站，从前一二二年走到一八七九年，最后停在六八二年。这条线的锚全是人间的公文——一个也不在神身上。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>《史记·封禅书》《汉书·武帝纪》两处一手已逐字核到（库内黄帝陵条 yc）；元封元年＝前110，库内 y:-109 为天文纪年，线文一律换算后写。</li>
+<li><span class="tag t-new">存疑·不置一词</span>黄帝其人——**本线自始至终不回答这个问题**。句式定死：不写「黄帝是虚构的」，写「受祭的人可以查无其人，祭这件事却句句有据」。</li>
+<li><span class="tag t-new">各源不一</span>桥山现存历代御制祝文碑数各源不一，库条已自陈「不给」，线文照办：一个数字都不出。</li>
+<li><span class="tag t-new">国保官定层</span>1961年第一批全国重点文物保护单位（古墓葬），官方名单「时代」一栏空着——同批太昊陵庙标「明、清」、炎帝陵标「清」，唯独此处不给分期。</li>
+<li><span class="tag t-new">降级不入·已从定稿删去</span>预备稿 §四建议把「黄山得名」(747) 降为序内一句。定稿不收：序里已有两处黄帝材料（武帝亲祭、国保时代栏），第三处会把开场那一问稀释。罗愿《新安志》卷三歙县山阜条小注原文留档在此，日后若序要加，逐字用这一段：「至天寳中好道家之説，故以黃帝為嘗遊于此，因名之耳。」</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/黄帝陵" target="_blank" rel="noopener">中文维基 · 黄帝陵</a>
+<a href="https://zh.wikisource.org/wiki/史記/卷028" target="_blank" rel="noopener">维基文库 · 史记 卷028 封禅书</a>
+<a href="https://zh.wikipedia.org/wiki/黄山" target="_blank" rel="noopener">中文维基 · 黄山（降级项「黄山得名」的库内条目）</a>
+</div>
+</details>
+</div></section>
+<section id="s1" data-year="-121" data-name="一人得道鸡犬升天"><div class="wrap">
+<div class="num">一 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><circle class="rs-cur" cx="26.0" cy="16" r="5.2"/><circle class="rs-todo" cx="84.8" cy="16" r="3"/><circle class="rs-todo" cx="143.6" cy="16" r="3"/><circle class="rs-todo" cx="202.4" cy="16" r="3"/><circle class="rs-todo" cx="261.2" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="378.8" cy="16" r="3"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="614.0" y="35" text-anchor="end">唐英款花觚</text><text class="rs-name" x="26.0" y="35" text-anchor="start">一人得道鸡犬升天</text></svg>
+<div class="yr">前122</div>
+<h2>一人得道鸡犬升天</h2>
+<p class="sub">寿县（寿春）　·　前122　·　西汉　·　名人轶事</p>
+<p>前一二二年，淮南王刘安谋反事发，自杀。</p>
+<p>民间传下来的却是另一个版本：他白日升天，没吃完的仙药洒在院子里，鸡和狗吃了，也一并飞了上去。「一人得道，鸡犬升天」这句话就是从这里来的。</p>
+<p>最早把这个说法写下来的人是王充。他写在《论衡·道虚》里——而他写下它，正是为了当场驳倒它。</p>
+<p>一个传说现存最早的文字，出自一个不信它的人之手。此后葛洪《神仙传》再敷演一遍，这个故事才定型。</p>
+<p>刘安这一尊进来的时候，没有敕封，没有庙额，一张纸也没有。</p>
+<p>刘安是个人。下一站要看的那两位，从来不是人。</p>
+<a class="go" href="timeline.html#line=xianghuo&amp;at=1">在图上看这一站 →</a>
+<p class="note">本库简注：淮南王刘安谋反事发自杀，民间反倒传他是白日升天，剩下的仙药被院里的鸡犬吃了也一并飞升。此系传说而非史实：最早写下它的是王充《论衡·道虚》，而王充记它正是为了当场驳倒它，后经葛洪《神仙传》敷演才定型</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>刘安谋反事发自杀（前122；库内 y:-121 为天文纪年）。</li>
+<li><span class="tag t-new">传统叙述·已被当场驳倒</span>白日升天、鸡犬同飞——**这一档是本站的论点本身**：最早写下它的是王充《论衡·道虚》，而王充记它正是为了当场驳倒它；后经葛洪《神仙传》敷演才定型。</li>
+<li><span class="tag t-new">缺口·已知</span>库条 yc 未带《论衡·道虚》驳文原文，故长文只转述、**不加「」**（预备稿 §九·A 已登记此缺口；补上一手后可回填一段引文）。</li>
+<li><span class="tag t-new">登记不设站</span>拜月一族（嫦娥／中秋／月坛）本线不设站：嘉靖九年（1530）夕月坛祀的是夜明之神，没有任何一张公文把嫦娥写进过名册。《淮南子》是「姮娥窃药奔月」的文本首见处，与本站同一个院子——日后若补库，建议增写本站 yc 一层，不另立站。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/刘安" target="_blank" rel="noopener">中文维基 · 刘安</a>
+<a href="https://zh.wikipedia.org/wiki/论衡" target="_blank" rel="noopener">中文维基 · 论衡</a>
+</div>
+</details>
+</div></section>
+<section id="s2" data-year="81" data-name="买地券"><div class="wrap">
+<div class="num">二 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="26.0" y1="16" x2="84.8" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-cur" cx="84.8" cy="16" r="5.2"/><circle class="rs-todo" cx="143.6" cy="16" r="3"/><circle class="rs-todo" cx="202.4" cy="16" r="3"/><circle class="rs-todo" cx="261.2" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="378.8" cy="16" r="3"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="614.0" y="35" text-anchor="end">唐英款花觚</text><text class="rs-name" x="84.8" y="35" text-anchor="middle">买地券</text></svg>
+<div class="yr">81</div>
+<h2>买地券</h2>
+<p class="sub">忻州市（出）→ 上海博物馆（藏）　·　81　·　东汉　·　文化·科技</p>
+<p>东汉建初六年，有人往墓里放了一块玉。青玉，长七点三厘米，上面刻着一份地契。</p>
+<p>买方叫靡婴，卖方是土公、后土这一类地下的神明，买的是墓田。券文写着「南广九十四步……直钱十万二千」。这份契约随死者下葬，留在墓里，给阴间的官府查验。</p>
+<p>这类文书东汉初兴起（前身是西汉初的告地策，那是另一类东西，学界分得很清），此后六朝隋唐至宋元明清一直没断，存世以宋元为大宗。南宋周密在《癸辛杂识》里写：「今人造墓，必用买地券。」</p>
+<p>晚期的券文价钱越写越虚，动辄「九万九千九百九十九」。而现知最早的这一件——俞伟超一九八一年论定——写的反倒是实价：十万二千钱。</p>
+<p>它传出山西忻县，端方旧藏，今在上海博物馆；上博官网自述，这是迄今所见唯一一件玉质买地券。</p>
+<p>全线只有这一份文书，是活人自己写好、递给神的。</p>
+<a class="go" href="timeline.html#line=xianghuo&amp;at=2">在图上看这一站 →</a>
+<p class="note">本库简注：**写给另一个世界看的地契**：随葬的土地买卖契约，向土公、后土等地下神明买下墓地，保墓主在冥间的居留不受干扰——阴间官府查验用的产权文书。源出西汉初的告地策（向地下冥府通报户籍与随葬品的文书，马王堆、凤凰山所出即是；两类文书学界分得很清，买地券是它的后续发展）。东汉初兴起，历六朝隋唐至宋元明清不绝，存世以宋元为大宗，周密《癸辛杂识》已谓「今人造墓，必用买地券」。晚期定型出「九万九千九百九十九」式的虚价套语，而**现知最早的一件**（俞伟超1981年论定）反而写实价：东汉建初六年（81年）武孟子男靡婴买墓田玉券，「南广九十四步……直钱十万二千」，青玉质，长仅7.3厘米，为**迄今所见唯一玉质买地券**（上海博物馆官网自述），传出山西忻县，端方旧藏，今在上博中国古代玉器馆。中文维基无「买地券」独立条目，主题在「墓券」条下——此处链接即挂彼条。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>东汉建初六年（81）武孟子男靡婴买墓田玉券，「直钱十万二千」，青玉，长7.3厘米，传出山西忻县，端方旧藏，今在上海博物馆中国古代玉器馆。</li>
+<li><span class="tag t-new">馆方自述·四字不许删</span>「**迄今所见**唯一玉质买地券」系上海博物馆官网自述，线文照录时保留「迄今所见」四字，不改写成无限定的「唯一」。</li>
+<li><span class="tag t-new">学者论定</span>「现知最早的一件」系俞伟超1981年论定——是学者的判断，不是实物自证，线文写明谁定的、哪一年。</li>
+<li><span class="tag t-new">须分开不许拉平</span>买地券与告地策是两类文书（库条原话「学界分得很清」）：告地策向地下冥府通报户籍与随葬品，买地券是它的后续发展。</li>
+<li><span class="tag t-new">接力不安在一人头上</span>**一种文书用了一千八百年**：东汉初兴起，历六朝隋唐至宋元明清不绝，存世以宋元为大宗——不许写成「东汉人发明了买地券」。</li>
+<li><span class="tag t-new">手续方向</span>全线仅此一站是「民间→神」：活人自己写一份文书递给神。**不可砍。**</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/墓券" target="_blank" rel="noopener">中文维基 · 墓券（无「买地券」独立条目，主题在此条下）</a>
+<a href="https://www.shanghaimuseum.net/mu/frontend/pg/m/article/id/CI00004642" target="_blank" rel="noopener">上海博物馆 · 藏品页</a>
+</div>
+</details>
+</div></section>
+<section id="s3" data-year="1123" data-name="妈祖信仰"><div class="wrap">
+<div class="num">三 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="84.8" y1="16" x2="143.6" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-cur" cx="143.6" cy="16" r="5.2"/><circle class="rs-todo" cx="202.4" cy="16" r="3"/><circle class="rs-todo" cx="261.2" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="378.8" cy="16" r="3"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">一人得道鸡犬升天</text><text class="rs-end" x="614.0" y="35" text-anchor="end">唐英款花觚</text><text class="rs-name" x="143.6" y="35" text-anchor="middle">妈祖信仰</text></svg>
+<div class="yr">1123</div>
+<h2>妈祖信仰</h2>
+<p class="sub">湄洲岛　·　1123　·　南宋　·　文化·科技</p>
+<p>从这里起，看的是朝廷那一头：神要进名册，得有一纸文书。</p>
+<p>林默，莆田湄洲人，传说生于建隆元年（九六〇），卒于雍熙四年（九八七）。这组生卒是元代文献才出现的追记，宋以前古籍无载。</p>
+<p>现存最早的妈祖文字是南宋绍兴二十年（一一五〇）廖鹏飞的《圣墩祖庙重建顺济庙记》，比那个卒年晚一百六十三年。中间这一百六十三年怎么走过来的，没有同时代的文字留下。</p>
+<p>本库给这一条系的年份因此是宣和五年（一一二三）：这一年宋徽宗给她的庙赐了一块额，两个字，「顺济」。这是这门信仰第一次拿到官府的承认。</p>
+<p>此后累朝加封，由夫人而妃而天妃。「天后」这一步的年份至今没定论：通行说法称康熙二十三年（一六八四）经施琅奏请即封，刘义杰比勘《天妃显圣录》诸本认为要到乾隆二年（一七三七），李祖基又反过来质疑乾隆二年说本身有讹——三说照录，本库不裁。</p>
+<p>官军、商船、海盗共祭这一位海神。</p>
+<a class="go" href="timeline.html#line=xianghuo&amp;at=3">在图上看这一站 →</a>
+<p class="note">本库简注：中国最大的一门海神信仰，也是本库第一条民间神祇条目。传说中的林默生于北宋建隆元年（960）、卒于雍熙四年（987），莆田湄洲人——**但这组生卒是元代文献才出现的追记**，宋以前古籍无载；现存最早的妈祖文字是南宋绍兴二十年（1150）廖鹏飞《圣墩祖庙重建顺济庙记》，比「卒年」晚一百六十三年，中间那段神格化过程全无同时代文字留存。故本条的锚不打在她身上，打在官方文书上：宣和五年（1123）宋徽宗赐「顺济」庙额，是这门信仰第一次获得官府承认。此后累朝加封，由夫人而妃而天妃。**「天后」这一步的年份至今没定论，三说并存**：通行说法称康熙二十三年（1684）经施琅奏请即封；航海史学者刘义杰比勘《天妃显圣录》诸本，指出早出的「妃本」只作「奏请加封」、晚出的「后本」才改成「特封天后」，并据《康熙起居注》认为当年只准致祭、未准封号，天后之号要到乾隆二年（1737）；而李祖基《乾隆二年妈祖加封「天后」辨误》（《台湾源流》2011）又反过来质疑乾隆二年说本身有讹。官军、商船、海盗共祭一位海神，这门信仰的普及正因它不属于任何一方。湄洲祖庙至今是进香中心，2009年「妈祖信俗」列入联合国教科文组织人类非物质文化遗产代表作名录。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>宣和五年（1123）宋徽宗赐「顺济」庙额，是这门信仰第一次获官府承认——本条的锚。</li>
+<li><span class="tag t-new">元代追记</span>林默生卒（960—987）是元代文献才出现的追记，宋以前古籍无载。**这一档同时进 b／b2 卡片**，不只写在长文里（错型一）。</li>
+<li><span class="tag t-ok">信史</span>现存最早的妈祖文字是南宋绍兴二十年（1150）廖鹏飞《圣墩祖庙重建顺济庙记》，比传说的卒年晚一百六十三年。</li>
+<li><span class="tag t-new">各源不一·三说并存</span>「天后」封号年三说：康熙二十三年（1684）施琅奏请即封（通行说）；刘义杰比勘《天妃显圣录》诸本，认为要到乾隆二年（1737）；李祖基《乾隆二年妈祖加封「天后」辨误》又质疑乾隆二年说本身有讹。**一说不裁。**</li>
+<li><span class="tag t-new">伦理·写到这里就停</span>「官军、商船、海盗共祭」是库条原话的事实，线文写完即止，**不接「可见人心所向」一类替古人做心理的归纳**。</li>
+<li><span class="tag t-new">不入长文</span>2009年「妈祖信俗」列入人类非遗、湄洲祖庙至今为进香中心——库条已载，但全线止于1879、不作古今对照，故长文不用。</li>
+<li><span class="tag t-new">缺口·已知</span>「顺济」庙额的一手（廖鹏飞庙记原文）库条未带，故长文只述其事、不加「」。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/媽祖" target="_blank" rel="noopener">中文维基 · 媽祖</a>
+</div>
+</details>
+</div></section>
+<section id="s4" data-year="1316" data-name="文昌帝君"><div class="wrap">
+<div class="num">四 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="143.6" y1="16" x2="202.4" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-cur" cx="202.4" cy="16" r="5.2"/><circle class="rs-todo" cx="261.2" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="378.8" cy="16" r="3"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">一人得道鸡犬升天</text><text class="rs-end" x="614.0" y="35" text-anchor="end">唐英款花觚</text><text class="rs-name" x="202.4" y="35" text-anchor="middle">文昌帝君</text></svg>
+<div class="yr">1316</div>
+<h2>文昌帝君</h2>
+<p class="sub">梓潼县七曲山　·　1316　·　元　·　文化·科技</p>
+<p>管科举功名的那位神，是两条来路合成的。</p>
+<p>一条是星辰：文昌星，主文运。另一条是人：四川梓潼的地方神，后者又与东晋时起兵抗前秦、战殁于蜀的张育（张亚子）合流。张育殉国的年份两说，一作宁康二年（三七四），一作建元二年（三六六），本库不裁。</p>
+<p>北宋起，四川的举子把梓潼神奉为保佑科名之神；南宋因号称灵验，各地举子渐渐都改信了他。</p>
+<p>两条来路并成一位，有确切的日子：元仁宗延祐三年七月七日，加封圣号「輔元開化文昌司禄宏仁帝君」。《三教源流搜神大全》卷一梓潼帝君条逐字记着。同一条里还记着此前的累封：唐玄宗幸蜀，「神迎於萬里橋」，追封左丞相；僖宗播迁，又加封顺济王。</p>
+<p>此后文昌宫、文昌阁随科举普及而遍布各地，与关圣帝君等合称五文昌。</p>
+<p>一颗星和一个战死的人，从这一天起合用一个名字。</p>
+<a class="go" href="timeline.html#line=xianghuo&amp;at=4">在图上看这一站 →</a>
+<p class="note">本库简注：管科举功名的那位神，是两条来路合成的：一条是星辰崇拜里的文昌星（主文运），一条是四川梓潼的地方神——后者又与东晋时起兵抗前秦、战殁于蜀的张育（张亚子）合流。**张育殉国的年份两说未消解**：一作宁康二年（374），一作更早的建元二年（366），本库不裁。北宋起梓潼神被四川举子奉为保佑科名之神；南宋因号称灵验，渐取代各地其他科举守护神，成为举子共信的对象。两条来路并成一位，有确切的日子：元仁宗延祐三年七月七日（1316）加封圣号「輔元開化文昌司禄宏仁帝君」——《三教源流搜神大全》卷一梓潼帝君条逐字，同条并记此前唐玄宗幸蜀时「神迎於萬里橋」追封左丞相、僖宗播迁又加封顺济王的历代累封。此后文昌宫、文昌阁随科举普及而遍布各地，与关圣帝君等合称五文昌。**科举有多要紧，看它连神都配了一整套就知道**：库内武成王庙（731—1388）是给武的那一边配的，文昌是给考试这一边配的，两边都是朝廷用一纸文书把民间香火收进礼制——同一手法在武的一边另见关羽累封条。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>元仁宗延祐三年七月七日（1316）加封「輔元開化文昌司禄宏仁帝君」，《三教源流搜神大全》卷一梓潼帝君条逐字。</li>
+<li><span class="tag t-new">两说不裁</span>张育（张亚子）殉国年份：宁康二年（374）／建元二年（366），本库不裁。</li>
+<li><span class="tag t-new">相撞标本</span>星辰（文昌星）＋真人（张育）合成一位——本站是「人神／非人神」那条纵轴的三个在场证明之一（另两处：城隍站、门神站）。</li>
+<li><span class="tag t-new">绝对词已重扫·撤回</span>预备稿 §十·3 判本站为「全线唯一精确到日的一站」。定稿**撤回这个说法**：钟馗站「是歲除夜」同样指到一个具体的日子，「唯一精确到日」在本线内立不住。线文只写出这个日期，不加「唯一」。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/文昌帝君" target="_blank" rel="noopener">中文维基 · 文昌帝君</a>
+<a href="https://zh.wikisource.org/wiki/三教源流搜神大全/卷一" target="_blank" rel="noopener">维基文库 · 三教源流搜神大全 卷一</a>
+</div>
+</details>
+</div></section>
+<section id="s5" data-year="1369" data-name="大封天下城隍"><div class="wrap">
+<div class="num">五 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="202.4" y1="16" x2="261.2" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-cur" cx="261.2" cy="16" r="5.2"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="378.8" cy="16" r="3"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">一人得道鸡犬升天</text><text class="rs-end" x="614.0" y="35" text-anchor="end">唐英款花觚</text><text class="rs-name" x="261.2" y="35" text-anchor="middle">大封天下城隍</text></svg>
+<div class="yr">1369</div>
+<h2>大封天下城隍</h2>
+<p class="sub">南京市（洪武颁诏）　·　1369　·　明　·　制度</p>
+<p>城隍本是城墙与护城河，后来长成了有阴间行政与司法职责的人格神。</p>
+<p>现存最早的祭城隍记载在北齐天保六年（五五五）：慕容俨守郢城被围，「城中先有神祠一所，俗號城隍神，公私每有祈禱」，于是率众祈请。《北齐书》记下的结果是：风起浪涌，冲断了敌军拦江的荻洪。</p>
+<p>唐代地方官祭城隍渐成文体。开元五年，张说的《祭城隍文》里写「人之仰恩，是關祀典」；四十二年后，缙云县令李阳冰求雨，与神约期五日，及期大雨，遂迁庙于山巅作记——那篇记的头一句却是：「城隍神祀典無之，吳越有之。」一个说是關祀典，一个说祀典無之，唐人自己也没说定。</p>
+<p>收编在洪武二年（一三六九）正月。太祖对礼官说「明有禮樂，幽有鬼神，若城隍神者歷代所祀，宜新封爵」——京都城隍封王，府为「鑒察司民城隍威靈公」秩正二品，州为靈佑侯秩三品，县为顯佑伯秩四品，冕旒章服按品级各有差等。</p>
+<p>这套爵位只用了一年。洪武三年诏去封号，一律改称某府州县城隍之神，又令各庙毁塑像而立木主。塑像撤下，案上换成一块木牌。连神本身也可以撤换，这个说法先秦就有：《孟子·尽心下》说祭祀按时而「旱乾水溢，則變置社稷」。</p>
+<p>各地又常以殉国、蒙冤或有德政的真人充任本地城隍——纪信、文天祥、周新——那是民间另一层的追认，不在朝廷这份名册上。</p>
+<a class="go" href="timeline.html#line=xianghuo&amp;at=5">在图上看这一站 →</a>
+<p class="note">本库简注：城隍本是由城墙与护城河演化来的自然神，后来长成有阴间行政、司法职责的人格神。现存最早的祭城隍记载在北齐天保六年（555）：慕容俨守郢城被围，「城中先有神祠一所，俗號城隍神，公私每有祈禱」，于是率众祈请，果然冲风欻起、惊涛涌激，漂断了敌军拦江的荻洪（《北齐书·慕容俨传》）。唐代地方官祭城隍渐成文体：张说开元五年（717）四月的《祭城隍文》已是最正式的口吻——「城隍以積陰為德，致和產物，助天育人，人之仰恩，是關祀典」；可四十二年后，乾元二年（759）缙云县令李阳冰求雨，「與神約曰：五日不雨，將焚其廟」，及期大雨，遂迁庙于山巅并作记，那篇记的头一句却是「城隍神祀典無之，吳越有之」。**一个说是關祀典，一个说祀典無之**——到八世纪中叶，城隍在国家祀典里究竟算不算数，唐人自己也没说定。收编发生在洪武二年（1369）正月：太祖对中书及礼官说「明有禮樂，幽有鬼神，若城隍神者歷代所祀，宜新封爵」，遂封京都城隍为「承天鑒國司民升福明靈王」，开封、临濠、太平、和州、滁州五处各有封王之号，其余府为「鑒察司民城隍威靈公」秩正二品、州为「鑒察司民城隍靈佑侯」秩三品、县为「鑒察司民城隍顯佑伯」秩四品，冕旒章服按品级各有差等（《明太祖实录》卷三十八）。**这套爵位只用了一年**：洪武三年即「詔去封號」，改称某府州县城隍之神，又令各庙屏去他神、毁塑像而立木主，「定廟制，高廣視官署廳堂」（《明史·礼志三》；这句四库本作「止稱某府州縣城隍之神」，维基文库明史卷49页作「其」，一字两本，故此处只述其意）。**先封成王侯公伯，一年之内又一律削平**，两道诏书把「国家收编民间神」这件事的试探与仓促全写在了脸上。至于各地常以殉国、蒙冤或有德政的真人充任本地城隍（纪信、文天祥、周新等），那是民间另一层的追认，不在朝廷这份名册上。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>《北齐书·慕容俨传》（555）、张说《祭城隍文》（717）、李阳冰缙云城隍庙记（759）、《明太祖实录》卷三十八（1369）、《明史·礼志三》（1370）——五处一手，俱在库条 yc。</li>
+<li><span class="tag t-new">传统叙述·照录不评</span>慕容俨祈祷后风起浪涌漂断荻洪、李阳冰约期而雨——**照录史料怎么写，不追加「其实是巧合」，也不追加「果然应验」。**</li>
+<li><span class="tag t-new">版本互校·引号黑名单</span>洪武三年那句四库本作「止稱某府州縣城隍之神」、维基文库明史卷49页作「其」，一字两本——**库条只述其意不加引号，线文照办**，这一句在引号白名单之外。</li>
+<li><span class="tag t-new">接力不安在一人头上</span>洪武二年封、洪武三年削是**同一个朝廷两年两道诏书、两处出处**，不许压成「朱元璋封了又撤」。</li>
+<li><span class="tag t-new">不许编因果</span>洪武三年削封号 与 民间城隍香火不衰，**不许写成因果**——库里没有任何材料证明后者是对前者的反应。</li>
+<li><span class="tag t-new">降级为一句旁注</span>《孟子·尽心下》「旱乾水溢，則變置社稷」出库内「太庙与社稷坛」条(1420)，本线只作本站末尾一句，不设站。</li>
+<li><span class="tag t-new">站题落地自查</span>站题「塑像换成了木牌」是白话转写，诏令原文作「毁塑像而立木主」——**长文里「木主」二字已出现**（错型十六的落地检查）。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/城隍" target="_blank" rel="noopener">中文维基 · 城隍</a>
+<a href="https://zh.wikisource.org/wiki/大明太祖高皇帝實錄/卷038" target="_blank" rel="noopener">维基文库 · 大明太祖高皇帝實錄 卷038</a>
+<a href="https://zh.wikisource.org/wiki/明史/卷49" target="_blank" rel="noopener">维基文库 · 明史 卷49（礼志三）</a>
+</div>
+</details>
+</div></section>
+<section id="s6" data-year="1072" data-name="除夜赐钟馗"><div class="wrap">
+<div class="num">六 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="261.2" y1="16" x2="320.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-done" cx="261.2" cy="16" r="3"/><circle class="rs-cur" cx="320.0" cy="16" r="5.2"/><circle class="rs-todo" cx="378.8" cy="16" r="3"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">一人得道鸡犬升天</text><text class="rs-end" x="614.0" y="35" text-anchor="end">唐英款花觚</text><text class="rs-name" x="320.0" y="35" text-anchor="middle">除夜赐钟馗</text></svg>
+<div class="yr">1072</div>
+<h2>除夜赐钟馗</h2>
+<p class="sub">开封市　·　1072　·　北宋</p>
+<p>前面三站，纸是发给神的。这一站的纸也是朝廷印的，收的却是人。时间要退回三百年。</p>
+<p>沈括《梦溪笔谈·补笔谈》记，宫中旧藏一幅吴道子画的钟馗，卷首唐人题记讲的正是那个最有名的故事：明皇病中梦见一大一小两个鬼，问大鬼是谁，「奏云：『臣鍾馗氏，即武舉不捷之士也。誓與陛下除天下之妖孽。』」醒来病好了，于是诏吴道子照梦作画。</p>
+<p>这个故事本身不系年——沈括只说那是「禁中舊有」的旧物。能系年的是紧接着的一笔：</p>
+<blockquote>熙寧五年，上令畫工摹搨鐫板，印賜兩府輔臣各一本。是歲除夜，遣入內供奉官梁楷就東西府給賜鍾馗之象<small>《梦溪笔谈 · 补笔谈》</small></blockquote>
+<p>一〇七二年，朝廷把这幅画刻成版印出来，除夕那天派人送到东西两府，执政大臣一人一本；这也是雕版印年节画像最早的一批记载之一。张说《谢赐钟馗及历日表》可为旁证——钟馗图配新历一同颁下，唐朝确有此例；但那篇表文本身不系年，坊间给它系的那个年份，本库遍查未见出处，不采。</p>
+<p>一张画上没有官品。可它是照名册发下去的：两府，各一本。</p>
+<a class="go" href="timeline.html#line=xianghuo&amp;at=6">在图上看这一站 →</a>
+<p class="note">本库简注：锚不打在唐明皇的梦里，打在一次有确切纪年的颁赐上。沈括《梦溪笔谈·补笔谈》记宫中旧藏一幅吴道子画钟馗，卷首唐人题记讲的正是那个最有名的故事：明皇开元讲武骊山，还宫染病逾月，梦见一大一小两鬼，大鬼捉住小鬼「刳其目，然後擘而啖之」；上问何人，「奏云：『臣鍾馗氏，即武舉不捷之士也。誓與陛下除天下之妖孽。』」醒来病愈，乃诏吴道子按梦作画，画成而叹「是卿與朕同夢耳，何肖若此哉」。**这个故事本身不系年**：沈括只说它是「禁中舊有」的旧物。能系年的是紧接着的一笔：「熙寧五年，上令畫工摹搨鐫板，印賜兩府輔臣各一本。是歲除夜，遣入內供奉官梁楷就東西府給賜鍾馗之象」——1072年朝廷把这幅画刻版印出来，除夕分赐执政大臣（除夜是农历岁末，按公历已跨进次年年初）。**这也是雕版印年节画像最早的一批记载之一**。沈括自己对源头的判断是「觀此題相記，似始於開元時」；张说《谢赐钟馗及历日表》可为旁证：「中使至，奉宣聖旨，賜臣畫鍾馗一及新曆日一軸者」——钟馗图配新历一同颁下，唐朝确有此例。**但这篇表文本身不系年**：坊间常见的「开元十五年（727）」一说，本库遍查未见出处，不采；只能确认它出自张说（667—730）之手，故此例至迟不晚于开元年间。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>熙宁五年（1072）令画工摹搨镌板、印赐两府辅臣各一本，是岁除夜遣梁楷就东西府给赐；《梦溪笔谈·补笔谈》一手。（除夜是农历岁末，按公历已跨进次年年初。）</li>
+<li><span class="tag t-new">传统叙述·本身不系年</span>唐明皇梦钟馗——沈括自己说那是「禁中舊有」的旧物题记，不系年。</li>
+<li><span class="tag t-new">未能核实·不采</span>坊间常见的「开元十五年张说《谢赐钟馗历日表》」一说，库条原话「本库遍查未见出处，不采」。**线文一个字都不提那个年份**，只写「坊间给它系的那个年份」——本站硬约束，已落地。</li>
+<li><span class="tag t-ok">信史</span>张说（667—730）确有《谢赐钟馗及历日表》，可证钟馗图配新历一同颁下唐朝有此例；故此例至迟不晚于开元年间。</li>
+<li><span class="tag t-ok">信史</span>这也是雕版印年节画像最早的一批记载之一。</li>
+<li><span class="tag t-new">边界·归节日线</span>除夕怎么过、桃符→春联、爆竹、假期史归节日线。本站只写**颁赐**这个公文动作，不写节俗。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/鍾馗" target="_blank" rel="noopener">中文维基 · 鍾馗</a>
+<a href="https://zh.wikisource.org/wiki/夢溪筆談/補筆談" target="_blank" rel="noopener">维基文库 · 夢溪筆談 補筆談</a>
+</div>
+</details>
+</div></section>
+<section id="s7" data-year="1592" data-name="门神"><div class="wrap">
+<div class="num">七 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="320.0" y1="16" x2="378.8" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-done" cx="261.2" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-cur" cx="378.8" cy="16" r="5.2"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">一人得道鸡犬升天</text><text class="rs-end" x="614.0" y="35" text-anchor="end">唐英款花觚</text><text class="rs-name" x="378.8" y="35" text-anchor="middle">门神</text></svg>
+<div class="yr">1592</div>
+<h2>门神</h2>
+<p class="sub">南京市（世德堂刊本）　·　1592　·　明</p>
+<p>门上贴神像，最早贴的是两个神话人物。</p>
+<p>《荆楚岁时记》记岁旦风俗：「造桃板著戶，謂之仙木。繪二神貼戶左右，左神荼，右鬱壘，俗謂之門神。」其注引应劭《风俗通》，说这两位住在度朔山桃树下，简阅百鬼；同一条注又引《括地图》另一说，只有郁、垒两个名字，「即無神荼之名」——这一层本身就已经在层累。</p>
+<p>换成两个真人是很晚的事。常见的讲法是：《三教源流搜神大全》卷七「门神二将军」条早于《西游记》一个半世纪，秦琼、尉迟恭当门神由它首倡。要核这句话，得先离开门口，翻开那部小说。</p>
+<p>搜神大全那一条，讲完唐太宗寝门外闹鬼、秦叔宝自请与胡敬德「戎裝立門以伺」、太宗命画工图其形像悬于左右门之后，紧跟一句：「西遊記小詞有『本是英雄豪傑舊勳臣，只落得千年稱戶尉，萬古作門神』之句。」——这三句正是《西游记》第十回的原文，一字不差。搜神大全既然在引西游记，就不可能早于它。</p>
+<p>所以这一站的年份系在万历二十年（一五九二）：金陵世德堂刊《新刻出像官板大字西游记》，是这个故事现存最早的确切纪年。</p>
+<p>至于真人在民间彻底顶替神荼郁垒，那是宋元至明清渐进的事，没有哪一年可以指认。</p>
+<a class="go" href="timeline.html#line=xianghuo&amp;at=7">在图上看这一站 →</a>
+<p class="note">本库简注：门上贴神像，最早贴的是两个神话人物。**这一层最早的明确记载在《荆楚岁时记》**，记的是岁旦风俗：「造桃板著戶，謂之仙木。繪二神貼戶左右，左神荼，右鬱壘，俗謂之門神」；其注引应劭《风俗通》：「上古之時，有神荼、壘鬱兄弟二人，住度朔山上桃樹下，簡百鬼。鬼妄搰人，援以葦索，執以食虎。于是縣官以臘除夕飾桃人，垂葦索，畫虎于門」——同注又引《括地图》另一说，只有郁、垒二名而「即無神荼之名」，可见这一层本身也已经在层累。**换成两个真人是很晚的事，而通行的讲法把顺序讲反了**：常见说法称《三教源流搜神大全》卷七「门神二将军」条早于《西游记》一个半世纪，秦琼、尉迟恭当门神由它首倡。核到原文才发现，该条讲完唐太宗寝门外「拋磚弄瓦，鬼魅號呼」、秦叔宝自请与胡敬德（尉迟恭）「戎裝立門以伺」、太宗命画工图其形像悬于宫掖左右门「後世沿襲，遂永為門神」之后，紧跟一句「西遊記小詞有『本是英雄豪傑舊勳臣，只落得千年稱戶尉，萬古作門神』之句」——**这三句正是《西游记》第十回的原文**（「他本是英雄豪傑舊勳臣，只落得千年稱戶尉，萬古作門神」），一字不差。搜神大全在引西游记，就不可能早于它；中文维基该书条目也只说「大概完書於明代」，同卷前一条更已出现「皇明洪武初」字样。故本条的锚打在能系年的那一头：万历二十年（1592）金陵世德堂刊《新刻出像官板大字西游记》（库内西游记条同年，互见），是这个故事现存最早的确切纪年。真人在民间彻底顶替神荼郁垒则是宋元至明清渐进的事，没有哪一年可以指认。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>《荆楚岁时记》「繪二神貼戶左右，左神荼，右鬱壘」及其注引《风俗通》；《西游记》第十回原文三句。</li>
+<li><span class="tag t-new">辟谣·本站论点</span>「《搜神大全》早于《西游记》一个半世纪」不成立——该条自己在引《西游记》第十回原文，一字不差。**辟的是文献的先后，不是「有没有门神」。**</li>
+<li><span class="tag t-new">层累·并存</span>注引《括地图》另一说只有郁、垒二名而「即無神荼之名」——神话层本身也在层累，这一句留在线文里。</li>
+<li><span class="tag t-new">无年可指</span>真人在民间彻底顶替神荼郁垒是宋元至明清渐进的事，**没有哪一年可以指认**（库条自警）。线文不许写「从此门上就换成了秦琼尉迟恭」。</li>
+<li><span class="tag t-new">引文归属·防就近误读</span>「本是英雄豪傑舊勳臣」句在搜神大全的转引里无「他」字，《西游记》第十回原文作「他本是英雄豪傑舊勳臣」——线文按此分别照录，避免「他」被就近读成尉迟恭（错型十四）。</li>
+<li><span class="tag t-new">过桥已设</span>从门口跳到一部小说：线文写「要核这句话，得先离开门口，翻开那部小说」（错型八自查：抽掉这句，前后接不上）。</li>
+<li><span class="tag t-new">降级不设站</span>《西游记》(1592) 归书库／演艺线，本线只以「被引用的那本书」身份出现在本站正文。</li>
+<li><span class="tag t-new">地理</span>本条无 p 字段（w 挂西游记）。地理取它能系年的那一头——万历二十年金陵世德堂刊本，即南京；与城隍站（洪武颁诏，南京）同城相隔二百二十三年，**同城而已，不许接成因果**。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/门神" target="_blank" rel="noopener">中文维基 · 门神</a>
+<a href="https://zh.wikisource.org/wiki/西遊記/第010回" target="_blank" rel="noopener">维基文库 · 西遊記 第十回</a>
+<a href="https://zh.wikipedia.org/wiki/荆楚岁时记" target="_blank" rel="noopener">中文维基 · 荆楚岁时记</a>
+</div>
+</details>
+</div></section>
+<section id="s8" data-year="1062" data-name="包公变阎罗"><div class="wrap">
+<div class="num">八 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="378.8" y1="16" x2="437.6" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-done" cx="261.2" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="378.8" cy="16" r="3"/><circle class="rs-cur" cx="437.6" cy="16" r="5.2"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">一人得道鸡犬升天</text><text class="rs-end" x="614.0" y="35" text-anchor="end">唐英款花觚</text><text class="rs-name" x="437.6" y="35" text-anchor="middle">包公变阎罗</text></svg>
+<div class="yr">1062</div>
+<h2>包公变阎罗</h2>
+<p class="sub">开封市　·　1062　·　北宋　·　名人轶事</p>
+<p>再退回北宋，比钟馗那次颁赐还早十年。</p>
+<p>包拯知开封府的时候，京城里传着一句话：「關節不到，有閻羅包老。」《宋史》本传把它记了下来。这句话把他比作阎罗——是个比喻。同一段还记下他实办的一件事：把府衙正门打开，让告状的人当面陈说，「拯開正門，使得至前陳曲直，吏不敢欺」。</p>
+<p>嘉祐七年（一〇六二），他卒于枢密副使任，谥孝肃。</p>
+<p>真正把他写成白天在开封府断案、夜里下阴间当判官的是元杂剧，距他去世两三百年；明清以后，后人又把他安进「十殿阎罗」，做第五殿阎罗天子。</p>
+<p>那套冥界的官僚体系比包拯出生还早：十王信仰源出晚唐五代的《佛说十王经》。后人把他填进了一个早就设好的位子。</p>
+<p>东汉那块玉券写明，墓田是向地下的神明买的，契约留着给阴间官府查验。那套官府一直在那儿，换的只是坐在里面的人。</p>
+<p>与城隍那一站恰成一进一出：那边是朝廷把民间的神编进官品，这边是民间把朝廷的清官编进冥官。</p>
+<a class="go" href="timeline.html#line=xianghuo&amp;at=8">在图上看这一站 →</a>
+<p class="note">本库简注：锚打在他去世那一年，因为那正是比喻与神格的分界。生前这一头有一手坐实：《宋史》本传记他知开封府时「立朝剛毅，貴戚宦官為之斂手，聞者皆憚之。人以包拯笑比黃河清，童稚婦女，亦知其名，呼曰『包待制』。京師為之語曰：『關節不到，有閻羅包老。』」——**这仍是一句外号式的民谚**：说他铁面像阎罗，不是说他真要去当阎罗。同段还记下他实办的一件事：「舊制，凡訟訴不得徑造庭下。拯開正門，使得至前陳曲直，吏不敢欺」——把府衙正门打开，让告状的人当面陈说，胥吏再无从居中做手脚。嘉祐七年（1062）卒于枢密副使任，赠礼部尚书，谥孝肃。真正把他写成「昼断阳、夜断阴」、白天在开封府断案、夜里下阴间当判官的，是元杂剧（现存以包拯为主角者十余种），距他去世两三百年；明清以后又被安进「十殿阎罗」里做第五殿阎罗天子。**那套冥界官僚体系比他出生还早**：十王信仰源出晚唐五代的《佛说十王经》，包拯是被后人塞进一套现成的编制，不是这套编制为他新设的。与库内城隍条（1369）恰成一进一出：那边是朝廷把民间的神编进官品，这边是民间把朝廷的清官编进冥官。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>《宋史》卷316本传「關節不到，有閻羅包老」及开正门听讼一事，同段。</li>
+<li><span class="tag t-new">转述·须标明谁写的</span>「昼断阳、夜断阴」是**元杂剧**写的，不是宋人写的，距包拯去世两三百年；明清以后又被安进「十殿阎罗」作第五殿。</li>
+<li><span class="tag t-ok">信史</span>十王信仰源出晚唐五代《佛说十王经》，**比包拯出生还早**——后人把他填进一个早就设好的位子，不是这套编制为他新设。</li>
+<li><span class="tag t-new">镜像·顺序不可倒</span>与库内城隍条（1369）恰成一进一出（库条已写好这一对判语）。**站序不能倒**：先看见朝廷给神发官品，再看见百姓给清官发冥官，镜像才成立。</li>
+<li><span class="tag t-new">过桥已设</span>1062 逆行回到幕三之首之前，线文起手即写「再退回北宋，比钟馗那次颁赐还早十年」。</li>
+<li><span class="tag t-new">主语防误读</span>「那套冥界的官僚体系比包拯出生还早」——「他」会被就近读成阎罗，线文已改写成实名（错型十四）。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/包拯" target="_blank" rel="noopener">中文维基 · 包拯</a>
+<a href="https://zh.wikisource.org/wiki/宋史/卷316" target="_blank" rel="noopener">维基文库 · 宋史 卷316</a>
+</div>
+</details>
+</div></section>
+<section id="s9" data-year="1592" data-name="关林"><div class="wrap">
+<div class="num">九 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="437.6" y1="16" x2="496.4" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-done" cx="261.2" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="378.8" cy="16" r="3"/><circle class="rs-done" cx="437.6" cy="16" r="3"/><circle class="rs-cur" cx="496.4" cy="16" r="5.2"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">一人得道鸡犬升天</text><text class="rs-end" x="614.0" y="35" text-anchor="end">唐英款花觚</text><text class="rs-name" x="496.4" y="35" text-anchor="middle">关林</text></svg>
+<div class="yr">1592</div>
+<h2>关林</h2>
+<p class="sub">洛阳关林　·　1592　·　明　·　遗址·建筑</p>
+<p>离开纸，去看一处地方。</p>
+<p>洛阳城南，一片柏林，一座冢。传为关羽首级所葬。</p>
+<p>中国的关庙成千上万，独此一处是冢、庙、林三祀合一。「林」这个字只给过两个人：曲阜孔林，洛阳关林。一文一武。</p>
+<p>始建年通行作明万历二十年（一五九二）。本库未核到《明神宗实录》或《河南通志》的原文，只能给万历一朝的窗口，把握标软；清乾隆年间大加扩建。</p>
+<p>能拿到的最硬的一层在国保档案里：二〇〇六年第六批全国重点文物保护单位，编号Ⅲ－三四二，官定时代「明至清」。方志追记的始建年与国保的保守分期不冲突，它们在讲不同的事。</p>
+<p>这一站没有新的论点。只有一座冢，一片柏树，和给了它的那一个字。</p>
+<p>下一站要看的那一串字，供的正是这座冢里的人。</p>
+<a class="go" href="timeline.html#line=xianghuo&amp;at=9">在图上看这一站 →</a>
+<p class="note">本库简注：洛阳城南，传为埋葬关羽首级之地。中国的关庙成千上万，独此一处是冢、庙、林三祀合一——**「林」这个字只给过两个人**：曲阜孔林与洛阳关林，一文一武（库内曲阜三孔条即孔林所在）。始建年通行作明万历二十年（1592），本轮未核到《明神宗实录》或《河南通志》原文，故给万历一朝的窗口并标定年把握为软；清乾隆年间大加扩建。国保档案给的是最硬的一层：2006年列第六批全国重点文物保护单位，编号Ⅲ－342，官定时代「明至清」——与方志追记的始建年不冲突，是三级阶梯的两层。库内武庙制度（731—1388）与关帝崇拜讲的是封号与祀典怎么一级级抬上去，解州关帝庙与此条讲的是这套香火落在地上的两处实体：一处是他生长的地方，一处是他首级所葬——**身首异处，两地建庙。**</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-new">国保官定层</span>2006年第六批全国重点文物保护单位，编号Ⅲ－342，官定时代「明至清」——**本站最硬的一层**。</li>
+<li><span class="tag t-new">传统叙述·定年软</span>始建年通行作万历二十年（1592），库条自陈未核到《明神宗实录》或《河南通志》原文，故给万历一朝窗口（u1:1573 u2:1620）、把握标软。</li>
+<li><span class="tag t-trad">传统叙述</span>传为关羽首级所葬。</li>
+<li><span class="tag t-new">库条原话</span>「「林」这个字只给过两个人」——曲阜孔林与洛阳关林（库内曲阜三孔条即孔林所在）。此为本线三处合法「唯一／只有」之一，照抄库条，未自造。</li>
+<li><span class="tag t-new">数字零容忍</span>「关庙成千上万」是库条原话的概数，**不许换算成具体数字**。</li>
+<li><span class="tag t-new">呼吸点</span>**全线唯一不设「出幕新问题」的站**：无新论点，只给一个画面，同时充当下一站的引桥。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/关林" target="_blank" rel="noopener">中文维基 · 关林</a>
+<a href="https://zh.wikipedia.org/wiki/曲阜孔庙、孔林和孔府" target="_blank" rel="noopener">中文维基 · 曲阜孔庙、孔林和孔府</a>
+</div>
+</details>
+</div></section>
+<section id="s10" data-year="1652" data-name="关羽累封"><div class="wrap">
+<div class="num">十 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="496.4" y1="16" x2="555.2" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-done" cx="261.2" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="378.8" cy="16" r="3"/><circle class="rs-done" cx="437.6" cy="16" r="3"/><circle class="rs-done" cx="496.4" cy="16" r="3"/><circle class="rs-cur" cx="555.2" cy="16" r="5.2"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">一人得道鸡犬升天</text><text class="rs-name" x="555.2" y="35" text-anchor="middle">关羽累封</text></svg>
+<div class="yr">1652</div>
+<h2>关羽累封</h2>
+<p class="sub">运城市解州　·　1652–1879　·　清　·　文化·科技</p>
+<p>蜀汉景耀三年（二六〇）刘禅追谥关羽「壮缪侯」，此后长期无封；北宋徽宗朝二十余年间由侯而公而王，各本年份与用字不一，只作通说记。</p>
+<p>流传最广的一条是明万历四十二年（一六一四）敕封「三界伏魔大帝神威远镇天尊关圣帝君」——也恰恰是史源最薄的一条：本库未能查得《明神宗实录》或《明史》的直接佐证，故不入年表，只记此存疑。</p>
+<p>可逐条复核的是清代。顺治九年（一六五二）敕封「忠义神武关圣大帝」，弃去明代那个道教色彩浓厚的伏魔帝号，纳入儒家祀典。此后乾隆加「灵佑」，嘉庆加「仁勇」，道光加「威显」，咸丰加「护国」「保民」，同治加「翊赞」，光绪五年（一八七九）加「宣德」——各有《清实录》的卷次日期可查（「精诚」「绥靖」二字没有逐年细目，只知在咸丰至同治之间）。</p>
+<p>终成二十六字：忠义神武灵佑仁勇威显护国保民精诚绥靖翊赞宣德关圣大帝。</p>
+<p>两百二十七年，七个皇帝，一次两个字。不是朝廷把他抬上去的，是朝廷一直在往上补。</p>
+<p>清代武庙的主神也从姜太公换成了他；哪一年正式顶上，雍正三年与雍正八年两说，至今没有一手确证。</p>
+<a class="go" href="timeline.html#line=xianghuo&amp;at=10">在图上看这一站 →</a>
+<p class="note">本库简注：库内樊城之战（219）记的是关羽生前，这一条记他死后一千六百年里被朝廷加了多长的头衔。蜀汉景耀三年（260）刘禅追谥「壮缪侯」之后长期无封，北宋徽宗朝二十余年间由侯而公而王（崇宁元年忠惠公、宣和五年义勇武安王等，各版本年份与用字不一，且多无脚注可回溯，只作通说记）。**明万历四十二年（1614）敕封「三界伏魔大帝神威远镇天尊关圣帝君」是网上流传最广的一条，也恰恰是史源最薄的一条**：本库未能查得《明神宗实录》或《明史》的直接佐证，连维基百科该行自身都没有引用标签，故不入本条正文年表，只记此存疑。真正可逐条复核的是清代：顺治九年（1652）敕封「忠义神武关圣大帝」，弃明代道教色彩浓厚的伏魔帝号，纳入儒家祀典；此后乾隆三十三年（1769）加「灵佑」、嘉庆十九年（1814）加「仁勇」、道光八年（1828）加「威显」、咸丰二三年加「护国」「保民」、同治九年（1870）加「翊赞」、光绪五年（1879）加「宣德」，各有《清实录》卷次日期可查（「精诚」「绥靖」二字无逐年细目，只知在咸丰至同治间）。终成二十六字：忠义神武灵佑仁勇威显护国保民精诚绥靖翊赞宣德关圣大帝。**清代武庙的主神也由姜太公换成了他**，与库内武成王庙（731—1388）恰成接力——但两件事相隔三百余年，明代废武成王庙的理由是姜太公并入历代帝王庙，与关羽无关，不可接成一个故事；关羽究竟哪一年正式顶上（雍正三年/1725与雍正八年/1730两说），至今未有一手确证。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>清代逐朝加字，顺治九年（1652）至光绪五年（1879），各有《清实录》卷次日期可查。</li>
+<li><span class="tag t-new">存疑·只记不采</span>明万历四十二年（1614）「三界伏魔大帝神威远镇天尊关圣帝君」流传最广、史源最薄，库条已判不入正文年表。线文照办：**可以说它是流传最广也史源最薄的一条，不可以把它当事实叙述。**</li>
+<li><span class="tag t-new">各源不一</span>「精诚」「绥靖」二字无逐年细目，只知在咸丰至同治之间。</li>
+<li><span class="tag t-new">两说未决</span>关羽哪一年正式顶替姜太公为武庙主神：雍正三年（1725）／雍正八年（1730）。</li>
+<li><span class="tag t-new">不许编因果</span>明洪武二十一年废武成王庙的理由是姜太公并入历代帝王庙，**与关羽无关，不可接成一个故事**（库条自警）。线文一字未提1388。</li>
+<li><span class="tag t-new">通说层</span>北宋徽宗朝由侯而公而王，各版本年份与用字不一、多无脚注可回溯，只作通说记。</li>
+<li><span class="tag t-new">翻转句配额</span>「不是朝廷把他抬上去的，是朝廷一直在往上补」——**全线两处翻转句的配额，定稿只用掉这一处**（另一处未用）。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/关羽" target="_blank" rel="noopener">中文维基 · 关羽</a>
+<a href="https://zh.wikipedia.org/wiki/武庙" target="_blank" rel="noopener">中文维基 · 武庙（库内武成王庙条，备选未入）</a>
+</div>
+</details>
+</div></section>
+<section id="s11" data-year="1741" data-name="唐英款花觚"><div class="wrap">
+<div class="num">十一 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="555.2" y1="16" x2="614.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-done" cx="261.2" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="378.8" cy="16" r="3"/><circle class="rs-done" cx="437.6" cy="16" r="3"/><circle class="rs-done" cx="496.4" cy="16" r="3"/><circle class="rs-done" cx="555.2" cy="16" r="3"/><circle class="rs-cur" cx="614.0" cy="16" r="5.2"/><text class="rs-end" x="26.0" y="35" text-anchor="start">一人得道鸡犬升天</text><text class="rs-name" x="614.0" y="35" text-anchor="end">唐英款花觚</text></svg>
+<div class="yr">1741</div>
+<h2>唐英款花觚</h2>
+<p class="sub">景德镇市（造）→ 中国国家博物馆（藏）　·　1741　·　清　·　文物</p>
+<p>往上加字的那两百多年里，有一件东西上的字是自己写的。</p>
+<p>乾隆六年，景德镇御窑烧成一件青花花觚。腹部桃形开光里一段楷书自铭，把督陶官的全副头衔写了个够：</p>
+<blockquote>养心殿总监造，钦差督理江南淮、宿、海三关，兼管江西陶政九江关税务，内务府员外郎仍管佐领加五级，沈阳唐英敬制，献东坝天仙圣母案前永远供奉，乾隆六年春月谷旦<small>花觚腹部开光自铭（国博官网藏品页所录）</small></blockquote>
+<p>末句写明去处。东坝的天仙圣母即碧霞元君，庙在今北京朝阳东坝。这件觚是供案上「五供」中的一件——一件香炉、一对烛台、一对花瓶。</p>
+<p>前面几站，官品是朝廷发给神的。这一件上的官品，是官自己带进庙里的。</p>
+<p>这套五供如今不在一处：觚在中国国家博物馆，同款的一对烛台在伦敦维多利亚与艾伯特博物馆。</p>
+<p>国博定它为有绝对纪年铭款的乾隆早期标准器——断这件瓷器的年份，靠的是器上那行字。</p>
+<a class="go" href="timeline.html#line=xianghuo&amp;at=11">在图上看这一站 →</a>
+<p class="note">本库简注：乾隆六年（1741）景德镇御窑烧造的青花花觚，腹部桃形开光内一段楷书自铭，**把督陶官的全副头衔写了个够**：「养心殿总监造，钦差督理江南淮、宿、海三关，兼管江西陶政九江关税务，内务府员外郎仍管佐领加五级，沈阳唐英敬制，献东坝天仙圣母案前永远供奉，乾隆六年春月谷旦」（国博官网藏品页所录）。末句写明去处——东坝的天仙圣母即碧霞元君，庙在今北京朝阳东坝；此觚是供案上「五供」（一件香炉、一对烛台、一对花瓶）中的一件。这套五供如今不在一处：觚在中国国家博物馆，同款的一对烛台在伦敦维多利亚与艾伯特博物馆（FE.129-E-1975）。唐英（1682—1756），沈阳人，隶汉军正白旗，雍正六年（1728）奉命驻景德镇佐理陶务，前后二十余年，「曾与工匠同食息者三年」，所督瓷器世称「唐窑」，撰《陶成纪事碑》《陶冶图说》。国博定其为「有绝对纪年铭款……乾隆早期的标准器」——与库内大维德花瓶（1351）同理：**瓷器的年份常常不是釉色说了算，是器上那行字说了算**。定名两存：国博官网作「青花缠枝莲纹花觚」，展厅说明牌作「唐英制青花缠枝莲纹觚」。坊间「分献京城多座庙宇」与「为东岳庙、关帝庙烧供器」两说未获出处坐实，本条只记铭文自证的东坝一处。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>乾隆六年（1741）景德镇御窑烧造；腹部桃形开光楷书自铭逐字见国博官网藏品页；五供分藏——觚在中国国家博物馆，同款一对烛台在伦敦维多利亚与艾伯特博物馆（FE.129-E-1975）。</li>
+<li><span class="tag t-new">定名两存</span>国博官网作「青花缠枝莲纹花觚」，展厅说明牌作「唐英制青花缠枝莲纹觚」，**两名并记不裁**（定稿把这一层放在 b2 卡片上，长文不重复）。</li>
+<li><span class="tag t-new">未获出处·不采</span>坊间「分献京城多座庙宇」与「为东岳庙、关帝庙烧供器」两说未获出处坐实，库条只记铭文自证的东坝一处，线文照办。</li>
+<li><span class="tag t-new">站位裁定·本站为定稿新收</span>预备稿 §三·B 把它列为加站方案（12→13），由建线者自裁。**定稿收**：它是城隍站的倒影（官品这一次不是朝廷发给神的，是官自己带进庙里的），并给「手续方向」表补上第五个方向（官员个人→神）；另有一张成品自摄照已挂条卡（js/pics-own-cards.js）可供日后配图。</li>
+<li><span class="tag t-new">碧霞元君·配图账倒挂</span>铭文「献东坝天仙圣母案前永远供奉」是碧霞元君在库内的唯一出现处；而 docs/pics-own.md 已有一张自摄「泰山岱顶碧霞祠俯瞰」标「已点将」，点的却是一个尚不存在的条目。**建线前须查清这一张当初点给了谁**——此事随配图工序另办，本轮不做（用户定：配图最后）。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/唐英 (清朝督陶官)" target="_blank" rel="noopener">中文维基 · 唐英（清朝督陶官）</a>
+<a href="https://www.chnmuseum.cn/zp/zpml/201812/t20181218_23901.shtml" target="_blank" rel="noopener">中国国家博物馆 · 藏品页</a>
+</div>
+</details>
+</div></section>
+<section id="s12" class="tone"><div class="wrap">
+<div class="num">落点</div>
+<h2>开皇没有辛酉年</h2>
+<p>最后一站往回走。前面的公文一路排到光绪五年，这一站却停在永淳元年——六八二年。</p>
+<p>《旧唐书》孙思邈本传记下他自己说过的一句话：「開皇辛酉嵗生，至今年九十三矣。」</p>
+<p>开皇年间没有辛酉年。开皇元年（五八一）是辛丑，下一个辛酉已经到了仁寿元年（六〇一）。一句自述里，就卡着一处对不上的干支。</p>
+<p>后世由此推出他生于五八一、五五七、五一五诸说，享年在一百零一岁到一百六十八岁之间摇摆。本传接着说得更玄：「詢之鄉里，咸云數百嵗人。」</p>
+<p>只有死年是硬的：「永淳元年卒。」可紧接着一句又把他推了回去——「經月餘，顏貌不改，舉屍就木，猶若空衣，時人異之。」尸体一个多月没有变样，抬进棺木的时候轻得像一件空衣裳。</p>
+<p>官方的封号来得很晚：宋徽宗崇宁二年（一一〇三）追封「妙应真人」（另有据药王山碑刻的两阶段说，本库未获拓本核实，两说并存）。</p>
+<p>走到这里，桥山上那一问还是没有答案：受祭的人可以查无其人，祭这件事却句句有据。关羽那二十六个字，一次两个，补了两百二十七年。而成神在这部数据库里留下的痕迹，恰好落在它最要紧的那一栏上——生卒年。越是神，活得越长。</p>
+<p>还要说一句本库自己的规矩。这条线一路核的是哪一年、哪本书、谁写的：搜神大全早于西游记一个半世纪，核出来是反的；张说那篇表文的年份，遍查无出处；万历四十二年那十六个字，实录里找不到。三处辟的全是文献，一处也没有辟到神。</p>
+<p>神灵不灵，本库不置一词；纸上的年月与出处，本库句句要核。这条线自己也是在给这些神办手续——办入库的手续，判准只有一条：受祀者可以查无其人，祀之者必有其人。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-new">信史·可自验</span>「開皇辛酉嵗生」自述原文见《旧唐书》本传；**开皇年间没有辛酉年**：开皇元年（581）辛丑，下一个辛酉已到仁寿元年（601）。这是干支推算，不是学者推断，读者可自验。</li>
+<li><span class="tag t-ok">信史</span>「永淳元年卒」（682）——只有死年是硬的。</li>
+<li><span class="tag t-new">各源不一·并存不裁</span>生年三说（581／557／515），享年在101至168岁之间摇摆。</li>
+<li><span class="tag t-new">传统叙述·照录不解释</span>「顏貌不改，舉屍就木，猶若空衣」是正史里的尸解写法，**照录，不解释成「其实是……」**。线文的白话过渡把主语点明为尸体（原句主语不是他本人，错型十四）。</li>
+<li><span class="tag t-new">两说并存</span>妙应真人封号：崇宁二年（1103）直封／1103赐额＋1104特封两阶段说，药王山碑刻拓本本库未核到，两说并存。**不拿一张拓本图去坐实未核的说法。**</li>
+<li><span class="tag t-new">不入·落点内一句</span>《千金方》(652) 不设站；「药王」称呼走进民间通俗信仰要等明清宝卷与戏曲传唱，距其去世六百余年（此层定稿未入长文，只留档）。</li>
+<li><span class="tag t-new">落点清单自查</span>落点只留三样，每一样都指得回某一站：那个不可能的干支（本站）、桥山上那一问（序）、二十六个字（关羽累封站）。**不加第四样。**</li>
+<li><span class="tag t-new">伦理·写进落点不藏在注里</span>三处辟谣（搜神大全先后、张说表文年份、万历十六字）**辟的全是文献的可核陈述，一处也没有辟到神**。判准一句：受祀者可以查无其人，祀之者必有其人。本库不判神的真假，只判文书的真假——这条规矩保护的正是信众。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/wiki/孙思邈" target="_blank" rel="noopener">中文维基 · 孙思邈</a>
+<a href="https://zh.wikisource.org/wiki/舊唐書 (四庫全書本)/卷191" target="_blank" rel="noopener">维基文库 · 舊唐書（四庫全書本）卷191</a>
+</div>
+</details>
+</div></section>
+<footer><div class="wrap">
+本页由 <code>tools/mining/build_line_page.py</code> 从库内数据生成，不手改。长文出自纪录片叙事稿，考据随文写就；凡各源不一致的数字，做法是一个都不给。
+<div class="row">
+<a href="timeline.html#line=xianghuo">在图上走一遍 →</a>
+<a href="index.html">中国帝王寿命数据库</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-xianghuo.md" target="_blank" rel="noopener">资料与出处 ↗</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%%E5%%8B%%98%%E8%%AF%%AF&amp;title=%%E5%%8B%%98%%E8%%AF%%AF%%EF%%BC%%9A" target="_blank" rel="noopener">报个错 ↗</a>
+</div></div></footer>
+<dialog id="lb"><button id="lbx" type="button" aria-label="关闭">✕</button><img id="lbi" alt=""><div id="lbc"></div></dialog>
+<script>
+// 进度条与导轨高亮。整页只有这一段脚本，无依赖、无外链。
+var bar=document.getElementById('bar'),links=[].slice.call(document.querySelectorAll('#rail a')),
+    secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+function tick(){
+  var h=document.documentElement,y=h.scrollTop||document.body.scrollTop,
+      m=(h.scrollHeight-h.clientHeight)||1;
+  bar.style.width=(100*y/m)+'%';
+  var at=0;
+  for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].getBoundingClientRect().top<h.clientHeight*0.42) at=i; }
+  for(var j=0;j<links.length;j++) links[j].className=(j===at?'on':'');
+}
+addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
+
+// 点开放大。图注与署名跟着进去——放大了更该说清这是谁的
+var lb=document.getElementById('lb'),lbi=document.getElementById('lbi'),lbc=document.getElementById('lbc');
+[].forEach.call(document.querySelectorAll('button.zoom'),function(b){
+  b.addEventListener('click',function(){
+    lbi.src=b.getAttribute('data-src'); lbi.alt=b.getAttribute('data-cap')||'';
+    var cap=b.getAttribute('data-cap')||'', who=b.getAttribute('data-who')||'',
+        full=b.getAttribute('data-full')||'';
+    lbc.innerHTML='';
+    var t=document.createElement('div'); t.textContent=cap+(cap&&who?'　':'')+who; lbc.appendChild(t);
+    if(full){var a=document.createElement('a'); a.href=full; a.target='_blank'; a.rel='noopener';
+      a.textContent='在 Commons 看原尺寸 ↗'; var d=document.createElement('div');
+      d.style.marginTop='.4rem'; d.appendChild(a); lbc.appendChild(d);}
+    if(lb.showModal) lb.showModal(); else lb.setAttribute('open','');
+  });
+});
+document.getElementById('lbx').addEventListener('click',function(){lb.close?lb.close():lb.removeAttribute('open')});
+lb.addEventListener('click',function(e){ if(e.target===lb) lb.close&&lb.close(); });
+</script>
+</body></html>
