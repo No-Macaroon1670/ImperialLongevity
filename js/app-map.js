@@ -218,6 +218,7 @@ svg.addEventListener('wheel', (e) => {
 
 // 拖着平移。拖过就不算点击——否则松手时会把选中的链顺手关掉
 let panning = null, suppressClick = false, pinch = null;
+svg.style.cursor = 'grab';   // 抓手三态：常态 grab、拖动 grabbing、松手复位（用户票据 2026-08-21）
 const PTRS = new Map();   // pointerId → 屏坐标；两个成员即捏合态
 svg.addEventListener('pointerdown', (e) => {
   // 先入册再分流：第一指落在点上也不妨碍第二指进来变成捏合（手机上点大，很常见）
@@ -234,6 +235,7 @@ svg.addEventListener('pointerdown', (e) => {
   if (VIEW.z <= 1) return;                 // 全图态单指留给页面滚动
   e.preventDefault();     // 掐掉浏览器的文本选择：不掐，拖图就是满图蓝色选区
   panning = { x: e.clientX, y: e.clientY, cx: VIEW.cx, cy: VIEW.cy, moved: false };
+  svg.style.cursor = 'grabbing';
   try { svg.setPointerCapture(e.pointerId); } catch (_) { /* 合成指针无捕获权，忽略 */ }
 });
 svg.addEventListener('pointermove', (e) => {
@@ -260,6 +262,7 @@ const endPtr = (e) => {
   if (pinch && PTRS.size < 2) { pinch = null; suppressClick = true; scheduleDraw(); }
   if (panning && panning.moved) { suppressClick = true; scheduleDraw(); }
   if (!PTRS.size) panning = null;
+  if (!PTRS.size) svg.style.cursor = 'grab';
 };
 svg.addEventListener('pointerup', endPtr);
 svg.addEventListener('pointercancel', endPtr);
