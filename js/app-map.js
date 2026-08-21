@@ -221,6 +221,7 @@ let panning = null, suppressClick = false, pinch = null;
 svg.style.cursor = 'grab';   // 抓手三态：常态 grab、拖动 grabbing、松手复位（用户票据 2026-08-21）
 const PTRS = new Map();   // pointerId → 屏坐标；两个成员即捏合态
 svg.addEventListener('pointerdown', (e) => {
+  tipHide();
   // 先入册再分流：第一指落在点上也不妨碍第二指进来变成捏合（手机上点大，很常见）
   PTRS.set(e.pointerId, { x: e.clientX, y: e.clientY });
   if (PTRS.size === 2) {
@@ -1510,6 +1511,12 @@ function mountLineChips() {
     state.sel = idOf(r);
     say(r, true);
     scheduleDraw();
+    // 骰子/搜索落点：底部全卡太远，小卡就地弹出（用户票据 2026-08-21）。
+    // 双 rAF 等新视图落定再算屏坐标；悬停别处会顶掉它，按下地图即收。
+    const meta = r['层'] === 'dyn' ? `${yr(r.y)} – ${yr(r.e)}　政权` : `${yr(r.y)}　${kindLabel(r)}`;
+    const body = r['层'] === 'dyn' ? BIO.get(r.key) : YC.get(r.n);
+    requestAnimationFrame(() => requestAnimationFrame(() =>
+      tipShow(x, y2 - 8 / VIEW.z, r.n, meta, body)));
   };
   sin.addEventListener('input', () => {
     const q = sin.value.trim();
