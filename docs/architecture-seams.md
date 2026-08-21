@@ -24,3 +24,13 @@
 
 ## 原则
 机制共享、版式各归；新功能落地前先问一句「另一页要不要」——要，就写进共享层。
+
+## 统一地图模块（2026-08-21 用户定向，可行性在研）
+
+**三个消费者，一台引擎**：①故事页大图（构建时静态）②时间轴走线小地图（运行时）
+③地图页（运行时）。用户原话：prefer main map as base…plan for the fact that we'll
+make more of these and they're going to be used in the same way——**新开一条线只准
+带数据来，不准带新地图代码来**。
+首选路线：plate.js 作唯一制图底座，故事页在构建时经 node 跑 plate.js 出静态 SVG；
+备选：故事侧独立统一模块。build_line_page.py 里今晚现写的 map_svg（含标签避让）
+是过渡件，方案落地后废弃——它与 plate.js 的标签排版器是重复发明，此债已认。
