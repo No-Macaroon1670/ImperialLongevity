@@ -2,7 +2,7 @@
 // 改 docs/pics-<线>.json 的「卡」标后跑 tools/mining/build_line_page.py <线>。
 // 挑选规则见 build_line_page.py emit_line_pics 档头。
 export const LINE_PICS = {
- "beitie": {
+ "kanhe": {
   "石鼓": {
    "缩略图": "img/used/gugong-shiguguan-quanjing.jpg?v=eb5cf006",
    "说明": "故宫石鼓馆——原石在龛里，拓本在墙上：经典的两种身体",

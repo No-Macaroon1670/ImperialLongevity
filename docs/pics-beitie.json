@@ -1,16 +1,4 @@
 {
- "说明": "碑帖线配图账，体例同 pics-xianghuo.json。",
- "站": {
-  "石鼓": {
-   "文件": "gugong-shiguguan-quanjing.jpg",
-   "署名": "No-Macaroon1670 摄，2024 年 1 月",
-   "作者": "No-Macaroon1670 摄，2024 年 1 月",
-   "许可": "作者本人拍摄",
-   "说明": "故宫石鼓馆——原石在龛里，拓本在墙上：经典的两种身体",
-   "卡": true,
-   "整幅": true,
-   "缩略图": "img/used/gugong-shiguguan-quanjing.jpg",
-   "说明页": ""
-  }
- }
+ "说明": "碑帖线配图账，体例同 pics-xianghuo.json。 2026-08-22 更正：石鼓站属勘合线，其图移 docs/pics-kanhe.json。",
+ "站": {}
 }
