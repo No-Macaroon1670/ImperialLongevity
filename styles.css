@@ -1360,6 +1360,13 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-read-n.idle { font-style: italic; opacity: .85; }
 .pl-tally { margin-top: 8px; }
 
+/* 宽屏时全卡挪到图右侧（用户票据 2026-08-21：底部全卡离视线太远）——
+   sticky 跟滚，窄屏回落回图下方原位 */
+@media (min-width: 1420px) {
+  .pl-stage { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 16px; align-items: start; }
+  .pl-stage .pl-read { margin-top: 0; position: sticky; top: 14px; }
+}
+
 /* 这条得写在媒体查询**之前**：写在后面会把窄屏那句 display:block 盖掉 */
 .pl-scroll-hint { display: none; margin: 6px 0 0; font-size: .74rem; color: var(--text-2); }
 
