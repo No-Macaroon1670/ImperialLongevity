@@ -1178,8 +1178,8 @@ section.card.river-mode .chart-host.full-bleed > .notes {
    底图只有海岸线与黄河长江，没有国界（见 tools/mining/build_basemap.py）。 */
 .minimap {
   position: fixed; z-index: 901; right: 16px; bottom: 16px;
-  /* 258px 在故事模式里太小（用户实测指出）。宽度 JS 会现量，这儿随便调 */
-  width: clamp(300px, 27vw, 420px); padding: 8px 9px 6px;
+  /* 258px 在故事模式里太小（用户实测指出）；2026-08-22 再抬一档＋字号提两成（字还是有点小，用户又指出） */
+  width: clamp(320px, 30vw, 480px); padding: 8px 9px 6px;
   background: var(--surface-1); border: 1px solid var(--border);
   border-radius: var(--radius); box-shadow: 0 10px 34px rgba(0, 0, 0, .34);
   display: none; pointer-events: none;      /* 只读的图，不抢下面图的点击 */
@@ -1220,7 +1220,7 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 /* 现藏地的名字：跟那条「出→藏」的虚线同色，读者一眼看出这两样是一件事 */
 .mm-held-t { fill: var(--ev-art, var(--seq-500)); font-weight: 600; opacity: .92; }
 .mm-note {
-  margin-top: 4px; font-size: .72rem; color: var(--muted);
+  margin-top: 4px; font-size: .78rem; color: var(--muted);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 @media (max-width: 1000px) { .minimap { display: none !important; } }

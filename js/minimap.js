@@ -23,6 +23,9 @@
 // fit/clamp/inFrame/everyPoint 与那边的 fit_box/clamp/build_marks 是同一件事的
 // 两种写法。留边 pad 一并归到 **1.30**（本来这儿是 1.35，取景比故事页松一档）。
 
+// 字号量纲：u(N) 即物理 N px（unitOf 把物理像素换算进 viewBox）。
+// 2026-08-22 库主指出字太小、当有物理下限——直接抬到正文级：
+// 站名 12 / 现藏 11 / 河名 10 / 城市 9。撞了让位照旧归排版器。
 import { BASEMAP } from './basemap.js';
 import {
   el, plateFilters, LabelSolver, placeCandidates, NUDGES, ANCHORS, RIVER_TAGS,
@@ -102,14 +105,14 @@ export function mountMinimap(geoOf, allOf) {
       const p = xy([lat, lon]);
       if (!inView(p)) continue;
       gRef.appendChild(el('circle', { class: 'mm-city', cx: p[0], cy: p[1], r: u(1.6) }));
-      refJobs.push(tag(gRef, name, 'mm-city-t', u(6.4), 10, placeCandidates('e', u(1)), p));
+      refJobs.push(tag(gRef, name, 'mm-city-t', u(9), 10, placeCandidates('e', u(1)), p));
     }
     // 河名贴在河上，**不能跑远**——跑远了就指着别的地方了，故只微挪
     for (const [name, lat, lon] of RIVER_TAGS) {
       const p = xy([lat, lon]);
       if (!inView(p)) continue;
       const nudge = NUDGES.tight.map(([dx, dy]) => [u(dx * 0.6), u(dy * 0.6), 'middle']);
-      refJobs.push(tag(gRef, name, 'mm-river-t', u(6.8), 50, nudge, p));
+      refJobs.push(tag(gRef, name, 'mm-river-t', u(10), 50, nudge, p));
     }
   };
 
@@ -164,7 +167,7 @@ export function mountMinimap(geoOf, allOf) {
       // 地名直接标在点旁：底下那行小字要跨到眼睛外面去才读得到。
       // 优先级给到最高——这一站的名字是**必须**画出来的那个
       if (mk.place) {
-        nowJobs.push(tag(gNow, mk.place, 'mm-here-t', u(7.6), 100,
+        nowJobs.push(tag(gNow, mk.place, 'mm-here-t', u(12), 100,
           placeCandidates('e', u(1)), mk.main));
       }
       msg = mk.place || '';
@@ -185,7 +188,7 @@ export function mountMinimap(geoOf, allOf) {
       // 现藏地也标名字。**图外的不标**：名字钉在框边上，读者会以为东西就在那儿；
       // 虚线方块只说「往那个方向」，那行小字里的「（图外）」才说清楚
       if (!off && mk.heldName) {
-        nowJobs.push(tag(gNow, mk.heldName, 'mm-held-t', u(6.8), 80,
+        nowJobs.push(tag(gNow, mk.heldName, 'mm-held-t', u(11), 80,
           placeCandidates('e', u(1)), [hx, hy]));
       }
       const where = mk.heldName + (off ? '（图外）' : '');
