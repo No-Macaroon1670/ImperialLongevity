@@ -16,4 +16,9 @@ export const OWN_PIC = {
   鹳鱼石斧图彩陶缸: 'img/own/guobo-guanyushifutu-taogang.jpg',
   红山文化玉龙: 'img/own/guobo-hongshan-yulong.jpg',
   舞蹈纹彩陶盆: 'img/own/guobo-wudaowen-caitaopen.jpg',
+  华光礁一号: 'img/own/guobo-huaguangjiao-ciqi.jpg',
+  南海一号: 'img/own/guobo-nanhaiyihao-ciqi.jpg',
+  三道岗沉船: 'img/own/guobo-sandaogang-ciqi.jpg',
+  天安门: 'img/own/tiananmen-chenglou.jpg',
+  唐英款花觚: 'img/own/guobo-tangying-hugu.jpg',
 };
