@@ -128,6 +128,7 @@ figure.pic{margin:0 0 2rem}
 figure.pic img{display:block;width:100%;height:auto;border-radius:3px}
 @media(min-width:820px){
   figure.pic{float:left;width:44%;margin:.4rem 1.6rem .8rem 0}
+  figure.pic.pic-wide{float:none;width:100%;margin:.6rem 0 1.2rem}
   section p,section h2,details.app{clear:none}
   details.app,.go{clear:both}
 }
@@ -426,7 +427,18 @@ def main():
                 import hashlib
                 h = hashlib.md5(open(fp, 'rb').read()).hexdigest()[:8]
                 p['缩略图'] = src + '?v=' + h
-        A('<figure class="pic">')
+        wide = False
+        src0 = (p.get('缩略图') or '').split('?')[0]
+        if src0 and not src0.startswith('http'):
+            fp0 = os.path.join(ROOT, src0)
+            if os.path.exists(fp0):
+                try:
+                    from PIL import Image as _Im
+                    w0, h0 = _Im.open(fp0).size
+                    wide = p.get('整幅') and w0 / max(h0, 1) > 2.2
+                except Exception:
+                    pass
+        A('<figure class="pic%s">' % (' pic-wide' if wide else ''))
         # 可点开放大。**不去取 Commons 原图**——那等于把刚去掉的外部依赖请回来；
         # 仓库里这份 880px 相对页面上的 260px 已是 3.4 倍，够看了。
         # 原尺寸给外链，想要的人自己去 Commons
