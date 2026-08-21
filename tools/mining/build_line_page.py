@@ -370,21 +370,54 @@ def map_svg(bm, proj, vb, marks, cls, labels=True, anchors=True, dust=load_dust(
             if bx < ox + ow and ox < bx + w and by - h < oy and oy - oh < by:
                 return False
         return True
-    fs_st, fs_city, fs_riv = u(9.6), u(8.4), u(9)
-    st_lab = {}
+    fs_st, fs_city, fs_riv, fs_idx = u(12.5), u(9.5), u(10), u(8.5)
+    st_lab, idx_lab = {}, {}
     if labels:
+        # 点先入账：任何标签都不许压在点上（站点与城点一视同仁）
+        for mk in marks:
+            for p0 in mk['pts']:
+                p = clamp(p0, vb, u(9))
+                boxes.append((p[0] - u(5.5), p[1] + u(5.5), u(11), u(11)))
+        if anchors:
+            for nm, lat, lon in ANCHORS:
+                p = proj(lon, lat)
+                if inside(p):
+                    boxes.append((p[0] - u(3), p[1] + u(3), u(6), u(6)))
+        placed_names = []
         for mi, mk in enumerate(marks):
             if not (mk['pts'] and mk.get('名')):
                 continue
             name = mk['名']
             p = clamp(mk['pts'][0], vb, u(9))
+            # 同名近点去重：两站共用一个地名（莫高窟/藏经洞案）只出一次标签
+            if any(pn == name and abs(px - p[0]) + abs(py - p[1]) < u(40) for pn, px, py in placed_names):
+                continue
+            placed_names.append((name, p[0], p[1]))
             w, h = len(name) * fs_st * 1.04, fs_st * 1.2
             cands = [(p[0] + u(6.5), p[1] + u(3.2)),
                      (p[0] - u(6.5) - w, p[1] + u(3.2)),
                      (p[0] - w / 2, p[1] - u(7.5)),
-                     (p[0] - w / 2, p[1] + u(14.5))]
+                     (p[0] - w / 2, p[1] + u(14.5)),
+                     (p[0] + u(5), p[1] - u(6.5)),
+                     (p[0] - u(5) - w, p[1] - u(6.5)),
+                     (p[0] + u(5), p[1] + u(15.5)),
+                     (p[0] - u(5) - w, p[1] + u(15.5))]
+            # 外环备胎：内环全占再往外挪一档
+            cands += [(p[0] + u(15), p[1] + u(3.2)), (p[0] - u(15) - w, p[1] + u(3.2)),
+                      (p[0] - w / 2, p[1] - u(16)), (p[0] - w / 2, p[1] + u(25))]
             pos = next(((bx, by) for bx, by in cands if fits(bx, by, w, h)), cands[0])
             st_lab[mi] = pos
+            boxes.append((pos[0], pos[1], w, h))
+        # 序号也占位：四角候选，实在没地方就贴西北角认命
+        for mi, mk in enumerate(marks):
+            if not (mk['pts'] and mk.get('i')):
+                continue
+            p = clamp(mk['pts'][0], vb, u(9))
+            w, h = fs_idx * 1.1, fs_idx * 1.1
+            cands = [(p[0] - u(9), p[1] - u(3.5)), (p[0] + u(4.5), p[1] - u(3.5)),
+                     (p[0] - u(9), p[1] + u(11)), (p[0] + u(4.5), p[1] + u(11))]
+            pos = next(((bx, by) for bx, by in cands if fits(bx, by, w, h)), cands[0])
+            idx_lab[mi] = pos
             boxes.append((pos[0], pos[1], w, h))
     if anchors:
         for nm, lat, lon in ANCHORS:
@@ -420,15 +453,15 @@ def map_svg(bm, proj, vb, marks, cls, labels=True, anchors=True, dust=load_dust(
         for p0 in mk['pts']:
             p = clamp(p0, vb, u(9))
             k = 'm-maybe' if len(mk['pts']) > 1 else 'm-dot'
-            out.append('<circle class="%s" cx="%.1f" cy="%.1f" r="%.1f"/>' % (k, p[0], p[1], u(4.4)))
+            out.append('<circle class="%s" cx="%.1f" cy="%.1f" r="%.1f"/>' % (k, p[0], p[1], u(5)))
         if mi in st_lab:
             bx, by = st_lab[mi]
             out.append('<text class="m-stop-t" x="%.1f" y="%.1f" font-size="%.1f">%s</text>'
                        % (bx, by, fs_st, esc(mk['名'])))
-        if cls == 'hmap' and mk['pts'] and mk.get('i'):
-            p = clamp(mk['pts'][0], vb, u(9))
+        if cls == 'hmap' and mi in idx_lab:
+            bx, by = idx_lab[mi]
             out.append('<text class="m-idx" x="%.1f" y="%.1f" font-size="%.1f">%d</text>'
-                       % (p[0] - u(6.2), p[1] - u(5.2), u(7.6), mk['i']))
+                       % (bx, by, fs_idx, mk['i']))
         out.append('</g>')
     out.append('</svg>')
     return ''.join(out)
