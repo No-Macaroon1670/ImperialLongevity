@@ -77,16 +77,15 @@ export const PICS = {
    "说明页": ""
   },
   "榆林窟": {
-   "文件": "Yulin Caves Jiuquan Gansu China 酒泉 楡林窟 - panoramio (1).jpg",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Yulin_Caves_Jiuquan_Gansu_China_%E9%85%92%E6%B3%89_%E6%A5%A1%E6%9E%97%E7%AA%9F_-_panoramio_%281%29.jpg/960px-Yulin_Caves_Jiuquan_Gansu_China_%E9%85%92%E6%B3%89_%E6%A5%A1%E6%9E%97%E7%AA%9F_-_panoramio_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "原图": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Yulin_Caves_Jiuquan_Gansu_China_%E9%85%92%E6%B3%89_%E6%A5%A1%E6%9E%97%E7%AA%9F_-_panoramio_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-   "许可": "CC BY 3.0",
-   "作者": "Hiroki Ogawa",
-   "署名": "Hiroki Ogawa",
-   "说明页": "https://commons.wikimedia.org/wiki/File:Yulin_Caves_Jiuquan_Gansu_China_%E9%85%92%E6%B3%89_%E6%A5%A1%E6%9E%97%E7%AA%9F_-_panoramio_(1).jpg",
-   "说明": "榆林河峡谷。文中所述第三窟取经图，未得许可可用之图源",
+   "文件": "chengbo-xiyouji-sishitu-muou.jpg",
+   "署名": "No-Macaroon1670 摄，2023 年 12 月",
+   "许可": "作者本人拍摄",
+   "说明": "今日戏台上的取经四师徒（成都博物馆偶戏特展）——第三窟那铺取经图未得图源：壁画上猴行者随玄奘西行的组合，早《西游记》成书三百年",
    "卡": true,
-   "整幅": false
+   "整幅": true,
+   "缩略图": "img/story/shiku/chengbo-xiyouji-sishitu-muou.jpg",
+   "作者": "No-Macaroon1670 摄，2023 年 12 月",
+   "说明页": ""
   },
   "峨眉山乐山大佛": {
    "文件": "Giant Buddha of Leshan.jpg",
@@ -172,6 +171,19 @@ export const PICS = {
     "卡": true,
     "整幅": true,
     "缩略图": "img/used/shanghai-chenghuangmiao-shenkan.jpg",
+    "说明页": ""
+   }
+  ],
+  "买地券": [
+   {
+    "文件": "shangbo-yumaidiquan.jpg",
+    "署名": "No-Macaroon1670 摄，2016 年 9 月",
+    "作者": "No-Macaroon1670 摄，2016 年 9 月",
+    "许可": "作者本人拍摄",
+    "说明": "上海博物馆的玉买地券本尊——上方是两面券文的拓片对照，「建初六年十二月十六日乙酉，武孟子男靡婴买……」",
+    "卡": true,
+    "整幅": true,
+    "缩略图": "img/used/shangbo-yumaidiquan.jpg",
     "说明页": ""
    }
   ]

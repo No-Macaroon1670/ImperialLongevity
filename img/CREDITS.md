@@ -16,7 +16,7 @@ CC-BY 与 CC-BY-SA 要求署名，这是法律义务；CC0 与公有领域不要
 | 麦积山石窟 | `majishan-huge-sculptures-20090226.jpg` | MarsmanRom | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Majishan_huge_sculptures_20090226.jpg) |
 | 云冈石窟 | `cave-20-yungang-grottoes.jpg` | Dudva | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:Cave_20,_Yungang_Grottoes.jpg) |
 | 龙门石窟 | `longmen-lushena-fengxiansi-2023.jpg` | No-Macaroon1670 摄，2023 年 12 月 | 作者本人拍摄 | — |
-| 榆林窟 | `yulin-caves-jiuquan-gansu-china-酒泉-楡林窟-panoramio-1.jpg` | Hiroki Ogawa | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Yulin_Caves_Jiuquan_Gansu_China_%E9%85%92%E6%B3%89_%E6%A5%A1%E6%9E%97%E7%AA%9F_-_panoramio_(1).jpg) |
+| 榆林窟 | `chengbo-xiyouji-sishitu-muou.jpg` | No-Macaroon1670 摄，2023 年 12 月 | 作者本人拍摄 | — |
 | 峨眉山乐山大佛 | `giant-buddha-of-leshan.jpg` | Giorgioglobe | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Giant_Buddha_of_Leshan.jpg) |
 | 金刚经印本 | `diamond-sutra-of-868-ad-the-diamond-sutra-868-frontispiece-a.jpg` | the British Library | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:Diamond_Sutra_of_868_AD_-_The_Diamond_Sutra_(868),_frontispiece_and_text_-_BL_Or._8210-P.2.jpg) |
 | 大足石刻 | `baodingshan-cliff-carvings-50620551337.jpg` | Hugh Llewelyn from Keynsham, UK | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Baodingshan_Cliff_Carvings_(50620551337).jpg) |

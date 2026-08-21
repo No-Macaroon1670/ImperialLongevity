@@ -54,12 +54,12 @@ export const LINE_PICS = {
    "整幅": true
   },
   "榆林窟": {
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Yulin_Caves_Jiuquan_Gansu_China_%E9%85%92%E6%B3%89_%E6%A5%A1%E6%9E%97%E7%AA%9F_-_panoramio_%281%29.jpg/960px-Yulin_Caves_Jiuquan_Gansu_China_%E9%85%92%E6%B3%89_%E6%A5%A1%E6%9E%97%E7%AA%9F_-_panoramio_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "说明": "榆林河峡谷。文中所述第三窟取经图，未得许可可用之图源",
-   "作者": "Hiroki Ogawa",
-   "署名": "Hiroki Ogawa",
-   "许可": "CC BY 3.0",
-   "说明页": "https://commons.wikimedia.org/wiki/File:Yulin_Caves_Jiuquan_Gansu_China_%E9%85%92%E6%B3%89_%E6%A5%A1%E6%9E%97%E7%AA%9F_-_panoramio_(1).jpg"
+   "缩略图": "img/story/shiku/chengbo-xiyouji-sishitu-muou.jpg?v=b229fb61",
+   "说明": "今日戏台上的取经四师徒（成都博物馆偶戏特展）——第三窟那铺取经图未得图源：壁画上猴行者随玄奘西行的组合，早《西游记》成书三百年",
+   "作者": "No-Macaroon1670 摄，2023 年 12 月",
+   "署名": "No-Macaroon1670 摄，2023 年 12 月",
+   "许可": "作者本人拍摄",
+   "整幅": true
   },
   "峨眉山乐山大佛": {
    "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Giant_Buddha_of_Leshan.jpg/960px-Giant_Buddha_of_Leshan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
