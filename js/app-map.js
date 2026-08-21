@@ -1488,10 +1488,14 @@ function mountLineChips() {
   dice.setAttribute('aria-label', '随机跳到图上一条');
   dice.textContent = '🎲';
   dice.addEventListener('click', () => {
-    if (ALL.length < 2) return;
+    // 骰子只掷在正看着的宇宙里（用户票据 2026-08-21）：shown() 已含层/类别/
+    // 年代滑块/低置信/自动坐标全套开关；全关到没得摇时退回全库，免得按钮装死
+    let pool = shown();
+    if (pool.length < 2) pool = ALL;
+    if (pool.length < 2) return;
     let pick = null;
     for (let a2 = 0; a2 < 8 && (!pick || pick === lastPick); a2 += 1) {
-      pick = ALL[Math.floor(Math.random() * ALL.length)];
+      pick = pool[Math.floor(Math.random() * pool.length)];
     }
     lastPick = pick;
     dice.classList.remove('rolling');

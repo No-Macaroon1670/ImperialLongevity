@@ -40,6 +40,9 @@ const S = {
   filtersOpen: false,
 };
 
+// 只读探针：给搜索/骰子这类外围件看一眼当前视图开关（不给写权——写仍走 setOpt）
+export const tlProbe = { evOff: () => new Set(S.evOff || []) };
+
 function filtered() {
   return EMPERORS.filter((e) => {
     if (!S.includeNominal && e.nominal) return false;

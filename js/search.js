@@ -16,6 +16,7 @@ import { h, fmtYearAxis } from './charts.js';
 import { EMPERORS, DYNASTIES } from './data.js';
 import { EVENTS, EVENT_KINDS } from './events.js';
 import { norm, withPy, scoreKeys } from './search-core.js';
+import { tlProbe } from './shell.js';
 
 // 匹配核（norm/withPy/scoreKeys）在 search-core.js——地图搜索同用，只此一份。
 
@@ -45,7 +46,7 @@ function buildIndex() {
     const kind = (EVENT_KINDS[ev.k] || {}).label || '大事';
     const who = ev.k === 'fig' && ev.w && ev.w !== ev.n ? ` · ${ev.w}` : '';
     idx.push({
-      kind: 'ev', id: i, label: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
+      kind: 'ev', id: i, k: ev.k, label: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
       sub: `${kind} · ${fmtYearAxis(ev.y)}${ev.y2 ? `–${fmtYearAxis(ev.y2)}` : ''}${who}`,
       // 雅名也要能搜:图上写的是「破釜沉舟」,搜这四个字却找不到巨鹿之战,
       // 等于把刚教给读者的名字又藏起来
@@ -100,10 +101,17 @@ export function mountSearch(sectionEl, hostOf) {
    * 记住上一次的落点,免得连按两下停在原地——那看着像按钮坏了。
    */
   let lastPick = null;
-  const pool = idx.filter((it) => it.kind === 'emp' || it.kind === 'ev');
   const dice = h('button', {
     class: 'chip tl-dice', type: 'button', title: '随机跳到一位君主或一件大事',
     onclick: () => {
+      // 骰子只掷在正看着的宇宙里（用户票据 2026-08-21）：类别关了不摇进来；
+      // 事件层全关时退到君主＋政权（政权平时不取——跨几百年落点等于没落点，
+      // 但全关场景里它比「按了没反应」强）
+      const evO = tlProbe.evOff();
+      const evPool = idx.filter((it) => it.kind === 'ev' && !evO.has(it.k));
+      const pool = evPool.length
+        ? idx.filter((it) => it.kind === 'emp').concat(evPool)
+        : idx.filter((it) => it.kind === 'emp' || it.kind === 'dyn');
       if (pool.length < 2) return;
       let pick = null;
       for (let a = 0; a < 8 && (!pick || pick === lastPick); a++) {
