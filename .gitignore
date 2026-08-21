@@ -21,6 +21,15 @@ img/inbox/*
 img/processing/*
 !img/inbox/README.md
 
+# ── 四夹制（用户 2026-08-21 定）：只有被用的才需要 push ──────────────
+# inbox（放料）→ processing（案头）→ own（成品库，**本地**）→ used（上线层，入库）。
+# img/own/ 是成品库不是上线层：出品都落这儿，但库存 200 多张、近 40 MB，
+# 其中真被站点引用的只有二十来张。**成品≠上站**——被 js/pics-own-cards.js
+# 点名、或被某条故事线接线点将，那一步才 git mv 进 img/used/ 并入库推送。
+# 照片文件本身一张都不删，只是留在本机备用。
+img/own/*
+!img/own/README.md
+
 # Python 缓存
 __pycache__/
 *.pyc
