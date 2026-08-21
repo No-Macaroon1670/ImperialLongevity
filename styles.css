@@ -1372,6 +1372,14 @@ section.card.river-mode .chart-host.full-bleed > .notes {
     object-fit: cover; margin: 0 0 8px; }
 }
 
+/* 超宽屏（车道 1180 + 右侧悬卡 330+24 有富余）：地图收回整条车道（用户：
+   宽图的开阔感是这页原本的样子），全卡悬到车道外右侧空白带，sticky 跟滚 */
+@media (min-width: 1780px) {
+  .pl-stage { display: block; position: relative; }
+  .pl-stage .pl-read { position: absolute; left: 100%; top: 0;
+    margin-left: 24px; width: 330px; }
+}
+
 /* 这条得写在媒体查询**之前**：写在后面会把窄屏那句 display:block 盖掉 */
 .pl-scroll-hint { display: none; margin: 6px 0 0; font-size: .74rem; color: var(--text-2); }
 
