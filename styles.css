@@ -1163,6 +1163,9 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .mm-coast-fuzz { fill: none; stroke: var(--border); stroke-width: 3.6; opacity: .45; }
 .mm-coast { fill: none; stroke: var(--border); stroke-width: 1; opacity: .85; }
 .mm-river { fill: none; stroke: var(--seq-400); stroke-width: 1.4; opacity: .55; }
+/* 尘点铺底：全库落点当坐标纸，点密之处自然是名城，库一长图自动跟上。
+   淡到几乎只是纸纹——它是底纹不是内容，站点的点必须一眼压得过它 */
+.mm-dust { fill: var(--muted); opacity: .22; }
 /* 全程的点一直画着，只是淡——读者要能看见自己走到哪儿，也要能看见还剩多少。
    起初 .38 太隐，实测根本注意不到（用户指出），提到 .62 并稍放大 */
 .mm-all circle { fill: var(--muted); opacity: .62; }

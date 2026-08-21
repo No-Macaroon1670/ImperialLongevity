@@ -181,11 +181,16 @@ export const NUDGES = {
    用法：
        const s = new LabelSolver();
        s.obstacle(markNode);                       // 点、符号：永远占位
-       s.job({ nodes, priority, candidates, apply, validate });
+       s.job({ nodes, priority, candidates, apply, validate, must });
        s.solve();                                  // 必须在元素已入 DOM 之后
 
    `apply(cand)` 负责把标签摆到那个候选位；排版器只管量框、判撞、决定用哪个。
-   全部候选都撞 → 隐藏。**宁可少画一个地名，也不要两个叠在一起。**             */
+   全部候选都撞 → 隐藏。**宁可少画一个地名，也不要两个叠在一起。**
+
+   `must: true` 是**保底档**，给「掉了就是错、不是丑」的那种字：地图上的序号
+   掉一个，读者就跟长文左栏的行程条对不上号了。撞满时它不藏，退回第一个
+   合法候选位硬摆上去（叠一点也认），并照样入账，免得后面的字再叠上来。
+   solve() 的回执里 `forced` 报的就是这种。缺省 false，老调用方一行不必改。 */
 
 export class LabelSolver {
   constructor() { this.jobs = []; this.obstacles = []; }
@@ -211,11 +216,20 @@ export class LabelSolver {
     return !!a && !!b && a.l < b.x - 1 && b.l < a.x - 1 && a.t < b.y - 1 && b.t < a.y - 1;
   }
 
+  /** 压掉多少面积。只有保底档用得着：撞满时得比较「哪个候选位压得最少」。 */
+  static overlap(a, b) {
+    if (!a || !b) return 0;
+    const w = Math.min(a.x, b.x) - Math.max(a.l, b.l);
+    const h = Math.min(a.y, b.y) - Math.max(a.t, b.t);
+    return w > 0 && h > 0 ? w * h : 0;
+  }
+
   solve() {
     const taken = this.obstacles.map((n) => LabelSolver.rectOf([n])).filter(Boolean);
     // 高优先级先落座；同优先级按登记顺序
     const jobs = this.jobs.slice().sort((a, b) => (b.priority || 0) - (a.priority || 0));
     let hidden = 0;
+    let forced = 0;
     for (const job of jobs) {
       let seated = false;
       for (const cand of job.candidates) {
@@ -225,12 +239,34 @@ export class LabelSolver {
         if (!r) { seated = true; break; }        // 量不出框（未渲染）就放过
         if (!taken.some((t) => LabelSolver.hits(r, t))) { taken.push(r); seated = true; break; }
       }
+      // 保底档：撞满也得画。取**压得最少**的那个合法候选位——不是死取第一个：
+      // 两站同址时（碑帖线的开封禁中两帖、书归线的北京两库）死取第一个会让两个
+      // 序号一模一样地叠在同一处，那比掉号还难认。validate 仍然算数：硬摆是允许
+      // 叠字，不是允许出框；出了框会被 viewBox 裁掉半个字，那不叫保底
+      if (!seated && job.must) {
+        let best = null, least = Infinity;
+        for (const cand of job.candidates) {
+          if (job.validate && !job.validate(cand)) continue;
+          job.apply(cand);
+          const r = LabelSolver.rectOf(job.nodes);
+          const area = r ? taken.reduce((s, t) => s + LabelSolver.overlap(r, t), 0) : 0;
+          if (area < least) { least = area; best = cand; if (!area) break; }
+        }
+        best = best || job.candidates[0];
+        if (best) {
+          job.apply(best);
+          const r = LabelSolver.rectOf(job.nodes);
+          if (r) taken.push(r);
+          seated = true;
+          forced += 1;
+        }
+      }
       if (!seated) {
         job.nodes.forEach((n) => n && n.setAttribute('display', 'none'));
         hidden += 1;
       }
     }
-    return { placed: jobs.length - hidden, hidden };
+    return { placed: jobs.length - hidden, hidden, forced };
   }
 }
 

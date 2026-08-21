@@ -23,7 +23,7 @@
 
 用法：python tools/mining/build_line_page.py [key]     # 缺省 shiku
 """
-import io, json, math, os, re, sys
+import io, json, os, re, shutil, subprocess, sys
 
 ROOT = r"C:/Users/ziyi_/Claude/imperial-longevity"
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -167,6 +167,8 @@ svg *{vector-effect:non-scaling-stroke}
 .m-off{stroke-dasharray:3 2.5}
 .m-flow{stroke:var(--gold);stroke-width:1;opacity:.35;stroke-dasharray:4 3}
 .m-stop-t{fill:var(--dim);opacity:.8;font-family:var(--sans)}
+/* 现藏之处的馆名。金色，与那个空心方块、那条虚线同一族 */
+.m-held-t{fill:var(--gold);opacity:.75;font-family:var(--sans)}
 /* 当前这一节：亮起来 */
 .m-stop.on .m-dot{fill:var(--accent);opacity:1}
 .m-stop.on .m-maybe{stroke:var(--accent);opacity:1}
@@ -239,25 +241,42 @@ lb.addEventListener('click',function(e){ if(e.target===lb) lb.close&&lb.close();
 # ── 地图 ────────────────────────────────────────────────────────────
 # 长文页的地图在**生成时**画进 HTML：这一页只有一段内联脚本、不引模块，
 # 而地图的几何是死的（一条线的站点不会变），没有理由留到运行时算。
-# 两张：开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
-# 底图与 js/basemap.js 同源（海岸线与黄河长江，没有国界，理由见 build_basemap.py）。
-ANCHORS = [
-    ('北京', 39.90, 116.40), ('西安', 34.27, 108.95), ('成都', 30.66, 104.07),
-    ('广州', 23.13, 113.26), ('上海', 31.23, 121.47), ('乌鲁木齐', 43.83, 87.62),
-    ('昆明', 25.04, 102.72), ('兰州', 36.06, 103.83), ('武汉', 30.59, 114.31),
-    ('台北', 25.03, 121.57), ('重庆', 29.56, 106.55), ('南京', 32.06, 118.80),
-]
-RIVER_TAGS = [('黄河', 37.4, 110.5), ('长江', 30.2, 108.6)]
+#
+# **但画图的代码不在这儿了。** 从 2026-08-21 起，这张图与时间轴的小地图、
+# 地图页走同一台引擎：js/plate.js ＋ js/plate-line.js，在 node 里跑
+# （tools/mining/render_line_map.mjs）。原先这个文件里另有一套 python 制图
+# ——自己的 project、自己的取景、自己的贪心避让、自己抄的一份 ANCHORS——
+# 两百来行，且那份 ANCHORS 已经漂移（漏了沈阳、长沙两座城，同一张图两版
+# 画出来的城不一样多，只是以前没人对着看）。同一语义两处维护，删净。
+#
+# 只剩下**导轨**：route_strip 那条站界行程条不是地图，是行进条，留在这儿。
 
 
-def load_basemap():
-    """从 js/basemap.js 取几何。它是生成物，形状固定，正则够用。"""
-    src = io.open(os.path.join(ROOT, 'js/basemap.js'), encoding='utf-8').read()
-    g = lambda p: re.search(p, src).group(1)
-    bbox = [float(x) for x in g(r'bbox: \[([^\]]+)\]').split(',')]
-    return {'bbox': bbox, 'lat0': float(g(r'lat0: ([\d.]+)')),
-            'h': float(g(r'w: 1000, h: ([\d.]+)')),
-            'coast': g(r"coast: '([^']*)'"), 'rivers': g(r"rivers: '([^']*)'")}
+NODE = shutil.which('node')
+RENDERER = os.path.join(ROOT, 'tools/mining/render_line_map.mjs')
+
+
+def map_svg(key, cls='hmap', width=640):
+    """一条线的大图，交给 node 画，拿回一段 SVG 字符串直接嵌进 HTML。
+
+    **不留 python 退路**（用户 2026-08-21 拍）：留一份退路就等于把刚删掉的
+    那两百行又养起来，而那两百行正是这次要还的债。没有 node 就直说，别偷偷
+    画一张跟另外两个消费者不一样的图出来。
+
+    这条线一站都没有地理档时，渲染器输出空串——调用方据此决定那一节出不出现。
+    """
+    if not NODE:
+        raise SystemExit(
+            '没找到 node。这张图归 tools/mining/render_line_map.mjs 画（与小地图、'
+            '地图页同一台引擎），PATH 里得有 node（本机验的是 v24.19.0）。')
+    r = subprocess.run([NODE, RENDERER, key, '--class', cls, '--width', str(width)],
+                       capture_output=True, cwd=ROOT)
+    err = r.stderr.decode('utf-8', 'replace').strip()
+    if r.returncode != 0:
+        raise SystemExit('画图失败（%s）：\n%s' % (key, err))
+    if err:
+        print('  · 地图：%s' % err)
+    return r.stdout.decode('utf-8')
 
 
 def route_strip(stops, cur):
@@ -292,224 +311,6 @@ def route_strip(stops, cur):
     return ''.join(o)
 
 
-def load_dust():
-    """全库落点作暗尘铺底（用户 2026-08-21 定：让库自己当 context anchor——
-    点密之处自然是名城，库一长图自动跟上，零策展维护）。0.15 度网格去重压字节。"""
-    src = io.open(os.path.join(ROOT, 'js/geo-events.js'), encoding='utf-8').read()
-    seen, pts = set(), []
-    for m in re.finditer(r'"点":\s*\[\s*([0-9.]+),\s*([0-9.]+)', src):
-        lat, lon = float(m.group(1)), float(m.group(2))
-        key2 = (round(lat / 0.15), round(lon / 0.15))
-        if key2 in seen:
-            continue
-        seen.add(key2)
-        pts.append((lat, lon))
-    return pts
-
-
-def load_geo(key):
-    p = os.path.join(ROOT, 'docs/geo-%s.json' % key)
-    return (json.load(io.open(p, encoding='utf-8')).get('站', {})
-            if os.path.exists(p) else {})
-
-
-def mapper(bm):
-    w, s0, e, n = bm['bbox']
-    k = math.cos(math.radians(bm['lat0']))
-    W = (e - w) * k
-    return lambda lon, lat: (1000.0 * (lon - w) * k / W, 1000.0 * (n - lat) / W)
-
-
-def fit_box(pts, bm, pad=1.30, minspan=150.0):
-    """按本线全部点定取景框。石窟线铺开全国，赤壁线自动收到长江中游。"""
-    if not pts:
-        return [0, 0, 1000, bm['h']]
-    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
-    w0 = max(max(xs) - min(xs), minspan)
-    h0 = max(max(ys) - min(ys), minspan * 0.62)
-    cx, cy = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2
-    W, H = w0 * pad, h0 * pad
-    if W / H < 1000 / 630.0:
-        W = H * (1000 / 630.0)
-    else:
-        H = W * (630.0 / 1000)
-    return [cx - W / 2, cy - H / 2, W, H]
-
-
-
-def clamp(p, vb, m):
-    """出了取景框就贴到边上。地图放不下不等于那件事没发生。"""
-    return (min(max(p[0], vb[0] + m), vb[0] + vb[2] - m),
-            min(max(p[1], vb[1] + m), vb[1] + vb[3] - m))
-
-
-def map_svg(bm, proj, vb, marks, cls, labels=True, anchors=True, dust=load_dust()):
-    """一张地图。marks 逐项：{i, pts:[(x,y)], held:(x,y)|None, 名}
-
-    标签走贪心避让（用户 2026-08-21 点名：站名互叠、又压城名）：站名先占位
-    （东/西/北/南四个候选位取首个不撞的），城名让站名（撞了就不出，点还在），
-    江河名再让。序号贴点西北角。
-    """
-    u = lambda px: px * vb[2] / 1000.0 * (1000.0 / 640)      # 640 是长文栏宽
-    out = ['<svg class="%s" viewBox="%.1f %.1f %.1f %.1f" preserveAspectRatio="xMidYMid meet" aria-hidden="true">'
-           % (cls, vb[0], vb[1], vb[2], vb[3])]
-    out.append('<path class="m-coast" d="%s"/>' % bm['coast'])
-    out.append('<path class="m-river" d="%s"/>' % bm['rivers'])
-    inside = lambda p: (vb[0] < p[0] < vb[0] + vb[2]) and (vb[1] < p[1] < vb[1] + vb[3])
-    if dust:
-        for la, lo in dust:
-            dp = proj(lo, la)
-            if inside(dp):
-                out.append('<circle class="m-dust" cx="%.1f" cy="%.1f" r="%.1f"/>' % (dp[0], dp[1], u(1.1)))
-    # ── 标签布局预算：先站名、后城名、末江河名，全用同一张占位账 ──
-    boxes = []
-    def fits(bx, by, w, h):
-        if bx < vb[0] + u(2) or by - h < vb[1] + u(2) or bx + w > vb[0] + vb[2] - u(2) or by > vb[1] + vb[3] - u(2):
-            return False
-        for (ox, oy, ow, oh) in boxes:
-            if bx < ox + ow and ox < bx + w and by - h < oy and oy - oh < by:
-                return False
-        return True
-    fs_st, fs_city, fs_riv, fs_idx = u(12.5), u(9.5), u(10), u(8.5)
-    st_lab, idx_lab = {}, {}
-    if labels:
-        # 点先入账：任何标签都不许压在点上（站点与城点一视同仁）
-        for mk in marks:
-            for p0 in mk['pts']:
-                p = clamp(p0, vb, u(9))
-                boxes.append((p[0] - u(5.5), p[1] + u(5.5), u(11), u(11)))
-        if anchors:
-            for nm, lat, lon in ANCHORS:
-                p = proj(lon, lat)
-                if inside(p):
-                    boxes.append((p[0] - u(3), p[1] + u(3), u(6), u(6)))
-        placed_names = []
-        for mi, mk in enumerate(marks):
-            if not (mk['pts'] and mk.get('名')):
-                continue
-            name = mk['名']
-            p = clamp(mk['pts'][0], vb, u(9))
-            # 同名近点去重：两站共用一个地名（莫高窟/藏经洞案）只出一次标签
-            if any(pn == name and abs(px - p[0]) + abs(py - p[1]) < u(40) for pn, px, py in placed_names):
-                continue
-            placed_names.append((name, p[0], p[1]))
-            w, h = len(name) * fs_st * 1.04, fs_st * 1.2
-            cands = [(p[0] + u(6.5), p[1] + u(3.2)),
-                     (p[0] - u(6.5) - w, p[1] + u(3.2)),
-                     (p[0] - w / 2, p[1] - u(7.5)),
-                     (p[0] - w / 2, p[1] + u(14.5)),
-                     (p[0] + u(5), p[1] - u(6.5)),
-                     (p[0] - u(5) - w, p[1] - u(6.5)),
-                     (p[0] + u(5), p[1] + u(15.5)),
-                     (p[0] - u(5) - w, p[1] + u(15.5))]
-            # 外环备胎：内环全占再往外挪一档
-            cands += [(p[0] + u(15), p[1] + u(3.2)), (p[0] - u(15) - w, p[1] + u(3.2)),
-                      (p[0] - w / 2, p[1] - u(16)), (p[0] - w / 2, p[1] + u(25))]
-            pos = next(((bx, by) for bx, by in cands if fits(bx, by, w, h)), cands[0])
-            st_lab[mi] = pos
-            boxes.append((pos[0], pos[1], w, h))
-        # 序号也占位：四角候选，实在没地方就贴西北角认命
-        for mi, mk in enumerate(marks):
-            if not (mk['pts'] and mk.get('i')):
-                continue
-            p = clamp(mk['pts'][0], vb, u(9))
-            w, h = fs_idx * 1.1, fs_idx * 1.1
-            cands = [(p[0] - u(9), p[1] - u(3.5)), (p[0] + u(4.5), p[1] - u(3.5)),
-                     (p[0] - u(9), p[1] + u(11)), (p[0] + u(4.5), p[1] + u(11))]
-            pos = next(((bx, by) for bx, by in cands if fits(bx, by, w, h)), cands[0])
-            idx_lab[mi] = pos
-            boxes.append((pos[0], pos[1], w, h))
-    if anchors:
-        for nm, lat, lon in ANCHORS:
-            p = proj(lon, lat)
-            if not inside(p):
-                continue
-            out.append('<circle class="m-city" cx="%.1f" cy="%.1f" r="%.1f"/>' % (p[0], p[1], u(2.2)))
-            w, h = len(nm) * fs_city * 1.04, fs_city * 1.2
-            bx, by = p[0] + u(4), p[1] + u(3.4)
-            if fits(bx, by, w, h):
-                boxes.append((bx, by, w, h))
-                out.append('<text class="m-city-t" x="%.1f" y="%.1f" font-size="%.1f">%s</text>'
-                           % (bx, by, fs_city, esc(nm)))
-        for nm, lat, lon in RIVER_TAGS:
-            p = proj(lon, lat)
-            w, h = len(nm) * fs_riv * 1.04, fs_riv * 1.2
-            if inside(p) and fits(p[0], p[1], w, h):
-                boxes.append((p[0], p[1], w, h))
-                out.append('<text class="m-river-t" x="%.1f" y="%.1f" font-size="%.1f">%s</text>'
-                           % (p[0], p[1], fs_riv, esc(nm)))
-    for mi, mk in enumerate(marks):
-        gid = (' id="gm-%d" data-name="%s"' % (mk['i'], esc(mk.get('名') or ''))
-               if cls == 'gmap' else '')
-        out.append('<g class="m-stop"%s>' % gid)
-        if mk.get('held'):
-            h2 = clamp(mk['held'], vb, u(9))
-            if mk['pts']:
-                a2 = clamp(mk['pts'][0], vb, u(9))
-                out.append('<line class="m-flow" x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f"/>'
-                           % (a2[0], a2[1], h2[0], h2[1]))
-            out.append('<rect class="m-held%s" x="%.1f" y="%.1f" width="%.1f" height="%.1f"/>'
-                       % (' m-off' if mk.get('外') else '', h2[0] - u(4), h2[1] - u(4), u(8), u(8)))
-        for p0 in mk['pts']:
-            p = clamp(p0, vb, u(9))
-            k = 'm-maybe' if len(mk['pts']) > 1 else 'm-dot'
-            out.append('<circle class="%s" cx="%.1f" cy="%.1f" r="%.1f"/>' % (k, p[0], p[1], u(5)))
-        if mi in st_lab:
-            bx, by = st_lab[mi]
-            out.append('<text class="m-stop-t" x="%.1f" y="%.1f" font-size="%.1f">%s</text>'
-                       % (bx, by, fs_st, esc(mk['名'])))
-        if cls == 'hmap' and mi in idx_lab:
-            bx, by = idx_lab[mi]
-            out.append('<text class="m-idx" x="%.1f" y="%.1f" font-size="%.1f">%d</text>'
-                       % (bx, by, fs_idx, mk['i']))
-        out.append('</g>')
-    out.append('</svg>')
-    return ''.join(out)
-
-
-def build_marks(stops, geo, proj, bm):
-    """站表 → 地图标记。导轨序号：序＝0，各站从 1 起。
-
-    **境外的现藏地不参与取景**：《金刚经》现藏伦敦，若把它算进包围盒，
-    整张图会被拉成欧亚大陆、中国这边挤成一小团（实测踩过）。
-    它照画，只是贴到图框边上并标「图外」——那卷经**离境**这件事正是这条线的结尾，
-    不能因为放不下就抹掉。
-    """
-    w, s0, e, n = bm['bbox']
-    in_box = lambda lat, lon: (w <= lon <= e and s0 <= lat <= n)
-    marks, pts = [], []
-    for i, st in enumerate(stops, 1):
-        g = geo.get(st['ev'] or '')
-        if not g:
-            continue
-        ps, keep = [], []
-        if g.get('点'):
-            p = proj(g['点'][1], g['点'][0])
-            ps.append(p)
-            if in_box(*g['点']):
-                keep.append(p)
-        for x in (g.get('诸说') or []):
-            if x.get('点'):
-                p = proj(x['点'][1], x['点'][0])
-                ps.append(p)
-                if in_box(*x['点']):
-                    keep.append(p)
-        held = off = None
-        if g.get('现藏'):
-            held = proj(g['现藏'][1], g['现藏'][0])
-            off = not in_box(*g['现藏'])
-            if not off:
-                keep.append(held)
-        if not ps and not held:
-            continue
-        name = g.get('地名') or (('%d 说' % len(g['诸说'])) if g.get('诸说') else g.get('藏于'))
-        if off:
-            name = (name or '') + '（图外）' if not g.get('地名') else name
-        marks.append({'i': i, 'pts': ps, 'held': held, '外': bool(off), '名': name})
-        pts += keep
-    return marks, pts
-
-
 def main():
     key = sys.argv[1] if len(sys.argv) > 1 else 'shiku'
     meta, stops = load_line(key)
@@ -529,11 +330,7 @@ def main():
             epigraph = {'v': _v, 'by': _by}
     srcs = load_sources(key)
     per = srcs.get('站', {})
-    bm = load_basemap()
-    proj = mapper(bm)
-    geo = load_geo(key)
-    marks, mpts = build_marks(stops, geo, proj, bm)
-    vb = fit_box(mpts, bm)
+    hmap = map_svg(key)          # 空串＝这条线一站都没有地理档
     pics_path = os.path.join(ROOT, 'docs/pics-%s.json' % key)
     pics = (json.load(io.open(pics_path, encoding='utf-8')).get('站', {})
             if os.path.exists(pics_path) else {})
@@ -592,10 +389,10 @@ def main():
         if epigraph['by']:
             A('<div class="vby">%s</div>' % esc(epigraph['by']))
         A('</div></section>')
-    if marks:
+    if hmap:
         A('<section id="smap"><div class="wrap">')
         A('<div class="num">这条线在地上</div>')
-        A(map_svg(bm, proj, vb, marks, 'hmap', dust=load_dust()))
+        A(hmap)
         A('<p class="note">只有海岸线与黄河、长江，没有国界——这不是政区图。'
           '空心圈是各源不一致、至今没有定论的地点；方块是文物现藏之处，'
           '连着的虚线就是它离开的那段路。坐标取自 Wikidata（CC0）。</p>')
