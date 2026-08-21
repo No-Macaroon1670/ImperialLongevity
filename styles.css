@@ -532,21 +532,33 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 /* 桌面钉住簇（2026-08-22 库主令）：河流一节滚很久，浮动搜索左侧补 🎲 与 📖 简钮，
    最左再给一颗回顶 ⬆——窄屏另有黑条「回到页首」，故 ⬆ 只在宽屏出没 */
 @media (min-width: 720px) {
-  .tl-dice.pinned, .line-launch.pinned, .tl-totop.pinned {
+  .tl-dice.pinned, .line-launch.pinned, .tl-totop.pinned, .tl-gear.pinned {
     position: fixed; z-index: 70; margin: 0; padding: 0;
     width: 34px; height: 34px; min-height: 0; box-sizing: border-box;
     display: inline-flex; align-items: center; justify-content: center;
     line-height: 1; overflow: hidden; top: 52px;
     background: var(--surface-1); box-shadow: 0 4px 16px rgba(0, 0, 0, .16);
   }
-  .tl-dice.pinned { right: calc(14px + min(260px, 46vw) + 30px); }
-  .line-launch.pinned { right: calc(14px + min(260px, 46vw) + 30px + 40px); }
-  .tl-totop.pinned { right: calc(14px + min(260px, 46vw) + 30px + 80px); }
+  .tl-gear.pinned { right: calc(14px + min(260px, 46vw) + 30px); }
+  .tl-dice.pinned { right: calc(14px + min(260px, 46vw) + 30px + 40px); }
+  .line-launch.pinned { right: calc(14px + min(260px, 46vw) + 30px + 80px); }
+  .tl-totop.pinned { right: calc(14px + min(260px, 46vw) + 30px + 120px); }
   .tl-dice.pinned span:not(.tl-dice-face) { display: none; }
   .line-launch.pinned span:not(.line-face) { display: none; }
 }
-.tl-totop { display: none; }   /* 只在钉住态现身；窄屏交给黑条的「回到页首」 */
-@media (max-width: 719px) { .tl-totop.pinned { display: none; } }
+.tl-totop, .tl-gear { display: none; }   /* 只在钉住态现身；窄屏交给黑条与折叠条 */
+/* 齿轮弹层：把 section 里原装的 .local-controls 浮到簇下方——不复制状态，
+   控件还是那一套，只是换个地方现身；行宽自回折，超高自滚 */
+@media (min-width: 720px) {
+  section.lc-open .local-controls {
+    position: fixed; top: 94px; right: 14px; z-index: 69;
+    width: min(620px, calc(100vw - 28px)); max-height: 55vh; overflow: auto;
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 12px; box-shadow: 0 12px 36px rgba(0, 0, 0, .22);
+    padding: 10px 14px;
+  }
+}
+@media (max-width: 719px) { .tl-totop.pinned, .tl-gear.pinned { display: none; } }
 .tl-search.pinned input {
   box-shadow: 0 4px 16px rgba(0, 0, 0, .16); background: var(--surface-1);
 }

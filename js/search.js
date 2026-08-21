@@ -125,6 +125,14 @@ export function mountSearch(sectionEl, hostOf) {
     },
   }, [h('span', { class: 'tl-dice-face', text: '🎲' }), h('span', { text: '随便看看' })]);
   // 回顶：长卷滚很久，钉住态在簇最左给一颗 ⬆（2026-08-22 库主令；窄屏黑条已有「回到页首」）
+  // 齿轮：视图切换与时间缩放藏在它后面（2026-08-22 库主令：看到一半想换河流细度，
+  // 常驻又碍事）。开合状态记在 section 上——render() 会整行重建 .local-controls，
+  // 类挂控件自身就会一点选项弹层即合
+  const gear = h('button', {
+    class: 'chip tl-gear', type: 'button', title: '视图与显示设置',
+    onclick: () => sectionEl.classList.toggle('lc-open'),
+  }, [h('span', { text: '⚙' })]);
+  (sectionEl.querySelector('.head') || sectionEl).appendChild(gear);
   const totop = h('button', {
     class: 'chip tl-totop', type: 'button', title: '回到页首',
     onclick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
@@ -142,6 +150,8 @@ export function mountSearch(sectionEl, hostOf) {
     box.classList.toggle('pinned', on);
     dice.classList.toggle('pinned', on);    // 钉住态：窄屏进顶部黑条，宽屏浮在搜索左侧（2026-08-22 扩桌面）
     totop.classList.toggle('pinned', on);
+    gear.classList.toggle('pinned', on);
+    if (!on) sectionEl.classList.remove('lc-open');   // 解钉即收弹层
     // 故事线入口同理：顶栏左边还空着一格，正好放它（用户实测指出）
     for (const b of document.querySelectorAll('.line-launch')) b.classList.toggle('pinned', on);
   };
