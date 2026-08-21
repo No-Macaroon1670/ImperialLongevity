@@ -509,6 +509,11 @@ export const LINES = {
     name: '石窟线',
     sub: '佛教东传与中国化的实物轴',
     lede: '从洛阳的一场梦，到一九〇〇年半夜破壁：一千八百年凿在山壁上。',
+    // 题辞：全线定场诗，用户（No-Macaroon1670）作，原挂在 line-text-shiku.js
+    // 的 EPIGRAPH，2026-08-21 迁到这里——build_line_page.py 的封面诗与走线
+    // 开场卡（tour.js 的 full 卡）现在读同一份，字一个没改
+    shi: ['汉帝梦金身', '西方有神灵', '马铃叮万里', '雒阳佛钟鸣'],
+    shiBy: 'No-Macaroon1670 题',
     // 长文（js/line-text-shiku.js）按站点的 ev 挂上：宽屏面板里读整段散文，
     // 窄屏仍读 b/b2 那两句——一屏预算装不下六百字。
     // 序与落点没有落点可打光，故做成**首尾两张定调卡**：`full` 让它们
@@ -540,6 +545,11 @@ export const LINES = {
     name: '赤壁线',
     sub: '一场战役如何变成一件件文物',
     lede: '正史里只有三十一个字。火、东风、华容道，是后来一层层加上去的。',
+    // 题辞：用户（No-Macaroon1670）作，原挂在 line-text-chibi.js 的
+    // EPIGRAPH，2026-08-21 迁到这里，理由同石窟线
+    shi: ['南郡将星堕', '浩气尚回肠', '火霞燃赤壁', '三杯礼周郎',
+      '碧血泣吴志', '千古两茫茫', '江畔听涛响', '仍奏小乔殇'],
+    shiBy: 'No-Macaroon1670 题',
     stops: [
       { t: CB_PRO.t, b: CB_PRO.p[0], long: CB_PRO.p, full: true, read: 'story-chibi.html#s0' },
       ...CHIBI.map((s, i) => ({
@@ -601,6 +611,10 @@ export const LINES = {
     name: '书库线',
     sub: '国家修书八柜：动机、方法与无常',
     lede: '中国第一份国家书单，自己也亡佚了。此后一千八百年，每个王朝都想把天下的书装进一个柜子。',
+    // 题辞：用户（No-Macaroon1670）作，原挂在 line-text-shugui.js 的
+    // EPIGRAPH，2026-08-21 迁到这里，理由同石窟线
+    shi: ['皇城昔日万签书', '烈火东风一夜无', '且佩幽兰誊小楷', '文渊阁内展残图'],
+    shiBy: 'No-Macaroon1670 题',
     stops: [
       { t: SG_PRO.t, b: SG_PRO.p[0], long: SG_PRO.p, full: true, read: 'story-shugui.html#s0' },
       ...SHUGUI.map((s, i) => ({

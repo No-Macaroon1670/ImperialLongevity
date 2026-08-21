@@ -316,18 +316,22 @@ def main():
     meta, stops = load_line(key)
     ev, dyn = load_events(), load_dyn()
     pro, long_text, epi = load_long(key)
-    # 题辞（可选）：line-text 里有 EPIGRAPH 就在封面下渲染一首短诗（免正则，纯 find）
-    _src = io.open(os.path.join(ROOT, 'js/line-text-%s.js' % key), encoding='utf-8').read()
+    # 题辞（可选）：LINES[key] 里有 shi 就在封面下渲染一首短诗（免正则，纯 find）。
+    # 字段 2026-08-21 从 line-text-<key>.js 的 EPIGRAPH 迁到 js/lines.js——
+    # 走线开场卡（tour.js 的 full 卡）现在读同一份，取水口只留这一处。
+    _src = io.open(os.path.join(ROOT, 'js/lines.js'), encoding='utf-8').read()
     epigraph = None
-    _i = _src.find('export const EPIGRAPH = {')
-    if _i >= 0:
-        _blk = _src[_i:_src.find('};', _i)]
-        _vseg = _blk[_blk.find('v: [') + 4:_blk.find(']', _blk.find('v: ['))]
-        _v = _vseg.split("'")[1::2]
-        _j = _blk.find("by: '")
-        _by = _blk[_j + 5:_blk.find("'", _j + 5)] if _j >= 0 else ''
-        if _v:
-            epigraph = {'v': _v, 'by': _by}
+    _lb = re.search(r"%s:\s*\{(.*?)\n  \}," % key, _src, re.S)
+    if _lb:
+        _blk = _lb.group(1)
+        _si = _blk.find('shi: [')
+        if _si >= 0:
+            _vseg = _blk[_si + 6:_blk.find(']', _si)]
+            _v = _vseg.split("'")[1::2]
+            _j = _blk.find("shiBy: '")
+            _by = _blk[_j + 8:_blk.find("'", _j + 8)] if _j >= 0 else ''
+            if _v:
+                epigraph = {'v': _v, 'by': _by}
     srcs = load_sources(key)
     per = srcs.get('站', {})
     hmap = map_svg(key)          # 空串＝这条线一站都没有地理档

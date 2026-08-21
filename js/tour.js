@@ -171,6 +171,11 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   // ── 讲解面板 ─────────────────────────────────────────────────────────
   const step = h('span', { class: 'tour-step' });
   const closeBtn = h('button', { class: 'tour-x', type: 'button', 'aria-label': '结束导览', text: '✕' });
+  // 诗题：只在定调卡（序、落点，st.full）且这条线带 shi 时现——贴在卡顶、
+  // 标题之上。样式克制：居中、小字，落款更小，不与讲解本身抢注意力
+  // （字段随 lines.js 的 LINES[key].shi / shiBy 一起从 line-text-<key>.js 的
+  // EPIGRAPH 迁来，story 页封面诗读的是同一份）
+  const poem = h('div', { class: 'tour-poem' });
   const title = h('h3', { class: 'tour-title' });
   const body = h('div', { class: 'tour-body' });
   // b2＝主旨之后的其余交代。它属于详解的第一段：主旨永远看得见，细节点开才来
@@ -240,7 +245,7 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     class: 'tour-panel', role: 'dialog', 'aria-live': 'polite', 'aria-label': '导览',
   }, [
     h('div', { class: 'tour-head' }, [h('span', { class: 'tour-tag', text: TAG }), step, closeBtn]),
-    picBox, title, body, cta, more,
+    picBox, poem, title, body, cta, more,
     h('div', { class: 'tour-nav' }, [readLink, prev, next]),
   ]);
   // 讲解与副卡装在同一个坞里,由 flex 排上下——各自 position:fixed 的话
@@ -487,6 +492,15 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
 
     step.textContent = `${i + 1} / ${STOPS.length}`;
     title.textContent = st.t;
+    // 诗题：只在定调卡上现（st.full 且这条线的 opts.shi 有内容）。序与落点
+    // 共用同一首诗，不分别挂两份——那首诗讲的是整条线，不是某一站
+    poem.innerHTML = '';
+    const showPoem = !!(st.full && opts.shi && opts.shi.length);
+    poem.classList.toggle('on', showPoem);
+    if (showPoem) {
+      for (const ln of opts.shi) poem.appendChild(h('div', { class: 'tour-poem-l', text: ln }));
+      if (opts.shiBy) poem.appendChild(h('div', { class: 'tour-poem-by', text: opts.shiBy }));
+    }
     // 宽屏摆得下就**恢复原来的整段**：折叠是为手机的一屏预算而设，桌面
     // 没有这个约束，却因此把同一段叙述劈成两半——主旨在上、其余被功能句
     // 隔到下面（用户实测：桌面还是原来的全文更好读）。

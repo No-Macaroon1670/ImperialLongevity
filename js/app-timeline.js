@@ -42,6 +42,7 @@ function openLine(key, at) {
   syncThemeLabel();
   lineTour = mountTour(panorama, chartHost, {
     stops: line.stops, tag: line.name, key: `il.line.${line.key}`, launch: false, geo: line.geo,
+    shi: line.shi, shiBy: line.shiBy,
     onStop: () => {
       if (themeWas) root.setAttribute('data-theme', themeWas);
       else root.removeAttribute('data-theme');

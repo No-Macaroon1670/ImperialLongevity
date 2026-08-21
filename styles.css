@@ -1133,6 +1133,17 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 }
 .tour-dock.dock-full .tour-title { font-size: 1.1rem; letter-spacing: .04em; }
 
+/* 诗题：定调卡专属，贴在卡顶、标题之上——只有带 shi 的线（石窟、赤壁、书库）
+   走到序或落点才现。样式克制：居中、小字，落款比诗句更小一档，
+   不与讲解本身抢注意力（字来自 js/lines.js 的 LINES[key].shi / shiBy，
+   与 story 页封面那首诗同一份文本，一字不改）。 */
+.tour-poem { display: none; text-align: center; margin: 0 0 10px; }
+.tour-poem.on { display: block; }
+.tour-poem-l {
+  font-size: .82rem; line-height: 1.85; letter-spacing: .14em; color: var(--text-2);
+}
+.tour-poem-by { margin-top: 5px; font-size: .68rem; color: var(--muted); letter-spacing: .06em; }
+
 /* 窄屏才出现的去处：这一站的全文在长文页上 */
 .tour-read {
   margin-right: auto; align-self: center;
