@@ -283,7 +283,14 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 footer.foot { border-top: 1px solid var(--border); margin-top: 40px; padding-top: 18px;
   color: var(--muted); font-size: .82rem; }
 
-.theme-toggle { margin-left: 8px; }
+/* 深色开关统一驻右上角（2026-08-22 库主令：所有 view 一处，不再挂段末）。
+   钉住的搜索簇为其让位下移（见 .tl-search.pinned） */
+.theme-toggle {
+  position: fixed; top: 10px; right: 14px; z-index: 90; margin: 0;
+  padding: 4px 10px; border-radius: 999px; font-size: .8rem;
+  background: var(--surface-1); border: 1px solid var(--border);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .12); cursor: pointer;
+}
 
 .timeline-scroll {
   max-height: 640px; overflow: auto;
@@ -520,8 +527,26 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
    滚出视野后,想搜就得先滚回顶上——而「页太长滚不动」正是搜索要解决的事。
    故本节占据视口时把它钉在右上角(与纪年滑杆同一套出没规则) */
 .tl-search.pinned {
-  position: fixed; top: 10px; right: 14px; z-index: 70; margin: 0;
+  position: fixed; top: 52px; right: 14px; z-index: 70; margin: 0;   /* 52px：给右上角深色药丸让层 */
 }
+/* 桌面钉住簇（2026-08-22 库主令）：河流一节滚很久，浮动搜索左侧补 🎲 与 📖 简钮，
+   最左再给一颗回顶 ⬆——窄屏另有黑条「回到页首」，故 ⬆ 只在宽屏出没 */
+@media (min-width: 720px) {
+  .tl-dice.pinned, .line-launch.pinned, .tl-totop.pinned {
+    position: fixed; z-index: 70; margin: 0; padding: 0;
+    width: 34px; height: 34px; min-height: 0; box-sizing: border-box;
+    display: inline-flex; align-items: center; justify-content: center;
+    line-height: 1; overflow: hidden; top: 52px;
+    background: var(--surface-1); box-shadow: 0 4px 16px rgba(0, 0, 0, .16);
+  }
+  .tl-dice.pinned { right: calc(14px + min(260px, 46vw) + 30px); }
+  .line-launch.pinned { right: calc(14px + min(260px, 46vw) + 30px + 40px); }
+  .tl-totop.pinned { right: calc(14px + min(260px, 46vw) + 30px + 80px); }
+  .tl-dice.pinned span:not(.tl-dice-face) { display: none; }
+  .line-launch.pinned span:not(.line-face) { display: none; }
+}
+.tl-totop { display: none; }   /* 只在钉住态现身；窄屏交给黑条的「回到页首」 */
+@media (max-width: 719px) { .tl-totop.pinned { display: none; } }
 .tl-search.pinned input {
   box-shadow: 0 4px 16px rgba(0, 0, 0, .16); background: var(--surface-1);
 }
@@ -598,7 +623,9 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
    卡在文档流内（.kp-zone 排版元素）：不浮空、不遮任何控件（用户定案），
    吊挂/让位那一整套几何计算随之退役。 */
 .kp-corner {
-  position: static; transform: none;
+  /* relative 非 static：kp-close 是 absolute，爹不站位叉就漂去外层容器角上
+     （2026-08-22 库主截图实案「close button 又 drift 了」）。流内行为与 static 相同 */
+  position: relative; transform: none;
   /* 放开生长：两张卡平分整行、独卡也能舒展到 580px——定宽 430 会在宽屏
      留出大片死白（用户实测「poor use of space」）。摘要列随宽多露字 */
   flex: 1 1 430px; width: auto; max-width: 580px; max-height: 196px;

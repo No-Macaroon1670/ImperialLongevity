@@ -124,6 +124,12 @@ export function mountSearch(sectionEl, hostOf) {
       go(pick, { smooth: true });
     },
   }, [h('span', { class: 'tl-dice-face', text: '🎲' }), h('span', { text: '随便看看' })]);
+  // 回顶：长卷滚很久，钉住态在簇最左给一颗 ⬆（2026-08-22 库主令；窄屏黑条已有「回到页首」）
+  const totop = h('button', {
+    class: 'chip tl-totop', type: 'button', title: '回到页首',
+    onclick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+  }, [h('span', { text: '⬆' })]);
+  (sectionEl.querySelector('.head') || sectionEl).appendChild(totop);
   (sectionEl.querySelector('.head') || sectionEl).appendChild(dice);
   (sectionEl.querySelector('.head') || sectionEl).appendChild(box);
   // 本节在视口里就把搜索框钉住。用 IntersectionObserver 而非 scroll 事件:
@@ -134,7 +140,8 @@ export function mountSearch(sectionEl, hostOf) {
   const sync = () => {
     const on = headGone && sectionHere;
     box.classList.toggle('pinned', on);
-    dice.classList.toggle('pinned', on);    // 窄屏时骰子跟着钉进顶部黑条（CSS 侧只在窄屏生效）
+    dice.classList.toggle('pinned', on);    // 钉住态：窄屏进顶部黑条，宽屏浮在搜索左侧（2026-08-22 扩桌面）
+    totop.classList.toggle('pinned', on);
     // 故事线入口同理：顶栏左边还空着一格，正好放它（用户实测指出）
     for (const b of document.querySelectorAll('.line-launch')) b.classList.toggle('pinned', on);
   };
