@@ -41,6 +41,7 @@ export const OWN_PIC = {
   广德寺: 'img/used/suining-songci-guangdesi-banban.jpg',
   蜀语: 'img/used/suining-songci-lishi-fuzi-banban.jpg',
   大封天下城隍: 'img/used/shanghai-chenghuangmiao-shenkan.jpg',
+  买地券: 'img/used/shangbo-yumaidiquan.jpg',
   桓温灭成汉: 'img/used/suining-songci-huanwen-pingshu-map.jpg',
   钧窑: 'img/used/guobo-junyao-tianlanyou-wan.jpg',
   龙泉窑: 'img/used/suining-songci-longquanyao-qingyou-ping.jpg',

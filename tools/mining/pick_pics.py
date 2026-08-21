@@ -17,7 +17,7 @@ import io, json, os, re, sys, time
 import urllib.parse, urllib.request
 
 ROOT = r"C:/Users/ziyi_/Claude/imperial-longevity"
-OUT = os.path.join(ROOT, "tools/mining/pic_candidates.json")
+OUT = os.path.join(ROOT, "tools/mining/pic_candidates.json")  # 无参数时的旧名；按线跑见 main 内改名
 UA = {"User-Agent": "ImperialLongevity-picprobe/1.0 (storyline illustration licensing)"}
 # 可自由使用者（署名仍要给）。凡不在此列一律标出，人来判
 FREE = re.compile(r'(cc0|公有领域|public domain|^pd|cc[- ]by([- ]sa)?)', re.I)
@@ -38,6 +38,18 @@ CATS = {
     '金刚经印本': ['Diamond Sutra'],
     '大足石刻': ['Dazu Rock Carvings'],
     '藏经洞发现': ['Library Cave', 'Mogao Caves'],
+    # ── 香火线（2026-08-22 扩）。花觚/城隍两站自摄图已足，不在此列 ──
+    '序': ['Mausoleum of the Yellow Emperor'],
+    '一人得道鸡犬升天': ['Liu An'],
+    '买地券': [],
+    '妈祖信仰': ['Meizhou Mazu Ancestral Temple', 'Mazu'],
+    '文昌帝君': ['Wenchang Wang'],
+    '除夜赐钟馗': ['Zhong Kui'],
+    '门神': ['Menshen'],
+    '包公变阎罗': ['Bao Zheng'],
+    '关林': ['Guanlin'],
+    '关羽累封': ['Guan Yu'],
+    '落点': ['Sun Simiao'],
 }
 # 叙述里那句话的关键词。命中它的候选排前面——图要贴着这一段文字，
 # 不是贴着站名（用户：我想要的是那铺悟空唐僧的壁画）
@@ -53,8 +65,26 @@ WANT = {
     '金刚经印本': ['frontispiece', '868'],
     '大足石刻': ['baoding', 'parental', 'filial', '父母'],
     '藏经洞发现': ['cave 17', 'cave17', 'library cave', 'stein', 'wang'],
+    '序': ['mausoleum', 'qiaoshan', 'tomb', 'huangdi', '轩辕', '桥山'],
+    '一人得道鸡犬升天': ['liu an', 'huainan', '淮南'],
+    '买地券': ['tomb contract', 'land deed', '买地券', '買地券'],
+    '妈祖信仰': ['meizhou', 'temple', 'statue', '湄洲', '祖庙'],
+    '文昌帝君': ['wenchang', 'zitong', '文昌', '梓潼'],
+    '除夜赐钟馗': ['gong kai', 'zhongkui', 'painting', '龔開', '歲朝'],
+    '门神': ['door god', 'new year print', 'woodblock', '年画', '門神'],
+    '包公变阎罗': ['bao zheng', 'baogong', 'portrait', 'temple', '包公祠'],
+    '关林': ['guanlin', 'tomb', 'gate', 'luoyang', '冢'],
+    '关羽累封': ['guandi', 'xiezhou', 'temple', 'statue', '解州'],
+    '落点': ['sun simiao', 'yaowang', 'statue', '药王山', '孫思邈'],
 }
 QUERIES = {k: WANT[k] for k in CATS}
+# 按线跑：pick_pics.py <线key> 只处理该线的站（不给参数则全表）
+LINE_STOPS = {
+    'shiku': ['白马寺', '克孜尔石窟', '敦煌石窟', '麦积山石窟', '云冈石窟', '龙门石窟',
+              '榆林窟', '峨眉山乐山大佛', '金刚经印本', '大足石刻', '藏经洞发现'],
+    'xianghuo': ['序', '一人得道鸡犬升天', '买地券', '妈祖信仰', '文昌帝君',
+                 '除夜赐钟馗', '门神', '包公变阎罗', '关林', '关羽累封', '落点'],
+}
 # 只要照片。djvu/pdf 是扫描古籍与公文，tif/svg/ogv 不适合直接上页
 BAD_EXT = re.compile(r'\.(djvu|pdf|tif|tiff|svg|ogv|webm|ogg|mid|xcf)$', re.I)
 
@@ -134,7 +164,14 @@ def meta(files):
 
 def main():
     rows = []
+    global OUT
+    only = LINE_STOPS.get(sys.argv[1]) if len(sys.argv) > 1 else None
+    if len(sys.argv) > 1:
+        # 按线跑写按线的档，别覆盖别条线的候选（2026-08-22 险案：香火线打捞差点覆盖石窟候选）
+        OUT = os.path.join(ROOT, 'tools/mining/pic_candidates-%s.json' % sys.argv[1])
     for stop, qs in QUERIES.items():
+        if only and stop not in only:
+            continue
         files, seen = [], set()
         for cat in CATS.get(stop, []):
             for t in in_category(cat):
@@ -148,7 +185,7 @@ def main():
         # 而分类里那两处的文件名是「Caves 1-4」「2010 CHINE (459...)」这类，
         # 排序无从下手。合起来再排，命中叙述关键词的排前面
         for q in qs:
-            for t in search('%s %s' % (CATS.get(stop, [stop])[0], q)):
+            for t in search('%s %s' % ((CATS.get(stop) or [stop])[0], q)):
                 if t not in seen and not BAD_EXT.search(t):
                     seen.add(t)
                     files.append(t)
