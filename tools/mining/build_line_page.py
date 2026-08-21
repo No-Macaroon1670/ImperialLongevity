@@ -142,9 +142,16 @@ figure.pic figcaption a:hover{color:var(--dim)}
    全程的点一律画出、只是淡；当前那一站才亮——读者要能看见自己走到哪儿，
    也要能看见还剩多少。 */
 #smap{padding:4rem 0 3.5rem}
-svg.hmap,svg.gmap{display:block;width:100%;height:auto}
+svg.hmap{display:block;width:100%;height:auto}
+svg.rstrip{display:block;width:100%;max-width:640px;height:auto;margin:.4rem 0 .1rem;overflow:visible}
+.rs-base{stroke:var(--rule);stroke-width:1.4}
+.rs-hop{stroke:var(--accent);stroke-width:2.2}
+.rs-done{fill:var(--dim)}
+.rs-todo{fill:none;stroke:var(--faint);stroke-width:1.2}
+.rs-cur{fill:var(--accent)}
+.rs-name{fill:var(--ink);font-family:var(--sans);font-size:11.5px;letter-spacing:.08em}
+.rs-end{fill:var(--faint);font-family:var(--sans);font-size:9.5px;letter-spacing:.04em}
 svg.hmap{margin:1.6rem 0 1rem}
-svg.gmap{margin-top:1.1rem;opacity:.9}
 svg *{vector-effect:non-scaling-stroke}
 .m-coast{fill:none;stroke:var(--rule);stroke-width:1.1}
 .m-river{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.42}
@@ -203,14 +210,6 @@ function tick(){
   var at=0;
   for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].getBoundingClientRect().top<h.clientHeight*0.42) at=i; }
   for(var j=0;j<links.length;j++) links[j].className=(j===at?'on':'');
-  // 小地图跟着走：全程的点一直都在，只把当前这一节点亮
-  var g=document.querySelectorAll('svg.gmap .m-stop'),nm='';
-  for(var k=0;k<g.length;k++){
-    var on=(g[k].id==='gm-'+at);
-    g[k].setAttribute('class','m-stop'+(on?' on':''));
-    if(on) nm=g[k].getAttribute('data-name')||'';
-  }
-  var gn=document.getElementById('gname'); if(gn) gn.textContent=nm;
 }
 addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
 
@@ -257,6 +256,38 @@ def load_basemap():
     return {'bbox': bbox, 'lat0': float(g(r'lat0: ([\d.]+)')),
             'h': float(g(r'w: 1000, h: ([\d.]+)')),
             'coast': g(r"coast: '([^']*)'"), 'rivers': g(r"rivers: '([^']*)'")}
+
+
+def route_strip(stops, cur):
+    """站界行程条：第 cur 站（1起）的章头示意——已过实心、本站放大带名、未来空心。
+    静态即正确：第 N 站的条画「前 N-1 站已过」，不需要滚动状态（用户 2026-08-21 案：
+    侧栏小图不随 stop 变，遂撤职，由此条接岗）。"""
+    n = len(stops)
+    if n < 2:
+        return ''
+    W, H, pad, y = 640.0, 50, 26, 16
+    xs = [pad + (W - 2 * pad) * i / (n - 1) for i in range(n)]
+    o = ['<svg class="rstrip" viewBox="0 0 640 %d" aria-hidden="true">' % H]
+    o.append('<line class="rs-base" x1="%.1f" y1="%d" x2="%.1f" y2="%d"/>' % (xs[0], y, xs[-1], y))
+    if cur > 1:
+        o.append('<line class="rs-hop" x1="%.1f" y1="%d" x2="%.1f" y2="%d"/>' % (xs[cur - 2], y, xs[cur - 1], y))
+    for i, x in enumerate(xs, 1):
+        if i < cur:
+            o.append('<circle class="rs-done" cx="%.1f" cy="%d" r="3"/>' % (x, y))
+        elif i == cur:
+            o.append('<circle class="rs-cur" cx="%.1f" cy="%d" r="5.2"/>' % (x, y))
+        else:
+            o.append('<circle class="rs-todo" cx="%.1f" cy="%d" r="3"/>' % (x, y))
+    nm = lambda st: (st.get('ev') or '')
+    if cur > 2:
+        o.append('<text class="rs-end" x="%.1f" y="%d" text-anchor="start">%s</text>' % (xs[0], y + 19, esc(nm(stops[0]))))
+    if cur < n - 1:
+        o.append('<text class="rs-end" x="%.1f" y="%d" text-anchor="end">%s</text>' % (xs[-1], y + 19, esc(nm(stops[-1]))))
+    anch = 'middle' if 1 < cur < n else ('start' if cur == 1 else 'end')
+    o.append('<text class="rs-name" x="%.1f" y="%d" text-anchor="%s">%s</text>'
+             % (xs[cur - 1], y + 19, anch, esc(nm(stops[cur - 1]))))
+    o.append('</svg>')
+    return ''.join(o)
 
 
 def load_geo(key):
@@ -452,9 +483,8 @@ def main():
         short = label.split('：')[0].split(' · ')[-1][:6]
         A('<a href="#%s"><span class="dot"></span><span class="lbl">%s</span></a>' % (sid, esc(short)))
     A('</nav>')
-    if marks:
-        A(map_svg(bm, proj, vb, marks, 'gmap', labels=False, anchors=False))
-        A('<div id="gname"></div>')
+    # 侧栏小地图已撤（用户 2026-08-21 裁：太 mini 且长文页气质不合——
+    # 地理全貌归页首大图，行程位置归站界行程条 route_strip）
     A('</div>')
 
     A('<header class="cover"><div class="wrap">')
@@ -571,6 +601,7 @@ def main():
         rec = per.get(name) or {}
         A('<section id="s%d" data-year="%s" data-name="%s"><div class="wrap">' % (i, e.get('y', ''), esc(name)))
         A('<div class="num">%s / %s</div>' % (cn(i), cn(len(stops))))
+        A(route_strip(stops, i))
         if e.get('y'):
             A('<div class="yr">%s</div>' % yr(e['y']))
         A('<h2>%s</h2>' % esc(name or s['t']))
