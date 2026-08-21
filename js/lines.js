@@ -635,6 +635,9 @@ export const LINES = {
     name: '演艺线',
     sub: '谁出钱看，艺人站在哪儿',
     lede: '五千年前陶盆上十五个人手拉着手。从那儿到今天的剧场，钱换了九种，场子换了九个，围观的人群一直是同一群。',
+    // 题辞：用户（No-Macaroon1670）2026-08-21 作。伶人无名而戏千秋。
+    shi: ['箫笛息音犹绕梁', '西楼月下牡丹杳', '梨园多少红尘客', '千秋戏中唱主调'],
+    shiBy: 'No-Macaroon1670 题',
     stops: [
       { t: YY_PRO.t, b: YY_PRO.p[0], long: YY_PRO.p, full: true, read: 'story-yanyi.html#s0' },
       ...YANYI.map((s, i) => ({
