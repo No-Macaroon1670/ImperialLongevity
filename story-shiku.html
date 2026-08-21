@@ -92,6 +92,14 @@ figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
   line-height:1.8;color:var(--faint)}
 figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
 figure.pic figcaption a:hover{color:var(--dim)}
+/* 一站多图（如落点三张）：不绕排，并排摆成一排——「能看见三样东西」，
+   图就该一次看见三样，不该被文字拆成三处零散的浮块 */
+.pic-trio{display:flex;flex-direction:column;gap:1.4rem;margin:0 0 2rem}
+.pic-trio figure.pic{margin:0}
+@media(min-width:820px){
+  .pic-trio{flex-direction:row}
+  .pic-trio figure.pic{float:none;width:calc(33.333% - .94rem)}
+}
 
 /* ── 地图 ────────────────────────────────────────────────────────
    开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
