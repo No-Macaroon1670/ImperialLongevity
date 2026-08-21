@@ -153,6 +153,8 @@ svg.rstrip{display:block;width:100%;max-width:640px;height:auto;margin:.4rem 0 .
 .rs-end{fill:var(--faint);font-family:var(--sans);font-size:9.5px;letter-spacing:.04em}
 svg.hmap{margin:1.6rem 0 1rem}
 svg *{vector-effect:non-scaling-stroke}
+.m-dust{fill:#6a6259;opacity:.32}
+.m-idx{fill:var(--dim);font-family:var(--sans);letter-spacing:0}
 .m-coast{fill:none;stroke:var(--rule);stroke-width:1.1}
 .m-river{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.42}
 .m-city{fill:var(--faint);opacity:.75}
@@ -290,6 +292,21 @@ def route_strip(stops, cur):
     return ''.join(o)
 
 
+def load_dust():
+    """全库落点作暗尘铺底（用户 2026-08-21 定：让库自己当 context anchor——
+    点密之处自然是名城，库一长图自动跟上，零策展维护）。0.15 度网格去重压字节。"""
+    src = io.open(os.path.join(ROOT, 'js/geo-events.js'), encoding='utf-8').read()
+    seen, pts = set(), []
+    for m in re.finditer(r'"点":\s*\[\s*([0-9.]+),\s*([0-9.]+)', src):
+        lat, lon = float(m.group(1)), float(m.group(2))
+        key2 = (round(lat / 0.15), round(lon / 0.15))
+        if key2 in seen:
+            continue
+        seen.add(key2)
+        pts.append((lat, lon))
+    return pts
+
+
 def load_geo(key):
     p = os.path.join(ROOT, 'docs/geo-%s.json' % key)
     return (json.load(io.open(p, encoding='utf-8')).get('站', {})
@@ -326,12 +343,12 @@ def clamp(p, vb, m):
             min(max(p[1], vb[1] + m), vb[1] + vb[3] - m))
 
 
-def map_svg(bm, proj, vb, marks, cls, labels=True, anchors=True):
+def map_svg(bm, proj, vb, marks, cls, labels=True, anchors=True, dust=load_dust()):
     """一张地图。marks 逐项：{i, pts:[(x,y)], held:(x,y)|None, 名}
 
-    `i` 是它在导轨里的序号，前端据此高亮当前一节。
-    全程的点一律画出、只是淡；当前那一站才亮——**读者要能看见自己走到哪儿了，
-    也要能看见还剩多少**（用户指定）。
+    标签走贪心避让（用户 2026-08-21 点名：站名互叠、又压城名）：站名先占位
+    （东/西/北/南四个候选位取首个不撞的），城名让站名（撞了就不出，点还在），
+    江河名再让。序号贴点西北角。
     """
     u = lambda px: px * vb[2] / 1000.0 * (1000.0 / 640)      # 640 是长文栏宽
     out = ['<svg class="%s" viewBox="%.1f %.1f %.1f %.1f" preserveAspectRatio="xMidYMid meet" aria-hidden="true">'
@@ -339,39 +356,79 @@ def map_svg(bm, proj, vb, marks, cls, labels=True, anchors=True):
     out.append('<path class="m-coast" d="%s"/>' % bm['coast'])
     out.append('<path class="m-river" d="%s"/>' % bm['rivers'])
     inside = lambda p: (vb[0] < p[0] < vb[0] + vb[2]) and (vb[1] < p[1] < vb[1] + vb[3])
+    if dust:
+        for la, lo in dust:
+            dp = proj(lo, la)
+            if inside(dp):
+                out.append('<circle class="m-dust" cx="%.1f" cy="%.1f" r="%.1f"/>' % (dp[0], dp[1], u(1.1)))
+    # ── 标签布局预算：先站名、后城名、末江河名，全用同一张占位账 ──
+    boxes = []
+    def fits(bx, by, w, h):
+        if bx < vb[0] + u(2) or by - h < vb[1] + u(2) or bx + w > vb[0] + vb[2] - u(2) or by > vb[1] + vb[3] - u(2):
+            return False
+        for (ox, oy, ow, oh) in boxes:
+            if bx < ox + ow and ox < bx + w and by - h < oy and oy - oh < by:
+                return False
+        return True
+    fs_st, fs_city, fs_riv = u(9.6), u(8.4), u(9)
+    st_lab = {}
+    if labels:
+        for mi, mk in enumerate(marks):
+            if not (mk['pts'] and mk.get('名')):
+                continue
+            name = mk['名']
+            p = clamp(mk['pts'][0], vb, u(9))
+            w, h = len(name) * fs_st * 1.04, fs_st * 1.2
+            cands = [(p[0] + u(6.5), p[1] + u(3.2)),
+                     (p[0] - u(6.5) - w, p[1] + u(3.2)),
+                     (p[0] - w / 2, p[1] - u(7.5)),
+                     (p[0] - w / 2, p[1] + u(14.5))]
+            pos = next(((bx, by) for bx, by in cands if fits(bx, by, w, h)), cands[0])
+            st_lab[mi] = pos
+            boxes.append((pos[0], pos[1], w, h))
     if anchors:
         for nm, lat, lon in ANCHORS:
             p = proj(lon, lat)
             if not inside(p):
                 continue
             out.append('<circle class="m-city" cx="%.1f" cy="%.1f" r="%.1f"/>' % (p[0], p[1], u(2.2)))
-            out.append('<text class="m-city-t" x="%.1f" y="%.1f" font-size="%.1f">%s</text>'
-                       % (p[0] + u(4), p[1] + u(3.4), u(8.4), esc(nm)))
+            w, h = len(nm) * fs_city * 1.04, fs_city * 1.2
+            bx, by = p[0] + u(4), p[1] + u(3.4)
+            if fits(bx, by, w, h):
+                boxes.append((bx, by, w, h))
+                out.append('<text class="m-city-t" x="%.1f" y="%.1f" font-size="%.1f">%s</text>'
+                           % (bx, by, fs_city, esc(nm)))
         for nm, lat, lon in RIVER_TAGS:
             p = proj(lon, lat)
-            if inside(p):
+            w, h = len(nm) * fs_riv * 1.04, fs_riv * 1.2
+            if inside(p) and fits(p[0], p[1], w, h):
+                boxes.append((p[0], p[1], w, h))
                 out.append('<text class="m-river-t" x="%.1f" y="%.1f" font-size="%.1f">%s</text>'
-                           % (p[0], p[1], u(9), esc(nm)))
-    for mk in marks:
+                           % (p[0], p[1], fs_riv, esc(nm)))
+    for mi, mk in enumerate(marks):
         gid = (' id="gm-%d" data-name="%s"' % (mk['i'], esc(mk.get('名') or ''))
                if cls == 'gmap' else '')
         out.append('<g class="m-stop"%s>' % gid)
         if mk.get('held'):
-            h = clamp(mk['held'], vb, u(9))
+            h2 = clamp(mk['held'], vb, u(9))
             if mk['pts']:
-                a = clamp(mk['pts'][0], vb, u(9))
+                a2 = clamp(mk['pts'][0], vb, u(9))
                 out.append('<line class="m-flow" x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f"/>'
-                           % (a[0], a[1], h[0], h[1]))
+                           % (a2[0], a2[1], h2[0], h2[1]))
             out.append('<rect class="m-held%s" x="%.1f" y="%.1f" width="%.1f" height="%.1f"/>'
-                       % (' m-off' if mk.get('外') else '', h[0] - u(4), h[1] - u(4), u(8), u(8)))
+                       % (' m-off' if mk.get('外') else '', h2[0] - u(4), h2[1] - u(4), u(8), u(8)))
         for p0 in mk['pts']:
             p = clamp(p0, vb, u(9))
             k = 'm-maybe' if len(mk['pts']) > 1 else 'm-dot'
             out.append('<circle class="%s" cx="%.1f" cy="%.1f" r="%.1f"/>' % (k, p[0], p[1], u(4.4)))
-        if labels and mk['pts'] and mk.get('名'):
-            p = clamp(mk['pts'][0], vb, u(9))
+        if mi in st_lab:
+            bx, by = st_lab[mi]
             out.append('<text class="m-stop-t" x="%.1f" y="%.1f" font-size="%.1f">%s</text>'
-                       % (p[0] + u(6.5), p[1] + u(3.2), u(9.6), esc(mk['名'])))
+                       % (bx, by, fs_st, esc(mk['名'])))
+        if cls == 'hmap' and mk['pts'] and mk.get('i'):
+            p = clamp(mk['pts'][0], vb, u(9))
+            out.append('<text class="m-idx" x="%.1f" y="%.1f" font-size="%.1f">%d</text>'
+                       % (p[0] - u(6.2), p[1] - u(5.2), u(7.6), mk['i']))
         out.append('</g>')
     out.append('</svg>')
     return ''.join(out)
@@ -505,7 +562,7 @@ def main():
     if marks:
         A('<section id="smap"><div class="wrap">')
         A('<div class="num">这条线在地上</div>')
-        A(map_svg(bm, proj, vb, marks, 'hmap'))
+        A(map_svg(bm, proj, vb, marks, 'hmap', dust=load_dust()))
         A('<p class="note">只有海岸线与黄河、长江，没有国界——这不是政区图。'
           '空心圈是各源不一致、至今没有定论的地点；方块是文物现藏之处，'
           '连着的虚线就是它离开的那段路。坐标取自 Wikidata（CC0）。</p>')
