@@ -690,6 +690,8 @@ export const LINES = {
     key: 'beitie',
     name: '碑帖线',
     sub: '经典是怎么被制造出来的',
+    shi: ['墨沁薛涛石中凿', '豪卷狂草楷成稿', '书中自有属文规', '碑上字随岁月老'],
+    shiBy: 'No-Macaroon1670 题',
     lede: '天下第一行书，没有一个活着的人见过真迹。你临的每一本字帖，都有人替你挑过。',
     stops: [
       { t: BT_PRO.t, b: BT_PRO.p[0], long: BT_PRO.p, full: true, read: 'story-beitie.html#s0' },
