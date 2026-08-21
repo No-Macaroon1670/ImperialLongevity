@@ -135,6 +135,14 @@ figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
   line-height:1.8;color:var(--faint)}
 figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
 figure.pic figcaption a:hover{color:var(--dim)}
+/* 一站多图（如落点三张）：不绕排，并排摆成一排——「能看见三样东西」，
+   图就该一次看见三样，不该被文字拆成三处零散的浮块 */
+.pic-trio{display:flex;flex-direction:column;gap:1.4rem;margin:0 0 2rem}
+.pic-trio figure.pic{margin:0}
+@media(min-width:820px){
+  .pic-trio{flex-direction:row}
+  .pic-trio figure.pic{float:none;width:calc(33.333% - .94rem)}
+}
 
 /* ── 地图 ────────────────────────────────────────────────────────
    开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
@@ -404,30 +412,43 @@ def main():
 
     quoted = set()
 
-    def picfig(name):
-        """配图。图注恒有一行**署名**：CC-BY／CC-BY-SA 是法律要求，CC0 与
+    def one_pic(p):
+        """单张配图。图注恒有一行**署名**：CC-BY／CC-BY-SA 是法律要求，CC0 与
         公有领域不要求但本库照署。自摄的图没有 Commons 文件页，只留署名不加链。"""
-        pic = pics.get(name)
-        if not (pic and pic.get('缩略图')):
-            return
         A('<figure class="pic">')
         # 可点开放大。**不去取 Commons 原图**——那等于把刚去掉的外部依赖请回来；
         # 仓库里这份 880px 相对页面上的 260px 已是 3.4 倍，够看了。
         # 原尺寸给外链，想要的人自己去 Commons
         A('<button class="zoom" type="button" data-src="%s" data-cap="%s" data-who="%s" '
           'data-full="%s" aria-label="放大看：%s">'
-          % (esc(pic['缩略图']), esc(pic.get('说明') or ''),
-             esc(' · '.join([x for x in [pic.get('署名') or pic.get('作者'),
-                                         pic.get('许可')] if x])),
-             esc(pic.get('说明页') or ''), esc(pic.get('说明') or '图片')))
-        A('<img src="%s" alt="%s" loading="lazy">' % (esc(pic['缩略图']), esc(pic.get('说明'))))
+          % (esc(p['缩略图']), esc(p.get('说明') or ''),
+             esc(' · '.join([x for x in [p.get('署名') or p.get('作者'),
+                                         p.get('许可')] if x])),
+             esc(p.get('说明页') or ''), esc(p.get('说明') or '图片')))
+        A('<img src="%s" alt="%s" loading="lazy">' % (esc(p['缩略图']), esc(p.get('说明'))))
         A('</button>')
-        who = ' · '.join([x for x in [pic.get('署名') or pic.get('作者'), pic.get('许可')] if x])
-        link = pic.get('说明页')
+        who = ' · '.join([x for x in [p.get('署名') or p.get('作者'), p.get('许可')] if x])
+        link = p.get('说明页')
         tail = ('<a href="%s" target="_blank" rel="noopener">%s</a>' % (esc(link), esc(who))
                 if link else esc(who))
-        A('<figcaption>%s　%s</figcaption>' % (esc(pic.get('说明') or ''), tail or '图片来源'))
+        A('<figcaption>%s　%s</figcaption>' % (esc(p.get('说明') or ''), tail or '图片来源'))
         A('</figure>')
+
+    def picfig(name):
+        """配图，一站一张或多张。**多张**（如落点三张自摄图）不绕排，
+        并排摆成一行——见上面 `.pic-trio`。单张沿用原先的文绕图。"""
+        pic = pics.get(name)
+        items = pic if isinstance(pic, list) else [pic] if pic else []
+        items = [p for p in items if p and p.get('缩略图')]
+        if not items:
+            return
+        multi = len(items) > 1
+        if multi:
+            A('<div class="pic-trio">')
+        for p in items:
+            one_pic(p)
+        if multi:
+            A('</div>')
 
     recheck = {}
     for r in srcs.get('复核', []):
@@ -515,6 +536,7 @@ def main():
         A('<section id="s%d" class="tone"><div class="wrap">' % (len(stops) + 1))
         A('<div class="num">落点</div>')
         A('<h2>%s</h2>' % esc(epi['t'].split('·')[-1].strip()))
+        picfig('落点')         # 落点也可配图（演艺线：今日天桥三张）
         paras_of('落点', epi['p'])
         app_block('落点')
         A('</div></section>')

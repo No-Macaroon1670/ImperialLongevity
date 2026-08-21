@@ -1,0 +1,40 @@
+{
+ "说明": "故事线的配图。选图是策展判断（准绳：这张图就是这段话在讲的那个东西），许可与署名从 Commons 抓、不手抄。`卡` 为真者进讲解卡，其余只进长文页。",
+ "站": {
+  "落点": [
+   {
+    "文件": "tianqiao-juchang-haibao-2016.jpg",
+    "署名": "No-Macaroon1670 摄，2016 年 9 月",
+    "许可": "作者本人拍摄",
+    "说明": "天桥剧场，门口立着芭蕾《睡美人》演出海报",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/yanyi/tianqiao-juchang-haibao-2016.jpg",
+    "作者": "No-Macaroon1670 摄，2016 年 9 月",
+    "说明页": ""
+   },
+   {
+    "文件": "tianqiao-deyunshe-jiejing-2016.jpg",
+    "署名": "No-Macaroon1670 摄，2016 年 9 月",
+    "许可": "作者本人拍摄",
+    "说明": "街对面德云社的招牌",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/yanyi/tianqiao-deyunshe-jiejing-2016.jpg",
+    "作者": "No-Macaroon1670 摄，2016 年 9 月",
+    "说明页": ""
+   },
+   {
+    "文件": "tianqiao-simianzhong-2016.jpg",
+    "署名": "No-Macaroon1670 摄，2016 年 9 月",
+    "许可": "作者本人拍摄",
+    "说明": "天桥广场重建的四面钟",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/yanyi/tianqiao-simianzhong-2016.jpg",
+    "作者": "No-Macaroon1670 摄，2016 年 9 月",
+    "说明页": ""
+   }
+  ]
+ }
+}

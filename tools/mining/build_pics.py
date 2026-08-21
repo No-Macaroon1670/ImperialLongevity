@@ -86,6 +86,38 @@ OWN = {
             '整幅': True,
         },
     },
+    'yanyi': {
+        # 落点段落原文点名三样东西——剧场与海报、德云社招牌、四面钟——
+        # 这三张 2016 年天桥实拍图逐一对上，故按文中出现的顺序排（不是拍摄
+        # 先后：拍摄顺序是钟→剧场→德云社，文中顺序是剧场→德云社→钟）。
+        # 一站三图，见 build_line_page.py 的 `.pic-trio`
+        '落点': [
+            {
+                '文件': 'tianqiao-juchang-haibao-2016.jpg',
+                '署名': 'No-Macaroon1670 摄，2016 年 9 月',
+                '许可': '作者本人拍摄',
+                '说明': '天桥剧场，门口立着芭蕾《睡美人》演出海报',
+                '卡': False,
+                '整幅': True,
+            },
+            {
+                '文件': 'tianqiao-deyunshe-jiejing-2016.jpg',
+                '署名': 'No-Macaroon1670 摄，2016 年 9 月',
+                '许可': '作者本人拍摄',
+                '说明': '街对面德云社的招牌',
+                '卡': False,
+                '整幅': True,
+            },
+            {
+                '文件': 'tianqiao-simianzhong-2016.jpg',
+                '署名': 'No-Macaroon1670 摄，2016 年 9 月',
+                '许可': '作者本人拍摄',
+                '说明': '天桥广场重建的四面钟',
+                '卡': False,
+                '整幅': True,
+            },
+        ],
+    },
 }
 
 
@@ -112,8 +144,9 @@ def credit_of(m):
 def main():
     key = sys.argv[1] if len(sys.argv) > 1 else 'shiku'
     picks = PICKS.get(key) or {}
-    if not picks:
-        sys.exit('还没给 %s 选图，先填 PICKS' % key)
+    own_picks = OWN.get(key) or {}
+    if not picks and not own_picks:
+        sys.exit('还没给 %s 选图，先填 PICKS 或 OWN' % key)
     cands = json.load(io.open(os.path.join(ROOT, 'tools/mining/pic_candidates.json'),
                               encoding='utf-8'))
     meta = {}
@@ -141,13 +174,24 @@ def main():
             '整幅': not (0.95 <= (m.get('宽') or 1) / (m.get('高') or 1) <= 1.6),
         }
 
-    # 自己拍的接在后面：没有 Commons 元数据可抓，本表即出处
-    for ev, v in (OWN.get(key) or {}).items():
+    # 自己拍的接在后面：没有 Commons 元数据可抓，本表即出处。
+    # 一站可以是一张（dict）或多张（list，如落点三张天桥图）
+    def place(v):
         local = 'img/story/%s/%s' % (key, v['文件'])
         if not os.path.exists(os.path.join(ROOT, local)):
-            print('  ⚠ %s 的自摄图还没放进来：%s' % (ev, local))
-            continue
-        out[ev] = {**v, '缩略图': local, '作者': v['署名'], '说明页': ''}
+            print('  ⚠ %s 的自摄图还没放进来：%s' % (v['文件'], local))
+            return None
+        return {**v, '缩略图': local, '作者': v['署名'], '说明页': ''}
+
+    for ev, v in own_picks.items():
+        if isinstance(v, list):
+            placed = [p for p in (place(x) for x in v) if p]
+            if placed:
+                out[ev] = placed
+        else:
+            p = place(v)
+            if p:
+                out[ev] = p
 
     path = os.path.join(ROOT, 'docs/pics-%s.json' % key)
     io.open(path, 'w', encoding='utf-8', newline='\n').write(json.dumps({
@@ -173,11 +217,17 @@ def main():
     io.open(os.path.join(ROOT, 'js/pics.js'), 'w', encoding='utf-8',
             newline=chr(10)).write(chr(10).join(head))
 
-    print('写出 %s：%d 站（进卡 %d）' % (path, len(out), sum(1 for v in out.values() if v['卡'])))
+    def flat(v):
+        return v if isinstance(v, list) else [v]
+
+    ncard = sum(1 for v in out.values() for p in flat(v) if p['卡'])
+    print('写出 %s：%d 站／%d 张（进卡 %d）'
+          % (path, len(out), sum(len(flat(v)) for v in out.values()), ncard))
     for ev, v in out.items():
-        print('  %-12s %-14s %-30s%s' % (ev, v['许可'] or '?',
-                                       (v['署名'] or '（无署名可给）')[:30],
-                                       '　[卡]' if v['卡'] else ''))
+        for p in flat(v):
+            print('  %-12s %-14s %-30s%s' % (ev, p['许可'] or '?',
+                                           (p['署名'] or '（无署名可给）')[:30],
+                                           '　[卡]' if p['卡'] else ''))
     if miss:
         print('  ⚠ 候选里找不到：', miss)
     print('  写出 js/pics.js：%s' % '、'.join('%s %d' % (k, len(v)) for k, v in rows.items()))
