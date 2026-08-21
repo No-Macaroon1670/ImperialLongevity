@@ -26,6 +26,7 @@ export const OWN_PIC = {
   三道岗沉船: 'img/used/guobo-sandaogang-ciqi.jpg',
   天安门: 'img/used/tiananmen-chenglou.jpg',
   唐英款花觚: 'img/used/guobo-tangying-hugu.jpg',
+  碧霞元君: 'img/used/taishan-bixiaci-fukan.jpg',
   桓温灭成汉: 'img/used/suining-songci-huanwen-pingshu-map.jpg',
   钧窑: 'img/used/guobo-junyao-tianlanyou-wan.jpg',
   龙泉窑: 'img/used/suining-songci-longquanyao-qingyou-ping.jpg',

@@ -1,0 +1,29 @@
+{
+ "说明": "香火线配图账。体例同 pics-yanyi.json：站 -> 单张或列表；多张并排 .pic-trio。",
+ "站": {
+  "唐英款花觚": [
+   {
+    "文件": "guobo-tangying-hugu.jpg",
+    "署名": "No-Macaroon1670 摄，2024 年 1 月",
+    "作者": "No-Macaroon1670 摄，2024 年 1 月",
+    "许可": "作者本人拍摄",
+    "说明": "唐英自制青花缠枝莲纹觚，佛前五供之一——上面的字是他自己写的（中国国家博物馆）",
+    "卡": true,
+    "整幅": true,
+    "缩略图": "img/used/guobo-tangying-hugu.jpg",
+    "说明页": ""
+   },
+   {
+    "文件": "taishan-bixiaci-fukan.jpg",
+    "署名": "No-Macaroon1670 摄，2016 年 9 月",
+    "作者": "No-Macaroon1670 摄，2016 年 9 月",
+    "许可": "作者本人拍摄",
+    "说明": "泰山岱顶碧霞祠，清晨俯瞰——觚铭末句写明的去处「天仙圣母」，祖庭在此",
+    "卡": true,
+    "整幅": true,
+    "缩略图": "img/used/taishan-bixiaci-fukan.jpg",
+    "说明页": ""
+   }
+  ]
+ }
+}
