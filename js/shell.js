@@ -184,6 +184,7 @@ function buildFilters(host) {
   }));
   const cnt = h('span', { class: 'filter-count', id: 'filter-count' });
   row.appendChild(cnt);
+  if (themeBtnRef) row.appendChild(themeBtnRef);   // 深色开关驻常驻筛选条尾（index 的「设置」）
   host.appendChild(row);
   row.scrollTop = prevScroll;
 }
@@ -194,6 +195,7 @@ const sel = (key, label, options, when) => ({ type: 'select', key, label, option
 const tog = (key, label, when) => ({ type: 'toggle', key, label, when });
 // 只有两三个选项时用分段器而非下拉：下拉把另一个选项藏起来，读者得先点开
 // 才知道有得选，换一次要两下；分段器两个都摆在明面上，换一次一下。
+let themeBtnRef = null;   // 深色开关的活节点：谁建「设置」块谁把它接走（2026-08-22 统一令）
 const seg = (key, label, options, when) => ({ type: 'seg', key, label, options, when });
 // 连续量用滑杆。时间缩放本来给的是三档预设，可「多宽算合适」取决于屏宽与
 // 你正在看哪一段，三档常常没有一档正好；滑杆让读者自己定，并且看得见量纲。
@@ -215,6 +217,7 @@ function buildControls(sec) {
       det.appendChild(h('summary', { text: c.label }));
       const inner = buildControls({ controls: c.items });   // 递归复用同一台机器
       inner.classList.add('lc-set-body');
+      if (c.label === '设置' && themeBtnRef) inner.appendChild(themeBtnRef);   // 深色开关入住
       det.appendChild(inner);
       wrap.appendChild(det);
       continue;
@@ -540,8 +543,12 @@ export function mountApp({ sections, hero }) {
     }
   });
 
-  // 主题切换
+  // 主题切换（节点引用存模块级 themeBtnRef——重建筛选条/设置块时靠它搬回，见 buildControls/buildFilters）
   const tt = document.getElementById('theme-toggle');
+  themeBtnRef = tt;
+  // 首屏收编：绑定晚于首次建块，此刻主动搬家一次（此后每次重建由建块方接手）
+  const home = document.querySelector('.pl-settings .lc-set-body') || document.getElementById('filters-panel');
+  if (home) home.appendChild(tt);
   tt.addEventListener('click', () => {
     const cur = document.documentElement.getAttribute('data-theme');
     const next = cur === 'dark' ? 'light' : cur === 'light' ? 'dark' : (matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark');

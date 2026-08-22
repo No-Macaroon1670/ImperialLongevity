@@ -283,14 +283,9 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 footer.foot { border-top: 1px solid var(--border); margin-top: 40px; padding-top: 18px;
   color: var(--muted); font-size: .82rem; }
 
-/* 深色开关统一驻右上角（2026-08-22 库主令：所有 view 一处，不再挂段末）。
-   钉住的搜索簇为其让位下移（见 .tl-search.pinned） */
-.theme-toggle {
-  position: fixed; top: 10px; right: 14px; z-index: 90; margin: 0;
-  padding: 4px 10px; border-radius: 999px; font-size: .8rem;
-  background: var(--surface-1); border: 1px solid var(--border);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, .12); cursor: pointer;
-}
+/* 深色开关住进「设置」（2026-08-22 库主令：固定药丸在小屏与顶部黑条撞车）。
+   由 shell 钩子自动入住任何『设置』块与 index 筛选条尾——一套逻辑三页统一 */
+.theme-toggle { margin-left: 4px; }
 
 .timeline-scroll {
   max-height: 640px; overflow: auto;
