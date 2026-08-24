@@ -114,6 +114,26 @@ OWN = {
         # 这三张 2016 年天桥实拍图逐一对上，故按文中出现的顺序排（不是拍摄
         # 先后：拍摄顺序是钟→剧场→德云社，文中顺序是剧场→德云社→钟）。
         # 一站三图，见 build_line_page.py 的 `.pic-trio`
+        # 首站转正（2026-08-24 周末bug报「盆图长文不见了」——实为从未接站，候选转正）
+        '舞蹈纹彩陶盆': {
+            '文件': 'guobo-wudaowen-caitaopen.jpg',
+            '路径': 'img/used/guobo-wudaowen-caitaopen.jpg',
+            '署名': 'No-Macaroon1670 摄，2024 年 1 月',
+            '许可': '作者本人拍摄',
+            '说明': '舞蹈纹彩陶盆（中国国家博物馆）——五千年前的舞队，本线的第一位演员',
+            '卡': True,
+            '整幅': True,
+        },
+        # 徽班进京站（2026-08-22 曾手改 json，2026-08-24 收编入正本表）
+        '徽班进京': {
+            '文件': 'gugong-changyinge-zhengmian.jpg',
+            '路径': 'img/used/gugong-changyinge-zhengmian.jpg',
+            '署名': 'No-Macaroon1670 摄，2024 年 1 月',
+            '许可': '作者本人拍摄',
+            '说明': '畅音阁三层大戏楼（1772 年建）——徽班进京面对的正是这套宫廷演剧体制；三匾自上而下：畅音阁、导和怡泰、壹天宣豫',
+            '卡': True,
+            '整幅': True,
+        },
         # 次序 2026-08-22 库主调定：四面钟居中；四面钟登导览卡
         '落点': [
             {
@@ -201,7 +221,9 @@ def main():
     # 自己拍的接在后面：没有 Commons 元数据可抓，本表即出处。
     # 一站可以是一张（dict）或多张（list，如落点三张天桥图）
     def place(v):
-        local = 'img/story/%s/%s' % (key, v['文件'])
+        # 「路径」字段直指既有成品（如 img/used/ 里身兼条目卡图者），不强制搬进 story 目录
+        # ——2026-08-24 立：此前徽班进京站图手改 json 绕过本表，重建即被冲掉的漂移由此根治
+        local = v.get('路径') or ('img/story/%s/%s' % (key, v['文件']))
         if not os.path.exists(os.path.join(ROOT, local)):
             print('  ⚠ %s 的自摄图还没放进来：%s' % (v['文件'], local))
             return None

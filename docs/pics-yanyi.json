@@ -1,6 +1,30 @@
 {
  "说明": "故事线的配图。选图是策展判断（准绳：这张图就是这段话在讲的那个东西），许可与署名从 Commons 抓、不手抄。`卡` 为真者进讲解卡，其余只进长文页。",
  "站": {
+  "舞蹈纹彩陶盆": {
+   "文件": "guobo-wudaowen-caitaopen.jpg",
+   "路径": "img/used/guobo-wudaowen-caitaopen.jpg",
+   "署名": "No-Macaroon1670 摄，2024 年 1 月",
+   "许可": "作者本人拍摄",
+   "说明": "舞蹈纹彩陶盆（中国国家博物馆）——五千年前的舞队，本线的第一位演员",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/used/guobo-wudaowen-caitaopen.jpg",
+   "作者": "No-Macaroon1670 摄，2024 年 1 月",
+   "说明页": ""
+  },
+  "徽班进京": {
+   "文件": "gugong-changyinge-zhengmian.jpg",
+   "路径": "img/used/gugong-changyinge-zhengmian.jpg",
+   "署名": "No-Macaroon1670 摄，2024 年 1 月",
+   "许可": "作者本人拍摄",
+   "说明": "畅音阁三层大戏楼（1772 年建）——徽班进京面对的正是这套宫廷演剧体制；三匾自上而下：畅音阁、导和怡泰、壹天宣豫",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/used/gugong-changyinge-zhengmian.jpg",
+   "作者": "No-Macaroon1670 摄，2024 年 1 月",
+   "说明页": ""
+  },
   "落点": [
    {
     "文件": "tianqiao-juchang-haibao-2016.jpg",
@@ -35,17 +59,6 @@
     "作者": "No-Macaroon1670 摄，2016 年 9 月",
     "说明页": ""
    }
-  ],
-  "徽班进京": {
-   "文件": "gugong-changyinge-zhengmian.jpg",
-   "署名": "No-Macaroon1670 摄，2024 年 1 月",
-   "作者": "No-Macaroon1670 摄，2024 年 1 月",
-   "许可": "作者本人拍摄",
-   "说明": "畅音阁三层大戏楼（1772 年建）——徽班进京面对的正是这套宫廷演剧体制；三匾自上而下：畅音阁、导和怡泰、壹天宣豫",
-   "卡": true,
-   "整幅": true,
-   "缩略图": "img/used/gugong-changyinge-zhengmian.jpg",
-   "说明页": ""
-  }
+  ]
  }
 }

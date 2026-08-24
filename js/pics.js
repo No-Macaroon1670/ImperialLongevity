@@ -4,6 +4,20 @@
 // 署名是硬要求不是装饰：CC-BY／CC-BY-SA 要求给出作者与许可，
 // 故每张图都带 作者／许可／说明页，渲染时必须一起显示。
 export const PICS = {
+ "beitie": {},
+ "kanhe": {
+  "石鼓": {
+   "文件": "gugong-shiguguan-quanjing.jpg",
+   "署名": "No-Macaroon1670 摄，2024 年 1 月",
+   "作者": "No-Macaroon1670 摄，2024 年 1 月",
+   "许可": "作者本人拍摄",
+   "说明": "故宫石鼓馆——原石在龛里，拓本在墙上：经典的两种身体",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/used/gugong-shiguguan-quanjing.jpg",
+   "说明页": ""
+  }
+ },
  "shiku": {
   "白马寺": {
    "文件": "2011-06 White Horse Temple 03.jpg",
@@ -186,9 +200,149 @@ export const PICS = {
     "缩略图": "img/used/shangbo-yumaidiquan.jpg",
     "说明页": ""
    }
-  ]
+  ],
+  "序": {
+   "文件": "Mausoleum of the Yellow Emperor (20171001142733).jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Mausoleum_of_the_Yellow_Emperor_%2820171001142733%29.jpg/1280px-Mausoleum_of_the_Yellow_Emperor_%2820171001142733%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/5/53/Mausoleum_of_the_Yellow_Emperor_%2820171001142733%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC BY-SA 4.0",
+   "作者": "N509FZ",
+   "署名": "N509FZ",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Mausoleum_of_the_Yellow_Emperor_(20171001142733).jpg",
+   "说明": "桥山黄帝陵前的香火——两千一百年前，汉武帝的那一问就发生在这座山上",
+   "卡": true,
+   "整幅": false,
+   "缩略图": "img/story/xianghuo/mausoleum-of-the-yellow-emperor-20171001142733.jpg"
+  },
+  "妈祖信仰": {
+   "文件": "古妈祖庙 - panoramio.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/%E5%8F%A4%E5%A6%88%E7%A5%96%E5%BA%99_-_panoramio.jpg/1280px-%E5%8F%A4%E5%A6%88%E7%A5%96%E5%BA%99_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "许可": "CC BY 3.0",
+   "作者": "<a rel=\"nofollow\" class=\"external text\" href=\"https://web.ar",
+   "署名": "<a rel=\"nofollow\" class=\"external text\" href=\"https://web.ar",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E5%8F%A4%E5%A6%88%E7%A5%96%E5%BA%99_-_panoramio.jpg",
+   "说明": "湄洲屿妈祖祖庙——从林默到天后，累封的起点在这座岛",
+   "卡": true,
+   "整幅": false,
+   "缩略图": "img/story/xianghuo/古妈祖庙-panoramio.jpg"
+  },
+  "文昌帝君": {
+   "文件": "梓潼帝君（三教源流搜神大全）.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/8/8a/%E6%A2%93%E6%BD%BC%E5%B8%9D%E5%90%9B%EF%BC%88%E4%B8%89%E6%95%99%E6%BA%90%E6%B5%81%E6%90%9C%E7%A5%9E%E5%A4%A7%E5%85%A8%EF%BC%89.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/8/8a/%E6%A2%93%E6%BD%BC%E5%B8%9D%E5%90%9B%EF%BC%88%E4%B8%89%E6%95%99%E6%BA%90%E6%B5%81%E6%90%9C%E7%A5%9E%E5%A4%A7%E5%85%A8%EF%BC%89.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC0",
+   "作者": "唐吉訶德的侍從",
+   "署名": "唐吉訶德的侍從",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E6%A2%93%E6%BD%BC%E5%B8%9D%E5%90%9B%EF%BC%88%E4%B8%89%E6%95%99%E6%BA%90%E6%B5%81%E6%90%9C%E7%A5%9E%E5%A4%A7%E5%85%A8%EF%BC%89.jpg",
+   "说明": "明刊《三教源流搜神大全》里的梓潼帝君——白特卧侧，天聋地哑随侍",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/xianghuo/梓潼帝君-三教源流搜神大全.jpg"
+  },
+  "除夜赐钟馗": {
+   "文件": "Gong Kai-Zhong Kui Traveling.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Gong_Kai-Zhong_Kui_Traveling.jpg/1280px-Gong_Kai-Zhong_Kui_Traveling.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/2/23/Gong_Kai-Zhong_Kui_Traveling.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "Gong Kai 龔開 (1222–1307)",
+   "署名": "Gong Kai 龔開 (1222–1307)",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Gong_Kai-Zhong_Kui_Traveling.jpg",
+   "说明": "宋末龚开《中山出游图》（弗利尔美术馆藏）——吴道子那幅已佚，这是存世最早的钟馗名卷之一",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/xianghuo/gong-kai-zhong-kui-traveling.jpg"
+  },
+  "门神": {
+   "文件": "New Year Picture of Military Door God MET DP-17326-004.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/New_Year_Picture_of_Military_Door_God_MET_DP-17326-004.jpg/1280px-New_Year_Picture_of_Military_Door_God_MET_DP-17326-004.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/4/4c/New_Year_Picture_of_Military_Door_God_MET_DP-17326-004.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC0",
+   "作者": "AnonymousUnknown author",
+   "署名": "AnonymousUnknown author",
+   "说明页": "https://commons.wikimedia.org/wiki/File:New_Year_Picture_of_Military_Door_God_MET_DP-17326-004.jpg",
+   "说明": "清代武门神木版年画（大都会艺术博物馆藏）——从桃人到神荼郁垒到纸上武将，门口那班岗换了几轮人",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/xianghuo/new-year-picture-of-military-door-god-met-dp-17326-004.jpg"
+  },
+  "包公变阎罗": {
+   "文件": "Portrait of Bao Zheng (998-1061).jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Portrait_of_Bao_Zheng_%28998-1061%29.jpg/1280px-Portrait_of_Bao_Zheng_%28998-1061%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Portrait_of_Bao_Zheng_%28998-1061%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC0",
+   "作者": null,
+   "署名": null,
+   "说明页": "https://commons.wikimedia.org/wiki/File:Portrait_of_Bao_Zheng_(998-1061).jpg",
+   "说明": "传世包拯朝服立像——持笏，展脚幞头，上方题跋录至和年间敕文；活着是官，死后还是官",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/xianghuo/portrait-of-bao-zheng-998-1061.jpg"
+  },
+  "关林": {
+   "文件": "Guanlin Temple, Luoyang - September 2011 (6154331992).jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Guanlin_Temple%2C_Luoyang_-_September_2011_%286154331992%29.jpg/1280px-Guanlin_Temple%2C_Luoyang_-_September_2011_%286154331992%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Guanlin_Temple%2C_Luoyang_-_September_2011_%286154331992%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC BY-SA 2.0",
+   "作者": "kevinmcgill from Den Bosch, Netherlands",
+   "署名": "kevinmcgill from Den Bosch, Netherlands",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Guanlin_Temple,_Luoyang_-_September_2011_(6154331992).jpg",
+   "说明": "洛阳关林仪门——石狮分立，柏树夹道，门内香火正盛",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/xianghuo/guanlin-temple-luoyang-september-2011-6154331992.jpg"
+  },
+  "关羽累封": {
+   "文件": "Statue of Guan Yu in Hsinchu Guandi Temple 20241021.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Statue_of_Guan_Yu_in_Hsinchu_Guandi_Temple_20241021.jpg/1280px-Statue_of_Guan_Yu_in_Hsinchu_Guandi_Temple_20241021.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Statue_of_Guan_Yu_in_Hsinchu_Guandi_Temple_20241021.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC BY-SA 4.0",
+   "作者": "阿道",
+   "署名": "阿道",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Statue_of_Guan_Yu_in_Hsinchu_Guandi_Temple_20241021.jpg",
+   "说明": "新竹关帝庙正龛，匾曰「關聖帝君」——这四个字本身就是累封的成果",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/xianghuo/statue-of-guan-yu-in-hsinchu-guandi-temple-20241021.jpg"
+  },
+  "落点": {
+   "文件": "Statue of the King of Medicine 01.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Statue_of_the_King_of_Medicine_01.jpg/1280px-Statue_of_the_King_of_Medicine_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Statue_of_the_King_of_Medicine_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Baomi",
+   "署名": "Baomi",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Statue_of_the_King_of_Medicine_01.jpg",
+   "说明": "药王山的孙思邈旧木雕坐像——手抚伏虎",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/xianghuo/statue-of-the-king-of-medicine-01.jpg"
+  }
  },
  "yanyi": {
+  "舞蹈纹彩陶盆": {
+   "文件": "guobo-wudaowen-caitaopen.jpg",
+   "路径": "img/used/guobo-wudaowen-caitaopen.jpg",
+   "署名": "No-Macaroon1670 摄，2024 年 1 月",
+   "许可": "作者本人拍摄",
+   "说明": "舞蹈纹彩陶盆（中国国家博物馆）——五千年前的舞队，本线的第一位演员",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/used/guobo-wudaowen-caitaopen.jpg",
+   "作者": "No-Macaroon1670 摄，2024 年 1 月",
+   "说明页": ""
+  },
+  "徽班进京": {
+   "文件": "gugong-changyinge-zhengmian.jpg",
+   "路径": "img/used/gugong-changyinge-zhengmian.jpg",
+   "署名": "No-Macaroon1670 摄，2024 年 1 月",
+   "许可": "作者本人拍摄",
+   "说明": "畅音阁三层大戏楼（1772 年建）——徽班进京面对的正是这套宫廷演剧体制；三匾自上而下：畅音阁、导和怡泰、壹天宣豫",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/used/gugong-changyinge-zhengmian.jpg",
+   "作者": "No-Macaroon1670 摄，2024 年 1 月",
+   "说明页": ""
+  },
   "落点": [
    {
     "文件": "tianqiao-juchang-haibao-2016.jpg",

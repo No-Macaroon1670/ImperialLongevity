@@ -390,6 +390,7 @@ async function fillCard(card, spec) {
   // 代行百科职能,掐字数等于掐正文)——长文交给 kp-yc-full 去撑,悬浮卡靠
   // 既有的整卡滚动(.kp overflow-y:auto)接住,角卡/嵌入卡是文档流内的定版卡,
   // 改让盒子自然撑高(styles.css 同段有批注)
+  card.wiki.style.display = '';   // 摘帽：上一位若是无维基条目藏过链，这一位先亮回来（2026-08-24 周末bug报）
   if (!spec.title) {
     card.wiki.style.display = 'none';
     card.baidu.style.display = spec.baidu ? '' : 'none';

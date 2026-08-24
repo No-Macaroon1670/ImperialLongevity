@@ -286,6 +286,9 @@ footer.foot { border-top: 1px solid var(--border); margin-top: 40px; padding-top
 /* 深色开关住进「设置」（2026-08-22 库主令：固定药丸在小屏与顶部黑条撞车）。
    由 shell 钩子自动入住任何『设置』块与 index 筛选条尾——一套逻辑三页统一 */
 .theme-toggle { margin-left: 4px; }
+/* 刷新瞬间开关还睡在段末（shell 尚未收编）——在 lede 里就藏着，搬进设置/筛选条后自然现身
+   （2026-08-24 周末bug报「refresh 时段末闪现」） */
+.lede .theme-toggle, p.lede .theme-toggle { display: none; }
 
 .timeline-scroll {
   max-height: 640px; overflow: auto;
@@ -547,7 +550,7 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 @media (min-width: 720px) {
   section.lc-open .local-controls {
     position: fixed; top: 94px; right: 14px; z-index: 69;
-    width: min(620px, calc(100vw - 28px)); max-height: 55vh; overflow: auto;
+    width: min(620px, calc(100vw - 28px)); max-height: calc(100vh - 110px); overflow: auto;
     background: var(--surface-1); border: 1px solid var(--border);
     border-radius: 12px; box-shadow: 0 12px 36px rgba(0, 0, 0, .22);
     padding: 10px 14px;

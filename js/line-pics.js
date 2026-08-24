@@ -216,11 +216,11 @@ export const LINE_PICS = {
   }
  },
  "yanyi": {
-  "落点": {
-   "缩略图": "img/story/yanyi/tianqiao-simianzhong-2016.jpg?v=f91d6d43",
-   "说明": "天桥广场重建的四面钟",
-   "作者": "No-Macaroon1670 摄，2016 年 9 月",
-   "署名": "No-Macaroon1670 摄，2016 年 9 月",
+  "舞蹈纹彩陶盆": {
+   "缩略图": "img/used/guobo-wudaowen-caitaopen.jpg?v=2feb8f6c",
+   "说明": "舞蹈纹彩陶盆（中国国家博物馆）——五千年前的舞队，本线的第一位演员",
+   "作者": "No-Macaroon1670 摄，2024 年 1 月",
+   "署名": "No-Macaroon1670 摄，2024 年 1 月",
    "许可": "作者本人拍摄",
    "整幅": true
   },
@@ -229,6 +229,14 @@ export const LINE_PICS = {
    "说明": "畅音阁三层大戏楼（1772 年建）——徽班进京面对的正是这套宫廷演剧体制；三匾自上而下：畅音阁、导和怡泰、壹天宣豫",
    "作者": "No-Macaroon1670 摄，2024 年 1 月",
    "署名": "No-Macaroon1670 摄，2024 年 1 月",
+   "许可": "作者本人拍摄",
+   "整幅": true
+  },
+  "落点": {
+   "缩略图": "img/story/yanyi/tianqiao-simianzhong-2016.jpg?v=f91d6d43",
+   "说明": "天桥广场重建的四面钟",
+   "作者": "No-Macaroon1670 摄，2016 年 9 月",
+   "署名": "No-Macaroon1670 摄，2016 年 9 月",
    "许可": "作者本人拍摄",
    "整幅": true
   }

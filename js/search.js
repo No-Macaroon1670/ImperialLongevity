@@ -133,6 +133,15 @@ export function mountSearch(sectionEl, hostOf) {
     onclick: () => sectionEl.classList.toggle('lc-open'),
   }, [h('span', { text: '⚙' })]);
   (sectionEl.querySelector('.head') || sectionEl).appendChild(gear);
+  // 小屏上弹层可能盖住齿轮本尊，关不掉（2026-08-24 周末bug报）：点弹层外即关，Esc 同效
+  document.addEventListener('click', (e) => {
+    if (!sectionEl.classList.contains('lc-open')) return;
+    if (e.target.closest('.local-controls') || e.target.closest('.tl-gear')) return;
+    sectionEl.classList.remove('lc-open');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') sectionEl.classList.remove('lc-open');
+  });
   const totop = h('button', {
     class: 'chip tl-totop', type: 'button', title: '回到页首',
     onclick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
