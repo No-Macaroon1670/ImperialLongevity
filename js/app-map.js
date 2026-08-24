@@ -430,6 +430,22 @@ function group(rows) {
  * 一圈塞二十二个，圈会大到跨过半个华北，而里头的点仍然挨着。
  * 每环最多十个，一环装满再往外开一环。
  */
+/** 展开环的真实外径：与 spread() 同一套分环公式算到最外环。
+ *  推挤账要用它——合并判据用折叠圆（封顶26），环却无上限，中间那段
+ *  「判据说不用并、环却画得到」正是邻簇被视觉吸进环里的几何根源
+ *  （2026-08-24 库主周末bug报＋侦察定案） */
+function ringR(n) {
+  const k = 1 / VIEW.z;
+  let rest = n > 6 ? n - 1 : n;
+  let ring = 0, rad = 0, i = 0;
+  while (i < rest) {
+    const cap = Math.min(rest - i, 6 + ring * 4);
+    rad = (5 + 1.9 * Math.min(cap, 6) + ring * 13.5) * k;
+    i += cap; ring += 1;
+  }
+  return rad;
+}
+
 function spread(g) {
   const n = g.rows.length;
   if (n === 1) { g.rows[0].px = g.rows[0].x; g.rows[0].py = g.rows[0].y; return; }
@@ -760,8 +776,11 @@ function draw() {
   // 让位平移必须在自动展开**之前**：gid 由组心坐标算出，先展开后平移的话，
   // 自动展开记下的 gid 与渲染时算出的对不上，朝簇照旧折着，选中的政权
   // 画不出来又被当「被筛掉」清掉（搜索定位东晋，实测踩到）
-  const EVF = gs.filter((g) => g.rows.length > CAP && !state.open.has(gidOf(g)))
-    .map((g) => ({ cx: g.cx, cy: g.cy, R: clusterR(g.rows.length) }));
+  // 展开簇不再豁免推离源：折叠时用折叠圆半径，展开时用环真实外径——
+  // 否则朝簇方块失去推挤便退回环心，看着像被吸进去（2026-08-24 修）
+  const EVF = gs.filter((g) => g.rows.length > CAP)
+    .map((g) => ({ cx: g.cx, cy: g.cy,
+      R: state.open.has(gidOf(g)) ? ringR(g.rows.length) : clusterR(g.rows.length) }));
   for (const dg of gsDyn) {
     // 让位量要算**双方**半径：朝簇自己也有个大方块（南京十朝反手压住杭州簇心，实测）
     const selfR = 11 / VIEW.z;
