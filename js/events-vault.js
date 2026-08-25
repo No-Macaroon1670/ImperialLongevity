@@ -1,4 +1,5 @@
 // 出界暂存库:轴止于 1911,这里存**已研核、但年份出界**的条目。
+// 2026-08-25 起两头皆收：史前端（早于轴起点约前5000）同理暂存——出界的是渲染量程，不是锚（灵井鸟雕案立）。
 // 用户 2026-08-20 定的:旗袍这类先存起来、不展示,若日后加民国期,整块搬回 events.js。
 // **任何页面都不 import 此文件**,tools/mining/build_geo_events.py 也只读 events.js,
 // 故此处条目不上图、不进索引、不进搜索。字段体例与 events.js 完全一致,搬回即用。
@@ -15,4 +16,27 @@ export const EVENTS_VAULT = [
   // 报头：「(七)　第八千二百卅四號　泰東日報　康德元年四月廿七日」
   // 原件直读图：https://archive.org/download/taidong-ribao-1934.04.27/page/n6.jpg （4946×7198）
   { y: 1934, k: 'cul', n: '二人转', p: ['阿城区:显*'], w: '二人转', m: 'https://archive.org/details/taidong-ribao-1934.04.27', yc: '东北曲艺，一旦一丑，说唱歌舞并作。**1934年4月27日大连《泰东日报》第七版已见「二人轉」之名**：阿城（今哈尔滨市阿城区）通信〈二人轉·有傷風化·當局亟宜取締〉，报纸自释「即鄉間蹦々，美其名曰蓮花落」——原件扫描公开可核，报头「第八千二百卅四號　泰東日報　康德元年四月廿七日」（康德纪年只作原件描述，系年从公历）。只说「已见」，不说「最早见于」——「此前无」本库未证。标题与末句「望有管理責者，宜加取締」是投书呼吁的口吻，不是官府法令，不得写成「当局查禁二人转」。同名异实必辨：民国期「蹦蹦」一名两物——关内（京津）的蹦蹦是评剧前身，连阔如《江湖丛谈》记北京天桥「蹦蹦棚子，又叫奉天落子、半班戲……美其名叫評戲」；关外的乡间蹦蹦才是二人转。三个坑：「奉天落子」字面带奉天、实为天桥评戏之称，见字认地必错；两边都往「莲花落」上攀附；「落子馆」另是鼓姬唱大鼓的杂耍场，两边蹦蹦都不是。「二人转」1953年始为正式名称一说出自研究者（知网系文献，本库未核）。另辟一谣：网传此报道出自《泰东日报》「十周年特刊」——原件是日常出版第8234号第七版，非特刊。', r: 2 },
+  // 贾湖骨笛（2026-08-25 终审·量程储备）。约前7000—前5800，早于库轴起点（现最早 u1:-4999 河姆渡）约八百年，
+  // 照周口店判例「非资格不够，是量程边界」暂存；同队待史前轴者：周口店北京人遗址、许昌灵井微型鸟雕。
+  // 轴两端各压一案（民国轴／史前轴），是同一道闸门题。b 不写：百度触发人机验证未测；nb 亦不写（须实测「确无词条」方可置）。
+  // m 为河南博物院 SPA 页，浏览器渲染实测200、裸 curl 恒返404壳，同莲鹤方壶（events.js 莲鹤方壶行）已认可之先例。
+  { y: -6999, y2: -5799, k: 'art', n: '贾湖骨笛', p: ['贾湖遗址:发', '河南博物院:现*'], w: '賈湖骨笛', m: 'https://www.chnmus.net/ch/collection/treasure/details.html?id=508164979145447651', cf: 2, yc: '河南舞阳贾湖新石器时代遗址出土的骨质管乐器。河南博物院藏品页原文「以鹤类禽鸟中空的尺骨锯去两端关节钻孔制成」；镇院之宝一支出自M282号墓，馆页逐字「出土时间: 1987年」「出土地点: 河南舞阳贾湖遗址M282号墓」「这支骨笛全长23.1厘米，笛身钻有7个音孔」。中文维基条目自述：「賈湖骨笛又稱『賈湖骨管』，出土於賈湖遺址，距今約9000年至7700年⋯1979年秋發現，是中國出土年代最早、保存最為完整、出土個數最多，而且可供演奏的樂器實物。」系年取跨度不取单点：骨笛不是孤器而是一群，早中晚三期递变（据维基条正文，此层为转述提取、未逐字核原始 wikitext：早期五、六孔，中期七孔，晚期七、八孔），用起讫年（约前7000—前5800）比强凑单件更如实，置信按 cf:2（测年区间，同小河墓地判例）。年代四源不一，量级一致而端点互有出入，一律并存不裁：维基条作距今约9000—7700年；河南博物院专家点评栏（张居中，中国科学技术大学教授）作「距今7800年-9000年的河南贾湖遗址」；同馆另一标本页作「距今年代为9000—8600年左右」；贾湖遗址整体另有碳十四树轮校正8942—7868aBP一说。出土总数三说并存：馆方点评栏「1984年至1987年及2001年，这里先后出土了30多支用丹顶鹤尺骨制成的骨笛。笛孔有2、5、6、7、8之别，大多数骨笛仍为７孔」；维基条作共发现16只；媒体转述作40余支分藏五家机构——未见可裁定的一手汇总清单，一个都不采。藏地亦有出入：同一馆网站内，M282页称河南博物院收藏，「舞阳贾湖骨笛」页称「河南省文物考古研究所藏」，孰是笔误未能判定，并存照录；中国国家博物馆、河南省文物考古研究院、漯河市博物馆、贾湖遗址博物馆分藏之说仅见二次转述，未逐馆核实，记其存在而不作落点。发现时间同样分三层：维基条系于「1979年秋發現」，馆页「出土时间: 1987年」只管M282这一支，另有1986年5月第四次发掘首次掘获三支之说（网络转述，未核）——三者各指不同事，本条不合并、不给单一发现年。「贾湖骨笛不只是中国年代最早的乐器实物，更被专家认定为世界上最早的可吹奏乐器」与研究成果刊英国《自然》《古物》一说，同出馆方点评栏，未核原刊，记其口径而不作定论。', r: 2 },
+  // 灵井鸟雕（2026-08-25 终审·储备）。出界在**轴的另一头**：约前11500，比现库最早条目
+  // （河姆渡朱漆碗／双鸟朝阳纹牙雕 y:-4749）再早约六千七百年，独条把横轴拉长逾一倍半，故存此候补。
+  // 锚案本身站得住：六法皆试过（docs/anchor-policy.md），出界的是渲染量程，不是锚。
+  // 一手双核（journals.plos.org 稿件 XML ＋ PMC7286485，两处提取逐字一致）：
+  //   摘要「...suggest a Late Paleolithic origin for the carving, with a probable age estimated to 13,500 years old.」
+  //   测年「The age of the bone bearing a deep notch produced by gouging is 11,520 ± 40 (Beta-515953),
+  //        which corresponds to an age of 13,448–13,279 cal BP (95.4%).」
+  //        ——所测为同出骨片，非雕像本身，故**不写 u1/u2**（写了就是拿旁证的实测冒充本体的窗口），
+  //        照小河墓地（events.js:182）、楼兰美女（events.js:184）走 cf:2＋区间入 yc 散文。
+  //   现藏「...are curated at the Henan Provincial Institute of Cultural Relics and Archaeology, Zhengzhou,
+  //        Henan Province, China (Repository ID: 09L5鸟-01)」——英文单源，中文一手待补。
+  //   出土「During the 2008 and 2013 excavation campaigns, the spoil heap left by the well diggers in 1958
+  //        was identified...」——非 2009 年发掘所出，侦察稿「09 与 2009 年发掘互证」已推翻。
+  // 搬回前须办两事：① 百度百科实测 403（反爬）非 404，b 与 nb 皆未写，须重核，否则卡上
+  //   「百度百科 ↗」按钮会指向 404；② 中文一手复核现藏机构及此后有无移交／巡展。
+  // 换算备忘：本库 y 用天文纪年 y=-(N-1)，cal BP 基准 1950 年，故 13,448 cal BP = y -11498、
+  //   13,279 cal BP = y -11329（侦察稿所算 -11497/-11328 差一年）；y 取通行圆整的约前11500。
+  { y: -11499, k: 'art', n: '灵井鸟雕', p: ['灵井“许昌人”遗址:发', '郑州市:现*'], w: '灵井“许昌人”遗址', m: 'https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0233370', cf: 2, yc: '一只立着的骨雕小鸟，长19.2毫米、宽5.1毫米、高12.5毫米（论文原文「The figurine depicts a small standing bird (length 19.2 mm, width 5.1 mm, height 12.5 mm)」），取中型哺乳动物肢骨的骨密质残片，先经火烧至发黑，再以四种技法（gouging 凿、abrading 磨、scraping 刮、incising 刻）雕成；无雀形目那样的细腿，代之以一方大底座使其直立，尾部夸张外伸以配重防前倾——「In lieu of the passerine short legs, a large, rectangular pedestal allows the figurine to stand in the upright position」「The oversized tail prevents the object from tilting forward」。它不是从探方里挖出来的：1958年当地人打井堆下的废土堆，在2008与2013两个发掘季被重新找到并水筛，鸟雕与细石核细石叶、鸵鸟蛋皮穿孔坠饰同出其中，层位靠伴出物与原料反推（那种高质量黑燧石只见于第5层），非原位实测。年代论文自陈为「a probable age estimated to 13,500 years old」，据地层、研究史与二十八个测年综合推定；全文唯一直接相关的实测是一块带凿痕的骨片：「The age of the bone bearing a deep notch produced by gouging is 11,520 ± 40 (Beta-515953), which corresponds to an age of 13,448–13,279 cal BP (95.4%)」——测的是那块骨片，不是这只鸟，故本条只取约数单锚、标 cf:2，不把这个区间写成鸟雕自己的断代窗口（体例同小河墓地、楼兰美女）。「最早」二字须拆开看：论文措辞克制，摘要只说东亚在新石器之前「no instances of three-dimensional portable art, well attested in Europe since at least 40 ka BP, were documented thus far in East Asia prior to the Neolithic」（说的是记录里没有，不是断言没有过），结论作「The bird figurine from Lingjing constitutes the first carving found at an East Asian Paleolithic site」与「The Lingjing bird carving is the only Paleolithic three-dimensional object carved in burnt bone and representing a bird standing on a pedestal」，提前年数作「predates previously known comparable instances from this region by 8,500 years」（Archaeology Magazine 新闻页替读者算了这笔账：中国此前已知最早的鸟形雕刻约五千年前）。「我国最古老的雕塑」「中国最早雕塑」是新华社、中国科学报等转述层的概括，非论文自称，记而不采；提前年数中国科学报另作八千多年，与论文的 8,500 并存不裁。现藏据论文材料与方法节：「The Lingjing bird carving and the associated archeological material analyzed in this study are curated at the Henan Provincial Institute of Cultural Relics and Archaeology, Zhengzhou, Henan Province, China (Repository ID: 09L5鸟-01)」，即河南省文物考古研究院（郑州）；此系2020年论文一处英文表述，河南省文物局与文旅厅官网皆403不可核，中文一手信源未获，此后有无移交或巡展未能核实。论文：Li Z、Doyon L、Fang H 等，PLOS ONE 15(6): e0233370，2020年6月10日发表，开放获取。', r: 2 },
 ];
