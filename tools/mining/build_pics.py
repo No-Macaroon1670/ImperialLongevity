@@ -49,7 +49,7 @@ PICKS = {
         # 空着只让人以为没有图，写明才告诉他那铺壁画存在、只是拿不到
         '榆林窟': ('Yulin Caves Jiuquan Gansu China 酒泉 楡林窟 - panoramio (1).jpg',
                    True, '榆林河峡谷。文中所述第三窟取经图，未得许可可用之图源'),
-        '峨眉山乐山大佛': ('Giant Buddha of Leshan.jpg', True, '乐山大佛'),
+        '乐山大佛': ('Giant Buddha of Leshan.jpg', True, '乐山大佛'),
         # **进卡**：整条线上最该有图的一站——文里点到编号，图就是那一卷的卷首
         '金刚经印本': ('Diamond Sutra of 868 AD - The Diamond Sutra (868), '
                        'frontispiece and text - BL Or. 8210-P.2.jpg',

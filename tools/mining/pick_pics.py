@@ -34,7 +34,7 @@ CATS = {
     '云冈石窟': ['Yungang Grottoes'],
     '龙门石窟': ['Longmen Grottoes'],
     '榆林窟': ['Yulin Caves'],
-    '峨眉山乐山大佛': ['Leshan Giant Buddha'],
+    '乐山大佛': ['Leshan Giant Buddha'],
     '金刚经印本': ['Diamond Sutra'],
     '大足石刻': ['Dazu Rock Carvings'],
     '藏经洞发现': ['Library Cave', 'Mogao Caves'],
@@ -61,7 +61,7 @@ WANT = {
     '云冈石窟': ['cave 20', 'cave20', 'seated', 'colossal'],
     '龙门石窟': ['vairocana', 'fengxian', 'losana', 'colossal'],
     '榆林窟': ['xuanzang', 'monkey', 'pilgrim', 'mural', '取经'],
-    '峨眉山乐山大佛': ['giant buddha', 'leshan'],
+    '乐山大佛': ['giant buddha', 'leshan'],
     '金刚经印本': ['frontispiece', '868'],
     '大足石刻': ['baoding', 'parental', 'filial', '父母'],
     '藏经洞发现': ['cave 17', 'cave17', 'library cave', 'stein', 'wang'],
@@ -81,7 +81,7 @@ QUERIES = {k: WANT[k] for k in CATS}
 # 按线跑：pick_pics.py <线key> 只处理该线的站（不给参数则全表）
 LINE_STOPS = {
     'shiku': ['白马寺', '克孜尔石窟', '敦煌石窟', '麦积山石窟', '云冈石窟', '龙门石窟',
-              '榆林窟', '峨眉山乐山大佛', '金刚经印本', '大足石刻', '藏经洞发现'],
+              '榆林窟', '乐山大佛', '金刚经印本', '大足石刻', '藏经洞发现'],
     'xianghuo': ['序', '一人得道鸡犬升天', '买地券', '妈祖信仰', '文昌帝君',
                  '除夜赐钟馗', '门神', '包公变阎罗', '关林', '关羽累封', '落点'],
 }

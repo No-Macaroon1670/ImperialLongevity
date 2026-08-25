@@ -71,7 +71,7 @@ export const LINE_PICS = {
    "许可": "作者本人拍摄",
    "整幅": true
   },
-  "峨眉山乐山大佛": {
+  "乐山大佛": {
    "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Giant_Buddha_of_Leshan.jpg/960px-Giant_Buddha_of_Leshan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "说明": "乐山大佛",
    "作者": "Giorgioglobe",
