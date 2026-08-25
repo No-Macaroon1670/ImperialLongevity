@@ -670,7 +670,7 @@ export const LINES = {
     name: '勘合线',
     sub: '拿东西去对它的记录',
     lede: '一千年里，没有人指得出哪一件是秘色瓷。十二站，看记录如何立、如何失效、又如何救回一件东西。',
-    shi: ['秘瓷满杜康', '风烟早相忘', '谁持万世尺', '千古度兴亡'],
+    shi: ['秘瓷满杜康', '风烟早相忘', '谁持万世尺', '千古度英雄'],
     shiBy: 'No-Macaroon1670 题',
     stops: [
       { t: KH_PRO.t, b: KH_PRO.p[0], long: KH_PRO.p, full: true, read: 'story-kanhe.html#s0' },
