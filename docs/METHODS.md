@@ -18,6 +18,12 @@
 - **导览卡主图程序**（2026-08-22 库主定）：站图供入 docs/pics-<线>.json 时，**必挑恰一张打「卡」标**（判准「图即主语」）——build_line_page.py 汇出 js/line-pics.js，lines.js 尾部通用挂载，tour 导览卡自动带图。一站多图只登打标那张；改标重跑即换
 - **tools/mining/photo_triage.py**——闸0.5 三层分拣（L1 需求命中必过/L2 择段备胎/L3 不看，零 token 账面切）。2026-08-22 挂号：C1 主力批实证 249 判仅 3 废（废率 1.2%），词表即需求表，改需求先改词表
 - **docs/holding/pics-own.md**（本地）——自摄照片账册＋准入规（OWN_PIC 手选、宁缺勿滥；2026-08-21 防爬转本地：账册逐行描述未发表照片属元数据）
+- **馆方 CC0 开放图第三通道**（2026-08-25 用户定向：「更灵活运用各 institute/museum 的
+  CC0 image」）——自摄、Commons 之外的第三图源，主战场是流散海外条目。四条军规：
+  ①授权逐件实测（Met OA/CMA OA/AIC PD/Smithsonian 等各馆政策不一，波士顿 MFA 即非开放——
+  以该件页面标志为准，绝不按馆默认）；②一律 vendor 落本地 img/ 防外链腐（走 vendor_pics
+  既有模式），CREDITS.md 照 Commons 体例记 馆名+编号+URL+授权；③API 直链优先（Met/CMA/AIC
+  皆有开放 API 带图链）；④与自摄分工按件裁：自摄带亲历叙事、CC0 带画质，判官荐、库主点。
 
 ## 台账（劳动登记）
 - **docs/kaozheng-ledger.md**——一手核对总账（逐字核得/讹字纠正/历法换算/辟谣之辟谣…每笔留档，查重复用）
