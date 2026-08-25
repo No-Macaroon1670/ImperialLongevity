@@ -30,7 +30,8 @@
   甲、只扫 .md 建议文——工作流 .json 档案属 prompt/判词记录，不入网；
   乙、「不值得」等负面判词不算建议命中。建议池版图（拉网必扫全）：holding/raw/ 研究卷、
   holding/ 各账、desk/ 点将单，**以及 docs/idea-*.md 构想卷**（用户 2026-08-25 点名：
-  idea-class-entries、idea-en-exclusive 等皆载词条建议，勿漏）。
+  idea-class-entries、idea-en-exclusive、idea-textbook-canon 等皆载词条建议，勿漏；
+  textbook-canon 卷另立「复筛附卷」样板——旧尺裁的案按新规拣出候重议，只拣不判）。
 
 ## 判例（散在案卷，择要）
 - events.js EVENT_KINDS 注释：类别判例＋fig 判准（成语入口/故事假人真/辟谣是正业）
