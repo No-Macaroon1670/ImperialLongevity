@@ -36,7 +36,8 @@
 
 import { BASEMAP } from '../../js/basemap.js';
 import {
-  el, haloText, LabelSolver, placeCandidates, NUDGES, ANCHORS, RIVER_TAGS,
+  el, haloText, lakeLayer, LabelSolver, placeCandidates, NUDGES,
+  ANCHORS, RIVER_TAGS, LAKE_TAGS,
 } from '../../js/plate.js';
 import {
   xy, fitBox, unitOf, inViewOf, clampTo, marksOf, dustOf, dustGroup,
@@ -162,6 +163,41 @@ globalThis.document = {
  *  对到长文第几节，而那正是序号存在的唯一理由。 */
 const bodyStops = (line) => (line.stops || []).filter((s) => !s.full);
 
+/* ═══ 二·半、湖的取景筛子 ═══════════════════════════════════════════════
+   （2026-08-26 story 静态图补湖案）
+
+   湖是**面**，不是点。图上现成的两个筛子都是点筛：城市用 inView（离边 3% 以内
+   不画）、尘点用 toEdge（铺到框边）。拿点筛去套一块水面会出错——用形心筛的话，
+   形心刚出框而半个湖还在框里的湖会被整块丢掉，图上凭空少一片水。故按**包围盒
+   与取景框相交**筛：这块水有一角在框里就画，一角都没有就不画。
+
+   为什么要筛。海岸与河是画整条、由 viewBox 自己裁的，湖照做也不会画到框外去
+   （SVG 会裁掉）。但这张图**是内联进 story/<key>.html 的**，一个青海湖就是
+   六百多字节的路径——只画江南的那几条线为一块永远看不见的水面付这个钱不值。
+   筛掉的是字节，不是画面。
+
+   坐标直接从 d 里成对读：BASEMAP.lakes 的路径全是 M/L/Z 绝对坐标，成对即
+   [x, y]。**不另取数**，就是 basemap.js 那串现成的 d。                       */
+
+const lakeBox = (d) => {
+  const n = String(d || '').match(/-?\d*\.?\d+/g) || [];
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (let i = 0; i + 1 < n.length; i += 2) {
+    const x = +n[i], y = +n[i + 1];
+    if (x < x0) x0 = x;
+    if (x > x1) x1 = x;
+    if (y < y0) y0 = y;
+    if (y > y1) y1 = y;
+  }
+  return [x0, y0, x1, y1];
+};
+
+/** 这块水面有没有一角落在取景框 vb 里。 */
+const lakeInView = (vb) => (lk) => {
+  const [x0, y0, x1, y1] = lakeBox(lk.d);
+  return x1 > vb[0] && x0 < vb[0] + vb[2] && y1 > vb[1] && y0 < vb[1] + vb[3];
+};
+
 /* ═══ 三、画 ═════════════════════════════════════════════════════════════ */
 
 export function renderLineMap(key, opt = {}) {
@@ -189,10 +225,17 @@ export function renderLineMap(key, opt = {}) {
     preserveAspectRatio: 'xMidYMid meet',
     'aria-hidden': 'true',
   });
-  // 底图：只有海岸线与黄河长江，没有国界（理由见 tools/mining/build_basemap.py）。
+  // 底图：海岸线、四个大湖、黄河长江淮河，没有国界（理由见 tools/mining/build_basemap.py）。
   // 大图上不用 feGaussianBlur——滤镜区域跨整张图，滚动时浏览器重绘不过来
-  // （plate.js 的 softStroke 抬头记着这一条）。故这里就是两根干净的线。
+  // （plate.js 的 softStroke 抬头记着这一条）。故这里就是几根干净的线加一层水面。
   svg.appendChild(el('path', { class: 'm-coast', d: BASEMAP.coast }));
+  // 大湖夹在海岸与河之间（2026-08-26 story 静态图补湖案）。**次序即层序**，
+  // 铁律照 plate.js lakeLayer 抬头：海岸之上、河之下。河压在湖上，「长江过洞庭」
+  // 那个「过」字才看得出来；反过来让湖盖住河，长江就像是流到洞庭为止。
+  // 框外的湖整块不入图（省内联字节，判据见 lakeInView）；一个都不在框里就连
+  // 这一层也不出——空 <g> 也是要占 HTML 的
+  const lakes = (BASEMAP.lakes || []).filter(lakeInView(VB));
+  if (lakes.length) lakeLayer(svg, lakes, 'm-lake');
   svg.appendChild(el('path', { class: 'm-river', d: BASEMAP.rivers }));
 
   if (dust) {
@@ -232,6 +275,17 @@ export function renderLineMap(key, opt = {}) {
         if (!inView(p)) continue;
         const nudge = NUDGES.tight.map(([dx, dy]) => [u(dx * 0.6), u(dy * 0.6), 'middle']);
         tag(gRef, name, 'm-river-t', u(10), 50, nudge, p);
+      }
+      // 湖名（2026-08-26 story 静态图补湖案）。**加名是因为这张图本来就有河名**：
+      // 黄河长江淮河都写着字，独独四片水面无名，读者会以为那是别的什么色块。
+      // 同律不许跑远（面状名跑远就是事实错误），但比河名让得起：字小一号、
+      // 优先级 30 < 河名 50 < 站名 100——湖是水系的结，不是干线，撞上站名先撤。
+      // inView 与河名同一个筛子：贴着框边的湖名会指着框外，那是骗人
+      for (const [name, lat, lon] of LAKE_TAGS) {
+        const p = xy([lat, lon]);
+        if (!inView(p)) continue;
+        const nudge = NUDGES.tight.map(([dx, dy]) => [u(dx * 0.6), u(dy * 0.6), 'middle']);
+        tag(gRef, name, 'm-lake-t', u(9), 30, nudge, p);
       }
     }
     svg.appendChild(gRef);

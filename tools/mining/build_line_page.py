@@ -148,7 +148,7 @@ figure.pic figcaption a:hover{color:var(--dim)}
 
 /* ── 地图 ────────────────────────────────────────────────────────
    开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
-   底图只有海岸线与黄河长江，没有国界（理由见 tools/mining/build_basemap.py）。
+   底图只有海岸线、四个大湖与黄河长江淮河，没有国界（理由见 tools/mining/build_basemap.py）。
    全程的点一律画出、只是淡；当前那一站才亮——读者要能看见自己走到哪儿，
    也要能看见还剩多少。 */
 #smap{padding:4rem 0 3.5rem}
@@ -167,9 +167,18 @@ svg *{vector-effect:non-scaling-stroke}
 .m-idx{fill:var(--dim);font-family:var(--sans);letter-spacing:0}
 .m-coast{fill:none;stroke:var(--rule);stroke-width:1.1}
 .m-river{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.42}
+/* 大湖：一片淡水色，压在海岸之上、河之下（层序归 render_line_map.mjs 的 append 次序）。
+   用河的色相而不是另起一色——湖跟河是一族，换个颜色就成了另一种东西。这一页是
+   深底，故比浅色两端（.mm-lake/.pl-lake）再压一档：填充只到河那道线有效浓度的
+   三成上下，读者一眼知道这是一块水面，但抢不过河、更抢不过站点。
+   填充比描边实：水面不是圈出来的区域。
+   要试「少画一个湖」，不必重跑构建：.m-lake[data-lake="太湖"]{display:none} */
+.m-lake{fill:var(--accent);fill-opacity:.13;stroke:var(--accent);stroke-opacity:.34;stroke-width:.8}
 .m-city{fill:var(--faint);opacity:.75}
 .m-city-t{fill:var(--faint);opacity:.85;font-family:var(--sans)}
 .m-river-t{fill:var(--accent);opacity:.65;font-family:var(--sans)}
+/* 湖名：与河名同色、小一号、更轻——湖是结不是干线（2026-08-26 story 静态图补湖案） */
+.m-lake-t{fill:var(--accent);opacity:.5;font-family:var(--sans)}
 .m-dot{fill:var(--dim);opacity:.5}
 .m-maybe{fill:none;stroke:var(--dim);stroke-width:1.2;opacity:.55;stroke-dasharray:3 2.5}
 .m-held{fill:none;stroke:var(--gold);stroke-width:1.2;opacity:.5}
