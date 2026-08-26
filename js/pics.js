@@ -164,6 +164,104 @@ export const PICS = {
    "缩略图": "img/story/chibi/zhsy100335-三國志通俗演義-明羅本撰-明嘉靖元年刻本-pdf.jpg"
   }
  },
+ "fengxian": {
+  "熹平石经": {
+   "文件": "Eastern Han Stone Classics (9832326865).jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Eastern_Han_Stone_Classics_%289832326865%29.jpg/1280px-Eastern_Han_Stone_Classics_%289832326865%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/4/48/Eastern_Han_Stone_Classics_%289832326865%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC0",
+   "作者": "Gary Todd from Xinzheng, China",
+   "署名": "Gary Todd from Xinzheng, China",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Eastern_Han_Stone_Classics_(9832326865).jpg",
+   "说明": "洛阳出土熹平石经残石——碑帖线看它是范本，这里看它是承认书；残石非太学原立整碑",
+   "卡": true,
+   "整幅": true
+  },
+  "七略": {
+   "文件": "NLC892-411999008902-3632 漢書 第7冊.pdf",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/NLC892-411999008902-3632_%E6%BC%A2%E6%9B%B8_%E7%AC%AC7%E5%86%8A.pdf/page69-1280px-NLC892-411999008902-3632_%E6%BC%A2%E6%9B%B8_%E7%AC%AC7%E5%86%8A.pdf.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/1/1b/NLC892-411999008902-3632_%E6%BC%A2%E6%9B%B8_%E7%AC%AC7%E5%86%8A.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "Ban Gu",
+   "署名": "Ban Gu",
+   "说明页": "https://commons.wikimedia.org/wiki/File:NLC892-411999008902-3632_%E6%BC%A2%E6%9B%B8_%E7%AC%AC7%E5%86%8A.pdf",
+   "说明": "明汲古阁本《汉书·艺文志》开篇叶（1642年刻）——「今刪其要，以備篇籍」正在此叶右半；《七略》原书无图可配",
+   "卡": true,
+   "整幅": true
+  },
+  "论衡": {
+   "文件": "Sibu Congkan0439-王充-論衡-8-7.djvu",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Sibu_Congkan0439-%E7%8E%8B%E5%85%85-%E8%AB%96%E8%A1%A1-8-7.djvu/page32-1280px-Sibu_Congkan0439-%E7%8E%8B%E5%85%85-%E8%AB%96%E8%A1%A1-8-7.djvu.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Sibu_Congkan0439-%E7%8E%8B%E5%85%85-%E8%AB%96%E8%A1%A1-8-7.djvu?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "Wang Chong",
+   "署名": "Wang Chong",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Sibu_Congkan0439-%E7%8E%8B%E5%85%85-%E8%AB%96%E8%A1%A1-8-7.djvu",
+   "说明": "四部丛刊影明通津草堂本《论衡·订鬼篇》——郁垒执鬼食虎、黄帝立桃人画门神诸句在此叶，引文首语在前叶末；是订鬼篇书影，非《山海经》，今本无此段",
+   "卡": true,
+   "整幅": true
+  },
+  "资治通鉴": {
+   "文件": "Sibu Congkan0180-司馬光-資治通鑑考異-6-2.djvu",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sibu_Congkan0180-%E5%8F%B8%E9%A6%AC%E5%85%89-%E8%B3%87%E6%B2%BB%E9%80%9A%E9%91%91%E8%80%83%E7%95%B0-6-2.djvu/page55-1280px-Sibu_Congkan0180-%E5%8F%B8%E9%A6%AC%E5%85%89-%E8%B3%87%E6%B2%BB%E9%80%9A%E9%91%91%E8%80%83%E7%95%B0-6-2.djvu.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Sibu_Congkan0180-%E5%8F%B8%E9%A6%AC%E5%85%89-%E8%B3%87%E6%B2%BB%E9%80%9A%E9%91%91%E8%80%83%E7%95%B0-6-2.djvu?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "Sima Guang",
+   "署名": "Sima Guang",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Sibu_Congkan0180-%E5%8F%B8%E9%A6%AC%E5%85%89-%E8%B3%87%E6%B2%BB%E9%80%9A%E9%91%91%E8%80%83%E7%95%B0-6-2.djvu",
+   "说明": "四部丛刊景宋刊本《通鉴考异》卷七——「帝焚圖書十四萬卷」条全文正在此叶，三数并陈、今从典略；原本无标点",
+   "卡": true,
+   "整幅": true
+  },
+  "录鬼簿": {
+   "文件": "Tianyige.jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Tianyige.jpg/1280px-Tianyige.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/4/45/Tianyige.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC BY-SA 4.0",
+   "作者": "钉钉",
+   "署名": "钉钉",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Tianyige.jpg",
+   "说明": "宁波天一阁书楼——蓝格钞本旧藏之地、1931年重整藏书之地；钞副本在城中友人家，非阁内",
+   "卡": true,
+   "整幅": false
+  },
+  "古今图书集成": {
+   "文件": "NLC892-411999021002-96323 欽定古今圖書集成 第1冊.pdf",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/NLC892-411999021002-96323_%E6%AC%BD%E5%AE%9A%E5%8F%A4%E4%BB%8A%E5%9C%96%E6%9B%B8%E9%9B%86%E6%88%90_%E7%AC%AC1%E5%86%8A.pdf/page5-1280px-NLC892-411999021002-96323_%E6%AC%BD%E5%AE%9A%E5%8F%A4%E4%BB%8A%E5%9C%96%E6%9B%B8%E9%9B%86%E6%88%90_%E7%AC%AC1%E5%86%8A.pdf.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/c/c0/NLC892-411999021002-96323_%E6%AC%BD%E5%AE%9A%E5%8F%A4%E4%BB%8A%E5%9C%96%E6%9B%B8%E9%9B%86%E6%88%90_%E7%AC%AC1%E5%86%8A.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "〔清〕蔣廷錫 陳夢雷等輯",
+   "署名": "〔清〕蔣廷錫 陳夢雷等輯",
+   "说明页": "https://commons.wikimedia.org/wiki/File:NLC892-411999021002-96323_%E6%AC%BD%E5%AE%9A%E5%8F%A4%E4%BB%8A%E5%9C%96%E6%9B%B8%E9%9B%86%E6%88%90_%E7%AC%AC1%E5%86%8A.pdf",
+   "说明": "雍正四年内府铜活字本内文叶（乾象典卷四十五）——坐实其物，不证除名；除名在卷首，本线未获卷首书影",
+   "卡": true,
+   "整幅": true
+  },
+  "京剧成型": {
+   "文件": "申報1876-06-05西陲惡耗.jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/%E7%94%B3%E5%A0%B11876-06-05%E8%A5%BF%E9%99%B2%E6%83%A1%E8%80%97.jpg/1280px-%E7%94%B3%E5%A0%B11876-06-05%E8%A5%BF%E9%99%B2%E6%83%A1%E8%80%97.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/4/4d/%E7%94%B3%E5%A0%B11876-06-05%E8%A5%BF%E9%99%B2%E6%83%A1%E8%80%97.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "《申報》",
+   "署名": "《申報》",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E7%94%B3%E5%A0%B11876-06-05%E8%A5%BF%E9%99%B2%E6%83%A1%E8%80%97.jpg",
+   "说明": "1876年6月5日《申报》头版原件——同年同报之版式；《图绘伶伦》那期（3月2日）原件藏订阅库，本线未见",
+   "卡": true,
+   "整幅": true
+  },
+  "舞蹈纹彩陶盆": {
+   "文件": "guobo-wudaowen-caitaopen.jpg",
+   "路径": "img/used/guobo-wudaowen-caitaopen.jpg",
+   "署名": "No-Macaroon1670 摄，2024 年 1 月",
+   "许可": "作者本人拍摄",
+   "说明": "舞蹈纹彩陶盆（中国国家博物馆）——第一页就带着缝：舞题三说、饰物两说，皆不裁",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/used/guobo-wudaowen-caitaopen.jpg",
+   "作者": "No-Macaroon1670 摄，2024 年 1 月",
+   "说明页": ""
+  }
+ },
  "kanhe": {
   "石鼓": {
    "文件": "gugong-shiguguan-quanjing.jpg",
@@ -816,7 +914,7 @@ export const PICS = {
  "yanyi": {
   "武帝立乐府": {
    "文件": "Nanjing Museum - Pottery figurines dancing and sitting.jpg",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Nanjing_Museum_-_Pottery_figurines_dancing_and_sitting.jpg/960px-Nanjing_Museum_-_Pottery_figurines_dancing_and_sitting.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/yanyi/nanjing-museum-pottery-figurines-dancing-and-sitting.jpg",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/4/44/Nanjing_Museum_-_Pottery_figurines_dancing_and_sitting.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "CC BY-SA 4.0",
    "作者": "Ecelan",
@@ -824,11 +922,12 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Nanjing_Museum_-_Pottery_figurines_dancing_and_sitting.jpg",
    "说明": "西汉乐舞陶俑（南京博物院）——乐府是官署、本无可拍之物，这组俑是它治下乐舞的实物",
    "卡": true,
-   "整幅": true
+   "整幅": true,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Nanjing_Museum_-_Pottery_figurines_dancing_and_sitting.jpg/1280px-Nanjing_Museum_-_Pottery_figurines_dancing_and_sitting.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   },
   "玄宗教梨园弟子": {
    "文件": "Tang Sancai Porcelain with Musicians on a Camel.jpg",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tang_Sancai_Porcelain_with_Musicians_on_a_Camel.jpg/960px-Tang_Sancai_Porcelain_with_Musicians_on_a_Camel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/yanyi/tang-sancai-porcelain-with-musicians-on-a-camel.jpg",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tang_Sancai_Porcelain_with_Musicians_on_a_Camel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "CC0",
    "作者": "Gary Todd",
@@ -836,11 +935,12 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Tang_Sancai_Porcelain_with_Musicians_on_a_Camel.jpg",
    "说明": "三彩载乐骆驼俑（中国国家博物馆，西安鲜于庭诲墓出土，723 年）——非梨园教习实景，是开元宫廷乐俗的代表物",
    "卡": true,
-   "整幅": true
+   "整幅": true,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tang_Sancai_Porcelain_with_Musicians_on_a_Camel.jpg/1280px-Tang_Sancai_Porcelain_with_Musicians_on_a_Camel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   },
   "瓦舍勾栏": {
    "文件": "宋人 眼药酸图.png",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/3/3b/%E5%AE%8B%E4%BA%BA_%E7%9C%BC%E8%8D%AF%E9%85%B8%E5%9B%BE.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "缩略图": "img/story/yanyi/宋人-眼药酸图.png",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/3/3b/%E5%AE%8B%E4%BA%BA_%E7%9C%BC%E8%8D%AF%E9%85%B8%E5%9B%BE.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "Public domain",
    "作者": "佚名（南宋画家），故宫博物院藏",
@@ -848,11 +948,12 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:%E5%AE%8B%E4%BA%BA_%E7%9C%BC%E8%8D%AF%E9%85%B8%E5%9B%BE.png",
    "说明": "南宋佚名《眼药酸》（故宫博物院藏）——现存最直接的杂剧演出图证；成画晚本站约百年，勾栏建筑画中无",
    "卡": true,
-   "整幅": false
+   "整幅": false,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/3/3b/%E5%AE%8B%E4%BA%BA_%E7%9C%BC%E8%8D%AF%E9%85%B8%E5%9B%BE.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
   },
   "魏良辅改昆腔": {
    "文件": "The Peony Pavilion WDL7112.jpg",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/The_Peony_Pavilion_WDL7112.jpg/960px-The_Peony_Pavilion_WDL7112.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/yanyi/the-peony-pavilion-wdl7112.jpg",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/8/81/The_Peony_Pavilion_WDL7112.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "Public domain",
    "作者": "Tang, Xianzu, 1550-1616",
@@ -860,12 +961,13 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:The_Peony_Pavilion_WDL7112.jpg",
    "说明": "1617 年坊刻《牡丹亭》木版插图（黄鸣岐刻）——改腔约一世纪后，昆腔载体的繁荣",
    "卡": true,
-   "整幅": true
+   "整幅": true,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/The_Peony_Pavilion_WDL7112.jpg/1280px-The_Peony_Pavilion_WDL7112.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   },
   "京剧成型": [
    {
     "文件": "Тринадцать великих актёров поздней Цин.jpg",
-    "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/%D0%A2%D1%80%D0%B8%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D1%8C_%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85_%D0%B0%D0%BA%D1%82%D1%91%D1%80%D0%BE%D0%B2_%D0%BF%D0%BE%D0%B7%D0%B4%D0%BD%D0%B5%D0%B9_%D0%A6%D0%B8%D0%BD.jpg/960px-%D0%A2%D1%80%D0%B8%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D1%8C_%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85_%D0%B0%D0%BA%D1%82%D1%91%D1%80%D0%BE%D0%B2_%D0%BF%D0%BE%D0%B7%D0%B4%D0%BD%D0%B5%D0%B9_%D0%A6%D0%B8%D0%BD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "缩略图": "img/story/yanyi/тринадцать-великих-актёров-поздней-цин.jpg",
     "原图": "https://upload.wikimedia.org/wikipedia/commons/c/c3/%D0%A2%D1%80%D0%B8%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D1%8C_%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85_%D0%B0%D0%BA%D1%82%D1%91%D1%80%D0%BE%D0%B2_%D0%BF%D0%BE%D0%B7%D0%B4%D0%BD%D0%B5%D0%B9_%D0%A6%D0%B8%D0%BD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
     "许可": "Public domain",
     "作者": "沈蓉圃（清，一作沈容圃）",
@@ -873,11 +975,12 @@ export const PICS = {
     "说明页": "https://commons.wikimedia.org/wiki/File:%D0%A2%D1%80%D0%B8%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D1%8C_%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85_%D0%B0%D0%BA%D1%82%D1%91%D1%80%D0%BE%D0%B2_%D0%BF%D0%BE%D0%B7%D0%B4%D0%BD%D0%B5%D0%B9_%D0%A6%D0%B8%D0%BD.jpg",
     "说明": "沈蓉圃《同光十三绝》全幅——成画晚于画中人活跃盛年，系追摹合绘",
     "卡": true,
-    "整幅": true
+    "整幅": true,
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/%D0%A2%D1%80%D0%B8%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D1%8C_%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85_%D0%B0%D0%BA%D1%82%D1%91%D1%80%D0%BE%D0%B2_%D0%BF%D0%BE%D0%B7%D0%B4%D0%BD%D0%B5%D0%B9_%D0%A6%D0%B8%D0%BD.jpg/1280px-%D0%A2%D1%80%D0%B8%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D1%8C_%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85_%D0%B0%D0%BA%D1%82%D1%91%D1%80%D0%BE%D0%B2_%D0%BF%D0%BE%D0%B7%D0%B4%D0%BD%D0%B5%D0%B9_%D0%A6%D0%B8%D0%BD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
    },
    {
     "文件": "Actors of the Chinese Theater in Costume. Beijing, 1874 WDL1932.png",
-    "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Actors_of_the_Chinese_Theater_in_Costume._Beijing%2C_1874_WDL1932.png/960px-Actors_of_the_Chinese_Theater_in_Costume._Beijing%2C_1874_WDL1932.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "缩略图": "img/story/yanyi/actors-of-the-chinese-theater-in-costume-beijing-1874-wdl193.png",
     "原图": "https://upload.wikimedia.org/wikipedia/commons/1/17/Actors_of_the_Chinese_Theater_in_Costume._Beijing%2C_1874_WDL1932.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
     "许可": "Public domain",
     "作者": "Adolf Nikolay Boyarsky",
@@ -885,7 +988,8 @@ export const PICS = {
     "说明页": "https://commons.wikimedia.org/wiki/File:Actors_of_the_Chinese_Theater_in_Costume._Beijing,_1874_WDL1932.png",
     "说明": "1874 年北京戏装演员，Boiarskii 摄——成型窗内的实拍；是否京剧班，原页未标，不坐实",
     "卡": false,
-    "整幅": false
+    "整幅": false,
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Actors_of_the_Chinese_Theater_in_Costume._Beijing%2C_1874_WDL1932.png/1280px-Actors_of_the_Chinese_Theater_in_Costume._Beijing%2C_1874_WDL1932.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
    }
   ],
   "舞蹈纹彩陶盆": {
