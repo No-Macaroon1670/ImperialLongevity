@@ -360,11 +360,11 @@ def main():
     A('<meta name="color-scheme" content="dark">')
     A('<title>%s · %s</title>' % (esc(meta.get('name')), esc(meta.get('lede'))))
     A('<meta name="description" content="%s共 %d 站。">' % (esc(meta.get('sub') + '。'), len(stops)))
-    A('<link rel="canonical" href="%s/story-%s.html">' % (SITE, key))
+    A('<link rel="canonical" href="%s/story/%s.html">' % (SITE, key))
     A('<meta property="og:type" content="article">')
     A('<meta property="og:title" content="%s">' % esc(meta.get('name')))
     A('<meta property="og:description" content="%s">' % esc(meta.get('lede')))
-    A('<meta property="og:url" content="%s/story-%s.html">' % (SITE, key))
+    A('<meta property="og:url" content="%s/story/%s.html">' % (SITE, key))
     A('<style>%s</style>' % CSS)
     A('</head>')
     A('<body>')
@@ -392,7 +392,7 @@ def main():
     A('<div class="kicker">%s</div>' % esc(meta.get('sub')))
     A('<h1>%s</h1>' % esc(meta.get('name')))
     A('<p class="lede">%s</p>' % esc(meta.get('lede')))
-    A('<div class="meta">共 %d 站　·　<a href="timeline.html#line=%s">在图上走一遍 →</a>'
+    A('<div class="meta">共 %d 站　·　<a href="../timeline.html#line=%s">在图上走一遍 →</a>'
       '　·　<a href="%s/blob/main/docs/line-%s.md">资料与出处 ↗</a></div>'
       % (len(stops), key, 'https://github.com/No-Macaroon1670/ImperialLongevity', key))
     A('</div></header>')
@@ -445,11 +445,11 @@ def main():
         # 原尺寸给外链，想要的人自己去 Commons
         A('<button class="zoom" type="button" data-src="%s" data-cap="%s" data-who="%s" '
           'data-full="%s" aria-label="放大看：%s">'
-          % (esc(p['缩略图']), esc(p.get('说明') or ''),
+          % (esc('../' + p['缩略图']), esc(p.get('说明') or ''),
              esc(' · '.join([x for x in [p.get('署名') or p.get('作者'),
                                          p.get('许可')] if x])),
              esc(p.get('说明页') or ''), esc(p.get('说明') or '图片')))
-        A('<img src="%s" alt="%s" loading="lazy">' % (esc(p['缩略图']), esc(p.get('说明'))))
+        A('<img src="%s" alt="%s" loading="lazy">' % (esc('../' + p['缩略图']), esc(p.get('说明'))))
         A('</button>')
         who = ' · '.join([x for x in [p.get('署名') or p.get('作者'), p.get('许可')] if x])
         link = p.get('说明页')
@@ -554,7 +554,7 @@ def main():
             A('<p class="sub">%s</p>' % esc('　·　'.join(bits)))
         picfig(name)
         paras_of(name, long_text.get(name) or [s['b'] + (s.get('b2') or '')])
-        A('<a class="go" href="timeline.html#line=%s&amp;at=%d">在图上看这一站 →</a>' % (key, i))
+        A('<a class="go" href="../timeline.html#line=%s&amp;at=%d">在图上看这一站 →</a>' % (key, i))
         if e.get('yc'):
             A('<p class="note">本库简注：%s</p>' % esc(e['yc']))
         app_block(name)
@@ -574,7 +574,7 @@ def main():
     A('本页由 <code>tools/mining/build_line_page.py</code> 从库内数据生成，不手改。'
       '长文出自纪录片叙事稿，考据随文写就；凡各源不一致的数字，做法是一个都不给。')
     A('<div class="row">')
-    A('<a href="timeline.html#line=%s">在图上走一遍 →</a>' % key)
+    A('<a href="../timeline.html#line=%s">在图上走一遍 →</a>' % key)
     A('<a href="index.html">中国帝王寿命数据库</a>')
     A('<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-%s.md" '
       'target="_blank" rel="noopener">资料与出处 ↗</a>' % key)
@@ -586,7 +586,8 @@ def main():
     A('<script>%s</script>' % JS)
     A('</body></html>')
 
-    out = os.path.join(ROOT, 'story-%s.html' % key)
+    # 2026-08-26 搬目录案（库主裁：未公布故零存根成本）：story 页迁 story/ 子目录
+    out = os.path.join(ROOT, 'story', '%s.html' % key)
     html = '\n'.join(O)
     io.open(out, 'w', encoding='utf-8', newline='\n').write(html)
     print('写出 %s：%d 节，%d 字节' % (out, len(rail), len(html.encode('utf-8'))))

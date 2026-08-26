@@ -624,16 +624,16 @@ export const LINES = {
     // `read` 指向长文页的对应一节：窄屏读不到全文，给个去处
     stops: [
       // 序也配图：那一段说三匹白马都是后人编的，而门前那匹石马是实的
-      { t: PROLOGUE.t, b: PROLOGUE.p[0], long: PROLOGUE.p, full: true, read: 'story-shiku.html#s0',
+      { t: PROLOGUE.t, b: PROLOGUE.p[0], long: PROLOGUE.p, full: true, read: 'story/shiku.html#s0',
         ...(PICS.shiku['序'] ? { pic: PICS.shiku['序'] } : {}) },
       ...SHIKU.map((s, i) => ({
-        ...s, read: `story-shiku.html#s${i + 1}`,
+        ...s, read: `story/shiku.html#s${i + 1}`,
         ...(TEXT[s.ev] ? { long: TEXT[s.ev] } : {}),
         // 只有「图即主语」的站才把图带进讲解卡（`卡` 由 build_pics.py 定）。
         // 长文页不受这个限制，那是读物
         ...(PICS.shiku[s.ev] && PICS.shiku[s.ev]['卡'] ? { pic: PICS.shiku[s.ev] } : {}),
       })),
-      { t: EPILOGUE.t, b: EPILOGUE.p[0], long: EPILOGUE.p, full: true, read: 'story-shiku.html#s12' },
+      { t: EPILOGUE.t, b: EPILOGUE.p[0], long: EPILOGUE.p, full: true, read: 'story/shiku.html#s12' },
     ],
     // 长文里那些硬数字（尺寸、件数、工时、引文、编号）的逐条出处另有一份，
     // 挂在目录里而不是站点卡上：读者走线时要的是故事，要查的时候才去翻账
@@ -653,12 +653,12 @@ export const LINES = {
       '碧血泣吴志', '千古两茫茫', '江畔听涛响', '仍奏小乔殇'],
     shiBy: 'No-Macaroon1670 题',
     stops: [
-      { t: CB_PRO.t, b: CB_PRO.p[0], long: CB_PRO.p, full: true, read: 'story-chibi.html#s0' },
+      { t: CB_PRO.t, b: CB_PRO.p[0], long: CB_PRO.p, full: true, read: 'story/chibi.html#s0' },
       ...CHIBI.map((s, i) => ({
-        ...s, read: `story-chibi.html#s${i + 1}`,
+        ...s, read: `story/chibi.html#s${i + 1}`,
         ...(CB_TEXT[s.ev] ? { long: CB_TEXT[s.ev] } : {}),
       })),
-      { t: CB_EPI.t, b: CB_EPI.p[0], long: CB_EPI.p, full: true, read: 'story-chibi.html#s9' },
+      { t: CB_EPI.t, b: CB_EPI.p[0], long: CB_EPI.p, full: true, read: 'story/chibi.html#s9' },
     ],
     prologue: CB_PRO,
     epilogue: CB_EPI,
@@ -673,12 +673,12 @@ export const LINES = {
     shi: ['秘瓷满杜康', '风烟早相忘', '谁持万世尺', '千古度英雄'],
     shiBy: 'No-Macaroon1670 题',
     stops: [
-      { t: KH_PRO.t, b: KH_PRO.p[0], long: KH_PRO.p, full: true, read: 'story-kanhe.html#s0' },
+      { t: KH_PRO.t, b: KH_PRO.p[0], long: KH_PRO.p, full: true, read: 'story/kanhe.html#s0' },
       ...KANHE.map((s, i) => ({
-        ...s, read: `story-kanhe.html#s${i + 1}`,
+        ...s, read: `story/kanhe.html#s${i + 1}`,
         ...(KH_TEXT[s.ev] ? { long: KH_TEXT[s.ev] } : {}),
       })),
-      { t: KH_EPI.t, b: KH_EPI.p[0], long: KH_EPI.p, full: true, read: 'story-kanhe.html#s13' },
+      { t: KH_EPI.t, b: KH_EPI.p[0], long: KH_EPI.p, full: true, read: 'story/kanhe.html#s13' },
     ],
     prologue: KH_PRO,
     epilogue: KH_EPI,
@@ -697,12 +697,12 @@ export const LINES = {
     shiBy: 'No-Macaroon1670 题',
     lede: '天下第一行书，没有一个活着的人见过真迹。你临的每一本字帖，都有人替你挑过。',
     stops: [
-      { t: BT_PRO.t, b: BT_PRO.p[0], long: BT_PRO.p, full: true, read: 'story-beitie.html#s0' },
+      { t: BT_PRO.t, b: BT_PRO.p[0], long: BT_PRO.p, full: true, read: 'story/beitie.html#s0' },
       ...BEITIE.map((s, i) => ({
-        ...s, read: `story-beitie.html#s${i + 1}`,
+        ...s, read: `story/beitie.html#s${i + 1}`,
         ...(BT_TEXT[s.ev] ? { long: BT_TEXT[s.ev] } : {}),
       })),
-      { t: BT_EPI.t, b: BT_EPI.p[0], long: BT_EPI.p, full: true, read: 'story-beitie.html#s8' },
+      { t: BT_EPI.t, b: BT_EPI.p[0], long: BT_EPI.p, full: true, read: 'story/beitie.html#s8' },
     ],
     prologue: BT_PRO,
     epilogue: BT_EPI,
@@ -722,12 +722,12 @@ export const LINES = {
     shi: ['皇城昔日万签书', '烈火东风一夜无', '且佩幽兰誊小楷', '文渊阁内展残图'],
     shiBy: 'No-Macaroon1670 题',
     stops: [
-      { t: SG_PRO.t, b: SG_PRO.p[0], long: SG_PRO.p, full: true, read: 'story-shugui.html#s0' },
+      { t: SG_PRO.t, b: SG_PRO.p[0], long: SG_PRO.p, full: true, read: 'story/shugui.html#s0' },
       ...SHUGUI.map((s, i) => ({
-        ...s, read: `story-shugui.html#s${i + 1}`,
+        ...s, read: `story/shugui.html#s${i + 1}`,
         ...(SG_TEXT[s.ev] ? { long: SG_TEXT[s.ev] } : {}),
       })),
-      { t: SG_EPI.t, b: SG_EPI.p[0], long: SG_EPI.p, full: true, read: 'story-shugui.html#s9' },
+      { t: SG_EPI.t, b: SG_EPI.p[0], long: SG_EPI.p, full: true, read: 'story/shugui.html#s9' },
     ],
     prologue: SG_PRO,
     epilogue: SG_EPI,
@@ -745,12 +745,12 @@ export const LINES = {
     shi: ['箫笛息音犹绕梁', '西楼月下牡丹杳', '梨园多少红尘客', '千秋戏中唱主调'],
     shiBy: 'No-Macaroon1670 题',
     stops: [
-      { t: YY_PRO.t, b: YY_PRO.p[0], long: YY_PRO.p, full: true, read: 'story-yanyi.html#s0' },
+      { t: YY_PRO.t, b: YY_PRO.p[0], long: YY_PRO.p, full: true, read: 'story/yanyi.html#s0' },
       ...YANYI.map((s, i) => ({
-        ...s, read: `story-yanyi.html#s${i + 1}`,
+        ...s, read: `story/yanyi.html#s${i + 1}`,
         ...(YY_TEXT[s.ev] ? { long: YY_TEXT[s.ev] } : {}),
       })),
-      { t: YY_EPI.t, b: YY_EPI.p[0], long: YY_EPI.p, full: true, read: 'story-yanyi.html#s10' },
+      { t: YY_EPI.t, b: YY_EPI.p[0], long: YY_EPI.p, full: true, read: 'story/yanyi.html#s10' },
     ],
     prologue: YY_PRO,
     epilogue: YY_EPI,
@@ -767,12 +767,12 @@ export const LINES = {
     shi: ['鬼仙怪妖，自古唯凭人定', '天地神祖，向来难判谁灵'],
     shiBy: 'No-Macaroon1670 题',
     stops: [
-      { t: XH_PRO.t, b: XH_PRO.p[0], long: XH_PRO.p, full: true, read: 'story-xianghuo.html#s0' },
+      { t: XH_PRO.t, b: XH_PRO.p[0], long: XH_PRO.p, full: true, read: 'story/xianghuo.html#s0' },
       ...XIANGHUO.map((s, i) => ({
-        ...s, read: `story-xianghuo.html#s${i + 1}`,
+        ...s, read: `story/xianghuo.html#s${i + 1}`,
         ...(XH_TEXT[s.ev] ? { long: XH_TEXT[s.ev] } : {}),
       })),
-      { t: XH_EPI.t, b: XH_EPI.p[0], long: XH_EPI.p, full: true, read: 'story-xianghuo.html#s12' },
+      { t: XH_EPI.t, b: XH_EPI.p[0], long: XH_EPI.p, full: true, read: 'story/xianghuo.html#s12' },
     ],
     prologue: XH_PRO,
     epilogue: XH_EPI,

@@ -1405,7 +1405,7 @@ function lnGoto(i) {
   if (LN.bar) {
     const read = LN.bar.querySelector('[data-a=read]');
     const tl = LN.bar.querySelector('[data-a=tl]');
-    if (read) read.href = st.read || `story-${LN.key}.html`;
+    if (read) read.href = st.read || `story/${LN.key}.html`;
     if (tl) tl.href = `timeline.html#line=${LN.key}&at=${LN.at}`;
     LN.bar.querySelector('[data-a=prev]').disabled = LN.at === 0;
     const nx = LN.bar.querySelector('[data-a=next]');

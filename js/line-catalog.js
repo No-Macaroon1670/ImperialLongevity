@@ -56,10 +56,10 @@ export function buildLineCatalog({ lines, onPick }) {
       const row2 = document.createElement('div');
       row2.className = 'lc-links';
       // 两种读法并排：走图在上面那颗大按钮，读文在这儿。
-      // 长文页是同一份数据的另一个出口（story-<key>.html，深色）
+      // 长文页是同一份数据的另一个出口（story/<key>.html，深色）
       const rd = document.createElement('a');
       rd.className = 'lc-doc';
-      rd.href = `story-${line.key}.html`;
+      rd.href = `story/${line.key}.html`;
       rd.textContent = '读长文 →';
       const a = document.createElement('a');
       a.className = 'lc-doc';
