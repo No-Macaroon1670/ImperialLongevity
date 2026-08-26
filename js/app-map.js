@@ -1474,36 +1474,26 @@ addEventListener('hashchange', () => {
 /** 入口：故事线的启动链接，跟在类别行后面。 */
 function mountLineChips() {
   const bar = $('plate-kinds');
-  const wrap = document.createElement('span');
-  wrap.className = 'pl-ln-launch';
-  wrap.append('走一条线：');
+  // 故事线书钮（2026-08-26 库主令：与时间轴同款 📖 元件标准化，居搜索框右侧；
+  // 「走一条线：」文字排与折叠单/文字钮一并退役）。目录浮层走共用件 line-catalog.js：
+  // 图页池子只列带 geo 的线，选中即走图，零轴位移
   const geoLines = Object.values(LINES).filter((L) => L.geo);
-  if (geoLines.length <= 3) {
-    geoLines.forEach((L, i, arr) => {
-      const a2 = document.createElement('a');
-      a2.href = `#line=${L.key}`;
-      a2.textContent = L.name;
-      wrap.appendChild(a2);
-      if (i < arr.length - 1) wrap.append(' · ');
-    });
-  } else {
-    // 线一多平铺就挤（用户预判于第四条上线前）。此处原是 details 折叠单，
-    // 原地展开会把整条类别轴顶下去（周一单3病案）——2026-08-26 改开时间轴
-    // 同款目录浮层（共用件 line-catalog.js）：线名＋站数＋lede＋读长文/资料
-    // 两链的卡列，零轴位移；图页池子只列带 geo 的线
-    const cat = buildLineCatalog({
-      lines: geoLines,
-      onPick: (L) => { history.replaceState(null, '', `#line=${L.key}`); enterLine(L.key, 0); },
-    });
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'pl-lines-btn';
-    btn.textContent = `全部 ${geoLines.length} 条 ▾`;
-    btn.setAttribute('aria-label', '故事线目录');
-    btn.addEventListener('click', cat.open);
-    wrap.appendChild(btn);
-  }
-  bar.after(wrap);
+  const cat = buildLineCatalog({
+    lines: geoLines,
+    onPick: (L) => { history.replaceState(null, '', `#line=${L.key}`); enterLine(L.key, 0); },
+  });
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'chip line-launch';
+  const face = document.createElement('span');
+  face.className = 'line-face';
+  face.textContent = '📖';
+  const label = document.createElement('span');
+  label.textContent = '故事线';
+  btn.append(face, label);
+  btn.title = '故事线目录：穿过这张图的几种读法';
+  btn.setAttribute('aria-label', '故事线目录');
+  btn.addEventListener('click', cat.open);
 
   // 搜索框（用户 2026-08-22 提）：轻装版——只搜图上有落点的条目与政权名，
   // 不引河页搜索的大池子（那会把君主全表拖进图页；拼音键记在接缝清单待并）。
@@ -1539,8 +1529,8 @@ function mountLineChips() {
     dice.classList.add('rolling');
     locate(pick);
   });
-  sbox.append(sin, dice, slist);   // 骰子居右（用户指定：不另起一行）
-  wrap.after(sbox);
+  sbox.append(sin, dice, btn, slist);   // 骰子居右（用户指定：不另起一行）；书钮再靠右（2026-08-26 库主令）
+  bar.after(sbox);
   const locate = (r) => {
     slist.innerHTML = ''; sin.value = r.n;
     if (r['层'] !== 'dyn' && state.off.has(r.k)) state.off.delete(r.k);   // 关着的类先点亮
