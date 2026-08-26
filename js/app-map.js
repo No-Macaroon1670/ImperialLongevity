@@ -26,7 +26,7 @@
 import { BASEMAP, project } from './basemap.js';
 import { norm as searchNorm, withPy as searchWithPy, scoreKeys as searchScore } from './search-core.js';
 import {
-  el, softStroke, haloText, LabelSolver, placeCandidates, NUDGES,
+  el, softStroke, haloText, lakeLayer, LabelSolver, placeCandidates, NUDGES,
   graticulePath, reader, ANCHORS, RIVER_TAGS,
 } from './plate.js';
 import { GEO_EVENTS } from './geo-events.js';
@@ -118,6 +118,9 @@ const gCoast = el('g');
 // 浏览器重绘不过来——图上内容钉住不动、底下的灰块自己在走，上半截被撕掉一条白带
 softStroke(gCoast, BASEMAP.coast, 'pl-coast-fuzz');
 gCoast.appendChild(el('path', { class: 'pl-coast', d: BASEMAP.coast }));
+// 大湖夹在海岸与河之间（2026-08-26 底图水系扩建案）。次序即层序：
+// 河要压在湖上，长江才是「过」洞庭鄱阳，不是流到湖里为止
+lakeLayer(gCoast, BASEMAP.lakes, 'pl-lake');
 gCoast.appendChild(el('path', { class: 'pl-river', d: BASEMAP.rivers }));
 const gRef = el('g', { class: 'pl-ref' });      // 参照城市与河名
 const gLead = el('g', { class: 'pl-leads' });   // 散开之后拉回真位置的细线

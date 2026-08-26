@@ -28,7 +28,8 @@
 // 站名 12 / 现藏 11 / 河名 10 / 城市 9。撞了让位照旧归排版器。
 import { BASEMAP } from './basemap.js';
 import {
-  el, plateFilters, LabelSolver, placeCandidates, NUDGES, ANCHORS, RIVER_TAGS,
+  el, plateFilters, lakeLayer, LabelSolver, placeCandidates, NUDGES,
+  ANCHORS, RIVER_TAGS,
 } from './plate.js';
 import {
   xy, fitBox, unitOf, inViewOf, clampTo, marksOf, dustOf, dustGroup, tagJob, runJobs,
@@ -57,6 +58,10 @@ export function mountMinimap(geoOf, allOf) {
     class: 'mm-coast-fuzz', d: BASEMAP.coast, filter: `url(#${FLT.coast})`,
   }));
   svg.appendChild(el('path', { class: 'mm-coast', d: BASEMAP.coast }));
+  // 大湖夹在海岸与河之间（2026-08-26 底图水系扩建案）。次序即层序：河压在湖上。
+  // 赤壁线取景正在长江中游，洞庭与鄱阳会占掉小地图不小的一块——这是它该占的：
+  // 那一战就打在长江与洞庭之间
+  lakeLayer(svg, BASEMAP.lakes, 'mm-lake');
   svg.appendChild(el('path', { class: 'mm-river', d: BASEMAP.rivers }));
   const gRef = el('g', { class: 'mm-ref' });     // 参照：城市与河名
   const gAll = el('g', { class: 'mm-all' });     // 全程：淡点
