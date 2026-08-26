@@ -1266,6 +1266,15 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .mm-coast-fuzz { fill: none; stroke: var(--border); stroke-width: 3.6; opacity: .45; }
 .mm-coast { fill: none; stroke: var(--border); stroke-width: 1; opacity: .85; }
 .mm-river { fill: none; stroke: var(--seq-400); stroke-width: 1.4; opacity: .55; }
+/* 大湖：一片淡水色，压在海岸之上、河之下（层序归 js/minimap.js 的 append 次序）。
+   用河的色相而不是另起一色——湖跟河是一族，换个颜色就成了另一种东西。
+   调子跟着「糊开的海岸」走：淡到不抢戏，但填充比描边实一点，读者一眼知道
+   这是一块水面而不是一个圈出来的区域（山脉那层才是圈出来的区域）。
+   两套主题都成立：--seq-400 在浅色是 #3987e5、深色是 #256abf，同一个透明度
+   压在两种底纸上都还在「一片淡水」这个档位上。
+   要试「少画一个湖」，不必重跑构建：.mm-lake[data-lake="太湖"]{display:none} */
+.mm-lake { fill: var(--seq-400); fill-opacity: .18; stroke: var(--seq-400);
+  stroke-opacity: .5; stroke-width: .8; }
 /* 尘点铺底：全库落点当坐标纸，点密之处自然是名城，库一长图自动跟上。
    淡到几乎只是纸纹——它是底纹不是内容，站点的点必须一眼压得过它 */
 .mm-dust { fill: var(--muted); opacity: .22; }
@@ -1386,6 +1395,13 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-coast-fuzz { fill: none; stroke: var(--muted); stroke-width: 6; opacity: .3; }
 .pl-coast { fill: none; stroke: var(--muted); stroke-width: 1.2; opacity: .85; }
 .pl-river { fill: none; stroke: var(--seq-400); stroke-width: 2; opacity: .8; }
+/* 大湖：一片淡水色，压在海岸之上、河之下（层序归 js/app-map.js 的 append 次序）。
+   用河的色相而不是另起一色——湖跟河是一族。填充比描边实一点：这是一块水面，
+   不是一个圈出来的区域（山脉那层 .pl-terr 才是圈出来的区域，故那层反过来
+   描边比填充实）。两套主题都成立，--seq-400 浅深各有各的值。
+   要试「少画一个湖」，不必重跑构建：.pl-lake[data-lake="太湖"]{display:none} */
+.pl-lake { fill: var(--seq-400); fill-opacity: .17; stroke: var(--seq-400);
+  stroke-opacity: .45; stroke-width: 1; }
 
 /* 参照层是坐标纸，不是内容，故极淡 */
 .pl-city { fill: var(--muted); opacity: .45; }
