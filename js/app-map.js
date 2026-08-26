@@ -1484,13 +1484,10 @@ function mountLineChips() {
   });
   const btn = document.createElement('button');
   btn.type = 'button';
-  btn.className = 'chip line-launch';
-  const face = document.createElement('span');
-  face.className = 'line-face';
-  face.textContent = '📖';
-  const label = document.createElement('span');
-  label.textContent = '故事线';
-  btn.append(face, label);
+  // 与骰子同排须同视觉档（2026-08-26 库主令：一繁一简别扭，取双简）——
+  // 只留 📖 图标，名字进 title/aria；搜索行寸土寸金
+  btn.className = 'pl-dice pl-book';
+  btn.textContent = '📖';
   btn.title = '故事线目录：穿过这张图的几种读法';
   btn.setAttribute('aria-label', '故事线目录');
   btn.addEventListener('click', cat.open);

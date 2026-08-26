@@ -207,6 +207,27 @@ const rng = (key, label, { min, max, step = 1, fmt }, when) =>
 // 不值得常驻工具条——窄屏上它们会把条杆挤断行。
 const grp = (label, items) => ({ type: 'group', label, items });
 
+// 点外面即合（2026-08-26 库主令：设置开态浮层化，零位移）：浮层不再撑开条杆，
+// 也就不再有「它还开着」的体感，不给一条自然的关法它会一直悬着盖住底下的控件。
+// 只挂一次全局监听：buildControls 每次 render 都重建 details 节点，逐节点挂会
+// 随重建次数累积同样多份。判断用 closest 而非节点比对——点浮层里的开关会触发
+// render()，事件冒到 document 时 e.target 已是被换掉的旧节点，跟活节点比对必然
+// 不相等、于是刚点完就把浮层关掉；只问「这一下落在某个 .lc-set 里吗」就没这毛病。
+// 点 summary 自身同样命中 closest 而放行，故与 details 原生开合不打架：
+// 开的那一下不会被同一次点击立刻关回去。
+let lcSetCloserBound = false;
+function bindLcSetOutsideClose() {
+  if (lcSetCloserBound) return;
+  lcSetCloserBound = true;
+  document.addEventListener('click', (e) => {
+    if (e.target?.closest?.('details.lc-set')) return;
+    const open = document.querySelectorAll('details.lc-set[open]');
+    if (!open.length) return;
+    for (const det of open) det.open = false;
+    S._lcSetOpen = false;   // toggle 事件是异步的，render() 可能先读到，故当场同步
+  });
+}
+
 function buildControls(sec) {
   const wrap = h('div', { class: 'local-controls' });
   for (const c of sec.controls) {
@@ -216,6 +237,7 @@ function buildControls(sec) {
       // render() 每改一个开关就整条重建;不记开合状态的话,勾一下块就合上了
       if (S._lcSetOpen) det.open = true;
       det.addEventListener('toggle', () => { S._lcSetOpen = det.open; });
+      bindLcSetOutsideClose();
       det.appendChild(h('summary', { text: c.label }));
       const inner = buildControls({ controls: c.items });   // 递归复用同一台机器
       inner.classList.add('lc-set-body');

@@ -472,8 +472,33 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 }
 
 /* 工具条里的设置折叠块:与地图页同款形态,挤在一行控件之间 */
-.local-controls .lc-set { display: inline-block; }
-.local-controls .lc-set .lc-set-body { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
+.local-controls .lc-set { display: inline-block; position: relative; }
+/* 内层体开态浮层化（2026-08-26 库主令：设置开态浮层化，零位移）：原先它在文档流里
+   原地长高，一点开就把同一行的邻居控件整排顶走——读者点「设置」是想改一个开关，
+   不是想让条杆重排。改成锚在 summary 下方的下拉浮层后，开合不再动到任何邻居。
+   right 而非 left 对齐：这块惯在条杆右端，左对齐会把浮层甩出视口右缘。
+   z-index 要高过 sticky 条杆与钉住簇那一族（40-70），否则浮层被条杆盖掉半截。
+   width:max-content 而非 min-width：min-width 会压过 max-width，兜底就永远不生效。 */
+.local-controls .lc-set .lc-set-body {
+  display: flex; flex-direction: column; gap: 2px;
+  /* margin 归零：内层体身上也带 .local-controls 类，会继承那条 margin:4px 0 12px，
+     浮层的 top 就不再是 calc 算出来的那个位置 */
+  position: absolute; margin: 0; top: calc(100% + 6px); right: 0; z-index: 72;
+  width: max-content; max-width: min(320px, 90vw);
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 12px; box-shadow: 0 12px 36px rgba(0, 0, 0, .22);
+  padding: 8px 12px;
+}
+/* 那 4px 本是给在流内的内层体留的呼吸位；内层体浮出去后它只剩「开一下条杆高 4px」
+   这一个作用，与零位移相抵（2026-08-26 库主令：设置开态浮层化，零位移） */
+.local-controls .lc-set[open] summary { margin-bottom: 0; }
+/* 齿轮弹层内的嵌套态例外（实测：绝对定位浮层会探出弹层底缘被裁）：
+   弹层自己就是悬浮件，里面原地展开不产生页面位移——退回流内即可 */
+section.lc-open .lc-set .lc-set-body {
+  position: static; width: auto; max-width: none;
+  border: none; box-shadow: none; border-radius: 0; padding: 2px 0 0; margin: 0;
+}
+section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
 .kp-solo .kp-ext { -webkit-line-clamp: 5; }
 
 /* 事件层的六个类别色:全部取自既有槽位,不新造色相。
@@ -1562,9 +1587,9 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 
 /* 线的折叠单:第四条线上线时自动从平铺切换过来 */
 .pl-lines-menu { display: inline-block; font-size: inherit; color: inherit; }
-/* 图页故事线书钮（2026-08-26 库主令：与时间轴 📖 元件标准化，居搜索框右侧）：
-   chip 底样共用，行内收紧免得比输入框高 */
-.pl-search .line-launch { flex: none; padding: 4px 10px; white-space: nowrap; }
+/* 图页故事线书钮（2026-08-26 库主令两轮：居搜索框右侧；与骰子统一视觉档取双简，
+   借 .pl-dice 底样成对方钮，📖 进图标、名字进 title/aria */
+.pl-search .pl-book { font-size: 1rem; }
 .pl-lines-menu summary { cursor: pointer; user-select: none; display: inline; }
 .pl-lines-menu a { display: block; padding: 2px 0 2px 14px; }
 
