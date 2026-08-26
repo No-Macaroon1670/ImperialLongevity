@@ -495,6 +495,50 @@ export const LINE_PICS = {
   }
  },
  "yanyi": {
+  "武帝立乐府": {
+   "缩略图": "img/story/yanyi/nanjing-museum-pottery-figurines-dancing-and-sitting.jpg?v=462addbb",
+   "说明": "西汉乐舞陶俑（南京博物院）——乐府是官署、本无可拍之物，这组俑是它治下乐舞的实物",
+   "作者": "Ecelan",
+   "署名": "Ecelan",
+   "许可": "CC BY-SA 4.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Nanjing_Museum_-_Pottery_figurines_dancing_and_sitting.jpg",
+   "整幅": true
+  },
+  "玄宗教梨园弟子": {
+   "缩略图": "img/story/yanyi/tang-sancai-porcelain-with-musicians-on-a-camel.jpg?v=0388f1d1",
+   "说明": "三彩载乐骆驼俑（中国国家博物馆，西安鲜于庭诲墓出土，723 年）——非梨园教习实景，是开元宫廷乐俗的代表物",
+   "作者": "Gary Todd",
+   "署名": "Gary Todd",
+   "许可": "CC0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Tang_Sancai_Porcelain_with_Musicians_on_a_Camel.jpg",
+   "整幅": true
+  },
+  "瓦舍勾栏": {
+   "缩略图": "img/story/yanyi/宋人-眼药酸图.png?v=0f26745b",
+   "说明": "南宋佚名《眼药酸》（故宫博物院藏）——现存最直接的杂剧演出图证；成画晚本站约百年，勾栏建筑画中无",
+   "作者": "佚名（南宋画家），故宫博物院藏",
+   "署名": "佚名（南宋画家），故宫博物院藏",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E5%AE%8B%E4%BA%BA_%E7%9C%BC%E8%8D%AF%E9%85%B8%E5%9B%BE.png"
+  },
+  "魏良辅改昆腔": {
+   "缩略图": "img/story/yanyi/the-peony-pavilion-wdl7112.jpg?v=5d1bcb6f",
+   "说明": "1617 年坊刻《牡丹亭》木版插图（黄鸣岐刻）——改腔约一世纪后，昆腔载体的繁荣",
+   "作者": "Tang, Xianzu, 1550-1616",
+   "署名": "Tang, Xianzu, 1550-1616",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:The_Peony_Pavilion_WDL7112.jpg",
+   "整幅": true
+  },
+  "京剧成型": {
+   "缩略图": "img/story/yanyi/тринадцать-великих-актёров-поздней-цин.jpg?v=cad30b5f",
+   "说明": "沈蓉圃《同光十三绝》全幅——成画晚于画中人活跃盛年，系追摹合绘",
+   "作者": "沈蓉圃（清，一作沈容圃）",
+   "署名": "沈蓉圃（清，一作沈容圃）",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%D0%A2%D1%80%D0%B8%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D1%8C_%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85_%D0%B0%D0%BA%D1%82%D1%91%D1%80%D0%BE%D0%B2_%D0%BF%D0%BE%D0%B7%D0%B4%D0%BD%D0%B5%D0%B9_%D0%A6%D0%B8%D0%BD.jpg",
+   "整幅": true
+  },
   "舞蹈纹彩陶盆": {
    "缩略图": "img/used/guobo-wudaowen-caitaopen.jpg?v=2feb8f6c",
    "说明": "舞蹈纹彩陶盆（中国国家博物馆）——五千年前的舞队，本线的第一位演员",

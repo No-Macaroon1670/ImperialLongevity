@@ -90,7 +90,7 @@ CC-BY 与 CC-BY-SA 要求署名，这是法律义务；CC0 与公有领域不要
 | 大封天下城隍 | `shanghai-chenghuangmiao-shenkan.jpg` | No-Macaroon1670 摄，2016 年 9 月 | 作者本人拍摄 | — |
 | 买地券 | `shangbo-yumaidiquan.jpg` | No-Macaroon1670 摄，2016 年 9 月 | 作者本人拍摄 | — |
 | 序 | `mausoleum-of-the-yellow-emperor-20171001142733.jpg` | N509FZ | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Mausoleum_of_the_Yellow_Emperor_(20171001142733).jpg) |
-| 妈祖信仰 | `古妈祖庙-panoramio.jpg` | <a rel="nofollow" class="external text" href="https://web.ar | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:%E5%8F%A4%E5%A6%88%E7%A5%96%E5%BA%99_-_panoramio.jpg) |
+| 妈祖信仰 | `古妈祖庙-panoramio.jpg` | 江上清风1961（Panoramio 原上传） | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:%E5%8F%A4%E5%A6%88%E7%A5%96%E5%BA%99_-_panoramio.jpg) |
 | 文昌帝君 | `梓潼帝君-三教源流搜神大全.jpg` | 唐吉訶德的侍從 | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:%E6%A2%93%E6%BD%BC%E5%B8%9D%E5%90%9B%EF%BC%88%E4%B8%89%E6%95%99%E6%BA%90%E6%B5%81%E6%90%9C%E7%A5%9E%E5%A4%A7%E5%85%A8%EF%BC%89.jpg) |
 | 除夜赐钟馗 | `gong-kai-zhong-kui-traveling.jpg` | Gong Kai 龔開 (1222–1307) | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Gong_Kai-Zhong_Kui_Traveling.jpg) |
 | 门神 | `new-year-picture-of-military-door-god-met-dp-17326-004.jpg` | AnonymousUnknown author | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:New_Year_Picture_of_Military_Door_God_MET_DP-17326-004.jpg) |
@@ -103,6 +103,12 @@ CC-BY 与 CC-BY-SA 要求署名，这是法律义务；CC0 与公有领域不要
 
 | 站 | 文件 | 署名 | 许可 | 原始文件页 |
 |---|---|---|---|---|
+| 武帝立乐府 | `nanjing-museum-pottery-figurines-dancing-and-sitting.jpg` | Ecelan | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Nanjing_Museum_-_Pottery_figurines_dancing_and_sitting.jpg) |
+| 玄宗教梨园弟子 | `tang-sancai-porcelain-with-musicians-on-a-camel.jpg` | Gary Todd | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:Tang_Sancai_Porcelain_with_Musicians_on_a_Camel.jpg) |
+| 瓦舍勾栏 | `宋人-眼药酸图.png` | 佚名（南宋画家），故宫博物院藏 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:%E5%AE%8B%E4%BA%BA_%E7%9C%BC%E8%8D%AF%E9%85%B8%E5%9B%BE.png) |
+| 魏良辅改昆腔 | `the-peony-pavilion-wdl7112.jpg` | Tang, Xianzu, 1550-1616 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:The_Peony_Pavilion_WDL7112.jpg) |
+| 京剧成型 | `тринадцать-великих-актёров-поздней-цин.jpg` | 沈蓉圃（清，一作沈容圃） | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:%D0%A2%D1%80%D0%B8%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D1%8C_%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85_%D0%B0%D0%BA%D1%82%D1%91%D1%80%D0%BE%D0%B2_%D0%BF%D0%BE%D0%B7%D0%B4%D0%BD%D0%B5%D0%B9_%D0%A6%D0%B8%D0%BD.jpg) |
+| 京剧成型 | `actors-of-the-chinese-theater-in-costume-beijing-1874-wdl193.png` | Adolf Nikolay Boyarsky | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Actors_of_the_Chinese_Theater_in_Costume._Beijing,_1874_WDL1932.png) |
 | 舞蹈纹彩陶盆 | `guobo-wudaowen-caitaopen.jpg` | No-Macaroon1670 摄，2024 年 1 月 | 作者本人拍摄 | — |
 | 徽班进京 | `gugong-changyinge-zhengmian.jpg` | No-Macaroon1670 摄，2024 年 1 月 | 作者本人拍摄 | — |
 | 落点 | `tianqiao-juchang-haibao-2016.jpg` | No-Macaroon1670 摄，2016 年 9 月 | 作者本人拍摄 | — |

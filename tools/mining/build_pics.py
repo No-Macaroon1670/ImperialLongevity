@@ -62,6 +62,25 @@ PICKS = {
                        'to examine near the entrance to Cave 17, the “library cave.jpg',
                        True, '第十六窟，写本堆于第十七窟口外待检，斯坦因摄于 1907 年'),
     },
+    # 演艺线五站（2026-08-26 觅图波圈选落图。库主圈选：①荐②备③备⑤荐⑥荐备双取，
+    # ④录鬼簿与⑦相声开山留白——录鬼簿 Commons 零命中、朱绍文无可靠影像存世，宁缺毋滥）。
+    # 京剧成型一站两图（画／照对照）——PICKS 首例列表值，main 里同步放行
+    'yanyi': {
+        '武帝立乐府': ('Nanjing Museum - Pottery figurines dancing and sitting.jpg', True,
+                  '西汉乐舞陶俑（南京博物院）——乐府是官署、本无可拍之物，这组俑是它治下乐舞的实物'),
+        '玄宗教梨园弟子': ('Tang Sancai Porcelain with Musicians on a Camel.jpg', True,
+                   '三彩载乐骆驼俑（中国国家博物馆，西安鲜于庭诲墓出土，723 年）——非梨园教习实景，是开元宫廷乐俗的代表物'),
+        '瓦舍勾栏': ('宋人 眼药酸图.png', True,
+                 '南宋佚名《眼药酸》（故宫博物院藏）——现存最直接的杂剧演出图证；成画晚本站约百年，勾栏建筑画中无'),
+        '魏良辅改昆腔': ('The Peony Pavilion WDL7112.jpg', True,
+                   '1617 年坊刻《牡丹亭》木版插图（黄鸣岐刻）——改腔约一世纪后，昆腔载体的繁荣'),
+        '京剧成型': [
+            ('Тринадцать великих актёров поздней Цин.jpg', True,
+             '沈蓉圃《同光十三绝》全幅——成画晚于画中人活跃盛年，系追摹合绘'),
+            ('Actors of the Chinese Theater in Costume. Beijing, 1874 WDL1932.png', False,
+             '1874 年北京戏装演员，Boiarskii 摄——成型窗内的实拍；是否京剧班，原页未标，不坐实'),
+        ],
+    },
 }
 
 
@@ -199,24 +218,31 @@ def main():
             meta[c['文件'].replace('File:', '')] = c
 
     out, miss = {}, []
-    for ev, (fname, on_card, cap) in picks.items():
-        m = meta.get(fname)
-        if not m:
-            miss.append((ev, fname))
-            continue
-        if not m.get('可用'):
-            miss.append((ev, fname + '（许可不可用）'))
-            continue
-        out[ev] = {
-            '文件': fname, '缩略图': m.get('缩略图'), '原图': m.get('原图'),
-            '许可': m.get('许可'), '作者': m.get('作者'),
-            '署名': credit_of(m), '说明页': m.get('说明页'),
-            '说明': cap, '卡': bool(on_card),
-            # 裁不裁看长宽比：**只有接近横幅的才裁**。
-            # 长卷（>1.6）裁了会切掉画心；竖幅（<0.95）裁成横条会切掉主体
-            # ——那张石马照就是 0.75，按 cover 裁正好把马头切没。
-            '整幅': not (0.95 <= (m.get('宽') or 1) / (m.get('高') or 1) <= 1.6),
-        }
+    for ev, spec in picks.items():
+        # 一站可以一张（元组）或多张（元组列表，2026-08-26 京剧成型画／照对照首用）
+        placed = []
+        for fname, on_card, cap in (spec if isinstance(spec, list) else [spec]):
+            m = meta.get(fname)
+            if not m:
+                miss.append((ev, fname))
+                continue
+            if not m.get('可用'):
+                miss.append((ev, fname + '（许可不可用）'))
+                continue
+            placed.append({
+                '文件': fname, '缩略图': m.get('缩略图'), '原图': m.get('原图'),
+                '许可': m.get('许可'), '作者': m.get('作者'),
+                '署名': credit_of(m), '说明页': m.get('说明页'),
+                '说明': cap, '卡': bool(on_card),
+                # 裁不裁看长宽比：**只有接近横幅的才裁**。
+                # 长卷（>1.6）裁了会切掉画心；竖幅（<0.95）裁成横条会切掉主体
+                # ——那张石马照就是 0.75，按 cover 裁正好把马头切没。
+                '整幅': not (0.95 <= (m.get('宽') or 1) / (m.get('高') or 1) <= 1.6),
+            })
+        if len(placed) == 1:
+            out[ev] = placed[0]
+        elif placed:
+            out[ev] = placed
 
     # 自己拍的接在后面：没有 Commons 元数据可抓，本表即出处。
     # 一站可以是一张（dict）或多张（list，如落点三张天桥图）

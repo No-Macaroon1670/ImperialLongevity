@@ -4,7 +4,166 @@
 // 署名是硬要求不是装饰：CC-BY／CC-BY-SA 要求给出作者与许可，
 // 故每张图都带 作者／许可／说明页，渲染时必须一起显示。
 export const PICS = {
- "beitie": {},
+ "beitie": {
+  "熹平石经": {
+   "文件": "Eastern Han Stone Classics (9832326865).jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Eastern_Han_Stone_Classics_%289832326865%29.jpg/1280px-Eastern_Han_Stone_Classics_%289832326865%29.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/4/48/Eastern_Han_Stone_Classics_%289832326865%29.jpg",
+   "许可": "CC0",
+   "作者": "Gary Todd (Flickr, from Xinzheng, China)",
+   "署名": "Gary Todd (Flickr, from Xinzheng, China)",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Eastern_Han_Stone_Classics_(9832326865).jpg",
+   "说明": "洛阳出土熹平石经残石（CC0）——与勘合线国博残石为两馆两石",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/beitie/eastern-han-stone-classics-9832326865.jpg"
+  },
+  "兰亭集序": {
+   "文件": "神龍蘭亭序全.JPG",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/%E7%A5%9E%E9%BE%8D%E8%98%AD%E4%BA%AD%E5%BA%8F%E5%85%A8.JPG/1280px-%E7%A5%9E%E9%BE%8D%E8%98%AD%E4%BA%AD%E5%BA%8F%E5%85%A8.JPG",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/4/44/%E7%A5%9E%E9%BE%8D%E8%98%AD%E4%BA%AD%E5%BA%8F%E5%85%A8.JPG",
+   "许可": "Public domain",
+   "作者": "传冯承素摹（唐），故宫博物院藏；credit：故宫博物院",
+   "署名": "传冯承素摹（唐），故宫博物院藏；credit：故宫博物院",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E7%A5%9E%E9%BE%8D%E8%98%AD%E4%BA%AD%E5%BA%8F%E5%85%A8.JPG",
+   "说明": "神龙本兰亭全卷（28549px 源，候裁段）",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/beitie/神龍蘭亭序全.jpg"
+  },
+  "淳化阁帖": {
+   "文件": "淳化阁帖.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/%E6%B7%B3%E5%8C%96%E9%98%81%E5%B8%96.jpg/1280px-%E6%B7%B3%E5%8C%96%E9%98%81%E5%B8%96.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/e/e7/%E6%B7%B3%E5%8C%96%E9%98%81%E5%B8%96.jpg",
+   "许可": "CC BY-SA 3.0",
+   "作者": "古代书家原刻，维基用户上传翻拍",
+   "署名": "古代书家原刻，维基用户上传翻拍",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E6%B7%B3%E5%8C%96%E9%98%81%E5%B8%96.jpg",
+   "说明": "淳化阁帖拓面",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/beitie/淳化阁帖.jpg"
+  },
+  "广艺舟双楫": {
+   "文件": "清 康有为行书对联-昆明市晋宁区博物馆藏 2026-05-20.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/%E6%B8%85_%E5%BA%B7%E6%9C%89%E4%B8%BA%E8%A1%8C%E4%B9%A6%E5%AF%B9%E8%81%94-%E6%98%86%E6%98%8E%E5%B8%82%E6%99%8B%E5%AE%81%E5%8C%BA%E5%8D%9A%E7%89%A9%E9%A6%86%E8%97%8F_2026-05-20.jpg/1280px-%E6%B8%85_%E5%BA%B7%E6%9C%89%E4%B8%BA%E8%A1%8C%E4%B9%A6%E5%AF%B9%E8%81%94-%E6%98%86%E6%98%8E%E5%B8%82%E6%99%8B%E5%AE%81%E5%8C%BA%E5%8D%9A%E7%89%A9%E9%A6%86%E8%97%8F_2026-05-20.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/4/47/%E6%B8%85_%E5%BA%B7%E6%9C%89%E4%B8%BA%E8%A1%8C%E4%B9%A6%E5%AF%B9%E8%81%94-%E6%98%86%E6%98%8E%E5%B8%82%E6%99%8B%E5%AE%81%E5%8C%BA%E5%8D%9A%E7%89%A9%E9%A6%86%E8%97%8F_2026-05-20.jpg",
+   "许可": "CC BY-SA 4.0",
+   "作者": "康有为（书），Kcx36 摄（昆明市晋宁区博物馆藏）",
+   "署名": "康有为（书），Kcx36 摄（昆明市晋宁区博物馆藏）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E6%B8%85_%E5%BA%B7%E6%9C%89%E4%B8%BA%E8%A1%8C%E4%B9%A6%E5%AF%B9%E8%81%94-%E6%98%86%E6%98%8E%E5%B8%82%E6%99%8B%E5%AE%81%E5%8C%BA%E5%8D%9A%E7%89%A9%E9%A6%86%E8%97%8F_2026-05-20.jpg",
+   "说明": "康有为行书对联——广艺舟双楫作者手迹",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/beitie/清-康有为行书对联-昆明市晋宁区博物馆藏-2026-05-20.jpg"
+  }
+ },
+ "chibi": {
+  "隆中对": {
+   "文件": "Dai Jin-Looking Three Times at the Thatched Hut.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Dai_Jin-Looking_Three_Times_at_the_Thatched_Hut.jpg/1280px-Dai_Jin-Looking_Three_Times_at_the_Thatched_Hut.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Dai_Jin-Looking_Three_Times_at_the_Thatched_Hut.jpg",
+   "许可": "Public domain (PD-Art, PD-old-100)",
+   "作者": "戴进 Dai Jin（明代宫廷画家）",
+   "署名": "戴进 Dai Jin（明代宫廷画家）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Dai_Jin-Looking_Three_Times_at_the_Thatched_Hut.jpg",
+   "说明": "戴进《三顾茅庐图》，故宫博物院藏——不涉地望之争",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/chibi/dai-jin-looking-three-times-at-the-thatched-hut.jpg"
+  },
+  "赤壁之战": {
+   "文件": "赤壁縱火.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/%E8%B5%A4%E5%A3%81%E7%B8%B1%E7%81%AB.jpg/1280px-%E8%B5%A4%E5%A3%81%E7%B8%B1%E7%81%AB.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/8/83/%E8%B5%A4%E5%A3%81%E7%B8%B1%E7%81%AB.jpg",
+   "许可": "Public domain",
+   "作者": "马骀 Ma Tai（1885-1937）",
+   "署名": "马骀 Ma Tai（1885-1937）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:赤壁縱火.jpg",
+   "说明": "马骀画宝《周瑜赤壁纵火》（1928）——版画层，非史图",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/chibi/赤壁縱火.jpg"
+  },
+  "刮目相看": {
+   "文件": "Portrait of Lu Meng, Qing dynasty.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Portrait_of_Lu_Meng%2C_Qing_dynasty.jpg/1280px-Portrait_of_Lu_Meng%2C_Qing_dynasty.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Portrait_of_Lu_Meng%2C_Qing_dynasty.jpg",
+   "许可": "Public domain",
+   "作者": "佚名（清代，出自《绣像全图三国演义》）",
+   "署名": "佚名（清代，出自《绣像全图三国演义》）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Portrait_of_Lu_Meng,_Qing_dynasty.jpg",
+   "说明": "清代绣像《吕蒙》——演义形象层",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/chibi/portrait-of-lu-meng-qing-dynasty.jpg"
+  },
+  "三国志": {
+   "文件": "A Fragment of Biography of Bu Zhi History Books of Three Kingdoms 01 2012-12.JPG",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/A_Fragment_of_Biography_of_Bu_Zhi_History_Books_of_Three_Kingdoms_01_2012-12.JPG/1280px-A_Fragment_of_Biography_of_Bu_Zhi_History_Books_of_Three_Kingdoms_01_2012-12.JPG",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/3/3a/A_Fragment_of_Biography_of_Bu_Zhi_History_Books_of_Three_Kingdoms_01_2012-12.JPG",
+   "许可": "CC BY-SA 3.0",
+   "作者": "猫猫的日记本（自摄，敦煌研究院藏品）",
+   "署名": "猫猫的日记本（自摄，敦煌研究院藏品）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:A_Fragment_of_Biography_of_Bu_Zhi_History_Books_of_Three_Kingdoms_01_2012-12.JPG",
+   "说明": "敦煌研究院藏东晋写本《三国志·步骘传》残卷——现存最早抄本之列",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/chibi/a-fragment-of-biography-of-bu-zhi-history-books-of-three-kin.jpg"
+  },
+  "前赤壁赋": {
+   "文件": "Su Shi-Former Ode on the Red Cliff.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Su_Shi-Former_Ode_on_the_Red_Cliff.jpg/1280px-Su_Shi-Former_Ode_on_the_Red_Cliff.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Su_Shi-Former_Ode_on_the_Red_Cliff.jpg",
+   "许可": "Public domain",
+   "作者": "苏轼（原作），台北故宫早年网展数字化",
+   "署名": "苏轼（原作），台北故宫早年网展数字化",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Su_Shi-Former_Ode_on_the_Red_Cliff.jpg",
+   "说明": "苏轼《前赤壁赋》墨迹全卷（台北故宫）",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/chibi/su-shi-former-ode-on-the-red-cliff.jpg"
+  },
+  "寒食帖": {
+   "文件": "寒食帖.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/%E5%AF%92%E9%A3%9F%E5%B8%96.jpg/1280px-%E5%AF%92%E9%A3%9F%E5%B8%96.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/7/7b/%E5%AF%92%E9%A3%9F%E5%B8%96.jpg",
+   "许可": "Public domain",
+   "作者": "苏轼（原作）",
+   "署名": "苏轼（原作）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:寒食帖.jpg",
+   "说明": "《黄州寒食诗帖》全卷（38700px 源，候裁段）",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/chibi/寒食帖.jpg"
+  },
+  "赤壁图": {
+   "文件": "金武元直赤壁圖 卷.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/%E9%87%91%E6%AD%A6%E5%85%83%E7%9B%B4%E8%B5%A4%E5%A3%81%E5%9C%96_%E5%8D%B7.jpg/1280px-%E9%87%91%E6%AD%A6%E5%85%83%E7%9B%B4%E8%B5%A4%E5%A3%81%E5%9C%96_%E5%8D%B7.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/a/a6/%E9%87%91%E6%AD%A6%E5%85%83%E7%9B%B4%E8%B5%A4%E5%A3%81%E5%9C%96_%E5%8D%B7.jpg",
+   "许可": "CC0",
+   "作者": "國立故宮博物院（原作武元直）",
+   "署名": "國立故宮博物院（原作武元直）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:金武元直赤壁圖_卷.jpg",
+   "说明": "金·武元直《赤壁图》卷（台北故宫 CC0）——最早赤壁山水（网版已裁去馆方扫描附带的校色条与编号牌，库主令）",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/chibi/金武元直赤壁圖-卷.jpg"
+  },
+  "三国演义": {
+   "文件": "ZHSY100335 三國志通俗演義 明羅本撰 明嘉靖元年刻本.pdf",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/ZHSY100335_%E4%B8%89%E5%9C%8B%E5%BF%97%E9%80%9A%E4%BF%97%E6%BC%94%E7%BE%A9_%E6%98%8E%E7%BE%85%E6%9C%AC%E6%92%B0_%E6%98%8E%E5%98%89%E9%9D%96%E5%85%83%E5%B9%B4%E5%88%BB%E6%9C%AC.pdf/page1-1280px-ZHSY100335_%E4%B8%89%E5%9C%8B%E5%BF%97%E9%80%9A%E4%BF%97%E6%BC%94%E7%BE%A9_%E6%98%8E%E7%BE%85%E6%9C%AC%E6%92%B0_%E6%98%8E%E5%98%89%E9%9D%96%E5%85%83%E5%B9%B4%E5%88%BB%E6%9C%AC.pdf.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/e/e4/ZHSY100335_%E4%B8%89%E5%9C%8B%E5%BF%97%E9%80%9A%E4%BF%97%E6%BC%94%E7%BE%A9_%E6%98%8E%E7%BE%85%E6%9C%AC%E6%92%B0_%E6%98%8E%E5%98%89%E9%9D%96%E5%85%83%E5%B9%B4%E5%88%BB%E6%9C%AC.pdf",
+   "许可": "Public domain",
+   "作者": "(明)罗本（罗贯中），中华再造善本影印",
+   "署名": "(明)罗本（罗贯中），中华再造善本影印",
+   "说明页": "https://commons.wikimedia.org/wiki/File:ZHSY100335_三國志通俗演義_明羅本撰_明嘉靖元年刻本.pdf",
+   "说明": "明嘉靖元年刻本《三国志通俗演义》（国图藏中华再造善本）",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/chibi/zhsy100335-三國志通俗演義-明羅本撰-明嘉靖元年刻本-pdf.jpg"
+  }
+ },
  "kanhe": {
   "石鼓": {
    "文件": "gugong-shiguguan-quanjing.jpg",
@@ -16,6 +175,236 @@ export const PICS = {
    "整幅": true,
    "缩略图": "img/used/gugong-shiguguan-quanjing.jpg",
    "说明页": ""
+  },
+  "书同文": {
+   "文件": "Edict bronze standard weight Qin dynasty.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Edict_bronze_standard_weight_Qin_dynasty.jpg/1280px-Edict_bronze_standard_weight_Qin_dynasty.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/6/67/Edict_bronze_standard_weight_Qin_dynasty.jpg",
+   "许可": "CC0",
+   "作者": "ReijiYamashina777",
+   "署名": "ReijiYamashina777",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Edict_bronze_standard_weight_Qin_dynasty.jpg",
+   "说明": "秦诏版拓本——统一文字的政令刻在铜版上",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/kanhe/edict-bronze-standard-weight-qin-dynasty.jpg"
+  },
+  "熹平石经": {
+   "文件": "guobo-xipingshijing-canshi.jpg",
+   "署名": "No-Macaroon1670 摄",
+   "作者": "No-Macaroon1670 摄",
+   "许可": "作者本人拍摄",
+   "说明": "国博藏熹平石经残石（自摄）",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/used/guobo-xipingshijing-canshi.jpg",
+   "说明页": ""
+  },
+  "孝文帝汉化·迁都洛阳": {
+   "文件": "20240815 Site of Luoyang City from Han to Wei Dynasty - Site of the Palace City 01.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/20240815_Site_of_Luoyang_City_from_Han_to_Wei_Dynasty_-_Site_of_the_Palace_City_01.jpg/1280px-20240815_Site_of_Luoyang_City_from_Han_to_Wei_Dynasty_-_Site_of_the_Palace_City_01.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/8/87/20240815_Site_of_Luoyang_City_from_Han_to_Wei_Dynasty_-_Site_of_the_Palace_City_01.jpg",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Windmemories",
+   "署名": "Windmemories",
+   "说明页": "https://commons.wikimedia.org/wiki/File:20240815_Site_of_Luoyang_City_from_Han_to_Wei_Dynasty_-_Site_of_the_Palace_City_01.jpg",
+   "说明": "汉魏洛阳故城遗址航拍——迁都的落点今貌",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/kanhe/20240815-site-of-luoyang-city-from-han-to-wei-dynasty-site-o.jpg"
+  },
+  "天龙山石窟": [
+   {
+    "文件": "jinci-yuantiao-tianlongshan.jpg",
+    "署名": "No-Macaroon1670 摄，2023 年 12 月",
+    "作者": "No-Macaroon1670 摄，2023 年 12 月",
+    "许可": "作者本人拍摄",
+    "说明": "自晋祠远眺天龙山——在地的山",
+    "卡": true,
+    "整幅": true,
+    "缩略图": "img/used/jinci-yuantiao-tianlongshan.jpg",
+    "说明页": ""
+   },
+   {
+    "文件": "Tianlongshan Grotto - Manshan Pavillion, Taiyuan, Shanxi.JPG",
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Tianlongshan_Grotto_-_Manshan_Pavillion%2C_Taiyuan%2C_Shanxi.JPG/1280px-Tianlongshan_Grotto_-_Manshan_Pavillion%2C_Taiyuan%2C_Shanxi.JPG",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Tianlongshan_Grotto_-_Manshan_Pavillion%2C_Taiyuan%2C_Shanxi.JPG",
+    "许可": "CC BY-SA 4.0",
+    "作者": "Underbar dk",
+    "署名": "Underbar dk",
+    "说明页": "https://commons.wikimedia.org/wiki/File:Tianlongshan_Grotto_-_Manshan_Pavillion,_Taiyuan,_Shanxi.JPG",
+    "说明": "天龙山漫山阁——山上的窟",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/kanhe/tianlongshan-grotto-manshan-pavillion-taiyuan-shanxi.jpg"
+   },
+   {
+    "文件": "nezu-tianlongshan-c10-bodhisattva-head.jpg",
+    "署名": "No-Macaroon1670 摄，菩薩立像頭部｜**天龍山石窟第10窟**｜石造（砂岩）｜中国・北齊時代 6世紀｜编号 20086",
+    "作者": "No-Macaroon1670 摄，菩薩立像頭部｜**天龍山石窟第10窟**｜石造（砂岩）｜中国・北齊時代 6世紀｜编号 20086",
+    "许可": "作者本人拍摄",
+    "说明": "东京根津美术馆藏天龙山第10窟菩萨头像（自摄）——离散的头",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/used/nezu-tianlongshan-c10-bodhisattva-head.jpg",
+    "说明页": ""
+   }
+  ],
+  "独孤信之死": [
+   {
+    "文件": "guobo-nzhou-duguxin-epitaph.jpg",
+    "署名": "No-Macaroon1670 摄，独孤信之死 ——**本册无独立文件行**",
+    "作者": "No-Macaroon1670 摄，独孤信之死 ——**本册无独立文件行**",
+    "许可": "作者本人拍摄",
+    "说明": "国博藏独孤信墓志（自摄）",
+    "卡": true,
+    "整幅": true,
+    "缩略图": "img/used/guobo-nzhou-duguxin-epitaph.jpg",
+    "说明页": ""
+   },
+   {
+    "文件": "Du Guxin epitaph.jpg",
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Du_Guxin_epitaph.jpg/1280px-Du_Guxin_epitaph.jpg",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Du_Guxin_epitaph.jpg",
+    "许可": "Public domain",
+    "作者": "未署名（来源sohu.com转载，摄影者不详）",
+    "署名": "未署名（来源sohu.com转载，摄影者不详）",
+    "说明页": "https://commons.wikimedia.org/wiki/File:Du_Guxin_epitaph.jpg",
+    "说明": "独孤信墓志拓本——方格志文逐字可读",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/kanhe/du-guxin-epitaph.jpg"
+   },
+   {
+    "文件": "Western Wei 26-face Seal of Dugu Xin (9947998814).jpg",
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Western_Wei_26-face_Seal_of_Dugu_Xin_%289947998814%29.jpg/1280px-Western_Wei_26-face_Seal_of_Dugu_Xin_%289947998814%29.jpg",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/2/26/Western_Wei_26-face_Seal_of_Dugu_Xin_%289947998814%29.jpg",
+    "许可": "CC0",
+    "作者": "Gary Todd",
+    "署名": "Gary Todd",
+    "说明页": "https://commons.wikimedia.org/wiki/File:Western_Wei_26-face_Seal_of_Dugu_Xin_(9947998814).jpg",
+    "说明": "独孤信廿六面煤精组印——一人多衔的实物",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/kanhe/western-wei-26-face-seal-of-dugu-xin-9947998814.jpg"
+   }
+  ],
+  "开成石经": {
+   "文件": "Yijing stele Beilin.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Yijing_stele_Beilin.jpg/1280px-Yijing_stele_Beilin.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/6/61/Yijing_stele_Beilin.jpg",
+   "许可": "CC BY-SA 3.0",
+   "作者": "Felix Andrews (Floybix)",
+   "署名": "Felix Andrews (Floybix)",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Yijing_stele_Beilin.jpg",
+   "说明": "西安碑林开成石经拓面近摄",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/kanhe/yijing-stele-beilin.jpg"
+  },
+  "秘色瓷": [
+   {
+    "文件": "famensi-mise-kuikou-pan.jpg",
+    "署名": "No-Macaroon1670 摄，秘色瓷 ——**本册无独立文件行**",
+    "作者": "No-Macaroon1670 摄，秘色瓷 ——**本册无独立文件行**",
+    "许可": "作者本人拍摄",
+    "说明": "国博展出法门寺秘色葵口盘（自摄，带说明牌）",
+    "卡": true,
+    "整幅": true,
+    "缩略图": "img/used/famensi-mise-kuikou-pan.jpg",
+    "说明页": ""
+   },
+   {
+    "文件": "Mise ware excavated at Famen Temple, 2019-11-16 01.jpg",
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Mise_ware_excavated_at_Famen_Temple%2C_2019-11-16_01.jpg/1280px-Mise_ware_excavated_at_Famen_Temple%2C_2019-11-16_01.jpg",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/1/11/Mise_ware_excavated_at_Famen_Temple%2C_2019-11-16_01.jpg",
+    "许可": "CC BY-SA 4.0",
+    "作者": "Siyuwj",
+    "署名": "Siyuwj",
+    "说明页": "https://commons.wikimedia.org/wiki/File:Mise_ware_excavated_at_Famen_Temple,_2019-11-16_01.jpg",
+    "说明": "法门寺出土秘色瓷盘——棚拍级单件",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/kanhe/mise-ware-excavated-at-famen-temple-2019-11-16-01.jpg"
+   }
+  ],
+  "钱镠铁券": {
+   "文件": "Iron Plaque for Quan Liu, 2016-09-15 02.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Iron_Plaque_for_Quan_Liu%2C_2016-09-15_02.jpg/1280px-Iron_Plaque_for_Quan_Liu%2C_2016-09-15_02.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Iron_Plaque_for_Quan_Liu%2C_2016-09-15_02.jpg",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Siyuwj",
+   "署名": "Siyuwj",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Iron_Plaque_for_Quan_Liu,_2016-09-15_02.jpg",
+   "说明": "钱镠铁券近摄——嵌金字铁瓦",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/kanhe/iron-plaque-for-quan-liu-2016-09-15-02.jpg"
+  },
+  "湖州镜": [
+   {
+    "文件": "guobo-nansong-huzhou-shijia-tongjing-sanmian.jpg",
+    "署名": "No-Macaroon1670 摄",
+    "作者": "No-Macaroon1670 摄",
+    "许可": "作者本人拍摄",
+    "说明": "国博藏南宋湖州石家镜三面（自摄）",
+    "卡": true,
+    "整幅": true,
+    "缩略图": "img/used/guobo-nansong-huzhou-shijia-tongjing-sanmian.jpg",
+    "说明页": ""
+   },
+   {
+    "文件": "大理州博物馆-大理国-大理市弘圣寺塔-菊瓣纹圆铜镜 “湖州石念 二叔照子”铭文铜镜.jpg",
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/%E5%A4%A7%E7%90%86%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86-%E5%A4%A7%E7%90%86%E5%9B%BD-%E5%A4%A7%E7%90%86%E5%B8%82%E5%BC%98%E5%9C%A3%E5%AF%BA%E5%A1%94-%E8%8F%8A%E7%93%A3%E7%BA%B9%E5%9C%86%E9%93%9C%E9%95%9C_%E2%80%9C%E6%B9%96%E5%B7%9E%E7%9F%B3%E5%BF%B5_%E4%BA%8C%E5%8F%94%E7%85%A7%E5%AD%90%E2%80%9D%E9%93%AD%E6%96%87%E9%93%9C%E9%95%9C.jpg/1280px-%E5%A4%A7%E7%90%86%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86-%E5%A4%A7%E7%90%86%E5%9B%BD-%E5%A4%A7%E7%90%86%E5%B8%82%E5%BC%98%E5%9C%A3%E5%AF%BA%E5%A1%94-%E8%8F%8A%E7%93%A3%E7%BA%B9%E5%9C%86%E9%93%9C%E9%95%9C_%E2%80%9C%E6%B9%96%E5%B7%9E%E7%9F%B3%E5%BF%B5_%E4%BA%8C%E5%8F%94%E7%85%A7%E5%AD%90%E2%80%9D%E9%93%AD%E6%96%87%E9%93%9C%E9%95%9C.jpg",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/2/2a/%E5%A4%A7%E7%90%86%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86-%E5%A4%A7%E7%90%86%E5%9B%BD-%E5%A4%A7%E7%90%86%E5%B8%82%E5%BC%98%E5%9C%A3%E5%AF%BA%E5%A1%94-%E8%8F%8A%E7%93%A3%E7%BA%B9%E5%9C%86%E9%93%9C%E9%95%9C_%E2%80%9C%E6%B9%96%E5%B7%9E%E7%9F%B3%E5%BF%B5_%E4%BA%8C%E5%8F%94%E7%85%A7%E5%AD%90%E2%80%9D%E9%93%AD%E6%96%87%E9%93%9C%E9%95%9C.jpg",
+    "许可": "CC BY-SA 4.0",
+    "作者": "瑞丽江的河水",
+    "署名": "瑞丽江的河水",
+    "说明页": "https://commons.wikimedia.org/wiki/File:%E5%A4%A7%E7%90%86%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86-%E5%A4%A7%E7%90%86%E5%9B%BD-%E5%A4%A7%E7%90%86%E5%B8%82%E5%BC%98%E5%9C%A3%E5%AF%BA%E5%A1%94-%E8%8F%8A%E7%93%A3%E7%BA%B9%E5%9C%86%E9%93%9C%E9%95%9C_%E2%80%9C%E6%B9%96%E5%B7%9E%E7%9F%B3%E5%BF%B5_%E4%BA%8C%E5%8F%94%E7%85%A7%E5%AD%90%E2%80%9D%E9%93%AD%E6%96%87%E9%93%9C%E9%95%9C.jpg",
+    "说明": "大理弘圣寺塔出土两镜带官牌——湖州镜远销的实证",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/kanhe/大理州博物馆-大理国-大理市弘圣寺塔-菊瓣纹圆铜镜-湖州石念-二叔照子-铭文铜镜.jpg"
+   }
+  ],
+  "郑和下西洋": [
+   {
+    "文件": "guobo-mingdai-zhenghe-tongzhong-xuande.jpg",
+    "署名": "No-Macaroon1670 摄",
+    "作者": "No-Macaroon1670 摄",
+    "许可": "作者本人拍摄",
+    "说明": "国博藏宣德郑和铜钟（自摄）",
+    "卡": true,
+    "整幅": true,
+    "缩略图": "img/used/guobo-mingdai-zhenghe-tongzhong-xuande.jpg",
+    "说明页": ""
+   },
+   {
+    "文件": "天妃灵应之记碑 01.jpg",
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/%E5%A4%A9%E5%A6%83%E7%81%B5%E5%BA%94%E4%B9%8B%E8%AE%B0%E7%A2%91_01.jpg/1280px-%E5%A4%A9%E5%A6%83%E7%81%B5%E5%BA%94%E4%B9%8B%E8%AE%B0%E7%A2%91_01.jpg",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/8/82/%E5%A4%A9%E5%A6%83%E7%81%B5%E5%BA%94%E4%B9%8B%E8%AE%B0%E7%A2%91_01.jpg",
+    "许可": "CC BY-SA 4.0",
+    "作者": "FradonStar",
+    "署名": "FradonStar",
+    "说明页": "https://commons.wikimedia.org/wiki/File:%E5%A4%A9%E5%A6%83%E7%81%B5%E5%BA%94%E4%B9%8B%E8%AE%B0%E7%A2%91_01.jpg",
+    "说明": "天妃灵应之记碑展厅——碑刻本尊",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/kanhe/天妃灵应之记碑-01.jpg"
+   }
+  ],
+  "皇史宬": {
+   "文件": "20251026 Chest from the Imperial Archives.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/20251026_Chest_from_the_Imperial_Archives.jpg/1280px-20251026_Chest_from_the_Imperial_Archives.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/d/de/20251026_Chest_from_the_Imperial_Archives.jpg",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Windmemories",
+   "署名": "Windmemories",
+   "说明页": "https://commons.wikimedia.org/wiki/File:20251026_Chest_from_the_Imperial_Archives.jpg",
+   "说明": "皇史宬鎏金铜皮樟木金匮——五米厚墙里装的就是它",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/kanhe/20251026-chest-from-the-imperial-archives.jpg"
   }
  },
  "shiku": {
@@ -161,6 +550,112 @@ export const PICS = {
    "说明页": ""
   }
  },
+ "shugui": {
+  "一万三千二百一十九卷": {
+   "文件": "至聖先賢半身像 冊-096-劉向.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/%E8%87%B3%E8%81%96%E5%85%88%E8%B3%A2%E5%8D%8A%E8%BA%AB%E5%83%8F_%E5%86%8A-096-%E5%8A%89%E5%90%91.jpg/1280px-%E8%87%B3%E8%81%96%E5%85%88%E8%B3%A2%E5%8D%8A%E8%BA%AB%E5%83%8F_%E5%86%8A-096-%E5%8A%89%E5%90%91.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/e/ea/%E8%87%B3%E8%81%96%E5%85%88%E8%B3%A2%E5%8D%8A%E8%BA%AB%E5%83%8F_%E5%86%8A-096-%E5%8A%89%E5%90%91.jpg",
+   "许可": "Public domain",
+   "作者": "佚名（元代画家），台北故宫博物院南薰殿旧藏，数字化经 Shuge 转录",
+   "署名": "佚名（元代画家），台北故宫博物院南薰殿旧藏，数字化经 Shuge 转录",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E8%87%B3%E8%81%96%E5%85%88%E8%B3%A2%E5%8D%8A%E8%BA%AB%E5%83%8F_%E5%86%8A-096-%E5%8A%89%E5%90%91.jpg",
+   "说明": "《至圣先贤半身像》刘向——校书者",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/shugui/至聖先賢半身像-冊-096-劉向.jpg"
+  },
+  "江陵的火": {
+   "文件": "荆州古城墙.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/%E8%8D%86%E5%B7%9E%E5%8F%A4%E5%9F%8E%E5%A2%99.jpg/1280px-%E8%8D%86%E5%B7%9E%E5%8F%A4%E5%9F%8E%E5%A2%99.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/8/83/%E8%8D%86%E5%B7%9E%E5%8F%A4%E5%9F%8E%E5%A2%99.jpg",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Kong5579（摄）",
+   "署名": "Kong5579（摄）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E8%8D%86%E5%B7%9E%E5%8F%A4%E5%9F%8E%E5%A2%99.jpg",
+   "说明": "荆州古城墙今貌——图注须认账：今貌非梁元帝时物",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/shugui/荆州古城墙.jpg"
+  },
+  "把书拆成零件": {
+   "文件": "IOC.UTokyo-006017 藝文類聚一百卷嘉靖中天水胡纘宗刊本 卷首.pdf",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/IOC.UTokyo-006017_%E8%97%9D%E6%96%87%E9%A1%9E%E8%81%9A%E4%B8%80%E7%99%BE%E5%8D%B7%E5%98%89%E9%9D%96%E4%B8%AD%E5%A4%A9%E6%B0%B4%E8%83%A1%E7%BA%98%E5%AE%97%E5%88%8A%E6%9C%AC_%E5%8D%B7%E9%A6%96.pdf/page1-1280px-IOC.UTokyo-006017_%E8%97%9D%E6%96%87%E9%A1%9E%E8%81%9A%E4%B8%80%E7%99%BE%E5%8D%B7%E5%98%89%E9%9D%96%E4%B8%AD%E5%A4%A9%E6%B0%B4%E8%83%A1%E7%BA%98%E5%AE%97%E5%88%8A%E6%9C%AC_%E5%8D%B7%E9%A6%96.pdf.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/0/0e/IOC.UTokyo-006017_%E8%97%9D%E6%96%87%E9%A1%9E%E8%81%9A%E4%B8%80%E7%99%BE%E5%8D%B7%E5%98%89%E9%9D%96%E4%B8%AD%E5%A4%A9%E6%B0%B4%E8%83%A1%E7%BA%98%E5%AE%97%E5%88%8A%E6%9C%AC_%E5%8D%B7%E9%A6%96.pdf",
+   "许可": "Public domain",
+   "作者": "欧阳询（原编），明嘉靖间胡缵宗刊本；东京大学东洋文化研究所藏并数字化",
+   "署名": "欧阳询（原编），明嘉靖间胡缵宗刊本；东京大学东洋文化研究所藏并数字化",
+   "说明页": "https://commons.wikimedia.org/wiki/File:IOC.UTokyo-006017_%E8%97%9D%E6%96%87%E9%A1%9E%E8%81%9A%E4%B8%80%E7%99%BE%E5%8D%B7%E5%98%89%E9%9D%96%E4%B8%AD%E5%A4%A9%E6%B0%B4%E8%83%A1%E7%BA%98%E5%AE%97%E5%88%8A%E6%9C%AC_%E5%8D%B7%E9%A6%96.pdf",
+   "说明": "《艺文类聚》明嘉靖刻本卷首",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/shugui/ioc-utokyo-006017-藝文類聚一百卷嘉靖中天水胡纘宗刊本-卷首-pdf.jpg"
+  },
+  "真宗划掉的那一页": {
+   "文件": "SSID-10224663 宋本冊府元龜 一、二、三、四.pdf",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/SSID-10224663_%E5%AE%8B%E6%9C%AC%E5%86%8A%E5%BA%9C%E5%85%83%E9%BE%9C_%E4%B8%80%E3%80%81%E4%BA%8C%E3%80%81%E4%B8%89%E3%80%81%E5%9B%9B.pdf/page1-1280px-SSID-10224663_%E5%AE%8B%E6%9C%AC%E5%86%8A%E5%BA%9C%E5%85%83%E9%BE%9C_%E4%B8%80%E3%80%81%E4%BA%8C%E3%80%81%E4%B8%89%E3%80%81%E5%9B%9B.pdf.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/3/37/SSID-10224663_%E5%AE%8B%E6%9C%AC%E5%86%8A%E5%BA%9C%E5%85%83%E9%BE%9C_%E4%B8%80%E3%80%81%E4%BA%8C%E3%80%81%E4%B8%89%E3%80%81%E5%9B%9B.pdf",
+   "许可": "Public domain",
+   "作者": "王钦若等编；宋刻本",
+   "署名": "王钦若等编；宋刻本",
+   "说明页": "https://commons.wikimedia.org/wiki/File:SSID-10224663_%E5%AE%8B%E6%9C%AC%E5%86%8A%E5%BA%9C%E5%85%83%E9%BE%9C_%E4%B8%80%E3%80%81%E4%BA%8C%E3%80%81%E4%B8%89%E3%80%81%E5%9B%9B.pdf",
+   "说明": "宋本《册府元龟》书影",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/shugui/ssid-10224663-宋本冊府元龜-一-二-三-四-pdf.jpg"
+  },
+  "只抄了两份的书": {
+   "文件": "Page from the 'Great encyclopaedia of the Yongle Reign' (Yongle dadian) (CBL C 1751, f.34v).jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Page_from_the_%27Great_encyclopaedia_of_the_Yongle_Reign%27_%28Yongle_dadian%29_%28CBL_C_1751%2C_f.34v%29.jpg/1280px-Page_from_the_%27Great_encyclopaedia_of_the_Yongle_Reign%27_%28Yongle_dadian%29_%28CBL_C_1751%2C_f.34v%29.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Page_from_the_%27Great_encyclopaedia_of_the_Yongle_Reign%27_%28Yongle_dadian%29_%28CBL_C_1751%2C_f.34v%29.jpg",
+   "许可": "Public domain",
+   "作者": "佚名（明内府写手），都柏林 Chester Beatty Library 藏",
+   "署名": "佚名（明内府写手），都柏林 Chester Beatty Library 藏",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Page_from_the_%27Great_encyclopaedia_of_the_Yongle_Reign%27_(Yongle_dadian)_(CBL_C_1751,_f.34v).jpg",
+   "说明": "《永乐大典》存页",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/shugui/page-from-the-great-encyclopaedia-of-the-yongle-reign-yongle.jpg"
+  },
+  "五米厚的墙": {
+   "文件": "20251026 Chest from the Imperial Archives.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/20251026_Chest_from_the_Imperial_Archives.jpg/1280px-20251026_Chest_from_the_Imperial_Archives.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/d/de/20251026_Chest_from_the_Imperial_Archives.jpg",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Windmemories（摄）",
+   "署名": "Windmemories（摄）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:20251026_Chest_from_the_Imperial_Archives.jpg",
+   "说明": "皇史宬金匮（Commons）",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/shugui/20251026-chest-from-the-imperial-archives.jpg"
+  },
+  "被涂掉的名字": {
+   "文件": "蔣廷錫.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/%E8%94%A3%E5%BB%B7%E9%8C%AB.jpg/1280px-%E8%94%A3%E5%BB%B7%E9%8C%AB.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/8/8a/%E8%94%A3%E5%BB%B7%E9%8C%AB.jpg",
+   "许可": "Public domain",
+   "作者": "清叶衍兰辑摹，黄小泉绘",
+   "署名": "清叶衍兰辑摹，黄小泉绘",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E8%94%A3%E5%BB%B7%E9%8C%AB.jpg",
+   "说明": "蒋廷锡像——383px 源，候更高清替换",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/shugui/蔣廷錫.jpg"
+  },
+  "一边收，一边烧": {
+   "文件": "文渊阁.JPG",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/%E6%96%87%E6%B8%8A%E9%98%81.JPG/1280px-%E6%96%87%E6%B8%8A%E9%98%81.JPG",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/5/55/%E6%96%87%E6%B8%8A%E9%98%81.JPG",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Walter Grassroot（摄）",
+   "署名": "Walter Grassroot（摄）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E6%96%87%E6%B8%8A%E9%98%81.JPG",
+   "说明": "文渊阁匾额",
+   "卡": true,
+   "整幅": true,
+   "缩略图": "img/story/shugui/文渊阁.jpg"
+  }
+ },
  "xianghuo": {
   "唐英款花觚": [
    {
@@ -218,8 +713,8 @@ export const PICS = {
    "文件": "古妈祖庙 - panoramio.jpg",
    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/%E5%8F%A4%E5%A6%88%E7%A5%96%E5%BA%99_-_panoramio.jpg/1280px-%E5%8F%A4%E5%A6%88%E7%A5%96%E5%BA%99_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "许可": "CC BY 3.0",
-   "作者": "<a rel=\"nofollow\" class=\"external text\" href=\"https://web.ar",
-   "署名": "<a rel=\"nofollow\" class=\"external text\" href=\"https://web.ar",
+   "作者": "江上清风1961（Panoramio 原上传）",
+   "署名": "江上清风1961（Panoramio 原上传）",
    "说明页": "https://commons.wikimedia.org/wiki/File:%E5%8F%A4%E5%A6%88%E7%A5%96%E5%BA%99_-_panoramio.jpg",
    "说明": "湄洲屿妈祖祖庙——从林默到天后，累封的起点在这座岛",
    "卡": true,
@@ -319,6 +814,80 @@ export const PICS = {
   }
  },
  "yanyi": {
+  "武帝立乐府": {
+   "文件": "Nanjing Museum - Pottery figurines dancing and sitting.jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Nanjing_Museum_-_Pottery_figurines_dancing_and_sitting.jpg/960px-Nanjing_Museum_-_Pottery_figurines_dancing_and_sitting.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/4/44/Nanjing_Museum_-_Pottery_figurines_dancing_and_sitting.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Ecelan",
+   "署名": "Ecelan",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Nanjing_Museum_-_Pottery_figurines_dancing_and_sitting.jpg",
+   "说明": "西汉乐舞陶俑（南京博物院）——乐府是官署、本无可拍之物，这组俑是它治下乐舞的实物",
+   "卡": true,
+   "整幅": true
+  },
+  "玄宗教梨园弟子": {
+   "文件": "Tang Sancai Porcelain with Musicians on a Camel.jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tang_Sancai_Porcelain_with_Musicians_on_a_Camel.jpg/960px-Tang_Sancai_Porcelain_with_Musicians_on_a_Camel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tang_Sancai_Porcelain_with_Musicians_on_a_Camel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC0",
+   "作者": "Gary Todd",
+   "署名": "Gary Todd",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Tang_Sancai_Porcelain_with_Musicians_on_a_Camel.jpg",
+   "说明": "三彩载乐骆驼俑（中国国家博物馆，西安鲜于庭诲墓出土，723 年）——非梨园教习实景，是开元宫廷乐俗的代表物",
+   "卡": true,
+   "整幅": true
+  },
+  "瓦舍勾栏": {
+   "文件": "宋人 眼药酸图.png",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/3/3b/%E5%AE%8B%E4%BA%BA_%E7%9C%BC%E8%8D%AF%E9%85%B8%E5%9B%BE.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/3/3b/%E5%AE%8B%E4%BA%BA_%E7%9C%BC%E8%8D%AF%E9%85%B8%E5%9B%BE.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "佚名（南宋画家），故宫博物院藏",
+   "署名": "佚名（南宋画家），故宫博物院藏",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E5%AE%8B%E4%BA%BA_%E7%9C%BC%E8%8D%AF%E9%85%B8%E5%9B%BE.png",
+   "说明": "南宋佚名《眼药酸》（故宫博物院藏）——现存最直接的杂剧演出图证；成画晚本站约百年，勾栏建筑画中无",
+   "卡": true,
+   "整幅": false
+  },
+  "魏良辅改昆腔": {
+   "文件": "The Peony Pavilion WDL7112.jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/The_Peony_Pavilion_WDL7112.jpg/960px-The_Peony_Pavilion_WDL7112.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/8/81/The_Peony_Pavilion_WDL7112.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "Tang, Xianzu, 1550-1616",
+   "署名": "Tang, Xianzu, 1550-1616",
+   "说明页": "https://commons.wikimedia.org/wiki/File:The_Peony_Pavilion_WDL7112.jpg",
+   "说明": "1617 年坊刻《牡丹亭》木版插图（黄鸣岐刻）——改腔约一世纪后，昆腔载体的繁荣",
+   "卡": true,
+   "整幅": true
+  },
+  "京剧成型": [
+   {
+    "文件": "Тринадцать великих актёров поздней Цин.jpg",
+    "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/%D0%A2%D1%80%D0%B8%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D1%8C_%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85_%D0%B0%D0%BA%D1%82%D1%91%D1%80%D0%BE%D0%B2_%D0%BF%D0%BE%D0%B7%D0%B4%D0%BD%D0%B5%D0%B9_%D0%A6%D0%B8%D0%BD.jpg/960px-%D0%A2%D1%80%D0%B8%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D1%8C_%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85_%D0%B0%D0%BA%D1%82%D1%91%D1%80%D0%BE%D0%B2_%D0%BF%D0%BE%D0%B7%D0%B4%D0%BD%D0%B5%D0%B9_%D0%A6%D0%B8%D0%BD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/c/c3/%D0%A2%D1%80%D0%B8%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D1%8C_%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85_%D0%B0%D0%BA%D1%82%D1%91%D1%80%D0%BE%D0%B2_%D0%BF%D0%BE%D0%B7%D0%B4%D0%BD%D0%B5%D0%B9_%D0%A6%D0%B8%D0%BD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "许可": "Public domain",
+    "作者": "沈蓉圃（清，一作沈容圃）",
+    "署名": "沈蓉圃（清，一作沈容圃）",
+    "说明页": "https://commons.wikimedia.org/wiki/File:%D0%A2%D1%80%D0%B8%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D1%8C_%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D1%85_%D0%B0%D0%BA%D1%82%D1%91%D1%80%D0%BE%D0%B2_%D0%BF%D0%BE%D0%B7%D0%B4%D0%BD%D0%B5%D0%B9_%D0%A6%D0%B8%D0%BD.jpg",
+    "说明": "沈蓉圃《同光十三绝》全幅——成画晚于画中人活跃盛年，系追摹合绘",
+    "卡": true,
+    "整幅": true
+   },
+   {
+    "文件": "Actors of the Chinese Theater in Costume. Beijing, 1874 WDL1932.png",
+    "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Actors_of_the_Chinese_Theater_in_Costume._Beijing%2C_1874_WDL1932.png/960px-Actors_of_the_Chinese_Theater_in_Costume._Beijing%2C_1874_WDL1932.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/1/17/Actors_of_the_Chinese_Theater_in_Costume._Beijing%2C_1874_WDL1932.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "许可": "Public domain",
+    "作者": "Adolf Nikolay Boyarsky",
+    "署名": "Adolf Nikolay Boyarsky",
+    "说明页": "https://commons.wikimedia.org/wiki/File:Actors_of_the_Chinese_Theater_in_Costume._Beijing,_1874_WDL1932.png",
+    "说明": "1874 年北京戏装演员，Boiarskii 摄——成型窗内的实拍；是否京剧班，原页未标，不坐实",
+    "卡": false,
+    "整幅": false
+   }
+  ],
   "舞蹈纹彩陶盆": {
    "文件": "guobo-wudaowen-caitaopen.jpg",
    "路径": "img/used/guobo-wudaowen-caitaopen.jpg",

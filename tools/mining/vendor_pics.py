@@ -118,7 +118,9 @@ def main():
             print('  %-12s 已是本地，跳过' % ev)
             continue
 
-        ext = '.jpg' if not url.lower().endswith('.png') else '.png'
+        # 判扩展名前先剥查询串——远端 URL 常带 ?utm_… 记号，
+        # 直接 endswith 会把 PNG 存成 .jpg（2026-08-26 眼药酸实踩）
+        ext = '.png' if url.split('?')[0].lower().endswith('.png') else '.jpg'
         fn = slug(v['文件']) + ext
         dest = os.path.join(outdir, fn)
 
