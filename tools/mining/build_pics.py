@@ -56,7 +56,7 @@ PICKS = {
                        True, '咸通九年《金刚经》卷首扉画及经文，大英图书馆藏 Or.8210/P.2'),
         # 文里讲的是《父母恩重经变相》那一龛，手上只有宝顶山泛拍；
         # 图注写明是「宝顶山摩崖」而非那一龛，读者不会被误导
-        '大足石刻': ('Baodingshan Cliff Carvings (50620551337).jpg', True, '大足宝顶山摩崖造像'),
+        '宝顶山摩崖造像': ('Baodingshan Cliff Carvings (50620551337).jpg', True, '大足宝顶山摩崖造像'),
         # **进卡**：斯坦因自己拍的，洞口堆着待检的写本——文里那一刻的现场
         '藏经洞发现': ('Photo showing Cave 16 and the manuscripts piled up for Stein '
                        'to examine near the entrance to Cave 17, the “library cave.jpg',

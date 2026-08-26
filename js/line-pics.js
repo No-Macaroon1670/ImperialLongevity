@@ -291,7 +291,7 @@ export const LINE_PICS = {
  },
  "shiku": {
   "白马寺": {
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/2011-06_White_Horse_Temple_03.jpg/960px-2011-06_White_Horse_Temple_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/2011-06-white-horse-temple-03.jpg?v=64d29317",
    "说明": "洛阳白马寺山门",
    "作者": "Gary Todd",
    "署名": "Gary Todd",
@@ -299,7 +299,7 @@ export const LINE_PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:2011-06_White_Horse_Temple_03.jpg"
   },
   "克孜尔石窟": {
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Fragments_of_Buddhist_Wall_Painting%2C_Kyzil%2C_Sinkiang%2C_China%2C_Central_Asian_art%2C_6th_century_-_Nelson-Atkins_Museum_of_Art_-_DSC09161.JPG/960px-Fragments_of_Buddhist_Wall_Painting%2C_Kyzil%2C_Sinkiang%2C_China%2C_Central_Asian_art%2C_6th_century_-_Nelson-Atkins_Museum_of_Art_-_DSC09161.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/fragments-of-buddhist-wall-painting-kyzil-sinkiang-china-cen.jpg?v=9c7448f4",
    "说明": "克孜尔壁画残片，今藏堪萨斯城纳尔逊-阿特金斯艺术博物馆",
    "作者": "Daderot",
    "署名": "Daderot",
@@ -307,7 +307,7 @@ export const LINE_PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Fragments_of_Buddhist_Wall_Painting,_Kyzil,_Sinkiang,_China,_Central_Asian_art,_6th_century_-_Nelson-Atkins_Museum_of_Art_-_DSC09161.JPG"
   },
   "敦煌石窟": {
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/%E8%8E%AB%E9%AB%98%E7%AA%9F%E4%B9%9D%E5%B1%82%E6%A5%BC_-_panoramio.jpg/960px-%E8%8E%AB%E9%AB%98%E7%AA%9F%E4%B9%9D%E5%B1%82%E6%A5%BC_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/莫高窟九层楼-panoramio.jpg?v=090484b8",
    "说明": "莫高窟崖面与九层楼",
    "作者": "guan",
    "署名": "guan",
@@ -316,7 +316,7 @@ export const LINE_PICS = {
    "整幅": true
   },
   "麦积山石窟": {
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Majishan_huge_sculptures_20090226.jpg/960px-Majishan_huge_sculptures_20090226.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/majishan-huge-sculptures-20090226.jpg?v=affedc80",
    "说明": "麦积山崖面大型造像",
    "作者": "MarsmanRom",
    "署名": "MarsmanRom",
@@ -325,7 +325,7 @@ export const LINE_PICS = {
    "整幅": true
   },
   "云冈石窟": {
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Cave_20%2C_Yungang_Grottoes.jpg/960px-Cave_20%2C_Yungang_Grottoes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/cave-20-yungang-grottoes.jpg?v=0483da59",
    "说明": "云冈第二十窟大佛，前壁久塌，故露天而坐",
    "作者": "Dudva",
    "署名": "Dudva",
@@ -349,7 +349,7 @@ export const LINE_PICS = {
    "整幅": true
   },
   "乐山大佛": {
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Giant_Buddha_of_Leshan.jpg/960px-Giant_Buddha_of_Leshan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/giant-buddha-of-leshan.jpg?v=d1537036",
    "说明": "乐山大佛",
    "作者": "Giorgioglobe",
    "署名": "Giorgioglobe",
@@ -357,15 +357,15 @@ export const LINE_PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Giant_Buddha_of_Leshan.jpg"
   },
   "金刚经印本": {
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Diamond_Sutra_of_868_AD_-_The_Diamond_Sutra_%28868%29%2C_frontispiece_and_text_-_BL_Or._8210-P.2.jpg/960px-Diamond_Sutra_of_868_AD_-_The_Diamond_Sutra_%28868%29%2C_frontispiece_and_text_-_BL_Or._8210-P.2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/diamond-sutra-of-868-ad-the-diamond-sutra-868-frontispiece-a.jpg?v=55c645cf",
    "说明": "咸通九年《金刚经》卷首扉画及经文，大英图书馆藏 Or.8210/P.2",
    "署名": "the British Library",
    "许可": "CC0",
    "说明页": "https://commons.wikimedia.org/wiki/File:Diamond_Sutra_of_868_AD_-_The_Diamond_Sutra_(868),_frontispiece_and_text_-_BL_Or._8210-P.2.jpg",
    "整幅": true
   },
-  "大足石刻": {
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Baodingshan_Cliff_Carvings_%2850620551337%29.jpg/960px-Baodingshan_Cliff_Carvings_%2850620551337%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "宝顶山摩崖造像": {
+   "缩略图": "img/story/shiku/baodingshan-cliff-carvings-50620551337.jpg?v=0b2c159d",
    "说明": "大足宝顶山摩崖造像",
    "作者": "Hugh Llewelyn from Keynsham, UK",
    "署名": "Hugh Llewelyn from Keynsham, UK",
@@ -373,7 +373,7 @@ export const LINE_PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Baodingshan_Cliff_Carvings_(50620551337).jpg"
   },
   "藏经洞发现": {
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Photo_showing_Cave_16_and_the_manuscripts_piled_up_for_Stein_to_examine_near_the_entrance_to_Cave_17%2C_the_%E2%80%9Clibrary_cave.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "缩略图": "img/story/shiku/photo-showing-cave-16-and-the-manuscripts-piled-up-for-stein.jpg?v=b147e243",
    "说明": "第十六窟，写本堆于第十七窟口外待检，斯坦因摄于 1907 年",
    "作者": "Aurel Stein",
    "署名": "Aurel Stein",
