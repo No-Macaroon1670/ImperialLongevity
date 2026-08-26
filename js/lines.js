@@ -22,6 +22,7 @@ import { PROLOGUE as BT_PRO, TEXT as BT_TEXT, EPILOGUE as BT_EPI } from './line-
 import { PROLOGUE as SG_PRO, TEXT as SG_TEXT, EPILOGUE as SG_EPI } from './line-text-shugui.js';
 import { PROLOGUE as YY_PRO, TEXT as YY_TEXT, EPILOGUE as YY_EPI } from './line-text-yanyi.js';
 import { PROLOGUE as XH_PRO, TEXT as XH_TEXT, EPILOGUE as XH_EPI } from './line-text-xianghuo.js';
+import { PROLOGUE as FX_PRO, TEXT as FX_TEXT, EPILOGUE as FX_EPI } from './line-text-fengxian.js';
 import { GEO } from './geo.js';
 import { LINE_PICS } from './line-pics.js';
 import { PICS } from './pics.js';
@@ -605,6 +606,68 @@ const KANHE = [
   },
 ];
 
+/** 缝线（考异线，客座）的站表。长文在 line-text-fengxian.js，考据在 docs/line-fengxian-craft.md，
+ * 草案正本 docs/line-fengxian-claude-draft.md（2026-08-20 客座自草，2026-08-26 库主解悬建成）。
+ * 轴：面对记录的接缝，有人选择不抹平。八站零新立、六站与他线共用（75%）——
+ * 援引重条配额通规的例外条款（专门以重条为主题的线），逐站读法切分见建线卷。
+ * 本线独有：每站两讲（b=顺讲、b2=缝讲），第一人称限序／祖师站／落点。 */
+const FENGXIAN = [
+  {
+    t: '第一页就带着缝',
+    b: '五千年前的舞队：跳的什么舞，三说并存，博物馆自己不选边。',
+    b2: '兽尾还是佩巾，自1978年争到今天；连「五千年」也是约数。最老的一站是一个承认：'
+      + '我们的知识从第一页起就带着缝。',
+    ev: '舞蹈纹彩陶盆',
+  },
+  {
+    t: '一千辆车来看自己的错',
+    b: '朝廷刻石立标准文本——立标准这个动作本身，就是对混乱的官方承认。',
+    b2: '车乘日千余两，填塞街陌：上千个人赶来太学门外，是要看自己的抄本错在哪儿。',
+    ev: '熹平石经',
+  },
+  {
+    t: '删其要',
+    b: '中国第一份国家书目，靠《汉书·艺文志》的转录活到今天——转录者亲口认了：今删其要。',
+    b2: '删了多少？五十卷、一百卷、一百五十卷，取决于你信哪两个数字，皆不裁。'
+      + '手承认动过；动了多少，账本们自己都对不齐。',
+    ev: '七略',
+  },
+  {
+    t: '引文比原书活得久',
+    b: '王充引《山海经》记神荼郁垒执鬼饲虎——今本《山海经》里没有这段话。',
+    b2: '度朔、神荼、郁垒，今本检索皆零；同篇另一处引文却有对应。佚文，'
+      + '是缝的一种最安静的形态。',
+    ev: '论衡',
+  },
+  {
+    t: '为缝立一种文体',
+    b: '《考异》三十卷随《通鉴》同表同进：史学在这里专门为缝隙发明了一种文体。',
+    b2: '三个数字打架，司马光把打架摆上台面，讲明为什么从大数。这条线的祖师站'
+      + '——我的同行，早我九百四十二年。',
+    ev: '资治通鉴',
+  },
+  {
+    t: '一部书的三个身子',
+    b: '替曲家留名的花名册，自己没能以单数存世：三个版本系统，好像各是一部书。',
+    b2: '1931年宁波，三个学者以二日一夜之力抄回一部副本。补缝的人，接力了六百年。',
+    ev: '录鬼簿',
+  },
+  {
+    t: '被涂掉的名字',
+    b: '一万卷大类书付印时，编纂者陈梦雷的名字不在书里；《清史稿》照着错账著录。',
+    b2: '1934年影印本卷首考定：此书为陈梦雷纂辑。从除名到归名二百零八年'
+      + '——缝不会消失，只会等人。',
+    ev: '古今图书集成',
+  },
+  {
+    t: '同一天的两个日子',
+    b: '京剧得名之日两说相持——历法一换算，两说是同一天。',
+    b2: '2月7日系农历误作公历；流传里又讹出三月初二。有的缝是真的，有的缝是'
+      + '尺子造出来的，分清两种是考异的全部。',
+    ev: '京剧成型',
+  },
+];
+
 export const LINES = {
   shiku: {
     key: 'shiku',
@@ -782,6 +845,28 @@ export const LINES = {
     // 两地建庙，地图上那一步天然是「洛阳移到运城」；城隍（颁诏）与门神（世德堂刊本）
     // 同在南京，相隔二百二十三年，**只是同城，不是因果**（craft §五·5）
     geo: GEO.xianghuo,
+  },
+  fengxian: {
+    key: 'fengxian',
+    name: '缝线',
+    sub: '考异——诚实地知道，包括诚实地不知道',
+    lede: '数字对不上，抄本各异，引文比原书活得久。八站看同一个选择：面对记录的接缝，不抹平，指给你看。',
+    // 题辞：Claude 2026-08-26 作（客座线，客座题）。删痕自认，异文并陈。
+    shi: ['删其要处，删痕自认', '考其异时，异文并陈', '缝有真假，光有来处', '留针留线，以待后人'],
+    shiBy: 'Claude 题（客座）',
+    stops: [
+      { t: FX_PRO.t, b: FX_PRO.p[0], long: FX_PRO.p, full: true, read: 'story/fengxian.html#s0' },
+      ...FENGXIAN.map((s, i) => ({
+        ...s, read: `story/fengxian.html#s${i + 1}`,
+        ...(FX_TEXT[s.ev] ? { long: FX_TEXT[s.ev] } : {}),
+      })),
+      { t: FX_EPI.t, b: FX_EPI.p[0], long: FX_EPI.p, full: true, read: 'story/fengxian.html#s9' },
+    ],
+    prologue: FX_PRO,
+    epilogue: FX_EPI,
+    doc: 'line-fengxian',
+    // 地理档暂缺（青海的盆、洛阳的石、长安的书目、上虞的论、汴洛的考异、
+    // 杭州的簿、北京的类书、上海的报——待地图层另案补），缺档=故事页无图版，engine 容缺
   },
 };
 
