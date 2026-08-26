@@ -76,16 +76,18 @@ a{color:inherit}
 #side{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
   z-index:40;width:11rem}
 #rail{display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
-/* 点与标签的间距落在 .dot 的 margin 上而不靠 flex gap：读者侧环境（插件/旧内核）重写 <a>
+/* rdot/rlbl 带前缀与外界脱钩（照 charts.js sw- 家法；库主实测 Rakuten 扩展注入
+   .dot{position:absolute} 把点拽出流压上标签首字，position:static 双保险）。
+   点与标签的间距落在 .rdot 的 margin 上而不靠 flex gap：读者侧环境（插件/旧内核）重写 <a>
    的 display 时会退成 inline 排布，margin+vertical-align 在两种排布下同样成立，标签永不吃点
    （2026-08-26 库主线上截图实案，本地净环境不复现；flex 健康时此写法与 gap 像素等价） */
 #rail a{display:flex;align-items:center;color:var(--faint);text-decoration:none;
   letter-spacing:.04em;transition:color .25s}
-#rail .dot{display:inline-block;vertical-align:middle;width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;margin-right:.5rem;transition:transform .25s}
-#rail a .lbl{display:inline-block;vertical-align:middle;opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap}
-#rail a:hover{color:var(--dim)} #rail a:hover .lbl{opacity:1;transform:none}
-#rail a.on{color:var(--accent)} #rail a.on .dot{transform:scale(1.5)}
-#rail a.on .lbl{opacity:1;transform:none}
+#rail .rdot{position:static;display:inline-block;vertical-align:middle;width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;margin-right:.5rem;transition:transform .25s}
+#rail a .rlbl{display:inline-block;vertical-align:middle;opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap}
+#rail a:hover{color:var(--dim)} #rail a:hover .rlbl{opacity:1;transform:none}
+#rail a.on{color:var(--accent)} #rail a.on .rdot{transform:scale(1.5)}
+#rail a.on .rlbl{opacity:1;transform:none}
 @media(max-width:1180px){#side{display:none}}
 .wrap{max-width:40rem;margin:0 auto;padding:0 1.5rem}
 header.cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
@@ -402,7 +404,7 @@ def main():
     A('<nav id="rail" aria-label="节次">')
     for sid, label in rail:
         short = label.split('：')[0].split(' · ')[-1][:6]
-        A('<a href="#%s"><span class="dot"></span><span class="lbl">%s</span></a>' % (sid, esc(short)))
+        A('<a href="#%s"><span class="rdot"></span><span class="rlbl">%s</span></a>' % (sid, esc(short)))
     A('</nav>')
     # 侧栏小地图已撤（用户 2026-08-21 裁：太 mini 且长文页气质不合——
     # 地理全貌归页首大图，行程位置归站界行程条 route_strip）
