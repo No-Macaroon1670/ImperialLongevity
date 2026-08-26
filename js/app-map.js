@@ -86,9 +86,11 @@ const shown = () => ALL.filter((r) => state.layers.has(r['层'])
   && (r['层'] === 'dyn' && state.aliveOnly && state.upto < Y_HI
     ? (r.y <= state.upto && r.e >= state.upto)
     : r.y <= state.upto)
+  // 主>=0 必须站在取 链[主] 之前：无图内点条目主=-1，链[-1] 是 undefined，
+  // 关掉「画低置信」后短路失效即抛错、全图点消失（2026-08-26 库主实测报案）
+  && r['主'] >= 0
   && (state.showLow || !r['链'][r['主']]['约'])
-  && (state.showAuto || r['据'] !== 'w')
-  && r['主'] >= 0);
+  && (state.showAuto || r['据'] !== 'w'));
 
 const idOf = (r) => `${r['层']}:${r.n}`;
 // 调试窗：个人站，留着便宜（终端里 window.__map 直接看内脏）
