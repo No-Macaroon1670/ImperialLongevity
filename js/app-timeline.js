@@ -5,6 +5,7 @@
 import { mountApp } from './shell.js';
 import { SECTIONS } from './sections-panorama.js';
 import { mountSearch } from './search.js';
+import { buildLineCatalog } from './line-catalog.js';
 import { mountTour } from './tour.js';
 import { lineOf, LINES } from './lines.js';
 import { EMPERORS, DYNASTIES } from './data.js';
@@ -55,7 +56,6 @@ function openLine(key, at) {
   lineTour.start(n);
   return true;
 }
-const REPO = 'https://github.com/No-Macaroon1670/ImperialLongevity';
 // 主题按钮的字要跟着走，否则读者看到「🌙 深色」而页面已经是深色的了
 function syncThemeLabel() {
   const tt = document.getElementById('theme-toggle');
@@ -68,72 +68,10 @@ function syncThemeLabel() {
 // 书的按钮开的是**目录**而不是某一条线：线会越来越多，而「有哪些线可走」
 // 本身就是读者要先看见的东西（用户指出）。目录只列名字、一句话与站数，
 // 点一条才进去——选择在读者手里，不在按钮上。
-const catalog = document.createElement('div');
-catalog.className = 'line-catalog';
-catalog.setAttribute('role', 'dialog');
-catalog.setAttribute('aria-label', '故事线目录');
-const closeCatalog = () => { catalog.classList.remove('on'); document.body.classList.remove('line-catalog-on'); };
-{
-  const sheet = document.createElement('div');
-  sheet.className = 'lc-sheet';
-  const head = document.createElement('div');
-  head.className = 'lc-head';
-  const h = document.createElement('h3');
-  h.textContent = '故事线';
-  const x = document.createElement('button');
-  x.type = 'button'; x.className = 'kp-close'; x.textContent = '✕';
-  x.setAttribute('aria-label', '关闭');
-  x.addEventListener('click', closeCatalog);
-  head.append(h, x);
-  const intro = document.createElement('p');
-  intro.className = 'lc-intro';
-  intro.textContent = '一条线是穿过这张图的一种读法：跨越时代的一串站点，逐站打光、逐站讲。';
-  sheet.append(head, intro);
-  for (const line of Object.values(LINES)) {
-    const row = document.createElement('button');
-    row.type = 'button'; row.className = 'lc-row';
-    const nm = document.createElement('div');
-    nm.className = 'lc-name';
-    nm.textContent = line.name;
-    const cnt = document.createElement('span');
-    cnt.className = 'lc-count';
-    cnt.textContent = `${line.stops.length} 站`;
-    nm.appendChild(cnt);
-    const sub = document.createElement('div');
-    sub.className = 'lc-sub';
-    sub.textContent = line.lede;
-    row.append(nm, sub);
-    row.addEventListener('click', () => {
-      closeCatalog();
-      history.replaceState(null, '', `#line=${line.key}`);
-      openLine(line.key);
-    });
-    sheet.appendChild(row);
-    // 出处链接单挂一行，不进站点卡：走线时不该被脚注打断，
-    // 但「这些数字哪来的」必须随时查得到（用户：链接到某处就行）
-    if (line.doc) {
-      const row2 = document.createElement('div');
-      row2.className = 'lc-links';
-      // 两种读法并排：走图在上面那颗大按钮，读文在这儿。
-      // 长文页是同一份数据的另一个出口（story-<key>.html，深色）
-      const rd = document.createElement('a');
-      rd.className = 'lc-doc';
-      rd.href = `story-${line.key}.html`;
-      rd.textContent = '读长文 →';
-      const a = document.createElement('a');
-      a.className = 'lc-doc';
-      a.href = `${REPO}/blob/main/docs/${line.doc}.md`;
-      a.target = '_blank'; a.rel = 'noopener';
-      a.textContent = '资料与出处 ↗';
-      row2.append(rd, a);
-      sheet.appendChild(row2);
-    }
-  }
-  catalog.appendChild(sheet);
-  catalog.addEventListener('click', (e) => { if (e.target === catalog) closeCatalog(); });
-  addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCatalog(); });
-  document.body.appendChild(catalog);
-}
+const { el: catalog, open: openCatalog } = buildLineCatalog({
+  lines: Object.values(LINES),
+  onPick: (line) => { history.replaceState(null, '', `#line=${line.key}`); openLine(line.key); },
+});
 {
   const head = panorama.querySelector('.head') || panorama;
   const btn = document.createElement('button');
@@ -148,12 +86,7 @@ const closeCatalog = () => { catalog.classList.remove('on'); document.body.class
   btn.append(face, label);
   btn.title = '故事线目录：穿过这张图的几种读法';
   btn.setAttribute('aria-label', '故事线目录');
-  btn.addEventListener('click', () => {
-    catalog.classList.add('on');
-    document.body.classList.add('line-catalog-on');
-    const first = catalog.querySelector('.lc-row');
-    if (first) first.focus();
-  });
+  btn.addEventListener('click', openCatalog);
   head.appendChild(btn);
 }
 

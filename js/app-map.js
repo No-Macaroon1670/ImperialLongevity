@@ -33,6 +33,7 @@ import { GEO_EVENTS } from './geo-events.js';
 import { GEO_DYN } from './geo-dynasties.js';
 import { EVENT_KINDS, EVENTS } from './events.js';
 import { evSpec, mountEmbedCard, mdBold } from './knowledge.js';
+import { buildLineCatalog } from './line-catalog.js';
 import { TERR } from './territories.js';
 import { syncCounts } from './counts.js';
 import { LINES } from './lines.js';
@@ -1486,25 +1487,21 @@ function mountLineChips() {
       if (i < arr.length - 1) wrap.append(' · ');
     });
   } else {
-    // 线一多平铺就挤（用户预判于第四条上线前）：收成折叠单，
-    // 每条带 sub 一句话——顺便回答「这条线讲什么」，平铺时反而给不了
-    const det = document.createElement('details');
-    det.className = 'pl-lines-menu';
-    const sum = document.createElement('summary');
-    sum.textContent = `全部 ${geoLines.length} 条`;
-    det.appendChild(sum);
-    for (const L of geoLines) {
-      const a2 = document.createElement('a');
-      a2.href = `#line=${L.key}`;
-      a2.append(L.name);
-      const why = document.createElement('span');
-      why.className = 'pl-set-why';
-      why.textContent = `——${L.sub}`;
-      a2.appendChild(why);
-      a2.addEventListener('click', () => { det.open = false; });
-      det.appendChild(a2);
-    }
-    wrap.appendChild(det);
+    // 线一多平铺就挤（用户预判于第四条上线前）。此处原是 details 折叠单，
+    // 原地展开会把整条类别轴顶下去（周一单3病案）——2026-08-26 改开时间轴
+    // 同款目录浮层（共用件 line-catalog.js）：线名＋站数＋lede＋读长文/资料
+    // 两链的卡列，零轴位移；图页池子只列带 geo 的线
+    const cat = buildLineCatalog({
+      lines: geoLines,
+      onPick: (L) => { history.replaceState(null, '', `#line=${L.key}`); enterLine(L.key, 0); },
+    });
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pl-lines-btn';
+    btn.textContent = `全部 ${geoLines.length} 条 ▾`;
+    btn.setAttribute('aria-label', '故事线目录');
+    btn.addEventListener('click', cat.open);
+    wrap.appendChild(btn);
   }
   bar.after(wrap);
 

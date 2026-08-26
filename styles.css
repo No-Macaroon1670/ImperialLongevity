@@ -1559,6 +1559,11 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 
 /* 线的折叠单:第四条线上线时自动从平铺切换过来 */
 .pl-lines-menu { display: inline-block; font-size: inherit; color: inherit; }
+/* 目录浮层的启动钮（2026-08-26 周一单3：details 原地展开退役，改共用 line-catalog 浮层）：
+   长得像原 summary 的一截可点文字，不抢「走一条线：」标签的排版 */
+.pl-lines-btn { border: none; background: none; font: inherit; color: var(--seq-500);
+  cursor: pointer; padding: 0; user-select: none; }
+.pl-lines-btn:hover { text-decoration: underline; }
 .pl-lines-menu summary { cursor: pointer; user-select: none; display: inline; }
 .pl-lines-menu a { display: block; padding: 2px 0 2px 14px; }
 
