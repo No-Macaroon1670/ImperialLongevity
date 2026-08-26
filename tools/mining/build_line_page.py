@@ -99,6 +99,7 @@ section.tone{background:var(--bg2)}
 .yr{font-family:var(--sans);font-size:2.6rem;line-height:1;color:var(--rule);margin:.4rem 0 .8rem;
   font-variant-numeric:tabular-nums;font-weight:700}
 h2{font-size:1.75rem;line-height:1.35;margin:0 0 .5rem;font-weight:500;letter-spacing:.04em}
+.h2-ev{font-size:.95rem;font-weight:400;color:var(--faint);letter-spacing:.02em;white-space:nowrap;margin-left:.35em}
 .sub{font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.1em;margin:0 0 2rem}
 section p{margin:0 0 1.35rem}
 p.beat{color:var(--gold)}
@@ -539,7 +540,12 @@ def main():
         A(route_strip(stops, i))
         if e.get('y'):
             A('<div class="yr">%s</div>' % yr(e['y']))
-        A('<h2>%s</h2>' % esc(name or s['t']))
+        # 节题双层（2026-08-26 库主令，与走线站点卡对称）：雅题作节题、
+        # 词条名小一号淡字随后；无雅题或两名同形则单名照旧
+        if s.get('t') and name and s['t'] != name:
+            A('<h2>%s <span class="h2-ev">%s</span></h2>' % (esc(s['t']), esc(name)))
+        else:
+            A('<h2>%s</h2>' % esc(name or s.get('t', '')))
         bits = [x for x in [rec.get('地点'),
                             yr(e['y'], e.get('y2')) if e.get('y') else None,
                             dyn.get(e.get('d')) if e.get('d') else None,
