@@ -46,3 +46,8 @@ docs/holding/
 docs/idea-*.md
 docs/plan-*.md
 docs/video-brief*.md
+
+# img/originals/ 出品原片留档（2026-08-26「出品留原片」新规）：凡进 own/ 或 used/
+# 的照片，原片以 <成品名>-orig.jpg 永存于此，EXIF 不剥——换 spec 重做的本钱。
+# 本地永不入库推送（原片含 GPS 等隐私字段）。
+img/originals/
