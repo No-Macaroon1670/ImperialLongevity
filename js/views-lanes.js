@@ -495,6 +495,7 @@ export function renderLaneTimeline(host, list, opts) {
     // 现在一等先挑位子,二等次之,三等垫底(r 见 js/events.js:按维基三项指标定)。
     // 画的次序反过来:三等先落笔,一等最后压顶,免得小点盖住大点。
     const rk = (ev) => ev.r || 2;
+    const rkMax = +opts.evRank || 3;   // 分量档（rank 屏蔽）：档外不入组不落笔
     // **同年错开**。此前同一年的几条事件坐标完全相同,命中区整块重叠,
     // 于是每年只有最后画上去的那条点得开——用户点「开凿大运河」,
     // 弹出来的是同年的「赵州桥建成」。实测 129 条事件挤在 59 个年份上
@@ -502,7 +503,7 @@ export function renderLaneTimeline(host, list, opts) {
     // 按年分组横向摊开,标准档 7px 合半年,肉眼几乎看不出,但各自可点、也各自可留名。
     const sameYear = new Map();
     for (const e2 of EVENTS) {
-      if (evOff.has(e2.k) || e2.k === 'era') continue;
+      if (evOff.has(e2.k) || e2.k === 'era' || rk(e2) > rkMax) continue;
       if (!sameYear.has(e2.y)) sameYear.set(e2.y, []);
       sameYear.get(e2.y).push(e2);
     }
@@ -531,7 +532,7 @@ export function renderLaneTimeline(host, list, opts) {
       // 陈桥兵变、靖康之变都一并挡掉了——正是先前特意补回来的那十一条,
       // 补进数据却仍被这里拦在轨外,等于白补。承继细丝的刻痕在河身、
       // 事件点在表头,两处register不同,并存不算重复。
-      if (evOff.has(ev.k) || ev.k === 'era') continue;
+      if (evOff.has(ev.k) || ev.k === 'era' || rk(ev) > rkMax) continue;
       // 视图分工（2026-08-20 用户裁）：带 tr 的事件在时间轴归承继箭头表现（箭头可点出卡），此处不画点；地图不看 tr 照常画
       if (ev.tr) continue;
       const ex = x(evAnchor(ev)) + fanOf(ev);

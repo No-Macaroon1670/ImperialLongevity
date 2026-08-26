@@ -25,6 +25,8 @@ const S = {
   panoramaMode: matchMedia('(max-width: 720px)').matches ? 'river' : 'lanes',
   riverPx: 7,
   lanePx: 14, laneColor: 'dynasty', laneViolent: true, laneStrands: false, laneEvents: true, evOff: [],
+  // 大事记分量档（rank 屏蔽制度，2026-08-26 库主立案落地）：3=全部、2=一二等、1=只看一等主推
+  evRank: 3,
   scatterX: 'birth',
   kmGroup: 'unified', kmScale: 'reign', kmCensorAbd: true, kmCI: true, kmFromAge: 15,
   cifScale: 'age',

@@ -821,11 +821,12 @@ export function renderRiver(host, list, opts) {
     const FS = 10.5, ROW = 12.5;
     const R = { 1: 4, 2: 3, 3: 2.2 };
     const rk = (e) => e.r || 2;
+    const rkMax = +opts.evRank || 3;   // 分量档（rank 屏蔽）：档外整条不画，标记也不留
     // 同年错开,与泳道图同理(见 views-lanes.js 的长注)。竖河里时间是纵向的,
     // 故沿河岸上下摊开;同年但分属两岸的本来就不撞,只在同岸内分组。
     const sameYear = new Map();
     for (const e2 of EVENTS) {
-      if (evOff.has(e2.k) || e2.k === 'era') continue;
+      if (evOff.has(e2.k) || e2.k === 'era' || rk(e2) > rkMax) continue;
       const key = `${e2.y}|${LEFT_BANK.has(e2.k) ? 'L' : 'R'}`;
       if (!sameYear.has(key)) sameYear.set(key, []);
       sameYear.get(key).push(e2);
@@ -844,7 +845,7 @@ export function renderRiver(host, list, opts) {
       // 陈桥兵变、靖康之变都一并挡掉了——正是先前特意补回来的那十一条,
       // 补进数据却仍被这里拦在轨外,等于白补。承继细丝的刻痕在河身、
       // 事件点在表头,两处register不同,并存不算重复。
-      if (evOff.has(ev.k) || ev.k === 'era') continue;
+      if (evOff.has(ev.k) || ev.k === 'era' || rk(ev) > rkMax) continue;
       const ty = y(evAnchor(ev)) + fanOf(ev);
       if (ty < -20 || ty > H + 20) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
@@ -1122,6 +1123,7 @@ export function renderRiver(host, list, opts) {
     const FS = 10, ROW = 13.5;
     const R = { 1: 4, 2: 3, 3: 2.3 };
     const rk = (e) => e.r || 2;
+    const rkMax = +opts.evRank || 3;   // 分量档（rank 屏蔽）：档外整条不画，标记也不留
     // 二三等要「河道宽松」才放出来，宽松有两个方向：
     //   横向 MIN_W——河道窄到写不下就别挤（十六国的九股并流里，二三等一律不放）；
     //   纵向 PAD ——名字要多大的清净才配写出来。一等按自身高度找空当，二等要
@@ -1196,7 +1198,7 @@ export function renderRiver(host, list, opts) {
     const taken = inkTaken.slice();
     const free = (x0, x1, y0, y1) => !taken.some((p) => x0 < p[1] && x1 > p[0] && y0 < p[3] && y1 > p[2]);
     for (const ev of [...EVENTS].sort((a, b) => rk(a) - rk(b) || a.y - b.y)) {
-      if (evOff.has(ev.k) || ev.k === 'era') continue;
+      if (evOff.has(ev.k) || ev.k === 'era' || rk(ev) > rkMax) continue;
       const ty = y(ev.y);
       if (ty < -20 || ty > H + 20) continue;
       const an = anchorOf(ev);
