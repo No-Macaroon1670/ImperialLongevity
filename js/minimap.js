@@ -29,7 +29,7 @@
 import { BASEMAP } from './basemap.js';
 import {
   el, plateFilters, lakeLayer, LabelSolver, placeCandidates, NUDGES,
-  ANCHORS, RIVER_TAGS,
+  ANCHORS, RIVER_TAGS, LAKE_TAGS,
 } from './plate.js';
 import {
   xy, fitBox, unitOf, inViewOf, clampTo, marksOf, dustOf, dustGroup, tagJob, runJobs,
@@ -118,6 +118,13 @@ export function mountMinimap(geoOf, allOf) {
       if (!inView(p)) continue;
       const nudge = NUDGES.tight.map(([dx, dy]) => [u(dx * 0.6), u(dy * 0.6), 'middle']);
       refJobs.push(tag(gRef, name, 'mm-river-t', u(10), 50, nudge, p));
+    }
+    // 湖名同律（2026-08-26 库主令）：小一号、优先级更低——小图上湖名让得起
+    for (const [name, lat, lon] of LAKE_TAGS) {
+      const p = xy([lat, lon]);
+      if (!inView(p)) continue;
+      const nudge = NUDGES.tight.map(([dx, dy]) => [u(dx * 0.6), u(dy * 0.6), 'middle']);
+      refJobs.push(tag(gRef, name, 'mm-lake-t', u(9), 30, nudge, p));
     }
   };
 

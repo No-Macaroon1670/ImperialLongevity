@@ -1294,6 +1294,7 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .mm-city { fill: var(--muted); opacity: .5; }
 .mm-city-t { fill: var(--muted); opacity: .62; font-weight: 400; }
 .mm-river-t { fill: var(--seq-400); opacity: .8; }
+.mm-lake-t { fill: var(--seq-400); opacity: .7; }
 /* 衬底改由 js/plate.js 的 haloText 画（同一段字画两遍），故这里不再描边——
    两处都描会让笔画糊掉一圈 */
 .mm-here-t { fill: var(--seq-500); font-weight: 700; }
@@ -1407,6 +1408,8 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-city { fill: var(--muted); opacity: .45; }
 .pl-city-t { fill: var(--muted); opacity: .8; font-weight: 400; }
 .pl-river-t { fill: var(--seq-400); opacity: .8; font-weight: 500; }
+/* 湖名：与河名同色系、更轻——湖是结不是干线（2026-08-26 库主令补名） */
+.pl-lake-t { fill: var(--seq-400); opacity: .7; }
 
 /* 一条目两个点之间那条线：出处 → 现在。虚线，因为它不是一条路径，是一段身世 */
 .pl-link line { stroke: var(--muted); stroke-width: 1.1; stroke-dasharray: 4 3; opacity: .6; }

@@ -27,7 +27,7 @@ import { BASEMAP, project } from './basemap.js';
 import { norm as searchNorm, withPy as searchWithPy, scoreKeys as searchScore } from './search-core.js';
 import {
   el, softStroke, haloText, lakeLayer, LabelSolver, placeCandidates, NUDGES,
-  graticulePath, reader, ANCHORS, RIVER_TAGS,
+  graticulePath, reader, ANCHORS, RIVER_TAGS, LAKE_TAGS,
 } from './plate.js';
 import { GEO_EVENTS } from './geo-events.js';
 import { GEO_DYN } from './geo-dynasties.js';
@@ -705,6 +705,15 @@ function draw() {
     const h = haloText(gRef, name, { size: 12 * iz, halo: 'var(--surface-2)', haloWidth: 3.4 * iz });
     h.over.setAttribute('class', 'pl-river-t');
     jobs.push({ h, p: [x, y], pri: 200,
+      cands: NUDGES.tight.map(([a, b]) => [a * iz, b * iz, 'middle']) });
+  }
+  // 湖名（2026-08-26 库主令）：与河名同的贴身微挪，字小一号、优先级次之——
+  // 湖名丢了可惜，但不许为它挤掉河名或站名
+  for (const [name, lat, lon] of LAKE_TAGS) {
+    const [x, y] = project(lon, lat);
+    const h = haloText(gRef, name, { size: 10.5 * iz, halo: 'var(--surface-2)', haloWidth: 3 * iz });
+    h.over.setAttribute('class', 'pl-lake-t');
+    jobs.push({ h, p: [x, y], pri: 130,
       cands: NUDGES.tight.map(([a, b]) => [a * iz, b * iz, 'middle']) });
   }
   // 地形的名字：斜体、极淡，排版优先级垫底——山名是布景，谁都可以压过它。
