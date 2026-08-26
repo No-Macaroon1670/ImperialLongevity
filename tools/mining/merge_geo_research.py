@@ -23,7 +23,7 @@
 import io, json, os, re, sys
 
 ROOT = r"C:/Users/ziyi_/Claude/imperial-longevity"
-ROLES = set('生 显 卒 葬 贬 行 造 立 发 现 址 战 起 都 迁 说 灾 颁'.split())
+ROLES = set('生 显 卒 葬 贬 行 造 立 发 现 址 战 起 都 迁 陪 说 灾 颁 摹'.split())  # 2026-08-26 补 陪（与正本对齐）、增 摹
 
 
 def token(p):

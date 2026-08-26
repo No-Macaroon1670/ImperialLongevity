@@ -34,7 +34,7 @@ UA = {"User-Agent": "ImperialLongevity-geo/1.0 (github.com/No-Macaroon1670/Imper
 BBOX = [73.0, 18.0, 135.0, 50.0]        # 与 js/basemap.js 一致：西 南 东 北
 
 # 角色表，见 docs/geo-model.md。不在表里的一律报错——错字会静悄悄变成新角色
-ROLES = set('生 显 卒 葬 贬 行 造 立 发 现 址 战 起 都 迁 陪 说 灾 颁'.split())
+ROLES = set('生 显 卒 葬 贬 行 造 立 发 现 址 战 起 都 迁 陪 说 灾 颁 摹'.split())
 
 
 def get(url, tries=8):
