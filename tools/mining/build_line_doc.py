@@ -62,7 +62,10 @@ def load_dyn():
 def load_events():
     src = io.open(os.path.join(ROOT, 'js/events.js'), encoding='utf-8').read()
     out = {}
-    for m in re.finditer(r'\{([^{}]*?y:\s*-?\d+[^{}]*?)\},', src):
+    # 按行锚定：events.js 一行一条是硬约定。旧式 [^{}] 掐块会被 yl 里照录的
+    # 维基文库 wikitext 花括号模板（{{*|…}}、{{SKchar|…}}）掐飞整条
+    # ——2026-08-26 粽子/奉先两条实踩（简注与落点齐失），故改此式
+    for m in re.finditer(r'^  \{ (.*?y:\s*-?\d+.*) \},?\s*$', src, re.M):
         b = m.group(1)
         def g(k):
             mm = re.search(FIELD % k, b)
