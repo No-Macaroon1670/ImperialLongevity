@@ -1690,3 +1690,7 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 /* 拖拽平移时浏览器会把 SVG 里的字当文本刷选区——满图蓝块（用户实测）。
    图上的字本来就不该被选中复制，整块关掉 */
 .plate, .plate-svg { user-select: none; -webkit-user-select: none; }
+
+/* 长简注分段（kp-ext 内块级段） */
+.kp-ext .kp-pr{display:block}
+.kp-ext .kp-pr+.kp-pr{margin-top:.5em}

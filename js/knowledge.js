@@ -202,6 +202,21 @@ export function mdBold(s) {
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 }
 
+// 长简注上卡的断行（2026-08-26 库主令「注意断行」）：库文层次以「。**层首句**」起层，
+// 照此骨架自动分段——kp-ext 是 <p>，段用块级 span，不嵌 p。短文无断点，天然单段。
+function ycParas(t) {
+  // 两条断段规则：①句号后紧跟 **层首** 必起新段（库文的层骨架）；
+  // ②无层标时按句群折行——段满约 170 字即在下一个句界起新段，字墙变段落。
+  const sents = t.split(/(?<=。|！|？)/g);
+  const paras = []; let cur = '';
+  for (const s of sents) {
+    if (cur && (s.startsWith('**') || cur.length >= 170)) { paras.push(cur); cur = ''; }
+    cur += s;
+  }
+  if (cur) paras.push(cur);
+  return paras.map((s) => '<span class="kp-pr">' + mdBold(s) + '</span>').join('');
+}
+
 function fetchSummary(title) {
   if (!CACHE.has(title)) {
     const hit = diskLoad()[title];
@@ -249,7 +264,7 @@ export function evSpec(ev) {
     q: ev.ya || ev.n, yt: true,
     // yc：库内自撰简注。无维基条目、或维基摘要抓取失败时，fillCard 拿它
     // 顶上摘要区——对 nb/无 w 判例族而言，这条注恰恰是全库考据最厚的地方
-    yc: ev.yc,
+    yc: ev.yl || ev.yc,  // 卡上取长文（yl），无长文退 yc——悬浮 tip 端仍直读 ev.yc（短）
   };
 }
 
@@ -292,6 +307,7 @@ function mkCard(sideClass) {
   });
   const head = h('div', { class: 'kp-sub' });
   const title = h('div', { class: 'kp-title' });
+
   const ext = h('p', { class: 'kp-ext' });
   const wiki = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '维基百科全文 ↗' });
   const baidu = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '百度百科 ↗' });
@@ -417,7 +433,7 @@ async function fillCard(card, spec) {
     card.wsrc.style.display = spec.wsrc ? '' : 'none';
     card.yt.style.display = card.bili.style.display = 'none';
     if (spec.yc) {
-      card.ext.innerHTML = mdBold(spec.yc);
+      card.ext.innerHTML = ycParas(spec.yc);
       card.el.classList.add('kp-yc-full');
       card.src.textContent = localPic ? localPic.note + '；本库自撰简注' : '本库自撰简注';
     } else {
@@ -495,7 +511,7 @@ async function fillCard(card, spec) {
   } else if (spec.yc) {
     // 有词条标题,但这一次没能拉到摘要(网络、限流、条目本身缺摘要都可能):
     // 别空手,库内简注顶上——待遇与「无维基条目」分支相同(全文、kp-yc-full)
-    card.ext.innerHTML = mdBold(spec.yc);
+    card.ext.innerHTML = ycParas(spec.yc);
     card.el.classList.add('kp-yc-full');
     card.src.textContent = localPic ? localPic.note + '；本库自撰简注' : '本库自撰简注';
   } else {
