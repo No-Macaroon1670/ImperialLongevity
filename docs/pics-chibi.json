@@ -1,0 +1,109 @@
+{
+ "说明": "chibi线配图账，体例同 pics-xianghuo.json。",
+ "站": {
+  "隆中对": {
+   "文件": "Dai Jin-Looking Three Times at the Thatched Hut.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Dai_Jin-Looking_Three_Times_at_the_Thatched_Hut.jpg/1280px-Dai_Jin-Looking_Three_Times_at_the_Thatched_Hut.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Dai_Jin-Looking_Three_Times_at_the_Thatched_Hut.jpg",
+   "许可": "Public domain (PD-Art, PD-old-100)",
+   "作者": "戴进 Dai Jin（明代宫廷画家）",
+   "署名": "戴进 Dai Jin（明代宫廷画家）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Dai_Jin-Looking_Three_Times_at_the_Thatched_Hut.jpg",
+   "说明": "戴进《三顾茅庐图》，故宫博物院藏——不涉地望之争",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/chibi/dai-jin-looking-three-times-at-the-thatched-hut.jpg"
+  },
+  "赤壁之战": {
+   "文件": "赤壁縱火.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/%E8%B5%A4%E5%A3%81%E7%B8%B1%E7%81%AB.jpg/1280px-%E8%B5%A4%E5%A3%81%E7%B8%B1%E7%81%AB.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/8/83/%E8%B5%A4%E5%A3%81%E7%B8%B1%E7%81%AB.jpg",
+   "许可": "Public domain",
+   "作者": "马骀 Ma Tai（1885-1937）",
+   "署名": "马骀 Ma Tai（1885-1937）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:赤壁縱火.jpg",
+   "说明": "马骀画宝《周瑜赤壁纵火》（1928）——版画层，非史图",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/chibi/赤壁縱火.jpg"
+  },
+  "刮目相看": {
+   "文件": "Portrait of Lu Meng, Qing dynasty.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Portrait_of_Lu_Meng%2C_Qing_dynasty.jpg/1280px-Portrait_of_Lu_Meng%2C_Qing_dynasty.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Portrait_of_Lu_Meng%2C_Qing_dynasty.jpg",
+   "许可": "Public domain",
+   "作者": "佚名（清代，出自《绣像全图三国演义》）",
+   "署名": "佚名（清代，出自《绣像全图三国演义》）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Portrait_of_Lu_Meng,_Qing_dynasty.jpg",
+   "说明": "清代绣像《吕蒙》——演义形象层",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/chibi/portrait-of-lu-meng-qing-dynasty.jpg"
+  },
+  "三国志": {
+   "文件": "A Fragment of Biography of Bu Zhi History Books of Three Kingdoms 01 2012-12.JPG",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/A_Fragment_of_Biography_of_Bu_Zhi_History_Books_of_Three_Kingdoms_01_2012-12.JPG/1280px-A_Fragment_of_Biography_of_Bu_Zhi_History_Books_of_Three_Kingdoms_01_2012-12.JPG",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/3/3a/A_Fragment_of_Biography_of_Bu_Zhi_History_Books_of_Three_Kingdoms_01_2012-12.JPG",
+   "许可": "CC BY-SA 3.0",
+   "作者": "猫猫的日记本（自摄，敦煌研究院藏品）",
+   "署名": "猫猫的日记本（自摄，敦煌研究院藏品）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:A_Fragment_of_Biography_of_Bu_Zhi_History_Books_of_Three_Kingdoms_01_2012-12.JPG",
+   "说明": "敦煌研究院藏东晋写本《三国志·步骘传》残卷——现存最早抄本之列",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/chibi/a-fragment-of-biography-of-bu-zhi-history-books-of-three-kin.jpg"
+  },
+  "前赤壁赋": {
+   "文件": "Su Shi-Former Ode on the Red Cliff.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Su_Shi-Former_Ode_on_the_Red_Cliff.jpg/1280px-Su_Shi-Former_Ode_on_the_Red_Cliff.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Su_Shi-Former_Ode_on_the_Red_Cliff.jpg",
+   "许可": "Public domain",
+   "作者": "苏轼（原作），台北故宫早年网展数字化",
+   "署名": "苏轼（原作），台北故宫早年网展数字化",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Su_Shi-Former_Ode_on_the_Red_Cliff.jpg",
+   "说明": "苏轼《前赤壁赋》墨迹全卷（台北故宫）",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/chibi/su-shi-former-ode-on-the-red-cliff.jpg"
+  },
+  "寒食帖": {
+   "文件": "寒食帖.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/%E5%AF%92%E9%A3%9F%E5%B8%96.jpg/1280px-%E5%AF%92%E9%A3%9F%E5%B8%96.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/7/7b/%E5%AF%92%E9%A3%9F%E5%B8%96.jpg",
+   "许可": "Public domain",
+   "作者": "苏轼（原作）",
+   "署名": "苏轼（原作）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:寒食帖.jpg",
+   "说明": "《黄州寒食诗帖》全卷（38700px 源，候裁段）",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/chibi/寒食帖.jpg"
+  },
+  "赤壁图": {
+   "文件": "金武元直赤壁圖 卷.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/%E9%87%91%E6%AD%A6%E5%85%83%E7%9B%B4%E8%B5%A4%E5%A3%81%E5%9C%96_%E5%8D%B7.jpg/1280px-%E9%87%91%E6%AD%A6%E5%85%83%E7%9B%B4%E8%B5%A4%E5%A3%81%E5%9C%96_%E5%8D%B7.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/a/a6/%E9%87%91%E6%AD%A6%E5%85%83%E7%9B%B4%E8%B5%A4%E5%A3%81%E5%9C%96_%E5%8D%B7.jpg",
+   "许可": "CC0",
+   "作者": "國立故宮博物院（原作武元直）",
+   "署名": "國立故宮博物院（原作武元直）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:金武元直赤壁圖_卷.jpg",
+   "说明": "金·武元直《赤壁图》卷（台北故宫 CC0）——最早赤壁山水",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/chibi/金武元直赤壁圖-卷.jpg"
+  },
+  "三国演义": {
+   "文件": "ZHSY100335 三國志通俗演義 明羅本撰 明嘉靖元年刻本.pdf",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/ZHSY100335_%E4%B8%89%E5%9C%8B%E5%BF%97%E9%80%9A%E4%BF%97%E6%BC%94%E7%BE%A9_%E6%98%8E%E7%BE%85%E6%9C%AC%E6%92%B0_%E6%98%8E%E5%98%89%E9%9D%96%E5%85%83%E5%B9%B4%E5%88%BB%E6%9C%AC.pdf/page1-1280px-ZHSY100335_%E4%B8%89%E5%9C%8B%E5%BF%97%E9%80%9A%E4%BF%97%E6%BC%94%E7%BE%A9_%E6%98%8E%E7%BE%85%E6%9C%AC%E6%92%B0_%E6%98%8E%E5%98%89%E9%9D%96%E5%85%83%E5%B9%B4%E5%88%BB%E6%9C%AC.pdf.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/e/e4/ZHSY100335_%E4%B8%89%E5%9C%8B%E5%BF%97%E9%80%9A%E4%BF%97%E6%BC%94%E7%BE%A9_%E6%98%8E%E7%BE%85%E6%9C%AC%E6%92%B0_%E6%98%8E%E5%98%89%E9%9D%96%E5%85%83%E5%B9%B4%E5%88%BB%E6%9C%AC.pdf",
+   "许可": "Public domain",
+   "作者": "(明)罗本（罗贯中），中华再造善本影印",
+   "署名": "(明)罗本（罗贯中），中华再造善本影印",
+   "说明页": "https://commons.wikimedia.org/wiki/File:ZHSY100335_三國志通俗演義_明羅本撰_明嘉靖元年刻本.pdf",
+   "说明": "明嘉靖元年刻本《三国志通俗演义》（国图藏中华再造善本）",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/chibi/zhsy100335-三國志通俗演義-明羅本撰-明嘉靖元年刻本-pdf.jpg"
+  }
+ }
+}

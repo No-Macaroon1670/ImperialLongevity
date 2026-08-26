@@ -6,6 +6,52 @@ CC-BY 与 CC-BY-SA 要求署名，这是法律义务；CC0 与公有领域不要
 
 图片各自的许可以本表为准，不随本仓库的代码许可。
 
+## beitie
+
+| 站 | 文件 | 署名 | 许可 | 原始文件页 |
+|---|---|---|---|---|
+| 熹平石经 | `eastern-han-stone-classics-9832326865.jpg` | Gary Todd (Flickr, from Xinzheng, China) | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:Eastern_Han_Stone_Classics_(9832326865).jpg) |
+| 兰亭集序 | `神龍蘭亭序全.jpg` | 传冯承素摹（唐），故宫博物院藏；credit：故宫博物院 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:%E7%A5%9E%E9%BE%8D%E8%98%AD%E4%BA%AD%E5%BA%8F%E5%85%A8.JPG) |
+| 淳化阁帖 | `淳化阁帖.jpg` | 古代书家原刻，维基用户上传翻拍 | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:%E6%B7%B3%E5%8C%96%E9%98%81%E5%B8%96.jpg) |
+| 广艺舟双楫 | `清-康有为行书对联-昆明市晋宁区博物馆藏-2026-05-20.jpg` | 康有为（书），Kcx36 摄（昆明市晋宁区博物馆藏） | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:%E6%B8%85_%E5%BA%B7%E6%9C%89%E4%B8%BA%E8%A1%8C%E4%B9%A6%E5%AF%B9%E8%81%94-%E6%98%86%E6%98%8E%E5%B8%82%E6%99%8B%E5%AE%81%E5%8C%BA%E5%8D%9A%E7%89%A9%E9%A6%86%E8%97%8F_2026-05-20.jpg) |
+
+## chibi
+
+| 站 | 文件 | 署名 | 许可 | 原始文件页 |
+|---|---|---|---|---|
+| 隆中对 | `dai-jin-looking-three-times-at-the-thatched-hut.jpg` | 戴进 Dai Jin（明代宫廷画家） | Public domain (PD-Art, PD-old-100) | [Commons](https://commons.wikimedia.org/wiki/File:Dai_Jin-Looking_Three_Times_at_the_Thatched_Hut.jpg) |
+| 赤壁之战 | `赤壁縱火.jpg` | 马骀 Ma Tai（1885-1937） | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:赤壁縱火.jpg) |
+| 刮目相看 | `portrait-of-lu-meng-qing-dynasty.jpg` | 佚名（清代，出自《绣像全图三国演义》） | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Portrait_of_Lu_Meng,_Qing_dynasty.jpg) |
+| 三国志 | `a-fragment-of-biography-of-bu-zhi-history-books-of-three-kin.jpg` | 猫猫的日记本（自摄，敦煌研究院藏品） | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:A_Fragment_of_Biography_of_Bu_Zhi_History_Books_of_Three_Kingdoms_01_2012-12.JPG) |
+| 前赤壁赋 | `su-shi-former-ode-on-the-red-cliff.jpg` | 苏轼（原作），台北故宫早年网展数字化 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Su_Shi-Former_Ode_on_the_Red_Cliff.jpg) |
+| 寒食帖 | `寒食帖.jpg` | 苏轼（原作） | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:寒食帖.jpg) |
+| 赤壁图 | `金武元直赤壁圖-卷.jpg` | 國立故宮博物院（原作武元直） | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:金武元直赤壁圖_卷.jpg) |
+| 三国演义 | `zhsy100335-三國志通俗演義-明羅本撰-明嘉靖元年刻本-pdf.jpg` | (明)罗本（罗贯中），中华再造善本影印 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:ZHSY100335_三國志通俗演義_明羅本撰_明嘉靖元年刻本.pdf) |
+
+## kanhe
+
+| 站 | 文件 | 署名 | 许可 | 原始文件页 |
+|---|---|---|---|---|
+| 石鼓 | `gugong-shiguguan-quanjing.jpg` | No-Macaroon1670 摄，2024 年 1 月 | 作者本人拍摄 | — |
+| 书同文 | `edict-bronze-standard-weight-qin-dynasty.jpg` | ReijiYamashina777 | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:Edict_bronze_standard_weight_Qin_dynasty.jpg) |
+| 熹平石经 | `guobo-xipingshijing-canshi.jpg` | No-Macaroon1670 摄 | 作者本人拍摄 | — |
+| 孝文帝汉化·迁都洛阳 | `20240815-site-of-luoyang-city-from-han-to-wei-dynasty-site-o.jpg` | Windmemories | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:20240815_Site_of_Luoyang_City_from_Han_to_Wei_Dynasty_-_Site_of_the_Palace_City_01.jpg) |
+| 天龙山石窟 | `jinci-yuantiao-tianlongshan.jpg` | No-Macaroon1670 摄，2023 年 12 月 | 作者本人拍摄 | — |
+| 天龙山石窟 | `tianlongshan-grotto-manshan-pavillion-taiyuan-shanxi.jpg` | Underbar dk | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Tianlongshan_Grotto_-_Manshan_Pavillion,_Taiyuan,_Shanxi.JPG) |
+| 天龙山石窟 | `nezu-tianlongshan-c10-bodhisattva-head.jpg` | No-Macaroon1670 摄，菩薩立像頭部｜**天龍山石窟第10窟**｜石造（砂岩）｜中国・北齊時代 6世紀｜编号 20086 | 作者本人拍摄 | — |
+| 独孤信之死 | `guobo-nzhou-duguxin-epitaph.jpg` | No-Macaroon1670 摄，独孤信之死 ——**本册无独立文件行** | 作者本人拍摄 | — |
+| 独孤信之死 | `du-guxin-epitaph.jpg` | 未署名（来源sohu.com转载，摄影者不详） | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Du_Guxin_epitaph.jpg) |
+| 独孤信之死 | `western-wei-26-face-seal-of-dugu-xin-9947998814.jpg` | Gary Todd | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:Western_Wei_26-face_Seal_of_Dugu_Xin_(9947998814).jpg) |
+| 开成石经 | `yijing-stele-beilin.jpg` | Felix Andrews (Floybix) | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Yijing_stele_Beilin.jpg) |
+| 秘色瓷 | `famensi-mise-kuikou-pan.jpg` | No-Macaroon1670 摄，秘色瓷 ——**本册无独立文件行** | 作者本人拍摄 | — |
+| 秘色瓷 | `mise-ware-excavated-at-famen-temple-2019-11-16-01.jpg` | Siyuwj | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Mise_ware_excavated_at_Famen_Temple,_2019-11-16_01.jpg) |
+| 钱镠铁券 | `iron-plaque-for-quan-liu-2016-09-15-02.jpg` | Siyuwj | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Iron_Plaque_for_Quan_Liu,_2016-09-15_02.jpg) |
+| 湖州镜 | `guobo-nansong-huzhou-shijia-tongjing-sanmian.jpg` | No-Macaroon1670 摄 | 作者本人拍摄 | — |
+| 湖州镜 | `大理州博物馆-大理国-大理市弘圣寺塔-菊瓣纹圆铜镜-湖州石念-二叔照子-铭文铜镜.jpg` | 瑞丽江的河水 | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:%E5%A4%A7%E7%90%86%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86-%E5%A4%A7%E7%90%86%E5%9B%BD-%E5%A4%A7%E7%90%86%E5%B8%82%E5%BC%98%E5%9C%A3%E5%AF%BA%E5%A1%94-%E8%8F%8A%E7%93%A3%E7%BA%B9%E5%9C%86%E9%93%9C%E9%95%9C_%E2%80%9C%E6%B9%96%E5%B7%9E%E7%9F%B3%E5%BF%B5_%E4%BA%8C%E5%8F%94%E7%85%A7%E5%AD%90%E2%80%9D%E9%93%AD%E6%96%87%E9%93%9C%E9%95%9C.jpg) |
+| 郑和下西洋 | `guobo-mingdai-zhenghe-tongzhong-xuande.jpg` | No-Macaroon1670 摄 | 作者本人拍摄 | — |
+| 郑和下西洋 | `天妃灵应之记碑-01.jpg` | FradonStar | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:%E5%A4%A9%E5%A6%83%E7%81%B5%E5%BA%94%E4%B9%8B%E8%AE%B0%E7%A2%91_01.jpg) |
+| 皇史宬 | `20251026-chest-from-the-imperial-archives.jpg` | Windmemories | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:20251026_Chest_from_the_Imperial_Archives.jpg) |
+
 ## shiku
 
 | 站 | 文件 | 署名 | 许可 | 原始文件页 |
@@ -22,6 +68,19 @@ CC-BY 与 CC-BY-SA 要求署名，这是法律义务；CC0 与公有领域不要
 | 大足石刻 | `960px-Baodingshan_Cliff_Carvings_%2850620551337%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail` | Hugh Llewelyn from Keynsham, UK | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Baodingshan_Cliff_Carvings_(50620551337).jpg) |
 | 藏经洞发现 | `Photo_showing_Cave_16_and_the_manuscripts_piled_up_for_Stein_to_examine_near_the_entrance_to_Cave_17%2C_the_%E2%80%9Clibrary_cave.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled` | Aurel Stein | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Photo_showing_Cave_16_and_the_manuscripts_piled_up_for_Stein_to_examine_near_the_entrance_to_Cave_17,_the_%E2%80%9Clibrary_cave.jpg) |
 | 序 | `baimasi-stone-horse-2023.jpg` | No-Macaroon1670 摄，2023 年 12 月 | 作者本人拍摄 | — |
+
+## shugui
+
+| 站 | 文件 | 署名 | 许可 | 原始文件页 |
+|---|---|---|---|---|
+| 一万三千二百一十九卷 | `至聖先賢半身像-冊-096-劉向.jpg` | 佚名（元代画家），台北故宫博物院南薰殿旧藏，数字化经 Shuge 转录 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:%E8%87%B3%E8%81%96%E5%85%88%E8%B3%A2%E5%8D%8A%E8%BA%AB%E5%83%8F_%E5%86%8A-096-%E5%8A%89%E5%90%91.jpg) |
+| 江陵的火 | `荆州古城墙.jpg` | Kong5579（摄） | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:%E8%8D%86%E5%B7%9E%E5%8F%A4%E5%9F%8E%E5%A2%99.jpg) |
+| 把书拆成零件 | `ioc-utokyo-006017-藝文類聚一百卷嘉靖中天水胡纘宗刊本-卷首-pdf.jpg` | 欧阳询（原编），明嘉靖间胡缵宗刊本；东京大学东洋文化研究所藏并数字化 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:IOC.UTokyo-006017_%E8%97%9D%E6%96%87%E9%A1%9E%E8%81%9A%E4%B8%80%E7%99%BE%E5%8D%B7%E5%98%89%E9%9D%96%E4%B8%AD%E5%A4%A9%E6%B0%B4%E8%83%A1%E7%BA%98%E5%AE%97%E5%88%8A%E6%9C%AC_%E5%8D%B7%E9%A6%96.pdf) |
+| 真宗划掉的那一页 | `ssid-10224663-宋本冊府元龜-一-二-三-四-pdf.jpg` | 王钦若等编；宋刻本 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:SSID-10224663_%E5%AE%8B%E6%9C%AC%E5%86%8A%E5%BA%9C%E5%85%83%E9%BE%9C_%E4%B8%80%E3%80%81%E4%BA%8C%E3%80%81%E4%B8%89%E3%80%81%E5%9B%9B.pdf) |
+| 只抄了两份的书 | `page-from-the-great-encyclopaedia-of-the-yongle-reign-yongle.jpg` | 佚名（明内府写手），都柏林 Chester Beatty Library 藏 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Page_from_the_%27Great_encyclopaedia_of_the_Yongle_Reign%27_(Yongle_dadian)_(CBL_C_1751,_f.34v).jpg) |
+| 五米厚的墙 | `20251026-chest-from-the-imperial-archives.jpg` | Windmemories（摄） | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:20251026_Chest_from_the_Imperial_Archives.jpg) |
+| 被涂掉的名字 | `蔣廷錫.jpg` | 清叶衍兰辑摹，黄小泉绘 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:%E8%94%A3%E5%BB%B7%E9%8C%AB.jpg) |
+| 一边收，一边烧 | `文渊阁.jpg` | Walter Grassroot（摄） | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:%E6%96%87%E6%B8%8A%E9%98%81.JPG) |
 
 ## xianghuo
 
@@ -44,17 +103,8 @@ CC-BY 与 CC-BY-SA 要求署名，这是法律义务；CC0 与公有领域不要
 
 | 站 | 文件 | 署名 | 许可 | 原始文件页 |
 |---|---|---|---|---|
+| 舞蹈纹彩陶盆 | `guobo-wudaowen-caitaopen.jpg` | No-Macaroon1670 摄，2024 年 1 月 | 作者本人拍摄 | — |
+| 徽班进京 | `gugong-changyinge-zhengmian.jpg` | No-Macaroon1670 摄，2024 年 1 月 | 作者本人拍摄 | — |
 | 落点 | `tianqiao-juchang-haibao-2016.jpg` | No-Macaroon1670 摄，2016 年 9 月 | 作者本人拍摄 | — |
 | 落点 | `tianqiao-simianzhong-2016.jpg` | No-Macaroon1670 摄，2016 年 9 月 | 作者本人拍摄 | — |
 | 落点 | `tianqiao-deyunshe-jiejing-2016.jpg` | No-Macaroon1670 摄，2016 年 9 月 | 作者本人拍摄 | — |
-
-## 条卡·馆方开放图（第三通道）
-
-不属于任何故事线的站，属条卡直挂（`js/pics-museum-cards.js` 手选表）。图取自博物馆开放取用 API，
-授权字段逐件实测（军规见 docs/METHODS.md「馆方 CC0 开放图第三通道」）；馆方原档留存本机备料库，
-入库的是长边 1600px 网版。CC0 不要求署名，本库一律照署。
-
-| 条名 | 文件 | 署名 | 许可 | 原始条目页 |
-|---|---|---|---|---|
-| 易县三彩罗汉像 | `museum-cc0/met-44799-yixian-luohan.jpg` | The Metropolitan Museum of Art，objectID 44799 | CC0（Met Open Access，isPublicDomain=true，2026-08-25 实测） | [Met](https://www.metmuseum.org/art/collection/search/44799) |
-| 广胜下寺壁画 | `museum-cc0/met-42716-guangsheng-bihua.jpg` | The Metropolitan Museum of Art，objectID 42716 | CC0（Met Open Access，isPublicDomain=true，2026-08-25 实测） | [Met](https://www.metmuseum.org/art/collection/search/42716) |

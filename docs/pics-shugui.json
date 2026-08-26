@@ -1,0 +1,109 @@
+{
+ "说明": "shugui线配图账，体例同 pics-xianghuo.json。",
+ "站": {
+  "一万三千二百一十九卷": {
+   "文件": "至聖先賢半身像 冊-096-劉向.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/%E8%87%B3%E8%81%96%E5%85%88%E8%B3%A2%E5%8D%8A%E8%BA%AB%E5%83%8F_%E5%86%8A-096-%E5%8A%89%E5%90%91.jpg/1280px-%E8%87%B3%E8%81%96%E5%85%88%E8%B3%A2%E5%8D%8A%E8%BA%AB%E5%83%8F_%E5%86%8A-096-%E5%8A%89%E5%90%91.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/e/ea/%E8%87%B3%E8%81%96%E5%85%88%E8%B3%A2%E5%8D%8A%E8%BA%AB%E5%83%8F_%E5%86%8A-096-%E5%8A%89%E5%90%91.jpg",
+   "许可": "Public domain",
+   "作者": "佚名（元代画家），台北故宫博物院南薰殿旧藏，数字化经 Shuge 转录",
+   "署名": "佚名（元代画家），台北故宫博物院南薰殿旧藏，数字化经 Shuge 转录",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E8%87%B3%E8%81%96%E5%85%88%E8%B3%A2%E5%8D%8A%E8%BA%AB%E5%83%8F_%E5%86%8A-096-%E5%8A%89%E5%90%91.jpg",
+   "说明": "《至圣先贤半身像》刘向——校书者",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/shugui/至聖先賢半身像-冊-096-劉向.jpg"
+  },
+  "江陵的火": {
+   "文件": "荆州古城墙.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/%E8%8D%86%E5%B7%9E%E5%8F%A4%E5%9F%8E%E5%A2%99.jpg/1280px-%E8%8D%86%E5%B7%9E%E5%8F%A4%E5%9F%8E%E5%A2%99.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/8/83/%E8%8D%86%E5%B7%9E%E5%8F%A4%E5%9F%8E%E5%A2%99.jpg",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Kong5579（摄）",
+   "署名": "Kong5579（摄）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E8%8D%86%E5%B7%9E%E5%8F%A4%E5%9F%8E%E5%A2%99.jpg",
+   "说明": "荆州古城墙今貌——图注须认账：今貌非梁元帝时物",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/shugui/荆州古城墙.jpg"
+  },
+  "把书拆成零件": {
+   "文件": "IOC.UTokyo-006017 藝文類聚一百卷嘉靖中天水胡纘宗刊本 卷首.pdf",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/IOC.UTokyo-006017_%E8%97%9D%E6%96%87%E9%A1%9E%E8%81%9A%E4%B8%80%E7%99%BE%E5%8D%B7%E5%98%89%E9%9D%96%E4%B8%AD%E5%A4%A9%E6%B0%B4%E8%83%A1%E7%BA%98%E5%AE%97%E5%88%8A%E6%9C%AC_%E5%8D%B7%E9%A6%96.pdf/page1-1280px-IOC.UTokyo-006017_%E8%97%9D%E6%96%87%E9%A1%9E%E8%81%9A%E4%B8%80%E7%99%BE%E5%8D%B7%E5%98%89%E9%9D%96%E4%B8%AD%E5%A4%A9%E6%B0%B4%E8%83%A1%E7%BA%98%E5%AE%97%E5%88%8A%E6%9C%AC_%E5%8D%B7%E9%A6%96.pdf.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/0/0e/IOC.UTokyo-006017_%E8%97%9D%E6%96%87%E9%A1%9E%E8%81%9A%E4%B8%80%E7%99%BE%E5%8D%B7%E5%98%89%E9%9D%96%E4%B8%AD%E5%A4%A9%E6%B0%B4%E8%83%A1%E7%BA%98%E5%AE%97%E5%88%8A%E6%9C%AC_%E5%8D%B7%E9%A6%96.pdf",
+   "许可": "Public domain",
+   "作者": "欧阳询（原编），明嘉靖间胡缵宗刊本；东京大学东洋文化研究所藏并数字化",
+   "署名": "欧阳询（原编），明嘉靖间胡缵宗刊本；东京大学东洋文化研究所藏并数字化",
+   "说明页": "https://commons.wikimedia.org/wiki/File:IOC.UTokyo-006017_%E8%97%9D%E6%96%87%E9%A1%9E%E8%81%9A%E4%B8%80%E7%99%BE%E5%8D%B7%E5%98%89%E9%9D%96%E4%B8%AD%E5%A4%A9%E6%B0%B4%E8%83%A1%E7%BA%98%E5%AE%97%E5%88%8A%E6%9C%AC_%E5%8D%B7%E9%A6%96.pdf",
+   "说明": "《艺文类聚》明嘉靖刻本卷首",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/shugui/ioc-utokyo-006017-藝文類聚一百卷嘉靖中天水胡纘宗刊本-卷首-pdf.jpg"
+  },
+  "真宗划掉的那一页": {
+   "文件": "SSID-10224663 宋本冊府元龜 一、二、三、四.pdf",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/SSID-10224663_%E5%AE%8B%E6%9C%AC%E5%86%8A%E5%BA%9C%E5%85%83%E9%BE%9C_%E4%B8%80%E3%80%81%E4%BA%8C%E3%80%81%E4%B8%89%E3%80%81%E5%9B%9B.pdf/page1-1280px-SSID-10224663_%E5%AE%8B%E6%9C%AC%E5%86%8A%E5%BA%9C%E5%85%83%E9%BE%9C_%E4%B8%80%E3%80%81%E4%BA%8C%E3%80%81%E4%B8%89%E3%80%81%E5%9B%9B.pdf.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/3/37/SSID-10224663_%E5%AE%8B%E6%9C%AC%E5%86%8A%E5%BA%9C%E5%85%83%E9%BE%9C_%E4%B8%80%E3%80%81%E4%BA%8C%E3%80%81%E4%B8%89%E3%80%81%E5%9B%9B.pdf",
+   "许可": "Public domain",
+   "作者": "王钦若等编；宋刻本",
+   "署名": "王钦若等编；宋刻本",
+   "说明页": "https://commons.wikimedia.org/wiki/File:SSID-10224663_%E5%AE%8B%E6%9C%AC%E5%86%8A%E5%BA%9C%E5%85%83%E9%BE%9C_%E4%B8%80%E3%80%81%E4%BA%8C%E3%80%81%E4%B8%89%E3%80%81%E5%9B%9B.pdf",
+   "说明": "宋本《册府元龟》书影",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/shugui/ssid-10224663-宋本冊府元龜-一-二-三-四-pdf.jpg"
+  },
+  "只抄了两份的书": {
+   "文件": "Page from the 'Great encyclopaedia of the Yongle Reign' (Yongle dadian) (CBL C 1751, f.34v).jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Page_from_the_%27Great_encyclopaedia_of_the_Yongle_Reign%27_%28Yongle_dadian%29_%28CBL_C_1751%2C_f.34v%29.jpg/1280px-Page_from_the_%27Great_encyclopaedia_of_the_Yongle_Reign%27_%28Yongle_dadian%29_%28CBL_C_1751%2C_f.34v%29.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Page_from_the_%27Great_encyclopaedia_of_the_Yongle_Reign%27_%28Yongle_dadian%29_%28CBL_C_1751%2C_f.34v%29.jpg",
+   "许可": "Public domain",
+   "作者": "佚名（明内府写手），都柏林 Chester Beatty Library 藏",
+   "署名": "佚名（明内府写手），都柏林 Chester Beatty Library 藏",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Page_from_the_%27Great_encyclopaedia_of_the_Yongle_Reign%27_(Yongle_dadian)_(CBL_C_1751,_f.34v).jpg",
+   "说明": "《永乐大典》存页",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/shugui/page-from-the-great-encyclopaedia-of-the-yongle-reign-yongle.jpg"
+  },
+  "五米厚的墙": {
+   "文件": "20251026 Chest from the Imperial Archives.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/20251026_Chest_from_the_Imperial_Archives.jpg/1280px-20251026_Chest_from_the_Imperial_Archives.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/d/de/20251026_Chest_from_the_Imperial_Archives.jpg",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Windmemories（摄）",
+   "署名": "Windmemories（摄）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:20251026_Chest_from_the_Imperial_Archives.jpg",
+   "说明": "皇史宬金匮（Commons）",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/shugui/20251026-chest-from-the-imperial-archives.jpg"
+  },
+  "被涂掉的名字": {
+   "文件": "蔣廷錫.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/%E8%94%A3%E5%BB%B7%E9%8C%AB.jpg/1280px-%E8%94%A3%E5%BB%B7%E9%8C%AB.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/8/8a/%E8%94%A3%E5%BB%B7%E9%8C%AB.jpg",
+   "许可": "Public domain",
+   "作者": "清叶衍兰辑摹，黄小泉绘",
+   "署名": "清叶衍兰辑摹，黄小泉绘",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E8%94%A3%E5%BB%B7%E9%8C%AB.jpg",
+   "说明": "蒋廷锡像——383px 源，候更高清替换",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/shugui/蔣廷錫.jpg"
+  },
+  "一边收，一边烧": {
+   "文件": "文渊阁.JPG",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/%E6%96%87%E6%B8%8A%E9%98%81.JPG/1280px-%E6%96%87%E6%B8%8A%E9%98%81.JPG",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/5/55/%E6%96%87%E6%B8%8A%E9%98%81.JPG",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Walter Grassroot（摄）",
+   "署名": "Walter Grassroot（摄）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E6%96%87%E6%B8%8A%E9%98%81.JPG",
+   "说明": "文渊阁匾额",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/shugui/文渊阁.jpg"
+  }
+ }
+}

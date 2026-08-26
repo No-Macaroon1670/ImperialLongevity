@@ -11,6 +11,236 @@
    "整幅": true,
    "缩略图": "img/used/gugong-shiguguan-quanjing.jpg",
    "说明页": ""
+  },
+  "书同文": {
+   "文件": "Edict bronze standard weight Qin dynasty.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Edict_bronze_standard_weight_Qin_dynasty.jpg/1280px-Edict_bronze_standard_weight_Qin_dynasty.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/6/67/Edict_bronze_standard_weight_Qin_dynasty.jpg",
+   "许可": "CC0",
+   "作者": "ReijiYamashina777",
+   "署名": "ReijiYamashina777",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Edict_bronze_standard_weight_Qin_dynasty.jpg",
+   "说明": "秦诏版拓本——统一文字的政令刻在铜版上",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/kanhe/edict-bronze-standard-weight-qin-dynasty.jpg"
+  },
+  "熹平石经": {
+   "文件": "guobo-xipingshijing-canshi.jpg",
+   "署名": "No-Macaroon1670 摄",
+   "作者": "No-Macaroon1670 摄",
+   "许可": "作者本人拍摄",
+   "说明": "国博藏熹平石经残石（自摄）",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/used/guobo-xipingshijing-canshi.jpg",
+   "说明页": ""
+  },
+  "孝文帝汉化·迁都洛阳": {
+   "文件": "20240815 Site of Luoyang City from Han to Wei Dynasty - Site of the Palace City 01.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/20240815_Site_of_Luoyang_City_from_Han_to_Wei_Dynasty_-_Site_of_the_Palace_City_01.jpg/1280px-20240815_Site_of_Luoyang_City_from_Han_to_Wei_Dynasty_-_Site_of_the_Palace_City_01.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/8/87/20240815_Site_of_Luoyang_City_from_Han_to_Wei_Dynasty_-_Site_of_the_Palace_City_01.jpg",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Windmemories",
+   "署名": "Windmemories",
+   "说明页": "https://commons.wikimedia.org/wiki/File:20240815_Site_of_Luoyang_City_from_Han_to_Wei_Dynasty_-_Site_of_the_Palace_City_01.jpg",
+   "说明": "汉魏洛阳故城遗址航拍——迁都的落点今貌",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/kanhe/20240815-site-of-luoyang-city-from-han-to-wei-dynasty-site-o.jpg"
+  },
+  "天龙山石窟": [
+   {
+    "文件": "jinci-yuantiao-tianlongshan.jpg",
+    "署名": "No-Macaroon1670 摄，2023 年 12 月",
+    "作者": "No-Macaroon1670 摄，2023 年 12 月",
+    "许可": "作者本人拍摄",
+    "说明": "自晋祠远眺天龙山——在地的山",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/used/jinci-yuantiao-tianlongshan.jpg",
+    "说明页": ""
+   },
+   {
+    "文件": "Tianlongshan Grotto - Manshan Pavillion, Taiyuan, Shanxi.JPG",
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Tianlongshan_Grotto_-_Manshan_Pavillion%2C_Taiyuan%2C_Shanxi.JPG/1280px-Tianlongshan_Grotto_-_Manshan_Pavillion%2C_Taiyuan%2C_Shanxi.JPG",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Tianlongshan_Grotto_-_Manshan_Pavillion%2C_Taiyuan%2C_Shanxi.JPG",
+    "许可": "CC BY-SA 4.0",
+    "作者": "Underbar dk",
+    "署名": "Underbar dk",
+    "说明页": "https://commons.wikimedia.org/wiki/File:Tianlongshan_Grotto_-_Manshan_Pavillion,_Taiyuan,_Shanxi.JPG",
+    "说明": "天龙山漫山阁——山上的窟",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/kanhe/tianlongshan-grotto-manshan-pavillion-taiyuan-shanxi.jpg"
+   },
+   {
+    "文件": "nezu-tianlongshan-c10-bodhisattva-head.jpg",
+    "署名": "No-Macaroon1670 摄，菩薩立像頭部｜**天龍山石窟第10窟**｜石造（砂岩）｜中国・北齊時代 6世紀｜编号 20086",
+    "作者": "No-Macaroon1670 摄，菩薩立像頭部｜**天龍山石窟第10窟**｜石造（砂岩）｜中国・北齊時代 6世紀｜编号 20086",
+    "许可": "作者本人拍摄",
+    "说明": "东京根津美术馆藏天龙山第10窟菩萨头像（自摄）——离散的头",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/used/nezu-tianlongshan-c10-bodhisattva-head.jpg",
+    "说明页": ""
+   }
+  ],
+  "独孤信之死": [
+   {
+    "文件": "guobo-nzhou-duguxin-epitaph.jpg",
+    "署名": "No-Macaroon1670 摄，独孤信之死 ——**本册无独立文件行**",
+    "作者": "No-Macaroon1670 摄，独孤信之死 ——**本册无独立文件行**",
+    "许可": "作者本人拍摄",
+    "说明": "国博藏独孤信墓志（自摄）",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/used/guobo-nzhou-duguxin-epitaph.jpg",
+    "说明页": ""
+   },
+   {
+    "文件": "Du Guxin epitaph.jpg",
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Du_Guxin_epitaph.jpg/1280px-Du_Guxin_epitaph.jpg",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Du_Guxin_epitaph.jpg",
+    "许可": "Public domain",
+    "作者": "未署名（来源sohu.com转载，摄影者不详）",
+    "署名": "未署名（来源sohu.com转载，摄影者不详）",
+    "说明页": "https://commons.wikimedia.org/wiki/File:Du_Guxin_epitaph.jpg",
+    "说明": "独孤信墓志拓本——方格志文逐字可读",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/kanhe/du-guxin-epitaph.jpg"
+   },
+   {
+    "文件": "Western Wei 26-face Seal of Dugu Xin (9947998814).jpg",
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Western_Wei_26-face_Seal_of_Dugu_Xin_%289947998814%29.jpg/1280px-Western_Wei_26-face_Seal_of_Dugu_Xin_%289947998814%29.jpg",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/2/26/Western_Wei_26-face_Seal_of_Dugu_Xin_%289947998814%29.jpg",
+    "许可": "CC0",
+    "作者": "Gary Todd",
+    "署名": "Gary Todd",
+    "说明页": "https://commons.wikimedia.org/wiki/File:Western_Wei_26-face_Seal_of_Dugu_Xin_(9947998814).jpg",
+    "说明": "独孤信廿六面煤精组印——一人多衔的实物",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/kanhe/western-wei-26-face-seal-of-dugu-xin-9947998814.jpg"
+   }
+  ],
+  "开成石经": {
+   "文件": "Yijing stele Beilin.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Yijing_stele_Beilin.jpg/1280px-Yijing_stele_Beilin.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/6/61/Yijing_stele_Beilin.jpg",
+   "许可": "CC BY-SA 3.0",
+   "作者": "Felix Andrews (Floybix)",
+   "署名": "Felix Andrews (Floybix)",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Yijing_stele_Beilin.jpg",
+   "说明": "西安碑林开成石经拓面近摄",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/kanhe/yijing-stele-beilin.jpg"
+  },
+  "秘色瓷": [
+   {
+    "文件": "famensi-mise-kuikou-pan.jpg",
+    "署名": "No-Macaroon1670 摄，秘色瓷 ——**本册无独立文件行**",
+    "作者": "No-Macaroon1670 摄，秘色瓷 ——**本册无独立文件行**",
+    "许可": "作者本人拍摄",
+    "说明": "国博展出法门寺秘色葵口盘（自摄，带说明牌）",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/used/famensi-mise-kuikou-pan.jpg",
+    "说明页": ""
+   },
+   {
+    "文件": "Mise ware excavated at Famen Temple, 2019-11-16 01.jpg",
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Mise_ware_excavated_at_Famen_Temple%2C_2019-11-16_01.jpg/1280px-Mise_ware_excavated_at_Famen_Temple%2C_2019-11-16_01.jpg",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/1/11/Mise_ware_excavated_at_Famen_Temple%2C_2019-11-16_01.jpg",
+    "许可": "CC BY-SA 4.0",
+    "作者": "Siyuwj",
+    "署名": "Siyuwj",
+    "说明页": "https://commons.wikimedia.org/wiki/File:Mise_ware_excavated_at_Famen_Temple,_2019-11-16_01.jpg",
+    "说明": "法门寺出土秘色瓷盘——棚拍级单件",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/kanhe/mise-ware-excavated-at-famen-temple-2019-11-16-01.jpg"
+   }
+  ],
+  "钱镠铁券": {
+   "文件": "Iron Plaque for Quan Liu, 2016-09-15 02.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Iron_Plaque_for_Quan_Liu%2C_2016-09-15_02.jpg/1280px-Iron_Plaque_for_Quan_Liu%2C_2016-09-15_02.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Iron_Plaque_for_Quan_Liu%2C_2016-09-15_02.jpg",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Siyuwj",
+   "署名": "Siyuwj",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Iron_Plaque_for_Quan_Liu,_2016-09-15_02.jpg",
+   "说明": "钱镠铁券近摄——嵌金字铁瓦",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/kanhe/iron-plaque-for-quan-liu-2016-09-15-02.jpg"
+  },
+  "湖州镜": [
+   {
+    "文件": "guobo-nansong-huzhou-shijia-tongjing-sanmian.jpg",
+    "署名": "No-Macaroon1670 摄",
+    "作者": "No-Macaroon1670 摄",
+    "许可": "作者本人拍摄",
+    "说明": "国博藏南宋湖州石家镜三面（自摄）",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/used/guobo-nansong-huzhou-shijia-tongjing-sanmian.jpg",
+    "说明页": ""
+   },
+   {
+    "文件": "大理州博物馆-大理国-大理市弘圣寺塔-菊瓣纹圆铜镜 “湖州石念 二叔照子”铭文铜镜.jpg",
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/%E5%A4%A7%E7%90%86%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86-%E5%A4%A7%E7%90%86%E5%9B%BD-%E5%A4%A7%E7%90%86%E5%B8%82%E5%BC%98%E5%9C%A3%E5%AF%BA%E5%A1%94-%E8%8F%8A%E7%93%A3%E7%BA%B9%E5%9C%86%E9%93%9C%E9%95%9C_%E2%80%9C%E6%B9%96%E5%B7%9E%E7%9F%B3%E5%BF%B5_%E4%BA%8C%E5%8F%94%E7%85%A7%E5%AD%90%E2%80%9D%E9%93%AD%E6%96%87%E9%93%9C%E9%95%9C.jpg/1280px-%E5%A4%A7%E7%90%86%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86-%E5%A4%A7%E7%90%86%E5%9B%BD-%E5%A4%A7%E7%90%86%E5%B8%82%E5%BC%98%E5%9C%A3%E5%AF%BA%E5%A1%94-%E8%8F%8A%E7%93%A3%E7%BA%B9%E5%9C%86%E9%93%9C%E9%95%9C_%E2%80%9C%E6%B9%96%E5%B7%9E%E7%9F%B3%E5%BF%B5_%E4%BA%8C%E5%8F%94%E7%85%A7%E5%AD%90%E2%80%9D%E9%93%AD%E6%96%87%E9%93%9C%E9%95%9C.jpg",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/2/2a/%E5%A4%A7%E7%90%86%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86-%E5%A4%A7%E7%90%86%E5%9B%BD-%E5%A4%A7%E7%90%86%E5%B8%82%E5%BC%98%E5%9C%A3%E5%AF%BA%E5%A1%94-%E8%8F%8A%E7%93%A3%E7%BA%B9%E5%9C%86%E9%93%9C%E9%95%9C_%E2%80%9C%E6%B9%96%E5%B7%9E%E7%9F%B3%E5%BF%B5_%E4%BA%8C%E5%8F%94%E7%85%A7%E5%AD%90%E2%80%9D%E9%93%AD%E6%96%87%E9%93%9C%E9%95%9C.jpg",
+    "许可": "CC BY-SA 4.0",
+    "作者": "瑞丽江的河水",
+    "署名": "瑞丽江的河水",
+    "说明页": "https://commons.wikimedia.org/wiki/File:%E5%A4%A7%E7%90%86%E5%B7%9E%E5%8D%9A%E7%89%A9%E9%A6%86-%E5%A4%A7%E7%90%86%E5%9B%BD-%E5%A4%A7%E7%90%86%E5%B8%82%E5%BC%98%E5%9C%A3%E5%AF%BA%E5%A1%94-%E8%8F%8A%E7%93%A3%E7%BA%B9%E5%9C%86%E9%93%9C%E9%95%9C_%E2%80%9C%E6%B9%96%E5%B7%9E%E7%9F%B3%E5%BF%B5_%E4%BA%8C%E5%8F%94%E7%85%A7%E5%AD%90%E2%80%9D%E9%93%AD%E6%96%87%E9%93%9C%E9%95%9C.jpg",
+    "说明": "大理弘圣寺塔出土两镜带官牌——湖州镜远销的实证",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/kanhe/大理州博物馆-大理国-大理市弘圣寺塔-菊瓣纹圆铜镜-湖州石念-二叔照子-铭文铜镜.jpg"
+   }
+  ],
+  "郑和下西洋": [
+   {
+    "文件": "guobo-mingdai-zhenghe-tongzhong-xuande.jpg",
+    "署名": "No-Macaroon1670 摄",
+    "作者": "No-Macaroon1670 摄",
+    "许可": "作者本人拍摄",
+    "说明": "国博藏宣德郑和铜钟（自摄）",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/used/guobo-mingdai-zhenghe-tongzhong-xuande.jpg",
+    "说明页": ""
+   },
+   {
+    "文件": "天妃灵应之记碑 01.jpg",
+    "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/%E5%A4%A9%E5%A6%83%E7%81%B5%E5%BA%94%E4%B9%8B%E8%AE%B0%E7%A2%91_01.jpg/1280px-%E5%A4%A9%E5%A6%83%E7%81%B5%E5%BA%94%E4%B9%8B%E8%AE%B0%E7%A2%91_01.jpg",
+    "原图": "https://upload.wikimedia.org/wikipedia/commons/8/82/%E5%A4%A9%E5%A6%83%E7%81%B5%E5%BA%94%E4%B9%8B%E8%AE%B0%E7%A2%91_01.jpg",
+    "许可": "CC BY-SA 4.0",
+    "作者": "FradonStar",
+    "署名": "FradonStar",
+    "说明页": "https://commons.wikimedia.org/wiki/File:%E5%A4%A9%E5%A6%83%E7%81%B5%E5%BA%94%E4%B9%8B%E8%AE%B0%E7%A2%91_01.jpg",
+    "说明": "天妃灵应之记碑展厅——碑刻本尊",
+    "卡": false,
+    "整幅": true,
+    "缩略图": "img/story/kanhe/天妃灵应之记碑-01.jpg"
+   }
+  ],
+  "皇史宬": {
+   "文件": "20251026 Chest from the Imperial Archives.jpg",
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/20251026_Chest_from_the_Imperial_Archives.jpg/1280px-20251026_Chest_from_the_Imperial_Archives.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/d/de/20251026_Chest_from_the_Imperial_Archives.jpg",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Windmemories",
+   "署名": "Windmemories",
+   "说明页": "https://commons.wikimedia.org/wiki/File:20251026_Chest_from_the_Imperial_Archives.jpg",
+   "说明": "皇史宬鎏金铜皮樟木金匮——五米厚墙里装的就是它",
+   "卡": false,
+   "整幅": true,
+   "缩略图": "img/story/kanhe/20251026-chest-from-the-imperial-archives.jpg"
   }
  }
 }
