@@ -24,6 +24,10 @@
   以该件页面标志为准，绝不按馆默认）；②一律 vendor 落本地 img/ 防外链腐（走 vendor_pics
   既有模式），CREDITS.md 照 Commons 体例记 馆名+编号+URL+授权；③API 直链优先（Met/CMA/AIC
   皆有开放 API 带图链）；④与自摄分工按件裁：自摄带亲历叙事、CC0 带画质，判官荐、库主点。
+  工序（2026-08-25 首批定）：馆方原档落 `img/museum-cc0/stock/`（gitignore，同 own/ 待遇）；
+  库主圈中挂卡者出长边 1600px 网版（q90 渐进去元数据，照 crop.py 家规）落 `img/museum-cc0/`
+  顶层入库；条卡接线走 `js/pics-museum-cards.js` 手选表（取图序：自摄＞馆方开放图＞维基缩略），
+  署名行入 img/CREDITS.md「条卡·馆方开放图」节。备料候条的件只留 stock，不入库不接线。
 
 ## 台账（劳动登记）
 - **docs/kaozheng-ledger.md**——一手核对总账（逐字核得/讹字纠正/历法换算/辟谣之辟谣…每笔留档，查重复用）

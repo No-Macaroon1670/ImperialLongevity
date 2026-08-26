@@ -47,3 +47,14 @@ CC-BY 与 CC-BY-SA 要求署名，这是法律义务；CC0 与公有领域不要
 | 落点 | `tianqiao-juchang-haibao-2016.jpg` | No-Macaroon1670 摄，2016 年 9 月 | 作者本人拍摄 | — |
 | 落点 | `tianqiao-simianzhong-2016.jpg` | No-Macaroon1670 摄，2016 年 9 月 | 作者本人拍摄 | — |
 | 落点 | `tianqiao-deyunshe-jiejing-2016.jpg` | No-Macaroon1670 摄，2016 年 9 月 | 作者本人拍摄 | — |
+
+## 条卡·馆方开放图（第三通道）
+
+不属于任何故事线的站，属条卡直挂（`js/pics-museum-cards.js` 手选表）。图取自博物馆开放取用 API，
+授权字段逐件实测（军规见 docs/METHODS.md「馆方 CC0 开放图第三通道」）；馆方原档留存本机备料库，
+入库的是长边 1600px 网版。CC0 不要求署名，本库一律照署。
+
+| 条名 | 文件 | 署名 | 许可 | 原始条目页 |
+|---|---|---|---|---|
+| 易县三彩罗汉像 | `museum-cc0/met-44799-yixian-luohan.jpg` | The Metropolitan Museum of Art，objectID 44799 | CC0（Met Open Access，isPublicDomain=true，2026-08-25 实测） | [Met](https://www.metmuseum.org/art/collection/search/44799) |
+| 广胜下寺壁画 | `museum-cc0/met-42716-guangsheng-bihua.jpg` | The Metropolitan Museum of Art，objectID 42716 | CC0（Met Open Access，isPublicDomain=true，2026-08-25 实测） | [Met](https://www.metmuseum.org/art/collection/search/42716) |

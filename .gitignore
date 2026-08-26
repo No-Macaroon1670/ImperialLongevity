@@ -30,6 +30,11 @@ img/processing/*
 img/own/*
 !img/own/README.md
 
+# ── 馆方 CC0 开放图第三通道（2026-08-25 立，军规见 docs/METHODS.md）───────
+# stock/ 是馆方原档备料库（vendor 落本地，动辄两三 MB），照 own/ 的规矩留在本机；
+# 圈中挂卡的出 1600px 网版落 img/museum-cc0/ 顶层，只有网版入库推送。
+img/museum-cc0/stock/
+
 # Python 缓存
 __pycache__/
 *.pyc

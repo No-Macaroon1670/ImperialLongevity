@@ -12,6 +12,7 @@
 import { h, fmtYearAxis } from './charts.js';
 import { EVENT_KINDS } from './events.js';
 import { OWN_PIC } from './pics-own-cards.js';
+import { MUSEUM_PIC } from './pics-museum-cards.js';
 
 /**
  * 值得自动弹卡的名君(姓名 → 权重 1–3):滚动经过时自动打开,权重高者优先。
@@ -243,6 +244,7 @@ export function evSpec(ev) {
     // b：百度自己的正名（维基与百度的条目名常不一致，实测 75 条要另写）
     // nb：百度确实没有这个词条，藏掉按钮而不是给个 404
     baidu: ev.b, noBaidu: !!ev.nb, museum: ev.m, wsrc: ev.wsrc, ownPic: OWN_PIC[ev.n],
+    musPic: MUSEUM_PIC[ev.n],
     q: ev.ya || ev.n, yt: true,
     // yc：库内自撰简注。无维基条目、或维基摘要抓取失败时，fillCard 拿它
     // 顶上摘要区——对 nb/无 w 判例族而言，这条注恰恰是全库考据最厚的地方
@@ -375,11 +377,14 @@ async function fillCard(card, spec) {
     card.el.classList.toggle('kp-haspic', !!on);
   };
   pic(false);
-  // 自摄图优先(手选表 pics-own-cards.js):立即上图,不等维基;维基缩略图退居替补
-  if (spec.ownPic) {
-    card.img.src = spec.ownPic;
+  // 本地图两级手选(自摄 pics-own-cards.js > 馆方开放图 pics-museum-cards.js):
+  // 立即上图,不等维基;维基缩略图退居替补。图注前缀随图源走。
+  const localPic = spec.ownPic ? { src: spec.ownPic, note: '图为本库自摄' }
+    : spec.musPic ? { src: spec.musPic.src, note: spec.musPic.credit } : null;
+  if (localPic) {
+    card.img.src = localPic.src;
     pic(true);
-    card.src.textContent = '图为本库自摄；摘要实时取自中文维基百科';
+    card.src.textContent = localPic.note + '；摘要实时取自中文维基百科';
   } else {
     card.src.textContent = '摘要实时取自中文维基百科';
   }
@@ -404,10 +409,10 @@ async function fillCard(card, spec) {
     if (spec.yc) {
       card.ext.innerHTML = mdBold(spec.yc);
       card.el.classList.add('kp-yc-full');
-      card.src.textContent = spec.ownPic ? '图为本库自摄；本库自撰简注' : '本库自撰简注';
+      card.src.textContent = localPic ? localPic.note + '；本库自撰简注' : '本库自撰简注';
     } else {
       card.ext.textContent = '中文维基无此条目；本条考据见库内简注与馆藏页。';
-      card.src.textContent = spec.ownPic ? '图为本库自摄' : '';
+      card.src.textContent = localPic ? localPic.note : '';
     }
     card.el.classList.add('on');
     return;
@@ -473,7 +478,7 @@ async function fillCard(card, spec) {
   if (s && s.extract && s.type !== 'disambiguation') {
     card.title.textContent = spec.display || s.title || spec.title;
     card.ext.textContent = s.extract;
-    if (!spec.ownPic && s.thumbnail && s.thumbnail.source) { card.img.src = s.thumbnail.source; pic(true); }
+    if (!localPic && s.thumbnail && s.thumbnail.source) { card.img.src = s.thumbnail.source; pic(true); }
     if (s.content_urls && s.content_urls.desktop) {
       card.wiki.href = s.content_urls.desktop.page + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
     }
@@ -482,7 +487,7 @@ async function fillCard(card, spec) {
     // 别空手,库内简注顶上——待遇与「无维基条目」分支相同(全文、kp-yc-full)
     card.ext.innerHTML = mdBold(spec.yc);
     card.el.classList.add('kp-yc-full');
-    card.src.textContent = spec.ownPic ? '图为本库自摄；本库自撰简注' : '本库自撰简注';
+    card.src.textContent = localPic ? localPic.note + '；本库自撰简注' : '本库自撰简注';
   } else {
     card.ext.textContent = '未能实时拉取维基摘要(可能无词条或网络受限),下方链接仍可直达。';
   }
