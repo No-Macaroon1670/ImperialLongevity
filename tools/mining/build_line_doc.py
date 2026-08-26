@@ -75,7 +75,7 @@ def load_events():
         out[n] = {'y': int(re.search(r'y:\s*(-?\d+)', b).group(1)),
                   'y2': int(y2.group(1)) if y2 else None,
                   'k': g('k'), 'w': g('w'), 'b': g('b'), 'd': g('d'),
-                  'yc': g('yc'), 'm': g('m'), 'ya': g('ya'),
+                  'yc': g('yc'), 'yl': g('yl'), 'm': g('m'), 'ya': g('ya'),
                   'u': int(u.group(1)) if u else None}
     return out
 

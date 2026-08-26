@@ -76,10 +76,13 @@ a{color:inherit}
 #side{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
   z-index:40;width:11rem}
 #rail{display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
-#rail a{display:flex;align-items:center;gap:.5rem;color:var(--faint);text-decoration:none;
+/* 点与标签的间距落在 .dot 的 margin 上而不靠 flex gap：读者侧环境（插件/旧内核）重写 <a>
+   的 display 时会退成 inline 排布，margin+vertical-align 在两种排布下同样成立，标签永不吃点
+   （2026-08-26 库主线上截图实案，本地净环境不复现；flex 健康时此写法与 gap 像素等价） */
+#rail a{display:flex;align-items:center;color:var(--faint);text-decoration:none;
   letter-spacing:.04em;transition:color .25s}
-#rail .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;transition:transform .25s}
-#rail a .lbl{opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap}
+#rail .dot{display:inline-block;vertical-align:middle;width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;margin-right:.5rem;transition:transform .25s}
+#rail a .lbl{display:inline-block;vertical-align:middle;opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap}
 #rail a:hover{color:var(--dim)} #rail a:hover .lbl{opacity:1;transform:none}
 #rail a.on{color:var(--accent)} #rail a.on .dot{transform:scale(1.5)}
 #rail a.on .lbl{opacity:1;transform:none}
@@ -564,8 +567,12 @@ def main():
         picfig(name)
         paras_of(name, long_text.get(name) or [s['b'] + (s.get('b2') or '')])
         A('<a class="go" href="../timeline.html#line=%s&amp;at=%d">在图上看这一站 →</a>' % (key, i))
-        if e.get('yc'):
-            A('<p class="note">本库简注：%s</p>' % esc(e['yc']))
+        # 长文优先：2026-08-26 yc/yl 拆分后 yc 只剩悬浮短版，长文在 yl（knowledge.js 卡面同约）。
+        # 只取 yc 会把七页的长简注整段截成短句——本行是那颗雷的排雷针，改回 yc 即复雷。
+        if e.get('yl') or e.get('yc'):
+            # 段首短标与段落转义是卡面格式，平铺段落里剥掉/铺平
+            _note = (e.get('yl') or e['yc']).replace('**', '').replace('\\n', ' ')
+            A('<p class="note">本库简注：%s</p>' % esc(_note))
         app_block(name)
         A('</div></section>')
 
