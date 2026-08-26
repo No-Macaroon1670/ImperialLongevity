@@ -301,6 +301,14 @@ def map_svg(key, cls='hmap', width=640):
     return r.stdout.decode('utf-8')
 
 
+def _who(p):
+    """署名行。剥 HTML 标签兜底：Commons 元数据 Artist 常整段是 <a> 链，采图侧漏网
+    一次（妈祖案 2026-08-26）就会把生标签印上图注——出口一律只留纯文本。"""
+    import re as _re
+    t = ' · '.join([x for x in [p.get('署名') or p.get('作者'), p.get('许可')] if x])
+    return _re.sub(r'\s+', ' ', _re.sub(r'<[^>]+>', '', t)).strip()
+
+
 def route_strip(stops, cur):
     """站界行程条：第 cur 站（1起）的章头示意——已过实心、本站放大带名、未来空心。
     静态即正确：第 N 站的条画「前 N-1 站已过」，不需要滚动状态（用户 2026-08-21 案：
@@ -458,12 +466,11 @@ def main():
         A('<button class="zoom" type="button" data-src="%s" data-cap="%s" data-who="%s" '
           'data-full="%s" aria-label="放大看：%s">'
           % (esc('../' + p['缩略图']), esc(p.get('说明') or ''),
-             esc(' · '.join([x for x in [p.get('署名') or p.get('作者'),
-                                         p.get('许可')] if x])),
+             esc(_who(p)),
              esc(p.get('说明页') or ''), esc(p.get('说明') or '图片')))
         A('<img src="%s" alt="%s" loading="lazy">' % (esc('../' + p['缩略图']), esc(p.get('说明'))))
         A('</button>')
-        who = ' · '.join([x for x in [p.get('署名') or p.get('作者'), p.get('许可')] if x])
+        who = _who(p)
         link = p.get('说明页')
         tail = ('<a href="%s" target="_blank" rel="noopener">%s</a>' % (esc(link), esc(who))
                 if link else esc(who))
