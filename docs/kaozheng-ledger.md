@@ -505,3 +505,4 @@
 | 08-26 | 湖南省博案改判：库主 VPN 香港取回「馆藏国宝」总目页 MHT（Snapshot-Content-Location: hnmuseum.com/zh-hans/guangcang_gauobao，45 部件全存）——**站活，此前双证不可达系区域性（北美向）阻断** | 库主 MHT 存证（holding/raw/hnmuseum-guancangguobao-20260826-hkvpn.mht） | hnmuseum.com 改记「区域封锁站·机测豁免·须VPN人工过目」；观察案销，转正链迁移案（下行） | 湖南省博·改判 |
 | 08-26 | 大禾方鼎现行正链线索：馆方总目页自身指链 /zh-hans/content/大-禾-人-面-纹-方-鼎（连字符路径）；本库旧 m 走 /zh-hans/zuixintuijie/（「最新推介」临时栏目路径）。总目页另挂「新版藏品数据库（试运行）」de.hnmuseum.com/collection/——馆方链路迁徙中 | 同上 MHT | 未验不迁（本网络不可达无法直测）：候库主 VPN 点开确认真渲染再改 m；皿方罍在总目第 2 页，链尚未获 | 湖南省博·正链迁移 |
 | 08-26 | 大禾方鼎 m 迁正链：/zh-hans/content/大-禾-人-面-纹-方-鼎（馆方总目页指链＋库主 VPN 点验真渲染「方鼎是live的」双证）——旧 zuixintuijie/ 临时栏目路径荣休 | 库主 VPN 实开终裁 | 区域封锁站的迁链体例首例：馆方一手指链＋库主VPN过目=达标；皿方罍不在馆藏国宝两页之列（库主翻页证），其链另案 | 湖南省博·大禾迁链 |
+| 08-26 | 皿方罍 m 迁新版藏品数据库：de.hnmuseum.com/collection/collectionDetails.html?id=1002229330115297280（库主在新库检得并亲见渲染）——旧 zuixintuijie/“皿而全”铜方罍 临时路径荣休；皿方罍不在馆藏国宝两页之列，系新库首个入本库的详情页 | 库主 VPN 实开终裁 | 新库标注「试运行」：若日后转正迁域，本条先动——周期体检届时顺验；湖南两条至此全部销案 | 湖南省博·皿方罍迁链 |
