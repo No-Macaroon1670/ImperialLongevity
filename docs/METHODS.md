@@ -74,6 +74,9 @@
 
 ## 工作流（可复用流水线）
 - 侦察（sonnet 广撒网）→ 终审（opus 判断题）→ 落库（单写者）三段式
+  **派活显式标模型**（2026-08-26 库主定，用量配平）：workflow 的 agent() 不标模型即继承
+  主循环（Fable）——从此一律显式：侦察/扫描/取证=sonnet，终审/总驳官/对抗复核=opus，
+  只有对话终裁、单写者落库、要开浏览器的 UI 施工验证留主循环。机械活照旧先问 Python。
 - 落库后勤（每批终审落地必做，2026-08-20 欠账 26 个搜不到的新字立此规）：
   重跑 tools/mining/gen_pinyin.py 更新 data-pinyin.js→lint-events 过一遍→再 commit
 - verify-line（.claude/workflows/verify-line.js）：claims.py 抽硬断言→分层核验
