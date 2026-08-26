@@ -20,10 +20,12 @@ def main():
     src = sys.argv[1]
     data = json.load(io.open(src, encoding='utf-8'))
     rows = data.get('result', data)['rows']
-    finals = {}
+    # 契约 v2「一政权多切片」：同 key 的多行各成一片（唐 668/740 实例），
+    # 故收成列表不收字典——旧写法 finals[key]=final 会让后一片吃掉前一片。
+    finals = []
     for r in rows:
         if r.get('verdict') in ('过', '改后过') and r.get('final'):
-            finals[r['final']['key']] = r['final']
+            finals.append(r['final'])
     import re, time
 
     def variants(name):
@@ -34,7 +36,7 @@ def main():
             v += [m.group(1).strip(), m.group(2).strip()]
         return v
 
-    want = sorted({v for f in finals.values() for c in f['corners'] for v in variants(c['place'])})
+    want = sorted({v for f in finals for c in f['corners'] for v in variants(c['place'])})
     qs, cs = {}, {}
     todo = want
     for round_ in range(3):
@@ -62,7 +64,8 @@ def main():
         return None
 
     out, doc = {}, ['# 盛时疆域示意·出处档（生成物，与 js/territories.js 同源）', '']
-    for key, f in finals.items():
+    for f in finals:
+        key = f['key']
         pts, miss = [], []
         for c in f['corners']:
             co = pt(c['place'])
