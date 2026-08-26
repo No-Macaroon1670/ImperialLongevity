@@ -30,7 +30,7 @@ for i, line in enumerate(body.splitlines(), 1):
         err("行尾不是 },")
     m = re.search(r"\by: (-?\d+)", t); n = re.search(r"n: '([^']+)'", t)
     w = re.search(r"w: '([^']+)'", t); k = re.search(r"k: '(\w+)'", t)
-    NO_W_OK = {'绿松石龙形器', '三道岗沉船', '簪花', '金鱼村窖藏', '象纹铜铙', '法书要录'}  # 无维基条判例：维基锚是服务不是门槛（象纹铜铙 2026-08-26 入：六候选REST实测皆missing，卡即百科自足）
+    NO_W_OK = {'绿松石龙形器', '三道岗沉船', '簪花', '金鱼村窖藏', '象纹铜铙', '法书要录', '金马小像'}  # 无维基条判例：维基锚是服务不是门槛（象纹铜铙 2026-08-26 入：六候选REST实测皆missing，卡即百科自足）
     if not w and n and n.group(1) in NO_W_OK:
         w = True
     if not (m and n and w and k):
