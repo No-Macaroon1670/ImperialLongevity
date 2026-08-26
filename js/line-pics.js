@@ -2,6 +2,118 @@
 // 改 docs/pics-<线>.json 的「卡」标后跑 tools/mining/build_line_page.py <线>。
 // 挑选规则见 build_line_page.py emit_line_pics 档头。
 export const LINE_PICS = {
+ "beitie": {
+  "熹平石经": {
+   "缩略图": "img/story/beitie/eastern-han-stone-classics-9832326865.jpg?v=2a0eb24f",
+   "说明": "洛阳出土熹平石经残石（CC0）——与勘合线国博残石为两馆两石",
+   "作者": "Gary Todd (Flickr, from Xinzheng, China)",
+   "署名": "Gary Todd (Flickr, from Xinzheng, China)",
+   "许可": "CC0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Eastern_Han_Stone_Classics_(9832326865).jpg",
+   "整幅": true
+  },
+  "兰亭集序": {
+   "缩略图": "img/story/beitie/神龍蘭亭序全.jpg?v=5ce62c39",
+   "说明": "神龙本兰亭全卷（28549px 源，候裁段）",
+   "作者": "传冯承素摹（唐），故宫博物院藏；credit：故宫博物院",
+   "署名": "传冯承素摹（唐），故宫博物院藏；credit：故宫博物院",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E7%A5%9E%E9%BE%8D%E8%98%AD%E4%BA%AD%E5%BA%8F%E5%85%A8.JPG",
+   "整幅": true
+  },
+  "淳化阁帖": {
+   "缩略图": "img/story/beitie/淳化阁帖.jpg?v=dda53b5f",
+   "说明": "淳化阁帖拓面",
+   "作者": "古代书家原刻，维基用户上传翻拍",
+   "署名": "古代书家原刻，维基用户上传翻拍",
+   "许可": "CC BY-SA 3.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E6%B7%B3%E5%8C%96%E9%98%81%E5%B8%96.jpg",
+   "整幅": true
+  },
+  "广艺舟双楫": {
+   "缩略图": "img/story/beitie/清-康有为行书对联-昆明市晋宁区博物馆藏-2026-05-20.jpg?v=5cdda336",
+   "说明": "康有为行书对联——广艺舟双楫作者手迹",
+   "作者": "康有为（书），Kcx36 摄（昆明市晋宁区博物馆藏）",
+   "署名": "康有为（书），Kcx36 摄（昆明市晋宁区博物馆藏）",
+   "许可": "CC BY-SA 4.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E6%B8%85_%E5%BA%B7%E6%9C%89%E4%B8%BA%E8%A1%8C%E4%B9%A6%E5%AF%B9%E8%81%94-%E6%98%86%E6%98%8E%E5%B8%82%E6%99%8B%E5%AE%81%E5%8C%BA%E5%8D%9A%E7%89%A9%E9%A6%86%E8%97%8F_2026-05-20.jpg",
+   "整幅": true
+  }
+ },
+ "chibi": {
+  "隆中对": {
+   "缩略图": "img/story/chibi/dai-jin-looking-three-times-at-the-thatched-hut.jpg?v=72fb5a19",
+   "说明": "戴进《三顾茅庐图》，故宫博物院藏——不涉地望之争",
+   "作者": "戴进 Dai Jin（明代宫廷画家）",
+   "署名": "戴进 Dai Jin（明代宫廷画家）",
+   "许可": "Public domain (PD-Art, PD-old-100)",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Dai_Jin-Looking_Three_Times_at_the_Thatched_Hut.jpg",
+   "整幅": true
+  },
+  "赤壁之战": {
+   "缩略图": "img/story/chibi/赤壁縱火.jpg?v=589c43a7",
+   "说明": "马骀画宝《周瑜赤壁纵火》（1928）——版画层，非史图",
+   "作者": "马骀 Ma Tai（1885-1937）",
+   "署名": "马骀 Ma Tai（1885-1937）",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:赤壁縱火.jpg",
+   "整幅": true
+  },
+  "刮目相看": {
+   "缩略图": "img/story/chibi/portrait-of-lu-meng-qing-dynasty.jpg?v=59579ace",
+   "说明": "清代绣像《吕蒙》——演义形象层",
+   "作者": "佚名（清代，出自《绣像全图三国演义》）",
+   "署名": "佚名（清代，出自《绣像全图三国演义》）",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Portrait_of_Lu_Meng,_Qing_dynasty.jpg",
+   "整幅": true
+  },
+  "三国志": {
+   "缩略图": "img/story/chibi/a-fragment-of-biography-of-bu-zhi-history-books-of-three-kin.jpg?v=78607fd2",
+   "说明": "敦煌研究院藏东晋写本《三国志·步骘传》残卷——现存最早抄本之列",
+   "作者": "猫猫的日记本（自摄，敦煌研究院藏品）",
+   "署名": "猫猫的日记本（自摄，敦煌研究院藏品）",
+   "许可": "CC BY-SA 3.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:A_Fragment_of_Biography_of_Bu_Zhi_History_Books_of_Three_Kingdoms_01_2012-12.JPG",
+   "整幅": true
+  },
+  "前赤壁赋": {
+   "缩略图": "img/story/chibi/su-shi-former-ode-on-the-red-cliff.jpg?v=b9671181",
+   "说明": "苏轼《前赤壁赋》墨迹全卷（台北故宫）",
+   "作者": "苏轼（原作），台北故宫早年网展数字化",
+   "署名": "苏轼（原作），台北故宫早年网展数字化",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Su_Shi-Former_Ode_on_the_Red_Cliff.jpg",
+   "整幅": true
+  },
+  "寒食帖": {
+   "缩略图": "img/story/chibi/寒食帖.jpg?v=e4843a14",
+   "说明": "《黄州寒食诗帖》全卷（38700px 源，候裁段）",
+   "作者": "苏轼（原作）",
+   "署名": "苏轼（原作）",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:寒食帖.jpg",
+   "整幅": true
+  },
+  "赤壁图": {
+   "缩略图": "img/story/chibi/金武元直赤壁圖-卷.jpg?v=38994e16",
+   "说明": "金·武元直《赤壁图》卷（台北故宫 CC0）——最早赤壁山水",
+   "作者": "國立故宮博物院（原作武元直）",
+   "署名": "國立故宮博物院（原作武元直）",
+   "许可": "CC0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:金武元直赤壁圖_卷.jpg",
+   "整幅": true
+  },
+  "三国演义": {
+   "缩略图": "img/story/chibi/zhsy100335-三國志通俗演義-明羅本撰-明嘉靖元年刻本-pdf.jpg?v=3bd9dd79",
+   "说明": "明嘉靖元年刻本《三国志通俗演义》（国图藏中华再造善本）",
+   "作者": "(明)罗本（罗贯中），中华再造善本影印",
+   "署名": "(明)罗本（罗贯中），中华再造善本影印",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:ZHSY100335_三國志通俗演義_明羅本撰_明嘉靖元年刻本.pdf",
+   "整幅": true
+  }
+ },
  "kanhe": {
   "石鼓": {
    "缩略图": "img/used/gugong-shiguguan-quanjing.jpg?v=eb5cf006",
@@ -9,6 +121,99 @@ export const LINE_PICS = {
    "作者": "No-Macaroon1670 摄，2024 年 1 月",
    "署名": "No-Macaroon1670 摄，2024 年 1 月",
    "许可": "作者本人拍摄",
+   "整幅": true
+  },
+  "书同文": {
+   "缩略图": "img/story/kanhe/edict-bronze-standard-weight-qin-dynasty.jpg?v=6645a49b",
+   "说明": "秦诏版拓本——统一文字的政令刻在铜版上",
+   "作者": "ReijiYamashina777",
+   "署名": "ReijiYamashina777",
+   "许可": "CC0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Edict_bronze_standard_weight_Qin_dynasty.jpg",
+   "整幅": true
+  },
+  "熹平石经": {
+   "缩略图": "img/used/guobo-xipingshijing-canshi.jpg?v=9357d734",
+   "说明": "国博藏熹平石经残石（自摄）",
+   "作者": "No-Macaroon1670 摄",
+   "署名": "No-Macaroon1670 摄",
+   "许可": "作者本人拍摄",
+   "整幅": true
+  },
+  "孝文帝汉化·迁都洛阳": {
+   "缩略图": "img/story/kanhe/20240815-site-of-luoyang-city-from-han-to-wei-dynasty-site-o.jpg?v=27acfffc",
+   "说明": "汉魏洛阳故城遗址航拍——迁都的落点今貌",
+   "作者": "Windmemories",
+   "署名": "Windmemories",
+   "许可": "CC BY-SA 4.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:20240815_Site_of_Luoyang_City_from_Han_to_Wei_Dynasty_-_Site_of_the_Palace_City_01.jpg",
+   "整幅": true
+  },
+  "天龙山石窟": {
+   "缩略图": "img/used/jinci-yuantiao-tianlongshan.jpg?v=d6c98618",
+   "说明": "自晋祠远眺天龙山——在地的山",
+   "作者": "No-Macaroon1670 摄，2023 年 12 月",
+   "署名": "No-Macaroon1670 摄，2023 年 12 月",
+   "许可": "作者本人拍摄",
+   "整幅": true
+  },
+  "独孤信之死": {
+   "缩略图": "img/used/guobo-nzhou-duguxin-epitaph.jpg?v=40636308",
+   "说明": "国博藏独孤信墓志（自摄）",
+   "作者": "No-Macaroon1670 摄，独孤信之死 ——**本册无独立文件行**",
+   "署名": "No-Macaroon1670 摄，独孤信之死 ——**本册无独立文件行**",
+   "许可": "作者本人拍摄",
+   "整幅": true
+  },
+  "开成石经": {
+   "缩略图": "img/story/kanhe/yijing-stele-beilin.jpg?v=5e7d6aa2",
+   "说明": "西安碑林开成石经拓面近摄",
+   "作者": "Felix Andrews (Floybix)",
+   "署名": "Felix Andrews (Floybix)",
+   "许可": "CC BY-SA 3.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Yijing_stele_Beilin.jpg",
+   "整幅": true
+  },
+  "秘色瓷": {
+   "缩略图": "img/used/famensi-mise-kuikou-pan.jpg?v=ab9d8715",
+   "说明": "国博展出法门寺秘色葵口盘（自摄，带说明牌）",
+   "作者": "No-Macaroon1670 摄，秘色瓷 ——**本册无独立文件行**",
+   "署名": "No-Macaroon1670 摄，秘色瓷 ——**本册无独立文件行**",
+   "许可": "作者本人拍摄",
+   "整幅": true
+  },
+  "钱镠铁券": {
+   "缩略图": "img/story/kanhe/iron-plaque-for-quan-liu-2016-09-15-02.jpg?v=b46cbabd",
+   "说明": "钱镠铁券近摄——嵌金字铁瓦",
+   "作者": "Siyuwj",
+   "署名": "Siyuwj",
+   "许可": "CC BY-SA 4.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Iron_Plaque_for_Quan_Liu,_2016-09-15_02.jpg",
+   "整幅": true
+  },
+  "湖州镜": {
+   "缩略图": "img/used/guobo-nansong-huzhou-shijia-tongjing-sanmian.jpg?v=fc530d93",
+   "说明": "国博藏南宋湖州石家镜三面（自摄）",
+   "作者": "No-Macaroon1670 摄",
+   "署名": "No-Macaroon1670 摄",
+   "许可": "作者本人拍摄",
+   "整幅": true
+  },
+  "郑和下西洋": {
+   "缩略图": "img/used/guobo-mingdai-zhenghe-tongzhong-xuande.jpg?v=58edcf2e",
+   "说明": "国博藏宣德郑和铜钟（自摄）",
+   "作者": "No-Macaroon1670 摄",
+   "署名": "No-Macaroon1670 摄",
+   "许可": "作者本人拍摄",
+   "整幅": true
+  },
+  "皇史宬": {
+   "缩略图": "img/story/kanhe/20251026-chest-from-the-imperial-archives.jpg?v=3f53508c",
+   "说明": "皇史宬鎏金铜皮樟木金匮——五米厚墙里装的就是它",
+   "作者": "Windmemories",
+   "署名": "Windmemories",
+   "许可": "CC BY-SA 4.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:20251026_Chest_from_the_Imperial_Archives.jpg",
    "整幅": true
   }
  },
@@ -112,9 +317,83 @@ export const LINE_PICS = {
    "整幅": true
   }
  },
+ "shugui": {
+  "一万三千二百一十九卷": {
+   "缩略图": "img/story/shugui/至聖先賢半身像-冊-096-劉向.jpg?v=dbcd7894",
+   "说明": "《至圣先贤半身像》刘向——校书者",
+   "作者": "佚名（元代画家），台北故宫博物院南薰殿旧藏，数字化经 Shuge 转录",
+   "署名": "佚名（元代画家），台北故宫博物院南薰殿旧藏，数字化经 Shuge 转录",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E8%87%B3%E8%81%96%E5%85%88%E8%B3%A2%E5%8D%8A%E8%BA%AB%E5%83%8F_%E5%86%8A-096-%E5%8A%89%E5%90%91.jpg",
+   "整幅": true
+  },
+  "江陵的火": {
+   "缩略图": "img/story/shugui/荆州古城墙.jpg?v=c02c5393",
+   "说明": "荆州古城墙今貌——图注须认账：今貌非梁元帝时物",
+   "作者": "Kong5579（摄）",
+   "署名": "Kong5579（摄）",
+   "许可": "CC BY-SA 4.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E8%8D%86%E5%B7%9E%E5%8F%A4%E5%9F%8E%E5%A2%99.jpg",
+   "整幅": true
+  },
+  "把书拆成零件": {
+   "缩略图": "img/story/shugui/ioc-utokyo-006017-藝文類聚一百卷嘉靖中天水胡纘宗刊本-卷首-pdf.jpg?v=f8b8fe82",
+   "说明": "《艺文类聚》明嘉靖刻本卷首",
+   "作者": "欧阳询（原编），明嘉靖间胡缵宗刊本；东京大学东洋文化研究所藏并数字化",
+   "署名": "欧阳询（原编），明嘉靖间胡缵宗刊本；东京大学东洋文化研究所藏并数字化",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:IOC.UTokyo-006017_%E8%97%9D%E6%96%87%E9%A1%9E%E8%81%9A%E4%B8%80%E7%99%BE%E5%8D%B7%E5%98%89%E9%9D%96%E4%B8%AD%E5%A4%A9%E6%B0%B4%E8%83%A1%E7%BA%98%E5%AE%97%E5%88%8A%E6%9C%AC_%E5%8D%B7%E9%A6%96.pdf",
+   "整幅": true
+  },
+  "真宗划掉的那一页": {
+   "缩略图": "img/story/shugui/ssid-10224663-宋本冊府元龜-一-二-三-四-pdf.jpg?v=7b5a3205",
+   "说明": "宋本《册府元龟》书影",
+   "作者": "王钦若等编；宋刻本",
+   "署名": "王钦若等编；宋刻本",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:SSID-10224663_%E5%AE%8B%E6%9C%AC%E5%86%8A%E5%BA%9C%E5%85%83%E9%BE%9C_%E4%B8%80%E3%80%81%E4%BA%8C%E3%80%81%E4%B8%89%E3%80%81%E5%9B%9B.pdf",
+   "整幅": true
+  },
+  "只抄了两份的书": {
+   "缩略图": "img/story/shugui/page-from-the-great-encyclopaedia-of-the-yongle-reign-yongle.jpg?v=356fdf0c",
+   "说明": "《永乐大典》存页",
+   "作者": "佚名（明内府写手），都柏林 Chester Beatty Library 藏",
+   "署名": "佚名（明内府写手），都柏林 Chester Beatty Library 藏",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Page_from_the_%27Great_encyclopaedia_of_the_Yongle_Reign%27_(Yongle_dadian)_(CBL_C_1751,_f.34v).jpg",
+   "整幅": true
+  },
+  "五米厚的墙": {
+   "缩略图": "img/story/shugui/20251026-chest-from-the-imperial-archives.jpg?v=3f53508c",
+   "说明": "皇史宬金匮（Commons）",
+   "作者": "Windmemories（摄）",
+   "署名": "Windmemories（摄）",
+   "许可": "CC BY-SA 4.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:20251026_Chest_from_the_Imperial_Archives.jpg",
+   "整幅": true
+  },
+  "被涂掉的名字": {
+   "缩略图": "img/story/shugui/蔣廷錫.jpg?v=e765d72b",
+   "说明": "蒋廷锡像——383px 源，候更高清替换",
+   "作者": "清叶衍兰辑摹，黄小泉绘",
+   "署名": "清叶衍兰辑摹，黄小泉绘",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E8%94%A3%E5%BB%B7%E9%8C%AB.jpg",
+   "整幅": true
+  },
+  "一边收，一边烧": {
+   "缩略图": "img/story/shugui/文渊阁.jpg?v=afd63136",
+   "说明": "文渊阁匾额",
+   "作者": "Walter Grassroot（摄）",
+   "署名": "Walter Grassroot（摄）",
+   "许可": "CC BY-SA 4.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E6%96%87%E6%B8%8A%E9%98%81.JPG",
+   "整幅": true
+  }
+ },
  "xianghuo": {
   "唐英款花觚": {
-   "缩略图": "img/used/guobo-tangying-hugu.jpg?v=cfbace89",
+   "缩略图": "img/used/guobo-tangying-hugu.jpg?v=f60aa7ab",
    "说明": "唐英自制青花缠枝莲纹觚，佛前五供之一——上面的字是他自己写的（中国国家博物馆）",
    "作者": "No-Macaroon1670 摄，2024 年 1 月",
    "署名": "No-Macaroon1670 摄，2024 年 1 月",

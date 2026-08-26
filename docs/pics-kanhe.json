@@ -21,7 +21,7 @@
    "署名": "ReijiYamashina777",
    "说明页": "https://commons.wikimedia.org/wiki/File:Edict_bronze_standard_weight_Qin_dynasty.jpg",
    "说明": "秦诏版拓本——统一文字的政令刻在铜版上",
-   "卡": false,
+   "卡": true,
    "整幅": true,
    "缩略图": "img/story/kanhe/edict-bronze-standard-weight-qin-dynasty.jpg"
   },
@@ -31,7 +31,7 @@
    "作者": "No-Macaroon1670 摄",
    "许可": "作者本人拍摄",
    "说明": "国博藏熹平石经残石（自摄）",
-   "卡": false,
+   "卡": true,
    "整幅": true,
    "缩略图": "img/used/guobo-xipingshijing-canshi.jpg",
    "说明页": ""
@@ -45,7 +45,7 @@
    "署名": "Windmemories",
    "说明页": "https://commons.wikimedia.org/wiki/File:20240815_Site_of_Luoyang_City_from_Han_to_Wei_Dynasty_-_Site_of_the_Palace_City_01.jpg",
    "说明": "汉魏洛阳故城遗址航拍——迁都的落点今貌",
-   "卡": false,
+   "卡": true,
    "整幅": true,
    "缩略图": "img/story/kanhe/20240815-site-of-luoyang-city-from-han-to-wei-dynasty-site-o.jpg"
   },
@@ -56,7 +56,7 @@
     "作者": "No-Macaroon1670 摄，2023 年 12 月",
     "许可": "作者本人拍摄",
     "说明": "自晋祠远眺天龙山——在地的山",
-    "卡": false,
+    "卡": true,
     "整幅": true,
     "缩略图": "img/used/jinci-yuantiao-tianlongshan.jpg",
     "说明页": ""
@@ -93,7 +93,7 @@
     "作者": "No-Macaroon1670 摄，独孤信之死 ——**本册无独立文件行**",
     "许可": "作者本人拍摄",
     "说明": "国博藏独孤信墓志（自摄）",
-    "卡": false,
+    "卡": true,
     "整幅": true,
     "缩略图": "img/used/guobo-nzhou-duguxin-epitaph.jpg",
     "说明页": ""
@@ -134,7 +134,7 @@
    "署名": "Felix Andrews (Floybix)",
    "说明页": "https://commons.wikimedia.org/wiki/File:Yijing_stele_Beilin.jpg",
    "说明": "西安碑林开成石经拓面近摄",
-   "卡": false,
+   "卡": true,
    "整幅": true,
    "缩略图": "img/story/kanhe/yijing-stele-beilin.jpg"
   },
@@ -145,7 +145,7 @@
     "作者": "No-Macaroon1670 摄，秘色瓷 ——**本册无独立文件行**",
     "许可": "作者本人拍摄",
     "说明": "国博展出法门寺秘色葵口盘（自摄，带说明牌）",
-    "卡": false,
+    "卡": true,
     "整幅": true,
     "缩略图": "img/used/famensi-mise-kuikou-pan.jpg",
     "说明页": ""
@@ -173,7 +173,7 @@
    "署名": "Siyuwj",
    "说明页": "https://commons.wikimedia.org/wiki/File:Iron_Plaque_for_Quan_Liu,_2016-09-15_02.jpg",
    "说明": "钱镠铁券近摄——嵌金字铁瓦",
-   "卡": false,
+   "卡": true,
    "整幅": true,
    "缩略图": "img/story/kanhe/iron-plaque-for-quan-liu-2016-09-15-02.jpg"
   },
@@ -184,7 +184,7 @@
     "作者": "No-Macaroon1670 摄",
     "许可": "作者本人拍摄",
     "说明": "国博藏南宋湖州石家镜三面（自摄）",
-    "卡": false,
+    "卡": true,
     "整幅": true,
     "缩略图": "img/used/guobo-nansong-huzhou-shijia-tongjing-sanmian.jpg",
     "说明页": ""
@@ -210,7 +210,7 @@
     "作者": "No-Macaroon1670 摄",
     "许可": "作者本人拍摄",
     "说明": "国博藏宣德郑和铜钟（自摄）",
-    "卡": false,
+    "卡": true,
     "整幅": true,
     "缩略图": "img/used/guobo-mingdai-zhenghe-tongzhong-xuande.jpg",
     "说明页": ""
@@ -238,7 +238,7 @@
    "署名": "Windmemories",
    "说明页": "https://commons.wikimedia.org/wiki/File:20251026_Chest_from_the_Imperial_Archives.jpg",
    "说明": "皇史宬鎏金铜皮樟木金匮——五米厚墙里装的就是它",
-   "卡": false,
+   "卡": true,
    "整幅": true,
    "缩略图": "img/story/kanhe/20251026-chest-from-the-imperial-archives.jpg"
   }
