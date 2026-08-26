@@ -548,7 +548,10 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 /* 齿轮弹层：把 section 里原装的 .local-controls 浮到簇下方——不复制状态，
    控件还是那一套，只是换个地方现身；行宽自回折，超高自滚 */
 @media (min-width: 720px) {
-  section.lc-open .local-controls {
+  /* :not(.lc-set-body)——「设置」折叠组的内层体由 buildControls 递归生成，
+     身上同样带 .local-controls 类；不排除的话它也会被本规则钉成 fixed 浮层，
+     脱离 details 悬在同一坐标、盖住自己的 summary（2026-08-26 用户实测「关闭不了」案） */
+  section.lc-open .local-controls:not(.lc-set-body) {
     position: fixed; top: 94px; right: 14px; z-index: 69;
     width: min(620px, calc(100vw - 28px)); max-height: calc(100vh - 110px); overflow: auto;
     background: var(--surface-1); border: 1px solid var(--border);
