@@ -715,6 +715,9 @@ section.card.has-kp:not(.desc-full) > .desc::after {
   content: '…'; display: inline; opacity: .55;
 }
 .kp-thumb { width: 100%; max-height: 168px; object-fit: cover; object-position: top; border-radius: 8px; }
+/* 本地手选图(自摄/馆方开放图)可点开放大(js/pic-zoom.js);预览是 cover 裁过的,
+   灯箱里才见全幅——维基缩略图不挂,光标不撒谎 */
+.kp-thumb.kp-zoomable { cursor: zoom-in; }
 .kp-sub { font-size: .74rem; color: var(--text-1); opacity: .62; margin-top: 8px; }
 .kp-title { font-weight: 720; font-size: 1.04rem; margin: 1px 0 6px; }
 .kp-ext { font-size: .82rem; line-height: 1.6; margin: 0;

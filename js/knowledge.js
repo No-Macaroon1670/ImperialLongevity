@@ -13,6 +13,7 @@ import { h, fmtYearAxis } from './charts.js';
 import { EVENT_KINDS } from './events.js';
 import { OWN_PIC } from './pics-own-cards.js';
 import { MUSEUM_PIC } from './pics-museum-cards.js';
+import { openPicZoom } from './pic-zoom.js';
 
 /**
  * 值得自动弹卡的名君(姓名 → 权重 1–3):滚动经过时自动打开,权重高者优先。
@@ -284,6 +285,11 @@ function mountSolo(wideMq) {
 
 function mkCard(sideClass) {
   const img = h('img', { class: 'kp-thumb', alt: '' });
+  // 图点开放大(2026-08-25 用户令,条卡与讲解卡同待遇):开关在 dataset.zoomcap——
+  // fillCard 只给本地手选图(自摄/馆方)设它,维基缩略图放大只会糊,不挂
+  img.addEventListener('click', () => {
+    if (img.dataset.zoomcap != null) openPicZoom(img.src, img.dataset.zoomcap);
+  });
   const head = h('div', { class: 'kp-sub' });
   const title = h('div', { class: 'kp-title' });
   const ext = h('p', { class: 'kp-ext' });
@@ -385,8 +391,12 @@ async function fillCard(card, spec) {
     card.img.src = localPic.src;
     pic(true);
     card.src.textContent = localPic.note + '；摘要实时取自中文维基百科';
+    card.img.classList.add('kp-zoomable');
+    card.img.dataset.zoomcap = `${spec.display || spec.title || ''}——${localPic.note}`;
   } else {
     card.src.textContent = '摘要实时取自中文维基百科';
+    card.img.classList.remove('kp-zoomable');
+    delete card.img.dataset.zoomcap;
   }
   // 无维基条目的条目(2026-08-21 起允许):收起维基栏与摘要抓取,不空转、
   // 不 404。摘要区改放库内简注(yc)全文顶上——这批条目(nb/无 w 判例族,如
