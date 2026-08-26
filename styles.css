@@ -929,6 +929,9 @@ body.tour-on .kp-solo.kp-yc-full .kp-ext {
 }
 .tour-x:hover { background: var(--surface-2); color: var(--text-1); }
 .tour-title { margin: 0 0 5px; font-size: 1rem; line-height: 1.35; }
+/* 站点卡副题：条目名小一号灰字缀在雅题后（2026-08-26 库主令） */
+.tour-title-ev { font-size: .74rem; font-weight: 400; color: var(--text-2);
+  margin-left: 8px; letter-spacing: 0; white-space: nowrap; }
 .tour-body { margin: 0 0 7px; font-size: .84rem; line-height: 1.58; color: var(--text-2); }
 /* 长文态：故事线的整段散文长在讲解里。逐段成 <p>，行距放开一点——
    这是拿来读的，不是拿来扫的；坞本来就会滚，右缘那条自绘进度条管「下面还有」。

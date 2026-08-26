@@ -492,6 +492,9 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
 
     step.textContent = `${i + 1} / ${STOPS.length}`;
     title.textContent = st.t;
+    // 副题（2026-08-26 库主令）：雅题之后小一号灰字标本站条目名——雅题是修辞，
+    // 读者得看得见这一站挂在库里哪一条上。序/落点等无 ev 的站自然不带
+    if (st.ev && st.ev !== st.t) title.appendChild(h('span', { class: 'tour-title-ev', text: st.ev }));
     // 诗题：只在定调卡上现（st.full 且这条线的 opts.shi 有内容）。序与落点
     // 共用同一首诗，不分别挂两份——那首诗讲的是整条线，不是某一站
     poem.innerHTML = '';
