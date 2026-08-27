@@ -202,18 +202,27 @@ export function mdBold(s) {
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 }
 
-// 长简注上卡的断行（2026-08-26 库主令「注意断行」）：库文层次以「。**层首句**」起层，
+// 长简注上卡的断行（2026-08-26 库主令「注意断行」）：库文层次以 **层首** 起层，
 // 照此骨架自动分段——kp-ext 是 <p>，段用块级 span，不嵌 p。短文无断点，天然单段。
+// build_line_page.py 的 note_paras 与此同法，两端改一处须对改。
 function ycParas(t) {
-  // 两条断段规则：①句号后紧跟 **层首** 必起新段（库文的层骨架）；
-  // ②无层标时按句群折行——段满约 170 字即在下一个句界起新段，字墙变段落。
-  const sents = t.split(/(?<=。|！|？)/g);
-  const paras = []; let cur = '';
-  for (const s of sents) {
-    if (cur && (s.startsWith('**') || cur.length >= 170)) { paras.push(cur); cur = ''; }
-    cur += s;
+  // 断段两规则：①粗体层首起新段（库文的层骨架）；②无层标约 170 字在句界折行。
+  // 粗体段先当原子切出再切句——层首两式并存（「**短标。**」句号在星内、
+  // 「**短标**：」在星外），句界切进星号对会把半对星号排上脸（谷仓罐式实踩）。
+  const units = [];
+  for (const tok of t.split(/(\*\*[^*]+\*\*)/g)) {
+    if (!tok) continue;
+    if (tok.startsWith('**')) units.push(tok);
+    else units.push(...tok.split(/(?<=。|！|？)/g).filter(Boolean));
   }
-  if (cur) paras.push(cur);
+  const paras = []; let cur = '';
+  for (const u of units) {
+    const atEnd = /[。！？」）]\s*$/.test(cur);
+    if (cur && atEnd && !/^[」』）】]/.test(u)
+        && (u.startsWith('**') || cur.length >= 170)) { paras.push(cur.trim()); cur = ''; }
+    cur += u;
+  }
+  if (cur.trim()) paras.push(cur.trim());
   return paras.map((s) => '<span class="kp-pr">' + mdBold(s) + '</span>').join('');
 }
 

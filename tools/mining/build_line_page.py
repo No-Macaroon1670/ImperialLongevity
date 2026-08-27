@@ -54,6 +54,38 @@ def rich(t):
     return re.sub(r'\*\*([^*]+)\*\*', r'<strong>\1</strong>', esc(t))
 
 
+def note_paras(t):
+    """长简注分段，与卡面 ycParas（js/knowledge.js）同法：粗体层首起新段，
+    无层标约 170 字在句界折行。粗体段先当原子切出再切句——库文层首两式并存
+    （「**短标。**」句号在星内、「**短标**：」在星外），句界切进星号对
+    会把半对星号排上脸（谷仓罐式实踩）。读的是 events.js 字面量：
+    段间 \\n\\n 是两组字符（硬段），段内单 \\n 铺平（卡面上实际换行也只渲染成空白）。"""
+    out = []
+    for block in t.split('\\n\\n'):
+        block = block.replace('\\n', ' ').strip()
+        if not block:
+            continue
+        units = []
+        for tok in re.split(r'(\*\*[^*]+\*\*)', block):
+            if not tok:
+                continue
+            if tok.startswith('**'):
+                units.append(tok)
+            else:
+                units.extend(s for s in re.split(r'(?<=[。！？])', tok) if s)
+        cur = ''
+        for u in units:
+            at_end = bool(re.search(r'[。！？」）]\s*$', cur))
+            if cur and at_end and not re.match(r'[」』）】]', u) \
+               and (u.startswith('**') or len(cur) >= 170):
+                out.append(cur.strip())
+                cur = ''
+            cur += u
+        if cur.strip():
+            out.append(cur.strip())
+    return out
+
+
 CSS = """
 :root{
   --bg:#0e0d0c; --bg2:#161311; --ink:#e9e3d7; --dim:#9a9187; --faint:#5d564e;
@@ -119,6 +151,7 @@ details.app summary{cursor:pointer;color:var(--faint);letter-spacing:.14em;font-
   padding:.5rem 0;border-top:1px solid var(--rule)}
 details.app ul{margin:.8rem 0;padding-left:1.1rem}
 details.app li{margin-bottom:.7rem}
+details.app p{margin:.9rem 0 0}
 .tag{display:inline-block;font-size:10px;letter-spacing:.08em;padding:1px 6px;margin-right:.5rem;
   border-radius:3px;border:1px solid currentColor;vertical-align:.08em}
 .t-ok{color:#7d9b6e} .t-trad{color:var(--gold)} .t-new{color:#6e8a9b}
@@ -578,10 +611,13 @@ def main():
         A('<a class="go" href="../timeline.html#line=%s&amp;at=%d">在图上看这一站 →</a>' % (key, i))
         # 长文优先：2026-08-26 yc/yl 拆分后 yc 只剩悬浮短版，长文在 yl（knowledge.js 卡面同约）。
         # 只取 yc 会把七页的长简注整段截成短句——本行是那颗雷的排雷针，改回 yc 即复雷。
+        # 2026-08-26 库主令：长简注收进折叠（与考据同式），段法照卡面（note_paras）——
+        # 摊平在正文脚下会喧宾夺主，收起来才是注该有的姿态。
         if e.get('yl') or e.get('yc'):
-            # 段首短标与段落转义是卡面格式，平铺段落里剥掉/铺平
-            _note = (e.get('yl') or e['yc']).replace('**', '').replace('\\n', ' ')
-            A('<p class="note">本库简注：%s</p>' % esc(_note))
+            A('<details class="app"><summary>本库简注</summary>')
+            for _p in note_paras(e.get('yl') or e['yc']):
+                A('<p>%s</p>' % rich(_p))
+            A('</details>')
         app_block(name)
         A('</div></section>')
 
