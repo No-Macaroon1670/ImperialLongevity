@@ -1150,8 +1150,10 @@ export const LINES = {
     prologue: SW_PRO,
     epilogue: SW_EPI,
     doc: 'line-shiwu',
-    // 地理档与配图归收尾工程（照缝线判官模式另案）；序站舆图入口（阿斯塔那单点）
-    // 依赖 geo-events 层已实测在库，与本表 geo 字段无涉
+    // 收尾工程 2026-08-28 落地（opus 地理判官方案，卷宗 desk/mitu-geo-shiwu-raw）：
+    // 15 定点＋2 现藏＋7 无点（制度类/成书地不可考/传说层皆宁缺）。
+    // 序站舆图入口（阿斯塔那单点）依赖 geo-events 层，与本表 geo 字段无涉
+    geo: GEO.shiwu,
   },
   difu: {
     key: 'difu',
@@ -1170,8 +1172,9 @@ export const LINES = {
     prologue: DF_PRO,
     epilogue: DF_EPI,
     doc: 'line-difu',
-    // 地理档与配图归收尾工程另案（十王图带五个日本藏点、目连出洞藏伦敦——
-    // 出→藏两笔是地图层最值钱的两笔；九华/宝顶两条无 p 候补）
+    // 收尾工程 2026-08-28 落地（opus 地理判官方案，卷宗 desk/mitu-geo-difu-raw）：
+    // 9 定点＋3 现藏（目连出洞藏伦敦、十王图五处日本藏并「等五处」一点）＋2 无点
+    geo: GEO.difu,
   },
 };
 
