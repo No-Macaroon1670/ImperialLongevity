@@ -98,6 +98,32 @@ CC-BY 与 CC-BY-SA 要求署名，这是法律义务；CC0 与公有领域不要
 | 藏经洞发现 | `photo-showing-cave-16-and-the-manuscripts-piled-up-for-stein.jpg` | Aurel Stein | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Photo_showing_Cave_16_and_the_manuscripts_piled_up_for_Stein_to_examine_near_the_entrance_to_Cave_17,_the_%E2%80%9Clibrary_cave.jpg) |
 | 序 | `baimasi-stone-horse-2023.jpg` | No-Macaroon1670 摄，2023 年 12 月 | 作者本人拍摄 | — |
 
+## shiwu
+
+| 站 | 文件 | 署名 | 许可 | 原始文件页 |
+|---|---|---|---|---|
+| 序 | `turpan-food-from-astana-cemetery-including-dumpling-grape-se.jpg` | Hiroooooo | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Turpan_Food_from_Astana_Cemetery_including_Dumpling_Grape_Seed.jpg) |
+| 鸿门宴 | `hongmen-banquet-luoyang-museum.png` | ChenDaoIsHere | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Hongmen_Banquet_Luoyang_Museum.png) |
+| 盐铁官营 | `nlc892-411999019329-302170-鹽鐵論-第1冊-pdf.jpg` | 〔漢〕桓寬撰 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:NLC892-411999019329-302170_%E9%B9%BD%E9%90%B5%E8%AB%96_%E7%AC%AC1%E5%86%8A.pdf) |
+| 鸡肋 | `nlc016-hwrb201817004-1499-三國志-六十五卷-第1冊-pdf.jpg` | 〔晉〕陳壽撰 (南朝宋)裴松之注 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:NLC016-HWRB201817004-1499_%E4%B8%89%E5%9C%8B%E5%BF%97_%E5%85%AD%E5%8D%81%E4%BA%94%E5%8D%B7_%E7%AC%AC1%E5%86%8A.pdf) |
+| 粽子 | `ncl-15288-0050-續齊諧記-pdf.jpg` | 吳均 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:NCL-15288-0050_%E7%BA%8C%E9%BD%8A%E8%AB%A7%E8%A8%98.pdf) |
+| 齐民要术 | `cadal06049860-齊民要術-卷七-卷八-djvu.jpg` | （後魏）賈思勰（ 撰） | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:CADAL06049860_%E9%BD%8A%E6%B0%91%E8%A6%81%E8%A1%93%C2%B7%E5%8D%B7%E4%B8%83~%E5%8D%B7%E5%85%AB.djvu) |
+| 荔枝 | `cadal06070948-荔枝譜-djvu.jpg` | （宋）蔡襄（撰） | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:CADAL06070948_%E8%8D%94%E6%9E%9D%E8%AD%9C.djvu) |
+| 炙手可热 | `虢国夫人游春图.jpg` | Zhang Xuan | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:%E8%99%A2%E5%9B%BD%E5%A4%AB%E4%BA%BA%E6%B8%B8%E6%98%A5%E5%9B%BE.jpg) |
+| 自京赴奉先县咏怀五百字 | `cadal06060000-御定全唐詩-卷二百十六-卷二百十八-djvu.jpg` | Kangxi Emperor | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:CADAL06060000_%E5%BE%A1%E5%AE%9A%E5%85%A8%E5%94%90%E8%A9%A9%C2%B7%E5%8D%B7%E4%BA%8C%E7%99%BE%E5%8D%81%E5%85%AD~%E5%8D%B7%E4%BA%8C%E7%99%BE%E5%8D%81%E5%85%AB.djvu) |
+| 苦笋帖 | `怀素-草书苦笋帖卷.jpg` | Huaisu | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:%E6%80%80%E7%B4%A0_%E8%8D%89%E4%B9%A6%E8%8B%A6%E7%AC%8B%E5%B8%96%E5%8D%B7.jpg) |
+| 豆腐 | `cadal06047418-清異錄-卷上-djvu.jpg` | （宋）陶榖（撰） | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:CADAL06047418_%E6%B8%85%E7%95%B0%E9%8C%84%C2%B7%E5%8D%B7%E4%B8%8A.djvu) |
+| 占城稻推广 | `nlc892-411999024482-12479-宋史-第36冊-pdf.jpg` | Toqto'a | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:NLC892-411999024482-12479_%E5%AE%8B%E5%8F%B2_%E7%AC%AC36%E5%86%8A.pdf) |
+| 圆子 | `nlc892-411999019980-71230-幽蘭居士東京夢華錄-第2冊-pdf.jpg` | 〔宋〕孟元老撰 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:NLC892-411999019980-71230_%E5%B9%BD%E8%98%AD%E5%B1%85%E5%A3%AB%E6%9D%B1%E4%BA%AC%E5%A4%A2%E8%8F%AF%E9%8C%84_%E7%AC%AC2%E5%86%8A.pdf) |
+| 尝醋图 | `the-three-vinegar-tasters.jpg` | Kanō school artist | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:The_Three_Vinegar_Tasters.jpg) |
+| 糖霜谱 | `cadal06067667-糖霜譜-djvu.jpg` | （宋）王灼（撰） | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:CADAL06067667_%E7%B3%96%E9%9C%9C%E8%AD%9C.djvu) |
+| 月饼 | `nlc403-002325346-112911-武林舊事-卷六-pdf.jpg` | 周密 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:NLC403-002325346-112911_%E6%AD%A6%E6%9E%97%E8%88%8A%E4%BA%8B_%E5%8D%B7%E5%85%AD.pdf) |
+| 马可·波罗行纪 | `bnf-fr2810-f1r-frontispice-livre-des-merveilles.jpg` | Mazarine Master | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:BNF_Fr2810_f1r_Frontispice_Livre_des_merveilles.jpeg) |
+| 辣椒传入 | `ssid-13003318-遵生八箋-卷16-pdf.jpg` | （明）高濂撰 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:SSID-13003318_%E9%81%B5%E7%94%9F%E5%85%AB%E7%AE%8B_%E5%8D%B716.pdf) |
+| 豆汁 | `portable-kitchen-and-diners-beijing-1874-wdl2047.png` | Adolf Nikolay Boyarsky | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Portable_Kitchen_and_Diners._Beijing,_1874_WDL2047.png) |
+| 冰糖葫芦 | `nlc892-gbzx0301015772-297274-燕京歲時記-一卷-pdf.jpg` | 〔清〕富察敦崇編 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:NLC892-GBZX0301015772-297274_%E7%87%95%E4%BA%AC%E6%AD%B2%E6%99%82%E8%A8%98_%E4%B8%80%E5%8D%B7.pdf) |
+| 冰糖葫芦 | `bundesarchiv-bild-137-009068-zuckerstangen-händler-in-peking.jpg` | Salzmann, E.v. | CC BY-SA 3.0 de | [Commons](https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_137-009068,_Zuckerstangen_H%C3%A4ndler_in_Peking.jpg) |
+
 ## shugui
 
 | 站 | 文件 | 署名 | 许可 | 原始文件页 |
