@@ -18,6 +18,7 @@ import { stampHash } from './search.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, TRANSITIONS, ORTHODOX, SECONDARY } from './dynasties.js';
 import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor } from './events.js';
+import { NIANHAO } from './data-nianhao.js';
 import { fmtDate } from './schema.js';
 
 const SLOT_VARS = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6', '--s7', '--s8'];
@@ -263,7 +264,11 @@ export function renderLaneTimeline(host, list, opts) {
   // 站错了地方。分成上下两条独立的争位赛道,两头都松快。
   const EV_UP = showEvents ? 66 : 0;    // 线上:文教
   const EV_DN = showEvents ? 81 : 0;    // 线下:政事 + 年份
-  const LANE_H = 48, LABEL_H = 15, TRACK_Y = 18, TRACK_H = 24;
+  // 纪年三档（idea-timeline-nianhao；2026-08-28 库主定）：全／选／无。
+  // 开着时行高让出 4px——细线贴在带下缘之外，不挤 48px 行制里带底与
+  // 下一行标签之间仅剩的 2px 缝
+  const nhMode = opts.laneNianhao || 'sel';
+  const LANE_H = nhMode !== 'off' ? 52 : 48, LABEL_H = 15, TRACK_Y = 18, TRACK_H = 24;
   const HEAD_H = 24 + EV_UP + EV_DN + (showEvents ? 6 : 25);
   const LABEL_FS = 12.5, SEG_FS = 10;
 
@@ -656,8 +661,10 @@ export function renderLaneTimeline(host, list, opts) {
   // 三个绘制层,DOM 顺序即遮挡顺序:浅底带垫底 → 承继细丝 → 君主段与标签压顶。
   // 细丝夹在中间,于是它在留白与浅底带上现身、遇到实心的君主段便潜行而过——
   // 与竖向河流的分层教义同一条(穿流带压在君主色块之下,只在河床与缝隙间可见)
-  const gBase = el('g'), gStrand = el('g', { class: 'tl-strands' }), gTop = el('g');
-  body.appendChild(gBase); body.appendChild(gStrand); body.appendChild(gTop);
+  const gBase = el('g'), gNian = el('g', { class: 'tl-nianhao' }),
+    gStrand = el('g', { class: 'tl-strands' }), gTop = el('g');
+  // 纪年线层压在浅底带（含交替期斜纹）之上、细丝与君主段之下
+  body.appendChild(gBase); body.appendChild(gNian); body.appendChild(gStrand); body.appendChild(gTop);
 
   // 年代拟测（F 旗 Y）的斜纹：夏与商前期的君主格是传统系年等比铺入的坐标，
   // 不是史源确年，画法上必须与实证段一眼可辨（斜纹＋半透明）。
@@ -824,6 +831,55 @@ export function renderLaneTimeline(host, list, opts) {
       labelNodes.push({ dot, label, x0: bx0, x1: bx1, lw });
     }
   }
+
+  // ── 纪年线：贴在政权带缘的年号细线 ──────────────────────────────────────
+  //
+  // 年号跟政权挂钩（idea-timeline-nianhao 用户定案）：细线随带走，不另设全局带。
+  // 一段一色（--nh-1..4 中性四色轮换，与政权配色完全不同），改元即断点——
+  // 断点密度本身是信息：武周那几年闪成碎彩，康熙六十一年一色到底；
+  // 先秦无年号，线整段缺席，缺席同样是信息（年号是武帝创的制）。
+  // **默认侧在带下缘之外**；主线交替期两朝同轨并立时，上半轨那一朝的线
+  // 翻到带上缘——各贴各的外侧，两套年号不会读串（2026-08-28 库主定的边角）。
+  // 名字不上图（细线容不下字），悬停读年号、起讫与在位君主。
+  const NH_VARS = ['--nh-1', '--nh-2', '--nh-3', '--nh-4'];
+  const clearNianhao = () => { gNian.innerHTML = ''; };
+  const drawNianhao = (filterKey) => {
+    clearNianhao();
+    if (nhMode === 'off') return;
+    for (const b of bands) {
+      if (filterKey && b.d.key !== filterKey) continue;
+      const list2 = NIANHAO[b.d.key];
+      if (!list2) continue;
+      const y0 = b.lane * LANE_H + 4;
+      list2.forEach((nh, i) => {
+        // 讫年含当年（建元讫-134，翌年改元元光），线画到 e+1；带被筛选截短时随带裁
+        const s0 = Math.max(nh.s, b.s), e0 = Math.min(nh.e + 1, b.e);
+        if (e0 - s0 <= 0) return;
+        for (const p of spanParts(b, s0, e0)) {
+          const gy = p.slot === 0 ? y0 + TRACK_Y - 3 : y0 + TRACK_Y + TRACK_H + 0.5;
+          const px0 = x(p.x0), px1 = x(p.x1);
+          gNian.appendChild(el('rect', {
+            x: px0 + 0.5, y: gy, width: Math.max(1, px1 - px0 - 1), height: 3,
+            fill: `var(${NH_VARS[i % NH_VARS.length]})`, 'pointer-events': 'none',
+          }));
+          // 3px 摸不准，命中带上下各放宽 2px 专吃悬停
+          const hit = el('rect', {
+            x: px0, y: gy - 2, width: Math.max(4, px1 - px0), height: 7,
+            fill: 'transparent', class: 'mark',
+          });
+          hoverable(hit, () => [
+            { color: `var(${NH_VARS[i % NH_VARS.length]})`,
+              value: `${fmtYearAxis(nh.s)}–${fmtYearAxis(nh.e)}`, label: '年号起讫' },
+            { label: '历时', value: `${nh.e - nh.s + 1} 年` },
+            ...(nh.emp ? [{ label: '改元之君', value: nh.emp }] : []),
+            '年号起讫按年粒度；改元常在年中，同一年正月与腊月可分属两个年号。',
+          ], () => `${b.d.name}·${nh.n}`);
+          gNian.appendChild(hit);
+        }
+      });
+    }
+  };
+  if (nhMode === 'all') drawNianhao(null);
 
   // ── 治世外套：套在对应皇帝格子外的一圈 ──────────────────────────────────
   //
@@ -1068,6 +1124,8 @@ export function renderLaneTimeline(host, list, opts) {
     if (key) drawStrands(key);
     else if (allOn) drawStrands(null, true);
     else clearStrands();
+    // 纪年「选」档与承继丝同一手势：点带即显该朝年号线，点空白即散
+    if (nhMode === 'sel') { if (key) drawNianhao(key); else clearNianhao(); }
   });
   if (allOn) drawStrands(null, true);
 
@@ -1251,6 +1309,8 @@ export function renderLaneTimeline(host, list, opts) {
   key.push('浅色半高＝称帝前掌权');
   if (markViolent) key.push('▲＝非正常死亡');
   if (hasMicro) key.push('极短政权仅存色点');
+  if (nhMode === 'all') key.push('带下缘细线＝年号（改元即换色；并立期上半轨移至带上缘）');
+  else if (nhMode === 'sel') key.push('点选朝代可显年号线（设置·纪年可改全显）');
   key.push('点选可显承继丝（详见下方说明）');
   staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text: key.join(' · ') }));
 

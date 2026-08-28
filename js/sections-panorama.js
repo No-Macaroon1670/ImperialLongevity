@@ -44,6 +44,10 @@ export const SECTIONS = [
       grp('设置', [
         tog('laneViolent', '标记非正常死亡'),
         tog('laneStrands', '全部承继关系', (st) => st.panoramaMode !== 'river'),
+        // 年号纪年线（idea-timeline-nianhao；2026-08-28 库主定三档）：
+        // 全＝各带常显、选＝点选朝代才显、无＝关。先落泳道，河流侧另案
+        seg('laneNianhao', '纪年', [['all', '全'], ['sel', '选'], ['off', '无']],
+          (st) => st.panoramaMode !== 'river'),
       ]),
     ],
     render: (host, l, o) => {

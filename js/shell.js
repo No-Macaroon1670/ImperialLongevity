@@ -25,6 +25,9 @@ const S = {
   panoramaMode: matchMedia('(max-width: 720px)').matches ? 'river' : 'lanes',
   riverPx: 7,
   lanePx: 14, laneColor: 'dynasty', laneViolent: true, laneStrands: false, laneEvents: true, evOff: [],
+  // 年号纪年线三档（2026-08-28 库主定）：全＝各带常显、选＝点选朝代才显、无＝关。
+  // 默认「选」——点带即出，与承继丝同一手势；常显交给「全」档
+  laneNianhao: 'sel',
   // 大事记分量档（rank 屏蔽制度，2026-08-26 库主立案落地）：3=全部、2=一二等、1=只看一等主推
   evRank: 3,
   scatterX: 'birth',
