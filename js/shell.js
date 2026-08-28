@@ -24,12 +24,13 @@ const S = {
   // 默认按屏宽选：手机竖屏顺着拇指的方向读河流；宽屏一屏并列看得到更多政权，泳道更强。
   panoramaMode: matchMedia('(max-width: 720px)').matches ? 'river' : 'lanes',
   riverPx: 7,
-  lanePx: 14, laneColor: 'dynasty', laneViolent: true, laneStrands: false, laneEvents: true, evOff: [],
+  lanePx: 14, laneColor: 'dynasty', laneViolent: true, laneStrands: false, evOff: [],
   // 年号纪年线三档（2026-08-28 库主定）：全＝各带常显、选＝点选朝代才显、无＝关。
   // 默认「选」——点带即出，与承继丝同一手势；常显交给「全」档
   laneNianhao: 'sel',
-  // 大事记分量档（rank 屏蔽制度，2026-08-26 库主立案落地）：3=全部、2=一二等、1=只看一等主推
-  evRank: 3,
+  // 大事记分级开关（2026-08-28 库主令：大事记 tog 与分量 seg 合并为一组独立档位）：
+  // 数组存**要看的等级**，各档独立勾选——只看三等（小众事件）也行；全取掉＝无大事记
+  evRanks: [1, 2, 3],
   scatterX: 'birth',
   kmGroup: 'unified', kmScale: 'reign', kmCensorAbd: true, kmCI: true, kmFromAge: 15,
   cifScale: 'age',
@@ -298,7 +299,8 @@ function buildControls(sec) {
         box.appendChild(chip(lab, on, () => {
           const arr = S[c.key];
           const i = arr.indexOf(v);
-          if (i >= 0) { if (arr.length > 1) arr.splice(i, 1); } else arr.push(v);
+          // min0：允许全取掉（大事记档位「全关＝无大事记」）；不带此旗的照旧至少留一项
+          if (i >= 0) { if (c.min0 || arr.length > 1) arr.splice(i, 1); } else arr.push(v);
           render();
         }));
       }

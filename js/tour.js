@@ -63,7 +63,7 @@ const DEFAULT_STOPS = [
     b: '一股满宽＝天下一统，裂成几股＝几家并立，重新统一时再合成一条。',
     b2: '这一段是三国：东汉的大河在建安末裂成魏蜀吴三股，各自着色并流六十年，二八〇年西晋灭吴，三股重新合成一条满宽的河。河宽恒定、只按当时并存的政权数均分——本库没有疆域与人口数据，若让分叉的宽窄去编码「谁更大」，那是在画我们并不掌握的东西。宽度只回答一个问题：那一年有几家。',
     cta: '这一节有两种读法，控件第一行随时可换：**竖向河流**顺着页面滚，读的是分合岔流；**横向泳道**并排铺开，读的是谁承谁。下一站换泳道看看。',
-    set: { panoramaMode: 'river', laneEvents: true, evOff: [] },
+    set: { panoramaMode: 'river', evRanks: [1, 2, 3], evOff: [] },
     span: [220, 280],
     ctrl: '视图',
   },
@@ -72,7 +72,7 @@ const DEFAULT_STOPS = [
     b: '七十二年里北方换了五姓十三君，南方十国并峙——这是整张图最挤的一段。',
     b2: '九〇七年朱温废唐，到九七九年北汉降宋。泳道被占满，河也分成最多股。',
     cta: '我把视图换成了**横向泳道**，并打开「全部承继关系」：粗实线＝法统相承，细实线＝亡入，虚线＝裂自。哪一国是从哪一国裂出来的，只有这些细丝说得出——这是河画不出来的一层。',
-    set: { panoramaMode: 'lanes', laneStrands: true, laneEvents: true, evOff: [] },
+    set: { panoramaMode: 'lanes', laneStrands: true, evRanks: [1, 2, 3], evOff: [] },
     span: [907, 979],
     ctrl: '全部承继关系',
   },
@@ -111,7 +111,7 @@ const DEFAULT_STOPS = [
     b: '汉代画像石上的一个母题：七个女儿为父报仇。',
     b2: '它不是哪一场战争，也不是哪一位皇帝，却在石头上被反复刻了一百多年。',
     cta: '维基那篇写得相当好，值得点进去读——卡片里的「维基百科全文」就是。顺带：我把类别筛到只剩「文化·科技」与「文物」，旁边那排开关随时可以改回来。',
-    set: { evOff: CULTURE_ONLY, laneEvents: true },
+    set: { evOff: CULTURE_ONLY, evRanks: [1, 2, 3] },
     ev: '七女为父报仇',
     card: true,
     legend: true,
@@ -478,7 +478,7 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   };
 
   // ── 状态存档：导览会动筛选，结束时按原样放回 ─────────────────────────
-  const TOUCHED = ['panoramaMode', 'laneStrands', 'laneEvents', 'evOff'];
+  const TOUCHED = ['panoramaMode', 'laneStrands', 'evRanks', 'evOff'];
   let saved = null;
   const afterRender = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
@@ -872,7 +872,8 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
         if (e2) need.add(e2.k);
       }
       if (need.size) {
-        S.laneEvents = true;
+        // 三档全开：走线站点的事件可能落在读者屏蔽的等级里，框住一片空同病
+        if (!S.evRanks || S.evRanks.length < 3) S.evRanks = [1, 2, 3];
         if (S.evOff && S.evOff.some((k) => need.has(k))) {
           S.evOff = S.evOff.filter((k) => !need.has(k));
         }

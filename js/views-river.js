@@ -738,7 +738,9 @@ export function renderRiver(host, list, opts) {
   // 代价是河面要让出两条边栏。窄到一定程度就不值:十六国九股并流时,
   // 河宽每让出一百像素,每股就少十一像素——名字先挤不下的是河里,不是岸上。
   // 故设河宽下限,让不出边栏时就不设边栏(改由 setupNarrowEvents 走另一套排法)。
-  const showEvents = opts.laneEvents !== false;
+  // 大事记分级独立勾选（evRanks 数组存要看的等级）；全取掉＝无大事记
+  const rkSet = new Set(opts.evRanks || [1, 2, 3]);
+  const showEvents = rkSet.size > 0;
   const BAND_MIN = 340;                    // 河宽下限:低于此不再割边栏
   const STRIP_MIN = 70;                    // 边栏下限:窄于此写不下名字
   // 要么给足,要么不给:三四十像素的边栏一个字都摆不下,却照样从河面上割走
@@ -824,13 +826,12 @@ export function renderRiver(host, list, opts) {
     const evOff = new Set(opts.evOff || []);
     const FS = 10.5, ROW = 12.5;
     const R = { 1: 4, 2: 3, 3: 2.2 };
-    const rk = (e) => e.r || 2;
-    const rkMax = +opts.evRank || 3;   // 分量档（rank 屏蔽）：档外整条不画，标记也不留
+    const rk = (e) => e.r || 2;        // 分级勾选（rank 屏蔽）：档外整条不画，标记也不留
     // 同年错开,与泳道图同理(见 views-lanes.js 的长注)。竖河里时间是纵向的,
     // 故沿河岸上下摊开;同年但分属两岸的本来就不撞,只在同岸内分组。
     const sameYear = new Map();
     for (const e2 of EVENTS) {
-      if (evOff.has(e2.k) || e2.k === 'era' || rk(e2) > rkMax) continue;
+      if (evOff.has(e2.k) || e2.k === 'era' || !rkSet.has(rk(e2))) continue;
       const key = `${e2.y}|${LEFT_BANK.has(e2.k) ? 'L' : 'R'}`;
       if (!sameYear.has(key)) sameYear.set(key, []);
       sameYear.get(key).push(e2);
@@ -849,7 +850,7 @@ export function renderRiver(host, list, opts) {
       // 陈桥兵变、靖康之变都一并挡掉了——正是先前特意补回来的那十一条,
       // 补进数据却仍被这里拦在轨外,等于白补。承继细丝的刻痕在河身、
       // 事件点在表头,两处register不同,并存不算重复。
-      if (evOff.has(ev.k) || ev.k === 'era' || rk(ev) > rkMax) continue;
+      if (evOff.has(ev.k) || ev.k === 'era' || !rkSet.has(rk(ev))) continue;
       const ty = y(evAnchor(ev)) + fanOf(ev);
       if (ty < -20 || ty > H + 20) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
@@ -1126,8 +1127,7 @@ export function renderRiver(host, list, opts) {
     // 挨在一起没有一丝白；13.5 给出一线呼吸
     const FS = 10, ROW = 13.5;
     const R = { 1: 4, 2: 3, 3: 2.3 };
-    const rk = (e) => e.r || 2;
-    const rkMax = +opts.evRank || 3;   // 分量档（rank 屏蔽）：档外整条不画，标记也不留
+    const rk = (e) => e.r || 2;        // 分级勾选（rank 屏蔽）：档外整条不画，标记也不留
     // 二三等要「河道宽松」才放出来，宽松有两个方向：
     //   横向 MIN_W——河道窄到写不下就别挤（十六国的九股并流里，二三等一律不放）；
     //   纵向 PAD ——名字要多大的清净才配写出来。一等按自身高度找空当，二等要
@@ -1202,7 +1202,7 @@ export function renderRiver(host, list, opts) {
     const taken = inkTaken.slice();
     const free = (x0, x1, y0, y1) => !taken.some((p) => x0 < p[1] && x1 > p[0] && y0 < p[3] && y1 > p[2]);
     for (const ev of [...EVENTS].sort((a, b) => rk(a) - rk(b) || a.y - b.y)) {
-      if (evOff.has(ev.k) || ev.k === 'era' || rk(ev) > rkMax) continue;
+      if (evOff.has(ev.k) || ev.k === 'era' || !rkSet.has(rk(ev))) continue;
       const ty = y(ev.y);
       if (ty < -20 || ty > H + 20) continue;
       const an = anchorOf(ev);
