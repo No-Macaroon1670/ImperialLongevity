@@ -28,6 +28,22 @@ CC-BY 与 CC-BY-SA 要求署名，这是法律义务；CC0 与公有领域不要
 | 赤壁图 | `金武元直赤壁圖-卷.jpg` | 國立故宮博物院（原作武元直） | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:金武元直赤壁圖_卷.jpg) |
 | 三国演义 | `zhsy100335-三國志通俗演義-明羅本撰-明嘉靖元年刻本-pdf.jpg` | (明)罗本（罗贯中），中华再造善本影印 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:ZHSY100335_三國志通俗演義_明羅本撰_明嘉靖元年刻本.pdf) |
 
+## difu
+
+| 站 | 文件 | 署名 | 许可 | 原始文件页 |
+|---|---|---|---|---|
+| 序 | `cadal06050851-搜神記-卷一-卷十-djvu.jpg` | （晉）幹寳（撰） | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:CADAL06050851_%E6%90%9C%E7%A5%9E%E8%A8%98%C2%B7%E5%8D%B7%E4%B8%80~%E5%8D%B7%E5%8D%81.djvu) |
+| 后土 | `qiufeng-tower-in-wanrong-houtu-temple-03-2013-09.jpg` | 猫猫的日记本 | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Qiufeng_Tower_in_Wanrong_Houtu_Temple_03_2013-09.JPG) |
+| 道行般若经 | `nlc892-zhch0006-196958-道行般若經-第2冊-pdf.jpg` | 〔漢〕支婁迦讖譯 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:NLC892-ZHCH0006-196958_%E9%81%93%E8%A1%8C%E8%88%AC%E8%8B%A5%E7%B6%93_%E7%AC%AC2%E5%86%8A.pdf) |
+| 青釉堆塑谷仓罐 | `宁波博物馆藏三国堆塑罐.jpg` | Siyuwj | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:%E5%AE%81%E6%B3%A2%E5%8D%9A%E7%89%A9%E9%A6%86%E8%97%8F%E4%B8%89%E5%9B%BD%E5%A0%86%E5%A1%91%E7%BD%90.jpg) |
+| 泰山治鬼 | `大宋东岳天齐仁圣帝碑.jpg` | H2v5o68z | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:%E5%A4%A7%E5%AE%8B%E4%B8%9C%E5%B2%B3%E5%A4%A9%E9%BD%90%E4%BB%81%E5%9C%A3%E5%B8%9D%E7%A2%91.jpg) |
+| 罗酆山 | `nlc892-411999015813-36625-真誥-第8冊-pdf.jpg` | 〔南朝梁〕陶弘景撰 | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:NLC892-411999015813-36625_%E7%9C%9F%E8%AA%A5_%E7%AC%AC8%E5%86%8A.pdf) |
+| 九华山 | `huacheng-temple-01.jpg` | WQL | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:Huacheng_Temple_01.jpg) |
+| 目连救母 | `目连救母192419.jpg` | Augustokremo | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:%E7%9B%AE%E8%BF%9E%E6%95%91%E6%AF%8D192419.jpg) |
+| 宝顶山摩崖造像 | `dazu-baoding-shan-250-no20-2012-gje.jpg` | Gerd Eichmann | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Dazu-Baoding_Shan-250-No20-2012-gje.jpg) |
+| 陆信忠款十王图 | `ten-kings-of-hell-riku-shinchu-nara-national-museum.jpg` | 陸信忠 (Lu Xinzhong) | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Ten_Kings_of_Hell_Riku_Shinchu_(Nara_National_Museum).jpg) |
+| 封神演义 | `新刻鍾伯敬先生批評封神演義-067.jpg` | — | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:%E6%96%B0%E5%88%BB%E9%8D%BE%E4%BC%AF%E6%95%AC%E5%85%88%E7%94%9F%E6%89%B9%E8%A9%95%E5%B0%81%E7%A5%9E%E6%BC%94%E7%BE%A9-067.jpg) |
+
 ## fengxian
 
 | 站 | 文件 | 署名 | 许可 | 原始文件页 |

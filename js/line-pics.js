@@ -114,6 +114,102 @@ export const LINE_PICS = {
    "整幅": true
   }
  },
+ "difu": {
+  "序": {
+   "缩略图": "img/story/difu/cadal06050851-搜神記-卷一-卷十-djvu.jpg?v=34214ff0",
+   "说明": "四库本《搜神记》提要叶（浙江大学CADAL扫描）——叶上「子部十二 小説家類二」正是序里那次读法之变的落款：史官修的书，后世归进了小说；今传二十卷系后人辑佚重编，非干宝原书三十卷",
+   "作者": "（晉）幹寳（撰）",
+   "署名": "（晉）幹寳（撰）",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:CADAL06050851_%E6%90%9C%E7%A5%9E%E8%A8%98%C2%B7%E5%8D%B7%E4%B8%80~%E5%8D%B7%E5%8D%81.djvu",
+   "整幅": true
+  },
+  "后土": {
+   "缩略图": "img/story/difu/qiufeng-tower-in-wanrong-houtu-temple-03-2013-09.jpg?v=ac479be5",
+   "说明": "万荣后土祠秋风楼——今存庙貌系后世重修，非汉武立祠时原构；祠之始建两说本线不裁",
+   "作者": "猫猫的日记本",
+   "署名": "猫猫的日记本",
+   "许可": "CC BY-SA 3.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Qiufeng_Tower_in_Wanrong_Houtu_Temple_03_2013-09.JPG",
+   "整幅": true
+  },
+  "道行般若经": {
+   "缩略图": "img/story/difu/nlc892-zhch0006-196958-道行般若經-第2冊-pdf.jpg?v=5a2467c3",
+   "说明": "《道行般若经》卷第三泥犁品（国家图书馆藏刻本影印，版本未核）——「用是斷法罪故，死入大泥犁中」正在此叶：先到汉语的是音译的泥犁，不是后来意译的地狱",
+   "作者": "〔漢〕支婁迦讖譯",
+   "署名": "〔漢〕支婁迦讖譯",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:NLC892-ZHCH0006-196958_%E9%81%93%E8%A1%8C%E8%88%AC%E8%8B%A5%E7%B6%93_%E7%AC%AC2%E5%86%8A.pdf",
+   "整幅": true
+  },
+  "青釉堆塑谷仓罐": {
+   "缩略图": "img/story/difu/宁波博物馆藏三国堆塑罐.jpg?v=6a43e69d",
+   "说明": "宁波博物馆藏三国青釉堆塑罐——同类器，非故宫那件永安三年铭本件：顶上小罐、口沿群鸟、一圈乐人都在，崇楼与龟驮碑不在此件上（馆签摄于展柜，签上定名一字未能放大坐实，不引）",
+   "作者": "Siyuwj",
+   "署名": "Siyuwj",
+   "许可": "CC BY-SA 3.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E5%AE%81%E6%B3%A2%E5%8D%9A%E7%89%A9%E9%A6%86%E8%97%8F%E4%B8%89%E5%9B%BD%E5%A0%86%E5%A1%91%E7%BD%90.jpg",
+   "整幅": true
+  },
+  "泰山治鬼": {
+   "缩略图": "img/story/difu/大宋东岳天齐仁圣帝碑.jpg?v=f088d4a9",
+   "说明": "岱庙「大宋东岳天齐仁圣帝碑」——大中祥符六年（1013）宋真宗封泰山神为天齐仁圣帝所立，年代据岱庙说明牌；碑身今日最醒目的是后人覆题的「五嶽獨宗」四大字与官衔题名：封号碑自己也被层层加写。封神演义站所引小说敕命，借的正是这道真封号",
+   "作者": "H2v5o68z",
+   "署名": "H2v5o68z",
+   "许可": "CC0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E5%A4%A7%E5%AE%8B%E4%B8%9C%E5%B2%B3%E5%A4%A9%E9%BD%90%E4%BB%81%E5%9C%A3%E5%B8%9D%E7%A2%91.jpg",
+   "整幅": true
+  },
+  "罗酆山": {
+   "缩略图": "img/story/difu/nlc892-411999015813-36625-真誥-第8冊-pdf.jpg?v=dc9dcc81",
+   "说明": "《真诰》卷之十五阐幽微篇首叶（国家图书馆藏刻本影印，版本未核）——「羅酆山在北方癸地」与陶弘景自注同在此叶；虚拟之山无可拍，能拍的只有写它的那页书",
+   "作者": "〔南朝梁〕陶弘景撰",
+   "署名": "〔南朝梁〕陶弘景撰",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:NLC892-411999015813-36625_%E7%9C%9F%E8%AA%A5_%E7%AC%AC8%E5%86%8A.pdf",
+   "整幅": true
+  },
+  "九华山": {
+   "缩略图": "img/story/difu/huacheng-temple-01.jpg?v=d9e55df1",
+   "说明": "九华山化城寺大雄宝殿——建中初刺史张严移旧额奏置寺，九华山自此进了朝廷的记录；今殿非唐代原构，历代屡毁屡修",
+   "作者": "WQL",
+   "署名": "WQL",
+   "许可": "CC0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Huacheng_Temple_01.jpg"
+  },
+  "目连救母": {
+   "缩略图": "img/story/difu/目连救母192419.jpg?v=3bee7276",
+   "说明": "祁剧《目连救母》「目连之舅劝青提破戒开荤」一场（2020年）——变文里母亲有了堕落缘由的那一层在今日舞台上的样子；活态搬演，非敦煌写本，两者隔着一千年；「青提」是目连戏惯称，佛经原典无此名",
+   "作者": "Augustokremo",
+   "署名": "Augustokremo",
+   "许可": "CC BY-SA 4.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E7%9B%AE%E8%BF%9E%E6%95%91%E6%AF%8D192419.jpg"
+  },
+  "宝顶山摩崖造像": {
+   "缩略图": "img/story/difu/dazu-baoding-shan-250-no20-2012-gje.jpg?v=e7b6ae26",
+   "说明": "大足宝顶山大佛湾第20号龛地狱变相全景——上层十佛与十王两司，下层地狱诸相收在斜角远景里；画左石阶旁即全国重点文物保护单位碑。石窟线从这片崖的孝道龛走过，本线看这一龛",
+   "作者": "Gerd Eichmann",
+   "署名": "Gerd Eichmann",
+   "许可": "CC BY-SA 4.0",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Dazu-Baoding_Shan-250-No20-2012-gje.jpg",
+   "整幅": true
+  },
+  "陆信忠款十王图": {
+   "缩略图": "img/story/difu/ten-kings-of-hell-riku-shinchu-nara-national-museum.jpg?v=38cee49a",
+   "说明": "陆信忠款《十王图》之一轴，题签「三年五道轉輪大王」（奈良国立博物馆藏）——一套十幅，每幅一位王者坐堂问案：王据案、侍者捧牍、甲士执仗、堂下亡魂候审；站文点名的泰山府君是另一幅",
+   "作者": "陸信忠 (Lu Xinzhong)",
+   "署名": "陸信忠 (Lu Xinzhong)",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Ten_Kings_of_Hell_Riku_Shinchu_(Nara_National_Museum).jpg",
+   "整幅": true
+  },
+  "封神演义": {
+   "缩略图": "img/story/difu/新刻鍾伯敬先生批評封神演義-067.jpg?v=686a7021",
+   "说明": "明刊《新刻鍾伯敬先生批評封神演義》插图，左半叶题「姜子牙歸國封神」——柏鉴职衔与黄飞虎三道敕命所在的第九十九回，画的正是这一叶的场面；Commons标出版窗口1573–1620，鍾伯敬系评者，非作者三说之一",
+   "许可": "Public domain",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E6%96%B0%E5%88%BB%E9%8D%BE%E4%BC%AF%E6%95%AC%E5%85%88%E7%94%9F%E6%89%B9%E8%A9%95%E5%B0%81%E7%A5%9E%E6%BC%94%E7%BE%A9-067.jpg"
+  }
+ },
  "fengxian": {
   "熹平石经": {
    "缩略图": "img/story/fengxian/eastern-han-stone-classics-9832326865.jpg?v=2a0eb24f",

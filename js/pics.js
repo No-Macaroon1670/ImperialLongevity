@@ -164,6 +164,140 @@ export const PICS = {
    "缩略图": "img/story/chibi/zhsy100335-三國志通俗演義-明羅本撰-明嘉靖元年刻本-pdf.jpg"
   }
  },
+ "difu": {
+  "序": {
+   "文件": "CADAL06050851 搜神記·卷一~卷十.djvu",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/CADAL06050851_%E6%90%9C%E7%A5%9E%E8%A8%98%C2%B7%E5%8D%B7%E4%B8%80~%E5%8D%B7%E5%8D%81.djvu/page3-1280px-CADAL06050851_%E6%90%9C%E7%A5%9E%E8%A8%98%C2%B7%E5%8D%B7%E4%B8%80~%E5%8D%B7%E5%8D%81.djvu.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/6/60/CADAL06050851_%E6%90%9C%E7%A5%9E%E8%A8%98%C2%B7%E5%8D%B7%E4%B8%80~%E5%8D%B7%E5%8D%81.djvu?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "（晉）幹寳（撰）",
+   "署名": "（晉）幹寳（撰）",
+   "说明页": "https://commons.wikimedia.org/wiki/File:CADAL06050851_%E6%90%9C%E7%A5%9E%E8%A8%98%C2%B7%E5%8D%B7%E4%B8%80~%E5%8D%B7%E5%8D%81.djvu",
+   "说明": "四库本《搜神记》提要叶（浙江大学CADAL扫描）——叶上「子部十二 小説家類二」正是序里那次读法之变的落款：史官修的书，后世归进了小说；今传二十卷系后人辑佚重编，非干宝原书三十卷",
+   "卡": true,
+   "整幅": true
+  },
+  "后土": {
+   "文件": "Qiufeng Tower in Wanrong Houtu Temple 03 2013-09.JPG",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Qiufeng_Tower_in_Wanrong_Houtu_Temple_03_2013-09.JPG/1280px-Qiufeng_Tower_in_Wanrong_Houtu_Temple_03_2013-09.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/8/82/Qiufeng_Tower_in_Wanrong_Houtu_Temple_03_2013-09.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC BY-SA 3.0",
+   "作者": "猫猫的日记本",
+   "署名": "猫猫的日记本",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Qiufeng_Tower_in_Wanrong_Houtu_Temple_03_2013-09.JPG",
+   "说明": "万荣后土祠秋风楼——今存庙貌系后世重修，非汉武立祠时原构；祠之始建两说本线不裁",
+   "卡": true,
+   "整幅": true
+  },
+  "道行般若经": {
+   "文件": "NLC892-ZHCH0006-196958 道行般若經 第2冊.pdf",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/NLC892-ZHCH0006-196958_%E9%81%93%E8%A1%8C%E8%88%AC%E8%8B%A5%E7%B6%93_%E7%AC%AC2%E5%86%8A.pdf/page14-1280px-NLC892-ZHCH0006-196958_%E9%81%93%E8%A1%8C%E8%88%AC%E8%8B%A5%E7%B6%93_%E7%AC%AC2%E5%86%8A.pdf.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/a/a6/NLC892-ZHCH0006-196958_%E9%81%93%E8%A1%8C%E8%88%AC%E8%8B%A5%E7%B6%93_%E7%AC%AC2%E5%86%8A.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "〔漢〕支婁迦讖譯",
+   "署名": "〔漢〕支婁迦讖譯",
+   "说明页": "https://commons.wikimedia.org/wiki/File:NLC892-ZHCH0006-196958_%E9%81%93%E8%A1%8C%E8%88%AC%E8%8B%A5%E7%B6%93_%E7%AC%AC2%E5%86%8A.pdf",
+   "说明": "《道行般若经》卷第三泥犁品（国家图书馆藏刻本影印，版本未核）——「用是斷法罪故，死入大泥犁中」正在此叶：先到汉语的是音译的泥犁，不是后来意译的地狱",
+   "卡": true,
+   "整幅": true
+  },
+  "青釉堆塑谷仓罐": {
+   "文件": "宁波博物馆藏三国堆塑罐.jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/%E5%AE%81%E6%B3%A2%E5%8D%9A%E7%89%A9%E9%A6%86%E8%97%8F%E4%B8%89%E5%9B%BD%E5%A0%86%E5%A1%91%E7%BD%90.jpg/1280px-%E5%AE%81%E6%B3%A2%E5%8D%9A%E7%89%A9%E9%A6%86%E8%97%8F%E4%B8%89%E5%9B%BD%E5%A0%86%E5%A1%91%E7%BD%90.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/a/a4/%E5%AE%81%E6%B3%A2%E5%8D%9A%E7%89%A9%E9%A6%86%E8%97%8F%E4%B8%89%E5%9B%BD%E5%A0%86%E5%A1%91%E7%BD%90.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC BY-SA 3.0",
+   "作者": "Siyuwj",
+   "署名": "Siyuwj",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E5%AE%81%E6%B3%A2%E5%8D%9A%E7%89%A9%E9%A6%86%E8%97%8F%E4%B8%89%E5%9B%BD%E5%A0%86%E5%A1%91%E7%BD%90.jpg",
+   "说明": "宁波博物馆藏三国青釉堆塑罐——同类器，非故宫那件永安三年铭本件：顶上小罐、口沿群鸟、一圈乐人都在，崇楼与龟驮碑不在此件上（馆签摄于展柜，签上定名一字未能放大坐实，不引）",
+   "卡": true,
+   "整幅": true
+  },
+  "泰山治鬼": {
+   "文件": "大宋东岳天齐仁圣帝碑.jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/%E5%A4%A7%E5%AE%8B%E4%B8%9C%E5%B2%B3%E5%A4%A9%E9%BD%90%E4%BB%81%E5%9C%A3%E5%B8%9D%E7%A2%91.jpg/1280px-%E5%A4%A7%E5%AE%8B%E4%B8%9C%E5%B2%B3%E5%A4%A9%E9%BD%90%E4%BB%81%E5%9C%A3%E5%B8%9D%E7%A2%91.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/c/c7/%E5%A4%A7%E5%AE%8B%E4%B8%9C%E5%B2%B3%E5%A4%A9%E9%BD%90%E4%BB%81%E5%9C%A3%E5%B8%9D%E7%A2%91.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC0",
+   "作者": "H2v5o68z",
+   "署名": "H2v5o68z",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E5%A4%A7%E5%AE%8B%E4%B8%9C%E5%B2%B3%E5%A4%A9%E9%BD%90%E4%BB%81%E5%9C%A3%E5%B8%9D%E7%A2%91.jpg",
+   "说明": "岱庙「大宋东岳天齐仁圣帝碑」——大中祥符六年（1013）宋真宗封泰山神为天齐仁圣帝所立，年代据岱庙说明牌；碑身今日最醒目的是后人覆题的「五嶽獨宗」四大字与官衔题名：封号碑自己也被层层加写。封神演义站所引小说敕命，借的正是这道真封号",
+   "卡": true,
+   "整幅": true
+  },
+  "罗酆山": {
+   "文件": "NLC892-411999015813-36625 真誥 第8冊.pdf",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/NLC892-411999015813-36625_%E7%9C%9F%E8%AA%A5_%E7%AC%AC8%E5%86%8A.pdf/page2-1280px-NLC892-411999015813-36625_%E7%9C%9F%E8%AA%A5_%E7%AC%AC8%E5%86%8A.pdf.jpg",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/b/b7/NLC892-411999015813-36625_%E7%9C%9F%E8%AA%A5_%E7%AC%AC8%E5%86%8A.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "〔南朝梁〕陶弘景撰",
+   "署名": "〔南朝梁〕陶弘景撰",
+   "说明页": "https://commons.wikimedia.org/wiki/File:NLC892-411999015813-36625_%E7%9C%9F%E8%AA%A5_%E7%AC%AC8%E5%86%8A.pdf",
+   "说明": "《真诰》卷之十五阐幽微篇首叶（国家图书馆藏刻本影印，版本未核）——「羅酆山在北方癸地」与陶弘景自注同在此叶；虚拟之山无可拍，能拍的只有写它的那页书",
+   "卡": true,
+   "整幅": true
+  },
+  "九华山": {
+   "文件": "Huacheng Temple 01.jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Huacheng_Temple_01.jpg/1280px-Huacheng_Temple_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Huacheng_Temple_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC0",
+   "作者": "WQL",
+   "署名": "WQL",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Huacheng_Temple_01.jpg",
+   "说明": "九华山化城寺大雄宝殿——建中初刺史张严移旧额奏置寺，九华山自此进了朝廷的记录；今殿非唐代原构，历代屡毁屡修",
+   "卡": true,
+   "整幅": false
+  },
+  "目连救母": {
+   "文件": "目连救母192419.jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/%E7%9B%AE%E8%BF%9E%E6%95%91%E6%AF%8D192419.jpg/1280px-%E7%9B%AE%E8%BF%9E%E6%95%91%E6%AF%8D192419.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/6/6a/%E7%9B%AE%E8%BF%9E%E6%95%91%E6%AF%8D192419.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Augustokremo",
+   "署名": "Augustokremo",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E7%9B%AE%E8%BF%9E%E6%95%91%E6%AF%8D192419.jpg",
+   "说明": "祁剧《目连救母》「目连之舅劝青提破戒开荤」一场（2020年）——变文里母亲有了堕落缘由的那一层在今日舞台上的样子；活态搬演，非敦煌写本，两者隔着一千年；「青提」是目连戏惯称，佛经原典无此名",
+   "卡": true,
+   "整幅": false
+  },
+  "宝顶山摩崖造像": {
+   "文件": "Dazu-Baoding Shan-250-No20-2012-gje.jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Dazu-Baoding_Shan-250-No20-2012-gje.jpg/1280px-Dazu-Baoding_Shan-250-No20-2012-gje.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/1/10/Dazu-Baoding_Shan-250-No20-2012-gje.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "CC BY-SA 4.0",
+   "作者": "Gerd Eichmann",
+   "署名": "Gerd Eichmann",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Dazu-Baoding_Shan-250-No20-2012-gje.jpg",
+   "说明": "大足宝顶山大佛湾第20号龛地狱变相全景——上层十佛与十王两司，下层地狱诸相收在斜角远景里；画左石阶旁即全国重点文物保护单位碑。石窟线从这片崖的孝道龛走过，本线看这一龛",
+   "卡": true,
+   "整幅": true
+  },
+  "陆信忠款十王图": {
+   "文件": "Ten Kings of Hell Riku Shinchu (Nara National Museum).jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Ten_Kings_of_Hell_Riku_Shinchu_%28Nara_National_Museum%29.jpg/1280px-Ten_Kings_of_Hell_Riku_Shinchu_%28Nara_National_Museum%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Ten_Kings_of_Hell_Riku_Shinchu_%28Nara_National_Museum%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "陸信忠 (Lu Xinzhong)",
+   "署名": "陸信忠 (Lu Xinzhong)",
+   "说明页": "https://commons.wikimedia.org/wiki/File:Ten_Kings_of_Hell_Riku_Shinchu_(Nara_National_Museum).jpg",
+   "说明": "陆信忠款《十王图》之一轴，题签「三年五道轉輪大王」（奈良国立博物馆藏）——一套十幅，每幅一位王者坐堂问案：王据案、侍者捧牍、甲士执仗、堂下亡魂候审；站文点名的泰山府君是另一幅",
+   "卡": true,
+   "整幅": true
+  },
+  "封神演义": {
+   "文件": "新刻鍾伯敬先生批評封神演義-067.jpg",
+   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/%E6%96%B0%E5%88%BB%E9%8D%BE%E4%BC%AF%E6%95%AC%E5%85%88%E7%94%9F%E6%89%B9%E8%A9%95%E5%B0%81%E7%A5%9E%E6%BC%94%E7%BE%A9-067.jpg/1280px-%E6%96%B0%E5%88%BB%E9%8D%BE%E4%BC%AF%E6%95%AC%E5%85%88%E7%94%9F%E6%89%B9%E8%A9%95%E5%B0%81%E7%A5%9E%E6%BC%94%E7%BE%A9-067.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "原图": "https://upload.wikimedia.org/wikipedia/commons/1/10/%E6%96%B0%E5%88%BB%E9%8D%BE%E4%BC%AF%E6%95%AC%E5%85%88%E7%94%9F%E6%89%B9%E8%A9%95%E5%B0%81%E7%A5%9E%E6%BC%94%E7%BE%A9-067.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "许可": "Public domain",
+   "作者": "",
+   "署名": "",
+   "说明页": "https://commons.wikimedia.org/wiki/File:%E6%96%B0%E5%88%BB%E9%8D%BE%E4%BC%AF%E6%95%AC%E5%85%88%E7%94%9F%E6%89%B9%E8%A9%95%E5%B0%81%E7%A5%9E%E6%BC%94%E7%BE%A9-067.jpg",
+   "说明": "明刊《新刻鍾伯敬先生批評封神演義》插图，左半叶题「姜子牙歸國封神」——柏鉴职衔与黄飞虎三道敕命所在的第九十九回，画的正是这一叶的场面；Commons标出版窗口1573–1620，鍾伯敬系评者，非作者三说之一",
+   "卡": true,
+   "整幅": false
+  }
+ },
  "fengxian": {
   "熹平石经": {
    "文件": "Eastern Han Stone Classics (9832326865).jpg",
@@ -515,7 +649,7 @@ export const PICS = {
  "shiku": {
   "白马寺": {
    "文件": "2011-06 White Horse Temple 03.jpg",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/2011-06_White_Horse_Temple_03.jpg/960px-2011-06_White_Horse_Temple_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/2011-06-white-horse-temple-03.jpg",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/6/68/2011-06_White_Horse_Temple_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "CC0",
    "作者": "Gary Todd",
@@ -523,11 +657,12 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:2011-06_White_Horse_Temple_03.jpg",
    "说明": "洛阳白马寺山门",
    "卡": true,
-   "整幅": false
+   "整幅": false,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/2011-06_White_Horse_Temple_03.jpg/960px-2011-06_White_Horse_Temple_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   },
   "克孜尔石窟": {
    "文件": "Fragments of Buddhist Wall Painting, Kyzil, Sinkiang, China, Central Asian art, 6th century - Nelson-Atkins Museum of Art - DSC09161.JPG",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Fragments_of_Buddhist_Wall_Painting%2C_Kyzil%2C_Sinkiang%2C_China%2C_Central_Asian_art%2C_6th_century_-_Nelson-Atkins_Museum_of_Art_-_DSC09161.JPG/960px-Fragments_of_Buddhist_Wall_Painting%2C_Kyzil%2C_Sinkiang%2C_China%2C_Central_Asian_art%2C_6th_century_-_Nelson-Atkins_Museum_of_Art_-_DSC09161.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/fragments-of-buddhist-wall-painting-kyzil-sinkiang-china-cen.jpg",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Fragments_of_Buddhist_Wall_Painting%2C_Kyzil%2C_Sinkiang%2C_China%2C_Central_Asian_art%2C_6th_century_-_Nelson-Atkins_Museum_of_Art_-_DSC09161.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "CC0",
    "作者": "Daderot",
@@ -535,11 +670,12 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Fragments_of_Buddhist_Wall_Painting,_Kyzil,_Sinkiang,_China,_Central_Asian_art,_6th_century_-_Nelson-Atkins_Museum_of_Art_-_DSC09161.JPG",
    "说明": "克孜尔壁画残片，今藏堪萨斯城纳尔逊-阿特金斯艺术博物馆",
    "卡": true,
-   "整幅": false
+   "整幅": false,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Fragments_of_Buddhist_Wall_Painting%2C_Kyzil%2C_Sinkiang%2C_China%2C_Central_Asian_art%2C_6th_century_-_Nelson-Atkins_Museum_of_Art_-_DSC09161.JPG/960px-Fragments_of_Buddhist_Wall_Painting%2C_Kyzil%2C_Sinkiang%2C_China%2C_Central_Asian_art%2C_6th_century_-_Nelson-Atkins_Museum_of_Art_-_DSC09161.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   },
   "敦煌石窟": {
    "文件": "莫高窟九层楼 - panoramio.jpg",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/%E8%8E%AB%E9%AB%98%E7%AA%9F%E4%B9%9D%E5%B1%82%E6%A5%BC_-_panoramio.jpg/960px-%E8%8E%AB%E9%AB%98%E7%AA%9F%E4%B9%9D%E5%B1%82%E6%A5%BC_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/莫高窟九层楼-panoramio.jpg",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/f/f9/%E8%8E%AB%E9%AB%98%E7%AA%9F%E4%B9%9D%E5%B1%82%E6%A5%BC_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "CC BY 3.0",
    "作者": "guan",
@@ -547,11 +683,12 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:%E8%8E%AB%E9%AB%98%E7%AA%9F%E4%B9%9D%E5%B1%82%E6%A5%BC_-_panoramio.jpg",
    "说明": "莫高窟崖面与九层楼",
    "卡": true,
-   "整幅": true
+   "整幅": true,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/%E8%8E%AB%E9%AB%98%E7%AA%9F%E4%B9%9D%E5%B1%82%E6%A5%BC_-_panoramio.jpg/960px-%E8%8E%AB%E9%AB%98%E7%AA%9F%E4%B9%9D%E5%B1%82%E6%A5%BC_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   },
   "麦积山石窟": {
    "文件": "Majishan huge sculptures 20090226.jpg",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Majishan_huge_sculptures_20090226.jpg/960px-Majishan_huge_sculptures_20090226.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/majishan-huge-sculptures-20090226.jpg",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/7/79/Majishan_huge_sculptures_20090226.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "CC BY-SA 3.0",
    "作者": "MarsmanRom",
@@ -559,11 +696,12 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Majishan_huge_sculptures_20090226.jpg",
    "说明": "麦积山崖面大型造像",
    "卡": true,
-   "整幅": true
+   "整幅": true,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Majishan_huge_sculptures_20090226.jpg/960px-Majishan_huge_sculptures_20090226.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   },
   "云冈石窟": {
    "文件": "Cave 20, Yungang Grottoes.jpg",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Cave_20%2C_Yungang_Grottoes.jpg/960px-Cave_20%2C_Yungang_Grottoes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/cave-20-yungang-grottoes.jpg",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/7/73/Cave_20%2C_Yungang_Grottoes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "CC0",
    "作者": "Dudva",
@@ -571,7 +709,8 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Cave_20,_Yungang_Grottoes.jpg",
    "说明": "云冈第二十窟大佛，前壁久塌，故露天而坐",
    "卡": true,
-   "整幅": false
+   "整幅": false,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Cave_20%2C_Yungang_Grottoes.jpg/960px-Cave_20%2C_Yungang_Grottoes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   },
   "龙门石窟": {
    "文件": "longmen-lushena-fengxiansi-2023.jpg",
@@ -597,7 +736,7 @@ export const PICS = {
   },
   "乐山大佛": {
    "文件": "Giant Buddha of Leshan.jpg",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Giant_Buddha_of_Leshan.jpg/960px-Giant_Buddha_of_Leshan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/giant-buddha-of-leshan.jpg",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/8/83/Giant_Buddha_of_Leshan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "CC BY-SA 4.0",
    "作者": "Giorgioglobe",
@@ -605,11 +744,12 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Giant_Buddha_of_Leshan.jpg",
    "说明": "乐山大佛",
    "卡": true,
-   "整幅": false
+   "整幅": false,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Giant_Buddha_of_Leshan.jpg/960px-Giant_Buddha_of_Leshan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   },
   "金刚经印本": {
    "文件": "Diamond Sutra of 868 AD - The Diamond Sutra (868), frontispiece and text - BL Or. 8210-P.2.jpg",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Diamond_Sutra_of_868_AD_-_The_Diamond_Sutra_%28868%29%2C_frontispiece_and_text_-_BL_Or._8210-P.2.jpg/960px-Diamond_Sutra_of_868_AD_-_The_Diamond_Sutra_%28868%29%2C_frontispiece_and_text_-_BL_Or._8210-P.2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/diamond-sutra-of-868-ad-the-diamond-sutra-868-frontispiece-a.jpg",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Diamond_Sutra_of_868_AD_-_The_Diamond_Sutra_%28868%29%2C_frontispiece_and_text_-_BL_Or._8210-P.2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "CC0",
    "作者": null,
@@ -617,11 +757,12 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Diamond_Sutra_of_868_AD_-_The_Diamond_Sutra_(868),_frontispiece_and_text_-_BL_Or._8210-P.2.jpg",
    "说明": "咸通九年《金刚经》卷首扉画及经文，大英图书馆藏 Or.8210/P.2",
    "卡": true,
-   "整幅": true
+   "整幅": true,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Diamond_Sutra_of_868_AD_-_The_Diamond_Sutra_%28868%29%2C_frontispiece_and_text_-_BL_Or._8210-P.2.jpg/960px-Diamond_Sutra_of_868_AD_-_The_Diamond_Sutra_%28868%29%2C_frontispiece_and_text_-_BL_Or._8210-P.2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   },
   "宝顶山摩崖造像": {
    "文件": "Baodingshan Cliff Carvings (50620551337).jpg",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Baodingshan_Cliff_Carvings_%2850620551337%29.jpg/960px-Baodingshan_Cliff_Carvings_%2850620551337%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "缩略图": "img/story/shiku/baodingshan-cliff-carvings-50620551337.jpg",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Baodingshan_Cliff_Carvings_%2850620551337%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "CC BY-SA 2.0",
    "作者": "Hugh Llewelyn from Keynsham, UK",
@@ -629,11 +770,12 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Baodingshan_Cliff_Carvings_(50620551337).jpg",
    "说明": "大足宝顶山摩崖造像",
    "卡": true,
-   "整幅": false
+   "整幅": false,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Baodingshan_Cliff_Carvings_%2850620551337%29.jpg/960px-Baodingshan_Cliff_Carvings_%2850620551337%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   },
   "藏经洞发现": {
    "文件": "Photo showing Cave 16 and the manuscripts piled up for Stein to examine near the entrance to Cave 17, the “library cave.jpg",
-   "缩略图": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Photo_showing_Cave_16_and_the_manuscripts_piled_up_for_Stein_to_examine_near_the_entrance_to_Cave_17%2C_the_%E2%80%9Clibrary_cave.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "缩略图": "img/story/shiku/photo-showing-cave-16-and-the-manuscripts-piled-up-for-stein.jpg",
    "原图": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Photo_showing_Cave_16_and_the_manuscripts_piled_up_for_Stein_to_examine_near_the_entrance_to_Cave_17%2C_the_%E2%80%9Clibrary_cave.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "许可": "Public domain",
    "作者": "Aurel Stein",
@@ -641,7 +783,8 @@ export const PICS = {
    "说明页": "https://commons.wikimedia.org/wiki/File:Photo_showing_Cave_16_and_the_manuscripts_piled_up_for_Stein_to_examine_near_the_entrance_to_Cave_17,_the_%E2%80%9Clibrary_cave.jpg",
    "说明": "第十六窟，写本堆于第十七窟口外待检，斯坦因摄于 1907 年",
    "卡": true,
-   "整幅": false
+   "整幅": false,
+   "远端": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Photo_showing_Cave_16_and_the_manuscripts_piled_up_for_Stein_to_examine_near_the_entrance_to_Cave_17%2C_the_%E2%80%9Clibrary_cave.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
   },
   "序": {
    "文件": "baimasi-stone-horse-2023.jpg",
