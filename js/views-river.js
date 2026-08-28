@@ -32,7 +32,7 @@
 //   5. **不套滚动容器 + 点选而非悬停。** 竖向内容再嵌一层竖向滚动是滚动陷阱，
 //      本图直接交给页面滚，全页只有一个滚动器；顶／底两条固定条充当上下节跳转
 //      与「安全起滑区」。触屏没有悬停，点中君主即高亮、详情进底部固定卡片。
-import { el, h, linear, hoverable, legend, tableView, notes, fmtYearAxis, fmt1, textWidth, glide } from './charts.js';
+import { el, h, linear, hoverable, tableView, notes, fmtYearAxis, fmt1, textWidth, glide } from './charts.js';
 import { DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS } from './dynasties.js';
 import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor } from './events.js';
@@ -717,7 +717,8 @@ export function renderRiver(host, list, opts) {
   if (!bands.length) { host.appendChild(h('p', { class: 'muted', text: '当前筛选无数据。' })); return; }
 
   let pxYear = opts.riverPx || 7;
-  const byDynasty = opts.laneColor !== 'unified';
+  // 双色「分合」档不进河流（库主 2026-08-28 裁撤）：河宽与分叉数本身就是分合，
+  // 双色在这儿是用颜色复述形状已说的话，还丢掉朝代身份。河流恒按朝代着色
   const markViolent = opts.laneViolent !== false;
   const slots = dynastyColorSlots();
   const ink = resolveInk(host);
@@ -902,7 +903,7 @@ export function renderRiver(host, list, opts) {
   // 否则「诛吕安刘」会正好压在「后 少 帝」的三个字上（用户实测截图）。
   const inkTaken = [];
   for (const b of ordered) {
-    const cvar = byDynasty ? slotVar(slots.get(b.d.key)) : (b.d.u ? '--c-unified' : '--c-split');
+    const cvar = slotVar(slots.get(b.d.key));
     const col = `var(${cvar})`;
     const st = DYN_STATS.get(b.d.key);
 
@@ -926,7 +927,7 @@ export function renderRiver(host, list, opts) {
     const tailN = necks.find((n2) => n2.xk === b.d.key);
     const varOf = (k2) => {
       const bb = bandBy.get(k2);
-      return bb ? (byDynasty ? slotVar(slots.get(k2)) : (bb.d.u ? '--c-unified' : '--c-split')) : null;
+      return bb ? slotVar(slots.get(k2)) : null;
     };
     const predV = headN ? varOf(headN.xk) : null;
     const succV = tailN ? varOf(tailN.yk) : null;
@@ -1727,14 +1728,8 @@ export function renderRiver(host, list, opts) {
     // 治世·中兴不列:它在泳道里是皇帝格子外的虚线外套,河流没有那一层
     for (const n of eventLegend(opts, { skip: ['era'] })) host.appendChild(n);
   }
-  // 按朝代配色时不放图例：65 个色块的对照表没人查得动，何况每条河道
-  // 都直接标着朝代名，颜色只是辅助通道。仅两色语义模式保留两行图例
-  if (!byDynasty) {
-    host.appendChild(legend([
-      { color: 'var(--c-unified)', label: '大一统王朝' },
-      { color: 'var(--c-split)', label: '分裂时期政权' },
-    ]));
-  }
+  // 不放朝代图例：65 个色块的对照表没人查得动，何况每条河道
+  // 都直接标着朝代名，颜色只是辅助通道
 
   host.appendChild(notes([
     `河宽**不编码疆域或人口**——本库没有这两项数据，若让分叉的宽窄去表示「谁更大」，`

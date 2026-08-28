@@ -31,9 +31,6 @@ export const SECTIONS = [
         fmt: (v) => { const w = document.querySelector('.lane-scroll')?.clientWidth || (innerWidth - 80);
           return `一屏 ≈ ${Math.max(5, Math.round(w / v / 5) * 5)} 年`; } },
         (st) => st.panoramaMode !== 'river'),
-      // 措辞收短（库主 2026-08-28）：具体朝代→朝代、大一统/分裂→分合——
-      // 「分合」与本节标题「分合岔流」同一词，条杆寸土寸金
-      seg('laneColor', '配色', [['dynasty', '朝代'], ['unified', '分合']]),
       // 大事记与分量合并为一组独立档位（2026-08-28 库主令）：三档各自勾选，
       // 全取掉＝无大事记——读者可以只看三等（小众事件），不再被「档位只能
       // 从一等往下含」绑住。总开关不另设：全关就是关
@@ -42,6 +39,12 @@ export const SECTIONS = [
       grp('设置', [
         tog('laneViolent', '标记非正常死亡'),
         tog('laneStrands', '全部承继关系', (st) => st.panoramaMode !== 'river'),
+        // 配色档降级入设置、且只给泳道（库主 2026-08-28 裁）：河流里分合是几何
+        // （一股满宽＝一统、数股＝割据），双色档在那儿是用颜色复述形状已说的话；
+        // 泳道双色仍是「哪几段是一统」的最快读法，也是「大一统定义严格/宽松」
+        // 筛选在本节唯一的视觉出口，降频不撤
+        seg('laneColor', '配色', [['dynasty', '朝代'], ['unified', '分合']],
+          (st) => st.panoramaMode !== 'river'),
         // 年号纪年线（idea-timeline-nianhao；2026-08-28 库主定三档）：
         // 全＝各带常显、选＝点选朝代才显、无＝关。两个视图共用一档：
         // 泳道线贴带缘（并立期上半轨翻上缘）、河流线贴各股左缘
