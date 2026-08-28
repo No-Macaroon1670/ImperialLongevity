@@ -45,9 +45,9 @@ export const SECTIONS = [
         tog('laneViolent', '标记非正常死亡'),
         tog('laneStrands', '全部承继关系', (st) => st.panoramaMode !== 'river'),
         // 年号纪年线（idea-timeline-nianhao；2026-08-28 库主定三档）：
-        // 全＝各带常显、选＝点选朝代才显、无＝关。先落泳道，河流侧另案
-        seg('laneNianhao', '纪年', [['all', '全'], ['sel', '选'], ['off', '无']],
-          (st) => st.panoramaMode !== 'river'),
+        // 全＝各带常显、选＝点选朝代才显、无＝关。两个视图共用一档：
+        // 泳道线贴带缘（并立期上半轨翻上缘）、河流线贴各股左缘
+        seg('laneNianhao', '纪年', [['all', '全'], ['sel', '选'], ['off', '无']]),
       ]),
     ],
     render: (host, l, o) => {

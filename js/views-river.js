@@ -36,6 +36,7 @@ import { el, h, linear, hoverable, legend, tableView, notes, fmtYearAxis, fmt1, 
 import { DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS } from './dynasties.js';
 import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor } from './events.js';
+import { NIANHAO } from './data-nianhao.js';
 import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName, eventLegend, evMark } from './views-lanes.js';
 import { mountKnowledge, evSpec } from './knowledge.js';
@@ -784,7 +785,8 @@ export function renderRiver(host, list, opts) {
   // 四个绘制层，DOM 顺序即遮挡顺序：所有河床垫底，君主段全体压在其上——
   // 因此新朝的预告细流（先于建国张开的淡色）只会显现在缝隙与河床里，
   // 绝不会浮在邻河的君主色块之上
-  const gBeds = el('g'), gStrips = el('g'), gEmps = el('g'), gLabels = el('g');
+  const gBeds = el('g'), gStrips = el('g'), gEmps = el('g'),
+    gNian = el('g', { class: 'river-nianhao' }), gLabels = el('g');
   const gEvents = el('g', { class: 'river-ev' });
   const evNodes = [];      // 供两翼卡自动跟随锚点用
 
@@ -804,7 +806,9 @@ export function renderRiver(host, list, opts) {
     svg.appendChild(el('text', { x: GUTTER - 7, y: y(t) + 3.5, class: 'tick', 'text-anchor': 'end', 'font-size': 9.5 },
       fmtYearAxis(t)));
   }
-  svg.appendChild(gBeds); svg.appendChild(gStrips); svg.appendChild(gEmps); svg.appendChild(gLabels);
+  // 纪年线层在君主色块之上（线要连续可见，不能学穿流带潜行）、标签之下
+  svg.appendChild(gBeds); svg.appendChild(gStrips); svg.appendChild(gEmps);
+  svg.appendChild(gNian); svg.appendChild(gLabels);
   svg.appendChild(gEvents);
 
   // ── 两岸事件轨 ──────────────────────────────────────────────────────────
@@ -1405,6 +1409,47 @@ export function renderRiver(host, list, opts) {
   scrub.addEventListener('pointermove', (e) => { if (scrubbing) scrubTo(e.clientY); });
   scrub.addEventListener('pointerup', () => { scrubbing = false; });
 
+  // ── 纪年线：贴河道左缘的年号细线（idea-timeline-nianhao 落地·河流段） ────
+  //
+  // 每股水流固定同一侧（2026-08-28 库主定：split river 各股皆取左缘），
+  // 一段一色（--nh-1..4 中性四色轮换）、改元即断点；三档开关与泳道共用
+  // laneNianhao（全／选／无，「选」与点选高亮同一手势）。色线要压在君主色块上
+  // 连续可见，故先垫一条页色窄带再上色线——不论压在哪家的色块上都读得出，
+  // 视觉上像左缘让出了一线河床。画法与「称帝前掌权窄条」同族（贴左缘采样、
+  // 极窄河道由 polyPath 的最小宽闸门自动裁掉），悬停出年号名。
+  const nhMode = opts.laneNianhao || 'sel';
+  const NH_VARS = ['--nh-1', '--nh-2', '--nh-3', '--nh-4'];
+  const clearNianhao = () => { gNian.innerHTML = ''; };
+  const drawNianhao = (filterKey) => {
+    clearNianhao();
+    if (nhMode === 'off') return;
+    for (const b of bands) {
+      if (filterKey && b.d.key !== filterKey) continue;
+      const list2 = NIANHAO[b.d.key];
+      if (!list2) continue;
+      list2.forEach((nh, i) => {
+        // 讫年含当年（建元讫-134，翌年改元元光），画到 e+1；带被筛选截短时随带裁
+        const ta = Math.max(nh.s, b.s), tb = Math.min(nh.e + 1, b.e);
+        if (tb - ta <= 0) return;
+        const s0 = sample(b.d.key, ta, tb);
+        const strip = polyPath(s0.map((p) => ({ t: p.t, x0: p.x0 + 0.8, x1: Math.min(p.x0 + 3.8, p.x1) })), y, 0);
+        if (!strip) return;
+        const under = polyPath(s0.map((p) => ({ t: p.t, x0: p.x0, x1: Math.min(p.x0 + 4.6, p.x1) })), y, 0);
+        if (under) gNian.appendChild(el('path', { d: under, fill: 'var(--page)', opacity: .85, 'pointer-events': 'none' }));
+        const node = el('path', { d: strip, fill: `var(${NH_VARS[i % NH_VARS.length]})`, class: 'mark' });
+        hoverable(node, () => [
+          { color: `var(${NH_VARS[i % NH_VARS.length]})`,
+            value: `${fmtYearAxis(nh.s)}–${fmtYearAxis(nh.e)}`, label: '年号起讫' },
+          { label: '历时', value: `${nh.e - nh.s + 1} 年` },
+          ...(nh.emp ? [{ label: '改元之君', value: nh.emp }] : []),
+          '年号起讫按年粒度；改元常在年中，同一年正月与腊月可分属两个年号。',
+        ], () => `${b.d.name}·${nh.n}`);
+        gNian.appendChild(node);
+      });
+    }
+  };
+  if (nhMode === 'all') drawNianhao(null);
+
   // ── 点选高亮 ────────────────────────────────────────────────────────────
   // 触屏没有悬停，故以点选替代：选中者留亮，同屏其余压暗，详情进底部固定卡片。
   const card = h('div', { class: 'river-card' });
@@ -1441,10 +1486,13 @@ export function renderRiver(host, list, opts) {
     for (const n of empNodes) n.node.classList.remove('dim', 'dim2', 'sel');
     for (const e2 of litEls) e2.setAttribute('opacity', e2.dataset.o0);
     litEls = [];
+    if (nhMode === 'sel') clearNianhao();
   };
   const select = (item) => {
     selected = item;
     if (kClean.hideSolo) kClean.hideSolo();     // 底部只容得下一张卡:开这张即收那张
+    // 纪年「选」档与点选同一手势：选中哪条河，哪条河的左缘出年号线
+    if (nhMode === 'sel') drawNianhao(item.band.d.key);
     const lv = chainOf(item.band.d.key);
     for (const n of empNodes) {
       const hop = lv.get(n.band.d.key);
@@ -1662,6 +1710,8 @@ export function renderRiver(host, list, opts) {
     + ' 点按任一段可锁定该君主，并顺法统链上下各点亮两跳（触屏为双击，'
     + '免得滚动时误触；单击仅浮出简要提示）。'
     + ' 左缘纪年滑杆轨上的色段＝天下一统的时段。'
+    + (nhMode === 'all' ? ' 河道左缘的细彩线＝年号：一段一色，改元即换色，悬停读年号名。'
+      : nhMode === 'sel' ? ' 点选君主可在该河道左缘显出年号细线（设置·纪年可改全显）。' : '')
     + ' 宽屏两翼另有知识卡——左翼是当前时段的主导朝代、右翼是视口内的名君，'
     + '随滚动自动更替；点选任一君主则两卡联动钉住（右卡其人、左卡其朝）。'
     + '摘要实时取自中文维基百科，并附全文、百度百科与相关视频的直达链接。' }));
