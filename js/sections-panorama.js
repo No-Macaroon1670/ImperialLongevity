@@ -31,7 +31,9 @@ export const SECTIONS = [
         fmt: (v) => { const w = document.querySelector('.lane-scroll')?.clientWidth || (innerWidth - 80);
           return `一屏 ≈ ${Math.max(5, Math.round(w / v / 5) * 5)} 年`; } },
         (st) => st.panoramaMode !== 'river'),
-      seg('laneColor', '配色', [['dynasty', '具体朝代'], ['unified', '大一统 / 分裂']]),
+      // 措辞收短（库主 2026-08-28）：具体朝代→朝代、大一统/分裂→分合——
+      // 「分合」与本节标题「分合岔流」同一词，条杆寸土寸金
+      seg('laneColor', '配色', [['dynasty', '朝代'], ['unified', '分合']]),
       // 大事记与分量合并为一组独立档位（2026-08-28 库主令）：三档各自勾选，
       // 全取掉＝无大事记——读者可以只看三等（小众事件），不再被「档位只能
       // 从一等往下含」绑住。总开关不另设：全关就是关
