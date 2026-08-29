@@ -1211,9 +1211,26 @@ function mountKinds() {
 
 function mountYear() {
   const sl = $('plate-year'), out = $('plate-year-out');
-  sl.min = String(Y_LO); sl.max = String(Y_HI); sl.value = String(Y_HI);
+  // 等事密度标尺（库主定，2026-08-29，只本页用）：滑杆刻度是**事件序号**不是年——
+  // 每挪一步多放一件事进图。线性年标尺退役的原因：域已达前4749，可前2000年
+  // 只有事件 7% 却占轨道六成，滑杆大半是死区。事件序号天然「疏处压、密处展」，
+  // 且 state.upto 保持年份语义，「截至/当时」两层读法与疆域切片零改动。
+  // 同年多事在轨道上是并排几步（拖过去年份不动）——这不是毛病，等密本义如此。
+  // 刻度线每二十件事一格（库主给的尺度），datalist 在不认它的浏览器里静默无害。
+  const STOPS = EV_ROWS.map((r) => r.y).sort((a, b) => a - b);
+  sl.min = '0'; sl.max = String(STOPS.length); sl.step = '1';
+  sl.value = sl.max;
+  const dl = $('plate-year-ticks');
+  if (dl) {
+    for (let i = 20; i < STOPS.length; i += 20) {
+      const o = document.createElement('option');
+      o.value = String(i);
+      dl.appendChild(o);
+    }
+  }
   const sync = () => {
-    state.upto = Number(sl.value);
+    const i = Number(sl.value);
+    state.upto = i >= STOPS.length ? Y_HI : STOPS[i];
     // 只写年份，解释是静态的另一行。之前把整句解释塞在这儿，
     // 拖动时文字变宽把滑杆挤得跳（用户实测指出）——动态文字必须定宽
     out.textContent = state.upto >= Y_HI ? '全部' : `${yr(state.upto)} 年`;
