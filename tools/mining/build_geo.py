@@ -24,7 +24,11 @@
 维基正题，含繁体与消歧义后缀，wbgetentities 对重定向并不宽容——实测
 「云冈石窟」直接查会落空）。查不到的写进 MANUAL 并注明依据，不许瞎填。
 
-用法：python tools/mining/build_geo.py <key>
+用法：python tools/mining/build_geo.py <key> [--refresh]
+
+解析过的名字进 geocache.json（「qid」「p625」两格，与 coords_of 的「坐标」格
+**分开**——两条路解析语义不同，见 build_geo_events.cache_load）。重跑一条线
+只外呼没见过的名；要重取删缓存里那一行，--refresh 本次全量重取。
 """
 import io, json, os, re, sys, time
 import urllib.error, urllib.parse, urllib.request
@@ -32,6 +36,7 @@ import urllib.error, urllib.parse, urllib.request
 ROOT = r"C:/Users/ziyi_/Claude/imperial-longevity"
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_line_doc import load_line, load_events  # noqa: E402
+from build_geo_events import cache_load, cache_save  # noqa: E402
 
 UA = {"User-Agent": "ImperialLongevity-geo/1.0 (storyline minimap)"}
 
@@ -281,13 +286,20 @@ PLACES = {
 MANUAL = {}
 
 
-def qids(titles):
-    """zhwiki 条目名（含重定向）→ QID。pageprops 一次解决归一与取号。"""
-    out = {}
-    for i in range(0, len(titles), 20):
+def qids(titles, refresh=False):
+    """zhwiki 条目名（含重定向）→ QID。pageprops 一次解决归一与取号。
+    见过的名走 geocache「qid」格；查无 QID 的不缓存——那是要改数据的信号。
+    缓存在整批取成后才落盘：中途 sys.exit 到不了写那一行。"""
+    cache = cache_load()
+    known = {} if refresh else cache.get('qid', {})
+    out = {t: known[t] for t in titles if t in known}
+    todo = [t for t in titles if t not in out]
+    print('  QID 缓存命中 %d / %d，新查 %d 名' % (len(out), len(titles), len(todo)))
+    new = {}
+    for i in range(0, len(todo), 20):
         u = ('https://zh.wikipedia.org/w/api.php?action=query&format=json&formatversion=2'
              '&redirects=1&prop=pageprops&ppprop=wikibase_item&titles='
-             + urllib.parse.quote('|'.join(titles[i:i + 20])))
+             + urllib.parse.quote('|'.join(todo[i:i + 20])))
         try:
             d = _get(u)
         except Exception as e:
@@ -296,25 +308,35 @@ def qids(titles):
         norm = {r['from']: r['to'] for r in (d.get('query', {}).get('normalized') or [])}
         redir = {r['from']: r['to'] for r in (d.get('query', {}).get('redirects') or [])}
         back = {}
-        for a in titles:
+        for a in todo:
             b = norm.get(a, a)
             back.setdefault(redir.get(b, b), []).append(a)
         for p in d.get('query', {}).get('pages', []):
             q = (p.get('pageprops') or {}).get('wikibase_item')
             for orig in back.get(p.get('title'), []):
                 if q:
-                    out[orig] = q
+                    new[orig] = q
         time.sleep(0.5)
+    if new:
+        cache.setdefault('qid', {}).update(new)
+        cache_save(cache)
+        out.update(new)
     return out
 
 
-def coords(ids):
-    """QID → (lat, lon)，取 P625。"""
-    out = {}
+def coords(ids, refresh=False):
+    """QID → (lat, lon)，取 P625。见过的号走 geocache「p625」格；
+    无 P625 的不缓存（那是要去补 MANUAL 或换名的信号）。"""
     ids = list(dict.fromkeys(ids))
-    for i in range(0, len(ids), 40):
+    cache = cache_load()
+    known = {} if refresh else cache.get('p625', {})
+    out = {q: known[q] for q in ids if q in known}
+    todo = [q for q in ids if q not in out]
+    print('  P625 缓存命中 %d / %d，新查 %d 号' % (len(out), len(ids), len(todo)))
+    new = {}
+    for i in range(0, len(todo), 40):
         u = ('https://www.wikidata.org/w/api.php?action=wbgetentities&format=json'
-             '&props=claims&ids=' + '|'.join(ids[i:i + 40]))
+             '&props=claims&ids=' + '|'.join(todo[i:i + 40]))
         try:
             d = _get(u)
         except Exception as e:
@@ -324,13 +346,19 @@ def coords(ids):
             if cl:
                 v = cl[0].get('mainsnak', {}).get('datavalue', {}).get('value', {})
                 if 'latitude' in v:
-                    out[q] = [round(v['latitude'], 4), round(v['longitude'], 4)]
+                    new[q] = [round(v['latitude'], 4), round(v['longitude'], 4)]
         time.sleep(0.5)
+    if new:
+        cache.setdefault('p625', {}).update(new)
+        cache_save(cache)
+        out.update(new)
     return out
 
 
 def main():
-    key = sys.argv[1] if len(sys.argv) > 1 else 'chibi'
+    args = [a for a in sys.argv[1:] if not a.startswith('--')]
+    refresh = '--refresh' in sys.argv
+    key = args[0] if args else 'chibi'
     spec = PLACES.get(key)
     if not spec:
         sys.exit('没有 %s 的地理映射，先写进 PLACES' % key)
@@ -344,8 +372,8 @@ def main():
             want += v
         elif isinstance(v, dict):
             want += [v[k] for k in ('出', '藏') if v.get(k)]
-    qs = qids(sorted(set(want)))
-    cs = coords(list(qs.values()))
+    qs = qids(sorted(set(want)), refresh=refresh)
+    cs = coords(list(qs.values()), refresh=refresh)
 
     def pt(title):
         q = qs.get(title)

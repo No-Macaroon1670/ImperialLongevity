@@ -22,9 +22,12 @@
 
 每个地名必须实测能解析——解析不出的**不许留在数据里**，脚本报错退出。
 
-用法：python tools/mining/build_geo_events.py
-读：js/events.js、js/dynasties.js、docs/geo-events-probe.json
-写：js/geo-events.js、js/geo-dynasties.js
+用法：python tools/mining/build_geo_events.py [--refresh]
+读：js/events.js、js/dynasties.js、docs/geo-events-probe.json、tools/mining/geocache.json
+写：js/geo-events.js、js/geo-dynasties.js、tools/mining/geocache.json
+
+解析过的地名存 geocache.json，重建只外呼新名（库主令：五百来处名不该每次全量
+打一遍 zhwiki）。要重取某名，删掉缓存里那一行再跑；`--refresh` 全量重取。
 """
 import io, json, os, re, sys, time
 import urllib.parse, urllib.request, urllib.error
@@ -35,6 +38,30 @@ BBOX = [73.0, 18.0, 135.0, 50.0]        # 与 js/basemap.js 一致：西 南 东
 
 # 角色表，见 docs/geo-model.md。不在表里的一律报错——错字会静悄悄变成新角色
 ROLES = set('生 显 卒 葬 贬 行 造 立 发 现 址 战 起 都 迁 陪 说 灾 颁 摹'.split())
+
+CACHE = os.path.join(ROOT, 'tools/mining/geocache.json')
+
+
+def cache_load():
+    """地名解析缓存。三个格子按**解析语义**分开，不许互通：
+      「坐标」 coords_of 的四遍梯子（zhwiki 主坐标→P625→非主→检索正题）
+      「qid」「p625」 build_geo 的纯 P625 路
+    同一个名字两条路可能给出不一样的点，混在一格里会让生成物悄悄换值。
+    缓存写的是「当时从 wiki 取到什么」——上游纠了坐标不会自动跟过来，
+    要重取就删那一行，或跑脚本时带 --refresh。"""
+    if os.path.exists(CACHE):
+        return json.load(io.open(CACHE, encoding='utf-8'))
+    return {'说明': '地名解析缓存，生成物。格子语义见 build_geo_events.cache_load；'
+                   '重取某名删那一行，--refresh 全量重取。',
+            '坐标': {}, 'qid': {}, 'p625': {}}
+
+
+def cache_save(c):
+    """先写临时档再换名——中途被打断不能把好档砸成半截（429覆写军规同源）。"""
+    tmp = CACHE + '.tmp'
+    io.open(tmp, 'w', encoding='utf-8', newline='\n').write(
+        json.dumps(c, ensure_ascii=False, indent=1, sort_keys=True))
+    os.replace(tmp, CACHE)
 
 
 def get(url, tries=8):
@@ -201,18 +228,31 @@ def _fetch_coords(titles, host, pace=0.4, chunk=50, log=None, fallback=True):
     return out
 
 
-def coords_of(titles, pace=0.4, chunk=50, log=None, fallback=True):
+def coords_of(titles, pace=0.4, chunk=50, log=None, fallback=True, refresh=False):
     """zhwiki/enwiki 条目名 → (lat, lon)。`en:` 前缀走英文维基（约定见 events.js 抬头）：
     流散在外的东西常常只有英文条目，记录在谁手里、条目就在谁的语言里。
-    返回的键**保留调用方给的原样**（含前缀），调用方不用关心分流。"""
+    返回的键**保留调用方给的原样**（含前缀），调用方不用关心分流。
+
+    解析过的名字进 geocache.json「坐标」格，命中零外呼、只打新名。
+    解析不出的**不缓存**——那是要报错去改数据的，不是要记住的。
+    缓存只在整批取成之后落盘：取到一半抛异常就到不了写那一行。"""
     titles = list(dict.fromkeys(t for t in titles if t))
-    zh = [t for t in titles if not t.startswith('en:')]
-    en = [t[3:] for t in titles if t.startswith('en:')]
-    out = _fetch_coords(zh, 'zh.wikipedia.org', pace, chunk, log, fallback) if zh else {}
+    cache = cache_load()
+    known = {} if refresh else cache.get('坐标', {})
+    out = {t: tuple(known[t]) for t in titles if t in known}
+    todo = [t for t in titles if t not in out]
+    if titles:
+        print('  地名缓存命中 %d / %d，新解析 %d 处' % (len(out), len(titles), len(todo)))
+    zh = [t for t in todo if not t.startswith('en:')]
+    en = [t[3:] for t in todo if t.startswith('en:')]
+    got = _fetch_coords(zh, 'zh.wikipedia.org', pace, chunk, log, fallback) if zh else {}
     if en:
-        got = _fetch_coords(en, 'en.wikipedia.org', pace, chunk, None, fallback)
-        for k, v in got.items():
-            out['en:' + k] = v
+        for k, v in _fetch_coords(en, 'en.wikipedia.org', pace, chunk, None, fallback).items():
+            got['en:' + k] = v
+    if got:
+        cache.setdefault('坐标', {}).update({k: list(v) for k, v in got.items()})
+        cache_save(cache)
+        out.update(got)
     return out
 
 
@@ -352,7 +392,7 @@ def main():
 
     names = [x['名'] for chain in hand.values() for x in chain]
     print('手写地名 %d 处（去重 %d 个），解析中…' % (len(names), len(set(names))))
-    xy = coords_of(names) if names else {}
+    xy = coords_of(names, refresh='--refresh' in sys.argv) if names else {}
     bad = [x for x in dict.fromkeys(names) if x not in xy]
     if bad:
         sys.exit('✗ 这些地名解析不出坐标，先在数据里换掉（%d 个）：\n  %s'
