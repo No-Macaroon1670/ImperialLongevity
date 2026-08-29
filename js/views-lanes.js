@@ -156,7 +156,7 @@ export function buildBands(list) {
  */
 const EV_SHAPE = {
   war: 'up', dis: 'down', rev: 'plus', out: 'diamond', gov: 'square',
-  cul: 'circle', inst: 'bar', era: 'bar', her: 'house', art: 'hex',
+  cul: 'circle', era: 'bar', her: 'house', art: 'hex',
   // 名人轶事用星:九种形状里星是唯一没被占的,而它恰好也是「名人」的现成隐喻。
   // 色相到这一类已经排到第十一个,颜色本身分辨力所剩无几,形状是这一类的主通道
   fig: 'star',
@@ -221,10 +221,13 @@ export function eventLegend(opts, { skip = [] } = {}) {
           opts.setOpt('evOff', kinds.filter((x) => x !== k));
           return;
         }
-        lastChip = { k, t: now };
         const next = new Set(off);
         if (next.has(k)) next.delete(k); else next.add(k);
         opts.setOpt('evOff', [...next]);
+        // 表在渲染**之后**才起（2026-08-28 库主报「双击坏了」）：setOpt 同步整段重绘，
+        // 库长到千余条后一绘三四百毫秒，第二击排队等它画完才派发——表起早了，
+        // 350ms 窗口永远迟到，双击净效果归零。起表挪到绘完，量的是「画完到下一击」
+        lastChip = { k, t: Date.now() };
       },
     });
     // 图例画的就是图上那个形状:色标只说得出颜色,而颜色已不是唯一的识别通道
@@ -234,11 +237,14 @@ export function eventLegend(opts, { skip = [] } = {}) {
     chip.appendChild(h('span', { text: `${meta.label} ${counts[k]}` }));
     row.appendChild(chip);
   }
-  // 类别多到十二种之后,一类类点回来太费手——全开一键复位(与地图页同名同位)
+  // 类别多到十二种之后,一类类点回来太费手——全开一键复位(与地图页同名同位)。
+  // 双态（2026-08-28 库主点子）：全亮时这颗钮变「全关」——先全关再点一类，
+  // 即是「只看一类」的第二条路，与双击独看互为备份
   row.appendChild(h('button', {
-    type: 'button', class: 'chip ev-chip' + (off.size ? '' : ' off'),
-    title: '重新点亮全部类别', text: '全开',
-    onclick: () => opts.setOpt('evOff', []),
+    type: 'button', class: 'chip ev-chip',
+    title: off.size ? '重新点亮全部类别' : '全部关掉，再点选一类即独看',
+    text: off.size ? '全开' : '全关',
+    onclick: () => opts.setOpt('evOff', off.size ? [] : kinds.slice()),
   }));
   return [h('p', { class: 'muted small', style: 'margin:10px 0 2px', text: '大事记（点色标可按类筛选，双击只看一类）' }), row];
 }

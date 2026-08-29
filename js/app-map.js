@@ -1183,14 +1183,26 @@ function mountKinds() {
       () => { if (state.layers.has('dyn')) state.layers.delete('dyn'); else state.layers.add('dyn'); },
       () => { state.layers = new Set(['dyn']); });
   }
-  // 全开：一键回到什么都画的状态。类别一多，逐个点开比逐个点关还费手
+  // 全开：一键回到什么都画的状态。类别一多，逐个点开比逐个点关还费手。
+  // 双态（2026-08-28 库主点子，与泳道图例同款）：全亮时这颗钮变「全关」——
+  // 先全关再点一类即独看，与双击独显互为备份
   const all = document.createElement('button');
   all.type = 'button';
   all.className = 'chip pl-chip pl-chip-all';
-  all.textContent = '全开';
+  const allOn = () => state.layers.has('ev') && !state.off.size
+    && (!HAS_DYN || state.layers.has('dyn'));
+  syncs.push(() => {
+    all.textContent = allOn() ? '全关' : '全开';
+    all.title = allOn() ? '全部关掉，再点选一类即独看' : '重新点亮全部类别';
+  });
   all.addEventListener('click', () => {
-    state.off.clear();
-    state.layers = new Set(HAS_DYN ? ['ev', 'dyn'] : ['ev']);
+    if (allOn()) {
+      state.off = new Set(KINDS);
+      state.layers = new Set(['ev']);   // ev 层留着、类别全灭；dyn 层一并息灯
+    } else {
+      state.off.clear();
+      state.layers = new Set(HAS_DYN ? ['ev', 'dyn'] : ['ev']);
+    }
     refresh();
   });
   bar.appendChild(all);
