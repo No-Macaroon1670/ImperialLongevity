@@ -61,7 +61,9 @@ const Y_LO = Math.min(...YEARS), Y_HI = Math.max(...YEARS);
 
 const state = {
   off: new Set(),          // 关掉的类别
-  upto: Y_HI,
+  // 「全部」用 Infinity 而非 Y_HI：末年（1911）有好几件事，等密标尺上并排好几步，
+  // 若以 upto>=Y_HI 当「全部」，拖到末年即提前放开「当时」滤镜——1911 与全部必须两回事
+  upto: Infinity,
   // 都城层默认关（用户拍板）：初见先读事件；点图例「政权都城」或选中政权时再亮
   layers: new Set(['ev']),
   sel: null,               // 选中的条目（链展开）
@@ -83,7 +85,7 @@ const state = {
  * 「河宽即并存政权数」的同一个读法。滑块拉满（＝不筛）时两层都全画。 */
 const shown = () => ALL.filter((r) => state.layers.has(r['层'])
   && (r['层'] !== 'ev' || !state.off.has(r.k))
-  && (r['层'] === 'dyn' && state.aliveOnly && state.upto < Y_HI
+  && (r['层'] === 'dyn' && state.aliveOnly && Number.isFinite(state.upto)
     ? (r.y <= state.upto && r.e >= state.upto)
     : r.y <= state.upto)
   // 主>=0 必须站在取 链[主] 之前：无图内点条目主=-1，链[-1] 是 undefined，
@@ -145,7 +147,7 @@ svg.append(gGrid, gTerr, gCoast, gExt, gRef, gLead, gChain, gDot, gLab, gHit, gL
 /** 多切片挑选：跟年代滑杆走，滑到哪年看哪年的疆域；「全部」用带 盛 标的默认切片 */
 function pickSnap(t) {
   if (!t || !t.snaps || !t.snaps.length) return null;
-  if (state.upto >= Y_HI) return t.snaps.find((sn) => sn['盛']) || t.snaps[t.snaps.length - 1];
+  if (!Number.isFinite(state.upto)) return t.snaps.find((sn) => sn['盛']) || t.snaps[t.snaps.length - 1];
   let best = t.snaps[0];
   for (const sn of t.snaps) {
     if (Math.abs(sn.y - state.upto) < Math.abs(best.y - state.upto)) best = sn;
@@ -1222,18 +1224,25 @@ function mountYear() {
   sl.value = sl.max;
   const dl = $('plate-year-ticks');
   if (dl) {
-    for (let i = 20; i < STOPS.length; i += 20) {
+    // 两端必须各有一格刻度：有 list 的滑杆在部分浏览器带磁吸，末格只到980的话
+    // 拖到头会被吸在980上、永远够不着「全部」（库主实测报案，2026-08-29）
+    for (let i = 0; i <= STOPS.length; i += 20) {
       const o = document.createElement('option');
-      o.value = String(i);
+      o.value = String(Math.min(i, STOPS.length));
+      dl.appendChild(o);
+    }
+    if (STOPS.length % 20) {
+      const o = document.createElement('option');
+      o.value = String(STOPS.length);
       dl.appendChild(o);
     }
   }
   const sync = () => {
     const i = Number(sl.value);
-    state.upto = i >= STOPS.length ? Y_HI : STOPS[i];
-    // 只写年份，解释是静态的另一行。之前把整句解释塞在这儿，
+    state.upto = i >= STOPS.length ? Infinity : STOPS[i];
+    // 只写年份，解释挪进了 label 的悬停提示（库主令：不常驻）。
     // 拖动时文字变宽把滑杆挤得跳（用户实测指出）——动态文字必须定宽
-    out.textContent = state.upto >= Y_HI ? '全部' : `${yr(state.upto)} 年`;
+    out.textContent = Number.isFinite(state.upto) ? `${yr(state.upto)} 年` : '全部';
     // 疆域层跟滑杆换切片：钉着的政权若有多张图，滑到哪年换哪张（坞行年份暂不追改，
     // 下次钉住时自然对齐——追改要重排 bits，代价大于收益）
     if (state.sel && state.sel.startsWith('dyn:') && state.showExtent) {
