@@ -45,7 +45,7 @@ const empIdOf = (name) => (EMPERORS.find((e) => e.name === name || e.temple === 
 const evIdx = (name) => EVENTS.findIndex((e) => e.n === name);
 
 // 只留「文化·科技」与「文物」两类时要关掉的其余各类
-const CULTURE_ONLY = ['war', 'gov', 'rev', 'out', 'dis', 'era', 'her', 'fig'];   // fig 不关的话「只剩两类」就是空话（inst 已裁撤）
+const CULTURE_ONLY = ['war', 'gov', 'rev', 'out', 'dis', 'era', 'her', 'fig', 'sci'];   // fig 不关的话「只剩两类」就是空话（inst 已裁撤；sci 拆出后同关，走线只留 cul+art）
 
 /**
  * 每一站:

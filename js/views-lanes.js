@@ -156,7 +156,7 @@ export function buildBands(list) {
  */
 const EV_SHAPE = {
   war: 'up', dis: 'down', rev: 'plus', out: 'diamond', gov: 'square',
-  cul: 'circle', era: 'bar', her: 'house', art: 'hex',
+  cul: 'circle', sci: 'ring', era: 'bar', her: 'house', art: 'hex',
   // 名人轶事用星:九种形状里星是唯一没被占的,而它恰好也是「名人」的现成隐喻。
   // 色相到这一类已经排到第十一个,颜色本身分辨力所剩无几,形状是这一类的主通道
   fig: 'star',
@@ -179,6 +179,10 @@ export function evMark(kind, cx, cy, r, extra = {}) {
       const rr = i % 2 ? 0.55 : 1.35;
       return [Math.cos(t) * rr, Math.sin(t) * rr];
     })));
+    // 环:科技类（2026-08-28 自 cul 拆出）。与文化的实心圆同族不同形——
+    // 空心即可辨,不与十一种既有形状撞;描边承色,fill 让给透明
+    case 'ring':    return el('circle', { cx, cy, r: r * 0.82, fill: 'none',
+      stroke: `var(--ev-${kind})`, 'stroke-width': r * 0.62, ...extra });
     case 'square':  return el('rect', { x: cx - r * 0.92, y: cy - r * 0.92, width: r * 1.84, height: r * 1.84, rx: r * 0.24, ...a });
     case 'bar':     return el('rect', { x: cx - r * 1.2, y: cy - r * 0.7, width: r * 2.4, height: r * 1.4, rx: r * 0.32, ...a });
     default:        return el('circle', { cx, cy, r, ...a });

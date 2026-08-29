@@ -517,7 +517,7 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
   --ev-war: var(--critical); --ev-rev: var(--s2); --ev-out: var(--s7);
   --ev-gov: var(--s1); --ev-cul: var(--s3); --ev-dis: var(--lane-other);
   --ev-era: var(--s4);   /* 治世·中兴:与时点事件区别开 */
-  --ev-inst: var(--s6);  /* 制度·交流存续期:同为长条,但与治世异色 */
+  --ev-sci: var(--s6);   /* 科技(2026-08-28 自 cul 拆出):承 inst 裁撤腾出的绿槽 */
   --ev-her: var(--s5);   /* 世界遗产:实物遗存,与著述类的 cul 分色 */
   /* 文物:调色板八个槽位到此已全部用尽,而 --s8 (#e34948) 与战事用的
      --critical (#d03b3b) 几乎同色,并排根本分不出。世界遗产与文物本是一家
@@ -980,7 +980,7 @@ body.tour-on .kp-solo.kp-yc-full .kp-ext {
   border-left: 3px solid var(--seq-400); padding: 4px 0 4px 9px; background: var(--surface-2);
   border-radius: 0 6px 6px 0;
 }
-.tour-cta2 { margin-top: 7px; border-left-color: var(--ev-inst); }
+.tour-cta2 { margin-top: 7px; border-left-color: var(--ev-sci); }
 .tour-extra:not(:empty) { margin-top: 9px; }
 /* 只在窄屏出现的一句实话（见 tour.js 的 mnote） */
 .tour-mnote { display: none; }
@@ -1439,7 +1439,7 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .k-fig { fill: var(--ev-fig); stroke: var(--ev-fig); }
 .k-dis { fill: var(--ev-dis); stroke: var(--ev-dis); }
 .k-era { fill: var(--ev-era); stroke: var(--ev-era); }
-.k-inst { fill: var(--ev-inst); stroke: var(--ev-inst); }
+.k-sci { fill: var(--ev-sci); stroke: var(--ev-sci); }
 .k-liv { fill: var(--ev-liv); stroke: var(--ev-liv); }
 /* 点的描边一律是纸色（拿来把挤在一起的点分开），故盖掉上面那份 stroke。
    纸色是 --surface-2，与 .plate 的底一致——描成 --surface-1 会在点周围留一圈亮边 */
@@ -1468,7 +1468,7 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-chip.k-war { color: var(--ev-war); }
 .pl-chip.k-rev { color: var(--ev-rev); }
 .pl-chip.k-era { color: var(--ev-era); }
-.pl-chip.k-inst { color: var(--ev-inst); }
+.pl-chip.k-sci { color: var(--ev-sci); }
 .pl-chip.k-liv { color: var(--ev-liv); }
 
 .pl-year { display: flex; align-items: center; gap: 8px; margin-left: auto; }
