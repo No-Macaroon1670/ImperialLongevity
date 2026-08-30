@@ -50,14 +50,25 @@ def unquote(js):
     return ''.join(re.findall(STR, js)).replace(BS + "'", "'")
 
 
+STR2 = r'"((?:[^"' + BS + BS + r']|' + BS + BS + r'.)*)"'
+
+
 def paras(block):
-    """长文的一块 → 段落表。每段一个字符串字面量，可跨行用 + 续。"""
+    """长文的一块 → 段落表。每段一个字符串字面量，可跨行用 + 续。
+
+    **单引号与双引号两种都收**（2026-08-30 实修）：旧版只认单引号，而 kanhe 的
+    长文当初按双引号落盘——于是那条线的成页长文**静悄悄被短文案顶替**，
+    整整一条线的散文没上过页，build 一声不吭（`long_text.get(name) or [b+b2]`
+    这个兜底把失败咽了下去）。键那一层早已两种都认（见 load_long 注释），
+    值这一层漏了，此次补齐；三姊妹线同格式，一并救回。
+    """
     out, cur = [], ''
     for ln in block.split('\n'):
         t = ln.strip()
         if not t or t.startswith('//'):
             continue
-        cur += ''.join(re.findall(STR, t))
+        got = re.findall(STR, t)
+        cur += ''.join(got) if got else ''.join(re.findall(STR2, t))
         if t.endswith(',') and not t.endswith('+'):
             out.append(cur.replace(BS + "'", "'"))
             cur = ''
@@ -109,9 +120,12 @@ def load_long(key):
         if not blk:
             return None
         body = blk.group(1)
-        t = re.search(r"t:\s*" + STR, body)
-        pb = re.search(r'p:\s*\[(.*?)\n  \],', body, re.S)
-        return {'t': t.group(1) if t else '', 'p': paras(pb.group(1)) if pb else []}
+        # 键与值两种写法都收（同 paras 的双引号案，2026-08-30）：老文件作
+        # `t: '…'` 与 `p: [ … ],`，新文件作 `"t": "…"` 与 `"p": [ … ]`（末尾无逗号）
+        t = re.search(r'"?t"?:\s*(?:' + STR + '|' + STR2 + ')', body)
+        pb = re.search(r'"?p"?:\s*\[(.*?)\n  \],?', body, re.S)
+        tv = (t.group(1) or t.group(2)) if t else ''
+        return {'t': tv, 'p': paras(pb.group(1)) if pb else []}
 
     text = {}
     tb = re.search(r'export const TEXT = \{(.*?)\n\};', src, re.S)
