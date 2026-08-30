@@ -23,9 +23,23 @@ BS = chr(92)
 STR = r"'((?:[^'" + BS + BS + r"]|" + BS + BS + r".)*)'"
 FIELD = r"\b%s:\s*" + STR
 
-KIND = {'war': '战事', 'gov': '制度', 'rev': '民变·政变', 'out': '外患·外交',
-        'cul': '文化·科技', 'dis': '灾疫', 'fig': '名人轶事', 'era': '治世·中兴',
-        'inst': '制度·交流存续期', 'her': '遗址·建筑', 'art': '文物'}
+def _load_kinds():
+    """类目名直读 js/events.js 的 EVENT_KINDS，**取水口只留一处**。
+
+    此处原是一份硬编码副本，实测走样三处而无人知：cul 还挂着拆科技前的旧名
+    「文化·科技」、新增的 sci 与 liv 一个都没有（副题里类目名径直消失，
+    2026-08-30 秘色瓷站实见）、已撤的 inst 还在。副本迟早偏离正本，故改直读。
+    """
+    src = io.open(os.path.join(ROOT, 'js/events.js'), encoding='utf-8').read()
+    blk = src[src.find('export const EVENT_KINDS'):]
+    blk = blk[:blk.find('\n};')]
+    out = dict(re.findall(r"^\s*(\w+):\s*\{[^}]*label:\s*'([^']+)'", blk, re.M))
+    if len(out) < 8:
+        sys.exit('✗ EVENT_KINDS 只解析出 %d 个类目，格式恐已变——不写盘' % len(out))
+    return out
+
+
+KIND = _load_kinds()
 
 # 核验结论的排序与记号：先看站不住的，再看没核出的
 VERDICT = {'证实': ('✅', 0), '部分': ('◐', 1), '存疑': ('⚠', 2), '未能核实': ('—', 3)}
