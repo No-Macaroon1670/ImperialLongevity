@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>罪与罚线 · 罪的圈画在血缘上、关系上、身体上、大地上、世代上。十二站量的是同一个半径——而最松的那一道谕，比最紧的两站还早五十八年。</title>
+<meta name="description" content="一个人做的事，法律把多少人算了进去。共 12 站。">
+<link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/story/zuifa.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="罪与罚线">
+<meta property="og:description" content="罪的圈画在血缘上、关系上、身体上、大地上、世代上。十二站量的是同一个半径——而最松的那一道谕，比最紧的两站还早五十八年。">
+<meta property="og:url" content="https://no-macaroon1670.github.io/ImperialLongevity/story/zuifa.html">
+<style>
+:root{
+  --bg:#0e0d0c; --bg2:#161311; --ink:#e9e3d7; --dim:#9a9187; --faint:#5d564e;
+  --rule:#2a2622; --accent:#c0603f; --gold:#c9a959;
+  --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+  font-size:18px;line-height:2.05;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+.epi-verse{padding:3rem 1.2rem 0;text-align:center}
+.epi-verse .vl{font-size:21px;letter-spacing:.38em;line-height:2.35;text-indent:.38em}
+.epi-verse .vby{margin-top:1rem;font-family:var(--sans);font-size:11px;color:var(--faint);letter-spacing:.24em}
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50}
+/* 导轨：宽屏才有。窄屏那点横向空间要留给正文 */
+/* 左栏：导轨在上，小地图在下。两者同住一个固定列——读者眼睛一抬，
+   既知道读到第几节，也知道那一节在地上哪儿 */
+#side{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
+  z-index:40;width:11rem}
+#rail{display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
+/* rdot/rlbl 带前缀与外界脱钩（照 charts.js sw- 家法；库主实测 Rakuten 扩展注入
+   .dot{position:absolute} 把点拽出流压上标签首字，position:static 双保险）。
+   点与标签的间距落在 .rdot 的 margin 上而不靠 flex gap：读者侧环境（插件/旧内核）重写 <a>
+   的 display 时会退成 inline 排布，margin+vertical-align 在两种排布下同样成立，标签永不吃点
+   （2026-08-26 库主线上截图实案，本地净环境不复现；flex 健康时此写法与 gap 像素等价） */
+#rail a{display:flex;align-items:center;color:var(--faint);text-decoration:none;
+  letter-spacing:.04em;transition:color .25s}
+#rail .rdot{position:static;display:inline-block;vertical-align:middle;width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;margin-right:.5rem;transition:transform .25s}
+#rail a .rlbl{display:inline-block;vertical-align:middle;opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap}
+#rail a:hover{color:var(--dim)} #rail a:hover .rlbl{opacity:1;transform:none}
+#rail a.on{color:var(--accent)} #rail a.on .rdot{transform:scale(1.5)}
+#rail a.on .rlbl{opacity:1;transform:none}
+@media(max-width:1180px){#side{display:none}}
+.wrap{max-width:40rem;margin:0 auto;padding:0 1.5rem}
+header.cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
+  padding:6rem 0 4rem;border-bottom:1px solid var(--rule)}
+.kicker{font-family:var(--sans);font-size:12px;letter-spacing:.34em;color:var(--faint);margin-bottom:2.4rem}
+h1{font-size:clamp(2.4rem,8vw,4rem);line-height:1.14;margin:0 0 1.6rem;font-weight:500;letter-spacing:.06em}
+.lede{font-size:1.06rem;color:var(--dim);line-height:2;max-width:30rem;margin:0}
+.meta{margin-top:3.4rem;font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.08em}
+.meta a{color:var(--gold);text-decoration:none;border-bottom:1px solid transparent}
+.meta a:hover{border-bottom-color:var(--gold)}
+section{padding:5.5rem 0;border-bottom:1px solid var(--rule)}
+section.tone{background:var(--bg2)}
+.num{font-family:var(--sans);font-size:11px;letter-spacing:.3em;color:var(--faint)}
+.yr{font-family:var(--sans);font-size:2.6rem;line-height:1;color:var(--rule);margin:.4rem 0 .8rem;
+  font-variant-numeric:tabular-nums;font-weight:700}
+h2{font-size:1.75rem;line-height:1.35;margin:0 0 .5rem;font-weight:500;letter-spacing:.04em}
+.h2-ev{font-size:.95rem;font-weight:400;color:var(--faint);letter-spacing:.02em;white-space:nowrap;margin-left:.35em}
+.sub{font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.1em;margin:0 0 2rem}
+section p{margin:0 0 1.35rem}
+p.beat{color:var(--gold)}
+blockquote{margin:2rem 0;padding-left:1.2rem;border-left:2px solid var(--accent);color:var(--ink)}
+blockquote small{display:block;margin-top:.5rem;font-family:var(--sans);font-size:11px;
+  letter-spacing:.08em;color:var(--faint)}
+.go{display:inline-block;margin:.4rem 0 1.6rem;font-family:var(--sans);font-size:12px;
+  letter-spacing:.08em;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:2px}
+.go:hover{border-bottom-color:var(--gold)}
+details.app{margin-top:2rem;font-family:var(--sans);font-size:13px;line-height:1.85;color:var(--dim)}
+details.app summary{cursor:pointer;color:var(--faint);letter-spacing:.14em;font-size:11px;
+  padding:.5rem 0;border-top:1px solid var(--rule)}
+details.app ul{margin:.8rem 0;padding-left:1.1rem}
+details.app li{margin-bottom:.7rem}
+details.app p{margin:.9rem 0 0}
+.tag{display:inline-block;font-size:10px;letter-spacing:.08em;padding:1px 6px;margin-right:.5rem;
+  border-radius:3px;border:1px solid currentColor;vertical-align:.08em}
+.t-ok{color:#7d9b6e} .t-trad{color:var(--gold)} .t-new{color:#6e8a9b}
+.t-infer{color:#9b8a6e} .t-doubt{color:var(--accent)}
+.src{margin-top:.9rem;display:flex;flex-wrap:wrap;gap:.9rem}
+.src a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule);font-size:12px}
+.src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
+.note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
+/* 配图。图注里那半行是**署名**，CC-BY／CC-BY-SA 要求给出作者与许可 */
+/* 文绕图。竖幅整幅摆着时两侧全空，绕排把那块空白还给文字；
+   窄屏不绕——一栏劈两半两边都读不成 */
+figure.pic{margin:0 0 2rem}
+figure.pic img{display:block;width:100%;height:auto;border-radius:3px}
+@media(min-width:820px){
+  figure.pic{float:left;width:44%;margin:.4rem 1.6rem .8rem 0}
+  figure.pic.pic-wide{float:none;width:100%;margin:.6rem 0 1.2rem}
+  section p,section h2,details.app{clear:none}
+  details.app,.go{clear:both}
+}
+figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
+  line-height:1.8;color:var(--faint)}
+figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
+figure.pic figcaption a:hover{color:var(--dim)}
+/* 一站多图（如落点三张）：不绕排，并排摆成一排——「能看见三样东西」，
+   图就该一次看见三样，不该被文字拆成三处零散的浮块 */
+.pic-trio{display:flex;flex-direction:column;gap:1.4rem;margin:0 0 2rem}
+.pic-trio figure.pic{margin:0}
+@media(min-width:820px){
+  .pic-trio{flex-direction:row}
+  .pic-trio figure.pic{float:none;width:calc(33.333% - .94rem)}
+}
+
+/* ── 地图 ────────────────────────────────────────────────────────
+   开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
+   底图只有海岸线、四个大湖与黄河长江淮河，没有国界（理由见 tools/mining/build_basemap.py）。
+   全程的点一律画出、只是淡；当前那一站才亮——读者要能看见自己走到哪儿，
+   也要能看见还剩多少。 */
+#smap{padding:4rem 0 3.5rem}
+svg.hmap{display:block;width:100%;height:auto}
+svg.rstrip{display:block;width:100%;max-width:640px;height:auto;margin:.4rem 0 .1rem;overflow:visible}
+.rs-base{stroke:var(--rule);stroke-width:1.4}
+.rs-hop{stroke:var(--accent);stroke-width:2.2}
+.rs-done{fill:var(--dim)}
+.rs-todo{fill:none;stroke:var(--faint);stroke-width:1.2}
+.rs-cur{fill:var(--accent)}
+.rs-name{fill:var(--ink);font-family:var(--sans);font-size:11.5px;letter-spacing:.08em}
+.rs-end{fill:var(--faint);font-family:var(--sans);font-size:9.5px;letter-spacing:.04em}
+svg.hmap{margin:1.6rem 0 1rem}
+svg *{vector-effect:non-scaling-stroke}
+.m-dust{fill:#6a6259;opacity:.32}
+.m-idx{fill:var(--dim);font-family:var(--sans);letter-spacing:0}
+.m-coast{fill:none;stroke:var(--rule);stroke-width:1.1}
+.m-river{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.42}
+/* 大湖：一片淡水色，压在海岸之上、河之下（层序归 render_line_map.mjs 的 append 次序）。
+   用河的色相而不是另起一色——湖跟河是一族，换个颜色就成了另一种东西。这一页是
+   深底，故比浅色两端（.mm-lake/.pl-lake）再压一档：填充只到河那道线有效浓度的
+   三成上下，读者一眼知道这是一块水面，但抢不过河、更抢不过站点。
+   填充比描边实：水面不是圈出来的区域。
+   要试「少画一个湖」，不必重跑构建：.m-lake[data-lake="太湖"]{display:none} */
+.m-lake{fill:var(--accent);fill-opacity:.13;stroke:var(--accent);stroke-opacity:.34;stroke-width:.8}
+.m-city{fill:var(--faint);opacity:.75}
+.m-city-t{fill:var(--faint);opacity:.85;font-family:var(--sans)}
+.m-river-t{fill:var(--accent);opacity:.65;font-family:var(--sans)}
+/* 湖名：与河名同色、小一号、更轻——湖是结不是干线（2026-08-26 story 静态图补湖案） */
+.m-lake-t{fill:var(--accent);opacity:.5;font-family:var(--sans)}
+.m-dot{fill:var(--dim);opacity:.5}
+.m-maybe{fill:none;stroke:var(--dim);stroke-width:1.2;opacity:.55;stroke-dasharray:3 2.5}
+.m-held{fill:none;stroke:var(--gold);stroke-width:1.2;opacity:.5}
+/* 贴在框边的方块：东西已经出了这张图的范围（伦敦） */
+.m-off{stroke-dasharray:3 2.5}
+.m-flow{stroke:var(--gold);stroke-width:1;opacity:.35;stroke-dasharray:4 3}
+.m-stop-t{fill:var(--dim);opacity:.8;font-family:var(--sans)}
+/* 现藏之处的馆名。金色，与那个空心方块、那条虚线同一族 */
+.m-held-t{fill:var(--gold);opacity:.75;font-family:var(--sans)}
+/* 当前这一节：亮起来 */
+.m-stop.on .m-dot{fill:var(--accent);opacity:1}
+.m-stop.on .m-maybe{stroke:var(--accent);opacity:1}
+.m-stop.on .m-held,.m-stop.on .m-flow{stroke:var(--gold);opacity:1}
+.m-stop.on .m-stop-t{fill:var(--ink);opacity:1}
+#gname{margin-top:.5rem;font-family:var(--sans);font-size:10.5px;color:var(--faint);
+  line-height:1.6;min-height:2.6em}
+
+/* 点开放大。用 <dialog>：Esc 与背景遮罩都是它自带的，不必自己写一套 */
+button.zoom{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in}
+button.zoom img{transition:opacity .18s}
+button.zoom:hover img{opacity:.86}
+dialog#lb{border:0;padding:0;background:none;max-width:96vw;max-height:96vh;color:var(--ink)}
+dialog#lb::backdrop{background:rgba(8,7,6,.92)}
+#lbi{display:block;max-width:min(96vw,900px);max-height:82vh;width:auto;height:auto;
+  margin:0 auto;border-radius:3px}
+#lbc{max-width:min(96vw,900px);margin:.8rem auto 0;font-family:var(--sans);font-size:12px;
+  line-height:1.8;color:var(--dim)}
+#lbc a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule)}
+#lbx{position:fixed;top:1.1rem;right:1.4rem;width:2.2rem;height:2.2rem;border:0;border-radius:50%;
+  background:rgba(255,255,255,.1);color:var(--ink);font-size:1rem;cursor:pointer}
+#lbx:hover{background:rgba(255,255,255,.2)}
+footer{padding:5rem 0 7rem;font-family:var(--sans);font-size:12.5px;color:var(--faint);line-height:2}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--rule)}
+footer a:hover{color:var(--ink)}
+footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
+@media(max-width:640px){
+  body{font-size:17px;line-height:1.98}
+  section{padding:4rem 0}
+  .yr{font-size:2rem}
+  h1{letter-spacing:.03em}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="side">
+<nav id="rail" aria-label="节次">
+<a href="#s0"><span class="rdot"></span><span class="rlbl">罚弗及嗣</span></a>
+<a href="#s1"><span class="rdot"></span><span class="rlbl">令民为伍</span></a>
+<a href="#s2"><span class="rdot"></span><span class="rlbl">婚家之手</span></a>
+<a href="#s3"><span class="rdot"></span><span class="rlbl">废而复行</span></a>
+<a href="#s4"><span class="rdot"></span><span class="rlbl">有以易之</span></a>
+<a href="#s5"><span class="rdot"></span><span class="rlbl">爰及五属</span></a>
+<a href="#s6"><span class="rdot"></span><span class="rlbl">姻亲皆尽</span></a>
+<a href="#s7"><span class="rdot"></span><span class="rlbl">径不过五分</span></a>
+<a href="#s8"><span class="rdot"></span><span class="rlbl">朋友亦族</span></a>
+<a href="#s9"><span class="rdot"></span><span class="rlbl">二月初五</span></a>
+<a href="#s10"><span class="rdot"></span><span class="rlbl">及于刻工</span></a>
+<a href="#s11"><span class="rdot"></span><span class="rlbl">非常之罪</span></a>
+<a href="#s12"><span class="rdot"></span><span class="rlbl">改业为良</span></a>
+<a href="#s13"><span class="rdot"></span><span class="rlbl">十四个字</span></a>
+</nav>
+</div>
+<header class="cover"><div class="wrap">
+<div class="kicker">一个人做的事，法律把多少人算了进去</div>
+<h1>罪与罚线</h1>
+<p class="lede">罪的圈画在血缘上、关系上、身体上、大地上、世代上。十二站量的是同一个半径——而最松的那一道谕，比最紧的两站还早五十八年。</p>
+<div class="meta">共 12 站　·　<a href="../timeline.html#line=zuifa">在图上走一遍 →</a>　·　<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-zuifa.md">资料与出处 ↗</a></div>
+</div></header>
+<section id="s0" class="tone"><div class="wrap">
+<div class="num">序</div>
+<h2>罚弗及嗣</h2>
+<p>两句很老的话，摆在一起是打架的。</p>
+<p>一句写在书里：「罰弗及嗣，賞延于世」——罚不追到儿子那一辈，赏才往下传。出自《尚書·大禹謨》，是皋陶答帝舜论刑的一段。</p>
+<p>一句挖在土里。1975 年湖北云梦睡虎地十一号墓出土的秦代竹简，《秦律雜抄》里有一条：「什伍智（知）弗告，貲一甲。」——同伍的人知情不报，罚一副甲。</p>
+<p>两句都老到分不清谁在前。麻烦在于，写着「罰弗及嗣」的那一篇，是东晋梅赜献上的二十五篇之一；清人阎若璩考定，那二十五篇是魏晋人补写的。<strong>连这句古训，也要靠一部后来被判为伪作的书才传得下来。</strong>（篇属伪古文，不等于所载之义为伪。这八个字有没有更早的来源，本线未核，不敢说。）</p>
+<p>这两条不上时间轴——它们是两个答案，不是两件事。</p>
+<p>于是问题不是古人残不残忍，是：<strong>一个人做的事，法律该把多少人算进去？</strong>这条线走十二站，量的就是这个圈的半径。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>「罰弗及嗣，賞延于世」确在《尚書·大禹謨》皋陶答帝舜一段，2026-08-30 由 action=raw 直取全文逐字核得（3,688 字节）。该页 header 自系 noauthor＝梅賾、notes＝（僞）、from＝古文尚書。</li>
+<li><span class="tag t-ok">信史</span>篇属伪古文一层为清人阎若璩《尚書古文疏證》考定，属考据结论档；库内另有条目尚书古文疏證（1745）。硬限度：可写连这句古训也是伪托的，不可写古训是假的——篇属伪古文不等于所载之义为伪。</li>
+<li><span class="tag t-ok">信史</span>这八个字有没有更早的来源，本轮未核，故序文不写首见、最早一类词。</li>
+<li><span class="tag t-ok">信史</span>序不上编年轴：所用两条（尚书 前169、睡虎地秦简 前217）都晚于站①（前356）。序讲的是两个答案，不是两件事，故不进轴，且在序内明说。</li>
+<li><span class="tag t-ok">信史</span>睡虎地秦简徭律失期罚则与《史記》失期法皆斬之争已核在案，但该争议归起义线（两线共用一次侦察），序只取《秦律雜抄》一条，不进这场争论。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">尚書/大禹謨（維基文庫 action=raw，3,688 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">睡虎地秦簡/秦律雜抄（維基文庫 action=raw，5,196 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">睡虎地秦簡/徭律（維基文庫 action=raw，1,417 字节，留档未用），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">库内条目：尚书（js/events.js 第 394 行）、睡虎地秦简（第 375 行</a>
+</div>
+</details>
+</div></section>
+<section id="s1" data-year="-355" data-name="商鞅变法"><div class="wrap">
+<div class="num">一 / 十二</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><circle class="rs-cur" cx="26.0" cy="16" r="5.2"/><circle class="rs-todo" cx="79.5" cy="16" r="3"/><circle class="rs-todo" cx="132.9" cy="16" r="3"/><circle class="rs-todo" cx="186.4" cy="16" r="3"/><circle class="rs-todo" cx="239.8" cy="16" r="3"/><circle class="rs-todo" cx="293.3" cy="16" r="3"/><circle class="rs-todo" cx="346.7" cy="16" r="3"/><circle class="rs-todo" cx="400.2" cy="16" r="3"/><circle class="rs-todo" cx="453.6" cy="16" r="3"/><circle class="rs-todo" cx="507.1" cy="16" r="3"/><circle class="rs-todo" cx="560.5" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="614.0" y="35" text-anchor="end">开豁贱籍</text><text class="rs-name" x="26.0" y="35" text-anchor="start">商鞅变法</text></svg>
+<div class="yr">前356</div>
+<h2>令民为伍 <span class="h2-ev">商鞅变法</span></h2>
+<p class="sub">前356　·　秦国　·　制度</p>
+<p><strong>圈是被一道法令画出来的。</strong></p>
+<p>秦孝公用商鞅变法，第一次变法在孝公六年（前 356，一说前 359，两说照抄）。变法令的头一句不是奖赏，是编组。《史記·商君列傳》录其原文：「令民為什伍，而相牧司連坐。不告姦者腰斬，告姦者與斬敵首同賞，匿姦者與降敵同罰。」——十家五家编成一组，互相看着，一人有罪，同组的人一起算进去。</p>
+<p><strong>同一件事，两份材料上的罚差得很远。</strong>出土秦简里那条只写「貲一甲」，罚一副甲；《史記》这里写的是腰斩。一个是律文，一个是史家追叙立法之辞，两处并存，皆不弥合。</p>
+<p><strong>这套法后来把立法者自己算了进去。</strong>孝公死，太子立，有人告商君欲反，发吏捕之。《史記》记他逃到关下要住店，店家不敢收：「商君之法，舍人無驗者坐之。」——留宿没有凭验的人，店家同坐。这一条正是他自己写的。他当场那句话本传也录了：「嗟乎，為法自斃一至此哉！」（今天通行的四字成语首字作「作」，《史記》正文作「為」；本线引文一律照正文，不拿成语形式当引文。）结局分三步：秦发兵攻之，杀于郑黾池；惠王车裂以徇；而后「遂滅商君之家」。</p>
+<p><strong>这道令画的圈有两层：什伍是邻居，灭家是血亲。</strong>两层都写在同一部法里，也都在同一个人身上兑现过。</p>
+<a class="go" href="../timeline.html#line=zuifa&amp;at=1">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>秦孝公用商鞅，徙木立信而后颁法：编户什伍、军功授爵、废井田、行县制，秦自此由僻处西陲而兵强国富。第一次变法在孝公六年（前356，一说前359），前350年再行第二次。</p>
+<p><strong>变法令的头一句，就是把民户编成互相监视的组，一人有罪同组皆坐。</strong>《史记·商君列传》录其原文：「令民為什伍，而相牧司連坐。不告姦者腰斬，告姦者與斬敵首同賞，匿姦者與降敵同罰。」——本条 yc 原先只写编户什伍，连坐这一层今补。《汉书·刑法志》追叙同一件事，把两项制度并记在他名下：「秦用商鞅，連相坐之法，造參夷之誅」。</p>
+<p><strong>后来这套法把立法者自己算了进去。</strong>孝公卒，太子立，公子虔之徒告商君欲反，发吏捕之：「商君亡至關下，欲舍客舍。客人不知其是商君也，曰：『商君之法，舍人無驗者坐之。』商君喟然嘆曰：『嗟乎，為法自斃一至此哉！』」——留宿无凭验之人，店家同坐，这正是连坐令自身的条文。《史记》记其终局分三步：「秦發兵攻商君，殺之於鄭黽池。秦惠王車裂商君以徇」，而后「遂滅商君之家」。</p>
+<p><strong>一字之差要记明</strong>：《史记》正文作「為法自斃」，而今日通行的四字成语，首字写的是作字、不是为字；本条引文一律照正文，不拿成语形式当引文。作字与此事相连至迟唐人已然（同页所附唐司马贞索隐述赞作「如何作法，逆旅不賓」），但四字成语的最早出处与定型之年本库未考，维基文库全文检索所见用例多在明清以降的小说笔记，不据以断言。互见库内睡虎地秦简（前217）：出土秦律里「什伍智（知）弗告，貲一甲」（《秦律雜抄》屯表律条）仍是同一机理，而罚只一甲，与《史记》所记不告奸者腰斩相去甚远，两处并存不弥合。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>连坐令原文、客舍无验者坐之、為法自斃、遂滅商君之家四处，2026-08-30 由《史記》卷068 action=raw 直取核得（10,412 字节）。</li>
+<li><span class="tag t-ok">信史</span>《漢書·刑法志》「秦用商鞅，連相坐之法，造參夷之誅」同日核得（卷023，25,382 字节），此句为站③接站①的接口。</li>
+<li><span class="tag t-ok">信史</span>第一次变法之年两说：孝公六年（前356）与前359，库条 yc 自陈，站文照抄两说，不裁。</li>
+<li><span class="tag t-ok">信史</span>不告奸罚则两处并存：出土秦简《秦律雜抄》作貲一甲，《史記》作腰斩；一为律文一为史家追叙立法之辞，皆不弥合。</li>
+<li><span class="tag t-ok">信史</span>「作法自毙」四字成语的定型之年本库未考，《史記》正文作為法自斃；站文引文一律照正文，成语形式不当引文。</li>
+<li><span class="tag t-ok">信史</span>库内 y:-355 為天文纪年，线文写前 356。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">史記/卷068 商君列傳（維基文庫 action=raw，10,412 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">漢書/卷023 刑法志（維基文庫 action=raw，25,382 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">库内条目：商鞅变法（js/events.js 第 317 行</a>
+</div>
+</details>
+</div></section>
+<section id="s2" data-year="-201" data-name="消灭异姓王"><div class="wrap">
+<div class="num">二 / 十二</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="26.0" y1="16" x2="79.5" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-cur" cx="79.5" cy="16" r="5.2"/><circle class="rs-todo" cx="132.9" cy="16" r="3"/><circle class="rs-todo" cx="186.4" cy="16" r="3"/><circle class="rs-todo" cx="239.8" cy="16" r="3"/><circle class="rs-todo" cx="293.3" cy="16" r="3"/><circle class="rs-todo" cx="346.7" cy="16" r="3"/><circle class="rs-todo" cx="400.2" cy="16" r="3"/><circle class="rs-todo" cx="453.6" cy="16" r="3"/><circle class="rs-todo" cx="507.1" cy="16" r="3"/><circle class="rs-todo" cx="560.5" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="614.0" y="35" text-anchor="end">开豁贱籍</text><text class="rs-name" x="79.5" y="35" text-anchor="middle">消灭异姓王</text></svg>
+<div class="yr">前202</div>
+<h2>婚家之手 <span class="h2-ev">消灭异姓王</span></h2>
+<p class="sub">前202–前196　·　西汉　·　制度</p>
+<p><strong>这一站只给一个画面。</strong></p>
+<p>刘邦称帝后翦除异姓诸侯王。《漢書》篇末班固算过账：「昔髙祖定天下，功臣異姓而王者八國。」八家里，只有长沙吴氏留了下来。</p>
+<p>最后一个被算掉的是英布。他年轻时有相者说他「當刑而王」，后来「及壯，坐法黥」——脸上真刺了字。《史記》记他听说自己受了刑反而高兴：「人相我當刑而王，幾是乎？」听见的人都笑他。</p>
+<p><strong>而经手他最后一程的，是他的妻家。</strong>英布的妻子是番君吴芮的女儿。《史記·黥布列傳》：「布故與番君婚，以故長沙哀王使人紿布，偽與亡，誘走越，故信而隨之番陽。番陽人殺布茲鄉民田舍，遂滅黥布。」——妻家派人骗他，说陪他一起逃；他信了，跟到番阳，死在一户人家的田舍里。《漢書》记同一件事，「紿」写作「誘」，也没有「民田舍」三字，两说并存，皆不裁。</p>
+<p><strong>株连的常态，是国家从你最亲的那一边下手。这一回，方向反了。</strong></p>
+<p>至于长沙一家为什么独存，今人多说是这只手换来的。一手没有这样挂钩：两传写完诱杀，紧接着的封赏名单只有贲赫与将率六人，一个字都没提长沙。《漢書》自己给的理由是另一个字——「長沙王忠，其定著令。」这一家再传三世：成王臣、哀王回、共王右、靖王差，末了「孝文後七年薨，無子，國除」。止于无子，不是削夺。</p>
+<p>脸上那个字，本线后面还要再遇见一次。</p>
+<a class="go" href="../timeline.html#line=zuifa&amp;at=2">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>刘邦称帝后视异姓诸侯王为威胁，先后废黜、诛杀或攻灭燕王臧荼、韩信、彭越、英布等人，此后与群臣立白马之盟，规定非刘姓不得封王。名单与总数出自《汉书》卷三十四篇末班固赞语：「昔髙祖定天下，功臣異姓而王者八國。張耳、吳芮、彭越、黥布、臧荼、盧綰與兩韓信」——两韩信指韩王信与淮阴侯韩信；同段又分判「張耳以智全，至子亦失國。唯吳芮之起，不失正道，故能傳號五世，以無嗣絕」，《史记·汉兴以来诸侯王年表》序亦记「高祖子弟同姓為王者九國，雖獨長沙異姓」——八家里独长沙吴氏留了下来。</p>
+<p><strong>最后一个被算掉的是英布，而经手的是他的姻亲</strong>：《史记·黥布列传》记布起兵之初「番君以其女妻之」（番君即吴芮），汉十一年（前196）淮阴侯、梁王先后被诛，布遂反，兵败走江南——「布故與番君婚，以故長沙哀王使人紿布，偽與亡，誘走越，故信而隨之番陽。番陽人殺布茲鄉民田舍，遂滅黥布」；《汉书》同事作「布舊與番君婚，故長沙哀王使人誘布，偽與俱亡，走越，布信而隨至番陽。</p>
+<p>番陽人殺布茲鄉，遂滅之」——紿与誘一字之异，史记多「民田舍」三字，两说并存不弥合。</p>
+<p><strong>死法与诛年另有一说，且出自同一部书</strong>：《汉书·高帝纪》十二年记「漢別將擊布軍洮水南北，皆大破之，追斬布番陽」，纪作汉军别将追斩、传作番阳人所杀；《汉书·异姓诸侯王表》又把「布反，誅」系于汉十一年，纪则把破军追斩系于十二年。诸说并存，本条不给英布之死的公历确年。</p>
+<p><strong>「長沙哀王」四字是一处正史与自己打架的地方</strong>：《汉书·异姓诸侯王表》系「成王臣嗣」于汉六年（前201）、「哀王回嗣」于孝惠二年（前193），《史记·汉兴以来诸侯王年表》同把「成王臣元年」放在前201、「哀王回元年」放在前193，《汉书·高帝纪》十二年更径书「長沙王臣等言」——两部书的表都作臣，只有两部书的列传作哀王。按表，英布死时在位的是成王吴臣（吴芮之子，即英布妻家的兄弟），哀王吴回尚未即位。</p>
+<p>本库所据维基文库为白文本，无三家注、颜师古注可对，<strong>成因（笔误／传写／别本）未能核实，只标注矛盾本身</strong>。今人常说的英布逃到吴臣处、被妻舅亲手所杀，也不是史文：一手只说长沙王遣人诱之，动手的另有其人。</p>
+<p><strong>豁免与诱杀之间的因果，一手没有挂钩</strong>：两传写完诱杀，紧接的封赏名单只有立皇子长为淮南王与封贲赫（史记作期思侯，汉书作列侯，又一处小异），一个字都没提长沙国因此获赏或获免。汉书自己给的理由是「忠」——《吴芮传》记「初，文王芮，髙祖賢之，制詔御史：『長沙王忠，其定著令。』」（原文以「初」字带出，未系年，早晚不可确指），班固赞语收口于「著于甲令而稱忠也」。</p>
+<p>本条旧文把长沙的幸免归于势弱（未标出处），今人又有把诱杀直接说成换来豁免的（见中文维基「长沙国」条，该段无脚注）——两者同属后人归因层，与汉书给的「忠」并列，不裁。</p>
+<p><strong>长沙国此后确实再传三世</strong>：《吴芮传》「子成王臣嗣。薨，子哀王回嗣。薨，子共王右嗣。薨，子靖王差嗣。孝文後七年薨，無子，國除」——孝文帝后元七年即前157年（文帝亦崩于是年），止于无子而非削夺；末代王的名字三个一手三种写法（史记表作「靖王著元年」、汉书表作「靖王產嗣」、汉书本传作「子靖王差嗣」），本条不考订，一并记此。株连是把一个人的罪算到最亲的人头上，这一案里伸出来的手却正是从最亲的那一边——至于这只手换来了什么，一手没说。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>本站是全线呼吸点（库主 2026-08-26 拍板④），只给画面不给新论点。</li>
+<li><span class="tag t-ok">信史</span>位置判断：该条 y:-201 即前 202，早于站③（前180）与站④（前167）。若按预备稿原位摆在站③之后，全线将出现第二处逆行，唯一一处逆行在落点这一结构论点即垮。本卷判：站照收、按编年归位到第二站；后半程的松处由站⑨承担。</li>
+<li><span class="tag t-ok">信史</span>库主亲荐的转述「英布逃至吴臣处，被妻舅杀害。而吴臣一家因此得以豁免」与一手冲突，本卷 raw 复核证实库条判得对，故站文按一手写，不照抄该转述。</li>
+<li><span class="tag t-ok">信史</span>《史記·黥布列傳》原文写动手的是番阳人：番陽人殺布茲鄉民田舍。妻家的角色是遣人诱之，不是亲手。</li>
+<li><span class="tag t-ok">信史</span>《漢書》诱杀句紧接的是封賁赫爲列矦，將率封者六人——封赏名单一个字都没提长沙，豁免与诱杀之间一手没有挂钩。</li>
+<li><span class="tag t-ok">信史</span>《漢書·吳芮傳》自记的理由是忠：初，文王芮，髙祖賢之，制詔御史：長沙王忠，其定著令。</li>
+<li><span class="tag t-ok">信史</span>再传三世成立，且止于无子不是削夺：子成王臣嗣。薨，子哀王回嗣。薨，子共王右嗣。薨，子靖王差嗣。孝文後七年薨，無子，國除。</li>
+<li><span class="tag t-ok">信史</span>紿／誘一字之异，史記多民田舍三字，两说并存皆不裁。</li>
+<li><span class="tag t-ok">信史</span>英布之死的确年不给：《漢書》纪作十二年追斩，表把布反誅系于十一年。</li>
+<li><span class="tag t-ok">信史</span>長沙哀王四字表传不合一层：本席实测漢書/卷13 与漢書/異姓諸侯王表 两个页名皆取不到（返回 1,930 字节错误页），表文未能核实，只作存疑登记，不进站文。</li>
+<li><span class="tag t-ok">信史</span>伦理：英布是被诱杀的真人，笔墨只落在方向反了这一层，不拿他的死做谈资。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">史記/卷091 黥布列傳（維基文庫 action=raw，10,402 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">漢書/韓彭英盧吳傳（維基文庫 action=raw，33,566 字节；漢書/卷034 为其重定向），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">漢書/卷13 與 漢書/異姓諸侯王表：两页名实测皆取不到，表文一层未能核实</a>
+<a href="" target="_blank" rel="noopener">库内条目：消灭异姓王（js/events.js 第 390 行</a>
+</div>
+</details>
+</div></section>
+<section id="s3" data-year="-179" data-name="诛吕安刘"><div class="wrap">
+<div class="num">三 / 十二</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="79.5" y1="16" x2="132.9" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="79.5" cy="16" r="3"/><circle class="rs-cur" cx="132.9" cy="16" r="5.2"/><circle class="rs-todo" cx="186.4" cy="16" r="3"/><circle class="rs-todo" cx="239.8" cy="16" r="3"/><circle class="rs-todo" cx="293.3" cy="16" r="3"/><circle class="rs-todo" cx="346.7" cy="16" r="3"/><circle class="rs-todo" cx="400.2" cy="16" r="3"/><circle class="rs-todo" cx="453.6" cy="16" r="3"/><circle class="rs-todo" cx="507.1" cy="16" r="3"/><circle class="rs-todo" cx="560.5" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">商鞅变法</text><text class="rs-end" x="614.0" y="35" text-anchor="end">开豁贱籍</text><text class="rs-name" x="132.9" y="35" text-anchor="middle">诛吕安刘</text></svg>
+<div class="yr">前180</div>
+<h2>废而复行 <span class="h2-ev">诛吕安刘</span></h2>
+<p class="sub">前180　·　西汉　·　民变·政变</p>
+<p><strong>这一次没有判决。</strong></p>
+<p>吕后死，陈平、周勃联合宗室诛吕氏，废少帝，迎立代王刘恒。《史記·呂太后本紀》记的不是一道判词，是一次分头搜捕：「遂遣人分部悉捕諸呂男女，無少長皆斬之。」处置逐人不同，下令的是太尉周勃，全篇不见任何法律名目。</p>
+<p><strong>而正式的族诛之令，此前七年已经被废掉了。</strong>《漢書·刑法志》记汉初「其大辟，尚有夷三族之令」，那道令把三族该怎么处置写得极细——本线不录其文，只记它的下场：「至高后元年，乃除三族罪、祅言令。」高后元年是前 187，诸吕被诛在前 180。<strong>法条已废，办法还在。</strong></p>
+<p><strong>而且不止废过一次。</strong>同篇续记文帝二年下诏议除收律与相坐法——收律就是把罪人妻子没为官奴的那一条，也就是后世所说的「罪人不孥」。丞相周勃、陈平头一次奏「臣之愚計，以為如其故便」，皇帝再问，才改口：「臣等謹奉詔，盡除收律、相坐法。」然而同一篇的下一句是：「其後，新垣平謀為逆，復行三族之誅。」——同一朝之内，废了，又行了一次。</p>
+<p>这套刑名的来处，《刑法志》自己点了：「秦用商鞅，連相坐之法，造參夷之誅。」上一站那道令，在这里第一次结账。</p>
+<a class="go" href="../timeline.html#line=zuifa&amp;at=3">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>吕后死后，陈平、周勃等大臣联合齐哀王等宗室诛杀吕氏一族，又废黜非惠帝亲生的少帝，迎立代王刘恒即位为汉文帝，为文景之治奠定基础。</p>
+<p><strong>诛杀一族在《史记》里不是一道判决，是一次分头搜捕。</strong>《吕太后本纪》记吕产已死之后：「遂遣人分部悉捕諸呂男女，無少長皆斬之。辛酉，捕斬呂祿，而笞殺呂媭。使人誅燕王呂通，而廢魯王偃。」——处置逐人不同（斩、笞杀、诛、废而不杀），全篇不见夷三族一类法律名目；下令的是太尉周勃，走的是政变的路数，不是援引某条成文法的司法程序。代王入未央宫的当夜还有一笔：「夜，有司分部誅滅梁、淮陽、常山王及少帝於邸。」</p>
+<p><strong>而正式的三族之令，此前七年已由吕后本人废掉了。</strong>《汉书·刑法志》：「漢興之初，雖有約法三章，網漏吞舟之魚，然其大辟，尚有夷三族之令。令曰：『當三族者，皆先黥，劓，斬左右止，笞殺之，梟其首，菹其骨肉於市。其誹謗詈詛者，又先斷舌。』故謂之具五刑。彭越、韓信之屬皆受此誅。至高后元年，乃除三族罪、祅言令。」——高后元年即前187，诸吕被诛在高后八年（前180），相隔七年：<strong>法条已废，办法仍在。</strong>同篇续记孝文二年文帝下诏议除收律与相坐法，左右丞相周勃、陈平初奏「臣之愚計，以為如其故便」，帝再诘而后改口「臣等謹奉詔，盡除收律、相坐法」；然而「其後，新垣平謀為逆，復行三族之誅」——一朝之内，废了又行一次。</p>
+<p>这套刑名的来处《刑法志》同篇已经点明：「秦用商鞅，連相坐之法，造參夷之誅」，即库内商鞅变法（前356）条。</p>
+<p><strong>这件事的定性，是新君的诏书当场写下的</strong>：《漢書·卷004》文帝纪记闰月己酉即位当日诏曰「諸呂用事擅權，謀為大逆，欲危劉氏宗廟，賴將相列侯宗室大臣誅之，皆伏其辜」；元年冬十月封赏诏又曰「前呂產自置為相國，呂祿為上將軍，擅遣將軍灌嬰將兵擊齊，欲代劉氏」（两诏皆维基文库逐字核）——一句认下吕氏谋大逆，一句把大臣动手写成诛有罪。</p>
+<p><strong>这一层的重读须挂具名学者，本库不自拟</strong>：郭茵《诛吕：「诸吕之乱」的真相与吕太后时期的权力结构》（陆帅、赵壮译，北京科学技术出版社，2024年10月）判曰「所谓『诸吕之乱』并非吕氏一族引发的『乱』，而是朝堂大臣与齐王兄弟发动的政变，因此不如叫作『诛吕之乱』」，并指吕产为相国、吕禄为上将军本是吕太后生前所任命，诏书却径称二人自置。</p>
+<p><strong>层级须写明</strong>：本库未叩该书原书，所据止于澎湃新闻「私家历史」栏目的该书摘录一层，属转述层；其文引诏书作「擅矫遣灌将军婴」，与《漢書·文帝紀》「擅遣將軍灌嬰」字句小异，两处照录不弥合，其「相隔四日」之说本库亦未验算。</p>
+<p><strong>传世正史即以诸吕欲乱立说，郭说与之相反，两说并存不裁</strong>，本库不判一是一非。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>三姊妹分工：本站只取「照的不是哪一条法」这一层。</li>
+<li><span class="tag t-ok">信史</span>《史記·呂太后本紀》分部搜捕句 2026-08-30 直取核得（卷009，16,590 字节）；全篇不见夷三族一类法律名目，下令的是太尉周勃。</li>
+<li><span class="tag t-ok">信史</span>《漢書·刑法志》三处同日核得：夷三族之令的存在与其被废（至高后元年，乃除三族罪、祅言令）；文帝二年议除收律相坐法（臣等謹奉詔，盡除收律、相坐法。）；其後，新垣平謀為逆，復行三族之誅。</li>
+<li><span class="tag t-ok">信史</span>高后元年为前 187，诸吕被诛在前 180（库内 y:-179 天文纪年），相隔七年。</li>
+<li><span class="tag t-ok">信史</span>伦理条一施工点：《漢書·刑法志》當三族者一条原文是刑罚场面，本线一个字不录，只写它被写得极细，论点由下一句被废承担。</li>
+<li><span class="tag t-ok">信史</span>收律即把罪人妻子没为官奴的那一条，也就是后世所说的罪人不孥——本线在此埋钩，站⑪还。</li>
+<li><span class="tag t-ok">信史</span>郭茵「诛吕之乱」说：库条自陈未叩原书、只到网媒摘录一层，本卷同样未获原书，整层不进站文，只作分级登记。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">史記/卷009 呂太后本紀（維基文庫 action=raw，16,590 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">漢書/卷023 刑法志（維基文庫 action=raw，25,382 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">库内条目：诛吕安刘（js/events.js 第 404 行</a>
+</div>
+</details>
+</div></section>
+<section id="s4" data-year="-166" data-name="缇萦上书"><div class="wrap">
+<div class="num">四 / 十二</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="132.9" y1="16" x2="186.4" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="79.5" cy="16" r="3"/><circle class="rs-done" cx="132.9" cy="16" r="3"/><circle class="rs-cur" cx="186.4" cy="16" r="5.2"/><circle class="rs-todo" cx="239.8" cy="16" r="3"/><circle class="rs-todo" cx="293.3" cy="16" r="3"/><circle class="rs-todo" cx="346.7" cy="16" r="3"/><circle class="rs-todo" cx="400.2" cy="16" r="3"/><circle class="rs-todo" cx="453.6" cy="16" r="3"/><circle class="rs-todo" cx="507.1" cy="16" r="3"/><circle class="rs-todo" cx="560.5" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">商鞅变法</text><text class="rs-end" x="614.0" y="35" text-anchor="end">开豁贱籍</text><text class="rs-name" x="186.4" y="35" text-anchor="middle">缇萦上书</text></svg>
+<div class="yr">前167</div>
+<h2>有以易之 <span class="h2-ev">缇萦上书</span></h2>
+<p class="sub">前167　·　西汉　·　制度</p>
+<p><strong>有人往回画了一次。</strong></p>
+<p>齐太仓令淳于意坐法当刑，槛送长安。他没有儿子，五个女儿里最小的一个随父入京上书。《漢書》录她的话：「妾父為吏，齊中皆稱其廉平，今坐法當刑。妾傷夫死者不可復生，刑者不可復屬，雖後欲改過自新，其道亡繇也。妾願沒入為官婢，以贖父刑罪，使得自新。」——《史記》另录一版，字句有出入，两版并存。</p>
+<p><strong>系年也是两说，相差十年。</strong>《漢書·刑法志》与《史記·孝文本紀》都作文帝十三年，即前 167；《史記·扁鵲倉公列傳》开口就作「文帝四年中」。本线取十三年一说，四年说并记不裁。</p>
+<p><strong>诏书自己写着要拿什么顶上去。</strong>《史記》所载止于「其除肉刑。」；《漢書·刑法志》多出后半：「其除肉刑，有以易之」。顶上来的是什么，丞相张苍、御史大夫冯敬奏得明明白白：「當黥者，髡鉗為城旦舂；當劓者，笞三百；當斬左止者，笞五百；當斬右止……皆棄市。」黥改成剃发戴钳去服苦役，劓改笞三百，斩左趾改笞五百，<strong>斩右趾改弃市——本来留命的一条，改成了死刑。</strong></p>
+<p>这笔账是同一部刑法志自己算的：「是後，外有輕刑之名，內實殺人。」代刑打死的人太多，逼得下一代皇帝两次减笞数才把死亡率压下去。</p>
+<p><strong>一道诏、两代皇帝、三次立法。圈是往回画了一点，而它往回画的办法，是把另一段路加长。</strong></p>
+<a class="go" href="../timeline.html#line=zuifa&amp;at=4">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>这道诏废掉的是三种肉刑的名目，不是肉体刑本身——诏书自己写着「有以易之」，拿别的顶上去。</strong>齐太仓令淳于意坐法当刑，槛送长安，幼女缇萦随父入京上书求代。</p>
+<p><strong>同一件事，两部一手正史系年不合，本条不弥合</strong>：《汉书·刑法志》作「即位十三年，齊太倉令淳于公有罪當刑，詔獄逮繫長安」，《史记·孝文本纪》系于十三年五月「齊太倉令淳于公有罪當刑，詔獄逮徙系長安」，《汉书·文帝纪》该年条只给七个字「五月，除肉刑法，語在刑法志」——三处相合，文帝十三年即前167；而《史记·扁鹊仓公列传》开口即作「文帝四年中，人上書言意，以刑罪當傳西之長安」，篇末仍作「書聞，上悲其意，此歲中亦除肉刑法」，与前者差十年。</p>
+<p>本条锚取十三年一说，四年说并记不裁。</p>
+<p><strong>上书原文亦两版，字句有出入，两版并录</strong>：《史记》卷105作「妾父為吏，齊中稱其廉平，今坐法當刑。妾切痛死者不可復生而刑者不可復續，雖欲改過自新，其道莫由，終不可得。妾願入身為官婢，以贖父刑罪，使得改行自新也」；《汉书》卷23作「妾父為吏，齊中皆稱其廉平，今坐法當刑。妾傷夫死者不可復生，刑者不可復屬，雖後欲改過自新，其道亡繇也。妾願沒入為官婢，以贖父刑罪，使得自新」。</p>
+<p><strong>诏书也是两版，而分歧恰落在最要紧的四个字上</strong>：《史记·孝文本纪》所载止于「其除肉刑。」；《汉书·刑法志》同诏多出后半「其除肉刑，有以易之；及令罪人各以輕重，不亡逃，有年而免。具為令。」两版共有的一段写着废它的理由：「夫刑至斷支體，刻肌膚，終身不息」（其下《汉书》作「何其刑之痛而不德也」，《史记》作「何其楚痛而不德也」，一字之差并存不裁）。</p>
+<p><strong>换成了什么，丞相张苍、御史大夫冯敬奏得明明白白</strong>（《汉书·刑法志》逐字）：「諸當完者，完為城旦舂；當黥者，髡鉗為城旦舂；當劓者，笞三百；當斬左止者，笞五百；當斬右止，及殺人先自告，及吏坐受賕枉法，守縣官財物而即盜之，已論命復有笞罪者，皆棄市。」黥改成剃发戴钳去服苦役，劓改笞三百，斩左趾改笞五百，<strong>斩右趾改弃市——本来留命的一条改成了死刑</strong>。</p>
+<p><strong>这笔账是同一部刑法志自己算的</strong>：「是後，外有輕刑之名，內實殺人。斬右止者又當死。斬左止者笞五百，當劓者笞三百，率多死。」代刑打死的人太多，逼得下一代皇帝两次减数：景帝元年诏「加笞與重罪無異，幸而不死，不可為人。其定律：笞五百曰三百，笞三百曰二百」；中六年再诏「加笞者，或至死而笞未畢，朕甚憐之。其減笞三百曰二百，笞二百曰一百」，又由丞相刘舍、御史大夫卫绾定下刑具规格与打法「笞者，箠長五尺，其本大一寸，其竹也，末薄半寸，皆平其節。</p>
+<p>當笞者笞臀。毋得更人，畢一罪乃更人」。</p>
+<p><strong>一道诏、两代皇帝、三次追加立法，才把这套「轻刑」的死亡率压下来。</strong>通行俗称作「缇萦救父」，本条照史文只记上书与下诏，不据俗称立说。</p>
+<p><strong>「肉刑从此废除」是全库对本条最须防的一句话</strong>：黥其后仍以刺字之名回到律条，见库内刺配（975）。库内互见诛吕安刘（前180）、文景之治（前179–前141）、睡虎地秦简（前217）。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>本站是缩圈的一极，与站⑥（放圈的一极）字数刻意等长。</li>
+<li><span class="tag t-ok">信史</span>上书原文汉书版、其除肉刑有以易之、张苍冯敬代刑奏、外有輕刑之名內實殺人四处，2026-08-30 由《漢書》卷023 action=raw 直取核得。</li>
+<li><span class="tag t-ok">信史</span>《史記·孝文本紀》十三年夏……五月，齊太倉令淳于公有罪當刑同日核得（卷010，20,595 字节），该本所载诏止于其除肉刑。</li>
+<li><span class="tag t-ok">信史</span>系年两说相差十年：《漢書·刑法志》与《史記·孝文本紀》皆作文帝十三年（前167），《史記·扁鵲倉公列傳》作文帝四年中。本线取十三年，四年说并记不裁。</li>
+<li><span class="tag t-ok">信史</span>上书原文两版（史記本／漢書本）、诏书两版（史記止于其除肉刑／漢書多出有以易之以下）、一字之差（漢書何其刑之痛而不德也／史記何其楚痛而不德也）——三处并存，皆不合成一版。</li>
+<li><span class="tag t-ok">信史</span>错型 3 高危点：不许写肉刑从此废除——站⑦就是本线自己的反例。</li>
+<li><span class="tag t-ok">信史</span>库内 y:-166 為天文纪年，线文写前 167。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">漢書/卷023 刑法志（維基文庫 action=raw，25,382 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">史記/卷010 孝文本紀（維基文庫 action=raw，20,595 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">库内条目：缇萦上书（js/events.js 第 395 行</a>
+</div>
+</details>
+</div></section>
+<section id="s5" data-year="166" data-name="党锢之祸"><div class="wrap">
+<div class="num">五 / 十二</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="186.4" y1="16" x2="239.8" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="79.5" cy="16" r="3"/><circle class="rs-done" cx="132.9" cy="16" r="3"/><circle class="rs-done" cx="186.4" cy="16" r="3"/><circle class="rs-cur" cx="239.8" cy="16" r="5.2"/><circle class="rs-todo" cx="293.3" cy="16" r="3"/><circle class="rs-todo" cx="346.7" cy="16" r="3"/><circle class="rs-todo" cx="400.2" cy="16" r="3"/><circle class="rs-todo" cx="453.6" cy="16" r="3"/><circle class="rs-todo" cx="507.1" cy="16" r="3"/><circle class="rs-todo" cx="560.5" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">商鞅变法</text><text class="rs-end" x="614.0" y="35" text-anchor="end">开豁贱籍</text><text class="rs-name" x="239.8" y="35" text-anchor="middle">党锢之祸</text></svg>
+<div class="yr">166</div>
+<h2>爰及五属 <span class="h2-ev">党锢之祸</span></h2>
+<p class="sub">166　·　东汉　·　制度</p>
+<p><strong>圈从血亲扩到师门，用了四次改口，四次都有原文。</strong></p>
+<p>东汉桓灵之时，士大夫与太学生因不满宦官专权遭构陷，被冠以「党人」之名。《後漢書·黨錮列傳》把范围的四次变动写得很清楚。</p>
+<p>一、延熹九年（166）首次收捕，次年赦归，「乃皆赦歸田裡，禁錮終身。而黨人之名，猶書王府」——罚只及本人，名字留在朝廷的簿册上。</p>
+<p>二、张俭事起，李膺不逃而诣诏狱，「考死，妻子徙邊，門生、故吏及其父兄，並被禁錮」——师门与父兄第一次被算进来。</p>
+<p>三、熹平五年（176），「於是又詔州郡更考黨人門生故吏父子兄弟，其在位者，免官禁錮，爰及五屬」。五属是什么，唐李贤注得明白：「謂斬衰、齊衰、大功、小功、緦麻也。」——<strong>以五等丧服为界，画到缌麻那一层为止。这个词后面还会再出现一次，请记住它。</strong></p>
+<p>四、光和二年（179），上禄长和海上言，说「而今黨人錮及五族，既乖典訓之文，有謬經常之法」；李贤于此注引《左氏傳》一句：「父子兄弟，罪不相及。」皇帝看了，「黨錮自從祖以下，皆得解釋」——范围第一次往回收。</p>
+<p>总账列传自己不给整数，只写「其死徙廢禁者，六七百人」。</p>
+<p><strong>还有一个人是自己走进来的。</strong>侍御史景毅的儿子拜李膺为师，名字没登记在名籍上，「故不及於譴」。景毅说：「本謂膺賢，遣子師之，豈可以漏奪名籍，苟安而已！」于是自表免官归乡。</p>
+<a class="go" href="../timeline.html#line=zuifa&amp;at=5">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>东汉桓帝、灵帝时，士大夫与太学生因不满宦官专权而遭构陷，被冠以「党人」罪名禁锢终身、不得为官，前后两次株连士人甚众，客观上加速了东汉的衰亡。</p>
+<p><strong>禁锢及于谁，《后汉书·党锢列传》里前后改过四次，四次都有原文。</strong>一、延熹九年（166）首次收捕党人，其辞所连及者二百余人；次年霍谞、窦武表请，「乃皆赦歸田裡，禁錮終身。而黨人之名，猶書王府」——罚只及本人，名字留在朝廷的簿册上。二、陈蕃、窦武谋诛宦官事败之后，张俭事起，李膺不逃，曰「事不辭難，罪不逃刑，臣之節也」，乃诣诏狱：「考死，妻子徙邊，門生、故吏及其父兄，並被禁錮」——师门与父兄第一次被算进来。</p>
+<p>三、熹平五年（176），永昌太守曹鸾上书讼党人而被掠杀，「於是又詔州郡更考黨人門生故吏父子兄弟，其在位者，免官禁錮，爰及五屬」，唐李贤注：「謂斬衰、齊衰、大功、小功、緦麻也。」——以五等丧服为界，画到了缌麻这一层。四、光和二年（179），上禄长和海上言：「禮，從祖兄弟別居異財，恩義已輕，服屬□末。而今黨人錮及五族，既乖典訓之文，有謬經常之法。」（文库该处一字漫漶，照录缺文符号）李贤于此注引《左氏传》「父子兄弟，罪不相及」；「帝覽而悟之，黨錮自從祖以下，皆得解釋」——范围第一次往回收。</p>
+<p>中平元年（184）黄巾起，中常侍吕强恐党人与张角合谋，言「黨錮久積，人情多怨」，遂大赦。</p>
+<p><strong>总账列传自己不给整数</strong>：「其死徙廢禁者，六七百人」，又「凡黨事始自甘陵、汝南，成於李膺、張儉，海內塗炭，二十餘年」——本条原文所谓株连士人甚众即此，不另补数字。</p>
+<p><strong>还有一个人是自己走进来的</strong>：侍御史景毅之子为李膺门徒而未录名籍，「故不及於譴」，景毅慨然曰「本謂膺賢，遣子師之，豈可以漏奪名籍，苟安而已！」，遂自表免官归里，时人义之。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>四次变动的原文与唐李贤两条注，2026-08-30 由《後漢書》卷67 action=raw 直取核得（57,251 字节）。</li>
+<li><span class="tag t-ok">信史</span>李贤注謂斬衰、齊衰、大功、小功、緦麻也是本线拆解「五族」误会的关键一手，站⑥要靠它接力，故本站明写请记住它。</li>
+<li><span class="tag t-ok">信史</span>光和二年和海上言里的黨人錮及五族与熹平五年诏里的爰及五屬，是同一件事的两种写法——五族＝五等丧服之亲，这是《後漢書》原文自证的等式，不是本库的推断。</li>
+<li><span class="tag t-ok">信史</span>总账列传自己不给整数（其死徙廢禁者，六七百人），本线不许另补数字。</li>
+<li><span class="tag t-ok">信史</span>景毅一节是本线视角（圈外的那一步）第一次落到具体人脸上。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">後漢書/卷67 黨錮列傳（維基文庫 action=raw，57,251 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">库内条目：党锢之祸（js/events.js 第 527 行</a>
+</div>
+</details>
+</div></section>
+<section id="s6" data-year="450" data-name="国史之狱"><div class="wrap">
+<div class="num">六 / 十二</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="239.8" y1="16" x2="293.3" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="79.5" cy="16" r="3"/><circle class="rs-done" cx="132.9" cy="16" r="3"/><circle class="rs-done" cx="186.4" cy="16" r="3"/><circle class="rs-done" cx="239.8" cy="16" r="3"/><circle class="rs-cur" cx="293.3" cy="16" r="5.2"/><circle class="rs-todo" cx="346.7" cy="16" r="3"/><circle class="rs-todo" cx="400.2" cy="16" r="3"/><circle class="rs-todo" cx="453.6" cy="16" r="3"/><circle class="rs-todo" cx="507.1" cy="16" r="3"/><circle class="rs-todo" cx="560.5" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">商鞅变法</text><text class="rs-end" x="614.0" y="35" text-anchor="end">开豁贱籍</text><text class="rs-name" x="293.3" y="35" text-anchor="middle">国史之狱</text></svg>
+<div class="yr">450</div>
+<h2>姻亲皆尽 <span class="h2-ev">国史之狱</span></h2>
+<p class="sub">450　·　北魏　·　民变·政变</p>
+<p><strong>这是本线上圈画得最远的一站，也是最容易被记错的一站。</strong></p>
+<p>北魏重臣崔浩主持编纂国史，因把国史刻石立在都城郊外通衢边而事发。传文给这部史的评语只有四个字：「浩盡述國事，備而不典」。而问案的落点在别处：「有司按驗浩，取祕書郎吏及長曆生數百人意狀。浩伏受賕」——卷宗上他认下的罪名是受贿。</p>
+<p><strong>先说那道没发出去的诏。</strong>《魏書·高允傳》记太武帝盛怒，命高允起草：「自浩已下、僮吏已上百二十八人皆夷五族。」高允持疑不写，一再催也不写。<strong>五族不是五个家族，是五等丧服之亲</strong>——同一个词，上一站《後漢書》的李贤注已经解释过。这道诏没有落地：《魏書》记结果是「浩竟族滅，餘皆身死」，《資治通鑑》记作「餘皆止誅其身」。<strong>那个一百二十八，是一道被挡下来的诏上的数字，不是死者数。</strong></p>
+<p><strong>真正落地的圈是四个姓。</strong>《魏書》卷三十五：「清河崔氏無遠近，范陽盧氏、太原郭氏、河東柳氏，皆浩之姻親，盡夷其族。」《北史》与《資治通鑑》同文，无第五家。</p>
+<p><strong>而尽夷也不是户口。</strong>同卷卷末记清河崔氏另有两支，因平素与崔浩不睦，「故誅浩時，二家獲免」；范阳卢氏的卢度世逃匿在别人家里，后来也等到了赦。</p>
+<p>（临刑的一段，是下一位史官魏收剪成的报应故事，本线不录。）</p>
+<a class="go" href="../timeline.html#line=zuifa&amp;at=6">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>北魏汉臣之首崔浩三朝参谋帷幄，主持编纂国史，因直书拓跋氏先世而族诛——本库「历史由谁写下」母题的价格顶点。</p>
+<p><strong>祸从一块石头起</strong>：《魏书·崔浩传》记著作令史闵湛、郄标「素諂事浩，乃請立石銘，刊載國書，并勒所注五經。浩贊成之」，工程「營於天郊東三里，方百三十步，用功三百萬乃訖」——国史刻成了都城郊外通衢边的石阵。传文给这部史的评语只有四个字：「浩盡述國事，備而不典」；而「石銘顯在衢路，往來行者咸以為言，事遂聞發」。</p>
+<p><strong>问案的落点耐人寻味</strong>：「有司按驗浩，取祕書郎吏及長曆生數百人意狀。浩伏受賕，其祕書郎吏已下盡死」——直书国恶的人，卷宗上认下的罪名是受贿。《世祖纪》系日：太平真君十一年「六月己亥，誅司徒崔浩」，本库验算即450年7月5日；株连之广本传直书：「清河崔氏無遠近，范陽盧氏、太原郭氏、河東柳氏，皆浩之姻親，盡夷其族」，又「自宰司之被戮辱，未有如浩者」。</p>
+<p><strong>临刑一段，魏收把它剪成了报应故事</strong>：崔浩「非毀佛法」（非毁，诋毁也），曾怒焚妻子诵读的佛经「捐灰於厠中」；及被收，「置之檻內，送於城南，使衞士數十人溲其上，呼聲嗷嗷，聞于行路」——「世皆以為報應之驗也」。写史的人死后，被下一位史家写进了因果（通行转述作「溲於其上」，原文无「於」字，本条照录本字）。</p>
+<p><strong>那位史家后来也栽在同一件事上</strong>：一百零一年后，北齐文宣帝诏魏收撰魏史（天保二年，551），当面许他一句「好直筆，我終不作魏太武誅史官」（《北齐书·魏收传》）——魏太武所诛的史官正是崔浩；书成之后诸家投牒，那部书被叫成「穢史」（互见库内魏书，554）。</p>
+<p><strong>杀他的人也留了一句在史里</strong>：《世祖纪》评太武帝「果於誅戮，後多悔之」，崔浩死后帝言「朕向失言。崔司徒可惜」。崔浩又深涉库内太武灭佛（446）一案，「非毀佛法」四字即其自证，焚经捐厕是这一层的私宅版。库内崔杼弑其君（太史兄弟前仆后继而书法不改）、董狐直笔与清代文字狱与本条同族——太史简的时代史官赢了，国史之狱里史官输掉了五个大族的性命。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>本站执行 docs/desk/guoshi-wuzu-verdict-20260829.md 终审判词：写四姓，不写五族；四姓引文后不接任何人数。</li>
+<li><span class="tag t-ok">信史</span>四姓句三源一致，2026-08-30 本席另行 raw 复核：《魏書》卷35（37,133 字节）、《資治通鑑》卷125（35,621 字节）皆逐字命中，无异文，无第五家。</li>
+<li><span class="tag t-ok">信史</span>「皆夷五族」确在《魏書》卷48 高允传（42,827 字节），但主语是自浩已下、僮吏已上百二十八人——一百二十八个人各夷五族；僮吏不是高门，凑不成五个大族。</li>
+<li><span class="tag t-ok">信史</span>该诏未执行：高允抗命不写，落地的结果《魏書》作浩竟族滅，餘皆身死，《資治通鑑》作餘皆止誅其身。故一百二十八是未执行之诏的数，不是死者数。</li>
+<li><span class="tag t-ok">信史</span>五族＝五等丧服之亲，词义由库内党锢之祸条所收李贤注自证，本线在站⑤先埋后还。</li>
+<li><span class="tag t-ok">信史</span>盡夷不是户口：同卷卷末记清河崔氏二家獲免；《魏書》卷47 记范阳卢度世逃匿获赦。</li>
+<li><span class="tag t-ok">信史</span>库条 yl 末句作「五个大族」系库内自误，本卷据终审判词写四姓（改文建议留给库主，本卷未动库文件）。</li>
+<li><span class="tag t-ok">信史</span>「觸怒鮮卑貴族」一层的一手在《北史》卷21，不在《魏書》；本站站文改写为因把国史刻石立在都城郊外通衢边而事发，不用族属语——既避出处错挂，也避民族情绪。</li>
+<li><span class="tag t-ok">信史</span>伦理条一：崔浩临刑一段库条已载原文，本线不录，只写它是魏收剪成的报应故事。</li>
+<li><span class="tag t-ok">信史</span>三姊妹分工：本站只取圈的半径与五族口径，书写权对峙那一层留给史笔线。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">魏書/卷35 崔浩傳（維基文庫 action=raw，37,133 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">魏書/卷48 高允傳（維基文庫 action=raw，42,827 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">資治通鑑/卷125（維基文庫 action=raw，35,621 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">終審卷 docs/desk/guoshi-wuzu-verdict-20260829.md（另据《北史》卷021 两本对勘，四姓同文</a>
+<a href="" target="_blank" rel="noopener">库内条目：国史之狱（js/events.js 第 662 行</a>
+</div>
+</details>
+</div></section>
+<section id="s7" data-year="975" data-name="刺配"><div class="wrap">
+<div class="num">七 / 十二</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="293.3" y1="16" x2="346.7" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="79.5" cy="16" r="3"/><circle class="rs-done" cx="132.9" cy="16" r="3"/><circle class="rs-done" cx="186.4" cy="16" r="3"/><circle class="rs-done" cx="239.8" cy="16" r="3"/><circle class="rs-done" cx="293.3" cy="16" r="3"/><circle class="rs-cur" cx="346.7" cy="16" r="5.2"/><circle class="rs-todo" cx="400.2" cy="16" r="3"/><circle class="rs-todo" cx="453.6" cy="16" r="3"/><circle class="rs-todo" cx="507.1" cy="16" r="3"/><circle class="rs-todo" cx="560.5" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">商鞅变法</text><text class="rs-end" x="614.0" y="35" text-anchor="end">开豁贱籍</text><text class="rs-name" x="346.7" y="35" text-anchor="middle">刺配</text></svg>
+<div class="yr">975</div>
+<h2>径不过五分 <span class="h2-ev">刺配</span></h2>
+<p class="sub">975　·　北宋　·　制度</p>
+<p><strong>圈刻回到身体上。</strong></p>
+<p>杖、黥、配三样合成一件事：打一顿，在身上刺字，再发到远处服役——罪同时落在身上、脸上和脚下。前 167 年那道诏废掉的正是黥的名目，此后它以刺字之名回到律条。<strong>中间隔着一千一百多年，不是废了又捡起来的一个连续动作。</strong></p>
+<p><strong>它的起源没有确年。</strong>本线锚在一道有确年的诏上，那不是它的开端。《宋史·刑法志一》记开宝八年（975）广州奏事，太祖因诏：「嶺南民犯竊盜，贓滿五貫至十貫者，決杖、黥面、配役，十貫以上乃死。」三事并于一诏，且有年月。</p>
+<p><strong>刺在哪里、刺多大，律里是分等的。</strong>《宋史·刑法志三》：「凡犯盜，刺環於耳後：徒、流，方；杖，圓；三犯杖，移於面。徑不過五分。」——先刺耳后，方形是徒流，圆形是杖，三犯杖罪才移上脸；直径不超过五分。<strong>一个圈的半径，第一次能用尺量。</strong></p>
+<p><strong>而这把尺明文把一类人划在外面。</strong>熙宁二年比部郎中张仲宣坐赃，法官议「杖脊、黥配海島」，知审刑院苏颂说：「且古者『刑不上大夫』，仲宣官五品……今刑為徒隸……恐污辱衣冠爾。」于是免杖免黥，改流贺州——「自是命官無杖、黥法」。</p>
+<p><strong>它的终点也有确年。</strong>光绪三十一年（1905）那道删除重刑的上谕里另有一句：「至緣坐各條，除知情者仍治罪外，餘著悉予寬免，其刺字等項，亦著概行革除。」——<strong>刺字与缘坐，是被同一道诏一起革除的。</strong></p>
+<a class="go" href="../timeline.html#line=zuifa&amp;at=7">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>杖、黥、配三样合成一件事：打一顿，在身上刺字，再发到远处服役——罪同时落在身上、脸上和脚下。</strong>前167年文帝除肉刑（库内缇萦上书）废掉的正是黥的名目，此后它以刺字之名回到律条里。</p>
+<p><strong>它的起源无年可系，本条照库内匠籍、部曲之例改锚</strong>：锚在《宋史·刑法志一》太祖开宝八年（975）那道有确年的诏上——广州奏岭南覆奏稽滞，「帝覽奏，惻然曰：『海隅習俗，貪獷穿窬，固其常也。』因詔：『嶺南民犯竊盜，贓滿五貫至十貫者，決杖、黥面、配役，十貫以上乃死。』」决杖、黥面、配役三事并于一诏，且有确年。</p>
+<p><strong>这一年不是刺配之始，只是它可系年的一个节点，本条不称其为始。</strong>九十五年后的另一头同样有确年：《宋史·刑法志三》熙宁三年（1070）中书上「刑名未安者五」，其三即「刺配之法二百餘條，其間情理輕者，亦可復古徒流移鄉之法，俟其再犯，然後決刺充軍。其配隸並減就本處，或與近地。凶頑之徒，自從舊法」——<strong>从一道边州诏令长成二百余条，长到朝廷自己要求清理</strong>。</p>
+<p>该志本身不给刺配的确立之年，本条不硬凑单点，也不用 y2 冒充存续（存续实到1905，画成长条只会说谎）。</p>
+<p><strong>流传甚广的「后晋天福年间创刺配」一说，本库循旧五代史、五代会要方向反复检索未获一手原文，所见皆网络转述互抄，判「未能核实」，记而不采，亦不充作两说之一并记。</strong>制度的几层，《宋史·刑法志三》逐字给了：军籍与赦免——「凡應配役者傅軍籍，用重典者黥其面。會赦，則有司上其罪狀，情輕者，縱之；重者，終身不釋」；刺在哪里、刺成什么形状是分等的——「凡犯盜，刺環於耳後：徒、流，方；杖，圓；三犯杖，移於面。</p>
+<p>徑不過五分」，先刺耳后，三犯杖罪才移上脸，径不过五分。</p>
+<p><strong>同代人当面说破过两件事。</strong>一是被刺的未必是恶人：熙宁三年那五条之其二说折杖之法「良民偶有抵冒，致傷肌體，為終身之辱；愚頑之徒，雖一時創痛，而終無愧恥」。二是它划了一道身份线：熙宁二年比部郎中张仲宣坐枉法赃，法官议「杖脊、黥配海島」，知审刑院苏颂言「且古者『刑不上大夫』，仲宣官五品，有罪得乘車，今刑為徒隸，其人雖無足矜，恐污辱衣冠爾」，于是「遂免杖、黥，流賀州。</p>
+<p>自是命官無杖、黥法」——<strong>刺在身上的圈，从此明文把一类人划在外面</strong>。刺配之前，《宋史·刑法志一》记「太祖受禪，始定折杖之制」，流徒杖笞各折为脊杖臀杖。</p>
+<p><strong>黥这个字比刺配老得多</strong>：《尚书·吕刑》记五刑之数「墨罰之屬千，劓罰之屬千，剕罰之屬五百，宮罰之屬三百，大辟之罰，其屬二百；五刑之屬三千」，墨即黥；维基文库本该篇于「墨辟疑赦」句下出异文校记，「墨」一作「黥」。</p>
+<p><strong>终点也有确年</strong>：维基文库所收《删除重刑诏》，光绪三十一年（1905）三月二十日内阁奉上谕，凌迟、枭首、戮尸永远删除之外，同诏另有一句「至緣坐各條，除知情者仍治罪外，餘著悉予寬免，其刺字等項，亦著概行革除」——<strong>刺字与缘坐是被同一道诏一起革除的</strong>；该诏落在库内清末新政（1901–1911）年段之内。中文维基「刺配」条目 REST 实测 404，w 挂母条目墨刑（该条描述即「在人脸上刺字的刑罚」），考据责任落在本卡。</p>
+<p>库内互见缇萦上书（前167）、王安石变法（1069）、唐律疏议（652）、大明律（1397）、大清律例（1646–1740）；水浒传（1589）里刺配是最常见的刑名场面，惟小说非一手，本条不引其文为证。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>975 诏、刺环分等、苏颂议、1905 诏四处，2026-08-30 由 action=raw 直取核得。</li>
+<li><span class="tag t-ok">信史</span>页名订正：库条 wsrc 作宋史/卷201，实测卷201 是刑法三（志第一百五十四），刑法一在卷199（志第一百五十二）。975 诏在卷199，刺环分等与苏颂议在卷201。两页页首皆挂 Textquality 25% 低校对标记。</li>
+<li><span class="tag t-ok">信史</span>限定：975 只是可系年的一个节点，不是刺配之始；站文不出现始于、创于。</li>
+<li><span class="tag t-ok">信史</span>「后晋天福年间创刺配」一说库内已判未能核实，本线不用，亦不充作两说之一并记。</li>
+<li><span class="tag t-ok">信史</span>站④（前167）与本站（975）相隔一千一百多年，站文已明写，不许读成废了又捡回来的连续动作。</li>
+<li><span class="tag t-ok">信史</span>1905 那道诏是本线唯一一处越过 1781 的年份，属经过权衡的例外：它是刺字这条律自身的终点，且刺字与缘坐同诏革除同时收拢本线的身体层与血缘层。处置是只给诏文与年月，一句评论都不加，不往 1905 之后走一个字。</li>
+<li><span class="tag t-ok">信史</span>伦理条一：刺字只写刺在哪里、刺多大、分几等，不写过程。</li>
+<li><span class="tag t-ok">信史</span>留档未用：《宋史·刑法志三》良民偶有抵冒，致傷肌體，為終身之辱——与苏颂议同轴，留一条即可。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">宋史/卷199 刑法志一（維基文庫 action=raw，33,985 字节，Textquality 25%），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">宋史/卷201 刑法志三（維基文庫 action=raw，38,338 字节，Textquality 25%），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">刪除重刑詔（維基文庫 action=raw，1,220 字节，Textquality 75%；光緒三十一年三月二十日內閣奉上諭），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">库内条目：刺配（js/events.js 第 882 行</a>
+</div>
+</details>
+</div></section>
+<section id="s8" data-year="1402" data-name="诛十族"><div class="wrap">
+<div class="num">八 / 十二</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="346.7" y1="16" x2="400.2" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="79.5" cy="16" r="3"/><circle class="rs-done" cx="132.9" cy="16" r="3"/><circle class="rs-done" cx="186.4" cy="16" r="3"/><circle class="rs-done" cx="239.8" cy="16" r="3"/><circle class="rs-done" cx="293.3" cy="16" r="3"/><circle class="rs-done" cx="346.7" cy="16" r="3"/><circle class="rs-cur" cx="400.2" cy="16" r="5.2"/><circle class="rs-todo" cx="453.6" cy="16" r="3"/><circle class="rs-todo" cx="507.1" cy="16" r="3"/><circle class="rs-todo" cx="560.5" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">商鞅变法</text><text class="rs-end" x="614.0" y="35" text-anchor="end">开豁贱籍</text><text class="rs-name" x="400.2" y="35" text-anchor="middle">诛十族</text></svg>
+<div class="yr">1402</div>
+<h2>朋友亦族 <span class="h2-ev">诛十族</span></h2>
+<p class="sub">1402　·　明　·　名人轶事</p>
+<p><strong>传说里的圈，比卷宗上的大。</strong></p>
+<p>方孝孺被诛十族，人人都听过。<strong>而这四个字，《明史》方孝孺本传一个也没有。</strong></p>
+<p><strong>逐层往回追，每一层的书都还在。</strong>最上游那一层没有十族：天顺间李贤《天順日錄》记到「夷其族」为止。现存最早的那个数字也没有十族：宋端仪《立齋閒錄》据档案立说——「今校南京錦衣衛鎮撫司監簿……載正學宗族抄扎人口有八百四十七人」，<strong>注意口径：这是查抄登记的人口，不是死者。</strong></p>
+<blockquote>十族」现存最早见于祝允明《野記》：「不過夷我九族耳！」「吾夷汝十族。」左右问是哪一族，答：「朋友亦族也。」祝允明卒于 1527，距事发一百二十余年。而八百七十三这个数字，出自一部根本不讲十族的书：《國朝獻徵錄》卷二十郑晓撰传作「宗族坐死者八百七十三人」，通篇不见十族。<strong>十族说出现之后，不采此说的写法仍在继续——层累不是一条直线。</strong>而清修《明史》仍不收，只作「宗族親友前後坐誅者數百人」</blockquote>
+<p><strong>三个数字口径各异，一个都不裁</strong>：847 是抄扎人口，873 是坐死者，數百人是正史的模糊说法——口径不同，不能相减。</p>
+<p><strong>要辟的是十族这四个字的来历，不是这桩案子。</strong>《明史》同卷另记一笔：万历十三年（1585）「釋坐孝孺謫戍者後裔……凡千三百餘人」——一百八十三年后放还的后人，比传说里的死者还多。</p>
+<a class="go" href="../timeline.html#line=zuifa&amp;at=8">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>「诛十族」这四个字，《明史》方孝孺本传里一个也没有。</strong>传说人人熟悉：明成祖命方孝孺草即位诏，方掷笔骂「不过夷我九族耳」，成祖答「吾夷汝十族」，把朋友门生算作第十族，株连八百余人。</p>
+<p><strong>逐层往回追，每一层都是维基文库上可逐字核对的原书</strong>，而这四个字出现得很晚。</p>
+<p><strong>最上游那一层没有十族</strong>：天顺间李贤（1408—1466）《天顺日录》记此事只到「文廟大怒，以凌遲之刑刑之，遂夷其族」为止（本库据维基文库 action=raw 逐字核得；宋端仪《立斋闲录》卷二转引同段作「以凌遲之刑刑之，夷其族」，少一「遂」字，两本异文并存不裁）。</p>
+<p><strong>最早的那个数字也没有十族</strong>：宋端仪（1448—1501）《立斋闲录》卷二末据档案立说——「今校南京錦衣衛鎮撫司監簿，除前編缺壞外，所存簿籍載正學宗族抄扎人口有八百四十七人」，下列族叔文度、族侄谅经良、族孙崇俭等名。</p>
+<p><strong>注意口径：这是抄扎（查抄登记）的人口数，不是死者数</strong>，二者不可混作一事；该卷通篇无「十族」。</p>
+<p><strong>「十族」现存最早见于祝允明（1461—1527）《野记》卷二</strong>，本库据维基文库逐字核得：「強使搦管，擲去，語益厲，曰：『不過夷我九族耳！』上怒云：『吾夷汝十族。』左右問：『何一族？』上曰：『朋友亦族也。』於是盡其九族之命而大搜天下為方友者殺之。」祝允明卒于1527，这一层距事发已一百二十余年。姜清（1483—？）《姜氏秘史》卷一亦有此说，只一句带过：「忤旨，因有滅十族等語。</p>
+<p>上大怒，即收捕其族黨，盡誅之。」</p>
+<p><strong>而「八百七十三人」这个数字，出自一部根本不讲十族的书，作者还比祝允明晚</strong>：《国朝献征录》卷之二十〈文学博士方公孝孺传〉署「鄭曉」（郑晓1499—1566；焦竑1540—1619编，本库据维基文库 action=raw 逐字核得），传文作「文皇大怒，命磔諸市……宗族坐死者八百七十三人」，通篇不见「十族」——<strong>可见十族说出现之后，不采此说的写法仍在继续，层累不是一条直线</strong>。</p>
+<p>（中文维基该条据李谷悦文称此传即郑晓《吾学编》所收，本库未获《吾学编》原书对勘，只记献征录所载。）</p>
+<p><strong>两样合流要到清初</strong>：谷应泰（1620—1690）《明史纪事本末》卷十八〈壬午殉难〉才把对话与数字并在一处——「文皇大聲曰：『汝安能遽死。即死，獨不顧九族乎？』孝孺曰：『便十族奈我何！』」，又记「初，籍十族，每逮至，輒以示孝孺，孝孺執不從，乃及母族林彥清等、妻族鄭原吉等。九族既戮，亦皆不從，乃及朋友門生廖鏞、林嘉猷等為一族，並坐，然後詔磔于市，坐死者八百七十三人，謫戍絕徼死者不可勝計。」</p>
+<p><strong>清修正史仍不收</strong>：《明史》卷一四一方孝孺传只作「孝孺之死，宗族親友前後坐誅者數百人」——既不取847，也不取873，更无「十族」。</p>
+<p><strong>三个数字口径各异，皆不裁</strong>：847是锦衣卫簿籍上的抄扎人口，873是「坐死者」，「数百人」是正史的模糊说法，口径不同不能相减。</p>
+<p><strong>连刑名也是两说</strong>：《天顺日录》作凌迟，《明史》与献征录所载郑晓传皆作「命磔諸市」，本条不弥合。</p>
+<p><strong>层累不止在人数上</strong>：绝命词《明史》《明史纪事本末》与郑晓传皆作「天降亂離兮孰知其由，奸臣得計兮謀國用猶」以下四句，而《立斋闲录》卷二引成化己亥（1479）谢铎《逊志斋集》序所录，多出「三綱易位兮四維不修。骨肉相殘兮至親為讎」两句。</p>
+<p><strong>官方文书何时改口，本库未能亲核</strong>：中文维基「誅十族」条据李谷悦文称万历间公文已径称十族，《明熹宗实录》卷二十二天启二年五月初四日（1622年6月12日）条亦然——距事发已两百二十年；本库未获《明熹宗实录》可核文本，只记此说不作定论，《明太宗实录》一层同样未核，不引。</p>
+<p><strong>研究层单独标明</strong>：李谷悦《方孝孺殉难事迹的叙事演化与「诛十族」说考》（《史学月刊》2014年第5期，37—47页）是中文维基该条的主要依据，其说以为「十族」本与《野记》中蟒蛇复仇的因果报应故事相配，后因东林党张扬士气而被当作史实——<strong>本库未获该文原刊，凡据此文之说一律作转述层，不作一手</strong>。该条自述：「方孝孺被『誅十族』的記載首見於祝允明的《野記》，本是與《野記》中蟒蛇復仇相結合的故事……而张廷玉主編的正史《明史》也沒有採用方孝孺被『誅十族』的說法。」网传「诛杀历时七日七夜」一类渲染细节未查得出处，不采。</p>
+<p><strong>案子还有一个可核的收尾</strong>：《明史》同卷记万历十三年（1585）三月「釋坐孝孺謫戍者後裔，浙江、江西、福建、四川、廣東凡千三百餘人」——一百八十三年后，五省放还的后人，比传说里的死者还多。姚广孝当初的求情也在同卷：「殺孝孺，天下讀書種子絕矣。」互见库内靖难之役（1399—1402，这道诏书正是那一战的收梢）、永乐大典与永乐盛世；国史之狱（450）同押株连一韵，但那是北魏崔浩案、另一条线，不并作一事。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>本站是全线辟谣站，照库条原样搬，不简化。层累链五部原书 2026-08-30 逐部 raw 直取核得。</li>
+<li><span class="tag t-ok">信史</span>最上游《天順日錄》一层无十族，本卷据《立齋閒錄》卷2 所引核得，其文止于以凌遲之刑刑之，夷其族；站文只引夷其族三字，凌迟二字属刑罚场面，照伦理条一不入线文。</li>
+<li><span class="tag t-ok">信史</span>最早的数字 847 出《立齋閒錄》卷2（50,974 字节），口径是锦衣卫镇抚司监簿上的抄扎人口，不是死者。</li>
+<li><span class="tag t-ok">信史</span>「十族」现存最早见祝允明《野記》（38,071 字节），祝卒于 1527，距事发一百二十余年。</li>
+<li><span class="tag t-ok">信史</span>873 出《國朝獻徵錄》卷之二十所收郑晓撰传（94,586 字节），该传通篇不见十族——十族说出现之后，不采此说的写法仍在继续。</li>
+<li><span class="tag t-ok">信史</span>该本无标点，命磔諸市与宗族坐死者八百七十三人皆为原文连读；本线只引其字，不代加标点后当整句引。</li>
+<li><span class="tag t-ok">信史</span>清修《明史》卷141（23,257 字节）仍不收，只作宗族親友前後坐誅者數百人。</li>
+<li><span class="tag t-ok">信史</span>三个数字口径各异，一个都不裁，且不能相减：847 抄扎人口／873 坐死者／數百人 正史模糊说法。</li>
+<li><span class="tag t-ok">信史</span>刑名两说不弥合：《天順日錄》作凌迟，《明史》与郑晓传皆作磔諸市。照伦理条一，本站定稿不叙任何刑名，故这两说只留在本考据栏，不进站文，站文里也就没有需要它的限定语。</li>
+<li><span class="tag t-ok">信史</span>李谷悦文（《史学月刊》2014-5）本卷未获原刊，整层不进站文；层累链已能由五部原书自证。</li>
+<li><span class="tag t-ok">信史</span>网传七日七夜一类渲染细节不采。《明熹宗实录》公文改口一层未获可核文本，不写。</li>
+<li><span class="tag t-ok">信史</span>伦理条四：要辟的是十族这四个字的来历，不是这桩案子——《明史》仍作坐诛者数百人，不许用一个辟谣去结掉整桩案子。</li>
+<li><span class="tag t-ok">信史</span>万历十三年释还千三百余人一节由《明史》同卷核得，是本站的可核收尾。</li>
+<li><span class="tag t-ok">信史</span>三姊妹分工：本站只取三个数字的口径，拒草诏那一层留给史笔线。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">立齋閒錄/卷2（維基文庫 action=raw，50,974 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">野記/2（祝允明，維基文庫 action=raw，38,071 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">國朝獻徵錄/卷之二十（鄭曉撰文學博士方公孝孺傳，維基文庫 action=raw，94,586 字节，无标点本），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">明史/卷141（維基文庫 action=raw，23,257 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">库内条目：诛十族（js/events.js 第 1143 行</a>
+</div>
+</details>
+</div></section>
+<section id="s9" data-year="1662" data-name="流放宁古塔"><div class="wrap">
+<div class="num">九 / 十二</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="400.2" y1="16" x2="453.6" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="79.5" cy="16" r="3"/><circle class="rs-done" cx="132.9" cy="16" r="3"/><circle class="rs-done" cx="186.4" cy="16" r="3"/><circle class="rs-done" cx="239.8" cy="16" r="3"/><circle class="rs-done" cx="293.3" cy="16" r="3"/><circle class="rs-done" cx="346.7" cy="16" r="3"/><circle class="rs-done" cx="400.2" cy="16" r="3"/><circle class="rs-cur" cx="453.6" cy="16" r="5.2"/><circle class="rs-todo" cx="507.1" cy="16" r="3"/><circle class="rs-todo" cx="560.5" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">商鞅变法</text><text class="rs-end" x="614.0" y="35" text-anchor="end">开豁贱籍</text><text class="rs-name" x="453.6" y="35" text-anchor="middle">流放宁古塔</text></svg>
+<div class="yr">1662</div>
+<h2>二月初五 <span class="h2-ev">流放宁古塔</span></h2>
+<p class="sub">1662　·　清　·　制度</p>
+<p><strong>圈画在大地上。</strong></p>
+<p>清初把重犯发往东北极边，宁古塔三字因此成了流刑的代称。它没有起讫可系——本线锚在有人写下它的那一天。方拱乾《絕域紀略》序末自题：「康熙壬寅七月二十七日，書于荷陰客舍。」壬寅即康熙元年，1662。</p>
+<p><strong>这本书是回来的人写的。</strong>开篇第一句：「老夫旣往而復還，豈非天哉？」他还记下自己曾催吴兆骞也写一部，没写成；吴的原话是「此生豈有還理？」——催人写书的那个回来了，被催的那个没有。</p>
+<p><strong>书里连这地名有没有塔都要交代</strong>：「寧古塔，不知何方輿……無寸碣可稽，無故老可問。」下文记相传满人呼六为宁公、呼坐为特，讹成宁古塔，末了断「固無臺無塔也」。另一部流人书给的来历不同，结论相同——两说并存，皆不取。</p>
+<p><strong>全书最刺人的一句不在写刑，在写活计。</strong>风俗一篇记当地女子舂米汲水无昼夜：「舂餘卽汲霜雪，井溜如山，赤脚單衣悲號於肩擔者不可紀，皆中華富貴家裔也。傷哉！」——<strong>被算进这个圈里来的，是罪人的家眷。</strong></p>
+<p><strong>家眷进圈的日子有一手确日，流人自己的没有。</strong>吴兆骞之子在《寧古塔紀略》记母亲赴戍：「庚子冬，自吳江起行」，「辛丑二月初五日，到戍所」。<strong>本线能拿到的唯一一个到戍确日，属于一个没有被判过罪的人。</strong></p>
+<p>（同在这几年，另一道令把沿海良民迁走：迁的无罪，流的有罪。）</p>
+<a class="go" href="../timeline.html#line=zuifa&amp;at=9">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>清初把重犯发往东北极边，「宁古塔」三字因此成了流刑的代称。</p>
+<p><strong>本条锚在流人写下的头一部宁古塔专书，不锚设官之年，也不锚判罚之年</strong>——照库内匠籍（锚在废籍）、部曲（锚在放免诏）两条的换锚办法：这项刑罚行用数十年，起讫皆无单点可系，而有人到了那里、并且把它写下来的那一刻有确年。方拱乾《绝域纪略》序末自题（本库据维基文库 action=raw 取原文逐字核，下同）：「康熙壬寅七月二十七日，書于荷陰客舍。」康熙壬寅即康熙元年，1662；文库该页 header 把这一日折作1662年9月9日，本库未另验算，只记其折算。</p>
+<p>序里交代了写它的由头：从戍所生还，亲友问个不停，「邸舍無事，偶追憶而條晰之，以省問對」；开篇第一句是「老夫旣往而復還，豈非天哉？」他还记下自己曾催吴汉槎（吴兆骞）与儿辈也各写一部，都没写成，吴的原话是「此生豈有還理？」——<strong>催人写书的那个回来了，被催的那个没有。</strong><strong>书里连这个地名有没有实物都要交代</strong>：〈流传〉开头「寧古塔，不知何方輿，歴代不知何所屬。</p>
+<p>數千里內外，無寸碣可稽，無故老可問」；下文记相传满人呼「六」为「寧公」、呼「坐」为「特」，故曰「寧公特」，一讹为「寧公臺」，再讹为「寧古塔」，末了断一句「固無臺無塔也」。另一部流人书给的来历不同而结论相同——吴桭臣《宁古塔纪略》文库本作「雖以塔名，實無塔」，又「滿洲稱六爲甯古，箇爲塔，其言甯古塔，猶華言六箇也」。一为讹变说、一为满语数词说，<strong>并存不裁</strong>。</p>
+<p><strong>在戍三年有内证</strong>：《绝域纪略》自记「居三年，唯兩日奇寒」，并把那两天分别系于己亥、庚子两年（文库页折作1659与1660）。他写的是旧城：「無疆界，無城郭，枕河而居，樹短柴柵，環三里」，「闢四門，而命之曰城」——两句之间文库本夹一条校勘注，记《昭代丛书》本「里」作「重」，两本并存不裁。</p>
+<p><strong>全书最刺人的一句不在写刑，在写活计</strong>：〈风俗〉记当地女子舂米汲水无昼夜，「舂餘卽汲霜雪，井溜如山，赤脚單衣悲號於肩擔者不可紀，皆中華富貴家裔也。傷哉！」——被算进这个圈里来的，是罪人的家眷。</p>
+<p><strong>而家眷进圈的日子有一手确日，流人自己的没有</strong>：《宁古塔纪略》开篇记作者之母（吴兆骞妻）赴戍，「庚子冬，自吳江起行」，「遣家人吳御及沈華夫妻同送我母至甯古塔」，「辛丑二月初五日，到戍所」——庚子年冬自吴江启程，辛丑年二月初五抵达（1660—1661）；作者本人「甲辰十月十四日寅時，生予」，即生在戍所。</p>
+<p><strong>本条能拿到的唯一一个一手到戍日，属于一个没有被判罪的人。</strong><strong>四处以文库本原文勘中文维基</strong>：①维基「方拱乾」条把《绝域纪略》与《宁古塔志》并列为两部著作，而文库本题下自注，《昭代丛书》本正题即作《宁古塔志》（该本「宁」字用异体），作者署名两本亦异——同书异题，不是两书；②维基「宁古塔」条把「以臻無爲之治」一语系于方拱乾名下，文库本此语出自卷末的跋（署名「禦兒無衣曹」，并注《说铃》本无此跋），非方氏自道；同处另引的「道不拾遺物，物遺則拾之置于公，俟失者往認焉」则确在方氏〈风俗〉本文之中；③维基「方拱乾」条引其序作「衰年性健忘，似多漏軼記」，文库本断句在「似多漏軼」，「記」字属下句；④维基「吴兆騫」条系其妻葛采真、妹吴文柔出关于康熙二年（1663），而《宁古塔纪略》作者以亲子身份记的是庚子冬起行、辛丑二月初五到戍——<strong>两说相差两年，本条从一手，维基一说并记</strong>。</p>
+<p><strong>另两条换锚候选各有败处，一并留档</strong>：①<strong>设官之年</strong>——中文维基「吉林将军」条（转引赵云田《清代的吉林将军》，中华文史网）作顺治十年（1653）始置宁古塔昂邦章京、康熙元年（1662）改为镇守宁古塔等处将军；「宁古塔」条则作顺治三年（1646）设奉天昂邦章京、顺治九年（1652）七月命梅勒章京沙尔虎达等驻防宁古塔、康熙元年（1662）改为宁古塔将军。</p>
+<p>设官一层各源不一，并存不裁；改称将军一层两条目一致，恰与本条锚年同落一年。但设官是建置不是罪罚，本条不取它作锚。②<strong>流人抵戍之年</strong>——中文维基「丁酉科場案」条把顺天、江南、河南三闱的判罚系于顺治十四至十五年（1657—1658），至于流人本人何时到达戍所，本库未查到一手依据；坊间转载文章所记的顺治十六年闰三月初三起解、七月十一日抵戍一说，通篇无脚注、未溯及年谱方志家书任何一种，<strong>未能核实，不采</strong>。</p>
+<p><strong>转述层（皆据中文维基相关条目，原书未获）</strong>：顺治十二年陈嘉猷发往宁古塔为此地流人之始（该说无脚注，且「陈嘉猷」在中文维基只是一张消歧义页，本库只记其说）；丁酉顺天乡试案「有一百零八人流放寧古塔」（无脚注，只记不作定数）；吴兆骞顺治十四年中江南乡试举人、以此案发遣，康熙二十年（1681）经纳兰明珠、徐乾学、徐元文等纳资赎归，「前後歷經二十三年」；方拱乾顺治十八年（1661）因家属认修京师前门城楼工程、依《大清会典事例》赎罪，十月赦还，将别时题壁「莫言萬里無人境，兀兀三年認作家」（维基注出《甦庵集》，本库未获原集）；张缙彦语「流徙來者，多吳、越、閩、廣、齊、楚、梁、秦、燕、趙之人」（维基注出《域外集》，未获原书）。</p>
+<p>维基「宁古塔」条另把「人說黃泉路，若到了寧古塔，便有十個黃泉也不怕了」一语系于方拱乾，而该处脚注指的却是吴兆骞〈上父母书〉，注与文不相配，<strong>出处未能核实，不采</strong>。</p>
+<p><strong>三部流人书的年份</strong>：《宁古塔纪略》文库本 header 系年1721，其卷首序记作者辛亥年见到一部流人诗稿，此后「閱六七載，漢槎之《秋笳集》始寄歸，崑山司寇公爲刋木行世」；中文维基无「秋笳集」条目（实测404），文库该条目只是一张三卷目录，无序跋纪年，《秋笳集》成书与刊行的确年本库未能核实。</p>
+<p><strong>就这三部书的文库本而言，只有《绝域纪略》的自题纪年确到月日，本条的锚就落在它上面。</strong><strong>地在何处</strong>：宁古塔有新旧二城，旧城在今黑龙江海林市西南、海浪河南岸旧街，新城在今宁安市，康熙五年（1666）迁建（据中文维基「宁古塔」条）；《宁古塔纪略》另记一座「有木城兩重」的城，「去舊城六十餘里」，即迁建后的那一座。维基多处径以「今宁安市」标顺治年间的流放地，而新城迟至康熙五年方有——方拱乾所记的是那座只有木栅四门的旧城，故本条主点落海林，新城并列。</p>
+<p>康熙十五年宁古塔将军移治吉林乌拉（「宁古塔」条折作1676年、「吉林将军」条折作1677年，两处折算不一，并存不裁），此地降为副都统辖区；1860年《中俄北京条约》后，旧称宁古塔的东部大片划归俄国。互见库内迁海令（1661）：同在这几年，一道令把沿海良民整片迁走，一条路把罪人整批送往极北，<strong>迁的无罪，流的有罪</strong>；又郑芝龙受抚（1628）——中文维基「宁古塔」条记郑芝龙亦流放此地、一说并处死于此（转述层，未核）。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>本站是次呼吸（见 craft 第二节排法 5）：质地天然是松的，只给两个画面与一个日期，不给新论点。</li>
+<li><span class="tag t-ok">信史</span>锚年 1662 出方拱乾《絕域紀略》序末自题，2026-08-30 raw 直取核得（18,430 字节）；文库该处年份挂 YL 模板（康熙壬寅｜1662年），本卷已展开核对。</li>
+<li><span class="tag t-ok">信史</span>文库页把该日折作 1662-09-09，本卷未另验算，只记其折算。</li>
+<li><span class="tag t-ok">信史</span>地名来历两说：《絕域紀略》讹变说（呼六为宁公、呼坐为特），《寧古塔紀略》满语数词说（宁古为六，塔为个）。两说并存，皆不取。</li>
+<li><span class="tag t-ok">信史</span>本站的论点在一个日期上：吴兆骞之子在《寧古塔紀略》记母亲赴戍庚子冬自吳江起行、辛丑二月初五日到戍所——本线能拿到的唯一一个到戍确日，属于一个没有被判过罪的人。</li>
+<li><span class="tag t-ok">信史</span>丁酉案流人抵戍之年无一手依据，不写。设官之年各源不一，且设官是建置不是罪罚，不取作锚。</li>
+<li><span class="tag t-ok">信史</span>迁海令（1661）不设站，降为本站末一句对照旁注：迁的无罪，流的有罪（库条自身已互见）。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">絕域紀略（方拱乾，維基文庫 action=raw，18,430 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">寧古塔紀略（吳桭臣，維基文庫 action=raw，43,409 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">库内条目：流放宁古塔（js/events.js 第 1260 行</a>
+</div>
+</details>
+</div></section>
+<section id="s10" data-year="1774" data-name="清代文字狱"><div class="wrap">
+<div class="num">十 / 十二</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="453.6" y1="16" x2="507.1" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="79.5" cy="16" r="3"/><circle class="rs-done" cx="132.9" cy="16" r="3"/><circle class="rs-done" cx="186.4" cy="16" r="3"/><circle class="rs-done" cx="239.8" cy="16" r="3"/><circle class="rs-done" cx="293.3" cy="16" r="3"/><circle class="rs-done" cx="346.7" cy="16" r="3"/><circle class="rs-done" cx="400.2" cy="16" r="3"/><circle class="rs-done" cx="453.6" cy="16" r="3"/><circle class="rs-cur" cx="507.1" cy="16" r="5.2"/><circle class="rs-todo" cx="560.5" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">商鞅变法</text><text class="rs-end" x="614.0" y="35" text-anchor="end">开豁贱籍</text><text class="rs-name" x="507.1" y="35" text-anchor="middle">清代文字狱</text></svg>
+<div class="yr">1774</div>
+<h2>及于刻工 <span class="h2-ev">清代文字狱</span></h2>
+<p class="sub">1774　·　清　·　制度</p>
+<p><strong>圈画到了跟写书的人毫无关系的人身上。</strong></p>
+<p>从文人著作里摘字句、罗织罪名，清代查办尤密。本线取乾隆三十九年（1774）作坐标，各案自系其年。</p>
+<p><strong>一案可见圈画到哪一层。</strong>康熙二年庄廷鑨明史案。全祖望《鮚埼亭集外編》卷二十二《江浙兩大獄記》两句直指著书人以外的人：「時江楚諸名士列名書中者皆死，刻工及鬻書者同日刑」——刻版的工匠与卖书的商人，与名士同日行刑。买书的一层更远：「滸墅關榷貨主事李尚白，聞閶門書坊有是書，遣役購之……其隣一朱姓者少待，及書賈返，朱為判其價；時主事已入京，以購逆書，立斬，書賈及役斬於杭，隣朱姓者，因年逾七十，免死，偕其妻發極邊。」——<strong>替人议了一次价钱的邻居，和妻子一起被算进了圈里。</strong></p>
+<p><strong>史源层级要说明。</strong>全祖望生在此案四十余年之后，所记距事发约九十年，是清人文集追记，不是同时代档案；他自道作记之意「葢爲妄作者戒也」。本线照录其文、标其人其年，不当档案用。数字同理：他给的总数是他一家之数，通行所说的牵连数千乃至上万是概述不是统计，两者不能相加。</p>
+<p><strong>同一篇里另有一人自己选了不减。</strong>作序的李令皙父子皆伏法，其幼子年十六，「法司令其減供一歲，例得免死，充軍」——口供改一岁就能活。他答：「予見父兄死，不忍獨生。」</p>
+<a class="go" href="../timeline.html#line=zuifa&amp;at=10">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>统治者从文人著作中摘取字句、罗织罪名加以迫害，清代查办尤密，规模较大者牵连可达数千乃至上万人。龚自珍后来感叹「避席畏闻文字狱，著书只为稻粱谋」，即指此风气对士人心理的长期压制。</p>
+<p><strong>本条是通条不是个案条</strong>：y 系乾隆三十九年（1774），只是这一现象上的一个坐标，所举各案一律自系其年，上引龚自珍已在道光朝。</p>
+<p><strong>牵连到哪一层，一案可见：康熙二年（1663）庄廷鑨明史案。</strong>全祖望《鮚埼亭集外編》卷二二《江浙兩大獄記》（维基文库四部丛刊本）两句直指著书人以外的人：「時江楚諸名士列名書中者皆死，刻工及鬻書者同日刑」——刻版的工匠与卖书的商人，与列名书中的名士同日行刑。买书的一层更远：「滸墅關榷貨主事李尚白，聞閶門書坊有是書，遣役購之，適書賈他出，役坐，其隣一朱姓者少待，及書賈返，朱為判其價；時主事已入京，以購逆書，立斬，書賈及役斬於杭，隣朱姓者，因年逾七十，免死，偕其妻發極邊。」——遣人买书的官员处斩，书商与差役斩于杭州，只在旁边替他议了个价钱的邻人年过七十免死，与妻同发极边。</p>
+<p>同记另有一笔：作序的李令皙父子皆伏法，其幼子年十六，「法司令其減供一歲，例得免死，充軍」，答曰「予見父兄死，不忍獨生」，卒不易其供而死——例本可以免他一死，他自己不受。</p>
+<p><strong>史源层级必须说明</strong>：全祖望（1705—1755）生在此案四十余年之后，所记距事发约九十年，属清人文集追记，不是同时代档案；他自道作记之意是「予備記其始末，葢爲妄作者戒也」，立场是训诫。故照库内诛十族条处理祝允明《野记》的老办法：录其原文、标其人其年与年代距离，不当档案用。</p>
+<p><strong>数字不并</strong>：全氏给此案的总数是「死者七十餘人，婦女並給邊」，那是他一家之数；本条原有的数千乃至上万是概述不是统计，两者不可相加相较。乾隆朝更贴近本条锚年的个案（徐述夔一柱楼诗案、王锡侯字贯案）本轮未核，暂不入。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>全站属转述层：全祖望（1705—1755）生在庄廷鑨案四十余年之后，所记距事发约九十年，是清人文集追记，不是同时代档案；其自道作记之意葢爲妄作者戒也，立场是训诫。照录其文、标其人其年与年代距离，不当档案用。</li>
+<li><span class="tag t-ok">信史</span>《江浙兩大獄記》2026-08-30 raw 直取核得（3,858 字节）；页首 header 自系 author＝全祖望、times＝清、from＝鮚埼亭集(四部叢刊本)·外編卷22。</li>
+<li><span class="tag t-ok">信史</span>本站取的是圈及刻工、鬻书者、买书者、替人议价的邻人这一层——圈画到了跟写书的人毫无关系的人身上。</li>
+<li><span class="tag t-ok">信史</span>数字不并：全氏给此案的总数死者七十餘人是他一家之数；库条原有的牵连可达数千乃至上万是概述不是统计，两者不能相加相较。</li>
+<li><span class="tag t-ok">信史</span>李令皙幼子一节是本线视角（圈外的那一步）第二次落到具体人脸上，与站⑤景毅呼应。</li>
+<li><span class="tag t-ok">信史</span>本条锚年 1774 只是这一现象上的一个坐标，所举各案自系其年；徐述夔、王锡侯两案库内未核，本线不入。</li>
+<li><span class="tag t-ok">信史</span>三姊妹分工：本站只取圈及刻工鬻书者买书者，摘句罗织那一层留给史笔线。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">江浙兩大獄記（全祖望《鮚埼亭集》外編卷22，四部叢刊本；維基文庫 action=raw，3,858 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">库内条目：清代文字狱（js/events.js 第 1344 行</a>
+</div>
+</details>
+</div></section>
+<section id="s11" data-year="1781" data-name="甘肃冒赈案"><div class="wrap">
+<div class="num">十一 / 十二</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="507.1" y1="16" x2="560.5" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="79.5" cy="16" r="3"/><circle class="rs-done" cx="132.9" cy="16" r="3"/><circle class="rs-done" cx="186.4" cy="16" r="3"/><circle class="rs-done" cx="239.8" cy="16" r="3"/><circle class="rs-done" cx="293.3" cy="16" r="3"/><circle class="rs-done" cx="346.7" cy="16" r="3"/><circle class="rs-done" cx="400.2" cy="16" r="3"/><circle class="rs-done" cx="453.6" cy="16" r="3"/><circle class="rs-done" cx="507.1" cy="16" r="3"/><circle class="rs-cur" cx="560.5" cy="16" r="5.2"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">商鞅变法</text><text class="rs-name" x="560.5" y="35" text-anchor="middle">甘肃冒赈案</text></svg>
+<div class="yr">1781</div>
+<h2>非常之罪 <span class="h2-ev">甘肃冒赈案</span></h2>
+<p class="sub">1781　·　清　·　制度</p>
+<p><strong>古训与破例同场，而且是同一个人当场办的。</strong></p>
+<p>乾隆年间甘肃布政使王亶望借捐监之制中饱。捐监本为士民捐粮换监生资格、以实仓储；他到任后请令民改输银——收本色改折色，仓里只剩账没有粮，赈灾的名目成了分赃的名目。案发的由头《清史稿》只两句：阿桂行军途中一路报雨，「上因疑甘肅頻歲報旱不實」。抄家的结果六字：「籍其家，得金銀逾百萬。」</p>
+<p><strong>给这案定性的是乾隆自己的一道谕。</strong>《欽定蘭州紀畧》卷十七：「甘肅揑災冒賑一案骩法營私……為從來未有之奇貪異事」，又：「非不知罪人不孥而此實非常之罪也。」——<strong>罪人不孥，就是本线第三站那道被文帝废掉的收律。皇帝先认下这条古训，再宣布这一案不适用——古训不是没人知道，是每次都有一个「但是」。</strong></p>
+<p><strong>处分名单正史开得清楚，处决总数却没有整数。</strong>《清史稿》记「獄定，上命斬亶望，賜勒爾謹自裁，廷贊論絞，並命即蘭州斬全迪」；线画在「冒賑至二萬以上皆死」，「於是坐斬者棟等二十二人，餘譴黜有差」；后头还有一批，「又誅閔鵷元等十一人」。档案一侧能点出名目的约三十五人，正史自己留了「餘譴黜有差」这条尾巴。另有几个流传甚广的整数，本轮未见一手支撑，并存不取。</p>
+<p>乾隆还有一句：「此二十二人之死，皆亶望導之使陷於法，與亶望殺之何異。」</p>
+<a class="go" href="../timeline.html#line=zuifa&amp;at=11">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>案子是从两纸对不上的奏报里翻出来的。</strong>《清史稿》卷三三九王亶望传（「王亶望，山西臨汾人」）写案发的由头只有两句：「阿桂報師行亦屢言雨」，而「上因疑甘肅頻歲報旱不實」——行军途中一路报雨，甘肃却年年报旱请赈。同传随即写「四十六年，命大學士阿桂如浙江勘工」，其时亶望已迁「浙江布政使」，人在浙江被逮。</p>
+<p><strong>被反过来用的是捐监这项制度</strong>：本为士民捐纳粮米（传作「監糧」）换取监生资格、以实仓储，亶望到任后申「陝甘總督勒爾謹」，「以內地倉儲未實為辭」请诸州县皆得收捐，又请「令民改輸銀」——收本色改折色，仓里从此只剩账、没有粮，赈灾的名目就此成了分赃的名目。抄家的结果，传里只有六个字：「籍其家，得金銀逾百萬」。</p>
+<p><strong>处分名单正史开得清楚，处决总数却没有一个整数。</strong>同传：「獄定，上命斬亶望，賜勒爾謹自裁，廷贊論絞，並命即蘭州斬全迪」——蒋全迪传作「蘭州知府蔣全迪」，本条落点即取此处；随后「遂令阿桂按治諸州縣」，线画在「冒賑至二萬以上皆死」，于是「於是坐斬者棟等二十二人，餘譴黜有差」（程栋，传作「皋蘭知縣程棟」）。乾隆自己有一句：「此二十二人之死，皆亶望導之使陷於法，與亶望殺之何異」。</p>
+<p>后头还有一批：「陝甘總督李侍堯續發得賕諸吏，又誅閔鵷元等十一人，罪董熙等六人」。官修《欽定蘭州紀畧》卷十八与此互证：「就其中情節最重之程棟等二十二犯先予勾决」。</p>
+<p><strong>档案一侧能点出名目的死刑约三十五人（二十二＋十一＋亶望＋全迪），而正史自己留了「餘譴黜有差」这条尾巴。</strong>中文维基该条正文另给正法「五十六名」、免死流放「四十六名」，涉案「113人」，追赃「281余万两」——本轮核这几处均无脚注，亦未见任何一手支撑，故与档案数并存，不取一舍一。</p>
+<p><strong>给这案子定性的是乾隆自己的一道谕。</strong>《欽定蘭州紀畧》卷十七（乾隆四十六年，系于辛亥条下）：「甘肅揑災冒賑一案骩法營私大小官員通同一氣為從來未有之奇貪異事」，又「非不知罪人不孥而此實非常之罪也」——罪人不孥是不株连妻孥的古训，皇帝先认这条古训，再宣布这一案不适用。</p>
+<p><strong>流传极广的另一句「上下勾通，侵帑剥民，盈千累万，为从来未有之奇贪异事」本条不用</strong>：本轮在《蘭州紀畧》已查卷次与《清實錄》乾隆四十六年七月（卷一一三六）均未核到，意思相近而字句不同，按二手转述处理。</p>
+<p><strong>抄家的人自己栽在抄家上。</strong>查抄王亶望家产由闽浙总督陈辉祖经手，其后以牟利营私获罪，《清史稿》同卷陈辉祖传（「陳輝祖，湖南祁陽人」）末句判词与亶望同档：「罪無異亶望，賜自裁」——他动的具体手脚（查抄时以次充好、私易赃物）各源皆有其说，本轮未取得一手逐字，故只记罪名不记手法。</p>
+<p><strong>赐死之年两说不裁</strong>：同传把这句系在「四十七年」一段之末，全传并无「四十八年」字样，中文维基则作卒于1783年；本条因此不另立 y2，也不替读者选边，这条支线是否另立条目留待后议。别名「甘肃米案」出自该条开篇「又称甘肃米案」，本轮实测无独立词条（404），故不作正题。</p>
+<p><strong>同年同省的另一面在库内另条</strong>：苏四十三起义（1781）记的是循化的民变，这一条记的是全省的吏治——两条同挂一年，本是一件事的两头。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>乾隆两句定性语 2026-08-30 由《欽定蘭州紀畧 (四庫全書本)》卷17 action=raw 直取核得（15,831 字节）；该本无标点，本线引文照原文连读，只在句末加句号。</li>
+<li><span class="tag t-ok">信史</span>处分名单、坐斩二十二人、又诛十一人、餘譴黜有差、乾隆二十二人之死一句，同日由《清史稿》卷339 核得（24,710 字节）。</li>
+<li><span class="tag t-ok">信史</span>处决总数无整数：档案一侧能点出名目的约三十五人（22＋11＋王亶望＋蒋全迪），而正史自己留了餘譴黜有差这条尾巴。另有几个流传甚广的整数本轮未见任何一手支撑，与档案数并存，不取一说。</li>
+<li><span class="tag t-ok">信史</span>罪人不孥即站③那道被文帝废掉的收律——本线的钩子在此还账。</li>
+<li><span class="tag t-ok">信史</span>流传极广的上下勾通、侵帑剥民一句库条已判按二手转述处理，本线不用。</li>
+<li><span class="tag t-ok">信史</span>陈辉祖赐死之年两说，本线未用此层。</li>
+<li><span class="tag t-ok">信史</span>伦理条五：只给做了什么（有出处），不给动机审判；不加贪官自有报应一类评语。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">欽定蘭州紀畧 (四庫全書本)/卷17（維基文庫 action=raw，15,831 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">清史稿/卷339 王亶望傳（維基文庫 action=raw，24,710 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">库内条目：甘肃冒赈案（js/events.js 第 1282 行</a>
+</div>
+</details>
+</div></section>
+<section id="s12" data-year="1723" data-name="开豁贱籍"><div class="wrap">
+<div class="num">十二 / 十二</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="560.5" y1="16" x2="614.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="79.5" cy="16" r="3"/><circle class="rs-done" cx="132.9" cy="16" r="3"/><circle class="rs-done" cx="186.4" cy="16" r="3"/><circle class="rs-done" cx="239.8" cy="16" r="3"/><circle class="rs-done" cx="293.3" cy="16" r="3"/><circle class="rs-done" cx="346.7" cy="16" r="3"/><circle class="rs-done" cx="400.2" cy="16" r="3"/><circle class="rs-done" cx="453.6" cy="16" r="3"/><circle class="rs-done" cx="507.1" cy="16" r="3"/><circle class="rs-done" cx="560.5" cy="16" r="3"/><circle class="rs-cur" cx="614.0" cy="16" r="5.2"/><text class="rs-end" x="26.0" y="35" text-anchor="start">商鞅变法</text><text class="rs-name" x="614.0" y="35" text-anchor="end">开豁贱籍</text></svg>
+<div class="yr">1723</div>
+<h2>改业为良 <span class="h2-ev">开豁贱籍</span></h2>
+<p class="sub">1723　·　清　·　制度</p>
+<p><strong>这一站要往回走五十八年。</strong>刚才那两站是 1774 与 1781；松开一个圈的那道谕，落在 1723。<strong>这条线不是一条越走越松的线：松开与收紧同时在场，而且松开在前。</strong></p>
+<p>雍正朝一连几道谕旨，把几个世代不得为良的群体从贱籍划出来。开头那道全文只有一句：《清實錄·世宗憲皇帝實錄》卷六，雍正元年四月戊辰：「除山西、陝西、教坊樂籍。改業為良民。」——<strong>十四个字。</strong></p>
+<p>乐户的来历，《清史稿·食貨志一》记作「山西等省有樂戶，先世因明建文末不附燕兵，編為樂籍」——这是正史的说法，本线照录，不另加考订。其后各支陆续跟进：元年并谕浙江之惰民、苏州之丐户「操業與樂籍無異，亦削除其籍」；五年谕徽州之伴儅、宁国之世仆「亦諭開除」；七年谕广东之疍户准于近水村庄居住，「與齊民一體編入保甲」。<strong>六种身份，一句改業為良。</strong></p>
+<p><strong>脱籍不等于脱身。</strong>乾隆三十六年陕西学政刘嶟奏请定禁例，部议：「凡報官改業後，必及四世，本族親支皆清白自守，方准報捐應試。」——<strong>四代人清白，才换得一张考卷。</strong>到嘉庆十四年，徽州、宁国、池州三府世仆应考仍遭讦控，上谕只好再说一遍：「此等名分，總以現在是否服役為斷。如年遠文契無考，著即開豁。」</p>
+<p>这六种身份各自对应一片地方人群。本线量的是制度，止于这几道谕旨。</p>
+<a class="go" href="../timeline.html#line=zuifa&amp;at=12">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>雍正朝一连几道谕旨，把几个世代不得为良的群体从贱籍里划出来。</p>
+<p><strong>开头那道只有十二个字。</strong>《清世宗实录》卷六，雍正元年四月戊辰：「除山西、陝西、教坊樂籍。改業為良民。」——乐户相传是明初不附燕兵者的后人，《清史稿·食货志一》：「山西等省有樂戶，先世因明建文末不附燕兵，編為樂籍。」其后各支陆续跟进，同卷记得最全：「雍正元年，令各屬禁革，改業為良。並諭浙江之惰民，蘇州之丐戶，操業與樂籍無異，亦削除其籍。</p>
+<p>五年，以江南徽州有伴儅，寧國有世僕，本地呼為『細民』；甚有兩姓丁口村莊相等，而此姓為彼姓執役，有如奴隸，亦諭開除。七年，以廣東蜑戶以船捕魚，粵民不容登岸，特諭禁止。准於近水村莊居住，與齊民一體編入保甲。」——山陕的乐户、绍兴的惰民、苏州的丐户、徽州的伴儅、宁国的世仆、广东的疍户，六种身份，一句「改业为良」。</p>
+<p><strong>脱籍不等于脱身</strong>：乾隆三十六年陕西学政刘嶟奏请定禁例，部议「凡報官改業後，必及四世，本族親支皆清白自守，方准報捐應試」——四代人清白，才换得一张考卷。到嘉庆十四年，徽州、宁国、池州三府世仆捐监应考仍屡遭讦控，上谕只好再说一遍：「此等名分，總以現在是否服役為斷。如年遠文契無考，著即開豁。」贱籍两个字，消失得比偏见快。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>本站是全线唯一一处逆行（1781→1723，回头五十八年），过桥句必写。自查法：抽掉过桥段落，本站第一句会变成雍正朝一连几道谕旨，读者立刻以为轴坏了——桥成立。</li>
+<li><span class="tag t-ok">信史</span>订正一：那道谕是十四个字，不是十二个字。2026-08-30 raw 直取《清實錄·世宗憲皇帝實錄》卷之六（25,218 字节），雍正元年四月戊辰条原文为除山西、陝西、教坊樂籍。改業為良民。去标点脚本点数：除山西陝西教坊樂籍改業為良民＝十四字。库条 yl 作十二个字，建议库主另行改正（本卷未动库文件）。</li>
+<li><span class="tag t-ok">信史</span>订正二：《清史稿·食貨志一》原文作山西等省有樂戶，先世因明建文末不附燕兵，編為樂籍——原文没有相传二字。相传是库条自己加的限定语，不得套进引号当引文。站文按传统叙述档处理：这是正史给的说法，本线照录，不另加考订，也不升格为已证之事。</li>
+<li><span class="tag t-ok">信史</span>六种身份、部议必及四世、嘉庆十四年上谕，皆由《清史稿》卷120/戶口 action=raw 直取核得（23,673 字节；卷120 主页仅作转录框架）。</li>
+<li><span class="tag t-ok">信史</span>伦理条三（本线压强顶点）：只写身份制度，不写族群性格；不点今地今人；不做他们后来怎样了。全站止于嘉庆十四年上谕。</li>
+<li><span class="tag t-ok">信史</span>不制造没发生的因果：本站（1723）与站⑩⑪（1774／1781）不是同一个皇帝也不是同一件事，过桥句只说时间上松在前紧在后，不写成一手松一手紧的人格化对仗。</li>
+<li><span class="tag t-ok">信史</span>错型 14：四代人清白才换得一张考卷，主语是后人不是雍正。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">清實錄/世宗憲皇帝實錄/卷之六（維基文庫 action=raw，25,218 字节；雍正元年四月戊辰条），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">清史稿/卷120/戶口 食貨一（維基文庫 action=raw，23,673 字节），查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">库内条目：开豁贱籍（js/events.js 第 1323 行</a>
+</div>
+</details>
+</div></section>
+<section id="s13" class="tone"><div class="wrap">
+<div class="num">落点</div>
+<h2>十四个字</h2>
+<p>开一个圈，用了十四个字。走出这个圈，部议要四代人。</p>
+<p>这条线量的每一个圈，都是从赢家写下的卷宗里量出来的。口径不同的数字，一个都没有合并。</p>
+<blockquote>Those we love the most also suffer the most.</blockquote>
+<blockquote>至爱者，至罪</blockquote>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>定调句落于落点，形式取原句＋中文转述（库主 2026-08-26 拍板②③）。原句逐字不动，不译成四字对仗；中文转述取库主亲拟正本：至爱者，至罪。（四二收束）</li>
+<li><span class="tag t-ok">信史</span>落点只还两个数字（十四／四世），故意不给结论——圈松开之后这个钩子全线不还。</li>
+<li><span class="tag t-ok">信史</span>库自身立场一句照预备稿第七节第九条：只说口径不同的数字一个都没有合并，不自我标榜最中立。</li>
+<li><span class="tag t-ok">信史</span>语感二十一：末句取文言短句，其前一句是英文原句，再前一句是白话，不连着两句都不解释。</li>
+<li><span class="tag t-ok">信史</span>十四这个数字本卷已亲自点数校正，见开豁贱籍条订正一——这条线全篇在说数字先问口径，落点自己那个数字也校过一次，才配站在这里。</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">定调句与中文转述：库主原话，不属史料层，逐字保真</a>
+<a href="" target="_blank" rel="noopener">十四个字：清實錄/世宗憲皇帝實錄/卷之六，查阅 2026-08-30</a>
+<a href="" target="_blank" rel="noopener">必及四世：清史稿/卷120/戶口，查阅 2026-08-30</a>
+</div>
+</details>
+</div></section>
+<footer><div class="wrap">
+本页由 <code>tools/mining/build_line_page.py</code> 从库内数据生成，不手改。长文出自纪录片叙事稿，考据随文写就；凡各源不一致的数字，做法是一个都不给。
+<div class="row">
+<a href="../timeline.html#line=zuifa">在图上走一遍 →</a>
+<a href="index.html">中国帝王寿命数据库</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-zuifa.md" target="_blank" rel="noopener">资料与出处 ↗</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%%E5%%8B%%98%%E8%%AF%%AF&amp;title=%%E5%%8B%%98%%E8%%AF%%AF%%EF%%BC%%9A" target="_blank" rel="noopener">报个错 ↗</a>
+</div></div></footer>
+<dialog id="lb"><button id="lbx" type="button" aria-label="关闭">✕</button><img id="lbi" alt=""><div id="lbc"></div></dialog>
+<script>
+// 进度条与导轨高亮。整页只有这一段脚本，无依赖、无外链。
+var bar=document.getElementById('bar'),links=[].slice.call(document.querySelectorAll('#rail a')),
+    secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+function tick(){
+  var h=document.documentElement,y=h.scrollTop||document.body.scrollTop,
+      m=(h.scrollHeight-h.clientHeight)||1;
+  bar.style.width=(100*y/m)+'%';
+  var at=0;
+  for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].getBoundingClientRect().top<h.clientHeight*0.42) at=i; }
+  for(var j=0;j<links.length;j++) links[j].className=(j===at?'on':'');
+}
+addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
+
+// 点开放大。图注与署名跟着进去——放大了更该说清这是谁的
+var lb=document.getElementById('lb'),lbi=document.getElementById('lbi'),lbc=document.getElementById('lbc');
+[].forEach.call(document.querySelectorAll('button.zoom'),function(b){
+  b.addEventListener('click',function(){
+    lbi.src=b.getAttribute('data-src'); lbi.alt=b.getAttribute('data-cap')||'';
+    var cap=b.getAttribute('data-cap')||'', who=b.getAttribute('data-who')||'',
+        full=b.getAttribute('data-full')||'';
+    lbc.innerHTML='';
+    var t=document.createElement('div'); t.textContent=cap+(cap&&who?'　':'')+who; lbc.appendChild(t);
+    if(full){var a=document.createElement('a'); a.href=full; a.target='_blank'; a.rel='noopener';
+      a.textContent='在 Commons 看原尺寸 ↗'; var d=document.createElement('div');
+      d.style.marginTop='.4rem'; d.appendChild(a); lbc.appendChild(d);}
+    if(lb.showModal) lb.showModal(); else lb.setAttribute('open','');
+  });
+});
+document.getElementById('lbx').addEventListener('click',function(){lb.close?lb.close():lb.removeAttribute('open')});
+lb.addEventListener('click',function(e){ if(e.target===lb) lb.close&&lb.close(); });
+</script>
+</body></html>

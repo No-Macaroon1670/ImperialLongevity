@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>身后之言线 · 秦始皇写给长子的那封信封好了，还没交给使者，人就死了。十五站，看四种把话留给后人的办法一一失守，最后停在一块一个字也没有的碑上。</title>
+<meta name="description" content="替不在场的人念出来。共 15 站。">
+<link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/story/shenhou.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="身后之言线">
+<meta property="og:description" content="秦始皇写给长子的那封信封好了，还没交给使者，人就死了。十五站，看四种把话留给后人的办法一一失守，最后停在一块一个字也没有的碑上。">
+<meta property="og:url" content="https://no-macaroon1670.github.io/ImperialLongevity/story/shenhou.html">
+<style>
+:root{
+  --bg:#0e0d0c; --bg2:#161311; --ink:#e9e3d7; --dim:#9a9187; --faint:#5d564e;
+  --rule:#2a2622; --accent:#c0603f; --gold:#c9a959;
+  --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+  font-size:18px;line-height:2.05;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+.epi-verse{padding:3rem 1.2rem 0;text-align:center}
+.epi-verse .vl{font-size:21px;letter-spacing:.38em;line-height:2.35;text-indent:.38em}
+.epi-verse .vby{margin-top:1rem;font-family:var(--sans);font-size:11px;color:var(--faint);letter-spacing:.24em}
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50}
+/* 导轨：宽屏才有。窄屏那点横向空间要留给正文 */
+/* 左栏：导轨在上，小地图在下。两者同住一个固定列——读者眼睛一抬，
+   既知道读到第几节，也知道那一节在地上哪儿 */
+#side{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
+  z-index:40;width:11rem}
+#rail{display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
+/* rdot/rlbl 带前缀与外界脱钩（照 charts.js sw- 家法；库主实测 Rakuten 扩展注入
+   .dot{position:absolute} 把点拽出流压上标签首字，position:static 双保险）。
+   点与标签的间距落在 .rdot 的 margin 上而不靠 flex gap：读者侧环境（插件/旧内核）重写 <a>
+   的 display 时会退成 inline 排布，margin+vertical-align 在两种排布下同样成立，标签永不吃点
+   （2026-08-26 库主线上截图实案，本地净环境不复现；flex 健康时此写法与 gap 像素等价） */
+#rail a{display:flex;align-items:center;color:var(--faint);text-decoration:none;
+  letter-spacing:.04em;transition:color .25s}
+#rail .rdot{position:static;display:inline-block;vertical-align:middle;width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;margin-right:.5rem;transition:transform .25s}
+#rail a .rlbl{display:inline-block;vertical-align:middle;opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap}
+#rail a:hover{color:var(--dim)} #rail a:hover .rlbl{opacity:1;transform:none}
+#rail a.on{color:var(--accent)} #rail a.on .rdot{transform:scale(1.5)}
+#rail a.on .rlbl{opacity:1;transform:none}
+@media(max-width:1180px){#side{display:none}}
+.wrap{max-width:40rem;margin:0 auto;padding:0 1.5rem}
+header.cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
+  padding:6rem 0 4rem;border-bottom:1px solid var(--rule)}
+.kicker{font-family:var(--sans);font-size:12px;letter-spacing:.34em;color:var(--faint);margin-bottom:2.4rem}
+h1{font-size:clamp(2.4rem,8vw,4rem);line-height:1.14;margin:0 0 1.6rem;font-weight:500;letter-spacing:.06em}
+.lede{font-size:1.06rem;color:var(--dim);line-height:2;max-width:30rem;margin:0}
+.meta{margin-top:3.4rem;font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.08em}
+.meta a{color:var(--gold);text-decoration:none;border-bottom:1px solid transparent}
+.meta a:hover{border-bottom-color:var(--gold)}
+section{padding:5.5rem 0;border-bottom:1px solid var(--rule)}
+section.tone{background:var(--bg2)}
+.num{font-family:var(--sans);font-size:11px;letter-spacing:.3em;color:var(--faint)}
+.yr{font-family:var(--sans);font-size:2.6rem;line-height:1;color:var(--rule);margin:.4rem 0 .8rem;
+  font-variant-numeric:tabular-nums;font-weight:700}
+h2{font-size:1.75rem;line-height:1.35;margin:0 0 .5rem;font-weight:500;letter-spacing:.04em}
+.h2-ev{font-size:.95rem;font-weight:400;color:var(--faint);letter-spacing:.02em;white-space:nowrap;margin-left:.35em}
+.sub{font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.1em;margin:0 0 2rem}
+section p{margin:0 0 1.35rem}
+p.beat{color:var(--gold)}
+blockquote{margin:2rem 0;padding-left:1.2rem;border-left:2px solid var(--accent);color:var(--ink)}
+blockquote small{display:block;margin-top:.5rem;font-family:var(--sans);font-size:11px;
+  letter-spacing:.08em;color:var(--faint)}
+.go{display:inline-block;margin:.4rem 0 1.6rem;font-family:var(--sans);font-size:12px;
+  letter-spacing:.08em;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:2px}
+.go:hover{border-bottom-color:var(--gold)}
+details.app{margin-top:2rem;font-family:var(--sans);font-size:13px;line-height:1.85;color:var(--dim)}
+details.app summary{cursor:pointer;color:var(--faint);letter-spacing:.14em;font-size:11px;
+  padding:.5rem 0;border-top:1px solid var(--rule)}
+details.app ul{margin:.8rem 0;padding-left:1.1rem}
+details.app li{margin-bottom:.7rem}
+details.app p{margin:.9rem 0 0}
+.tag{display:inline-block;font-size:10px;letter-spacing:.08em;padding:1px 6px;margin-right:.5rem;
+  border-radius:3px;border:1px solid currentColor;vertical-align:.08em}
+.t-ok{color:#7d9b6e} .t-trad{color:var(--gold)} .t-new{color:#6e8a9b}
+.t-infer{color:#9b8a6e} .t-doubt{color:var(--accent)}
+.src{margin-top:.9rem;display:flex;flex-wrap:wrap;gap:.9rem}
+.src a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule);font-size:12px}
+.src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
+.note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
+/* 配图。图注里那半行是**署名**，CC-BY／CC-BY-SA 要求给出作者与许可 */
+/* 文绕图。竖幅整幅摆着时两侧全空，绕排把那块空白还给文字；
+   窄屏不绕——一栏劈两半两边都读不成 */
+figure.pic{margin:0 0 2rem}
+figure.pic img{display:block;width:100%;height:auto;border-radius:3px}
+@media(min-width:820px){
+  figure.pic{float:left;width:44%;margin:.4rem 1.6rem .8rem 0}
+  figure.pic.pic-wide{float:none;width:100%;margin:.6rem 0 1.2rem}
+  section p,section h2,details.app{clear:none}
+  details.app,.go{clear:both}
+}
+figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
+  line-height:1.8;color:var(--faint)}
+figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
+figure.pic figcaption a:hover{color:var(--dim)}
+/* 一站多图（如落点三张）：不绕排，并排摆成一排——「能看见三样东西」，
+   图就该一次看见三样，不该被文字拆成三处零散的浮块 */
+.pic-trio{display:flex;flex-direction:column;gap:1.4rem;margin:0 0 2rem}
+.pic-trio figure.pic{margin:0}
+@media(min-width:820px){
+  .pic-trio{flex-direction:row}
+  .pic-trio figure.pic{float:none;width:calc(33.333% - .94rem)}
+}
+
+/* ── 地图 ────────────────────────────────────────────────────────
+   开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
+   底图只有海岸线、四个大湖与黄河长江淮河，没有国界（理由见 tools/mining/build_basemap.py）。
+   全程的点一律画出、只是淡；当前那一站才亮——读者要能看见自己走到哪儿，
+   也要能看见还剩多少。 */
+#smap{padding:4rem 0 3.5rem}
+svg.hmap{display:block;width:100%;height:auto}
+svg.rstrip{display:block;width:100%;max-width:640px;height:auto;margin:.4rem 0 .1rem;overflow:visible}
+.rs-base{stroke:var(--rule);stroke-width:1.4}
+.rs-hop{stroke:var(--accent);stroke-width:2.2}
+.rs-done{fill:var(--dim)}
+.rs-todo{fill:none;stroke:var(--faint);stroke-width:1.2}
+.rs-cur{fill:var(--accent)}
+.rs-name{fill:var(--ink);font-family:var(--sans);font-size:11.5px;letter-spacing:.08em}
+.rs-end{fill:var(--faint);font-family:var(--sans);font-size:9.5px;letter-spacing:.04em}
+svg.hmap{margin:1.6rem 0 1rem}
+svg *{vector-effect:non-scaling-stroke}
+.m-dust{fill:#6a6259;opacity:.32}
+.m-idx{fill:var(--dim);font-family:var(--sans);letter-spacing:0}
+.m-coast{fill:none;stroke:var(--rule);stroke-width:1.1}
+.m-river{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.42}
+/* 大湖：一片淡水色，压在海岸之上、河之下（层序归 render_line_map.mjs 的 append 次序）。
+   用河的色相而不是另起一色——湖跟河是一族，换个颜色就成了另一种东西。这一页是
+   深底，故比浅色两端（.mm-lake/.pl-lake）再压一档：填充只到河那道线有效浓度的
+   三成上下，读者一眼知道这是一块水面，但抢不过河、更抢不过站点。
+   填充比描边实：水面不是圈出来的区域。
+   要试「少画一个湖」，不必重跑构建：.m-lake[data-lake="太湖"]{display:none} */
+.m-lake{fill:var(--accent);fill-opacity:.13;stroke:var(--accent);stroke-opacity:.34;stroke-width:.8}
+.m-city{fill:var(--faint);opacity:.75}
+.m-city-t{fill:var(--faint);opacity:.85;font-family:var(--sans)}
+.m-river-t{fill:var(--accent);opacity:.65;font-family:var(--sans)}
+/* 湖名：与河名同色、小一号、更轻——湖是结不是干线（2026-08-26 story 静态图补湖案） */
+.m-lake-t{fill:var(--accent);opacity:.5;font-family:var(--sans)}
+.m-dot{fill:var(--dim);opacity:.5}
+.m-maybe{fill:none;stroke:var(--dim);stroke-width:1.2;opacity:.55;stroke-dasharray:3 2.5}
+.m-held{fill:none;stroke:var(--gold);stroke-width:1.2;opacity:.5}
+/* 贴在框边的方块：东西已经出了这张图的范围（伦敦） */
+.m-off{stroke-dasharray:3 2.5}
+.m-flow{stroke:var(--gold);stroke-width:1;opacity:.35;stroke-dasharray:4 3}
+.m-stop-t{fill:var(--dim);opacity:.8;font-family:var(--sans)}
+/* 现藏之处的馆名。金色，与那个空心方块、那条虚线同一族 */
+.m-held-t{fill:var(--gold);opacity:.75;font-family:var(--sans)}
+/* 当前这一节：亮起来 */
+.m-stop.on .m-dot{fill:var(--accent);opacity:1}
+.m-stop.on .m-maybe{stroke:var(--accent);opacity:1}
+.m-stop.on .m-held,.m-stop.on .m-flow{stroke:var(--gold);opacity:1}
+.m-stop.on .m-stop-t{fill:var(--ink);opacity:1}
+#gname{margin-top:.5rem;font-family:var(--sans);font-size:10.5px;color:var(--faint);
+  line-height:1.6;min-height:2.6em}
+
+/* 点开放大。用 <dialog>：Esc 与背景遮罩都是它自带的，不必自己写一套 */
+button.zoom{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in}
+button.zoom img{transition:opacity .18s}
+button.zoom:hover img{opacity:.86}
+dialog#lb{border:0;padding:0;background:none;max-width:96vw;max-height:96vh;color:var(--ink)}
+dialog#lb::backdrop{background:rgba(8,7,6,.92)}
+#lbi{display:block;max-width:min(96vw,900px);max-height:82vh;width:auto;height:auto;
+  margin:0 auto;border-radius:3px}
+#lbc{max-width:min(96vw,900px);margin:.8rem auto 0;font-family:var(--sans);font-size:12px;
+  line-height:1.8;color:var(--dim)}
+#lbc a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule)}
+#lbx{position:fixed;top:1.1rem;right:1.4rem;width:2.2rem;height:2.2rem;border:0;border-radius:50%;
+  background:rgba(255,255,255,.1);color:var(--ink);font-size:1rem;cursor:pointer}
+#lbx:hover{background:rgba(255,255,255,.2)}
+footer{padding:5rem 0 7rem;font-family:var(--sans);font-size:12.5px;color:var(--faint);line-height:2}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--rule)}
+footer a:hover{color:var(--ink)}
+footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
+@media(max-width:640px){
+  body{font-size:17px;line-height:1.98}
+  section{padding:4rem 0}
+  .yr{font-size:2rem}
+  h1{letter-spacing:.03em}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="side">
+<nav id="rail" aria-label="节次">
+<a href="#s0"><span class="rdot"></span><span class="rlbl">车过沙丘</span></a>
+<a href="#s1"><span class="rdot"></span><span class="rlbl">封好的那封信</span></a>
+<a href="#s2"><span class="rdot"></span><span class="rlbl">未央宫的那道</span></a>
+<a href="#s3"><span class="rdot"></span><span class="rlbl">十六行二百二</span></a>
+<a href="#s4"><span class="rdot"></span><span class="rlbl">金门土里那句</span></a>
+<a href="#s5"><span class="rdot"></span><span class="rlbl">写给还没出生</span></a>
+<a href="#s6"><span class="rdot"></span><span class="rlbl">书归长子，其</span></a>
+<a href="#s7"><span class="rdot"></span><span class="rlbl">他把头巾摔在</span></a>
+<a href="#s8"><span class="rdot"></span><span class="rlbl">手写的那张小</span></a>
+<a href="#s9"><span class="rdot"></span><span class="rlbl">衣带里的八个</span></a>
+<a href="#s10"><span class="rdot"></span><span class="rlbl">烛影里的那把</span></a>
+<a href="#s11"><span class="rdot"></span><span class="rlbl">满文那一行</span></a>
+<a href="#s12"><span class="rdot"></span><span class="rlbl">匾后面那只匣</span></a>
+<a href="#s13"><span class="rdot"></span><span class="rlbl">代写的那道朱</span></a>
+<a href="#s14"><span class="rdot"></span><span class="rlbl">石缝里的六十</span></a>
+<a href="#s15"><span class="rdot"></span><span class="rlbl">一整块石头，</span></a>
+<a href="#s16"><span class="rdot"></span><span class="rlbl">题刻累累</span></a>
+</nav>
+</div>
+<header class="cover"><div class="wrap">
+<div class="kicker">替不在场的人念出来</div>
+<h1>身后之言线</h1>
+<p class="lede">秦始皇写给长子的那封信封好了，还没交给使者，人就死了。十五站，看四种把话留给后人的办法一一失守，最后停在一块一个字也没有的碑上。</p>
+<div class="meta">共 15 站　·　<a href="../timeline.html#line=shenhou">在图上走一遍 →</a>　·　<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-shenhou.md">资料与出处 ↗</a></div>
+</div></header>
+<section id="s0" class="tone"><div class="wrap">
+<div class="num">序</div>
+<h2>车过沙丘</h2>
+<p>秦始皇三十七年七月，巡行的车队走到沙丘。他病重，让赵高写一封信给长子扶苏。信只有一句：「以兵屬蒙恬，與喪會咸陽而葬。」——把兵交给蒙恬，回咸阳来办丧事。</p>
+<p>《史记·李斯列传》接下去写了十一个字：「書已封，未授使者，始皇崩。」信封好了，还没交给送信的人，他就死了。于是「書及璽皆在趙高所」——信和玉玺，都在赵高手里。</p>
+<p>后来送到上郡的是另一封信。同一枚玺，同一个封套，内容换了：扶苏「為人子不孝，其賜劍以自裁」。</p>
+<p>遗言是唯一一种作者永远听不见别人怎么念的文体。一句话说出口的时候归说的人，念出来的时候归念的人。这条线走十五站，追同一个问题：人有没有办法，让自己那一句话念出来的时候还是自己的。</p>
+</div></section>
+<section id="s1" data-year="-209" data-name="沙丘之变"><div class="wrap">
+<div class="num">一 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><circle class="rs-cur" cx="26.0" cy="16" r="5.2"/><circle class="rs-todo" cx="68.0" cy="16" r="3"/><circle class="rs-todo" cx="110.0" cy="16" r="3"/><circle class="rs-todo" cx="152.0" cy="16" r="3"/><circle class="rs-todo" cx="194.0" cy="16" r="3"/><circle class="rs-todo" cx="236.0" cy="16" r="3"/><circle class="rs-todo" cx="278.0" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="362.0" cy="16" r="3"/><circle class="rs-todo" cx="404.0" cy="16" r="3"/><circle class="rs-todo" cx="446.0" cy="16" r="3"/><circle class="rs-todo" cx="488.0" cy="16" r="3"/><circle class="rs-todo" cx="530.0" cy="16" r="3"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="26.0" y="35" text-anchor="start">沙丘之变</text></svg>
+<div class="yr">前210</div>
+<h2>封好的那封信 <span class="h2-ev">沙丘之变</span></h2>
+<p class="sub">前210　·　秦　·　民变·政变</p>
+<p><strong>信在谁手里。</strong>那封信没有到扶苏手上，先落在三个人手里：赵高、李斯、胡亥。《史记·李斯列传》记，知道皇帝已死的只有「獨子胡亥、丞相李斯、趙高及幸宦者五六人」，其余群臣都不知道。李斯的理由写在同一段里：皇帝死在外面，没有确立的太子，所以「祕之」。</p>
+<p><strong>车队照常走。</strong>遗体安置在轀輬车里，「百官奏事上食如故」，宦官在车中替他答复奏事。从沙丘到咸阳这一路上，帝国收到的每一道回复，都不是他发的。</p>
+<p><strong>改写只用了一封信。</strong>赵高先说动胡亥，再说动李斯，三人「相與謀，詐為受始皇詔丞相，立子胡亥為太子」。给扶苏的那一封则「更為書」——重写。新信历数他屯边十余年无尺寸之功、上书诽谤，末句是「扶蘇為人子不孝，其賜劍以自裁」。写完之后，「封其書以皇帝璽」。</p>
+<p><strong>原信里没有继承这回事。</strong>值得摆在一起看的是那封真信的内容：十一个字，交代兵权归谁、回京办丧，通篇没有一句说到谁来接位。把皇位写进纸面的，是后来那一封。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=1">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>秦始皇在沙丘宫（今河北广宗）病逝后，赵高与李斯合谋杀害公子扶苏、拥立胡亥继位的政变，又称沙丘之谋，事后秦朝中枢权力落入赵高之手。</p>
+</details>
+</div></section>
+<section id="s2" data-year="6" data-name="汉平帝暴毙"><div class="wrap">
+<div class="num">二 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="26.0" y1="16" x2="68.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-cur" cx="68.0" cy="16" r="5.2"/><circle class="rs-todo" cx="110.0" cy="16" r="3"/><circle class="rs-todo" cx="152.0" cy="16" r="3"/><circle class="rs-todo" cx="194.0" cy="16" r="3"/><circle class="rs-todo" cx="236.0" cy="16" r="3"/><circle class="rs-todo" cx="278.0" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="362.0" cy="16" r="3"/><circle class="rs-todo" cx="404.0" cy="16" r="3"/><circle class="rs-todo" cx="446.0" cy="16" r="3"/><circle class="rs-todo" cx="488.0" cy="16" r="3"/><circle class="rs-todo" cx="530.0" cy="16" r="3"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="68.0" y="35" text-anchor="middle">汉平帝暴毙</text></svg>
+<div class="yr">6</div>
+<h2>未央宫的那道诏 <span class="h2-ev">汉平帝暴毙</span></h2>
+<p class="sub">6　·　西汉　·　民变·政变</p>
+<p>赵高手里那封信是被改写的。二百一十五年后，未央宫里的一份文书处理的是相反的情形：一个皇帝什么也没留下，而这件事本身也得由别人写成公文。</p>
+<p><strong>六个字。</strong>汉平帝九岁即位，朝政尽归大司马王莽。《汉书》卷十二〈平帝纪〉写他的死只用了六个字：「冬十二月丙午，帝崩于未央宮。」死因一字未记。</p>
+<p><strong>替死者交代他没有交代。</strong>接着是一道诏书：「皇帝仁惠，無不顧哀，每疾一發，氣輒上逆，害於言語，故不及有遺詔。其出媵妾，皆歸家得嫁，如孝文時故事。」——他每次发病气就上涌，说不出话，所以来不及留下遗诏。这句公文腔念出来像另一种语言，而它办的是一件古怪的差事：以朝廷的名义，替一个十四岁的人说明他为什么没有话。</p>
+<p><strong>成年是死后补的。</strong>同一段还记着一议：「禮，臣不殤君。皇帝年十有四歲，宜以禮斂，加元服。」臣子不能拿君主当夭折的孩子办丧事，于是先替他行成年礼，再入殓，奏可。他十四岁，而他是谁、算不算成年，是在他死后才定下来的。至于王莽下毒一说，后世多疑，王莽矢口否认，本线两存不裁。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=2">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>汉平帝年幼继位，朝政尽归大司马王莽，他渐长后对王莽日益不满，未几突然暴毙，年仅十四岁。《汉书》未记其死因，只引官方文书称「每疾一发，气辄上逆，害于言语，故不及有遗诏」，后世多疑王莽下毒，王莽矢口否认。</p>
+</details>
+</div></section>
+<section id="s3" data-year="557" data-name="独孤信之死"><div class="wrap">
+<div class="num">三 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="68.0" y1="16" x2="110.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-cur" cx="110.0" cy="16" r="5.2"/><circle class="rs-todo" cx="152.0" cy="16" r="3"/><circle class="rs-todo" cx="194.0" cy="16" r="3"/><circle class="rs-todo" cx="236.0" cy="16" r="3"/><circle class="rs-todo" cx="278.0" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="362.0" cy="16" r="3"/><circle class="rs-todo" cx="404.0" cy="16" r="3"/><circle class="rs-todo" cx="446.0" cy="16" r="3"/><circle class="rs-todo" cx="488.0" cy="16" r="3"/><circle class="rs-todo" cx="530.0" cy="16" r="3"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="110.0" y="35" text-anchor="middle">独孤信之死</text></svg>
+<div class="yr">557</div>
+<h2>十六行二百二十字 <span class="h2-ev">独孤信之死</span></h2>
+<p class="sub">557　·　北周　·　名人轶事</p>
+<p>未央宫那道诏至少还给了一句解释。四百年后有一方碑，连解释也不给——而不给的理由写在别处。</p>
+<p><strong>碑上有什么。</strong>1953 年陕西咸阳底张湾出土独孤信墓志，志盖已佚，志文十六行二百二十字，首题「周故柱國大將軍雍州刺史河內戾公墓誌」（据实物首行与展签双重核对）。全篇只记姓名、籍贯、家世、卒葬，以及夫人和三个儿子的名字。</p>
+<p><strong>碑上没有什么。</strong>写碑的人不缺材料。他九个女儿里，长女是北周明敬皇后，七女独孤伽罗是隋文献皇后，四女由唐追封元贞皇后；《周书》《北史》都说这种事自古没有过。这些，碑上一句不提。</p>
+<p><strong>不给理由的理由。</strong>《周书》卷十六把它写得很直白：赵贵被诛后，他以同谋坐免，「居無幾，晉公護又欲殺之，以其名望素重，不欲顯其罪，逼令自盡於家。時年五十五。」不写，是因为杀他的人不愿意把罪名摆出来。碑上的沉默不是石头的事，是活人先做的决定。</p>
+<p><strong>后来改的那个字，也有两个写法。</strong>隋文帝即位后下诏追赠太师、上柱国、赵国公，诏末《周书》作「諡曰景」；《北史》卷六十一记同一件事作「諡曰恭」，两文不合，本线并存不裁。而首题上那个「戾」字没有第二个版本——本线所核的《周书》《北史》两传都不载此谥，它只写在石头上。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=3">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>西魏柱国大将军之一，匈奴裔鲜卑人，本名如愿，鲜卑名期弥头，官至太保、大宗伯、卫国公。（<strong>称谓两说</strong>：中文维基作「八柱国之一」，中国国家博物馆展签作「六柱国之一」，并注明宇文泰共设八位柱国大将军、其中六人分领全国军队——两说各有所指，不择一。）周孝闵帝元年（557）与赵贵谋除权臣宇文护，事泄，被逼于家中自尽，虚岁五十四，<strong>谥「戾」</strong>。</p>
+<p>隋文帝即位后追赠太师、上柱国、赵国公，<strong>改谥「景」</strong>；唐朝再追封梁王——谥号往上改了两次。</p>
+<p><strong>他是北周明帝宇文毓、隋文帝杨坚、唐世祖李昞三人的岳父</strong>，亦即隋炀帝杨广与唐高祖李渊的外祖父：九女之中，长女为北周明敬皇后，七女独孤伽罗为隋文献皇后，四女由唐追封元贞皇后，《周书》《北史》评此事自古未有。1953年陕西咸阳底张湾发掘其墓，出墓志一方——志盖已佚，志文十六行二百二十字，首题「周故柱国大将军雍州刺史河内戾公墓志」（据实物首行与展签双重核对，非「襄州」），只记姓名、籍贯、家世、卒葬与夫人及三子之名。</p>
+<p><strong>内容之简略与其身份极不相称</strong>：写它的时候，他还是那个刚被赐死的戾公。其「多面体煤精组印」另于1981年在旬阳县寻获。</p>
+</details>
+</div></section>
+<section id="s4" data-year="1662" data-name="鲁王圹志"><div class="wrap">
+<div class="num">四 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="110.0" y1="16" x2="152.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-done" cx="110.0" cy="16" r="3"/><circle class="rs-cur" cx="152.0" cy="16" r="5.2"/><circle class="rs-todo" cx="194.0" cy="16" r="3"/><circle class="rs-todo" cx="236.0" cy="16" r="3"/><circle class="rs-todo" cx="278.0" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="362.0" cy="16" r="3"/><circle class="rs-todo" cx="404.0" cy="16" r="3"/><circle class="rs-todo" cx="446.0" cy="16" r="3"/><circle class="rs-todo" cx="488.0" cy="16" r="3"/><circle class="rs-todo" cx="530.0" cy="16" r="3"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="152.0" y="35" text-anchor="middle">鲁王圹志</text></svg>
+<div class="yr">1662</div>
+<h2>金门土里那句更正 <span class="h2-ev">鲁王圹志</span></h2>
+<p class="sub">1662　·　南明　·　文物</p>
+<p>独孤信那方碑把话省掉了。一千一百年后有另一方，写它的人非常清楚自己写给谁看——并且把这件事刻进了石头。</p>
+<p><strong>葬得很急。</strong>永历十六年十一月，南明监国鲁王朱以海死在金门。志文写：「王素有哮疾，壬寅十一月十三日中痰而薨」，年四十五。岛上局势不容停灵，「島上風鶴，不敢停襯」，当月二十二日下葬。</p>
+<p><strong>写碑的人先交代自己的处境。</strong>按会典，亲藩下葬该由翰林官奉旨撰圹志、礼部议谥。而当时永历帝远在云南，道路阻梗，请不下来。于是同在岛上的宁靖王朱术桂带着文武官自己写：「姑同諸文武叙王本末及生薨年月，勒石藏諸壙中。指日中興，特旨賜謚、改葬，此亦足備考訂云。」——先记下来埋进去，等复国之后再由朝廷补谥、改葬；而就算等不到，这块石头「亦足備考訂」。</p>
+<p><strong>用场是等到了，晚了三百年。</strong>复国没有来。1959 年这方圹志在金门出土，2011 年被指定为国宝。此前通行的说法是鲁王沉海溺毙，志文记的是病故。写碑人预告的那个用途兑现了一次，而兑现它的不是他等的那个朝廷。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=4">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>南明监国鲁王朱以海的墓志，1959年出土于福建金门，志文记载其因病去世的经过，纠正了此前鲁王被沉海溺毙的旧说，是研究南明史事的重要一手史料，2011年被指定为国宝。</p>
+</details>
+</div></section>
+<section id="s5" data-year="590" data-name="颜氏家训"><div class="wrap">
+<div class="num">五 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="152.0" y1="16" x2="194.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-done" cx="110.0" cy="16" r="3"/><circle class="rs-done" cx="152.0" cy="16" r="3"/><circle class="rs-cur" cx="194.0" cy="16" r="5.2"/><circle class="rs-todo" cx="236.0" cy="16" r="3"/><circle class="rs-todo" cx="278.0" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="362.0" cy="16" r="3"/><circle class="rs-todo" cx="404.0" cy="16" r="3"/><circle class="rs-todo" cx="446.0" cy="16" r="3"/><circle class="rs-todo" cx="488.0" cy="16" r="3"/><circle class="rs-todo" cx="530.0" cy="16" r="3"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="194.0" y="35" text-anchor="middle">颜氏家训</text></svg>
+<div class="yr">590</div>
+<h2>写给还没出生的人 <span class="h2-ev">颜氏家训</span></h2>
+<p class="sub">590　·　隋　·　文化</p>
+<p>鲁王那块石头把收信人刻了上去：后人，某一个还没到来的朝廷。而在此之前一千年，有人算过一笔更实际的账——收信人越少，话越可能被听进去。</p>
+<p><strong>他先承认这种书已经太多。</strong>《颜氏家训·序致》开篇说：圣贤之书讲诚孝、讲慎言检迹，「亦已備矣」；魏晋以来的诸子「理重事複，遞相模效，猶屋下架屋，牀上施牀耳」。那他为什么还要写一本：「吾今所以復為此者，非敢軌物範世也，業以整齊門內，提撕子孫。」不敢给天下立规矩，只是整顿自家门内。</p>
+<p><strong>接着是一句关于话本身的话。</strong>「夫同言而信，信其所親；同命而行，行其所服。」同样一句话，人信的是说话的人跟自己什么关系。他举了两个例子：要止住孩子胡闹，师友的告诫不如奶妈一句吩咐；要劝开打架的人，尧舜之道不如自家妻子一句劝。所以他把书写给门内：「吾望此書為汝曹之所信，猶賢於傅婢寡妻耳。」</p>
+<p><strong>办法是缩小收信人。</strong>这是全线第一个自觉的对策，而他把这么做的理由也写进了正文。全书七卷二十篇，隋初成书，是现存最早的家训专著之一。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=5">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>北齐士人颜之推所撰家训，隋初成书，共七卷二十篇，教诲子孙立身治家、读书为学之道，是现存最早的家训专著之一。</p>
+</details>
+</div></section>
+<section id="s6" data-year="1561" data-name="天一阁"><div class="wrap">
+<div class="num">六 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="194.0" y1="16" x2="236.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-done" cx="110.0" cy="16" r="3"/><circle class="rs-done" cx="152.0" cy="16" r="3"/><circle class="rs-done" cx="194.0" cy="16" r="3"/><circle class="rs-cur" cx="236.0" cy="16" r="5.2"/><circle class="rs-todo" cx="278.0" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="362.0" cy="16" r="3"/><circle class="rs-todo" cx="404.0" cy="16" r="3"/><circle class="rs-todo" cx="446.0" cy="16" r="3"/><circle class="rs-todo" cx="488.0" cy="16" r="3"/><circle class="rs-todo" cx="530.0" cy="16" r="3"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="236.0" y="35" text-anchor="middle">天一阁</text></svg>
+<div class="yr">1561</div>
+<h2>书归长子，其余不要 <span class="h2-ev">天一阁</span></h2>
+<p class="sub">1561–1566　·　明　·　遗址·建筑</p>
+<p>颜之推把话写成了一本书，书传了下来。而另一份写给自家人的交代只传下八个字，出处至今找不到。</p>
+<p><strong>一座向水求告的楼。</strong>宁波月湖西，兵部右侍郎范钦嘉靖四十年始建、四十五年建成天一阁，是中国现存最古的私家藏书楼。楼名与格局都取《易》数里天一生水、地六成之的意思：楼上一通间应天一，楼下六间应地六。藏书楼最怕火，名字与形制都是在向水求告。</p>
+<p><strong>一次分家。</strong>范钦临终把家产分作两份：一份是那七万余卷书，一份是其余。长子范大冲放弃其余，只要书。</p>
+<p><strong>八个字查不到一手。</strong>由此传下的家规是八个字：代不分书，书不出阁。各处转述一致，而它究竟是范钦的临终原话，还是后人对那次分产的概括，本库未核到一手文本，不能断——所以本线不给这八个字加引号。八个字流传得很广，出处却查不到。</p>
+<p><strong>楼靠什么留下来。</strong>此后屡遭兵燹与偷盗，一度只剩一万三千余卷，后经募集捐赠增至三十万卷。这座楼能存到今天，起点是一次放弃继承权的家庭决定。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=6">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>宁波月湖西的私家藏书楼，兵部右侍郎范钦嘉靖四十年（1561）始建、四十五年（1566）建成，是中国现存最古的私家藏书楼。楼名取郑玄注《易》「天一生水，地六成之」之义，格局也照这句话造：楼上一通间应「天一」，楼下六间应「地六」——藏书楼最怕火，名字与形制都是在向水求告。范钦临终把家产分作藏书与其余两份，长子范大冲宁可放弃其余家产，只要那七万余卷书，由此立下「代不分书，书不出阁」的家规（各处转述一致，未核到一手文本；是遗言原话还是后人对分产之举的概括，不能断）。</p>
+<p><strong>这座楼能存下来，靠的不是官府庇护，是一次放弃继承权的家庭决定。</strong>此后屡遭兵燹与偷盗，一度只剩一万三千余卷，后经募集捐赠增至三十万卷。清修四库全书时诏取其藏本进呈，七阁的「天一地六」格局即以此楼为范本——库内四库全书（1773—1782）与书库线讲的是官修的书柜，此条是民间那一面。1982年列第二批全国重点文物保护单位，时代「明」。「世界现存最早三座私家藏书楼之一」是流传的说法，未见可靠的国际比较出处，只记不采。</p>
+</details>
+</div></section>
+<section id="s7" data-year="436" data-name="自毁长城"><div class="wrap">
+<div class="num">七 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="236.0" y1="16" x2="278.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-done" cx="110.0" cy="16" r="3"/><circle class="rs-done" cx="152.0" cy="16" r="3"/><circle class="rs-done" cx="194.0" cy="16" r="3"/><circle class="rs-done" cx="236.0" cy="16" r="3"/><circle class="rs-cur" cx="278.0" cy="16" r="5.2"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="362.0" cy="16" r="3"/><circle class="rs-todo" cx="404.0" cy="16" r="3"/><circle class="rs-todo" cx="446.0" cy="16" r="3"/><circle class="rs-todo" cx="488.0" cy="16" r="3"/><circle class="rs-todo" cx="530.0" cy="16" r="3"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="278.0" y="35" text-anchor="middle">自毁长城</text></svg>
+<div class="yr">436</div>
+<h2>他把头巾摔在地上 <span class="h2-ev">自毁长城</span></h2>
+<p class="sub">436　·　刘宋　·　名人轶事</p>
+<p>把话写成书、写成家规，都要有时间。接下来这三站的人都没有时间。往回一千一百年，刘宋元嘉十三年。</p>
+<p><strong>罪名先写好了。</strong>檀道济是刘宋头号名将。《宋书》卷四十三先抄了那道处死他的诏书：「空懷疑貳，履霜日久」「因朕寢疾，規肆禍心」，末句是「便可收付廷尉，肅正刑書。事止元惡，餘無所問。」文书这一头做得很齐全。</p>
+<p><strong>他喊的那一句有两个版本。</strong>《宋书》卷四十三记：「初，道濟見收，脫幘投地曰：『乃復壞汝萬里之長城！』」《南史》卷十五记同一句作：「乃壞汝萬里長城。」两部书差了三个字，而后世通行的是后一种。一句已经进了成语的临终之言，本身有两个写法。</p>
+<p><strong>十四年后，下诏的人把它念了回去。</strong>元嘉二十七年，北魏军至瓜步。《南史》同卷记：「文帝登石頭城望，甚有憂色。歎曰：『若道濟在，豈至此！』」当初那道诏是以他的名义发的；把那句话重新说出口的，也是他。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=7">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>刘宋头号名将为宋文帝与刘义康所忌，下狱处死，临刑脱帻掷地怒吼「乃坏汝万里长城」；后世元嘉北伐屡败，文帝有「檀道济若在，岂使胡马至此」之叹</p>
+</details>
+</div></section>
+<section id="s8" data-year="1142" data-name="岳飞之死"><div class="wrap">
+<div class="num">八 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="278.0" y1="16" x2="320.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-done" cx="110.0" cy="16" r="3"/><circle class="rs-done" cx="152.0" cy="16" r="3"/><circle class="rs-done" cx="194.0" cy="16" r="3"/><circle class="rs-done" cx="236.0" cy="16" r="3"/><circle class="rs-done" cx="278.0" cy="16" r="3"/><circle class="rs-cur" cx="320.0" cy="16" r="5.2"/><circle class="rs-todo" cx="362.0" cy="16" r="3"/><circle class="rs-todo" cx="404.0" cy="16" r="3"/><circle class="rs-todo" cx="446.0" cy="16" r="3"/><circle class="rs-todo" cx="488.0" cy="16" r="3"/><circle class="rs-todo" cx="530.0" cy="16" r="3"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="320.0" y="35" text-anchor="middle">岳飞之死</text></svg>
+<div class="yr">1142</div>
+<h2>手写的那张小纸 <span class="h2-ev">岳飞之死</span></h2>
+<p class="sub">1142　·　南宋　·　民变·政变</p>
+<p>檀道济那一句留了下来，靠的是史官抄了它。而有的人一句也没能留下——留下来的是别人替他说的。</p>
+<p><strong>他自己的话只剩一句。</strong>《宋史》卷三百六十五记，使者来捕，他说：「皇天后土，可表此心。」初审的是何铸，「飛裂裳以背示鑄，有『盡忠報國』四大字，深入膚理」；何铸查下来「閱實無左驗」，认为无辜，于是换人主审。改命万俟卨，构出来的是另一套说法：他与张宪往来的书信「已焚」——定他罪的那份物证，据说已经不存在了。</p>
+<p><strong>定案的是一张小纸。</strong>案子办了两个月，「飛坐繫兩月，無可證者」。到年底，「歲暮，獄不成，檜手書小紙付獄，即報飛死」——结案靠的是秦桧亲手写的一张纸条。本线只记这张纸做了什么，不替它补动机。</p>
+<p><strong>活下来的是三个字。</strong>韩世忠不服，去问实据。同卷记这段对答——秦桧答：「飛子雲與張憲書雖不明，其事體莫須有。」韩世忠反问：「『莫須有』三字，何以服天下？」八百多年过去，这桩案子在汉语里的名字，用的是秦桧的话。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=8">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>绍兴十一年（1141）秦桧兴狱，万俟卨劾岳飞，张俊诬其部将张宪谋反；十二月宋金达成绍兴和议，岳飞被赐死狱中，岳云、张宪同被杀。「莫须有」是秦桧答韩世忠之语，遂成汉语里这桩冤案的代称。秦桧独揽相权十九年，1155年死，初谥「忠献」——开禧二年（1206）追夺王爵、改谥「缪丑」，宝祐二年（1254）再定谥「谬狠」，<strong>谥号被往下改了两次</strong>。</p>
+<p>朱熹记宋高宗每次朝见秦桧都贴身暗藏匕首；秦桧一死，高宗对杨存中说「朕今日始免靴中置刀矣」。自明成化年间（1475）起，杭州岳飞墓前不断有人建秦桧跪像供百姓泄愤，<strong>屡毁屡建，有记载的近十次</strong>。</p>
+</details>
+</div></section>
+<section id="s9" data-year="1279" data-name="过零丁洋"><div class="wrap">
+<div class="num">九 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="320.0" y1="16" x2="362.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-done" cx="110.0" cy="16" r="3"/><circle class="rs-done" cx="152.0" cy="16" r="3"/><circle class="rs-done" cx="194.0" cy="16" r="3"/><circle class="rs-done" cx="236.0" cy="16" r="3"/><circle class="rs-done" cx="278.0" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-cur" cx="362.0" cy="16" r="5.2"/><circle class="rs-todo" cx="404.0" cy="16" r="3"/><circle class="rs-todo" cx="446.0" cy="16" r="3"/><circle class="rs-todo" cx="488.0" cy="16" r="3"/><circle class="rs-todo" cx="530.0" cy="16" r="3"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="362.0" y="35" text-anchor="middle">过零丁洋</text></svg>
+<div class="yr">1279</div>
+<h2>衣带里的八个字 <span class="h2-ev">过零丁洋</span></h2>
+<p class="sub">1279　·　南宋　·　名人轶事</p>
+<p>秦桧那张小纸是写给狱吏的。而有人下笔的时候非常清楚第一个读者是谁，也清楚那个人不会被说服。</p>
+<p><strong>这首诗写给一个人看。</strong>祥兴二年正月，文天祥被押解途经零丁洋。元帅张弘范要他修书招降固守崖山的张世杰。《宋史》卷四百一十八记，他先回了一句：「吾不能捍父母，乃教人叛父母，可乎？」对方索之固，「乃書所過《零丁洋詩》與之。其末有云：『人生自古誰無死，留取丹心照汗青。』」</p>
+<p><strong>收信人的反应，史书也记了。</strong>下一句是六个字：「弘範笑而置之。」这首诗当初要说服谁，史书写得清楚；那个人笑了笑，把它放在一边。今天背这首诗的人，没有一个是它原来的收信人。</p>
+<p><strong>另一份缝在衣服里。</strong>不到四年，他在大都就义。数日后妻子欧阳氏收殓，《宋史》同卷记：「其衣帶中有贊曰：『孔曰成仁，孟曰取義，惟其義盡，所以仁至。讀聖賢書，所學何事，而今而後，庶幾無愧。』」这一份不写收信人，也没有交给任何人，它藏在衣带里，等人来解开。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=9">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>祥兴元年（1278）冬，文天祥在广东海丰五坡岭兵败被俘，吞冰片自尽未遂，解至潮阳，元军元帅张弘范将他拘于船上。次年正月，押解途经零丁洋，张弘范逼他修书招降固守崖山的张世杰，文天祥不允，反书此诗以明志：「惶恐滩头说惶恐，零丁洋里叹零丁。人生自古谁无死？留取丹心照汗青。」诗里嵌进两处地名：惶恐滩是他两年前空坑兵败、经此退往福建之地，零丁洋则是眼前这片海——张弘范只得作罢。</p>
+<p>库内「痛定思痛」（1276）记的是他使元被扣、脱身南归编《指南录》的那一程；隔三年再落笔，退路已经走尽。写下此诗不到四年，忽必烈亲自劝降，他答「一死之外，无可为者」，1283年就义于大都柴市，衣带间留下绝笔「孔曰成仁，孟曰取义」，与「留取丹心」遥相印证。</p>
+</details>
+</div></section>
+<section id="s10" data-year="976" data-name="烛影斧声"><div class="wrap">
+<div class="num">十 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="362.0" y1="16" x2="404.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-done" cx="110.0" cy="16" r="3"/><circle class="rs-done" cx="152.0" cy="16" r="3"/><circle class="rs-done" cx="194.0" cy="16" r="3"/><circle class="rs-done" cx="236.0" cy="16" r="3"/><circle class="rs-done" cx="278.0" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="362.0" cy="16" r="3"/><circle class="rs-cur" cx="404.0" cy="16" r="5.2"/><circle class="rs-todo" cx="446.0" cy="16" r="3"/><circle class="rs-todo" cx="488.0" cy="16" r="3"/><circle class="rs-todo" cx="530.0" cy="16" r="3"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="404.0" y="35" text-anchor="middle">烛影斧声</text></svg>
+<div class="yr">976</div>
+<h2>烛影里的那把斧 <span class="h2-ev">烛影斧声</span></h2>
+<p class="sub">976　·　北宋　·　民变·政变</p>
+<p>文天祥那份绝笔要等人来解开。而有一种遗言是死后才被拿出来念的——念的时候，写它的人不能作证。往回三百年。</p>
+<p><strong>最有名的那段记载出自一部笔记。</strong>开宝九年冬，宋太祖赵匡胤突然驾崩，其弟赵光义随即继位，其间情形成谜。这件事最著名的记载不出自正史，出自僧人文莹的《续湘山野录》。这一站看的是这段话的来路。</p>
+<p><strong>它写了什么。</strong>文莹记：那晚太祖急召开封王入宫，屏退宦官宫妾，「但遙見燭影下，太宗時或避席，有不可勝之狀」；三更，殿雪数寸，「帝引柱斧戳雪，顧太宗曰：『好做，好做！』遂解帶就寢，鼻息如雷霆」。将五鼓，「周廬者寂無所聞，帝已崩矣」。</p>
+<p><strong>遗诏在第二天早上。</strong>同一段的下一句常被略过：「太宗受遺詔於柩前即位。逮曉登明堂，宣遺詔罷……」——遗诏是在灵柩前接的，天亮才当众宣读。皇帝生前最后被听见的那两个字含义不明，而决定一切的那份文书，出现在他不能说话之后。这一站的争点不在斧子，在这份文书是什么时候写的。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=10">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>976年宋太祖赵匡胤突然驾崩，其弟赵光义随即继位，其间情形成谜，史学界有赵光义弑兄篡位之疑，相关记载以僧人文莹《续湘山野录》最著名。</p>
+</details>
+</div></section>
+<section id="s11" data-year="1722" data-name="康熙遗诏"><div class="wrap">
+<div class="num">十一 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="404.0" y1="16" x2="446.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-done" cx="110.0" cy="16" r="3"/><circle class="rs-done" cx="152.0" cy="16" r="3"/><circle class="rs-done" cx="194.0" cy="16" r="3"/><circle class="rs-done" cx="236.0" cy="16" r="3"/><circle class="rs-done" cx="278.0" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="362.0" cy="16" r="3"/><circle class="rs-done" cx="404.0" cy="16" r="3"/><circle class="rs-cur" cx="446.0" cy="16" r="5.2"/><circle class="rs-todo" cx="488.0" cy="16" r="3"/><circle class="rs-todo" cx="530.0" cy="16" r="3"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="446.0" y="35" text-anchor="middle">康熙遗诏</text></svg>
+<div class="yr">1722</div>
+<h2>满文那一行 <span class="h2-ev">康熙遗诏</span></h2>
+<p class="sub">1722　·　清　·　文物</p>
+<p>烛影那一夜之后七百多年，同样的疑问又落在一份遗诏上。这一次，那张纸还在。</p>
+<p><strong>东西在哪。</strong>中研院史语所历史文物陈列馆藏「清聖祖仁皇帝遺詔」一件，典藏号 037033，纸本，83.6×240.5 公分，满汉文并列书写。</p>
+<p><strong>对不上的地方在实物身上。</strong>民间的说法是把传位十四子改成传位于四子。而诏文自己写的是「雍親王皇四子胤禛人品貴重，深肖朕躬，必能克承大統。著繼朕登基，即皇帝位」——写的是皇四子。满文那一行，史语所的说法是费事，不是办不到：「隆科多等人想紙上作業地將滿文『juwan duici age In Jeng』（十四子胤禎）更動為『duici age In Jen』（四子胤禛），必須費事地抹去『十』（juwan）字，再改變 Jeng 一字的字尾筆法。」</p>
+<p><strong>辟到这里就得停。</strong>同一页把边界写在前面：「康熙賓天之後所頒布天下的遺詔，並未真正經過康熙本人寓目欽定，乃是不爭的事實」；「……已經是雍正大權在握之後進行加工的產物，當然不可能從中檢證康熙的遺命是否遭到竄改」。辟掉的只是纸面上改字这一个说法，继位公案不因此了结。这个说法长在九子夺嫡那二十年的土壤上。</p>
+<p><strong>他早在五年前把话公开过一次。</strong>史语所另记：康熙五十六年，他召集诸王大臣与皇子面谕，「今預使爾等知朕之血誠」，把遗诏的内容提前讲了一遍，后来颁行的遗诏大体套用这份面谕。先说出来，也没能了结。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=11">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>那道诏书还在。</strong>中研院史语所历史文物陈列馆藏一件，馆方著录：藏品名稱「清聖祖仁皇帝遺詔」，典藏號037033，年代「清 康熙六十一年 (1722 A.D.)」，紙本，83.6x240.5cm，語言文字「滿漢文並列」。</p>
+<p><strong>民间「把『十』改成『于』」那个说法，对不上的地方有三处，其中两处就在这件东西自己身上。</strong> <strong>一、称谓。</strong>馆方文物館週記046誊录的诏文作「雍親王皇四子胤禛人品貴重，深肖朕躬，必能克承大統。著繼朕登基，即皇帝位」——写的是「皇四子」，不是「四子」。故宫博物院官网《雍正即位之谜》把它讲成通例：「清代书写皇子称谓，一定要冠以『皇』字，即『皇某子』、『皇某某子』，四阿哥胤禛为『皇四子』，而十四阿哥允禵则书写为『皇十四子』，于是，将『十』改为『于』一说不攻自破。」</p>
+<p><strong>二、那个字。</strong>故宫同页续作「况且，『于』是现代的简体字，在清代并不通用，当时应使用『於』，所以，此说更是无稽之谈」——本库照引这句机构说法，另记一层限定：它宜读作「清代此类正式行文惯用『於』」，清代公文用字的字书或统计本库未核；能核到的一手就在这道诏书自己的文句里，週記所录诏文正作「五福以考終命列於第五者，誠以其難得故也」。</p>
+<p><strong>三、满文那一行，两家机构说得并不一样，本库并存不裁。</strong>故宫官网作「还有一个史实，就是清代诏书为满汉文合璧，满文是拼音文字，根本无法对其增减横竖笔画来篡改文字」；而藏着这件东西的史语所，藏品页说的是费事而不是办不到——「遺詔以滿漢文並列書寫，隆科多等人想紙上作業地將滿文『juwan duici age In Jeng』（十四子胤禎）更動為『duici age In Jen』（四子胤禛），必須費事地抹去『十』（juwan）字，再改變Jeng 一字的字尾筆法」。</p>
+<p><strong>辟到这里就得停。</strong>史语所同页把话说在前头：「康熙賓天之後所頒布天下的遺詔，並未真正經過康熙本人寓目欽定，乃是不爭的事實」「遑論頒布天下的正式遺詔，已經是雍正大權在握之後進行加工的產物，當然不可能從中檢證康熙的遺命是否遭到竄改」。时间层级各源一致：康熙六十一年十一月十三日戌刻崩于畅春园，十六日才颁遗诏且只宣满文本，二十日胤禛登极另颁即位诏书（验算：十三日＝1722年12月20日、十六日＝12月23日、二十日＝12月27日；<strong>故宫该页正文把十三日折成「1722年12月12日」，与验算不合，异文照录不采</strong>）。</p>
+<p>故宫自设的边界与宋瞳（中国人民大学清史研究所）《光明日报》2013年9月26日文一致：前者「因为几乎所有的遗诏都是在先帝驾崩后由顾命大臣撰写，用的均为先帝的口吻，这似乎也不能说明胤禛就是篡位」，末了更写「康熙传位胤禛这一说并没有确凿的证据」；后者「辽诏至多证明雍正没有改诏，依然无法成为判断雍正皇帝即位情况的关键证据」。</p>
+<p><strong>辟掉的只是把『十』改成『于』这一个说法，继位公案本身不因此了结。</strong> <strong>有几份、都在哪，各源不一。</strong>宋瞳文记「除本次出现之辽诏，海峡两岸已存有四份。大陆所藏在第一历史档案馆，台湾所藏在『中央研究院』历史语言研究所」，两岸各二（满汉合璧一份、汉文一份）；本库只在史语所馆方页面核到这一件，第一历史档案馆藏件在该馆官网未检得，止于转述层。</p>
+<p>辽宁那一件两说打架：宋瞳文记辽诏「以满、蒙、汉三种文字合璧写成，蒙文遗诏属首次问世」，沈阳档案信息网（沈阳市档案馆官网）所转沈阳晚报文却称「在馆内展出的『康熙遗诏』其实是一件复制件」「是2013年布置展览期间，由省档案馆向中国第一历史档案馆申请复制的拓本」，且作满汉两种文字——并存不裁；坊间「一式四份」之类的份数断言本库不采。</p>
+<p><strong>改诏说自己的来历，本库未能追到具名一手。</strong>故宫官网只说「雍正在位时就有人传言」；宋瞳文把它记成两路，其一「传位十四子」改「传位于四子」或「传位第四子」（注出处《大义觉迷录》），其二「传位于胤祯」改「传位于胤禛」（注出处金承艺《清朝帝位之争史实考》；故宫官网驳这一路，据康熙年间历次所修《玉牒》「雍正的名字都为『胤禛』」）；《大义觉迷录》原书本库未获——中文维基文库无此书，简繁正题实测皆404、站内检索零命中——故不自证亦不否证。</p>
+<p>诏文另见《清实录·圣祖仁皇帝实录》卷三百，惟本库所据电子本此卷通篇把胤禛写作「胤禎」，而诸兄弟又已改「允」字，行文自相不一，影印底本未见，只作旁证：逐字引文一律取馆方誊录。遗诏制作的专论见陳熙遠〈皇帝的最後一道命令——清代遺詔製作、皇權繼承與歷史書寫〉，《臺大歷史學報》33（2004）：161-213（书目据中研院「研之有物」页与史语所週記，全文本库未获）。</p>
+<p>互见库内九子夺嫡（1708—1722）与秘密立储（1723）——后者正是这场争夺的制度答案。</p>
+</details>
+</div></section>
+<section id="s12" data-year="1723" data-name="秘密立储"><div class="wrap">
+<div class="num">十二 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="446.0" y1="16" x2="488.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-done" cx="110.0" cy="16" r="3"/><circle class="rs-done" cx="152.0" cy="16" r="3"/><circle class="rs-done" cx="194.0" cy="16" r="3"/><circle class="rs-done" cx="236.0" cy="16" r="3"/><circle class="rs-done" cx="278.0" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="362.0" cy="16" r="3"/><circle class="rs-done" cx="404.0" cy="16" r="3"/><circle class="rs-done" cx="446.0" cy="16" r="3"/><circle class="rs-cur" cx="488.0" cy="16" r="5.2"/><circle class="rs-todo" cx="530.0" cy="16" r="3"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="488.0" y="35" text-anchor="middle">秘密立储</text></svg>
+<div class="yr">1723</div>
+<h2>匾后面那只匣子 <span class="h2-ev">秘密立储</span></h2>
+<p class="sub">1723　·　清　·　制度</p>
+<p>康熙提前公开的那一次没有了结。他儿子上台第二年换了个办法：不提前公开，改成谁也不许看，一直锁到他死。</p>
+<p><strong>他自己说了为什么。</strong>雍正元年八月，《清史稿》卷九记他召王大臣九卿面谕：「建儲一事，理宜夙定。去年十一月之事，倉卒之間，一言而定。聖祖神聖，非朕所及。今朕親寫密封，緘置錦匣，藏於正大光明匾額之後，諸卿其識之。」去年十一月那件事，仓卒之间一句话就定了——他把自己那次继位当成了要修的漏。</p>
+<p><strong>办法的形状。</strong>皇帝亲手写继承人姓名，一式两份，一份随身，一份封进建储匣，放在乾清宫「正大光明」匾后；皇帝殡天后由王公大臣公证启匣，所书皇子即位。这份文书的特别之处在于：作者活着的时候谁也不许读，作者死后才许拆。它把作者不在场从缺陷改成了条件。</p>
+<p><strong>匾也是临的。</strong>明代乾清宫悬「敬天法祖」匾，清改挂顺治御书「正大光明」，康熙、乾隆均曾临摹，今天挂的是乾隆的临本。顺带一笔：上一站那道康熙遗诏，开篇第一句正是「從來帝王之治天下，未嘗不以敬天法祖為首務」——被摘下来的那四个字，在他的遗诏里又写了一遍。</p>
+<p><strong>终于无可择。</strong>这套制度停在一个它没有预料的地方：咸丰只有一个儿子，制度无从执行；其后同治、光绪皆无子，再未行用。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=12">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>雍正元年下诏改行秘密立储：皇帝亲书继承人姓名，一式两份，一份随身，一份封入建储匣，存放于乾清宫「正大光明」匾后；皇帝殡天后由王公大臣公证启匣，所书皇子即位。此制为杜绝康熙末年诸子夺嫡而设，却终于「无可择」——咸丰帝只有一个儿子，制度无从执行；其后同治、光绪皆无子，再未行用。附：明代乾清宫悬「敬天法祖」匾，清改挂世祖顺治御书「正大光明」，康熙、乾隆均曾临摹，今悬者为乾隆临本</p>
+</details>
+</div></section>
+<section id="s13" data-year="1861" data-name="辛酉政变"><div class="wrap">
+<div class="num">十三 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="488.0" y1="16" x2="530.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-done" cx="110.0" cy="16" r="3"/><circle class="rs-done" cx="152.0" cy="16" r="3"/><circle class="rs-done" cx="194.0" cy="16" r="3"/><circle class="rs-done" cx="236.0" cy="16" r="3"/><circle class="rs-done" cx="278.0" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="362.0" cy="16" r="3"/><circle class="rs-done" cx="404.0" cy="16" r="3"/><circle class="rs-done" cx="446.0" cy="16" r="3"/><circle class="rs-done" cx="488.0" cy="16" r="3"/><circle class="rs-cur" cx="530.0" cy="16" r="5.2"/><circle class="rs-todo" cx="572.0" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-end" x="614.0" y="35" text-anchor="end">乾陵无字碑</text><text class="rs-name" x="530.0" y="35" text-anchor="middle">辛酉政变</text></svg>
+<div class="yr">1861</div>
+<h2>代写的那道朱谕 <span class="h2-ev">辛酉政变</span></h2>
+<p class="sub">1861　·　清　·　民变·政变</p>
+<p>建储匣要求皇帝亲笔。而咸丰十一年七月的那一天，皇帝已经写不了了。</p>
+<p><strong>朱谕是代写的。</strong>《清史稿》卷二十记：「辛丑，上不豫。壬寅，上大漸，召王大臣承寫硃諭，立皇長子為皇太子。癸卯，上崩於行宮，年三十一。」同一天，他指定载垣、端华、景寿、肃顺、穆荫、匡源、杜翰、焦祐瀛八人「贊襄政務」（《清史稿》卷二十一）。这份最后的安排，从第一笔起就不在他自己手上。</p>
+<p><strong>遗诏一个多月后才发。</strong>八月癸亥，「頒大行皇帝遺詔」。他死在七月十七日，天下见到那份遗诏，是一个多月以后的事。</p>
+<p><strong>罪名是六个字。</strong>九月三十日，两宫太后与恭亲王发动政变。《清史稿》卷二十一记那天的处分理由：「以擅改諭旨，力阻垂簾，解載垣、端華、肅順任」，其余五人罢军机。这条线追了两千年的那个动作，此刻成了一条可以定人罪的罪名。</p>
+<p><strong>七十二天。</strong>从七月十七日到九月三十日，七十二天（按同书所载朔日干支验算：咸丰十一年七月丁亥朔、八月丁巳朔、九月丙戌朔）。有一件事要分清：建储匣在这一局里根本没有出场——咸丰只有一个儿子，匣子无从执行。垮掉的是匣子之外那一份代笔的安排。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=13">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>咸丰帝驾崩后，慈安、慈禧两太后联合恭亲王奕訢发动宫廷政变，肃清咸丰遗命的顾命八大臣势力，改由两宫太后垂帘听政，奠定此后数十年慈禧掌控朝政的格局。</p>
+</details>
+</div></section>
+<section id="s14" data-year="700" data-name="除罪金简"><div class="wrap">
+<div class="num">十四 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="530.0" y1="16" x2="572.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-done" cx="110.0" cy="16" r="3"/><circle class="rs-done" cx="152.0" cy="16" r="3"/><circle class="rs-done" cx="194.0" cy="16" r="3"/><circle class="rs-done" cx="236.0" cy="16" r="3"/><circle class="rs-done" cx="278.0" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="362.0" cy="16" r="3"/><circle class="rs-done" cx="404.0" cy="16" r="3"/><circle class="rs-done" cx="446.0" cy="16" r="3"/><circle class="rs-done" cx="488.0" cy="16" r="3"/><circle class="rs-done" cx="530.0" cy="16" r="3"/><circle class="rs-cur" cx="572.0" cy="16" r="5.2"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-name" x="572.0" y="35" text-anchor="middle">除罪金简</text></svg>
+<div class="yr">700</div>
+<h2>石缝里的六十三个字 <span class="h2-ev">除罪金简</span></h2>
+<p class="sub">700　·　唐　·　文物</p>
+<p>这条线到这里，四种办法都试过了。往回一千一百多年，嵩山上有一封信，收信人不是后人。</p>
+<p><strong>一片金子。</strong>1982 年 5 月，登封农民屈西怀在中岳嵩山峻极峰的石缝中捡到一片金片。长 36.2 厘米，宽 8 厘米，重 223.5 克，上刻双钩楷书六十三字，落款是公元 700 年七月七日。</p>
+<p><strong>谁写给谁。</strong>久视元年，武则天遣道士胡超投金简于嵩山，为她「大周国主」之身祈三官九府免除罪责。铭文里有她自造的「曌」「圀」等字。这是已知唯一的唐代金简——河南博物院说，铜简、银简、玉简都发现过，「金簡則為首次發現」。</p>
+<p><strong>写下来就是为了没人看见。</strong>河南博物院的专家点评里有一段话把这件东西的性质说得很准：简、策上呈于天，是天子与天帝的「私話家語」，是国家的「最高機密」；「此種『最高機密』，史家無從獲得資料，典籍難以輯載」。这一份写好之后塞进石缝，一千二百八十二年没有读者。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=14">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>久视元年七月遣道士胡超投于嵩山，为其「大周国主」之身祈三官九府免除罪责。1982 年登封农民屈西怀于峻极峰石缝中拾得，为已知唯一的唐代金简；铭文六十三字，含其自造的「曌」「圀」等字</p>
+</details>
+</div></section>
+<section id="s15" data-year="706" data-name="乾陵无字碑"><div class="wrap">
+<div class="num">十五 / 十五</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="572.0" y1="16" x2="614.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="68.0" cy="16" r="3"/><circle class="rs-done" cx="110.0" cy="16" r="3"/><circle class="rs-done" cx="152.0" cy="16" r="3"/><circle class="rs-done" cx="194.0" cy="16" r="3"/><circle class="rs-done" cx="236.0" cy="16" r="3"/><circle class="rs-done" cx="278.0" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="362.0" cy="16" r="3"/><circle class="rs-done" cx="404.0" cy="16" r="3"/><circle class="rs-done" cx="446.0" cy="16" r="3"/><circle class="rs-done" cx="488.0" cy="16" r="3"/><circle class="rs-done" cx="530.0" cy="16" r="3"/><circle class="rs-done" cx="572.0" cy="16" r="3"/><circle class="rs-cur" cx="614.0" cy="16" r="5.2"/><text class="rs-end" x="26.0" y="35" text-anchor="start">沙丘之变</text><text class="rs-name" x="614.0" y="35" text-anchor="end">乾陵无字碑</text></svg>
+<div class="yr">706</div>
+<h2>一整块石头，不着一字 <span class="h2-ev">乾陵无字碑</span></h2>
+<p class="sub">706　·　唐　·　文物</p>
+<p>六年之后，同一个人留下另一件东西。这一件不藏，立在露天；也不写，一个字都没有。</p>
+<p><strong>它是什么。</strong>与西侧高宗的述圣记碑相对，一整石雕成，通体不着一字。立碑年代亦无确载，多系于神龙二年武则天祔葬乾陵前后。</p>
+<p><strong>四说并列，皆无实证。</strong>何以无字，自宋以来诸说纷纭：功高无以言表、罪孽不便自陈、中宗不知如何称呼她、留待后人评说。四说皆无实证，本线四说并存，不取一说。还有一条纪律要在这里说明：碑上没有字，所以这四种说法一句也不能加引号——给一块无字的碑加引号，是这条线能犯的最重的错。</p>
+<p><strong>可查的那一半。</strong>她当初怎么想存疑，事情最后如何却无疑：这块不着一字的碑，一千三百年来正是被后人评说的那一块，碑上后世题刻累累。</p>
+<p><strong>这一站还有一样别处没有的东西。</strong>本线十五站，其余十四站的年份都是硬的；只有这一块碑，连立起来的那一年也只能系在一个前后（今日逐条实测，本线带置信标记的仅此一条）。不写字的那一块，也是没有日期的那一块。</p>
+<a class="go" href="../timeline.html#line=shenhou&amp;at=15">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>与西侧高宗的述圣记碑相对，一整石雕成，通体不着一字。何以无字，自宋以来诸说纷纭——功高无以言表、罪孽不便自陈、中宗不知如何称呼她、留待后人评说，皆无实证。但<strong>她当初怎么想存疑，事情最后如何却无疑</strong>：这块不着一字的碑，一千三百年来正是被后人评说的那一块，碑上后世题刻累累。立碑年代亦无确载，多系于神龙二年武则天祔葬乾陵前后</p>
+</details>
+</div></section>
+<section id="s16" class="tone"><div class="wrap">
+<div class="num">落点</div>
+<h2>题刻累累</h2>
+<p>他封好的那封信没能送出去，她立起的那块碑一个字也没写；而一千三百年来，后人把字刻满了那块碑。</p>
+</div></section>
+<footer><div class="wrap">
+本页由 <code>tools/mining/build_line_page.py</code> 从库内数据生成，不手改。长文出自纪录片叙事稿，考据随文写就；凡各源不一致的数字，做法是一个都不给。
+<div class="row">
+<a href="../timeline.html#line=shenhou">在图上走一遍 →</a>
+<a href="index.html">中国帝王寿命数据库</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-shenhou.md" target="_blank" rel="noopener">资料与出处 ↗</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%%E5%%8B%%98%%E8%%AF%%AF&amp;title=%%E5%%8B%%98%%E8%%AF%%AF%%EF%%BC%%9A" target="_blank" rel="noopener">报个错 ↗</a>
+</div></div></footer>
+<dialog id="lb"><button id="lbx" type="button" aria-label="关闭">✕</button><img id="lbi" alt=""><div id="lbc"></div></dialog>
+<script>
+// 进度条与导轨高亮。整页只有这一段脚本，无依赖、无外链。
+var bar=document.getElementById('bar'),links=[].slice.call(document.querySelectorAll('#rail a')),
+    secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+function tick(){
+  var h=document.documentElement,y=h.scrollTop||document.body.scrollTop,
+      m=(h.scrollHeight-h.clientHeight)||1;
+  bar.style.width=(100*y/m)+'%';
+  var at=0;
+  for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].getBoundingClientRect().top<h.clientHeight*0.42) at=i; }
+  for(var j=0;j<links.length;j++) links[j].className=(j===at?'on':'');
+}
+addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
+
+// 点开放大。图注与署名跟着进去——放大了更该说清这是谁的
+var lb=document.getElementById('lb'),lbi=document.getElementById('lbi'),lbc=document.getElementById('lbc');
+[].forEach.call(document.querySelectorAll('button.zoom'),function(b){
+  b.addEventListener('click',function(){
+    lbi.src=b.getAttribute('data-src'); lbi.alt=b.getAttribute('data-cap')||'';
+    var cap=b.getAttribute('data-cap')||'', who=b.getAttribute('data-who')||'',
+        full=b.getAttribute('data-full')||'';
+    lbc.innerHTML='';
+    var t=document.createElement('div'); t.textContent=cap+(cap&&who?'　':'')+who; lbc.appendChild(t);
+    if(full){var a=document.createElement('a'); a.href=full; a.target='_blank'; a.rel='noopener';
+      a.textContent='在 Commons 看原尺寸 ↗'; var d=document.createElement('div');
+      d.style.marginTop='.4rem'; d.appendChild(a); lbc.appendChild(d);}
+    if(lb.showModal) lb.showModal(); else lb.setAttribute('open','');
+  });
+});
+document.getElementById('lbx').addEventListener('click',function(){lb.close?lb.close():lb.removeAttribute('open')});
+lb.addEventListener('click',function(e){ if(e.target===lb) lb.close&&lb.close(); });
+</script>
+</body></html>

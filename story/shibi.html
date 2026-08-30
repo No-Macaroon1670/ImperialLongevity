@@ -1,0 +1,998 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>史笔线 · 太史当朝写下五个字，还拿给众人看。二十站，看这支笔从史官手里到私人、到朝廷、到国库，每一次易手是什么价——而最后一手不在写，在核。</title>
+<meta name="description" content="一支笔换了四次手。共 20 站。">
+<link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/story/shibi.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="史笔线">
+<meta property="og:description" content="太史当朝写下五个字，还拿给众人看。二十站，看这支笔从史官手里到私人、到朝廷、到国库，每一次易手是什么价——而最后一手不在写，在核。">
+<meta property="og:url" content="https://no-macaroon1670.github.io/ImperialLongevity/story/shibi.html">
+<style>
+:root{
+  --bg:#0e0d0c; --bg2:#161311; --ink:#e9e3d7; --dim:#9a9187; --faint:#5d564e;
+  --rule:#2a2622; --accent:#c0603f; --gold:#c9a959;
+  --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+  font-size:18px;line-height:2.05;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+.epi-verse{padding:3rem 1.2rem 0;text-align:center}
+.epi-verse .vl{font-size:21px;letter-spacing:.38em;line-height:2.35;text-indent:.38em}
+.epi-verse .vby{margin-top:1rem;font-family:var(--sans);font-size:11px;color:var(--faint);letter-spacing:.24em}
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50}
+/* 导轨：宽屏才有。窄屏那点横向空间要留给正文 */
+/* 左栏：导轨在上，小地图在下。两者同住一个固定列——读者眼睛一抬，
+   既知道读到第几节，也知道那一节在地上哪儿 */
+#side{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
+  z-index:40;width:11rem}
+#rail{display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
+/* rdot/rlbl 带前缀与外界脱钩（照 charts.js sw- 家法；库主实测 Rakuten 扩展注入
+   .dot{position:absolute} 把点拽出流压上标签首字，position:static 双保险）。
+   点与标签的间距落在 .rdot 的 margin 上而不靠 flex gap：读者侧环境（插件/旧内核）重写 <a>
+   的 display 时会退成 inline 排布，margin+vertical-align 在两种排布下同样成立，标签永不吃点
+   （2026-08-26 库主线上截图实案，本地净环境不复现；flex 健康时此写法与 gap 像素等价） */
+#rail a{display:flex;align-items:center;color:var(--faint);text-decoration:none;
+  letter-spacing:.04em;transition:color .25s}
+#rail .rdot{position:static;display:inline-block;vertical-align:middle;width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;margin-right:.5rem;transition:transform .25s}
+#rail a .rlbl{display:inline-block;vertical-align:middle;opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap}
+#rail a:hover{color:var(--dim)} #rail a:hover .rlbl{opacity:1;transform:none}
+#rail a.on{color:var(--accent)} #rail a.on .rdot{transform:scale(1.5)}
+#rail a.on .rlbl{opacity:1;transform:none}
+@media(max-width:1180px){#side{display:none}}
+.wrap{max-width:40rem;margin:0 auto;padding:0 1.5rem}
+header.cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
+  padding:6rem 0 4rem;border-bottom:1px solid var(--rule)}
+.kicker{font-family:var(--sans);font-size:12px;letter-spacing:.34em;color:var(--faint);margin-bottom:2.4rem}
+h1{font-size:clamp(2.4rem,8vw,4rem);line-height:1.14;margin:0 0 1.6rem;font-weight:500;letter-spacing:.06em}
+.lede{font-size:1.06rem;color:var(--dim);line-height:2;max-width:30rem;margin:0}
+.meta{margin-top:3.4rem;font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.08em}
+.meta a{color:var(--gold);text-decoration:none;border-bottom:1px solid transparent}
+.meta a:hover{border-bottom-color:var(--gold)}
+section{padding:5.5rem 0;border-bottom:1px solid var(--rule)}
+section.tone{background:var(--bg2)}
+.num{font-family:var(--sans);font-size:11px;letter-spacing:.3em;color:var(--faint)}
+.yr{font-family:var(--sans);font-size:2.6rem;line-height:1;color:var(--rule);margin:.4rem 0 .8rem;
+  font-variant-numeric:tabular-nums;font-weight:700}
+h2{font-size:1.75rem;line-height:1.35;margin:0 0 .5rem;font-weight:500;letter-spacing:.04em}
+.h2-ev{font-size:.95rem;font-weight:400;color:var(--faint);letter-spacing:.02em;white-space:nowrap;margin-left:.35em}
+.sub{font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.1em;margin:0 0 2rem}
+section p{margin:0 0 1.35rem}
+p.beat{color:var(--gold)}
+blockquote{margin:2rem 0;padding-left:1.2rem;border-left:2px solid var(--accent);color:var(--ink)}
+blockquote small{display:block;margin-top:.5rem;font-family:var(--sans);font-size:11px;
+  letter-spacing:.08em;color:var(--faint)}
+.go{display:inline-block;margin:.4rem 0 1.6rem;font-family:var(--sans);font-size:12px;
+  letter-spacing:.08em;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:2px}
+.go:hover{border-bottom-color:var(--gold)}
+details.app{margin-top:2rem;font-family:var(--sans);font-size:13px;line-height:1.85;color:var(--dim)}
+details.app summary{cursor:pointer;color:var(--faint);letter-spacing:.14em;font-size:11px;
+  padding:.5rem 0;border-top:1px solid var(--rule)}
+details.app ul{margin:.8rem 0;padding-left:1.1rem}
+details.app li{margin-bottom:.7rem}
+details.app p{margin:.9rem 0 0}
+.tag{display:inline-block;font-size:10px;letter-spacing:.08em;padding:1px 6px;margin-right:.5rem;
+  border-radius:3px;border:1px solid currentColor;vertical-align:.08em}
+.t-ok{color:#7d9b6e} .t-trad{color:var(--gold)} .t-new{color:#6e8a9b}
+.t-infer{color:#9b8a6e} .t-doubt{color:var(--accent)}
+.src{margin-top:.9rem;display:flex;flex-wrap:wrap;gap:.9rem}
+.src a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule);font-size:12px}
+.src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
+.note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
+/* 配图。图注里那半行是**署名**，CC-BY／CC-BY-SA 要求给出作者与许可 */
+/* 文绕图。竖幅整幅摆着时两侧全空，绕排把那块空白还给文字；
+   窄屏不绕——一栏劈两半两边都读不成 */
+figure.pic{margin:0 0 2rem}
+figure.pic img{display:block;width:100%;height:auto;border-radius:3px}
+@media(min-width:820px){
+  figure.pic{float:left;width:44%;margin:.4rem 1.6rem .8rem 0}
+  figure.pic.pic-wide{float:none;width:100%;margin:.6rem 0 1.2rem}
+  section p,section h2,details.app{clear:none}
+  details.app,.go{clear:both}
+}
+figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
+  line-height:1.8;color:var(--faint)}
+figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
+figure.pic figcaption a:hover{color:var(--dim)}
+/* 一站多图（如落点三张）：不绕排，并排摆成一排——「能看见三样东西」，
+   图就该一次看见三样，不该被文字拆成三处零散的浮块 */
+.pic-trio{display:flex;flex-direction:column;gap:1.4rem;margin:0 0 2rem}
+.pic-trio figure.pic{margin:0}
+@media(min-width:820px){
+  .pic-trio{flex-direction:row}
+  .pic-trio figure.pic{float:none;width:calc(33.333% - .94rem)}
+}
+
+/* ── 地图 ────────────────────────────────────────────────────────
+   开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
+   底图只有海岸线、四个大湖与黄河长江淮河，没有国界（理由见 tools/mining/build_basemap.py）。
+   全程的点一律画出、只是淡；当前那一站才亮——读者要能看见自己走到哪儿，
+   也要能看见还剩多少。 */
+#smap{padding:4rem 0 3.5rem}
+svg.hmap{display:block;width:100%;height:auto}
+svg.rstrip{display:block;width:100%;max-width:640px;height:auto;margin:.4rem 0 .1rem;overflow:visible}
+.rs-base{stroke:var(--rule);stroke-width:1.4}
+.rs-hop{stroke:var(--accent);stroke-width:2.2}
+.rs-done{fill:var(--dim)}
+.rs-todo{fill:none;stroke:var(--faint);stroke-width:1.2}
+.rs-cur{fill:var(--accent)}
+.rs-name{fill:var(--ink);font-family:var(--sans);font-size:11.5px;letter-spacing:.08em}
+.rs-end{fill:var(--faint);font-family:var(--sans);font-size:9.5px;letter-spacing:.04em}
+svg.hmap{margin:1.6rem 0 1rem}
+svg *{vector-effect:non-scaling-stroke}
+.m-dust{fill:#6a6259;opacity:.32}
+.m-idx{fill:var(--dim);font-family:var(--sans);letter-spacing:0}
+.m-coast{fill:none;stroke:var(--rule);stroke-width:1.1}
+.m-river{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.42}
+/* 大湖：一片淡水色，压在海岸之上、河之下（层序归 render_line_map.mjs 的 append 次序）。
+   用河的色相而不是另起一色——湖跟河是一族，换个颜色就成了另一种东西。这一页是
+   深底，故比浅色两端（.mm-lake/.pl-lake）再压一档：填充只到河那道线有效浓度的
+   三成上下，读者一眼知道这是一块水面，但抢不过河、更抢不过站点。
+   填充比描边实：水面不是圈出来的区域。
+   要试「少画一个湖」，不必重跑构建：.m-lake[data-lake="太湖"]{display:none} */
+.m-lake{fill:var(--accent);fill-opacity:.13;stroke:var(--accent);stroke-opacity:.34;stroke-width:.8}
+.m-city{fill:var(--faint);opacity:.75}
+.m-city-t{fill:var(--faint);opacity:.85;font-family:var(--sans)}
+.m-river-t{fill:var(--accent);opacity:.65;font-family:var(--sans)}
+/* 湖名：与河名同色、小一号、更轻——湖是结不是干线（2026-08-26 story 静态图补湖案） */
+.m-lake-t{fill:var(--accent);opacity:.5;font-family:var(--sans)}
+.m-dot{fill:var(--dim);opacity:.5}
+.m-maybe{fill:none;stroke:var(--dim);stroke-width:1.2;opacity:.55;stroke-dasharray:3 2.5}
+.m-held{fill:none;stroke:var(--gold);stroke-width:1.2;opacity:.5}
+/* 贴在框边的方块：东西已经出了这张图的范围（伦敦） */
+.m-off{stroke-dasharray:3 2.5}
+.m-flow{stroke:var(--gold);stroke-width:1;opacity:.35;stroke-dasharray:4 3}
+.m-stop-t{fill:var(--dim);opacity:.8;font-family:var(--sans)}
+/* 现藏之处的馆名。金色，与那个空心方块、那条虚线同一族 */
+.m-held-t{fill:var(--gold);opacity:.75;font-family:var(--sans)}
+/* 当前这一节：亮起来 */
+.m-stop.on .m-dot{fill:var(--accent);opacity:1}
+.m-stop.on .m-maybe{stroke:var(--accent);opacity:1}
+.m-stop.on .m-held,.m-stop.on .m-flow{stroke:var(--gold);opacity:1}
+.m-stop.on .m-stop-t{fill:var(--ink);opacity:1}
+#gname{margin-top:.5rem;font-family:var(--sans);font-size:10.5px;color:var(--faint);
+  line-height:1.6;min-height:2.6em}
+
+/* 点开放大。用 <dialog>：Esc 与背景遮罩都是它自带的，不必自己写一套 */
+button.zoom{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in}
+button.zoom img{transition:opacity .18s}
+button.zoom:hover img{opacity:.86}
+dialog#lb{border:0;padding:0;background:none;max-width:96vw;max-height:96vh;color:var(--ink)}
+dialog#lb::backdrop{background:rgba(8,7,6,.92)}
+#lbi{display:block;max-width:min(96vw,900px);max-height:82vh;width:auto;height:auto;
+  margin:0 auto;border-radius:3px}
+#lbc{max-width:min(96vw,900px);margin:.8rem auto 0;font-family:var(--sans);font-size:12px;
+  line-height:1.8;color:var(--dim)}
+#lbc a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule)}
+#lbx{position:fixed;top:1.1rem;right:1.4rem;width:2.2rem;height:2.2rem;border:0;border-radius:50%;
+  background:rgba(255,255,255,.1);color:var(--ink);font-size:1rem;cursor:pointer}
+#lbx:hover{background:rgba(255,255,255,.2)}
+footer{padding:5rem 0 7rem;font-family:var(--sans);font-size:12.5px;color:var(--faint);line-height:2}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--rule)}
+footer a:hover{color:var(--ink)}
+footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
+@media(max-width:640px){
+  body{font-size:17px;line-height:1.98}
+  section{padding:4rem 0}
+  .yr{font-size:2rem}
+  h1{letter-spacing:.03em}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="side">
+<nav id="rail" aria-label="节次">
+<a href="#s0"><span class="rdot"></span><span class="rlbl">书者何人</span></a>
+<a href="#s1"><span class="rdot"></span><span class="rlbl">书法不隐</span></a>
+<a href="#s2"><span class="rdot"></span><span class="rlbl">执简而往</span></a>
+<a href="#s3"><span class="rdot"></span><span class="rlbl">传自何人</span></a>
+<a href="#s4"><span class="rdot"></span><span class="rlbl">坑者何人</span></a>
+<a href="#s5"><span class="rdot"></span><span class="rlbl">身毁不用</span></a>
+<a href="#s6"><span class="rdot"></span><span class="rlbl">私改国史</span></a>
+<a href="#s7"><span class="rdot"></span><span class="rlbl">刊石通衢</span></a>
+<a href="#s8"><span class="rdot"></span><span class="rlbl">号为秽史</span></a>
+<a href="#s9"><span class="rdot"></span><span class="rlbl">移馆禁中</span></a>
+<a href="#s10"><span class="rdot"></span><span class="rlbl">索观起居</span></a>
+<a href="#s11"><span class="rdot"></span><span class="rlbl">退而私撰</span></a>
+<a href="#s12"><span class="rdot"></span><span class="rlbl">立焚此简</span></a>
+<a href="#s13"><span class="rdot"></span><span class="rlbl">评其同异</span></a>
+<a href="#s14"><span class="rdot"></span><span class="rlbl">卷盈五百</span></a>
+<a href="#s15"><span class="rdot"></span><span class="rlbl">诏不可草</span></a>
+<a href="#s16"><span class="rdot"></span><span class="rlbl">石室金匮</span></a>
+<a href="#s17"><span class="rdot"></span><span class="rlbl">继迁固后</span></a>
+<a href="#s18"><span class="rdot"></span><span class="rlbl">用为初稿</span></a>
+<a href="#s19"><span class="rdot"></span><span class="rlbl">摘句成罪</span></a>
+<a href="#s20"><span class="rdot"></span><span class="rlbl">刻成之日</span></a>
+<a href="#s21"><span class="rdot"></span><span class="rlbl">不在当场</span></a>
+</nav>
+</div>
+<header class="cover"><div class="wrap">
+<div class="kicker">一支笔换了四次手</div>
+<h1>史笔线</h1>
+<p class="lede">太史当朝写下五个字，还拿给众人看。二十站，看这支笔从史官手里到私人、到朝廷、到国库，每一次易手是什么价——而最后一手不在写，在核。</p>
+<div class="meta">共 20 站　·　<a href="../timeline.html#line=shibi">在图上走一遍 →</a>　·　<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-shibi.md">资料与出处 ↗</a></div>
+</div></header>
+<section id="s0" class="tone"><div class="wrap">
+<div class="num">序</div>
+<h2>书者何人</h2>
+<p>前 607 年秋天，晋国的执政赵盾出奔，没有走出国境；他的族弟赵穿在桃园杀了国君。赵盾折回来，照旧执政。太史在朝堂上写下五个字——「趙盾弒其君」——并且拿给众人看。赵盾说不是这样。太史回他：「子為正卿，亡不越竟，反不討賊，非子而誰？」（《左傳·宣公二年》）</p>
+<p>一件事发生的时候，在场的人各有各的说法。最后留在纸上的是哪一种，由谁定？</p>
+<p>这条线走二十站，追一支笔换了几次手：先是有官职的史官，后是一个人躲着写、写完了叮嘱收信人把信烧掉，再后是朝廷开馆修书，最后正本进了一座不会烧的房子。每一站报一次价。</p>
+</div></section>
+<section id="s1" data-year="-606" data-name="董狐直笔"><div class="wrap">
+<div class="num">一 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><circle class="rs-cur" cx="26.0" cy="16" r="5.2"/><circle class="rs-todo" cx="56.9" cy="16" r="3"/><circle class="rs-todo" cx="87.9" cy="16" r="3"/><circle class="rs-todo" cx="118.8" cy="16" r="3"/><circle class="rs-todo" cx="149.8" cy="16" r="3"/><circle class="rs-todo" cx="180.7" cy="16" r="3"/><circle class="rs-todo" cx="211.7" cy="16" r="3"/><circle class="rs-todo" cx="242.6" cy="16" r="3"/><circle class="rs-todo" cx="273.6" cy="16" r="3"/><circle class="rs-todo" cx="304.5" cy="16" r="3"/><circle class="rs-todo" cx="335.5" cy="16" r="3"/><circle class="rs-todo" cx="366.4" cy="16" r="3"/><circle class="rs-todo" cx="397.4" cy="16" r="3"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="26.0" y="35" text-anchor="start">董狐直笔</text></svg>
+<div class="yr">前607</div>
+<h2>书法不隐 <span class="h2-ev">董狐直笔</span></h2>
+<p class="sub">前607　·　晋国　·　名人轶事</p>
+<p><strong>写下来，还要给人看。</strong>《左傳·宣公二年》记这一笔只用了十一个字：「大史書曰：『趙盾弒其君。』以示于朝。」写完不算完，还要在朝堂上出示。赵盾当场否认，太史回的那句话把理由摆在明处：「子為正卿，亡不越竟，反不討賊，非子而誰？」</p>
+<p><strong>写下来的那个人，传文里没有名字。</strong>传文自始至终只称「大史」。「董狐」两个字出现在下一句，是孔子说的：「董狐，古之良史也，書法不隱。」同一句话里还有另一半，是给被写的人的：「趙宣子，古之良大夫也，為法受惡，惜也。越竟乃免。」</p>
+<p><strong>这一笔付了多少。</strong>《左传》此后没有再记董狐的事。库条只写到这里——他后来怎样，本库不知道，也不代书。本条系年据《左传》宣公二年推排，属先秦编年推排层，本库标低置信。</p>
+<p><strong>这个名字后来一直有人用。</strong>一千二百多年后，唐朝一位谏议大夫上表劝皇帝不要看起居注，理由里搬出他：「旣不能效朱雲廷折，董狐無隱」；再过五百年，元朝进《宋史》的宰相在表文里也写：「雖微董狐直筆之可稱，庶逃司馬寡識而輕信」。两次都在官文书里，两次都是拿他当尺子。这两站都在后面。</p>
+<p><strong>而下一站，写同样一笔的人一连死了几个。</strong></p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=1">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>晋灵公欲杀执政赵盾，盾出奔未越境，族弟赵穿弑灵公；太史董狐书「赵盾弑其君」示于朝——「子为正卿，亡不越竟，反不讨贼」。孔子称其「古之良史，书法不隐」（《左传·宣公二年》）。《正气歌》「在晋董狐笔」即此</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S1 传文只称「大史」，「董狐」之名出自孔子语——本判官 2026-08-30 直取《春秋左氏傳·宣公》raw 逐字核得，非据库条转录</li>
+<li><span class="tag t-ok">信史</span>S1 「以示于朝」四字在原文，不是「示于众」；库条 yc 作「示于朝」，与原文合</li>
+<li><span class="tag t-ok">信史</span>S1 库条 cf:1（先秦编年推排层），线文照录低置信，不写「他安然无恙」——《左传》此后未再记董狐，库条亦只写到此</li>
+<li><span class="tag t-ok">信史</span>S1a 后世两次官文书引董狐，本判官各自直取核得：唐贞观九年朱子奢表（《唐會要》卷六十三）、元至正五年《進宋史表》（《宋史·附録》）。两处均非库条所载，属本轮新核，供第⑩⑭两站呼应用</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/春秋左氏傳/宣公（action=raw" target="_blank" rel="noopener">《春秋左氏傳/宣公》  直取，2026-08-30</a>
+<a href="https://zh.wikisource.org/wiki/正氣歌（同上）" target="_blank" rel="noopener">《正氣歌》</a>
+<a href="" target="_blank" rel="noopener">《唐會要/卷063》《宋史/附録》（同上，见第⑩⑭站</a>
+</div>
+</details>
+</div></section>
+<section id="s2" data-year="-547" data-name="崔杼弑其君"><div class="wrap">
+<div class="num">二 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="26.0" y1="16" x2="56.9" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-cur" cx="56.9" cy="16" r="5.2"/><circle class="rs-todo" cx="87.9" cy="16" r="3"/><circle class="rs-todo" cx="118.8" cy="16" r="3"/><circle class="rs-todo" cx="149.8" cy="16" r="3"/><circle class="rs-todo" cx="180.7" cy="16" r="3"/><circle class="rs-todo" cx="211.7" cy="16" r="3"/><circle class="rs-todo" cx="242.6" cy="16" r="3"/><circle class="rs-todo" cx="273.6" cy="16" r="3"/><circle class="rs-todo" cx="304.5" cy="16" r="3"/><circle class="rs-todo" cx="335.5" cy="16" r="3"/><circle class="rs-todo" cx="366.4" cy="16" r="3"/><circle class="rs-todo" cx="397.4" cy="16" r="3"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="56.9" y="35" text-anchor="middle">崔杼弑其君</text></svg>
+<div class="yr">前548</div>
+<h2>执简而往 <span class="h2-ev">崔杼弑其君</span></h2>
+<p class="sub">前548　·　姜齐　·　名人轶事</p>
+<p>晋国那一笔写完，什么也没发生。六十年后在齐国，同样五个字，价钱不一样。</p>
+<p><strong>原文只有二十九个字。</strong>《左傳·襄公二十五年》：「大史書曰：『崔杼弒其君。』崔子殺之。其弟嗣書，而死者二人。其弟又書，乃舍之。」本库据维基文库该卷逐字核得；该本以顿点断句，字形照录，不代为转换。</p>
+<p><strong>几个人死，要照注读。</strong>「死者二人」四字本身两可：可读作连太史在内累计死二人，也可读作太史之弟死者二人。杜预注作「嗣，續也。並前有三人死」（《春秋左傳正義》卷三十六），即太史与二弟共死三人，其后再书的那一人获舍。本库从杜注，另一读法照录不隐；传世本原无「二弟」「三弟」这类序数说法，本线不沿用。</p>
+<p><strong>还有一个人已经在路上。</strong>下一句是：「南史氏聞大史盡死，執簡以往。聞既書矣，乃還。」他听到的「大史盡死」是半路听来的话，不作死亡计数用。他带着简去，到了才知道已经写上了，就回去。</p>
+<p><strong>两站合起来正好是一联。</strong>文天祥《正氣歌》：「在齊太史簡，在晉董狐筆。」写在前面的是齐国这一站——付了命的那一站。价钱不是固定的，这一点从第二站起就得记住。</p>
+<p>可是这两件事，我们是从哪里知道的？两条库文的系年，都写着同一部书。</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=2">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>齐大夫崔杼弑庄公，太史照实书之而死，弟接续再书，仍死，又一弟再书，崔杼这才罢手。</p>
+<p><strong>原文只有二十九字</strong>，本库据维基文库《春秋左氏傳·襄公·廿五年》逐字核得：「大史書曰：『崔杼弒其君。』崔子殺之。其弟嗣書，而死者二人。其弟又書，乃舍之。」下接「南史氏聞大史盡死，執簡以往，聞既書矣，乃還。」</p>
+<p><strong>几人执笔、几人死，须照注读</strong>：「死者二人」四字本身两可——可读作连太史在内累计死二人，也可读作太史之弟死者二人。杜预注（维基文库《春秋左傳正義·卷36》）明作「嗣，續也。並前有三人死」，即太史与二弟共死三人，其后再书的那一人获舍。</p>
+<p><strong>本库从杜注，另一读法照录不隐</strong>；南史氏所闻的「大史盡死」是他半路听来的话，不作死亡计数用。传世本原无「二弟」「三弟」这类序数说法，本条不再沿用。《正气歌》「在齐太史简」即咏此——史笔不可夺的原点</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S2 《春秋左氏傳/襄公》页第二十五年一节系转录子页，本判官另取 春秋左氏傳/襄公/廿五年 raw，逐字核得二十九字全句；该本以顿点断句，字形照录不代为转换</li>
+<li><span class="tag t-ok">信史</span>S2 「而死者二人」两读——杜预注本判官另取《春秋左傳正義/卷36》raw 核得，作「嗣，續也。並前有三人死」；库条从杜注，另一读并存，线文不给死者数字</li>
+<li><span class="tag t-ok">信史</span>S2 南史氏所闻「大史盡死」系半路听来之语，不作死亡计数——库条已立此判，线文照办</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/春秋左氏傳/襄公/廿五年（action=raw" target="_blank" rel="noopener">《春秋左氏傳/襄公/廿五年》  直取，2026-08-30</a>
+<a href="https://zh.wikisource.org/wiki/春秋左傳正義/卷36（同上）" target="_blank" rel="noopener">《春秋左傳正義/卷36》</a>
+<a href="https://zh.wikisource.org/wiki/正氣歌（同上）" target="_blank" rel="noopener">《正氣歌》</a>
+</div>
+</details>
+</div></section>
+<section id="s3" data-year="-362" data-name="左传"><div class="wrap">
+<div class="num">三 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="56.9" y1="16" x2="87.9" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-cur" cx="87.9" cy="16" r="5.2"/><circle class="rs-todo" cx="118.8" cy="16" r="3"/><circle class="rs-todo" cx="149.8" cy="16" r="3"/><circle class="rs-todo" cx="180.7" cy="16" r="3"/><circle class="rs-todo" cx="211.7" cy="16" r="3"/><circle class="rs-todo" cx="242.6" cy="16" r="3"/><circle class="rs-todo" cx="273.6" cy="16" r="3"/><circle class="rs-todo" cx="304.5" cy="16" r="3"/><circle class="rs-todo" cx="335.5" cy="16" r="3"/><circle class="rs-todo" cx="366.4" cy="16" r="3"/><circle class="rs-todo" cx="397.4" cy="16" r="3"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="87.9" y="35" text-anchor="middle">左传</text></svg>
+<div class="yr">前363</div>
+<h2>传自何人 <span class="h2-ev">左传</span></h2>
+<p class="sub">前363　·　文化</p>
+<p><strong>前两站的账，记在同一本书上。</strong>库内葵丘会盟、泓水之战、崤之战、董狐直笔、崔杼弑其君、子产铸刑书、昭王南征七条的系年，都写着「据《左传》某年」。</p>
+<p><strong>而这部书自己的作者，说不清。</strong>旧题左丘明春秋末所撰，司马迁、刘向、班固皆从此说；唐赵匡首疑，此后异说纷起：或指战国楚人，或指卫人吴起，或指西汉末刘歆伪造——作者归属从春秋末一路被推到西汉末。诸说并存，本库不裁。</p>
+<p><strong>成书年也只能给一个窗口。</strong>今学界主流认为非一时一人所作，成书当在战国中期（徐中舒说，前 375—前 351）。书末缀记前 453 年智伯之亡，比记事下限哀公二十七年还晚十五年，是成书不早于此的实证。故本线写它一律给窗口，不写成书于某一年。</p>
+<p><strong>这一站的论点不是那两件事是编的。</strong>库条没有说《左传》所记不实，本库也不这么说。这一站说的是另一件事：我们的知识有一个来源，而那个来源自己也有来源问题。这与「各源不一并存不裁」是同一条规矩。</p>
+<p><strong>它还是后来一整门手艺的祖宗。</strong>司马光撰《资治通鉴》自承「因丘明編年之體，仿荀悅簡要之文」——编年体的谱系从这里一直续到本线第十三站。</p>
+<p>那么，把书都收走呢？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=3">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>全称《春秋左氏传》，编年体史书，依鲁十二公次第记事，起隐公元年（前722）迄哀公二十七年（前468），凡255年、三十五卷、约十八万字，是《十三经》中篇幅最长的一部，《四库全书》归之经部，与《公羊传》《谷梁传》合称春秋三传。库内葵丘会盟、泓水之战、崤之战、董狐直笔、崔杼弑其君、子产铸刑书、昭王南征等七条系年都写着「据《左传》某年」，全书本体却始终缺位——此条正是补位。</p>
+<p>传统说左丘明春秋末所撰，司马迁、刘向、班固皆从此说；唐赵匡首疑，此后异说纷起：或指战国楚人，或指卫人吴起，或指西汉末刘歆伪造——作者归属从春秋末一路推到了西汉末。今学界主流认为非一时一人所作，成书当在战国中期（徐中舒说，前375—前351年），比正文记事下限已晚了近百年；书末更缀记前453年智伯之亡一事——正是库内晋阳之战条所记那场三家灭知——比哀公二十七年还晚十五年，是成书不早于此的实证。</p>
+<p>库内诗经条已借这场断代之争讨论其成书年；司马光撰《资治通鉴》亦自承「因丘明编年之体，仿荀悦简要之文」，编年体的谱系由此续到了那里。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S3 七条系年清单、作者五说、徐中舒窗口说、书末缀记前 453 年智伯之亡——皆据库条 yl；本判官未另叩徐中舒原著，属转述层，线文照库条标窗口不给单一成书年</li>
+<li><span class="tag t-ok">信史</span>S3 司马光自承「因丘明編年之體，仿荀悅簡要之文」一语见库条 yl，本判官未在《進書表》raw 中检得此句（进书表无此语），故线文只作转述层引，不标一手</li>
+<li><span class="tag t-ok">信史</span>S3 本站论点须写死为「来源自己也有来源问题」，不得滑成「那两件事是编的」——库条未言《左传》所记不实</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">库内 `左传` 条 yl（js/events.js 第 316 行</a>
+<a href="" target="_blank" rel="noopener">作者诸说与成书窗口：中文维基「左传」（库条自陈来源，转述层</a>
+</div>
+</details>
+</div></section>
+<section id="s4" data-year="-212" data-name="焚书坑儒"><div class="wrap">
+<div class="num">四 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="87.9" y1="16" x2="118.8" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-cur" cx="118.8" cy="16" r="5.2"/><circle class="rs-todo" cx="149.8" cy="16" r="3"/><circle class="rs-todo" cx="180.7" cy="16" r="3"/><circle class="rs-todo" cx="211.7" cy="16" r="3"/><circle class="rs-todo" cx="242.6" cy="16" r="3"/><circle class="rs-todo" cx="273.6" cy="16" r="3"/><circle class="rs-todo" cx="304.5" cy="16" r="3"/><circle class="rs-todo" cx="335.5" cy="16" r="3"/><circle class="rs-todo" cx="366.4" cy="16" r="3"/><circle class="rs-todo" cx="397.4" cy="16" r="3"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="118.8" y="35" text-anchor="middle">焚书坑儒</text></svg>
+<div class="yr">前213</div>
+<h2>坑者何人 <span class="h2-ev">焚书坑儒</span></h2>
+<p class="sub">前213　·　秦　·　制度</p>
+<p>书的来源可以争，书本身可以烧。</p>
+<p><strong>焚书这一半，《史记》记得清楚，较可信。</strong>库条即照此写。</p>
+<p><strong>另一半的名字走了样。</strong>《史記·秦始皇本紀》记的是：「於是使御史悉案問諸生，諸生傳相告引，乃自除犯禁者四百六十餘人，皆阬之咸陽，使天下知之，以懲後。」——书作「諸生」。《史記·儒林列傳》另有一句总述：「及至秦之季世，焚詩書，阬術士，六藝從此缺焉。」——书作「術士」。本轮所核这两卷，都不作「坑儒」。</p>
+<p><strong>「坑儒」之名晚出，今多认为经后世渲染</strong>——库条原话如此，本线全篇不再把「坑儒」当事实用。至于这两个字最早写在哪一部书里、什么时候写的，本轮未核，一字不给。</p>
+<p><strong>这是本线第一次遇到这种事，不是最后一次。</strong>一个说法在最上游没有，往下一层长出来，再往下就成了通名。隔一千六百年，同样的事在「十族」两个字上又演了一遍。</p>
+<p>书烧过之后，谁来写？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=4">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>焚书见于《史记》,较可信;坑儒一说则久有争议——《史记》原文作「坑术士」,「坑儒」之名晚出,今多认为经后世渲染</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S4 库条 yc 作「《史记》原文作『坑术士』」——本判官 2026-08-30 直取两卷复核，实况比库条更细：《史記·秦始皇本紀》作「皆阬之咸陽」而所阬者书作「諸生」（四百六十餘人），《史記·儒林列傳》作「焚詩書，阬術士」。**本字是「阬」不是「坑」**，且两卷用词不同，线文两处并列，不合成一说</li>
+<li><span class="tag t-ok">信史</span>S4 「坑儒」二字最早的出处层级本轮未核（本判官只核《史記》两卷，未追伪孔安国序、衞宏序等），线文明写未核不给</li>
+<li><span class="tag t-ok">信史</span>S4 「坑儒之名晚出，今多认为经后世渲染」照库条原话，属传统叙述·久有争议档，本站论点即此档，须写进正文</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/史記/卷006（action=raw" target="_blank" rel="noopener">《史記/卷006》秦始皇本紀  直取，2026-08-30</a>
+<a href="https://zh.wikisource.org/wiki/史記/卷121（同上）" target="_blank" rel="noopener">《史記/卷121》儒林列傳</a>
+</div>
+</details>
+</div></section>
+<section id="s5" data-year="-98" data-name="司马迁著《史记》"><div class="wrap">
+<div class="num">五 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="118.8" y1="16" x2="149.8" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-cur" cx="149.8" cy="16" r="5.2"/><circle class="rs-todo" cx="180.7" cy="16" r="3"/><circle class="rs-todo" cx="211.7" cy="16" r="3"/><circle class="rs-todo" cx="242.6" cy="16" r="3"/><circle class="rs-todo" cx="273.6" cy="16" r="3"/><circle class="rs-todo" cx="304.5" cy="16" r="3"/><circle class="rs-todo" cx="335.5" cy="16" r="3"/><circle class="rs-todo" cx="366.4" cy="16" r="3"/><circle class="rs-todo" cx="397.4" cy="16" r="3"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="149.8" y="35" text-anchor="middle">司马迁著《史记》</text></svg>
+<div class="yr">前99</div>
+<h2>身毁不用 <span class="h2-ev">司马迁著《史记》</span></h2>
+<p class="sub">前99　·　西汉　·　文化</p>
+<p>官家的书房空了，写史成了一个人自己的事。</p>
+<p><strong>他自己写下的最克制的一句，在全书最后一篇。</strong>《太史公自序》：「七年而太史公遭李陵之禍，幽於縲紲。乃喟然而嘆曰：『是余之罪也夫！是余之罪也夫！身毀不用矣。』」本库据维基文库《史記》卷一三〇逐字核，自序通篇不见「宮刑」「腐刑」二字，他只说身毁不用。</p>
+<p><strong>刑名写在别人笔下。</strong>《漢書》卷五十四李陵传末作「上以遷誣罔，欲沮貳師，為陵遊說，下遷腐刑」——那两个字是第三方正史的落点，不是他自己写的。他自己最直白的一句在《報任少卿書》：「最下腐刑，極矣。」</p>
+<p><strong>受刑的经过与李陵兵败降匈奴的来龙去脉，本库未核，一字不补</strong>；父亲司马谈起草一层库内无出处，不代书。</p>
+<p><strong>他在自序里给自己找的先例，后面还要用到。</strong>「昔西伯拘羑里，演周易；孔子戹陳蔡，作春秋；屈原放逐，著離騷；左丘失明，厥有國語……」——一千七百年后，浙江一个双目失明的富户，就是拿这一句给自己壮胆，去写一部前朝史。那一站在第十七。</p>
+<p>一个人私下把书写完了，朝廷怎么办？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=5">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>受刑之后写完的那部书。</p>
+<p><strong>司马迁自己写下的最克制的一句，在《史记》最后一篇</strong>：《太史公自序》记「七年而太史公遭李陵之禍，幽於縲紲。乃喟然而嘆曰：『是余之罪也夫！是余之罪也夫！身毀不用矣。』」，紧接着便是「於是卒述陶唐以來，至于麟止，自黃帝始」——本库据维基文库《史記·卷130》逐字核，<strong>自序通篇不见「宮刑」「腐刑」二字</strong>，他只说身毁不用。</p>
+<p><strong>刑名写在别人笔下</strong>：《漢書·卷054》李广苏建传李陵传末作「上以遷誣罔，欲沮貳師，為陵遊說，下遷腐刑」（同上逐字核）——「腐刑」二字是第三方正史的落点，不是他自己写的。</p>
+<p><strong>他自己最直白的一句在《报任少卿书》</strong>：「最下腐刑，極矣」。此书两个底本字句不一，本库并存不裁：《漢書·卷062》本传作「頹其家聲，而僕又茸以蠶室」「詬莫大於官刑」「重為鄉黨戮笑，污辱先人」，维基文库《報任少卿書》（题注引《文選》卷四十一、《古文觀止》卷五）作「頹其家聲；而僕又佴以蠶室」「詬莫大於宮刑」「重為鄉黨所笑，以污辱先人」——一字之差照录两形，不代为择一。</p>
+<p><strong>受刑的经过与李陵兵败降匈奴的来龙去脉，本库本轮未核，一字不补</strong>；父亲司马谈起草一层库内无出处，不代书。《报任安书》「人固有一死」一句与该书写作年两说已在库内重于泰山条，此处不重收。鲁迅语出《汉文学史纲要》第十篇「司马相如与司马迁」，原文作「雖背《春秋》之義，固不失為史家之絕唱，無韻之《離騷》矣」——通行的八字是摘句，本库照录全句。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S5 《太史公自序》通篇不见「宮刑」「腐刑」二字——本判官直取《史記/卷130》raw 计数复核，两词命中皆为 0，与库条判断一致</li>
+<li><span class="tag t-ok">信史</span>S5 《報任少卿書》该本作「人固有一死，死或重於泰山，或輕於鴻毛」，比通行本多一「死」字；库内 `重于泰山` 条作通行形。**两形并存，线文因此不引这一句**，只引「最下腐刑，極矣」（该句两本无异）</li>
+<li><span class="tag t-ok">信史</span>S5 「左丘失明，厥有國語」一句为本轮新用：它是第⑰站庄廷鑨立说的直接来源（顾炎武原文引作「左丘失明乃著《國語》」，与自序字句小异，两处照录不弥合）</li>
+<li><span class="tag t-ok">信史</span>S5 受刑经过、李陵兵败降匈奴始末、司马谈起草一层——库内皆无出处，线文一字不补</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/史記/卷130（action=raw" target="_blank" rel="noopener">《史記/卷130》太史公自序  直取，2026-08-30</a>
+<a href="https://zh.wikisource.org/wiki/報任少卿書（同上）" target="_blank" rel="noopener">《報任少卿書》</a>
+<a href="" target="_blank" rel="noopener">《漢書》卷五十四李陵传末「下遷腐刑」——据库条 yl 所载逐字核记，本判官本轮未另取该卷 raw，标为库条一手转录层</a>
+</div>
+</details>
+</div></section>
+<section id="s6" data-year="82" data-name="汉书"><div class="wrap">
+<div class="num">六 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="149.8" y1="16" x2="180.7" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-cur" cx="180.7" cy="16" r="5.2"/><circle class="rs-todo" cx="211.7" cy="16" r="3"/><circle class="rs-todo" cx="242.6" cy="16" r="3"/><circle class="rs-todo" cx="273.6" cy="16" r="3"/><circle class="rs-todo" cx="304.5" cy="16" r="3"/><circle class="rs-todo" cx="335.5" cy="16" r="3"/><circle class="rs-todo" cx="366.4" cy="16" r="3"/><circle class="rs-todo" cx="397.4" cy="16" r="3"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="180.7" y="35" text-anchor="middle">汉书</text></svg>
+<div class="yr">82</div>
+<h2>私改国史 <span class="h2-ev">汉书</span></h2>
+<p class="sub">82　·　东汉　·　文化</p>
+<p>答案在下一代人身上，而且答得很具体。</p>
+<p><strong>告的是私改国史。</strong>《後漢書》卷四十上班彪列传：「父彪卒，歸鄉里。固以彪所續前史未詳，乃潛精研思，欲就其業。既而有人上書顯宗，告固私改作國史者，有詔下郡，收固系京兆獄，盡取其家書。」此前扶风人苏朗因伪言图谶下狱死——弟弟班超怕的正是郡里核考之下他哥哥自明不了，于是驰诣阙上书。</p>
+<p><strong>朝廷第一次处理私修，用的不是禁。</strong>「顯宗甚奇之，召詣校書部，除蘭台令史」，后来「帝乃復使終成前所著書」。告他的人要的是治罪，皇帝给他的是一个官和一份差事——从此写史是一份有编制的活。</p>
+<p><strong>「私作」这两个字，上一站那个人也担过。</strong>班固自己写下的修书理由是：司马迁「私作本紀，編於百王之末，廁於秦、項之列」。指人私作的人，转过身被人告私改。</p>
+<p><strong>系年只能给到年号。</strong>本传于下狱一事无系年，上文只用「既而」二字接住；通行的「永平五年（62 年）」一说本库未获一手依据，判为转述层推数，不入锚，正文亦不写此年。</p>
+<p>进了编制以后，写史就安全了吗？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=6">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>班固编撰的中国第一部纪传体断代史，记述西汉高祖元年至新朝地皇四年共229年史事，班固死后由其妹班昭及马续续成八表与天文志，历时四十余年方告完成。</p>
+<p><strong>这部书开头有一段下狱</strong>：《後漢書·卷40上》班彪列传（班固附传）记「父彪卒，歸鄉里。固以彪所續前史未詳，乃潛精研思，欲就其業。既而有人上書顯宗，告固私改作國史者，有詔下郡，收固系京兆獄，盡取其家書。先是扶風人蘇朗偽言圖讖事，下獄死。固弟超恐固為郡所核考，不能自明，乃馳詣闕上書，得召見，具言固所著述意，而郡亦上其書。顯宗甚奇之，召詣校書部，除蘭台令史」（维基文库该页繁简混排，引文字形照录该页，不代为转换）——告的是私改国史；此前扶风人苏朗因伪言图谶下狱死，班超怕的正是郡里核考之下他哥哥自明不了。</p>
+<p>而结局不是判罪，是给了他一个官，让他接着写。</p>
+<p><strong>系年只能给到年号，给不到年</strong>：本传于下狱一事无系年，上文只用「既而」二字接住；全传与修书有关的「永平」只有一句笼统之词「固自永平中始受詔，潛精積思二十餘年，至建初中乃成」。今人通行的「永平五年（62年）」一说，本库未获一手依据，判为转述层推数，不入锚，正文亦不写此年。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S6 下狱一段本判官直取《後漢書/卷40上》raw 逐字核得，与库条 yl 相合；该页繁简混排，引文字形照录该页不代为转换</li>
+<li><span class="tag t-ok">信史</span>S6 本轮新得一层：班固自陈修书之由，原文即指司马迁「私作本紀，編於百王之末，廁於秦、項之列」——「私作」与告他的「私改」是同一族词，线文用作本站反转，属本判官直取新核，库条 yl 未收此句</li>
+<li><span class="tag t-ok">信史</span>S6 下狱之年本传无系年，只用「既而」二字接住；通行「永平五年（62 年）」说本库未获一手，不入锚、正文不写——库条已立此判</li>
+<li><span class="tag t-ok">信史</span>S6 班昭、马续续成八表天文志属三人接力，线文不并作一人；本站只写下狱与收编一层，不写成书接力</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/後漢書/卷40上（action=raw" target="_blank" rel="noopener">《後漢書/卷40上》班彪列传（班固附传）  直取，2026-08-30</a>
+</div>
+</details>
+</div></section>
+<section id="s7" data-year="450" data-name="国史之狱"><div class="wrap">
+<div class="num">七 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="180.7" y1="16" x2="211.7" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-cur" cx="211.7" cy="16" r="5.2"/><circle class="rs-todo" cx="242.6" cy="16" r="3"/><circle class="rs-todo" cx="273.6" cy="16" r="3"/><circle class="rs-todo" cx="304.5" cy="16" r="3"/><circle class="rs-todo" cx="335.5" cy="16" r="3"/><circle class="rs-todo" cx="366.4" cy="16" r="3"/><circle class="rs-todo" cx="397.4" cy="16" r="3"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="211.7" y="35" text-anchor="middle">国史之狱</text></svg>
+<div class="yr">450</div>
+<h2>刊石通衢 <span class="h2-ev">国史之狱</span></h2>
+<p class="sub">450　·　北魏　·　民变·政变</p>
+<p>不安全。北魏的一次，把这件事的价钱一次付清。</p>
+<p><strong>祸从一块石头起。</strong>《魏書》卷三十五《崔浩傳》：著作令史闵湛、郄标「素諂事浩，乃請立石銘，刊載國書，并勒所注五經。浩贊成之」，工程「營於天郊東三里，方百三十步，用功三百萬乃訖」——国史刻成了都城郊外通衢边的石阵。</p>
+<p><strong>传文给这部史的评语只有八个字。</strong>「浩盡述國事，備而不典」；而「石銘顯在衢路，往來行者咸以為言，事遂聞發」。写得详备而不合体统，摆在路边，走过的人都在说，事情就发了。</p>
+<p><strong>卷宗上认下的却是另一件事。</strong>「有司按驗浩，取祕書郎吏及長曆生數百人意狀。浩伏受賕，其祕書郎吏已下盡死。」《世祖纪》系日：太平真君十一年「六月己亥，誅司徒崔浩」，本库验算即 450 年 7 月 5 日。</p>
+<p><strong>罪写在卷宗上是受贿，画在血缘上是四个姓。</strong>本传直书：「清河崔氏無遠近，范陽盧氏、太原郭氏、河東柳氏，皆浩之姻親，盡夷其族。」本库三源对勘（《魏書》卷三十五、《北史》卷二十一两本、《資治通鑑》卷一百二十五）字字相合，无第五家；「盡夷其族」是本传的书法，不是户口，本线不在它后面接任何人数——株连的账不记在这条线上。</p>
+<p><strong>杀他的人也留了一句在史里。</strong>《世祖纪》评太武帝「果於誅戮，後多悔之」；崔浩死后帝言「朕向失言。崔司徒可惜」。两句照录，不裁，也不用它替谁开脱。</p>
+<p>而崔浩临刑那一段，是一百年后另一个人写下来的。</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=7">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>北魏汉臣之首崔浩三朝参谋帷幄，主持编纂国史，因直书拓跋氏先世而族诛——本库「历史由谁写下」母题的价格顶点。</p>
+<p><strong>祸从一块石头起</strong>：《魏书·崔浩传》记著作令史闵湛、郄标「素諂事浩，乃請立石銘，刊載國書，并勒所注五經。浩贊成之」，工程「營於天郊東三里，方百三十步，用功三百萬乃訖」——国史刻成了都城郊外通衢边的石阵。传文给这部史的评语只有四个字：「浩盡述國事，備而不典」；而「石銘顯在衢路，往來行者咸以為言，事遂聞發」。</p>
+<p><strong>问案的落点耐人寻味</strong>：「有司按驗浩，取祕書郎吏及長曆生數百人意狀。浩伏受賕，其祕書郎吏已下盡死」——直书国恶的人，卷宗上认下的罪名是受贿。《世祖纪》系日：太平真君十一年「六月己亥，誅司徒崔浩」，本库验算即450年7月5日；株连之广本传直书：「清河崔氏無遠近，范陽盧氏、太原郭氏、河東柳氏，皆浩之姻親，盡夷其族」，又「自宰司之被戮辱，未有如浩者」。</p>
+<p><strong>临刑一段，魏收把它剪成了报应故事</strong>：崔浩「非毀佛法」（非毁，诋毁也），曾怒焚妻子诵读的佛经「捐灰於厠中」；及被收，「置之檻內，送於城南，使衞士數十人溲其上，呼聲嗷嗷，聞于行路」——「世皆以為報應之驗也」。写史的人死后，被下一位史家写进了因果（通行转述作「溲於其上」，原文无「於」字，本条照录本字）。</p>
+<p><strong>那位史家后来也栽在同一件事上</strong>：一百零一年后，北齐文宣帝诏魏收撰魏史（天保二年，551），当面许他一句「好直筆，我終不作魏太武誅史官」（《北齐书·魏收传》）——魏太武所诛的史官正是崔浩；书成之后诸家投牒，那部书被叫成「穢史」（互见库内魏书，554）。</p>
+<p><strong>杀他的人也留了一句在史里</strong>：《世祖纪》评太武帝「果於誅戮，後多悔之」，崔浩死后帝言「朕向失言。崔司徒可惜」。崔浩又深涉库内太武灭佛（446）一案，「非毀佛法」四字即其自证，焚经捐厕是这一层的私宅版。库内崔杼弑其君（太史兄弟前仆后继而书法不改）、董狐直笔与清代文字狱与本条同族——太史简的时代史官赢了，国史之狱里史官输掉了五个大族的性命。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S7 石铭段、评语八字、按验段、四姓段，本判官 2026-08-30 直取《魏書/卷35》raw（37,133 字节）逐字复核，逐句命中，与终审卷 desk/guoshi-wuzu-verdict-20260829.md 所载完全一致</li>
+<li><span class="tag t-ok">信史</span>S7 **族姓数定案：四姓，不写五族。**终审卷三源对勘（魏書卷35／北史卷021 标点本与四库白文本／資治通鑑卷125）完全一致，无第五家；「五族」二字虽在一手（魏書卷48高允传诏文），其义为五等丧服之亲、且该诏被抗命未发。本线依终审主文，只照录四姓，**四姓之后不接任何人数**（128 是未执行之诏的数）</li>
+<li><span class="tag t-ok">信史</span>S7 三姊妹分工：株连的半径归罪与罚线，本线只作一句交代并当场把车道让出；魏收剪成报应故事一层移至第⑧站，本站只留一句过桥，不写场面</li>
+<li><span class="tag t-ok">信史</span>S7 库条 yl 末句「五个大族」系库内自误，终审卷已建议库主改为四姓——**本线不沿用**，此处一并呈报</li>
+<li><span class="tag t-ok">信史</span>S7 「觸怒鮮卑貴族」一语的一手在《北史》卷二十一（「北人咸悉忿毒，相與構浩於帝」）而非《魏書》，另案；线文回避该表述，只写《魏書》原文「往來行者咸以為言」</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/魏書/卷35（action=raw" target="_blank" rel="noopener">《魏書/卷35》崔浩傳  直取，2026-08-30 本判官亲验</a>
+<a href="" target="_blank" rel="noopener">《魏書》卷四下世祖紀（系日）、《北史》卷二十一、《資治通鑑》卷一百二十五——据终审卷 docs/desk/guoshi-wuzu-verdict-20260829.md（该卷所列 URL 皆 action=raw</a>
+<a href="" target="_blank" rel="noopener">450 年 7 月 5 日系本库历法验算，见库条</a>
+</div>
+</details>
+</div></section>
+<section id="s8" data-year="554" data-name="魏书"><div class="wrap">
+<div class="num">八 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="211.7" y1="16" x2="242.6" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-cur" cx="242.6" cy="16" r="5.2"/><circle class="rs-todo" cx="273.6" cy="16" r="3"/><circle class="rs-todo" cx="304.5" cy="16" r="3"/><circle class="rs-todo" cx="335.5" cy="16" r="3"/><circle class="rs-todo" cx="366.4" cy="16" r="3"/><circle class="rs-todo" cx="397.4" cy="16" r="3"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="242.6" y="35" text-anchor="middle">魏书</text></svg>
+<div class="yr">554</div>
+<h2>号为秽史 <span class="h2-ev">魏书</span></h2>
+<p class="sub">554　·　北齐　·　文化</p>
+<p>把上一站剪成一个报应故事的人，一百零一年后坐进了同一个位子。</p>
+<p><strong>他领这份差事的时候，皇帝当面许了一句。</strong>《北齊書》卷三十七《魏收傳》记天保二年（551）诏魏收撰魏史：「帝勑收曰：『好直筆，我終不作魏太武誅史官。』」——魏太武所诛的史官，正是上一站的崔浩。魏收自己先说过的是：「臣願得直筆東觀，早成《魏書》。」</p>
+<p><strong>书成分两次上。</strong>「五年三月奏上之」（天保五年即 554），凡「十二紀，九十二列傳，合一百一十卷」；是年十一月复奏十志二十卷，「續於紀傳，合一百三十卷」。</p>
+<p><strong>名字是投牒的人叫出来的。</strong>诸家子孙不服，文宣帝命他与投诉者当面论讨，「前後投訴百有餘人」；后又「勑魏史且勿施行，令群官博議，聽有家事者入署，不實者陳牒。於是衆口喧然，號為『穢史』，投牒者相次，收無以抗之。」</p>
+<p><strong>把柄是本传自己交的，不是后人推的。</strong>「尒朱榮於魏為賊，收以高氏出自尒朱，且納榮子金，故減其惡而增其善」；「修史諸人祖宗姻戚多被書錄，飾以美言」；「夙有怨者，多沒其善」。传末论赞褒贬同段，本线不裁：既称「勒成魏籍，追從班、馬」，又指他「好抵陰私」。</p>
+<p><strong>这个名号系在哪一朝，两说不裁。</strong>本传把它叙在文宣朝，刘知几《史通·古今正史》则系在武成再改之后。故本条锚取书成之年，不把这两个字的出现点死在 554。</p>
+<p>杀过，骂过。下一步是把它做成一个衙门。</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=8">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>《魏书》一出就被叫成「穢史」，这两个字不是后人追贴的评语，是当时投牒的人叫出来的；而今天能读到这句话的那一卷，本身是后人补回去的。</strong>《北齐书》卷三七《魏收传》（维基文库，自注以中华书局一九七二年十一月第一版为本校）记天保二年（551）文宣帝诏魏收撰魏史，并当面许下一句：「好直筆，我終不作魏太武誅史官。」——魏太武所诛的史官正是崔浩，即库内国史之狱（450）；而把崔浩临刑一段剪成报应故事的《魏书·崔浩传》，执笔人就是这位受敕者。</p>
+<p><strong>书成分两次上</strong>：「五年三月奏上之」（天保五年即554；本库年号表天保 550—559、武平 570—576，下同），凡「十二紀，九十二列傳，合一百一十卷」；是年秋收以志未成奏请终业，十一月复奏十志二十卷，「續於紀傳，合一百三十卷」。</p>
+<p><strong>争起于诸家子孙</strong>：文宣命收于尚书省与投诉者当面论讨，「前後投訴百有餘人」；范阳卢斐、顿丘李庶讥议「史書不直」，卢斐当廷指自己的父亲「功業顯著，名聞天下，與收無親，遂不立傳」，而收的外亲崔绰「位止本郡功曹，更無事跡……乃為《傳》首」，收「無以對，戰栗而已」。但帝「先重收才，不欲加罪」，获罪的是告状的人——王松年与斐、庶「各被鞭配甲坊，或因以致死」，卢思道「亦抵罪」；原文只作「或因以致死」，不给人数，本条也不给。</p>
+<p><strong>名字是随后叫开的</strong>：「然猶以群口沸騰，勑魏史且勿施行，令群官博議，聽有家事者入署，不實者陳牒。於是衆口喧然，號為『穢史』，投牒者相次，收無以抗之。」</p>
+<p><strong>把柄是本传自己交的，不是后人推的</strong>：「尒朱榮於魏為賊，收以高氏出自尒朱，且納榮子金，故減其惡而增其善」；「修史諸人祖宗姻戚多被書錄，飾以美言」；「夙有怨者，多沒其善」——收还留下一句「何物小子，敢共魏收作色！舉之則使上天，按之當使入地」。</p>
+<p><strong>此后又改过两轮</strong>：一次「帝以魏史未行，詔收更加研審」，改定后「命送一本付幷省，一本付鄴下，任人寫之」；一次「其後羣臣多言魏史不實，武成復勑更審，收又回換」，为卢同立传、崔绰「返更附出」、杨愔家传改了八个字，传文的判语是「此其失也」（《史通》把两轮分系孝昭世与武成朝）。</p>
+<p><strong>传末论赞褒贬同段，本条不裁</strong>：既称「勒成魏籍，追從班、馬」，又指「但意存實錄，好抵陰私，到於親故之家，一無所說」，并判「王松年、李庶等並論正家門，未為謗議……庶因鞭撻而終，此公之失德」。</p>
+<p><strong>秽史之名的出处层级，两条要说破</strong>：其一，《北史》卷五十六同句作「於是眾口喧然，號為『穢史』」（衆／眾两本字形不同），看似两证其实一条——今本《北齐书》五十卷中只有一卷帝纪、十六卷列传是李百药原文，其余各卷系后人据《北史》抄补，魏收传正在其列（中文维基「北齐书」条；文库此卷即题作「補列傳第二九」）；其二，年份两说不裁——两部书把此名系在文宣朝（本传叙次夹在五年书成与「八年夏」即557之间，又云「終文宣世更不重論」），而刘知几《史通·古今正史》系在武成再改之后：「武成嘗訪諸群臣，猶云不實，又令治改，其所變易甚多。</p>
+<p>由是世薄其書，號為『穢史』。」故本条锚取书成之年，不把这个名号的出现点死在554。</p>
+<p><strong>北宋已录同段</strong>：《册府元龟》卷五百六十二国史部作「於是衆口諠然號為穢史」，可见此段北宋初已在流传；它出自《北齐书》原书还是《北史》，本条未判。刘知几另有一路批评与家族偏袒无关：《史通·採撰》「而魏收黨附北朝，尤苦南國，承其詭妄，重以加諸」（互见库内史通）。</p>
+<p><strong>身后一句照录，不代补因果</strong>：本传只作「齊亡之歲，收冢被發，棄其骨于外」，未言何人所为、因何而发（收卒于武平三年，572；北齐亡于577，见库内政权表）；北宋刘攽《旧本魏书目录叙》却把因果补上了——「收既以魏史招眾怨咎，齊亡之歲，盜發其冢，棄骨于外」，多出来的那半句是后人加的。</p>
+<p><strong>翻案之说并存</strong>：中文维基「魏收」条另主张《魏书》是因「準確記載部分權貴家族的不光彩事跡」而被诬为秽史，并举周一良《魏收之史學》（收《魏晋南北朝史论集》）等为之辩驳；该说条内未注出处，本库亦未获学术原文，只记其存在，与本传自陈的纳金改史、姻戚饰言两条一并照录，两边都不裁。互见库内国史之狱（450）、史通（702—710）与江陵陷落焚书（同年）。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S8 全部引文本判官 2026-08-30 直取《北齊書/卷37》raw（22,189 字节）逐字核得：「好直筆」1 见、「魏太武誅史官」1 见、「穢史」1 见、「投牒」1 见、「齊亡之歲」1 见</li>
+<li><span class="tag t-ok">信史</span>S8 本轮新得一句：魏收自陈「臣願得直筆東觀，早成《魏書》」——库条 yl 未收，本判官直取核得，线文用作反转的前半</li>
+<li><span class="tag t-ok">信史</span>S8 「穢史」系当时投牒者语而非后人追贴，此判据本传原句「於是衆口喧然，號為『穢史』」；名号系年两说（本传叙在文宣朝／《史通·古今正史》系在武成再改之后）并存不裁，库条已立此判，线文照办</li>
+<li><span class="tag t-ok">信史</span>S8 今本《北齊書》魏收传系后人据《北史》抄补（该卷文库即题「補列傳第二九」），故《北史》卷五十六同句看似两证其实一条——库条已写明，本站不把它当两个独立见证</li>
+<li><span class="tag t-ok">信史</span>S8 身后「收冢被發，棄其骨于外」本传未言何人所为，北宋刘攽补上「盜發其冢」的因果——**本线不写这一层**，以免把后人补的半句当本传原文；此判据库条 yl</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/北齊書/卷37（action=raw" target="_blank" rel="noopener">《北齊書/卷37》魏收傳  直取，2026-08-30 本判官亲验</a>
+<a href="" target="_blank" rel="noopener">《史通·古今正史》所系年份、《北史》卷五十六同句、刘攽《旧本魏书目录叙》——据库条 yl，本轮未另取</a>
+</div>
+</details>
+</div></section>
+<section id="s9" data-year="630" data-name="史馆"><div class="wrap">
+<div class="num">九 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="242.6" y1="16" x2="273.6" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-done" cx="242.6" cy="16" r="3"/><circle class="rs-cur" cx="273.6" cy="16" r="5.2"/><circle class="rs-todo" cx="304.5" cy="16" r="3"/><circle class="rs-todo" cx="335.5" cy="16" r="3"/><circle class="rs-todo" cx="366.4" cy="16" r="3"/><circle class="rs-todo" cx="397.4" cy="16" r="3"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="273.6" y="35" text-anchor="middle">史馆</text></svg>
+<div class="yr">630</div>
+<h2>移馆禁中 <span class="h2-ev">史馆</span></h2>
+<p class="sub">630　·　唐　·　制度</p>
+<p>唐朝做的事很平常：给它一间屋子。</p>
+<p><strong>通行的说法有两处要拆。</strong>都说唐太宗贞观三年设史馆——史馆不是唐朝新设的衙门，那一改也不落在公元 629 年。</p>
+<p><strong>唐以前它在秘书省。</strong>《旧唐书·职官志二》：「史館：歷代史官，隸秘書省著作局，皆著作郎掌修國史。武德因隋舊制。貞觀三年閏十二月，始移史館於禁中，在門下省北，宰相監修國史，自是著作郎始罷史職。」修史从此是宰相的差事，著作郎不再掌国史。</p>
+<p><strong>锚为什么取 630。</strong>贞观三年是闰年，闰十二月是这一年的第十三个月；据中央研究院两千年中西历转换，闰十二月一日为公元 630 年 1 月 19 日，明写的那个月整月落在 630 年内。《新唐书·百官志二》不给月份，故 u1/u2 给的是 629 年 1 月 30 日至 630 年 2 月 17 日这一段窗口。</p>
+<p><strong>这个衙门该出什么活，同卷写得很直。</strong>「史官掌修國史，不虛美，不隱惡，直書其事」；材料则「皆本於起居注、時政記，以為實錄，然後立編年之體，為褒貶焉」——起居注在前，实录在后，编年体是最后一道工序。</p>
+<p><strong>同卷还留下一句别处没有的实录</strong>：史馆「館門下東西有棗樹七十四株，無雜樹」。</p>
+<p>屋子盖好了。里面那本每天在写的册子，皇帝能不能自己翻？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=9">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>通行的说法是唐太宗贞观三年设史馆——<strong>这句话有两处要拆</strong>：史馆不是唐朝新设的衙门，贞观三年那一改也不落在公元629年。</p>
+<p><strong>唐以前它在秘书省</strong>：《旧唐书·职官志二》〈史馆〉开篇即自陈来历——「史館：歷代史官，隸秘書省著作局，皆著作郎掌修國史。武德因隋舊制。貞觀三年閏十二月，始移史館於禁中，在門下省北，宰相監修國史，自是著作郎始罷史職」；《唐会要》卷六十三〈史馆移置〉几乎同文：「武德初，因隋舊制，隸祕書省著作局。貞觀三年閏十二月，移史館於門下省北，宰相監修，自是著作局始罷此職。」</p>
+<p><strong>两处文字近乎逐字相同，很可能同源转录，本库不作两个独立见证。</strong>唐朝的改动因此不是凭空立一个史馆，是<strong>把修史的班子从秘书省下的技术官署挪进禁中、挪到门下省北，交宰相监修</strong>——修史从此是宰相的差事，著作郎不再管国史。中文维基「史館」条自述「史館，又名史閣，官署名，始建於北齊」，此系转述层，本库记而不作断。</p>
+<p><strong>第三源少一个月</strong>：《新唐书·百官志二》史馆修撰注只作「貞觀三年，置史館於門下省，以他官兼領……以宰相涖脩撰」，无「閏十二月」三字。</p>
+<p><strong>锚为什么是630而不是629</strong>：贞观三年是闰年，闰十二月是这一年的第十三个月；据中央研究院两千年中西历转换（sinocal.sinica.edu.tw），贞观三年正月一日为西元629年1月30日，闰十二月一日为西元630年1月19日，贞观四年正月一日为630年2月18日——<strong>两源明写的那个月，整月落在公历630年</strong>，故本条锚取630，不取把贞观三年径作629的通行换算。</p>
+<p>若依《新唐书》不给月份的写法，事在629年1月30日至630年2月17日之间，u1/u2 给的就是这一段窗口。（该转换表1582年10月15日以前用儒略历。）</p>
+<p><strong>后来又搬过一次，而这一次三源三个年份</strong>：《唐会要》卷六十三作「開元十五年三月一日」，《旧唐书·职官志二》作「開元二十五年三月」，《新唐书·百官志二》作「開元二十年」；三处所记其事相同——李林甫以中书是机要之地、史官记事却隶门下省太远，遂由史官尹愔奏请移史馆于中书省北，用旧尚药院充馆。</p>
+<p><strong>三个年份并存不裁，本库不代择一。</strong>《旧唐书》这一条还留下一句别处没有的实录：史馆「館門下東西有棗樹七十四株，無雜樹」。同卷又写明这个衙门该出什么活：「史官掌修國史，不虛美，不隱惡，直書其事」，材料则「皆本於起居注、時政記，以為實錄，然後立編年之體，為褒貶焉」——<strong>起居注在前，实录在后，编年体是最后一道工序</strong>；库内起居郎（628）管的正是第一道。</p>
+<p>互见库内太宗观起居注（643）、史通（702—710）与贞观政要（729）。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S9 《旧唐书·职官志二》史馆条全段本判官 2026-08-30 直取《舊唐書/卷43》raw 逐字核得，「貞觀三年閏十二月」「棗樹七十四株」「不虛美，不隱惡」皆 1 见</li>
+<li><span class="tag t-ok">信史</span>S9 630 而非通行 629：贞观三年闰十二月一日为公元 630 年 1 月 19 日（中央研究院两千年中西历转换，1582-10-15 以前用儒略历），明写的那个月整月落在 630 年内——库条已立此判，线文照录换算依据</li>
+<li><span class="tag t-ok">信史</span>S9 《唐會要》卷六十三〈史館移置〉与《旧唐书》此段文字近乎逐字相同，很可能同源转录，**不作两个独立见证**（库条已写明）；《新唐书》无「閏十二月」三字，故 u1/u2 给窗口</li>
+<li><span class="tag t-ok">信史</span>S9 中文维基「史館」条自述始建于北齐，属转述层，记而不作断——线文不写这一层</li>
+<li><span class="tag t-ok">信史</span>S9 开元年间移馆中书省北一事三源三个年份（开元十五年／二十五年／二十年），并存不裁——**线文不写**，因本站只取「挪进禁中、交宰相监修」这一次易手，多写一次搬迁会把站的主语挪开</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/舊唐書/卷43（action=raw" target="_blank" rel="noopener">《舊唐書/卷43》職官志二·史館  直取，2026-08-30 本判官亲验</a>
+<a href="" target="_blank" rel="noopener">中央研究院两千年中西历转换 sinocal.sinica.edu.tw（据库条所载换算结论，本判官未重跑该表</a>
+</div>
+</details>
+</div></section>
+<section id="s10" data-year="643" data-name="太宗观起居注"><div class="wrap">
+<div class="num">十 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="273.6" y1="16" x2="304.5" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-done" cx="242.6" cy="16" r="3"/><circle class="rs-done" cx="273.6" cy="16" r="3"/><circle class="rs-cur" cx="304.5" cy="16" r="5.2"/><circle class="rs-todo" cx="335.5" cy="16" r="3"/><circle class="rs-todo" cx="366.4" cy="16" r="3"/><circle class="rs-todo" cx="397.4" cy="16" r="3"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="304.5" y="35" text-anchor="middle">太宗观起居注</text></svg>
+<div class="yr">643</div>
+<h2>索观起居 <span class="h2-ev">太宗观起居注</span></h2>
+<p class="sub">643　·　唐　·　名人轶事</p>
+<p><strong>通行的一句话是：唐太宗要看起居注，史官不给，于是他下令改了玄武门那一段。</strong>这一句把至少四件事压成了一件——人不同，要的东西不同，系年各源不一。本线逐幕拆开。</p>
+<p><strong>索观本身就不止一次。</strong>《唐會要》卷六十三记贞观九年十月朱子奢上表，开口即引皇帝当月的旨意：「以起居記錄，書帝王臧否，前代但藏之史官，人主不見，今欲親自觀覽，用知得失。」他劝阻时举的两个榜样，一个是朱云，一个是本线第一站那个人。</p>
+<p><strong>问褚遂良，被拒；而这一幕三源三个年份，并存不裁。</strong>褚遂良答的是八个字：「不聞帝王躬自觀史」。</p>
+<p><strong>换了人，也换了东西。</strong>太宗转问监修国史的房玄龄：「卿可撰錄進來」；「房玄齡遂删略國史，表上」——要的已经不是起居注而是国史，交的人也不是起居郎而是宰相。见删略本中「六月四日事」语多微文，他又说「史官執筆，何煩過隱？宜卽改削，直書其事」。</p>
+<p><strong>而同一卷往下两个多月，同一个人对褚遂良说的是另一句：「望爾史官不書吾惡」。</strong>两句并列，本线不代为调和。</p>
+<p><strong>他最后拿到的是什么。</strong>贞观十七年七月十六日（即 643 年 9 月 4 日），房玄龄等上所撰《高祖》《太宗實錄》各二十卷，太宗遣褚遂良读给他听，读到自己初生祥瑞处「感動流涕」。他没有看到起居注，他听到的是一部已经编过的书。</p>
+<p><strong>而这部书后来又被编过一次。</strong>同卷记「敬宗又輒以己愛憎，曲事删改，論者尤之」——许敬宗正是那份进书名单上的第二个人。在这样的馆里当史官，是什么滋味？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=10">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>通行的一句话是：唐太宗要看起居注，史官不给，于是他下令改了玄武门那一段——<strong>这一句把至少四件事压成了一件</strong>。四件事的人不同、要的东西不同、系年各源不一，本条逐幕拆开，一处不弥合。</p>
+<p><strong>索观本身就不止一次</strong>：《唐会要》卷六十三〈史馆杂录上〉记贞观九年十月谏议大夫朱子奢上表，开口即引皇帝当月的旨意——「今月十六日，陛下出聖旨，發德音，以起居記錄，書帝王臧否，前代但藏之史官，人主不見，今欲親自觀覽，用知得失」；朱子奢反对的理由落在后世子孙身上，中主庸君见「時史直辭」必「唯當致怨史官」，故曰「所以前代不觀，蓋爲此也」。</p>
+<p><strong>这一幕《贞观政要》与两《唐书》都没有。</strong><strong>幕一·问褚遂良，被拒——三源给三个年份</strong>：《贞观政要·文史第二十八》系贞观十三年，太宗问「卿比知起居，書何等事？大抵於人君得觀見否？朕欲見此註記者，將卻觀所為得失以自警戒耳」，褚遂良答以「不聞帝王躬自觀史」；《旧唐书·褚遂良传》把同一段接在贞观十五年罢封禅之后，作「其年，遷諫議大夫，兼知起居事」；《唐会要》卷六十三则系「十六年四月二十八日」（中央研究院两千年中西历转换作642年6月1日）。</p>
+<p>《新唐书·褚遂良传》此段全不系年。</p>
+<p><strong>连黄门侍郎刘洎那句帮腔，三本三个写法</strong>：「設令遂良不記，天下之人皆記之矣」（贞观政要）／「設令遂良不記，天下亦記之矣」（旧唐书）／「使遂良不記，天下之人亦記之矣」（新唐书）——三说并存，皆不裁。</p>
+<p><strong>幕二·换了人，也换了东西</strong>：起居注在褚遂良手里没要到，太宗转而问监修国史的房玄龄「國史何因不令帝王觀見」，玄龄对以「恐有忤旨」，太宗曰「卿可撰錄進來」，玄龄乃删略国史表上——<strong>要的已经不是起居注而是国史，交出来的人也不是起居郎而是宰相</strong>。《贞观政要》此幕系贞观十四年，且直接写成「玄齡等遂刪略國史為編年體，撰高祖、太宗實錄各二十卷，表上之」；《唐会要》把它接在十六年四月二十八日那一条之内，只作「房玄齡遂删略國史，表上」，不言实录卷数。</p>
+<p><strong>幕三·太宗要求直书</strong>：太宗见删略本中「六月四日事」（即库内玄武门之变，626）「語多微文」，引周公诛管蔡、季友鸩叔牙为比，《贞观政要》作「史官執筆，何煩有隱？宜即改削浮詞，直書其事」，《唐会要》作「史官執筆，何煩過隱？宜卽改削，直書其事」；《贞观政要》另记侍中魏徵当场附议「陛下今遣史官正其辭，雅合至公之道」，《唐会要》无此句。</p>
+<p><strong>这一幕的史源只有这两处</strong>：本库对《旧唐书》房玄龄传（卷六十六）与《新唐书》房玄龄传（卷九十六）逐词核过，「六月四日」「編年」两词零命中，《新唐书》本传连「實錄」二字都不出现——<strong>把这段话挂在两《唐书》房玄龄传名下的，挂错了出处</strong>。</p>
+<p><strong>幕四·实录进呈，读的人还是褚遂良</strong>：《唐会要》卷六十三〈修国史〉给出全案唯一精确到日的系年，「貞觀十七年七月十六日，司空房玄齡、給事中許敬宗、著作郎敬播等，上所撰《高祖》、《太宗實錄》各二十卷。太宗遣諫議大夫褚遂良讀之，前始讀太宗初生祥瑞，遂感動流涕」，曰「朕於今日，富有四海，追思膝下，不可復得」，因悲不自止而命收卷。《旧唐书·房玄龄传》可作旁证，但不记此情节，只说「尋以撰《高祖、太宗實錄》成，降璽書褒美，賜物一千五百段」。</p>
+<p><strong>本条的锚取这一幕</strong>：贞观十七年七月十六日，据中央研究院两千年中西历转换（sinocal.sinica.edu.tw）即643年9月4日，该表1582年10月15日以前用儒略历；幕一三说不裁、幕三无独立系年，两者都不能当锚。</p>
+<p><strong>戏眼在最后一层</strong>：褚遂良说过「不聞帝王躬自觀史」，而太宗最终得到的是房玄龄删略、编年、成书的《实录》，还是由褚遂良念给他听的——<strong>他没有看到起居注，他听到的是一部已经编过的书</strong>。这部书后来又被编过一次：《唐会要》同卷记显庆二年二月以后事，「《高祖》、《太宗實錄》，敬播所修，頗多詳直。敬宗又輒以己愛憎，曲事删改，論者尤之」——许敬宗正是贞观十七年七月十六日进书名单上的第二个人。</p>
+<p>落点取长安，标低置信：诸源皆不记进书之地，此处由朝廷常所推得，当日行在本库未核。唐会要该本用「卽」「删」等本字，引文照录不改。互见库内玄武门之变（626）、起居郎（628）、史馆（630）、史通（702—710）与贞观政要（729）。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S10 四幕全部引文本判官 2026-08-30 直取《唐會要/卷063》raw 逐字核得：朱子奢表、褚遂良对、刘洎语、房玄龄删略、「宜卽改削，直書其事」、「望爾史官不書吾惡」、贞观十七年七月十六日进书与褚遂良读之流涕、显庆二年后许敬宗「曲事删改」，皆在同一卷</li>
+<li><span class="tag t-ok">信史</span>S10 本轮新得一层：贞观十六年七月八日太宗对褚遂良说「望爾史官不書吾惡」，与同卷四月二十八日「宜卽改削，直書其事」隔两个多月、出自同一人同一卷——**两句并列，不代为调和**。库条 yl 未收此句，属本判官直取新核</li>
+<li><span class="tag t-ok">信史</span>S10 幕一三源三个年份（《貞觀政要》贞观十三年／《旧唐书》褚遂良传接在贞观十五年后／《唐會要》十六年四月二十八日）——库条已立此判，线文照录三说不裁；本判官只亲验《唐會要》一源，另两源据库条，线文因此不引另两源的字句</li>
+<li><span class="tag t-ok">信史</span>S10 刘洎语三本三个写法，库条已列；线文**不引这一句**（三形并存而站内已有足够引文，引则须并列三形，会压垮段落）</li>
+<li><span class="tag t-ok">信史</span>S10 「把这段话挂在两《唐书》房玄龄传名下的，挂错了出处」一层见库条（该库条对两传逐词核过，「六月四日」「編年」零命中）——线文不复述这一层，只写《唐會要》所记，避免与库条重复且本判官未亲验该反证</li>
+<li><span class="tag t-ok">信史</span>S10 锚 643-09-04 由贞观十七年七月十六日换算（中央研究院表），据库条</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/唐會要/卷063（action=raw" target="_blank" rel="noopener">《唐會要/卷063》史館雜錄上·修國史  直取，2026-08-30 本判官亲验</a>
+<a href="" target="_blank" rel="noopener">《貞觀政要·文史》《旧唐书·褚遂良传》所系年份——据库条 yl，本轮未另取</a>
+</div>
+</details>
+</div></section>
+<section id="s11" data-year="702" data-name="史通"><div class="wrap">
+<div class="num">十一 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="304.5" y1="16" x2="335.5" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-done" cx="242.6" cy="16" r="3"/><circle class="rs-done" cx="273.6" cy="16" r="3"/><circle class="rs-done" cx="304.5" cy="16" r="3"/><circle class="rs-cur" cx="335.5" cy="16" r="5.2"/><circle class="rs-todo" cx="366.4" cy="16" r="3"/><circle class="rs-todo" cx="397.4" cy="16" r="3"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="335.5" y="35" text-anchor="middle">史通</text></svg>
+<div class="yr">702</div>
+<h2>退而私撰 <span class="h2-ev">史通</span></h2>
+<p class="sub">702–710　·　唐　·　文化</p>
+<p>有一个在里面待了三十年的人，把答案写下来了。</p>
+<p><strong>他先交代自己的资历。</strong>《史通·自敘》：「三為史臣，再入東觀」；「長安中，會奉詔預修《唐史》」（该本此处夹一句校语，疑「唐」当作「國」，照录不改）。</p>
+<p><strong>然后是理由。</strong>「凡所著述，嘗欲行其舊議。而當時同作諸士及監修貴臣，每與其鑿枘相違，齟齬難入。故其所載削，皆與俗浮沉」；「嗟乎！雖任當其職，而吾道不行」。于是——「必寢而不言，嘿而無述，又恐沒世之後，誰知予者？故退而私撰《史通》，以見其志。」监修贵臣，正是上一站那个衙门的产物。</p>
+<p><strong>中国第一部讲史书该怎么写的书，是被掣肘掣出来的。</strong>全书内篇十卷三十九篇、外篇十卷十三篇，共五十二篇：内篇论史书的体例与编纂，外篇考史籍源流、评前人修史长短。本库《史记》《汉书》《后汉书》《三国志》《资治通鉴》一路排下来写的都是史书，这一条讲的是史书该怎么写。</p>
+<p><strong>它自己也缺了三篇。</strong>内篇《體統》《紕繆》《弛張》今只剩篇目，正文早佚；四库馆臣据本传倒推「本傳已稱著史通四十九篇，則三篇之亡在修唐書以前矣」——那三篇在北宋修《新唐书》之前就没了。</p>
+<p><strong>系年与落点。</strong>起笔约在长安年间（701—704），成书景龙四年（710），故 y/y2 给的是这个窗口。落点取长安，标低置信：两《唐书》本传未记撰述之地，此处由起笔年份的朝廷所在推得。</p>
+<p>退出来私撰，能瞒多久？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=11">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>刘知几奉诏预修国史，因监修者掣肘，「故退而私撰《史通》，以见其志」——语出《自叙》。同篇又记「长安中……会奉诏预修《唐国史》」（「长安中」诸本作「长安年」「长安中年」），并自陈「余撰《史通》，亦屡移寒暑」：起笔约在长安年间（701–704），至景龙四年（710）仲春成书，原序自题「岁次庚戌景龙四年仲春之月」。全书内篇十卷三十九篇、外篇十卷十三篇，共五十二篇；内篇《体统》《纰缪》《弛张》今只剩篇目，正文早佚——四库馆臣据本传倒推「本传已称著史通四十九篇，则三篇之亡在修唐书以前矣」，那三篇在北宋修《新唐书》之前就没了。</p>
+<p>内篇论史书的体例与编纂，外篇考史籍源流、评前人修史长短。本库《史记》《汉书》《后汉书》《三国志》《资治通鉴》一路排下来，<strong>写的都是史书，这一条讲的是史书该怎么写</strong>——被它拿来评断体例得失的，正是那几部。落点取长安，标低置信：两《唐书》本传未记撰述之地，此处由起笔年份的朝廷所在推得。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S11 《自敘》全部引文本判官 2026-08-30 直取《史通/卷十》raw 逐字核得（该篇在内篇卷十，不在外篇；文库无「史通/卷10」页，须用汉字卷次）</li>
+<li><span class="tag t-ok">信史</span>S11 该本「會奉詔預修《唐史》」处夹一句校语「疑當作『國』」，库条 yc 径作《唐国史》——**线文照录本字并注明夹校**，不代为择一</li>
+<li><span class="tag t-ok">信史</span>S11 「屢移寒暑」「歲次庚戌景龍四年仲春之月」两句库条有而本判官本轮未在卷十检得（前者见于《自敘》他处或他本，后者在原序），**线文一律不引这两句**，只写窗口年份</li>
+<li><span class="tag t-ok">信史</span>S11 五十二篇、内篇三篇有录无书、四库馆臣倒推——四库语本判官另取《四庫全書總目提要/卷012》时未涉此条，故只据库条与《史通》卷首提要（本判官取《史通》首页 raw 核得「其《内篇‧體統》、《紕繆》、《弛張》三篇，有録無書。考本傳已稱著《史通》四十九篇，則三篇之亡，在修《唐書》以前矣」），字形照录</li>
+<li><span class="tag t-ok">信史</span>S11 落点长安标低置信，库条自陈系由起笔年份的朝廷所在推得——线文必带这句自陈</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/史通/卷十（action=raw" target="_blank" rel="noopener">《史通/卷十》自敘  直取，2026-08-30 本判官亲验</a>
+<a href="" target="_blank" rel="noopener">《史通》卷首（四库提要文，同上直取</a>
+</div>
+</details>
+</div></section>
+<section id="s12" data-year="1053" data-name="新五代史"><div class="wrap">
+<div class="num">十二 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="335.5" y1="16" x2="366.4" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-done" cx="242.6" cy="16" r="3"/><circle class="rs-done" cx="273.6" cy="16" r="3"/><circle class="rs-done" cx="304.5" cy="16" r="3"/><circle class="rs-done" cx="335.5" cy="16" r="3"/><circle class="rs-cur" cx="366.4" cy="16" r="5.2"/><circle class="rs-todo" cx="397.4" cy="16" r="3"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="366.4" y="35" text-anchor="middle">新五代史</text></svg>
+<div class="yr">1053</div>
+<h2>立焚此简 <span class="h2-ev">新五代史</span></h2>
+<p class="sub">1053　·　北宋　·　文化</p>
+<p>三百多年后，有一个人把私撰做到了底。</p>
+<p><strong>二十四史里唐代以后唯一的一部私修正史。</strong>限定语照库条原文，不删。原名《五代史記》，七十四卷，记后梁开平元年（907）至后周显德七年（960）。</p>
+<p><strong>成书之年有他自己的话为证。</strong>《歐陽修集》卷一百四十九「與梅聖俞四十六通」第二十三通，题下小注「皇祐五年」（1053）：「閒中不曾作文字，只整頓了《五代史》，成七十四卷。不敢多令人知，深思吾兄一看，如何可得極有義類？須要好人商量。此書不可使俗人見，不可使好人不見，奈何奈何。」信末又叮嘱一句：「此小簡立焚，勿漏史成之語。」连书写完了这件事，他都要收信人把信烧掉。</p>
+<p><strong>尾硬而头软。</strong>起笔之年没有一手依据，通行的 1036 年与「十八年」都是由他与尹洙、梅尧臣往还的书信推出来的，本条只记不锚。因是私撰，故藏于家——他毕生没有公开这部书，过世后一个月，家人才把它上呈。</p>
+<p><strong>他自己也不把传说当事实写。</strong>《伶官傳序》里那个三矢的故事，原文起头是「世言晉王之將終也」——「世言」两个字，今人转述常常漏掉。</p>
+<p><strong>层级照录</strong>：除书简与序文两处系维基文库一手外，本条其余史实、体例细目与诸家评语皆据中文维基转述层，未叩原书；落点商丘由他此前所任推得，标低置信。</p>
+<p>一个人，写得完一部通史吗？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=12">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>二十四史里唐代以后唯一的一部<strong>私修</strong>正史，原名《五代史记》，七十四卷（本纪十二、列传四十五、考三、世家及年谱十一、四夷附录三），记后梁开平元年（907）至后周显德七年（960）。</p>
+<p><strong>成书之年有作者自己的话为证。</strong>《欧阳修集》卷一百四十九「与梅圣俞四十六通」第二十三通，题下小注「皇祐五年」（1053）：「閒中不曾作文字，只整頓了《五代史》，成七十四卷。不敢多令人知，深思吾兄一看，如何可得極有義類？須要好人商量。此書不可使俗人見，不可使好人不見，奈何奈何。」信末又叮嘱一句「此小簡立焚，勿漏史成之語」——<strong>连「书写完了」这件事，他都要收信人把信烧掉。</strong>同信另有「某此居哀獨宿」「謀葬事未得」两句：那年他丁母忧，归葬吉州之行尚未成行。</p>
+<p>（该页维基文库自标「未校对」，然中文维基《新五代史》条注文独立引同段、出处作《欧阳修全集·书简》卷六《与梅圣俞》，字句与文库本相合，两处互校无异。）</p>
+<p><strong>尾硬而头软</strong>：起笔之年无一手，维基该条自陈「歐陽修編撰《新五代史》的時間沒有明確記載」，通行的1036年与「十八年」都是由他与尹洙、梅尧臣往还的书信推出来的，本条只记不锚。因是私撰，故藏于家——他毕生没有公开这部书，过世后一个月，家人才把它上呈宋神宗。体例上打通五代同编一部本纪，改「志」为「考」（只剩司天、职方二考），列传实为类传：死节、死事、一行、唐六臣、义儿、伶官、杂传各成一类；论赞以「嗚呼」二字发端。</p>
+<p><strong>教材里那篇《五代史伶官传序》，就是这部书里一篇类传的序</strong>，起句正是这个呜呼——「嗚呼！盛衰之理，雖曰天命，豈非人事哉！」，末句「作《伶官傳》。」把身份交代得清楚：它是序，不是传。</p>
+<p><strong>全篇最有名的那个故事，欧阳修自己没当事实写</strong>：李克用临终以三矢付庄宗，原文起头是「世言晉王之將終也，以三矢賜莊宗」——「世言」即世人这么说；今人转述常把这两个字漏掉，中文维基《五代史伶官传序》条摘要即径作「讲述了庄宗李存勖接受晋王李克用遗命」。另一处也常被略过：传诵的「憂勞可以興國，逸豫可以亡身」，上一句是他引《書》曰「滿招損，謙受益」——<strong>经典是《尚书》的，接下去那十二个字是他自己接上的。</strong>序里其余名句、以及「序通篇不点郭从谦，点名的是本传」那一层辨正，都在库内兴教门之变（926）条，此处不重写：那一条挂卷三十七的本传，是事的一手；这一条挂全书。</p>
+<p>《伶官传》一卷立传的伶人也不止郭从谦一个（维基该条目录列周匝、敬新磨、景进、史彦琼、郭从谦五人）。库内兰亭集序条里那句「《新五代史》所记温韬盗昭陵传世之物不见此帖」，引的也是这部书的杂传。身后事：金章宗泰和七年（1207）明令立于学官，从此大行于世，薛居正《旧五代史》渐湮不传；乾隆年间薛史复列正史，欧史才改称「新」。弟子徐无党为之作注，吴缜撰《五代史纂误》三卷专纠其谬。</p>
+<p><strong>褒贬两面并存不裁</strong>：顾炎武、钱大昕嫌他好发议论而不重史实，章学诚讥为「只是一部吊祭哀挽之集，如何可称史才」，刘攽听说书里不给韩通立传，大笑「如此，亦是第二等文字耳」；赵翼则说「卷帙雖不及薛史之半，而訂正之功倍之」。这部书成的次年，至和元年（1054）他被召还朝，奉命编修《新唐书》——<strong>私撰刚完，官修就来了</strong>，一人两史，一私一官，同列二十四史。</p>
+<p><strong>除书简与序文两处系维基文库一手外，本条其余史实、体例细目与诸家评语皆据中文维基转述层，未叩原书。</strong>落点取他此前所任的南京应天府（今商丘，皇祐二年北移），标低置信：这部书写了多年，他从洛阳到滁州、扬州、颍州、应天府一路辗转，本不出于一地。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S12 书简两句本判官 2026-08-30 直取《歐陽修集/卷149》raw 逐字核得（页题「卷一百四十九·書簡卷第六」，第二十三通题下小注「皇祐五年」）；**该页文库自标 Textquality 0%（未校对）**，库条已记中文维基独立引同段、出处作《欧阳修全集·书简》卷六，两处互校无异——本判官照录此层级声明，不升格为定本</li>
+<li><span class="tag t-ok">信史</span>S12 「唐代以后唯一」的限定语照库条原文，不许简化成「唯一的私修正史」（错型 3 白名单）</li>
+<li><span class="tag t-ok">信史</span>S12 起笔之年 1036 与「十八年」皆由书信推出，库条只记不锚，线文照办</li>
+<li><span class="tag t-ok">信史</span>S12 「世言晉王之將終也」一句据库条 yl（本判官本轮未另取《伶官傳序》raw），标为库条一手转录层；线文只用「世言」二字这一层，不引全句</li>
+<li><span class="tag t-ok">信史</span>S12 诸家评语（顾炎武、钱大昕、章学诚、刘攽、赵翼）库条自陈系中文维基转述层，**线文一律不引**</li>
+<li><span class="tag t-ok">信史</span>S12 落点商丘系推得，标低置信，库条自陈「这部书写了多年……本不出于一地」</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/歐陽修集/卷149（action=raw" target="_blank" rel="noopener">《歐陽修集/卷149》書簡卷第六  直取，2026-08-30 本判官亲验；该页 Textquality 0%</a>
+</div>
+</details>
+</div></section>
+<section id="s13" data-year="1084" data-name="资治通鉴"><div class="wrap">
+<div class="num">十三 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="366.4" y1="16" x2="397.4" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-done" cx="242.6" cy="16" r="3"/><circle class="rs-done" cx="273.6" cy="16" r="3"/><circle class="rs-done" cx="304.5" cy="16" r="3"/><circle class="rs-done" cx="335.5" cy="16" r="3"/><circle class="rs-done" cx="366.4" cy="16" r="3"/><circle class="rs-cur" cx="397.4" cy="16" r="5.2"/><circle class="rs-todo" cx="428.3" cy="16" r="3"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="397.4" y="35" text-anchor="middle">资治通鉴</text></svg>
+<div class="yr">1084</div>
+<h2>评其同异 <span class="h2-ev">资治通鉴</span></h2>
+<p class="sub">1084　·　北宋　·　文化</p>
+<p>写不完。这句话是他自己写下的。</p>
+<p><strong>《進書表》里的原话。</strong>「臣常不自揆，欲删削宂長，舉撮機要，專取關國家盛衰，繫生民休戚，善可為法，惡可為戒者，為編年一書，使先後有倫，精粗不雜，私家力薄，無由可成。」上一站那部书的作者藏了半辈子；这一站这部书，连书名都是上面给的——「又奉聖旨賜名《資治通鑑》」。</p>
+<p><strong>于是它由朝廷养着写。</strong>英宗诏下，「於崇文院置局，許借龍圖、天章閣、三館、祕閣書籍」，赐御府笔墨缯帛；后来他外任，「仍聽以書局自隨，給之祿秩，不責職業」。</p>
+<p><strong>规模与年份，进书表自陈。</strong>「上起戰國，下終五代，凡一千三百六十二年，修成二百九十四卷」，另《目錄》三十卷、《考異》三十卷，「合三百五十四卷」，元丰七年（1084）十一月进呈。「十九年」是后人由治平开局到进书首尾跨算得出的推数，表文只作「自治平開局，迨今始成，歲月淹久」；同表另有一个「十五年」，说的是他离京外任的年数，不要拿去当编书年数。</p>
+<p><strong>《考異》三十卷做什么，表文八个字写清了。</strong>「又參考羣書，評其同異，俾歸一塗」——各源不一时逐条比对，写明为什么这样取。这是本线上第一次，有人把取舍的理由单独装订成三十卷。</p>
+<p>这是慢的一头。快的一头呢？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=13">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>司马光主编的编年体通史，上起战国三家分晋，下至五代末年，共294卷、约三百万字，是中国古代规模最大的编年体史书之一。</p>
+<p><strong>书名是御赐的，不是自定的</strong>：司马光《进书表》开篇即曰「臣光言：先奉敕編集歷代君臣事迹，又奉聖旨賜名《資治通鑑》，今已了畢者」；《宋神宗资治通鉴序》亦曰「故賜其書名曰《資治通鑑》，以著朕之志焉耳」（维基文库该页于书名两侧另加引号，本库只录字）。缘起见《宋史·卷336》司马光传：「光常患歷代史繁，人主不能遍鑒，遂爲《通志》八卷以獻。英宗悅之，命置局秘閣，續其書」，又「至是，神宗名之曰《資治通鑒》，自製序授之，俾日進讀」（该页书名末字作鑒，与文库《进书表》作鑑不同，两形照录）。</p>
+<p><strong>卷数与《考异》，进书表自陈</strong>：「上起戰國，下終五代，凡一千三百六十二年，修成二百九十四卷；又略舉事目，年經國緯，以備檢尋，爲《目錄》三十卷；又參考羣書，評其同異，俾歸一塗，爲《考異》三十卷：合三百五十四卷」——《考异》三十卷做什么，表文八个字写清了：各源不一时逐条比对，写明为什么这样取。</p>
+<p><strong>「十九年」是推数，不是原文</strong>：进书表只作「自治平開局，迨今始成，歲月淹久」，未给年数，《宋史》本传亦无此语；今人所称十九年，系由治平开局（多系于治平三年即1066，本库未获一手系年）至元丰七年（1084）十一月进书首尾跨算得出，本库照录旧说而标为转述层推数，不作硬锚。</p>
+<p><strong>同表另有一个十五年，不要拿去当编书年数</strong>：「違離闕庭，十有五年，雖身處于外」说的是司马光外任离京的年数。</p>
+<p><strong>御制序是先赐后写进去的</strong>：《宋神宗资治通鉴序》页末司马光附记「治平四年十月，初開經筵，奉聖旨讀《資治通鑑》。其月九日，臣光初進讀，面賜御製序，令候書成日寫入」——面赐在治平四年（1067），写入成书要等到元丰七年（1084），两年份相减十七年，此数非原文所有。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S13 《進書表》全部引文本判官 2026-08-30 直取 zh.wikisource.org/wiki/進書表 raw 逐字核得</li>
+<li><span class="tag t-ok">信史</span>S13 本轮新得的本站台柱：「私家力薄，無由可成」——库条 yl 未单独摘出这一句，本判官直取核得，线文用作本站开场，与第⑫站欧阳修私撰成对</li>
+<li><span class="tag t-ok">信史</span>S13 「十九年」是后人由治平开局（多系于治平三年即 1066，本库未获一手系年）到元丰七年进书首尾跨算得出的推数，表文只作「自治平開局，迨今始成，歲月淹久」——库条已立此判，线文照录不作硬锚</li>
+<li><span class="tag t-ok">信史</span>S13 同表另一个「十五年」指外任离京年数，不可拿去当编书年数——库条已警，线文照写</li>
+<li><span class="tag t-ok">信史</span>S13 《宋史·卷336》司马光传所记「神宗名之曰《資治通鑒》」该页书名末字作「鑒」、文库《进书表》作「鑑」，两形照录不弥合——线文只用《進書表》一形，不并列（并列会把本站的主语从《考異》挪开）</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/進書表（action=raw" target="_blank" rel="noopener">《進書表》（司馬光，1084）  直取，2026-08-30 本判官亲验</a>
+<a href="" target="_blank" rel="noopener">《宋史》卷三三六司马光传、《宋神宗资治通鉴序》——据库条 yl，本轮未另取</a>
+</div>
+</details>
+</div></section>
+<section id="s14" data-year="1345" data-name="宋史"><div class="wrap">
+<div class="num">十四 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="397.4" y1="16" x2="428.3" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-done" cx="242.6" cy="16" r="3"/><circle class="rs-done" cx="273.6" cy="16" r="3"/><circle class="rs-done" cx="304.5" cy="16" r="3"/><circle class="rs-done" cx="335.5" cy="16" r="3"/><circle class="rs-done" cx="366.4" cy="16" r="3"/><circle class="rs-done" cx="397.4" cy="16" r="3"/><circle class="rs-cur" cx="428.3" cy="16" r="5.2"/><circle class="rs-todo" cx="459.3" cy="16" r="3"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="428.3" y="35" text-anchor="middle">宋史</text></svg>
+<div class="yr">1345</div>
+<h2>卷盈五百 <span class="h2-ev">宋史</span></h2>
+<p class="sub">1345　·　元　·　文化</p>
+<p><strong>先撤掉一句流传很广的评语。</strong>「二十四史中最潦草的一部」这话找不到一手依据。《四库全书总目》卷四十六说的是「其書僅一代之史，而卷帙幾盈五百。檢校既已難周，又大旨以表章道學為宗，餘事皆不甚措意，故舛謬不能殫數」；赵翼《廿二史札记》比较诸史，给《宋史》的字是「繁蕪」，「草率」二字他给的是《元史》。本线照原文写，不用那个转手来的标签。</p>
+<p><strong>两年半。</strong>至正三年（1343）三月开修，以中书右丞相脱脱为都总裁官；至正五年（1345）十月，「遼、金、宋三史成，右丞相阿魯圖進之」——脱脱已于至正四年五月辞相，仍以都总裁列衔，上表的却是继任者。主修的人和进书的人不是同一个人。</p>
+<p><strong>卷数有一手，而两个数字量的不是同一样东西。</strong>《進宋史表》署「至正五年十月二十一日」，自陈「謹撰述本紀四十七卷，志一百六十二卷，表三十二卷，列傳、世家二百五十五卷，裝潢四百九十二帙」——四十七加一百六十二加三十二加二百五十五正合四百九十六卷，而「帙」是装订单位，四百九十二与四百九十六不可混算。</p>
+<p><strong>而这道进表里还有一个名字。</strong>「雖微董狐直筆之可稱，庶逃司馬寡識而輕信」——元朝的宰相把书交上去的时候，搬出来给自己作保的，是本线第一站那个连姓名都要靠孔子一句话才留下来的太史。这一千九百年里，官文书搬他出来，这是第二次。</p>
+<p>写得快慢之外，还有别的东西会走样。</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=14">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>先撤掉一句流传很广的评语</strong>：「二十四史中最潦草的一部」这话找不到一手依据。《四库全书总目》卷四十六说的是「其書僅一代之史，而卷帙幾盈五百。檢校既已難周，又大旨以表章道學為宗，餘事皆不甚措意，故舛謬不能殫數」；赵翼《廿二史札记》比较诸史，给《宋史》的字是「繁蕪」，「草率」二字他给的是《元史》。本条照原文写，不用那个转手来的标签。至正三年（1343）三月开修，《元史·顺帝本纪》：「是月，詔修遼、金、宋三史，以中書右丞相脫脫為都總裁官」；至正五年（1345）「冬十月……辛未，遼、金、宋三史成，右丞相阿魯圖進之」——<strong>进书的不是脱脱</strong>：脱脱已于至正四年五月辞相，仍以都总裁列衔，上表的却是继任者阿鲁图。</p>
+<p>前后两年半。卷数有一手：《进〈宋史〉表》署「至正五年十月二十一日」，自陈「謹撰述本紀四十七卷，志一百六十二卷，表三十二卷，列傳、世家二百五十五卷，裝潢四百九十二帙」——四十七加一百六十二加三十二加二百五十五正合四百九十六卷，而「帙」是装订单位，四百九十二与四百九十六量的不是同一件事，不可混算。《四库总目》另指出一处漏账：总目把二百五十五全记作列传，卷四七八至四八三实为世家六卷，「《總目》未列，蓋偶遺也」。</p>
+<p><strong>「舛谬不能殚数」不是虚评，可以当场验一条</strong>：李熙靖在《宋史》里有两个传——卷三五七有他的本传「李熙靖，字子安，常州晉陵人，唐衛公德裕九世孫也」，卷四五三忠义传八又立一传「李熙靖，晉陵人。提舉醴泉觀。邦昌使直學士院，熙靖固拒，因憂憤不食」；同一个人、同一件拒事张邦昌的事，两卷各写一遍，连陪着他一起称病不起的谭世勣都在两处各出现一次。编修在元大都，刻板却在江南：书末所附中书省咨文命「與差去官精選高手人匠，就用齎去淨稿依式鏤板」，行文对象是「浙江等處行中書省」。</p>
+<p>库内已有史记、汉书、后汉书、三国志四部前四史的成书条目，此条与明史（1739）补上二十四史两端的另两块：一部两年半修成，一部修了几十年。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S14 《進宋史表》卷数句与署日本判官 2026-08-30 直取《宋史/附録》raw 逐字核得（该页须走 API parse 取 wikitext，直接 URL 编码「録」字易 404）</li>
+<li><span class="tag t-ok">信史</span>S14 **本轮最要紧的新得**：同一道进表里有「雖微董狐直筆之可稱，庶逃司馬寡識而輕信」一句——库条 yl 未收；这是本线序站与第⑭站之间的现成呼应，且与第⑩站朱子奢表「董狐無隱」同族。两处皆官文书，皆本判官直取核得</li>
+<li><span class="tag t-ok">信史</span>S14 四库总目原话本判官另取《四庫全書總目提要/卷046》raw 逐字核得，「舛謬不能殫數」1 见，前文作「其書僅一代之史，而卷帙幾盈五百」</li>
+<li><span class="tag t-ok">信史</span>S14 赵翼给《宋史》的字是「繁蕪」、「草率」给《元史》——据库条 yl，本判官本轮未另取《廿二史札记》，标为库条转录层</li>
+<li><span class="tag t-ok">信史</span>S14 四百九十六卷与装潢四百九十二帙量的不是同一样东西，**不可相减**——库条已写死，线文照办</li>
+<li><span class="tag t-ok">信史</span>S14 「二十四史中最潦草的一部」为已撤销的转手评语，必须写在本站开场（库条已撤，线文照撤）</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/宋史/附録（action=raw" target="_blank" rel="noopener">《宋史/附録》進宋史表  直取，2026-08-30 本判官亲验</a>
+<a href="https://zh.wikisource.org/wiki/四庫全書總目提要/卷046（同上）" target="_blank" rel="noopener">《四庫全書總目提要/卷046》</a>
+<a href="" target="_blank" rel="noopener">《元史·顺帝本纪》开修与成书两条——据库条 yl，本轮未另取</a>
+</div>
+</details>
+</div></section>
+<section id="s15" data-year="1402" data-name="诛十族"><div class="wrap">
+<div class="num">十五 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="428.3" y1="16" x2="459.3" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-done" cx="242.6" cy="16" r="3"/><circle class="rs-done" cx="273.6" cy="16" r="3"/><circle class="rs-done" cx="304.5" cy="16" r="3"/><circle class="rs-done" cx="335.5" cy="16" r="3"/><circle class="rs-done" cx="366.4" cy="16" r="3"/><circle class="rs-done" cx="397.4" cy="16" r="3"/><circle class="rs-done" cx="428.3" cy="16" r="3"/><circle class="rs-cur" cx="459.3" cy="16" r="5.2"/><circle class="rs-todo" cx="490.2" cy="16" r="3"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="459.3" y="35" text-anchor="middle">诛十族</text></svg>
+<div class="yr">1402</div>
+<h2>诏不可草 <span class="h2-ev">诛十族</span></h2>
+<p class="sub">1402　·　明　·　名人轶事</p>
+<p><strong>靖难之后的第一件事，是要一份诏书。</strong>《明史》卷一百四十一方孝孺传：成祖「顧左右授筆劄，曰：『詔天下，非先生草不可』孝孺投筆於地，且哭且罵曰：『死即死耳，詔不可草。』」最上游那一层写法略异，李贤《天順日錄》作「有死而已，詔不可草」。两个本子一个意思：拒的是执笔这个动作本身。</p>
+<p><strong>他不写，总要有人写。</strong>同卷往下几行：「成祖既殺孝孺，以草詔屬侍讀樓璉。璉，金華人，嘗從宋濂學。承命不敢辭。歸語妻子曰：『我固甘死，正恐累汝輩耳。』其夕，遂自經。」到底谁写成了那道诏书，本传给了三个人名——楼琏、括苍王景、无锡王达，三说并存不裁。</p>
+<p><strong>而「诛十族」这四个字，《明史》本传里一个也没有。</strong>逐层往回追：天顺间李贤《天順日錄》记到「以凌遲之刑刑之，遂夷其族」为止，无十族；宋端仪《立齋閒錄》卷二据档案立说——「所存簿籍載正學宗族抄扎人口有八百四十七人」，通篇也无十族。</p>
+<p><strong>现存最早的十族，在祝允明《野記》卷二。</strong>「曰：『不過夷我九族耳！』上怒云：『吾夷汝十族。』左右問：『何一族？』上曰：『朋友亦族也。』」祝允明卒于 1527，这一层距事发已一百二十余年。</p>
+<p><strong>三个数字口径各异，皆不裁。</strong>847 是锦衣卫簿籍上的抄扎登记人口；873 出自《國朝獻徵錄》卷之二十所载郑晓传「宗族坐死者八百七十三人」，而那篇传通篇不见十族；《明史》本传作「宗族親友前後坐誅者數百人」。口径不同，不能相减。清修正史仍不收十族。</p>
+<p>走样是从纸上开始的。那就把正本锁起来。</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=15">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>「诛十族」这四个字，《明史》方孝孺本传里一个也没有。</strong>传说人人熟悉：明成祖命方孝孺草即位诏，方掷笔骂「不过夷我九族耳」，成祖答「吾夷汝十族」，把朋友门生算作第十族，株连八百余人。</p>
+<p><strong>逐层往回追，每一层都是维基文库上可逐字核对的原书</strong>，而这四个字出现得很晚。</p>
+<p><strong>最上游那一层没有十族</strong>：天顺间李贤（1408—1466）《天顺日录》记此事只到「文廟大怒，以凌遲之刑刑之，遂夷其族」为止（本库据维基文库 action=raw 逐字核得；宋端仪《立斋闲录》卷二转引同段作「以凌遲之刑刑之，夷其族」，少一「遂」字，两本异文并存不裁）。</p>
+<p><strong>最早的那个数字也没有十族</strong>：宋端仪（1448—1501）《立斋闲录》卷二末据档案立说——「今校南京錦衣衛鎮撫司監簿，除前編缺壞外，所存簿籍載正學宗族抄扎人口有八百四十七人」，下列族叔文度、族侄谅经良、族孙崇俭等名。</p>
+<p><strong>注意口径：这是抄扎（查抄登记）的人口数，不是死者数</strong>，二者不可混作一事；该卷通篇无「十族」。</p>
+<p><strong>「十族」现存最早见于祝允明（1461—1527）《野记》卷二</strong>，本库据维基文库逐字核得：「強使搦管，擲去，語益厲，曰：『不過夷我九族耳！』上怒云：『吾夷汝十族。』左右問：『何一族？』上曰：『朋友亦族也。』於是盡其九族之命而大搜天下為方友者殺之。」祝允明卒于1527，这一层距事发已一百二十余年。姜清（1483—？）《姜氏秘史》卷一亦有此说，只一句带过：「忤旨，因有滅十族等語。</p>
+<p>上大怒，即收捕其族黨，盡誅之。」</p>
+<p><strong>而「八百七十三人」这个数字，出自一部根本不讲十族的书，作者还比祝允明晚</strong>：《国朝献征录》卷之二十〈文学博士方公孝孺传〉署「鄭曉」（郑晓1499—1566；焦竑1540—1619编，本库据维基文库 action=raw 逐字核得），传文作「文皇大怒，命磔諸市……宗族坐死者八百七十三人」，通篇不见「十族」——<strong>可见十族说出现之后，不采此说的写法仍在继续，层累不是一条直线</strong>。</p>
+<p>（中文维基该条据李谷悦文称此传即郑晓《吾学编》所收，本库未获《吾学编》原书对勘，只记献征录所载。）</p>
+<p><strong>两样合流要到清初</strong>：谷应泰（1620—1690）《明史纪事本末》卷十八〈壬午殉难〉才把对话与数字并在一处——「文皇大聲曰：『汝安能遽死。即死，獨不顧九族乎？』孝孺曰：『便十族奈我何！』」，又记「初，籍十族，每逮至，輒以示孝孺，孝孺執不從，乃及母族林彥清等、妻族鄭原吉等。九族既戮，亦皆不從，乃及朋友門生廖鏞、林嘉猷等為一族，並坐，然後詔磔于市，坐死者八百七十三人，謫戍絕徼死者不可勝計。」</p>
+<p><strong>清修正史仍不收</strong>：《明史》卷一四一方孝孺传只作「孝孺之死，宗族親友前後坐誅者數百人」——既不取847，也不取873，更无「十族」。</p>
+<p><strong>三个数字口径各异，皆不裁</strong>：847是锦衣卫簿籍上的抄扎人口，873是「坐死者」，「数百人」是正史的模糊说法，口径不同不能相减。</p>
+<p><strong>连刑名也是两说</strong>：《天顺日录》作凌迟，《明史》与献征录所载郑晓传皆作「命磔諸市」，本条不弥合。</p>
+<p><strong>层累不止在人数上</strong>：绝命词《明史》《明史纪事本末》与郑晓传皆作「天降亂離兮孰知其由，奸臣得計兮謀國用猶」以下四句，而《立斋闲录》卷二引成化己亥（1479）谢铎《逊志斋集》序所录，多出「三綱易位兮四維不修。骨肉相殘兮至親為讎」两句。</p>
+<p><strong>官方文书何时改口，本库未能亲核</strong>：中文维基「誅十族」条据李谷悦文称万历间公文已径称十族，《明熹宗实录》卷二十二天启二年五月初四日（1622年6月12日）条亦然——距事发已两百二十年；本库未获《明熹宗实录》可核文本，只记此说不作定论，《明太宗实录》一层同样未核，不引。</p>
+<p><strong>研究层单独标明</strong>：李谷悦《方孝孺殉难事迹的叙事演化与「诛十族」说考》（《史学月刊》2014年第5期，37—47页）是中文维基该条的主要依据，其说以为「十族」本与《野记》中蟒蛇复仇的因果报应故事相配，后因东林党张扬士气而被当作史实——<strong>本库未获该文原刊，凡据此文之说一律作转述层，不作一手</strong>。该条自述：「方孝孺被『誅十族』的記載首見於祝允明的《野記》，本是與《野記》中蟒蛇復仇相結合的故事……而张廷玉主編的正史《明史》也沒有採用方孝孺被『誅十族』的說法。」网传「诛杀历时七日七夜」一类渲染细节未查得出处，不采。</p>
+<p><strong>案子还有一个可核的收尾</strong>：《明史》同卷记万历十三年（1585）三月「釋坐孝孺謫戍者後裔，浙江、江西、福建、四川、廣東凡千三百餘人」——一百八十三年后，五省放还的后人，比传说里的死者还多。姚广孝当初的求情也在同卷：「殺孝孺，天下讀書種子絕矣。」互见库内靖难之役（1399—1402，这道诏书正是那一战的收梢）、永乐大典与永乐盛世；国史之狱（450）同押株连一韵，但那是北魏崔浩案、另一条线，不并作一事。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S15 三姊妹分工：本线只取两层——拒草诏书的书写权对峙、「十族」二字的层累与三个数字。**圈的半径（从九族扩到朋友门生）归罪与罚线，本站一字不写**</li>
+<li><span class="tag t-ok">信史</span>S15 拒草诏两个写法本判官 2026-08-30 分别直取核得：《明史/卷141》作「死即死耳，詔不可草」，李贤《天順日錄》作「有死而已，詔不可草」，《國朝獻徵錄/卷之二十》所载郑晓传（无标点本）作「死即死詔不可草」——三本并列，线文只取前两本，第三本记此备考</li>
+<li><span class="tag t-ok">信史</span>S15 **本轮最要紧的新得**：《明史》卷一四一同卷记「成祖既殺孝孺，以草詔屬侍讀樓璉……其夕，遂自經。或曰草詔乃括蒼王景，或曰無錫王達」——**接手草诏的人当夜自尽，且草诏者三说并存**。库条 yl 未收此层，本判官直取核得，它正是本线分到的「书写权」层最硬的一手。该页末字作「雲」（简转繁讹形，当作「云」），**线文因此不引末句原文，只述三说**</li>
+<li><span class="tag t-ok">信史</span>S15 十族四层史源本判官逐层直取复核：《天順日錄》十族命中 0、《立齋閒錄/卷2》十族命中 0、《野記/2》三句逐字合、《明史/卷141》十族命中 0——与库条判断完全一致</li>
+<li><span class="tag t-ok">信史</span>S15 三个数字口径各异：847 是抄扎（查抄登记）人口、873 是「坐死者」（且《國朝獻徵錄》该传通篇不见十族，本判官计数复核为 0）、《明史》作「數百人」，**不许相减、不许合并、不许择一**</li>
+<li><span class="tag t-ok">信史</span>S15 刑名两说（凌迟／磔）、绝命词两本多寡两说、《明熹宗实录》一层库条自陈未核——**线文一律不引**，本站只走书写权与层累两层</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/明史/卷141（action=raw" target="_blank" rel="noopener">《明史/卷141》方孝孺傳  直取，2026-08-30 本判官亲验</a>
+<a href="https://zh.wikisource.org/wiki/天順日錄（同上）" target="_blank" rel="noopener">《天順日錄》（李賢</a>
+<a href="https://zh.wikisource.org/wiki/立齋閒錄/卷2（同上）" target="_blank" rel="noopener">《立齋閒錄/卷2》（宋端儀</a>
+<a href="https://zh.wikisource.org/wiki/野記/2（同上）" target="_blank" rel="noopener">《野記/2》（祝允明</a>
+<a href="https://zh.wikisource.org/wiki/國朝獻徵錄/卷之二十（同上）" target="_blank" rel="noopener">《國朝獻徵錄/卷之二十》所载郑晓〈文學博士方公孝孺傳〉</a>
+</div>
+</details>
+</div></section>
+<section id="s16" data-year="1534" data-name="皇史宬"><div class="wrap">
+<div class="num">十六 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="459.3" y1="16" x2="490.2" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-done" cx="242.6" cy="16" r="3"/><circle class="rs-done" cx="273.6" cy="16" r="3"/><circle class="rs-done" cx="304.5" cy="16" r="3"/><circle class="rs-done" cx="335.5" cy="16" r="3"/><circle class="rs-done" cx="366.4" cy="16" r="3"/><circle class="rs-done" cx="397.4" cy="16" r="3"/><circle class="rs-done" cx="428.3" cy="16" r="3"/><circle class="rs-done" cx="459.3" cy="16" r="3"/><circle class="rs-cur" cx="490.2" cy="16" r="5.2"/><circle class="rs-todo" cx="521.2" cy="16" r="3"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="490.2" y="35" text-anchor="middle">皇史宬</text></svg>
+<div class="yr">1534</div>
+<h2>石室金匮 <span class="h2-ev">皇史宬</span></h2>
+<p class="sub">1534–1536　·　明　·　遗址·建筑</p>
+<p><strong>这一站只有一座房子。</strong>明清皇家档案库，又称表章库，专藏实录、圣训、玉牒，明代曾在此存《永乐大典》副本。嘉靖十三年（1534）动工，初名神御阁，十五年竣工敕赐今名。</p>
+<p><strong>造它的人把木头去尽。</strong>主殿为拱券式无梁建筑，墙身以特制磨砖砌成、厚五米，额枋斗拱门窗皆汉白玉雕成，山墙南北对开窗以通气，兼防火、防潮、防虫蛀、防鼠咬。殿内一点二米高的汉白玉须弥座上，置雕云龙纹镀金铜皮樟木柜一百五十二具。</p>
+<p><strong>「石室金匮」四个字是史书所称</strong>——库条原话即「史书所称『石室金匮』的典范」，本线引这四个字必带这句。</p>
+<p><strong>这座房子怎么用，有一个明朝人写下来过。</strong>顾炎武《書吳潘二子事》开篇：「先朝之史，皆天子之大臣與侍從之官承命為之，而世莫得見。其藏書之所曰皇史宬，每一帝崩，修《實錄》，則請前一朝之書出，以相對勘，非是莫得見者。」一朝一朝地对勘，是它唯一的用法；而这个用法只对一小群人开放。</p>
+<p><strong>本线只用它的这一段。</strong>这条线止于 1774 年，此后的事一律不写。</p>
+<p>那么，看不见的人怎么办？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=16">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>明清皇家档案库，又称表章库，专藏实录、圣训、玉牒，明代曾存《永乐大典》副本；是中国现存最古老、最完整的皇家档案库建筑群。嘉靖十三年（1534）动工，初名神御阁，十五年竣工敕赐今名。主殿为拱券式无梁建筑，墙身以特制磨砖砌成、厚五米，额枋斗拱门窗皆汉白玉雕成，山墙南北对开窗以通气，兼防火、防潮、防虫蛀、防鼠咬——史书所称「石室金匮」的典范。殿内一点二米高的汉白玉须弥座上，置雕云龙纹镀金铜皮樟木柜一百五十二具。</p>
+<p>1955年后归属权在国家档案局与故宫博物院之间数度往返，南院渐迁入两单位职工二十余户，明火做饭、裸线照明数十年；两家争产权而搬迁屡议不行，2019年底腾退方告完成。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S16 建筑规制、一百五十二具柜、专藏三种、动工与竣工年——皆据库条 yc/yl（库条自陈来源为中文维基，转述层），本判官本轮未另叩馆方或方志</li>
+<li><span class="tag t-ok">信史</span>S16 「石室金匮」四字须带「史书所称」——库条原话即「史书所称『石室金匮』的典范」，线文照办</li>
+<li><span class="tag t-ok">信史</span>S16 **本站的一手是顾炎武那一段**：《書吳潘二子事》开篇写皇史宬如何取用（每一帝崩修实录才请前一朝之书出以相对勘），本判官 2026-08-30 直取 raw 逐字核得。库内 `明史案` 条 yl 已引此段；本线把它挂在皇史宬站作实例、在明史案站接续下文，两站不引同一句</li>
+<li><span class="tag t-ok">信史</span>S16 **出轴排除**：库条 yl 载 1955—2019 产权纠纷一层，本线止于 1774，一字不提（本线第一硬规矩）</li>
+<li><span class="tag t-ok">信史</span>S16 库条自带绝对词「中国现存最古老、最完整的皇家档案库建筑群」——**线文不引这句**（引则须照抄全部限定语，而本站是呼吸点，不宜再压一层限定）</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">库内 `皇史宬` 条 yc/yl（js/events.js 第 1187 行，来源自陈为中文维基，转述层</a>
+<a href="https://zh.wikisource.org/wiki/書吳潘二子事（action=raw" target="_blank" rel="noopener">《書吳潘二子事》（顧炎武）  直取，2026-08-30 本判官亲验</a>
+</div>
+</details>
+</div></section>
+<section id="s17" data-year="1663" data-name="明史案"><div class="wrap">
+<div class="num">十七 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="490.2" y1="16" x2="521.2" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-done" cx="242.6" cy="16" r="3"/><circle class="rs-done" cx="273.6" cy="16" r="3"/><circle class="rs-done" cx="304.5" cy="16" r="3"/><circle class="rs-done" cx="335.5" cy="16" r="3"/><circle class="rs-done" cx="366.4" cy="16" r="3"/><circle class="rs-done" cx="397.4" cy="16" r="3"/><circle class="rs-done" cx="428.3" cy="16" r="3"/><circle class="rs-done" cx="459.3" cy="16" r="3"/><circle class="rs-done" cx="490.2" cy="16" r="3"/><circle class="rs-cur" cx="521.2" cy="16" r="5.2"/><circle class="rs-todo" cx="552.1" cy="16" r="3"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="521.2" y="35" text-anchor="middle">明史案</text></svg>
+<div class="yr">1663</div>
+<h2>继迁固后 <span class="h2-ev">明史案</span></h2>
+<p class="sub">1663　·　清　·　民变·政变</p>
+<p><strong>顾炎武接着写的那一段，就是答案。</strong>「國初，人樸厚，不敢言朝廷事，而史學因以廢失。正德以後，始有纂為一書附於野史者。大抵草澤之所聞，與事實絕遠，而反行於世。」到万历年间实录才稍稍传写流布，「然其卷帙重大，非士大夫累數千金之家，不能購。以是野史日盛，而謬悠之談偏於海內。」这一串因果不是本库连的，是他自己写的。</p>
+<p><strong>有两个人不甘心。</strong>「蘇之吳江有吳炎、潘檉章二子，皆高才……既而曰：『此不足傳也，當成一代史書，以繼遷、固之後。』於是購得《實錄》，復旁搜人家所藏文集奏疏，懷紙吮筆，早夜矻矻。」潘柽章刻《國史考異》三卷寄给顾炎武，顾「服其精審」。</p>
+<p><strong>而出事的是另一部书。</strong>湖州庄廷鑨目双盲，「以史遷有『左丘失明乃著《國語》』之說，奮欲著書」——他搬的正是本线第五站司马迁给自己找的那一句。他买下已故大学士朱国祯的遗稿，招人编成刻行，把吴、潘二人的名字列进参阅姓名中。书的来路三处记载各不相同，并存不裁。</p>
+<p><strong>死者人数四源不一，皆不裁。</strong>顾炎武作「所殺七十餘人，而吳、潘二子與其難」，全祖望《江浙兩大獄記》作「死者七十餘人」——一为时人亲历、一为后史追记，各自独立而数相合；另有二百多、七百多、逾千三说，本库未获原书，只作转引层记。牵连不是死者，两个数不许相减。</p>
+<p><strong>顾炎武自己差一点也在书里。</strong>「方莊生作書時，屬客延予，一至其家。予薄其人不學，竟去，以是不列名，獲免於難。」而吴、潘二人未脱稿的书稿，连同他借出去的一千余卷藏书，「盡亡」。</p>
+<p>私修一部前朝史要命。那官修的那一部呢？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=17">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>一部私修的明史先害死了写它印它的人；七十六年后，官修的《明史》成书，底本也是一部私家史稿</strong>——库内明史（1739）条与本条是同一件事的两头。中文维基该条称本案为「清初開國以來的第一宗文字獄」，与南山集案并称「清朝江浙兩大獄」，此并称出全祖望《鲒埼亭集外编》卷二二《江浙两大狱记》：「本朝江浙有兩大獄：一爲莊廷鑨史禍、一爲戴名世《南山集》之禍，予備記其始末，葢爲妄作者戒也。」</p>
+<p><strong>书的来路，三处记载各不相同，不弥合</strong>：浙江乌程（今湖州）南浔富户庄廷鑨目盲，买得明天启大学士朱国祯遗稿，延揽吴炎、潘柽章等十六人增补成《明书》、刻本作《明史辑略》，卷端罗列名士十八人，仍奉明朝年号，直呼努尔哈赤为「奴酋」、清兵为「建夷」——此据中文维基该条，该条记所买者为《明史概》遗稿；全祖望则记朱氏所著《明史》已刊行、「未刊者為列朝諸臣傳」，国变后家中落，「以藁本質千金於莊廷鑨」，廷鑨「因竄名己作刻之，補崇禎一朝事」；顾炎武《书吴潘二子事》又记朱国祯「嘗取國事，及公卿志狀疏草，命胥鈔錄凡數十帙，未成而卒」，并径判庄书「冗雜不足道也」，另录其父庄允诚刻书之由「吾三子皆已析產，獨中子死無後，吾哀其志，當先刻其書而後為之置嗣」。</p>
+<p><strong>层级须分</strong>：顾炎武一篇是时人亲历层——他与死者吴炎、潘柽章有交，事发时在世；全祖望（1705—1755）晚于事发数十年，属后史层。</p>
+<p><strong>死者人数四源不一，皆不裁</strong>：全祖望「是獄也，死者七十餘人，婦女並給邊」，顾炎武「所殺七十餘人，而吳、潘二子與其難」——一时人一后史，各自独立而数相合；中文维基该条脚注另转引纽琇《觚賸》死二百多人、邓之诚《清诗纪事本末》死七百多人、陆莘行《老父云游始末》诛杀逾千人，<strong>此三书原文本库未获，只作维基转引层记，不与前二说同列</strong>。同条又记「此案先後因此獄牽連千餘人」——牵连不是死者，两个数不许相减。</p>
+<p><strong>账不只算在写书的人头上</strong>：全祖望记「時江楚諸名士列名書中者皆死，刻工及鬻書者同日刑」，浒墅关榷货主事遣役买此书，主事「以購逆書，立斬」（其名全祖望作李尚白、中文维基作李继白，并存）；庄廷鑨已死，仍被发墓焚骨。</p>
+<p><strong>谁得脱，两造相左</strong>：全祖望作「惟海寧查繼佐、仁和陸圻，當獄初起，先首告……得脫罪」（二人，先自首）；中文维基据王士禛《吴顺恪六奇别传》作范骧、查继佐、陆圻三人因吴六奇之助无罪开释（三人，受人救），该条并自注「此处与查继佐条目的记载不符」——人数与缘由俱不合，本条并存不裁。顾炎武自记曾被延请而未列名：「予薄其人不學，竟去，以是不列名，獲免於難。」</p>
+<p><strong>两处与库内相接</strong>：其一，顾炎武此文开篇是一段时人的制度自述——「先朝之史，皆天子之大臣與侍從之官承命為之，而世莫得見。其藏書之所曰皇史宬，每一帝崩，修《實錄》，則請前一朝之書出，以相對勘，非是莫得見者」，又谓实录卷帙重大、非累数千金之家不能购，「以是野史日盛，而謬悠之談偏於海內」；库内皇史宬（1534）条只写那座房子，这一段写的是房子里的东西怎么管、管出了什么。</p>
+<p>其二，死者潘柽章生前刻《国史考异》三卷寄顾炎武，顾「服其精審」（同文）——库内尚书古文疏证（1745）那一路的考订工夫，此人先在做。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S17 顾炎武《書吳潘二子事》全文本判官 2026-08-30 直取 raw 逐字核得（全文仅一千二百余字，一次取尽）。他是时人亲历层：与死者吴炎、潘柽章有交，事发时在世</li>
+<li><span class="tag t-ok">信史</span>S17 「以是野史日盛」这一串因果**是顾炎武自己写的**，本库只转述、不自行连接——本线并置极多，此处必须写明因果的作者是谁（伦理自查第 6 条）</li>
+<li><span class="tag t-ok">信史</span>S17 **本轮新得的呼应**：庄廷鑨立说所据「左丘失明乃著《國語》」，正是第⑤站《太史公自序》「左丘失明，厥有國語」那一句；顾炎武所引与自序字句小异，两处照录不弥合</li>
+<li><span class="tag t-ok">信史</span>S17 死者人数四源不一：顾炎武「所殺七十餘人」与全祖望「死者七十餘人」两源独立而数相合（一时人一后史）；另有《觚賸》二百多、邓之诚七百多、陆莘行逾千三说，库条自陈只作维基转引层记，**不与前二说同列**。牵连千余人与死者是两个数，不许相减</li>
+<li><span class="tag t-ok">信史</span>S17 书的来路三处记载各不相同（中文维基该条／全祖望／顾炎武），谁得脱亦两造相左（全祖望作二人先自首／维基据王士禛作三人受救），库条并存不裁，线文只写「三处记载各不相同」一句，不逐一铺开——铺开会把本站的主语从「私修的代价」挪到「案情考异」</li>
+<li><span class="tag t-ok">信史</span>S17 **刻工、鬻书者、买书人一层归罪与罚线**（清代文字狱条的圈及读者与刻工），本站不写</li>
+<li><span class="tag t-ok">信史</span>S17 全祖望（1705—1755）距事发数十年，属后史层；线文引其字必带年代距离——本站只引其人数句，已在正文标明「后史追记」</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/書吳潘二子事（action=raw" target="_blank" rel="noopener">《書吳潘二子事》（顧炎武）  直取，2026-08-30 本判官亲验，全文 1,277 字节</a>
+<a href="https://zh.wikisource.org/wiki/江浙兩大獄記（同上，全文" target="_blank" rel="noopener">《江浙兩大獄記》（全祖望，四部叢刊本）  1,417 字节</a>
+</div>
+</details>
+</div></section>
+<section id="s18" data-year="1739" data-name="明史"><div class="wrap">
+<div class="num">十八 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="521.2" y1="16" x2="552.1" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-done" cx="242.6" cy="16" r="3"/><circle class="rs-done" cx="273.6" cy="16" r="3"/><circle class="rs-done" cx="304.5" cy="16" r="3"/><circle class="rs-done" cx="335.5" cy="16" r="3"/><circle class="rs-done" cx="366.4" cy="16" r="3"/><circle class="rs-done" cx="397.4" cy="16" r="3"/><circle class="rs-done" cx="428.3" cy="16" r="3"/><circle class="rs-done" cx="459.3" cy="16" r="3"/><circle class="rs-done" cx="490.2" cy="16" r="3"/><circle class="rs-done" cx="521.2" cy="16" r="3"/><circle class="rs-cur" cx="552.1" cy="16" r="5.2"/><circle class="rs-todo" cx="583.1" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-end" x="614.0" y="35" text-anchor="end">尚书古文疏证</text><text class="rs-name" x="552.1" y="35" text-anchor="middle">明史</text></svg>
+<div class="yr">1739</div>
+<h2>用为初稿 <span class="h2-ev">明史</span></h2>
+<p class="sub">1739　·　清　·　文化</p>
+<p>七十六年后，官修的《明史》成书，底本也是一部私家史稿。</p>
+<p><strong>进表自陈，转录在《四库全书总目》卷四十六。</strong>「惟舊臣王鴻緒之《史稿》，經名人三十載之用心。進在彤幃，頒來秘閣。首尾略具，事實頗詳。爰即成編，用為初稿。」官修正史明说自己是拿一部私家史稿当底本改的。</p>
+<p><strong>修了多久，三个起点三把尺子，本线一个都不选。</strong>同页转录进表：「康熙十八年始詔修《明史》」（1679）；又「臣等於時奉敕充總裁官，率同纂修諸臣，開館排輯。十五年之內，幾經同事遷流，三百餘卷之書，以次隨時告竣」（自雍正二年领衔算起）；另有顺治二年（1645）设馆一说，库条自陈只见二手转引，未获一手。九十四年、六十年、十五年，三把尺子并排放着。</p>
+<p><strong>卷数与成书日，提要给得很硬。</strong>「乾隆四年七月二十五日書成，表進。凡《本紀》二十四卷、《志》七十五卷、《表》一十三卷、《列傳》二百二十卷、《目錄》四卷。」</p>
+<p><strong>南明的处理写在同一条里。</strong>「若夫甲申以後，仍續載福王之號。乙酉以後，仍兼載唐王、桂王諸臣。則頒行以後，宣示綸綍，特命改增」——是刊行之后奉特旨补进去的。一部正史可以在印出来以后再改。</p>
+<p><strong>万斯同以布衣参史局、不署衔不受俸一事，出全祖望文集</strong>；维基文库该集为逐页影印，本轮未取得可检索原文，故列为转引不作一手。</p>
+<p>一部书可以改到刊行之后。那写书的人呢？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=18">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>《四库全书总目》卷四十六：「《明史》三百三十六卷（內府刊本）。國朝保和殿大學士張廷玉等奉敕撰。</p>
+<p><strong>乾隆四年七月二十五日書成，表進</strong>。凡《本紀》二十四卷、《志》七十五卷、《表》一十三卷、《列傳》二百二十卷、《目錄》四卷」——二十四加七十五加十三加二百二十为三百三十二，加目录四卷正合三百三十六。</p>
+<p><strong>「历时九十余年」这个说法，取决于从哪一年起算；而《进明史表》自己给的数是十五年。</strong>同页转录进表：「康熙十八年始詔修《明史》」（1679），又「臣等於時奉敕充總裁官……十五年之內，幾經同事遷流，三百餘卷之書，以次隨時告竣」（自雍正二年领衔算起）；另有顺治二年（1645）设馆一说，本轮只见二手转引，未获一手。三个起点、三个数：九十四年、六十年、十五年——<strong>本条一个都不选，把三把尺子并排放着</strong>。</p>
+<p>同页进表还留了一句要紧的自陈：「惟舊臣王鴻緒之《史稿》，經名人三十載之用心……爰即成編，用為初稿」——官修正史明说自己是拿一部私家史稿当底本改的。南明的处理也写在同一条里：「若夫甲申以後，仍續載福王之號。乙酉以後，仍兼載唐王、桂王諸臣。則頒行以後，宣示綸綍，特命改增」——<strong>是刊行之后奉特旨补进去的</strong>。万斯同以布衣参史局、不署衔不受俸而各纂修官之稿皆送他覆审，此事出全祖望《鲒埼亭集·万贞文先生传》；维基文库该集为逐页影印，本轮未取得可检索原文，故列为转引不作一手，赵翼推许《明史》为诸史之善的那句评语同样只止于转引。</p>
+<p>库内宋史（1345）两年半成书，此条修了几十年；一部被四库说「舛謬不能殫數」，一部被同一部总目放在对面，二十四史的两个极端正好凑成一对。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S18 《四库全书总目》卷四十六《明史》条本判官 2026-08-30 直取 raw 逐字核得：成书日、卷数、进表三段引文（康熙十八年始诏修、十五年之内、爰即成编用为初稿）、南明特命改增一段，皆逐句命中</li>
+<li><span class="tag t-ok">信史</span>S18 **三把尺子并排放着，一个都不选**：九十四年（自康熙十八年起算）、六十年（自顺治二年设馆一说起算）、十五年（进表自陈，自雍正二年领衔起算）。顺治二年设馆一说库条自陈只见二手转引未获一手——线文照录此层级</li>
+<li><span class="tag t-ok">信史</span>S18 该页引文用直角双引号以外的西式引号，本判官转录时只取字，不取引号形态</li>
+<li><span class="tag t-ok">信史</span>S18 万斯同以布衣参史局一事出全祖望《鲒埼亭集·万贞文先生传》，维基文库该集为逐页影印，库条自陈本轮未取得可检索原文，**列为转引不作一手**；赵翼推许《明史》为诸史之善的评语同样只止于转引，**线文不引**</li>
+<li><span class="tag t-ok">信史</span>S18 王鸿绪史稿→张廷玉领衔→万斯同覆审是三层接力，**不许压成一句**（错型 2）；线文只写底本一层，接力层不写</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/四庫全書總目提要/卷046（action=raw" target="_blank" rel="noopener">《四庫全書總目提要/卷046》明史條  直取，2026-08-30 本判官亲验</a>
+</div>
+</details>
+</div></section>
+<section id="s19" data-year="1774" data-name="清代文字狱"><div class="wrap">
+<div class="num">十九 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="552.1" y1="16" x2="583.1" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-done" cx="242.6" cy="16" r="3"/><circle class="rs-done" cx="273.6" cy="16" r="3"/><circle class="rs-done" cx="304.5" cy="16" r="3"/><circle class="rs-done" cx="335.5" cy="16" r="3"/><circle class="rs-done" cx="366.4" cy="16" r="3"/><circle class="rs-done" cx="397.4" cy="16" r="3"/><circle class="rs-done" cx="428.3" cy="16" r="3"/><circle class="rs-done" cx="459.3" cy="16" r="3"/><circle class="rs-done" cx="490.2" cy="16" r="3"/><circle class="rs-done" cx="521.2" cy="16" r="3"/><circle class="rs-done" cx="552.1" cy="16" r="3"/><circle class="rs-cur" cx="583.1" cy="16" r="5.2"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-name" x="583.1" y="35" text-anchor="middle">清代文字狱</text></svg>
+<div class="yr">1774</div>
+<h2>摘句成罪 <span class="h2-ev">清代文字狱</span></h2>
+<p class="sub">1774　·　清　·　制度</p>
+<p><strong>罪不在写这件事，在字句本身。</strong>统治者从文人著作中摘取字句、罗织罪名加以迫害，清代查办尤密，规模较大者牵连可达数千乃至上万人——「可达」二字照库条原话，是范围不是确数，本线不硬化，也不给全国总数。</p>
+<p><strong>一个前朝年号就够了。</strong>康熙四十一年（1702）戴名世《南山集·與余生書》引方孝标《滇黔紀聞》，而那部书用了南明永历年号。康熙五十年十月赵申乔上疏参奏，摘出来的是文风：「妄竊文名，恃才放蕩……語多狂悖，逞一時之私見，為不經之亂道。」（《東華錄》卷二十一，经中文维基转引，本库未叩原书；举发者的官衔三处不一，并存不裁。）</p>
+<p><strong>原拟与实判落差极大。</strong>全祖望《江浙兩大獄記》记九卿会鞫「擬戴名世大逆，法至寸磔」；疏奏之后「聖祖惻然，凡議絞者，改編戍」，最终只斩戴名世一人，「得恩旨全活者三百餘人」。</p>
+<p><strong>系年一说不弥合。</strong>全祖望结句作「康熙辛卯、壬辰閒事也」，比通行的康熙五十二年（1713）行刑说早一年；本库未溯《清实录》定谳，两说并记。</p>
+<p><strong>本条是通条不是个案。</strong>锚年乾隆三十九年（1774）只是这一现象上的一个坐标，所举各案一律自系其年；龚自珍那句「避席畏聞文字獄，著書只為稻粱謀」已在道光朝。乾隆朝更贴近锚年的两个个案（徐述夔一柱楼诗案、王锡侯字贯案）本轮未核，不入。</p>
+<p>写新的要命。那么，还有什么事可以做？</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=19">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>统治者从文人著作中摘取字句、罗织罪名加以迫害，清代查办尤密，规模较大者牵连可达数千乃至上万人。龚自珍后来感叹「避席畏闻文字狱，著书只为稻粱谋」，即指此风气对士人心理的长期压制。</p>
+<p><strong>本条是通条不是个案条</strong>：y 系乾隆三十九年（1774），只是这一现象上的一个坐标，所举各案一律自系其年，上引龚自珍已在道光朝。</p>
+<p><strong>牵连到哪一层，一案可见：康熙二年（1663）庄廷鑨明史案。</strong>全祖望《鮚埼亭集外編》卷二二《江浙兩大獄記》（维基文库四部丛刊本）两句直指著书人以外的人：「時江楚諸名士列名書中者皆死，刻工及鬻書者同日刑」——刻版的工匠与卖书的商人，与列名书中的名士同日行刑。买书的一层更远：「滸墅關榷貨主事李尚白，聞閶門書坊有是書，遣役購之，適書賈他出，役坐，其隣一朱姓者少待，及書賈返，朱為判其價；時主事已入京，以購逆書，立斬，書賈及役斬於杭，隣朱姓者，因年逾七十，免死，偕其妻發極邊。」——遣人买书的官员处斩，书商与差役斩于杭州，只在旁边替他议了个价钱的邻人年过七十免死，与妻同发极边。</p>
+<p>同记另有一笔：作序的李令皙父子皆伏法，其幼子年十六，「法司令其減供一歲，例得免死，充軍」，答曰「予見父兄死，不忍獨生」，卒不易其供而死——例本可以免他一死，他自己不受。</p>
+<p><strong>史源层级必须说明</strong>：全祖望（1705—1755）生在此案四十余年之后，所记距事发约九十年，属清人文集追记，不是同时代档案；他自道作记之意是「予備記其始末，葢爲妄作者戒也」，立场是训诫。故照库内诛十族条处理祝允明《野记》的老办法：录其原文、标其人其年与年代距离，不当档案用。</p>
+<p><strong>数字不并</strong>：全氏给此案的总数是「死者七十餘人，婦女並給邊」，那是他一家之数；本条原有的数千乃至上万是概述不是统计，两者不可相加相较。乾隆朝更贴近本条锚年的个案（徐述夔一柱楼诗案、王锡侯字贯案）本轮未核，暂不入。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S19 三姊妹分工：本线取「写下来就是罪、罪在字句本身」，**圈及读者与刻工归罪与罚线**——故本站不写刻工、鬻书者、买书官员、邻人那一串，虽然它就在库条 yl 里</li>
+<li><span class="tag t-ok">信史</span>S19 「牵连可达数千乃至上万人」照库条原话，**「可达」二字不删、不改成确数、不给全国总数**（数字军规）</li>
+<li><span class="tag t-ok">信史</span>S19 南山集案全部引文本判官 2026-08-30 直取《江浙兩大獄記》raw 逐字核得（原拟寸磔、圣祖恻然改编戍、全活三百余人、康熙辛卯壬辰间事）</li>
+<li><span class="tag t-ok">信史</span>S19 赵申乔弹章文字出《東華錄》卷二十一，库条自陈经中文维基该条转引、未叩原书——线文照录此层级；举发者官衔三处不一（左都御史／都御史／都谏），并存不裁</li>
+<li><span class="tag t-ok">信史</span>S19 行刑年两说不弥合：通行康熙五十二年（1713）／全祖望「康熙辛卯、壬辰閒事也」（1711—1712），库条自陈未溯《清实录》定谳，线文两说并记</li>
+<li><span class="tag t-ok">信史</span>S19 龚自珍句已在道光朝，本条锚年只是坐标——库条已写明，线文照写</li>
+<li><span class="tag t-ok">信史</span>S19 徐述夔一柱楼诗案、王锡侯字贯案本轮未核，**不入**（库条已判）</li>
+</ul>
+<div class="src">
+<a href="" target="_blank" rel="noopener">库内 `清代文字狱` 条 yc/yl（js/events.js 第 1344 行）与 `南山集案` 条（第 1265 行</a>
+<a href="https://zh.wikisource.org/wiki/江浙兩大獄記（action=raw" target="_blank" rel="noopener">《江浙兩大獄記》（全祖望，四部叢刊本）  直取，2026-08-30 本判官亲验</a>
+<a href="" target="_blank" rel="noopener">《東華錄》卷二十一赵申乔疏——经中文维基「南山案」条转引，本库未叩原书</a>
+</div>
+</details>
+</div></section>
+<section id="s20" data-year="1745" data-name="尚书古文疏证"><div class="wrap">
+<div class="num">二十 / 二十</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="583.1" y1="16" x2="614.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="56.9" cy="16" r="3"/><circle class="rs-done" cx="87.9" cy="16" r="3"/><circle class="rs-done" cx="118.8" cy="16" r="3"/><circle class="rs-done" cx="149.8" cy="16" r="3"/><circle class="rs-done" cx="180.7" cy="16" r="3"/><circle class="rs-done" cx="211.7" cy="16" r="3"/><circle class="rs-done" cx="242.6" cy="16" r="3"/><circle class="rs-done" cx="273.6" cy="16" r="3"/><circle class="rs-done" cx="304.5" cy="16" r="3"/><circle class="rs-done" cx="335.5" cy="16" r="3"/><circle class="rs-done" cx="366.4" cy="16" r="3"/><circle class="rs-done" cx="397.4" cy="16" r="3"/><circle class="rs-done" cx="428.3" cy="16" r="3"/><circle class="rs-done" cx="459.3" cy="16" r="3"/><circle class="rs-done" cx="490.2" cy="16" r="3"/><circle class="rs-done" cx="521.2" cy="16" r="3"/><circle class="rs-done" cx="552.1" cy="16" r="3"/><circle class="rs-done" cx="583.1" cy="16" r="3"/><circle class="rs-cur" cx="614.0" cy="16" r="5.2"/><text class="rs-end" x="26.0" y="35" text-anchor="start">董狐直笔</text><text class="rs-name" x="614.0" y="35" text-anchor="end">尚书古文疏证</text></svg>
+<div class="yr">1745</div>
+<h2>刻成之日 <span class="h2-ev">尚书古文疏证</span></h2>
+<p class="sub">1745　·　清　·　文化</p>
+<p><strong>这一站的年份比上一站早二十九年，是全线唯一的一处逆行。</strong>把它放在最后，因为它不是在写历史，是在核。而这两站本来就搭在一起：给它写提要的那部总目在卷十二，而四库开馆正是上一站锚年前后那几年。</p>
+<p><strong>它做的事只有一件。</strong>清阎若璩撰，八卷，逐条考订东晋梅赜所献《古文尚書》二十五篇为伪作。四库馆臣把辨伪的谱系从宋人一路排到他为止——吴棫始有异议，朱子稍稍疑之，吴澄诸人相继抉摘，明梅鷟参考诸书证其剽剟而蒐采未周，「至若璩乃引經據古，一一陳其矛盾之故，古文之偽乃大明」。</p>
+<p><strong>这一刀切在哪里，黄宗羲替他记下了。</strong>序里他的朋友朱康流问：「若無《大禹謨》則理學絕矣，而可偽之乎？」黄宗羲的回答是：「然則此十六字者，其為理學之蠹甚矣。」</p>
+<p><strong>成书之年三说并存不裁，故换锚于一手可证的刻成之年。</strong>卷首《尚書古文疏證識》开篇一句：「乾隆乙丑之秋，刻《尚書古文疏證》成。」乙丑即乾隆十年，1745。写这句识语的是他的孙子阎学林；这部书刻掉了三代人的力气：父亲阎咏想板行而工费浩繁不成，学林自己「官卑俸薄，每泫然抱遺書而泣」，直到癸亥春有人捐资开雕，又「閱二載而遂以藏事」。阎若璩卒于 1704 年——他没有等到这一天，中间隔了四十一年。</p>
+<p><strong>核别人的人，也被人核了一遍。</strong>同一篇提要说这部书「編次先後，亦未歸條理。蓋猶草創之本」，又指出有一条最要害的反证他竟没说；末了仍定评「考證之學則固未之或先矣」。至于《古文尚书》真伪之争，后世仍有翻案之论，库条未载，本库不表态。</p>
+<p><strong>本线走到这里就停。</strong>前面十九站问的是笔在谁手里；这一站换了一个问题：写下来的东西，凭什么算数。</p>
+<a class="go" href="../timeline.html#line=shibi&amp;at=20">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>书刻出来的时候，作者已经死了四十一年。</strong>清阎若璩撰，八卷，逐条考订东晋梅赜所献《古文尚书》二十五篇为伪作，是中国辨伪学最著名的一部专著。《四库全书总目》卷十二记其人「若璩字百詩，太原人，徙居山陽。康熙己未薦舉博學鴻詞」（己未即康熙十八年，1679；荐后与试与否该提要未言，本库不补，其子阎咏《后序》径称之为「徵君」）；生卒1636—1704年7月8日、号潜丘，据中文维基《閻若璩》条，属转述层。</p>
+<p><strong>系年先说清楚：成书之年三说并存不裁，故换锚于一手可证的刻成之年。</strong>黄宗羲作序时书还没写完，序中自道「淮海閻百詩寄《尚書古文疏證》，方成四卷，屬余序之」；《总目》亦记「其書初成四卷，餘姚黃宗羲序之。其後四卷又所次第續成」——两条一手都说是先四卷、后四卷分两截续成，并没有一个干净的成书年，提要更径判此书「編次先後，亦未歸條理。蓋猶草創之本」。</p>
+<p>中文维基该条则记康熙三十二年癸酉（1693）成书、阎氏时年五十八，自二十岁生疑历三十八年；其脚注只举〈西河与潜邱论尚书疏证〉〈送阎征君归淮安序〉两个篇名，本库未获此二文，只能作转述层记（库内《尚书》条 y:-168 已用此说，两处并存，不相裁夺）。</p>
+<p><strong>刻成之年则有一手</strong>：卷首《尚书古文疏证识》开篇即「乾隆乙丑之秋，刻《尚書古文疏證》成。」乙丑即乾隆十年，1745。识语作者阎学林是阎若璩之孙，这书刻掉了三代人的力气：其父阎咏「先君子在中翰時」就想板行而工费浩繁不成，学林自己「丙辰以來，微秩自效，官卑俸薄，每泫然抱遺書而泣，思欲繼先君子之志，如蚉虻負山，精衛之填滄海也」，直到「癸亥春，謁同里夔州程先生。</p>
+<p>先生雅嗜先大父書，慨然捐貲，始議開雕」，又「閱二載而遂以藏事」。阎若璩1704年卒，生前此书只有抄本流传。</p>
+<p><strong>书名的字序是作者自定的，四库把它掉了过来。</strong>四库著录作《古文尚书疏证》，而阎咏《后序》（署「康熙甲申端午前三日」，即1704年，其父卒年）记下父命名之义：书名末二字取自《汉书·儒林传》「同門梁邱賀疏通證明之」及颜师古注，而前四字则「首曰《尚書》，尊經也。次曰《古文》，傳疑也。」——尚书在前是尊经，古文在后是传疑，字序一掉即失其义。两名并存，本库条名取作者一方，四库一名列作别名。</p>
+<p><strong>一百二十八条的账，一手与今人转述看似打架，实为计法不同，本库点过。</strong>《总目》记「所列一百二十八條」，又记其残缺：「若璩沒後，傳寫佚其第三卷」，且「其二卷第二十八條、二十九條、三十條，七卷第一百二條、一百八條、一百九條、一百十條，八卷第一百二十二條至一百二十七條，皆有錄無書」——点名十三条，那是卷三以外所有阙条（三加四加六）。今人转述则作「存九十九条、有目无文十二条、目文全缺十七条」。</p>
+<p>本库据维基文库《尚书古文疏证》卷首全目逐条点得：总目正是一百二十八条，其中存条目文字而正文阙者十二条（卷二第二十八至三十共三条，加卷三前九条），连条目文字也不存者十七条（卷三后七条，加卷七第一百二、一百八、一百九、一百十共四条，加卷八第一百二十二至一百二十七共六条），余九十九条有文，三数相加正合一百二十八。两账各自成立，并非矛盾：提要数的是卷三以外的阙条，今人数的是有目无文者，取的截面不同——本库只作此说明，两说仍并存。</p>
+<p><strong>证伪证成什么样子，看卷二第三十一条，它拆的是理学的命根子。</strong>阎氏开门见山：「二十五篇之《書》其最背理者，在太甲稽首於伊尹；其精密絕倫者，在虞廷十六字」；而「人心惟危，道心惟微，惟精惟一，允执厥中」这十六字心传，他断为「此蓋純襲用《荀子》，而世舉未之察也」——前三句出《荀子·解蔽》所引《道经》，末句出《论语·尧曰》。这一刀的分量，黄宗羲在序里替他记下了：其友朱康流问「若無《大禹謨》則理學絕矣，而可偽之乎？」黄的回答是「然則此十六字者，其為理學之蠹甚矣」。</p>
+<p><strong>四库给出的辨伪谱系跨宋元明清四朝</strong>：「自吳棫始有異議，朱子亦稍稍疑之。吳澄諸人本朱子之說，相繼抉摘，其偽益彰，然亦未能條分縷析，以抉其罅漏。明梅鷟始參考諸書，證其剽剟，而見聞較狹，蒐采未周。至若璩乃引經據古，一一陳其矛盾之故，古文之偽乃大明。」</p>
+<p><strong>首功归谁至今未息。</strong>阎自己在卷八第一百十九承认用过梅鷟的书：「求其《譜》凡十載，得於友人黃虞稷家。急繕寫以來，讀之殊武斷也」，又说「采其若干條散各卷中」——认了《尚书谱》。但梅鷟另有一部《尚书考异》（二书并出，见中文维基《梅鷟》条），钱穆《中国近三百年学术史》（商务印书馆1997年）272页指阎引《考异》极多而多不明引；此说本库未获原书，据中文维基该条所引，属转述层，不作定谳。</p>
+<p><strong>两造并记</strong>：同时毛奇龄作《古文尚书冤词》力辨其真，四库馆臣判「毛奇齡作《古文尚書冤詞》，百計相軋，終不能以強辭奪正理」——此系站在阎一边的评语，非中立记录；但四库仍把《冤词》一并收录，自道理由是「惟奇齡才辨足以移人，又以衛經為辭，託名甚正。使置而不錄，恐人反疑其說之有憑，故並存之」，是一条并存不裁的老家法。</p>
+<p><strong>四库也没少挑阎的毛病</strong>：除讥其「草創之本」外，说他误认郑玄逸篇「不免千慮之一失」，更指出最要害的一条反证他竟没说——「又《史記》、《漢書》但有安國上古文《尚書》之說，並無受詔作《傳》之事。此偽本鑿空之顯證，亦辨偽本者至要之肯綮，乃置而未言，亦稍疏略」；末了仍定评「然反復釐剔，以祛千古之大疑，考證之學則固未之或先矣」。</p>
+<p><strong>两句流传极广的名句，本库未能核实</strong>：梁启超称阎「不能不認為近三百年學術解放之第一功臣」、汪中称此书为「千余年不传之绝学」，中文维基该条引之而俱未附出处，维基文库亦无《清代学术概论》（简繁实测皆 missing），本库未核到梁氏、汪氏原书，故只记其为转述层评价，不作一手引证。</p>
+<p><strong>落点与底本两个保留</strong>：刻地一手无明文，识语只说「謁同里夔州程先生」与「淮揚士大夫更多好義者」，而提要记阎若璩「徙居山陽」（山阳即今淮安），淮安系由这两条推得，标低置信；且维基文库所据底本每卷卷端题「平陰朱續晫近堂梓」，与卷首识语所记乾隆十年刻本并非一本，本库不弥合。互见库内《尚书》（y:-168，那二十五篇的来龙去脉与本条是同一件事的两头）、日知录（1695）、孟子字义疏证（1777）、说文解字注（1815）——三部清代考据成果之外，本条补的是「怎么证伪」这一层方法；下一环是新学伪经考（1891），康有为把同一套办法用到了刘歆身上。</p>
+</details>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>S20 四库提要全段本判官 2026-08-30 直取《四庫全書總目提要/卷012》raw 逐字核得：辨伪谱系、一百二十八条、有录无书十三条、「編次先後，亦未歸條理。蓋猶草創之本」、安国受诏作传一条反证他竟未言、末句定评</li>
+<li><span class="tag t-ok">信史</span>S20 卷首识语与黄宗羲序本判官同日直取 zh.wikisource.org/wiki/尚書古文疏證 raw 逐字核得：「乾隆乙丑之秋，刻《尚書古文疏證》成。」／朱康流问语／黄宗羲答语／阎学林三代刻书始末</li>
+<li><span class="tag t-ok">信史</span>S20 **换锚理由须照录**：成书之年三说并存不裁（黄宗羲序时方成四卷、四库记先四卷后四卷续成、中文维基记康熙三十二年成书历三十八年），故锚取一手可证的刻成之年乾隆十年（1745）</li>
+<li><span class="tag t-ok">信史</span>S20 「三十八年」与生卒 1636—1704-07-08 据中文维基，属转述层，库条已标；线文只用「三十八年」与卒年，用于算出四十一年这一差数</li>
+<li><span class="tag t-ok">信史</span>S20 **不许写**「最终定案」「从此再无异议」——《古文尚书》真伪之争后世仍有翻案之论，库条未载，本库不表态；线文已把这句写进正文末段</li>
+<li><span class="tag t-ok">信史</span>S20 逆行过桥：本站 1745 坐在第⑲站 1774 之后，桥是库内现成的——提要在《四库全书总目》卷十二，四库开馆 1773—1782，正是第⑲站锚年前后。自查法：抽掉这段，前后若照样连得上，就是没桥</li>
+<li><span class="tag t-ok">信史</span>S20 一百二十八条的两账（提要点名十三条／今人作存九十九、有目无文十二、目文全缺十七）本库已点过，两说并存——**线文不写这一层**，本站只留证伪与刻成两件事，多写一层会把落点压散</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/四庫全書總目提要/卷012（action=raw" target="_blank" rel="noopener">《四庫全書總目提要/卷012》古文尚書疏證條  直取，2026-08-30 本判官亲验</a>
+<a href="https://zh.wikisource.org/wiki/尚書古文疏證（同上）" target="_blank" rel="noopener">《尚書古文疏證》卷首（黃宗羲原序、閻詠後序、閻學林識、較閱姓氏、全目</a>
+</div>
+</details>
+</div></section>
+<section id="s21" class="tone"><div class="wrap">
+<div class="num">落点</div>
+<h2>不在当场</h2>
+<p>一件事发生的时候，在场的人各有各的说法；最后留在纸上的是哪一种，从来不在当场定——那部把一部经核成伪书的书刻出来时，核它的人已经死了四十一年。</p>
+</div></section>
+<footer><div class="wrap">
+本页由 <code>tools/mining/build_line_page.py</code> 从库内数据生成，不手改。长文出自纪录片叙事稿，考据随文写就；凡各源不一致的数字，做法是一个都不给。
+<div class="row">
+<a href="../timeline.html#line=shibi">在图上走一遍 →</a>
+<a href="index.html">中国帝王寿命数据库</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-shibi.md" target="_blank" rel="noopener">资料与出处 ↗</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%%E5%%8B%%98%%E8%%AF%%AF&amp;title=%%E5%%8B%%98%%E8%%AF%%AF%%EF%%BC%%9A" target="_blank" rel="noopener">报个错 ↗</a>
+</div></div></footer>
+<dialog id="lb"><button id="lbx" type="button" aria-label="关闭">✕</button><img id="lbi" alt=""><div id="lbc"></div></dialog>
+<script>
+// 进度条与导轨高亮。整页只有这一段脚本，无依赖、无外链。
+var bar=document.getElementById('bar'),links=[].slice.call(document.querySelectorAll('#rail a')),
+    secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+function tick(){
+  var h=document.documentElement,y=h.scrollTop||document.body.scrollTop,
+      m=(h.scrollHeight-h.clientHeight)||1;
+  bar.style.width=(100*y/m)+'%';
+  var at=0;
+  for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].getBoundingClientRect().top<h.clientHeight*0.42) at=i; }
+  for(var j=0;j<links.length;j++) links[j].className=(j===at?'on':'');
+}
+addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
+
+// 点开放大。图注与署名跟着进去——放大了更该说清这是谁的
+var lb=document.getElementById('lb'),lbi=document.getElementById('lbi'),lbc=document.getElementById('lbc');
+[].forEach.call(document.querySelectorAll('button.zoom'),function(b){
+  b.addEventListener('click',function(){
+    lbi.src=b.getAttribute('data-src'); lbi.alt=b.getAttribute('data-cap')||'';
+    var cap=b.getAttribute('data-cap')||'', who=b.getAttribute('data-who')||'',
+        full=b.getAttribute('data-full')||'';
+    lbc.innerHTML='';
+    var t=document.createElement('div'); t.textContent=cap+(cap&&who?'　':'')+who; lbc.appendChild(t);
+    if(full){var a=document.createElement('a'); a.href=full; a.target='_blank'; a.rel='noopener';
+      a.textContent='在 Commons 看原尺寸 ↗'; var d=document.createElement('div');
+      d.style.marginTop='.4rem'; d.appendChild(a); lbc.appendChild(d);}
+    if(lb.showModal) lb.showModal(); else lb.setAttribute('open','');
+  });
+});
+document.getElementById('lbx').addEventListener('click',function(){lb.close?lb.close():lb.removeAttribute('open')});
+lb.addEventListener('click',function(e){ if(e.target===lb) lb.close&&lb.close(); });
+</script>
+</body></html>
