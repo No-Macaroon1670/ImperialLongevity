@@ -71,7 +71,11 @@ function filtered() {
 function chip(label, active, onClick, dotColor) {
   const b = h('button', { class: 'chip', 'aria-pressed': String(active), onclick: onClick });
   if (dotColor) { const d = h('span', { class: 'il-dot' }); d.style.background = dotColor; b.appendChild(d); }
-  if (active) b.appendChild(h('span', { class: 'check', text: '✓' }));
+  // 勾号**常驻占位**、未选态只隐形（库主实测案 2026-08-31：点掉大事记一二三等，
+  // ✓ 进出让按钮忽宽忽窄，控件行一缩、同容器的词条卡跟着漂）——宽度恒定即无重排
+  const c = h('span', { class: 'check', text: '✓' });
+  if (!active) c.style.visibility = 'hidden';
+  b.appendChild(c);
   b.appendChild(h('span', { text: label }));
   return b;
 }
