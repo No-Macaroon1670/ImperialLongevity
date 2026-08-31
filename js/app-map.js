@@ -341,22 +341,8 @@ function eyeSync() {
 }
 
 /* ── 双版切换（世界图双版案）─────────────────────────────────────────── */
-// 左下「中国小版」返回钮：钮面就是一张缩小的中国海岸线——三答实装件原文
-// 「左下中国小版返回钮」。只在世界版出现
-const backBtn = document.createElement('button');
-backBtn.type = 'button';
-backBtn.className = 'pl-cnback';
-backBtn.style.display = 'none';
-backBtn.title = '回到中国版';
-{
-  const mini = el('svg', { viewBox: `0 0 ${BASEMAP.w} ${BASEMAP.h}`, 'aria-hidden': 'true' });
-  mini.appendChild(el('path', { d: BASEMAP.coast }));
-  backBtn.appendChild(mini);
-  const t = document.createElement('span');
-  t.textContent = '中国版';
-  backBtn.appendChild(t);
-}
-$('plate').appendChild(backBtn);
+// 左下「中国小版」返回钮已裁（库主裁：与缩放柱中国钮同屏冗余，2026-08-31 二裁；
+// 图例chip同日同由裁去）——切版只余缩放柱一门，双向：世界↔中国
 let syncAll = () => {};    // mountKinds 挂上真身，切版后同步图例双态
 
 function setWorld(on) {
@@ -370,8 +356,7 @@ function setWorld(on) {
   gExt.innerHTML = '';
   [gGrid, gTerr, gCoast].forEach((g) => { g.style.display = on ? 'none' : ''; });
   gWorld.style.display = on ? '' : 'none';
-  backBtn.style.display = on ? '' : 'none';
-  // 缩放柱里的世界钮双态同步（与图例钮、左下小版钮三处一体）
+  // 缩放柱里的世界钮双态同步（图例钮、左下小版钮俱裁后，此钮即唯一切版门）
   const zw = zctl.querySelector('button[data-z="world"]');
   if (zw) {
     zw.textContent = on ? '中国' : '世界';
@@ -383,7 +368,6 @@ function setWorld(on) {
   applyView();
   draw();
 }
-backBtn.addEventListener('click', (e) => { e.stopPropagation(); setWorld(false); });
 esvg.addEventListener('pointerdown', (e) => {
   const b = esvg.getBoundingClientRect();
   VIEW.cx = ((e.clientX - b.left) / b.width) * W;
@@ -1323,7 +1307,7 @@ function mountKinds() {
   });
   bar.appendChild(all);
   // 图例行不再放世界版chip（库主裁：与缩放柱的世界钮冗余，2026-08-31）——
-  // 切换只在缩放柱与左下小版钮两处
+  // 左下小版钮亦于同日二裁（同一冗余），切换只余缩放柱一处
   syncAll = refresh;
   refresh();
 }
