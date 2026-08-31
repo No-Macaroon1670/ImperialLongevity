@@ -45,7 +45,9 @@ import { WORLDMAP, projectWorld } from './basemap-world.js';
 let W = BASEMAP.w, H = BASEMAP.h;
 const $ = (id) => document.getElementById(id);
 const xy = ([lat, lon]) => (state.world ? projectWorld(lon, lat) : project(lon, lat));
-const yr = (y) => (y < 0 ? `前 ${-y}` : `${y}`);
+// 天文纪年→前N：**须加一**（-6999＝前7000）。此处原漏加，全图公元前年份
+// 显示皆晚一年，史前三条入库时撞出（2026-08-31）；正本口径见 charts.fmtYearAxis
+const yr = (y) => (y <= 0 ? `前 ${-y + 1}` : `${y}`);
 
 /* ── 数据 ─────────────────────────────────────────────────────────────── */
 
