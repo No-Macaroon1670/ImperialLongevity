@@ -436,7 +436,11 @@ def main():
     A('<div id="side">')
     A('<nav id="rail" aria-label="节次">')
     for sid, label in rail:
-        short = label.split('：')[0].split(' · ')[-1][:6]
+        # 导轨标签**不再硬切六字**（外评二轮撞出、判官甲案，2026-08-31）：
+        # #side 宽 11rem、11px 字，容得下十四字，全库最长站题十字——
+        # [:6] 是一刀切错的保险，实测切坏 56 条站题（「书归长子，其」之流）。
+        # 只保留题内冒号/间隔号的取尾逻辑，字数交给版面自己
+        short = label.split('：')[0].split(' · ')[-1]
         A('<a href="#%s"><span class="rdot"></span><span class="rlbl">%s</span></a>' % (sid, esc(short)))
     A('</nav>')
     # 侧栏小地图已撤（用户 2026-08-21 裁：太 mini 且长文页气质不合——
