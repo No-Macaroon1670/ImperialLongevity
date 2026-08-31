@@ -1320,19 +1320,8 @@ function mountKinds() {
     refresh();
   });
   bar.appendChild(all);
-  // 世界版切换钮：三十来条有境外落点的条目换一张世界底图看流散与出海。
-  // 双向都在这颗钮上；世界版另有左下小版钮回来（三答实装件）
-  const wb = document.createElement('button');
-  wb.type = 'button';
-  wb.className = 'chip pl-chip pl-chip-world';
-  syncs.push(() => {
-    wb.textContent = state.world ? '回中国版' : '世界版';
-    wb.title = state.world ? '回到中国版'
-      : '世界中的中国史：只画有境外落点的条目（流散与出海），弧线点开才画';
-    wb.classList.toggle('on', state.world);
-  });
-  wb.addEventListener('click', () => { setWorld(!state.world); });
-  bar.appendChild(wb);
+  // 图例行不再放世界版chip（库主裁：与缩放柱的世界钮冗余，2026-08-31）——
+  // 切换只在缩放柱与左下小版钮两处
   syncAll = refresh;
   refresh();
 }
