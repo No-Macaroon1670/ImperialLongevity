@@ -38,10 +38,13 @@ import { TERR } from './territories.js';
 import { syncCounts } from './counts.js';
 import { LINES } from './lines.js';
 import { DYNASTIES } from './dynasties.js';
+import { WORLDMAP, projectWorld } from './basemap-world.js';
 
-const W = BASEMAP.w, H = BASEMAP.h;
+// 世界图双版（库主三答定案 2026-08-24，点火 2026-08-31）：W/H 随版切换，
+// 中国版一切不动，世界版只画「有境外落点」的合格条目
+let W = BASEMAP.w, H = BASEMAP.h;
 const $ = (id) => document.getElementById(id);
-const xy = ([lat, lon]) => project(lon, lat);
+const xy = ([lat, lon]) => (state.world ? projectWorld(lon, lat) : project(lon, lat));
 const yr = (y) => (y < 0 ? `前 ${-y}` : `${y}`);
 
 /* ── 数据 ─────────────────────────────────────────────────────────────── */
@@ -74,7 +77,16 @@ const state = {
   showExtent: true,        // 政权选中时画盛时疆域示意（毛边色块，四至锚点法）
   showLow: true,           // 画低置信的点
   showAuto: true,          // 画自动取的坐标（据 'w'，没人逐条核过）
+  world: false,            // 世界版：只画有境外落点的条目，全落点组齐画
 };
+
+// 世界版的主点是**真主点**：中国版里主点出图时由链上末个图内点顶替（外主记档），
+// 世界版图框够大，主点回归外主本尊
+const mainIdx = (r) => (state.world && r['外主'] >= 0 ? r['外主'] : r['主']);
+// 「图外」只对中国版成立；世界版里那些点就在图上
+const hidOut = (c) => !state.world && c['外'];
+// 世界版合格：链上有任何境外点（库主三答③：凡有境外落点即合格）
+const worldFit = (r) => r['层'] === 'ev' && r['链'] && r['链'].some((c) => c['外']);
 
 /** 年代滑块对两层的意思不一样，这是有意的：
  *
@@ -84,21 +96,25 @@ const state = {
  * 用户实测看见的就是这个），而「此刻并存的政权」正是本站时间轴
  * 「河宽即并存政权数」的同一个读法。滑块拉满（＝不筛）时两层都全画。 */
 const shown = () => ALL.filter((r) => state.layers.has(r['层'])
+  // 世界版：政权层不上（都城皆境内，搬上去即「搬全量」，三答③明令不搬）；
+  // 事件只收合格条目
+  && (!state.world || (r['层'] === 'ev' && worldFit(r)))
   && (r['层'] !== 'ev' || !state.off.has(r.k))
   && (r['层'] === 'dyn' && state.aliveOnly && Number.isFinite(state.upto)
     ? (r.y <= state.upto && r.e >= state.upto)
     : r.y <= state.upto)
   // 主>=0 必须站在取 链[主] 之前：无图内点条目主=-1，链[-1] 是 undefined，
-  // 关掉「画低置信」后短路失效即抛错、全图点消失（2026-08-26 库主实测报案）
-  && r['主'] >= 0
-  && (state.showLow || !r['链'][r['主']]['约'])
+  // 关掉「画低置信」后短路失效即抛错、全图点消失（2026-08-26 库主实测报案）。
+  // 世界版用 mainIdx：无图内点条目的外主在世界图框里是正主
+  && mainIdx(r) >= 0
+  && (state.showLow || !r['链'][mainIdx(r)]['约'])
   && (state.showAuto || r['据'] !== 'w'));
 
 const idOf = (r) => `${r['层']}:${r.n}`;
 // 调试窗：个人站，留着便宜（终端里 window.__map 直接看内脏）
 window.__map = { state, ALL, TERR, idOf: null };
 window.__map.idOf = idOf;
-const trueXY = (r) => xy(r['链'][r['主']]['点']);
+const trueXY = (r) => xy(r['链'][r._pi !== undefined ? r._pi : mainIdx(r)]['点']);
 const kindLabel = (r) => (r['层'] === 'dyn' ? '政权' : (EVENT_KINDS[r.k] || {}).label || r.k);
 
 /* ── 骨架 ─────────────────────────────────────────────────────────────── */
@@ -124,6 +140,10 @@ gCoast.appendChild(el('path', { class: 'pl-coast', d: BASEMAP.coast }));
 // 河要压在湖上，长江才是「过」洞庭鄱阳，不是流到湖里为止
 lakeLayer(gCoast, BASEMAP.lakes, 'pl-lake');
 gCoast.appendChild(el('path', { class: 'pl-river', d: BASEMAP.rivers }));
+// 世界版底版：只有海岸线（河湖地形留给中国版），默认藏，setWorld 掀帘
+const gWorld = el('g', { class: 'pl-worldbase', style: 'display:none' });
+softStroke(gWorld, WORLDMAP.coast, 'pl-coast-fuzz');
+gWorld.appendChild(el('path', { class: 'pl-coast', d: WORLDMAP.coast }));
 const gRef = el('g', { class: 'pl-ref' });      // 参照城市与河名
 const gLead = el('g', { class: 'pl-leads' });   // 散开之后拉回真位置的细线
 const gChain = el('g', { class: 'pl-chain' });  // 选中时展开的链
@@ -140,7 +160,7 @@ const gExt = el('g', { class: 'pl-extent' });
   defs.appendChild(f);
   svg.appendChild(defs);
 }
-svg.append(gGrid, gTerr, gCoast, gExt, gRef, gLead, gChain, gDot, gLab, gHit, gLn);
+svg.append(gGrid, gTerr, gCoast, gWorld, gExt, gRef, gLead, gChain, gDot, gLab, gHit, gLn);
 
 /** 画/清 盛时疆域毛边色块。轮廓点经 project() 落图，中点二次曲线抹圆——
  *  粗描本来就是示意，棱角只会让它看起来假精确 */
@@ -304,10 +324,49 @@ esvg.appendChild(eyeRect);
 eye.appendChild(esvg);
 $('plate').appendChild(eye);
 function eyeSync() {
-  eye.classList.toggle('on', VIEW.z > 1.01);
+  // 鹰眼是中国版的定位锚（框出的是中国底图坐标系），世界版不摆
+  eye.classList.toggle('on', !state.world && VIEW.z > 1.01);
   eyeRect.setAttribute('x', VB[0]); eyeRect.setAttribute('y', VB[1]);
   eyeRect.setAttribute('width', VB[2]); eyeRect.setAttribute('height', VB[3]);
 }
+
+/* ── 双版切换（世界图双版案）─────────────────────────────────────────── */
+// 左下「中国小版」返回钮：钮面就是一张缩小的中国海岸线——三答实装件原文
+// 「左下中国小版返回钮」。只在世界版出现
+const backBtn = document.createElement('button');
+backBtn.type = 'button';
+backBtn.className = 'pl-cnback';
+backBtn.style.display = 'none';
+backBtn.title = '回到中国版';
+{
+  const mini = el('svg', { viewBox: `0 0 ${BASEMAP.w} ${BASEMAP.h}`, 'aria-hidden': 'true' });
+  mini.appendChild(el('path', { d: BASEMAP.coast }));
+  backBtn.appendChild(mini);
+  const t = document.createElement('span');
+  t.textContent = '中国版';
+  backBtn.appendChild(t);
+}
+$('plate').appendChild(backBtn);
+let syncAll = () => {};    // mountKinds 挂上真身，切版后同步图例双态
+
+function setWorld(on) {
+  if (state.world === !!on) return;
+  state.world = !!on;
+  W = on ? WORLDMAP.w : BASEMAP.w;
+  H = on ? WORLDMAP.h : BASEMAP.h;
+  VIEW.z = 1; VIEW.cx = W / 2; VIEW.cy = H / 2;
+  state.sel = null;
+  state.open.clear();
+  gExt.innerHTML = '';
+  [gGrid, gTerr, gCoast].forEach((g) => { g.style.display = on ? 'none' : ''; });
+  gWorld.style.display = on ? '' : 'none';
+  backBtn.style.display = on ? '' : 'none';
+  svg.setAttribute('aria-label', on ? '世界版：有境外落点的条目——流散与出海' : '本库能落到地上的条目分布图');
+  syncAll();
+  applyView();
+  draw();
+}
+backBtn.addEventListener('click', (e) => { e.stopPropagation(); setWorld(false); });
 esvg.addEventListener('pointerdown', (e) => {
   const b = esvg.getBoundingClientRect();
   VIEW.cx = ((e.clientX - b.left) / b.width) * W;
@@ -533,15 +592,15 @@ function drawChain(row, ax, ay) {
   const chain = row['链'];
   const cls = row['层'] === 'dyn' ? 'k-dyn' : `k-${row.k}`;
   // 主点已被散开挪过位子，链要从它**现在画在哪儿**接出去，否则线会脱开那个点
-  const at = (i) => (i === row['主'] ? [ax, ay] : xy(chain[i]['点']));
+  const at = (i) => (i === mainIdx(row) ? [ax, ay] : xy(chain[i]['点']));
 
   if (row['式'] === '诸说') {
     // 诸说不连线——它们不是先后的行迹，是并存的主张。全摆出来，让读者看见
     // 这地方至今没定论；主说实心，其余空心
     chain.forEach((c, i) => {
-      if (c['外']) return;
+      if (hidOut(c)) return;
       const [x, y] = at(i);
-      if (i !== row['主']) {
+      if (i !== mainIdx(row)) {
         gChain.appendChild(el('circle', { class: `pl-claim ${cls}`, cx: x, cy: y, r: 5 / VIEW.z }));
       }
       const h = haloText(gChain, c['名'],
@@ -571,7 +630,7 @@ function drawChain(row, ax, ay) {
     const total = seen.get(key);
     const [px, py] = at(a);
     let [rx, ry] = at(b);
-    if (chain[b]['外']) {
+    if (hidOut(chain[b])) {
       // 图外：按**真实大圆方位角**指出去，不照投影里的方向。屏上北是 −y，
       // 故方位角 θ 对应的方向向量是 (sinθ, −cosθ)。长度取够穿出图框即可
       const th = bearing(chain[a]['点'], chain[b]['点']);
@@ -602,10 +661,10 @@ function drawChain(row, ax, ay) {
   });
 
   chain.forEach((c, i) => {
-    if (c['角'] !== '陪' || c['外']) return;
+    if (c['角'] !== '陪' || hidOut(c)) return;
     let j = i - 1;
     while (j >= 0 && chain[j]['角'] === '陪') j -= 1;
-    if (j < 0) j = row['主'];
+    if (j < 0) j = mainIdx(row);
     const [px, py] = at(j);
     const [rx, ry] = at(i);
     const seg = clipSeg(px, py, rx, ry);
@@ -616,9 +675,9 @@ function drawChain(row, ax, ay) {
   });
 
   chain.forEach((c, i) => {
-    if (c['外']) return;
+    if (hidOut(c)) return;
     const [x, y] = at(i);
-    if (i !== row['主']) {
+    if (i !== mainIdx(row)) {
       gChain.appendChild(el('circle', {
         class: `pl-step ${cls}${c['约'] ? ' pl-low' : ''}`, cx: x, cy: y, r: 4.6 / VIEW.z,
       }));
@@ -636,10 +695,10 @@ function drawChain(row, ax, ay) {
 
 function say(row, pin) {
   const chain = row['链'];
-  const here = chain[row['主']];
+  const here = chain[mainIdx(row)];
   const bits = [];
   if (row['式'] === '诸说') {
-    const others = chain.filter((_, i) => i !== row['主']).map((c) => c['名']);
+    const others = chain.filter((_, i) => i !== mainIdx(row)).map((c) => c['名']);
     bits.push(`${chain.length} 说并存，主说 ${here['名']}`);
     if (others.length) bits.push(`另有：${others.join('、')}`);
   } else if (chain.length > 1) {
@@ -656,7 +715,7 @@ function say(row, pin) {
       .filter((t) => ROLE_GLOSS[t]);
     if (tags.length) bits.push(tags.map((t) => `${t}＝${ROLE_GLOSS[t]}`).join('，'));
   }
-  if (row['外主'] >= 0) bits.push(`主点其实在${chain[row['外主']]['名']}，出了这张图的范围`);
+  if (!state.world && row['外主'] >= 0) bits.push(`主点其实在${chain[row['外主']]['名']}，出了这张图的范围`);
   if (here['约']) bits.push('今地属推定，故画成半透明');
   if (row['据'] === 'w') bits.push('坐标取自该条目的维基页，没有人核过它是不是这件事发生的地方');
   const kick = row['层'] === 'dyn'
@@ -692,7 +751,8 @@ function draw() {
   // 之后，八十多个条目名一拥而上，北京、成都、上海连同黄河、长江全被挤掉，
   // 读者面对一堆彩点认不出哪儿是哪儿，而这正是当初加参照层要解决的事
   const iz = 1 / VIEW.z;
-  const cities = VIEW.z >= 1.8 ? ANCHORS.concat(ANCHORS_FAR) : ANCHORS;
+  // 世界版：参照层（城市/河湖名/地形名/经纬扶手）整层不上——那些全是中国版布景
+  const cities = state.world ? [] : (VIEW.z >= 1.8 ? ANCHORS.concat(ANCHORS_FAR) : ANCHORS);
   for (const [name, lat, lon] of cities) {
     const [x, y] = project(lon, lat);
     const c = el('circle', { class: 'pl-city', cx: x, cy: y, r: 2 * iz });
@@ -702,7 +762,7 @@ function draw() {
     h.over.setAttribute('class', 'pl-city-t');
     jobs.push({ h, p: [x, y], pri: 150, cands: placeCandidates('e', iz) });
   }
-  for (const [name, lat, lon] of RIVER_TAGS) {
+  for (const [name, lat, lon] of (state.world ? [] : RIVER_TAGS)) {
     const [x, y] = project(lon, lat);
     const h = haloText(gRef, name, { size: 12 * iz, halo: 'var(--surface-2)', haloWidth: 3.4 * iz });
     h.over.setAttribute('class', 'pl-river-t');
@@ -711,7 +771,7 @@ function draw() {
   }
   // 湖名（2026-08-26 库主令）：与河名同的贴身微挪，字小一号、优先级次之——
   // 湖名丢了可惜，但不许为它挤掉河名或站名
-  for (const [name, lat, lon] of LAKE_TAGS) {
+  for (const [name, lat, lon] of (state.world ? [] : LAKE_TAGS)) {
     const [x, y] = project(lon, lat);
     const h = haloText(gRef, name, { size: 10.5 * iz, halo: 'var(--surface-2)', haloWidth: 3 * iz });
     h.over.setAttribute('class', 'pl-lake-t');
@@ -720,8 +780,8 @@ function draw() {
   }
   // 地形的名字：斜体、极淡，排版优先级垫底——山名是布景，谁都可以压过它。
   // 面状名不许跑远（跑远了就指着别的山了），只用小步挪的候选
-  gTerr.style.display = state.showTerr ? '' : 'none';
-  if (state.showTerr) {
+  gTerr.style.display = (!state.world && state.showTerr) ? '' : 'none';
+  if (!state.world && state.showTerr) {
     for (const t of (BASEMAP.terrain || [])) {
       if (t.rank > 2 && VIEW.z < 1.4) continue;   // 小地物的名字放大了才给
       const h = haloText(gRef, t.n, {
@@ -735,7 +795,7 @@ function draw() {
   }
 
   // 放大后沿边标经纬度：没有政区界线的图，数字是最不含糊的扶手
-  if (VIEW.z >= 1.6) {
+  if (!state.world && VIEW.z >= 1.6) {
     const [w0, , e0, n0] = BASEMAP.bbox;
     for (let lon = 80; lon <= 130; lon += 10) {
       const [x] = project(lon, n0);
@@ -758,7 +818,13 @@ function draw() {
   // 政权都城不进事件聚簇（用户实测：都城被吸进数字大簇后不再单独画，
   // 永远点不出来）——事件照旧聚簇，都城自己跟自己分组（同城多朝互相散开），
   // 同城超过 DCAP 朝折成一个「朝簇」方块（点开摊开）。93 个都城是独立图层，理应永远可点
-  const gs = group(rows.filter((r) => r['层'] !== 'dyn'));
+  // 世界版点阵（三答②③）：合格条目全落点组齐画——每个落点一枚影子行，
+  // 名字只标真主点那枚（_minor 不标）；弧线仍点开才画（drawChain 照旧）
+  const evSrc = state.world
+    ? rows.filter((r) => r['层'] !== 'dyn').flatMap((r) => r['链'].map((c, i) => (
+      { ...r, _pi: i, _minor: i !== mainIdx(r) })))
+    : rows.filter((r) => r['层'] !== 'dyn');
+  const gs = group(evSrc);
   const gsDyn = group(rows.filter((r) => r['层'] === 'dyn'));
   // ── 聚合点把压在它圆下面的邻居一并吸进来 ──────────────────────
   // 不吸的话必然叠：聚合圆的半径（最大 26）比分组距离（11）大，
@@ -849,7 +915,7 @@ function draw() {
     for (const g of folded) {
       const cnt = {};
       for (const m2 of g.rows) {
-        const nm = m2.r['链'][m2.r['主']]['名'];
+        const nm = m2.r['链'][m2.r._pi !== undefined ? m2.r._pi : mainIdx(m2.r)]['名'];
         cnt[nm] = (cnt[nm] || 0) + 1;
       }
       const top = Object.entries(cnt).sort((a2, b2) => b2[1] - a2[1])[0];
@@ -1012,7 +1078,7 @@ function draw() {
       const { r } = m;
       const id = idOf(r);
       const cls = r['层'] === 'dyn' ? 'k-dyn' : `k-${r.k}`;
-      const low = r['链'][r['主']]['约'];
+      const low = r['链'][r._pi !== undefined ? r._pi : mainIdx(r)]['约'];
       // 散开之后拉一根细线回真位置：散开是为了点得中，细线是为了别让读者
       // 忘了它本来在哪儿。挪二十单位在这张图上就是一百多公里
       // 只在挪得够远时才拉引线：挪不到一个点的直径，引线给不出信息，
@@ -1082,7 +1148,7 @@ function draw() {
         && (!state.layers.has('ev') || state.off.size >= KINDS.length);
       // 放大了名字就该多：全图只标一等，放到 2.5 倍后二等也标，
       // 4 倍后三等也标——那时视口里没剩几个点，标得下
-      const labOk = r.r === 1 || (VIEW.z >= 2.5 && r.r === 2) || VIEW.z >= 4;
+      const labOk = !r._minor && (r.r === 1 || (VIEW.z >= 2.5 && r.r === 2) || VIEW.z >= 4 || state.world);
       if (!state.sel && (labOk || (r['层'] === 'dyn' && dynOnly))) {
         const h = haloText(gLab, r.n, {
           size: (r['层'] === 'dyn' ? 11.5 : 12.5) / VIEW.z, halo: 'var(--surface-2)',
@@ -1208,6 +1274,20 @@ function mountKinds() {
     refresh();
   });
   bar.appendChild(all);
+  // 世界版切换钮：三十来条有境外落点的条目换一张世界底图看流散与出海。
+  // 双向都在这颗钮上；世界版另有左下小版钮回来（三答实装件）
+  const wb = document.createElement('button');
+  wb.type = 'button';
+  wb.className = 'chip pl-chip pl-chip-world';
+  syncs.push(() => {
+    wb.textContent = state.world ? '回中国版' : '世界版';
+    wb.title = state.world ? '回到中国版'
+      : '世界中的中国史：只画有境外落点的条目（流散与出海），弧线点开才画';
+    wb.classList.toggle('on', state.world);
+  });
+  wb.addEventListener('click', () => { setWorld(!state.world); });
+  bar.appendChild(wb);
+  syncAll = refresh;
   refresh();
 }
 

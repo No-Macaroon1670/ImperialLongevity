@@ -1660,6 +1660,17 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 }
 .pl-eye.on { display: block; }
 .pl-eye svg { display: block; width: 100%; height: auto; }
+/* 世界版左下「中国小版」返回钮（世界图双版案）。与鹰眼共用一角：
+   鹰眼只在中国版放大时出现、此钮只在世界版出现，永不同台 */
+.pl-cnback {
+  position: absolute; left: 10px; bottom: 10px; display: flex; align-items: center;
+  gap: 7px; padding: 4px 10px 4px 6px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--surface-1); color: var(--text-1);
+  cursor: pointer; font-size: 12px; z-index: 5;
+}
+.pl-cnback:hover { border-color: var(--text-2); }
+.pl-cnback svg { display: block; width: 46px; height: 29px; }
+.pl-cnback svg path { fill: none; stroke: var(--text-2); stroke-width: 4; }
 .pl-eye-coast { fill: none; stroke: var(--muted); stroke-width: 2.5; opacity: .6; }
 .pl-eye-river { fill: none; stroke: var(--seq-400); stroke-width: 2.5; opacity: .5; }
 .pl-eye-rect { fill: var(--seq-500); fill-opacity: .13; stroke: var(--seq-500); stroke-width: 3; }

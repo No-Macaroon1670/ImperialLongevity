@@ -268,8 +268,111 @@ def report(seen, want, label):
               % (nm, len(pts), min(xs), max(xs), min(ys), max(ys)))
 
 
+# ── 世界版底图（世界图双版案，2026-08-31 库主点火；设计定案 2026-08-24 三答）──
+# 只产海岸线一样：世界版是流散与出海的舞台，河湖地形都留给中国版。
+# **中国居中（150°E）**：太平洋居中、美洲在右、欧洲在左——流散的弧照真实航向
+# 向右过洋（大英/宾大/波士顿诸点若用格林尼治居中会落在图左，弧要横穿大西洋，
+# 方向就撒谎了）。代价是格陵兰在图缝处被切开，中文版世界地图的通例如此。
+# 数据 Natural Earth 1:110m（公共领域），**vendored 一次**：首跑落
+# tools/mining/vendor/，以后重建零外呼（geocache 同族道理）。
+W_OUT = os.path.join(ROOT, 'js/basemap-world.js')
+W_CENTER = 150.0                 # 居中经线
+W_LAT = (-60.0, 75.0)            # 南砍南极洲；北到挪威岸够用
+W_TOL = 0.4                      # 110m 本就粗，0.4 度足矣
+
+
+def fetch_vendored(name):
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vendor', name)
+    if os.path.exists(p):
+        print('  %s（vendored，零外呼）' % name)
+        return json.load(io.open(p, encoding='utf-8'))
+    gj = fetch(name)
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    io.open(p, 'w', encoding='utf-8', newline='\n').write(json.dumps(gj))
+    print('  已 vendor：%s' % p)
+    return gj
+
+
+def w_shift(lon):
+    return ((lon - W_CENTER + 540.0) % 360.0) - 180.0
+
+
+def w_clip(line):
+    """平移居中后按纬度域裁剪；**跨缝必断**（相邻点平移后经度跳逾180度即是
+    绕过了图缝，连线会横贯整图）。"""
+    out, cur, prev = [], [], None
+    for x, y in line:
+        sx = w_shift(x)
+        if not (W_LAT[0] <= y <= W_LAT[1]):
+            if cur:
+                out.append(cur)
+            cur, prev = [], None
+            continue
+        if prev is not None and abs(sx - prev) > 180.0:
+            if cur:
+                out.append(cur)
+            cur = []
+        cur.append((sx, y))
+        prev = sx
+    if cur:
+        out.append(cur)
+    return [seg for seg in out if len(seg) >= 2]
+
+
+def w_project(x, y):
+    """平移后经纬 → 视图坐标。世界版取平直圆柱（lat0=0）：全球尺度上再作
+    cos 压缩会把赤道带压歪，且这版不与中国版拼图，无须迁就。"""
+    return (1000.0 * (x + 180.0) / 360.0, 1000.0 * (W_LAT[1] - y) / 360.0)
+
+
+def w_path(segs):
+    d = []
+    for seg in segs:
+        pts = [w_project(x, y) for x, y in seg]
+        d.append('M' + 'L'.join('%.1f %.1f' % (a, b) for a, b in pts))
+    return ''.join(d)
+
+
+def build_world():
+    coast = []
+    for feat in fetch_vendored('ne_110m_coastline.geojson')['features']:
+        g = feat['geometry']
+        lines = [g['coordinates']] if g['type'] == 'LineString' else g['coordinates']
+        for ln in lines:
+            for seg in w_clip([(p[0], p[1]) for p in ln]):
+                coast.append(dp(seg, W_TOL))
+    h = 1000.0 * (W_LAT[1] - W_LAT[0]) / 360.0
+    body = ('// basemap-world.js — 世界版底图（世界图双版案）。**生成物，不要手改**：\n'
+            '// 改了去跑 tools/mining/build_basemap.py。\n'
+            '//\n'
+            '// 只有海岸线：世界版是流散（出→藏）与出海事件的舞台，河湖地形留在中国版。\n'
+            '// **中国居中（150°E）**，太平洋居中、美洲在右——流散的弧照真实航向向右过洋；\n'
+            '// 图缝在大西洋 30°W，格陵兰在缝处被切开，中文版世界地图通例如此。\n'
+            '// 投影：平直圆柱（不压缩）。数据 Natural Earth 1:110m（公共领域），\n'
+            '// vendored 于 tools/mining/vendor/，重建零外呼。\n'
+            'export const WORLDMAP = {\n'
+            '  center: %.1f,\n'
+            '  lat: [%.1f, %.1f],\n'
+            '  w: 1000, h: %.1f,\n'
+            '  tol: %.2f,\n'
+            "  src: 'Natural Earth 1:110m coastline（公共领域）',\n"
+            "  coast: '%s',\n"
+            '};\n\n'
+            '/** 经纬 → 世界版视图坐标。与 build_basemap.w_project() 必须一致。 */\n'
+            'export function projectWorld(lon, lat) {\n'
+            '  const x = ((lon - WORLDMAP.center + 540) %% 360) - 180;\n'
+            '  return [1000 * (x + 180) / 360, 1000 * (WORLDMAP.lat[1] - lat) / 360];\n'
+            '}\n') % (W_CENTER, W_LAT[0], W_LAT[1], h, W_TOL, w_path(coast))
+    io.open(W_OUT, 'w', encoding='utf-8', newline='\n').write(body)
+    print('写出 %s：海岸 %d 段，%d 字节' % (W_OUT, len(coast), len(body.encode('utf-8'))))
+
+
 def main():
     sys.setrecursionlimit(10000)
+    if '--world-only' in sys.argv:
+        build_world()
+        return
+    build_world()
     coast, rivers, seen = [], [], {}
     for feat in fetch('ne_50m_coastline.geojson')['features']:
         g = feat['geometry']
