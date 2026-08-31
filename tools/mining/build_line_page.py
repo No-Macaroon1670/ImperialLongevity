@@ -116,7 +116,9 @@ a{color:inherit}
 #rail a{display:flex;align-items:center;color:var(--faint);text-decoration:none;
   letter-spacing:.04em;transition:color .25s}
 #rail .rdot{position:static;display:inline-block;vertical-align:middle;width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;margin-right:.5rem;transition:transform .25s}
-#rail a .rlbl{display:inline-block;vertical-align:middle;opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap}
+/* max-width+ellipsis 是超长站题的兜底（判官二席 2026-08-31，配 [:6] 撤硬切）：
+   用省略号，不用无声截断；现库最长站题十字（约114px）不触此限 */
+#rail a .rlbl{display:inline-block;vertical-align:middle;opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap;max-width:9.5rem;overflow:hidden;text-overflow:ellipsis}
 #rail a:hover{color:var(--dim)} #rail a:hover .rlbl{opacity:1;transform:none}
 #rail a.on{color:var(--accent)} #rail a.on .rdot{transform:scale(1.5)}
 #rail a.on .rlbl{opacity:1;transform:none}
