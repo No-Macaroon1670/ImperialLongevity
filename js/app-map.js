@@ -606,8 +606,11 @@ function drawChain(row, ax, ay) {
   const jobs = [];
   const chain = row['链'];
   const cls = row['层'] === 'dyn' ? 'k-dyn' : `k-${row.k}`;
-  // 主点已被散开挪过位子，链要从它**现在画在哪儿**接出去，否则线会脱开那个点
-  const at = (i) => (i === mainIdx(row) ? [ax, ay] : xy(chain[i]['点']));
+  // 主点已被散开挪过位子，链要从它**现在画在哪儿**接出去，否则线会脱开那个点。
+  // 世界版每个链点都可点（影子行带 _pi）：锚要跟着**被点的那一枚**走——
+  // 库主实测点了景德镇影子点，士林步点被錨到景德镇（2026-08-31 士林错位案）
+  const ai = row._pi !== undefined ? row._pi : mainIdx(row);
+  const at = (i) => (i === ai ? [ax, ay] : xy(chain[i]['点']));
 
   if (row['式'] === '诸说') {
     // 诸说不连线——它们不是先后的行迹，是并存的主张。全摆出来，让读者看见
@@ -632,7 +635,22 @@ function drawChain(row, ax, ay) {
   // 时序骨干剔除陪都：陪与正都**并存**，进了箭头序列会被读成迁都
   const seq = [];
   chain.forEach((c, i) => { if (c['角'] !== '陪') seq.push(i); });
-  for (let i = 0; i + 1 < seq.length; i += 1) legs.push([seq[i], seq[i + 1]]);
+  // **分藏不成行迹**（库主案 2026-08-31，易县罗汉散海外实见）：连续两个及以上
+  // 「现／摹」是平行的收藏地，不是一条走出来的路——罗汉像被画成
+  // 易县→纽约→伦敦→费城→多伦多的巡游，实情是一组造像四散各馆，
+  // 馆与馆之间毫无因果。故藏点各自从上一个非收藏节点散射连出，
+  // 藏点之间不画箭头；整链皆藏点（富春两半、黄庭经两摹）则只摆点不画线
+  const HOLD = new Set(['现', '摹']);
+  for (let i = 0; i + 1 < seq.length; i += 1) {
+    const a = seq[i], b = seq[i + 1];
+    if (HOLD.has(chain[a]['角']) && HOLD.has(chain[b]['角'])) {
+      let src = -1;
+      for (let j = i; j >= 0; j -= 1) {
+        if (!HOLD.has(chain[seq[j]]['角'])) { src = seq[j]; break; }
+      }
+      if (src >= 0) legs.push([src, b]);
+    } else legs.push([a, b]);
+  }
   const seen = new Map();
   const keyOf = (a, b) => [chain[a]['名'], chain[b]['名']].sort().join(' ');
   legs.forEach(([a, b]) => seen.set(keyOf(a, b), (seen.get(keyOf(a, b)) || 0) + 1));
@@ -719,8 +737,21 @@ function say(row, pin) {
   } else if (chain.length > 1) {
     const seqC = chain.filter((c) => c['角'] !== '陪');
     const peiC = chain.filter((c) => c['角'] === '陪');
-    let t = seqC.map((c) => `${c['名']}·${c['角']}${c['外'] ? '（图外）' : ''}`).join(' → ');
-    if (peiC.length) t += `；陪都：${peiC.map((c) => `${c['名']}${c['外'] ? '（图外）' : ''}`).join('、')}`;
+    // 分藏不成行迹（与链的画法同一条规矩）：尾部连续两个及以上藏点不再用
+    // 箭头串起，改记「分藏」——箭头是因果，分藏没有因果
+    const HOLD2 = new Set(['现', '摹']);
+    const tail = [];
+    while (seqC.length && HOLD2.has(seqC[seqC.length - 1]['角'])) tail.unshift(seqC.pop());
+    const nm = (c) => `${c['名']}·${c['角']}${hidOut(c) ? '（图外）' : ''}`;
+    let t;
+    if (tail.length >= 2) {
+      t = seqC.map(nm).join(' → ');
+      t += `${t ? '；' : ''}分藏：${tail.map((c) => `${c['名']}${hidOut(c) ? '（图外）' : ''}`).join('、')}`;
+    } else {
+      seqC.push(...tail);
+      t = seqC.map(nm).join(' → ');
+    }
+    if (peiC.length) t += `；陪都：${peiC.map((c) => `${c['名']}${hidOut(c) ? '（图外）' : ''}`).join('、')}`;
     bits.push(t);
   } else {
     bits.push(`${here['名']}·${here['角']}`);
