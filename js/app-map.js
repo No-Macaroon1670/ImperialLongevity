@@ -356,12 +356,19 @@ function setWorld(on) {
   gExt.innerHTML = '';
   [gGrid, gTerr, gCoast].forEach((g) => { g.style.display = on ? 'none' : ''; });
   gWorld.style.display = on ? '' : 'none';
-  // 缩放柱里的世界钮双态同步（图例钮、左下小版钮俱裁后，此钮即唯一切版门）
+  // 缩放柱里的世界钮双态同步（图例钮、左下小版钮俱裁后，宽屏此钮即唯一切版门）
   const zw = zctl.querySelector('button[data-z="world"]');
   if (zw) {
     zw.textContent = on ? '中国' : '世界';
     zw.title = on ? '回到中国版' : '世界中的中国史：有境外落点的条目';
     zw.classList.toggle('on', on);
+  }
+  // 窄屏地球钮双态同步（面由 CSS 按 .on 换：🌏↔小中国）
+  const gb = document.querySelector('.pl-globe');
+  if (gb) {
+    gb.classList.toggle('on', on);
+    gb.title = on ? '回到中国版' : '世界中的中国史：有境外落点的条目';
+    gb.setAttribute('aria-label', on ? '回到中国版' : '切到世界版');
   }
   svg.setAttribute('aria-label', on ? '世界版：有境外落点的条目——流散与出海' : '本库能落到地上的条目分布图');
   syncAll();
@@ -1645,6 +1652,27 @@ function mountLineChips() {
   btn.setAttribute('aria-label', '故事线目录');
   btn.addEventListener('click', cat.open);
 
+  // 窄屏切版门（库主裁 2026-08-31：缩放柱窄屏隐藏＋chip与小版钮俱裁后触屏无世界入口——
+  // 「加一个小按钮，就在故事线旁边」「可以加一个小地球」「之后换成一个小中国」）。
+  // 桌面藏：柱钮独门，免再生同日方裁的冗余；≤720px 现身即触屏唯一门。
+  // 面双态：中国版🌏去世界、世界版小中国海岸线（回收自退役小版钮）回门；国旗emoji
+  // 在 Windows 塌成字母不取。双态同步在 setWorld
+  const globe = document.createElement('button');
+  globe.type = 'button';
+  globe.className = 'pl-dice pl-globe';
+  globe.title = '世界中的中国史：有境外落点的条目';
+  globe.setAttribute('aria-label', '切到世界版');
+  {
+    const g = document.createElement('span');
+    g.className = 'pl-globe-go';
+    g.textContent = '🌏';
+    globe.appendChild(g);
+    const mini = el('svg', { viewBox: `0 0 ${BASEMAP.w} ${BASEMAP.h}`, 'aria-hidden': 'true' });
+    mini.appendChild(el('path', { d: BASEMAP.coast }));
+    globe.appendChild(mini);
+  }
+  globe.addEventListener('click', () => setWorld(!state.world));
+
   // 搜索框（用户 2026-08-22 提）：轻装版——只搜图上有落点的条目与政权名，
   // 不引河页搜索的大池子（那会把君主全表拖进图页；拼音键记在接缝清单待并）。
   // 选中即定位：挪视野、拉近、种下选中态——坞与嵌卡随 say() 一起到位
@@ -1679,7 +1707,7 @@ function mountLineChips() {
     dice.classList.add('rolling');
     locate(pick);
   });
-  sbox.append(sin, dice, btn, slist);   // 骰子居右（用户指定：不另起一行）；书钮再靠右（2026-08-26 库主令）
+  sbox.append(sin, dice, btn, globe, slist);   // 骰子居右（用户指定：不另起一行）；书钮再靠右（2026-08-26 库主令）；地球钮贴书钮（2026-08-31 库主令「就在故事线旁边」，窄屏专有）
   bar.after(sbox);
   const locate = (r) => {
     slist.innerHTML = ''; sin.value = r.n;

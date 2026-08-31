@@ -1671,6 +1671,17 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 @media (max-width: 720px) {
   .pl-zoomctl, .pl-eye { display: none !important; }
 }
+/* 窄屏切版门·地球钮（库主裁 2026-08-31「就在故事线旁边」）：桌面藏——缩放柱已是独门，
+   别再生同日方裁的冗余；≤720px 缩放柱隐藏，此钮即触屏唯一世界门。
+   面双态由 .on 切：中国版🌏、世界版小中国海岸线（回收自退役小版钮） */
+.pl-globe { display: none; }
+.pl-globe svg { display: none; width: 24px; height: 15px; }
+.pl-globe svg path { fill: none; stroke: var(--text-2); stroke-width: 7; }
+.pl-globe.on .pl-globe-go { display: none; }
+.pl-globe.on svg { display: block; }
+@media (max-width: 720px) {
+  .pl-globe { display: inline-flex; align-items: center; }
+}
 
 /* 悬停浮卡：照时间轴那张迷你知识卡——名、年、类别、简注摘要。
    贴着点出现；点太靠上就翻到下方，别被图框裁掉 */
