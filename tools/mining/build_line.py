@@ -27,10 +27,14 @@ def main():
     key = sys.argv[1] if len(sys.argv) > 1 else 'shiku'
     # 两种叙事稿形态各有抽取脚本：石窟线是一页 HTML（原稿），此后各线是 Markdown
     docs = os.path.join(HERE, '..', '..', 'docs')
+    craft = os.path.join(docs, 'line-%s-craft.md' % key)
     if os.path.exists(os.path.join(docs, 'line-%s-original.html' % key)):
         run('extract_shiku_sources.py')
-    elif os.path.exists(os.path.join(docs, 'line-%s-craft.md' % key)):
+    elif os.path.exists(craft) and '## 三、解说词' in open(craft, encoding='utf-8').read():
         run('craft_to_sources.py', key)
+    elif os.path.exists(os.path.join(docs, 'sources-%s.json' % key)):
+        # payload 生线（判官卷 craft 系自由体）：考据卡已由 apply_line_payload.py 直产，抽取步跳过
+        print('── craft 无解说词节而 sources-%s.json 在，视为 payload 生线，跳过抽取' % key)
     run('build_line_doc.py', key)
     run('build_line_page.py', key)
     print('全部重出完毕。别忘了 sh tools/lint-js.sh，以及浏览器里走一遍。')
