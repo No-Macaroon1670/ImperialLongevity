@@ -302,15 +302,23 @@ window.addEventListener('pointercancel', endPtr);
 // 控件：＋ － 全。滚轮不是人人都想得到，按钮谁都看得见
 const zctl = document.createElement('div');
 zctl.className = 'pl-zoomctl';
+// 「全」曾被读成「全球」（库主实测，2026-08-31，世界版上线当日）：世界版一存在，
+// 地图角上的单字「全」就有了第二义。两手同治：复位钮改双字「全图」自明；
+// 切世界版的钮就地补进这一柱（用户的手本能先来这儿找它）
 zctl.innerHTML = '<button type="button" data-z="in" title="放大">＋</button>'
   + '<button type="button" data-z="out" title="缩小">－</button>'
-  + '<button type="button" data-z="reset" title="回到全图">全</button>';
+  + '<button type="button" data-z="reset" title="回到全图" class="pl-z-wide">全图</button>'
+  + '<button type="button" data-z="world" title="世界中的中国史：有境外落点的条目" class="pl-z-wide">世界</button>';
 $('plate').appendChild(zctl);
 zctl.addEventListener('click', (e) => {
-  const a = e.target.dataset && e.target.dataset.z;
+  // closest 而非 e.target：库主实测报「点全无反应」（2026-08-31）——本地未复现，
+  // 但 e.target 判法有已知脆点（命中按钮内任何子节点即失灵），一并加固
+  const btn = e.target && e.target.closest ? e.target.closest('button[data-z]') : null;
+  const a = btn && btn.dataset.z;
   if (a === 'in') setZoom(VIEW.z * 1.6);
   else if (a === 'out') setZoom(VIEW.z / 1.6);
   else if (a === 'reset') { VIEW.cx = W / 2; VIEW.cy = H / 2; setZoom(1); }
+  else if (a === 'world') setWorld(!state.world);
 });
 
 // 鹰眼：全图轮廓 + 当前视口框。放大了才出现——全图状态下它就是废话
@@ -361,6 +369,13 @@ function setWorld(on) {
   [gGrid, gTerr, gCoast].forEach((g) => { g.style.display = on ? 'none' : ''; });
   gWorld.style.display = on ? '' : 'none';
   backBtn.style.display = on ? '' : 'none';
+  // 缩放柱里的世界钮双态同步（与图例钮、左下小版钮三处一体）
+  const zw = zctl.querySelector('button[data-z="world"]');
+  if (zw) {
+    zw.textContent = on ? '中国' : '世界';
+    zw.title = on ? '回到中国版' : '世界中的中国史：有境外落点的条目';
+    zw.classList.toggle('on', on);
+  }
   svg.setAttribute('aria-label', on ? '世界版：有境外落点的条目——流散与出海' : '本库能落到地上的条目分布图');
   syncAll();
   applyView();
