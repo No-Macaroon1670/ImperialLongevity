@@ -134,7 +134,9 @@ def load_long(key):
         # 条目名含「·」「（」一类字符时 JS 不许裸写，必须加引号。
         # 旧正则只认裸键，于是那一站的长文**静悄悄丢掉**，build 只报「无长文的站」
         # 而不说为什么（勘合线实测踩到）。两种都收。
-        for m in re.finditer(r"\n  (?:'([^']+)'|\"([^\"]+)\"|([^\s:{}'\"]+)): \[(.*?)\n  \],",
+        # 站块收尾的逗号也必须可选：apply_line_payload 产的 JSON 风格文件末键无逗号，
+        # 硬要逗号会把**末位站整站静默丢掉**（dashi ⑭三国演义实踩，08-31 verify 案连坐查出）。
+        for m in re.finditer(r"\n  (?:'([^']+)'|\"([^\"]+)\"|([^\s:{}'\"]+)): \[(.*?)\n  \],?",
                              tb.group(1), re.S):
             name = m.group(1) or m.group(2) or m.group(3)
             text[name] = paras(m.group(4))

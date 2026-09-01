@@ -570,9 +570,24 @@ def main():
         rec = per.get(name) or {}
         quotes = {q['文'].rstrip('。'): q.get('出处', '') for q in rec.get('引文', [])}
         for p in ps:
-            # 库内引文段常带句末句号，出处表里的原文不带——比对前一并削掉
-            bare = p.strip('「」').rstrip('。')
-            if p.startswith('「') and p.rstrip('。').endswith('」') or bare in quotes:
+            # 库内引文段常带句末句号，出处表里的原文不带——比对前一并削掉。
+            # 整段引文＝整段恰被一对引号包住（首「尾」剥除后内部引号深度不得跌破 0）；
+            # 「X」不是「Y」式库内自述句首尾皆引号字符，旧判定误吞其首「、丢句号并错排
+            # 引文块（08-31 verify-line 案：dashi「日轉」句＋shiwu「豆腐」段同病）。
+            p2 = p.rstrip('。')
+            full = p2.startswith('「') and p2.endswith('」')
+            if full:
+                depth = 0
+                for ch in p2[1:-1]:
+                    if ch == '「':
+                        depth += 1
+                    elif ch == '」':
+                        depth -= 1
+                        if depth < 0:
+                            full = False
+                            break
+            bare = p2[1:-1] if full else p2
+            if full or bare in quotes:
                 attr = quotes.get(bare) or quotes.get(p) or ''
                 quoted.add(bare)
                 A('<blockquote>%s%s</blockquote>'
