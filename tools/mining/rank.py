@@ -210,7 +210,8 @@ for k, need in FLOOR.items():
     for e in bycat[k]:
         if len(got) >= need:
             break
-        if tier[id(e)] != 1:
+        # cf:3 降级在前面已裁,保底不得捞回——否则太康失国(-8.02,传说档)照进一等
+        if tier[id(e)] != 1 and e.get("cf") != 3:
             tier[id(e)] = 1
             got.append(e)
 
@@ -219,9 +220,16 @@ for k, need in FLOOR.items():
 # 说得清的,两个信号同向。对**时间轴**来说这是致命的——锚点是给读者导航用的,
 # 而读者滚到秦汉那一段会一个锚点都碰不到。
 # 故每两百年一格,不足三个锚点的,从该格里分数最高的补足。
+#
+# **只辖信史段(y >= -3000,库主 2026-09-02 裁)**:史前条散布在前 50 万年到
+# 前 3000 年的稀疏区,每条独占一格,「每格保三锚」会把几十条负分遗址条机械
+# 推进一等(大窑遗址 -2.45 分进一等,2026-09-01 夜 diff 审出撤案)。史前条
+# 全凭分数与类别保底竞争,不再独格必进。
 BIN = 200
 bins = defaultdict(list)
 for e in order:
+    if e["y"] < -3000:
+        continue
     bins[(e["y"] // BIN) * BIN].append(e)
 promoted = []
 for b0 in sorted(bins):
@@ -229,7 +237,7 @@ for b0 in sorted(bins):
     for e in bins[b0]:
         if len(got) >= 3:
             break
-        if tier[id(e)] != 1:
+        if tier[id(e)] != 1 and e.get("cf") != 3:   # 传说档同样不经此门
             tier[id(e)] = 1
             got.append(e)
             promoted.append((b0, e))
