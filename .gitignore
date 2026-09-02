@@ -52,3 +52,7 @@ docs/video-brief*.md
 # 的照片，原片以 <成品名>-orig.jpg 永存于此，EXIF 不剥——换 spec 重做的本钱。
 # 本地永不入库推送（原片含 GPS 等隐私字段）。
 img/originals/
+
+# 员误建于库根的工作目录（2026-09-02 小政权员 xzq-*）——永不入库；brief 须给绝对会话暂存路径
+scratchpad/
+tools/mining/nianhao_debug.json
