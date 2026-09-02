@@ -361,6 +361,17 @@ export function renderLaneTimeline(host, list, opts) {
       const s = successorOf.get(prevOwner(k, b));
       return !!s && s !== b && !laneOf.has(s.d.key) && s.s < b.e;
     };
+    // 辫流政权：裂自 X 又汇回 X（SPRANG_FROM 与 MERGED_INTO 同指），且生卒都在 X 期内——
+    // 共国之于西周（共和行政）、大中之于大理（高氏篡立）。它填的正是母河君主格的那段空档，
+    // 故直接落母河那一行、与母河底带叠画，不另起泳道（库主 2026-09-02：「在横向泳道，
+    // 大中国应该直接在大理泳道。填进那个空档期」）。竖向河流不受此影响，仍画裂出与汇回。
+    const braidParent = (() => {
+      const key = b.d.key, par = SPRANG_FROM[key];
+      if (!par || MERGED_INTO[key] !== par || !laneOf.has(par)) return null;
+      const pb = bands.find((x) => x.d.key === par);
+      return pb && pb.s <= b.s && pb.e >= b.e ? par : null;
+    })();
+    if (braidParent) { place(b, laneOf.get(braidParent)); continue; }
     let k = -1;
     const pl = laneOf.get(SUCCESSION[b.d.key]);
     if (pl !== undefined && pl >= firstFree && freeIn(pl, b, 0)) k = pl;   // 紧随前身
