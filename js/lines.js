@@ -1167,7 +1167,7 @@ const SHENHOU = [
   {
     t: '代写的那道朱谕',
     b: '建储匣要求皇帝亲笔。咸丰十一年七月的那一天，朱谕是召大臣代写的。',
-    b2: '同一天他指定八人赞襄政务。七十二天后这八个人被解任，理由六个字：擅改谕旨，力阻垂帘。这条线追了两千年的那个动作，此刻成了一条罪名。',
+    b2: '同一天他指定八人赞襄政务。七十二天后这八个人被解任，理由八个字：擅改谕旨，力阻垂帘。这条线追了两千年的那个动作，此刻成了一条罪名。',
     ev: '辛酉政变',
     card: true,
   },
@@ -1735,7 +1735,7 @@ export const LINES = {
         ...s, read: `story/shenhou.html#s${i + 1}`,
         ...(SH_TEXT[s.ev] ? { long: SH_TEXT[s.ev] } : {}),
       })),
-      { t: SH_EPI.t, b: SH_EPI.p[0], long: SH_EPI.p, full: true, read: 'story/shenhou.html#s16' },
+      { t: SH_EPI.t, b: SH_EPI.p[0], long: SH_EPI.p, full: true, read: 'story/shenhou.html#s15' },
     ],
     prologue: SH_PRO,
     epilogue: SH_EPI,
