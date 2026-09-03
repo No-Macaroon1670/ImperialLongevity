@@ -776,6 +776,10 @@ body.tour-on .kp-solo.kp-yc-full .kp-ext {
 }
 .kp-corner.kp-yc-full { max-height: none; overflow: visible; }
 .kp-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; font-size: .8rem; }
+/* 故事线角标（2026-09-02）：卡上「X线第③站 →」胶囊，链去故事页对应站 */
+.kp-lines { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 0; }
+.kp-line { font-size: .74rem; line-height: 1.5; padding: 1px 9px; border-radius: 999px; border: 1px solid rgba(127,127,127,.45); text-decoration: none; opacity: .9; }
+.kp-line:hover { opacity: 1; text-decoration: underline; }
 .kp-links a { text-decoration: none; }
 /* 两个视频链接绑成一组：要换行一起换，绝不把哔哩哔哩单独挤到下一行（用户实测） */
 .kp-vids { display: inline-flex; gap: 12px; white-space: nowrap; }

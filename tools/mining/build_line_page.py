@@ -724,6 +724,34 @@ def emit_line_pics():
     print('写出 js/line-pics.js（%d 条线）' % len(out))
 
 
+def emit_line_stops():
+    """汇出 js/line-stops.js：站名 → 所属故事线与站序。**生成物，不要手改**。
+
+    知识卡「X线第③站 →」角标用（库主 2026-09-02：「现在的卡也应该连到相关的故事线上」）。
+    单独出一张极小的表，是因为 lines.js 把十四条线的全文都 import 进来，知识卡三处页面
+    若直接引 lines.js 要平白多载几百 KB。站序与本脚本给 story 页的 section id（s1…sN）同源，
+    故角标链 story/<key>.html#s<n> 恒能落到那一站。
+    """
+    src = io.open(os.path.join(ROOT, 'js/lines.js'), encoding='utf-8').read()
+    src = src[src.find('export const LINES = {'):]
+    out = {}
+    for key, name in re.findall(r"key: '(\w+)',\s*name: '([^']+)'", src):
+        _meta, stops = load_line(key)
+        for n, st in enumerate(stops, 1):
+            evn = st.get('ev')
+            if evn:
+                out.setdefault(evn, []).append({'key': key, 'name': name, 'i': n})
+    js = '\n'.join([
+        '// line-stops.js — 站名 → 所属故事线与站序（知识卡角标用）。**生成物，不要手改**：',
+        '// 改了去跑 tools/mining/build_line_page.py（任一线）。站序 i 与 story/<key>.html 的 section id s<i> 同源。',
+        'export const LINE_STOPS = ' + json.dumps(out, ensure_ascii=False, indent=1) + ';',
+        '',
+    ])
+    io.open(os.path.join(ROOT, 'js', 'line-stops.js'), 'w', encoding='utf-8', newline='\n').write(js)
+    print('写出 js/line-stops.js（%d 站入表）' % len(out))
+
+
 if __name__ == '__main__':
     main()
     emit_line_pics()
+    emit_line_stops()

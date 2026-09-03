@@ -14,6 +14,7 @@ import { EVENT_KINDS } from './events.js';
 import { OWN_PIC } from './pics-own-cards.js';
 import { MUSEUM_PIC } from './pics-museum-cards.js';
 import { openPicZoom } from './pic-zoom.js';
+import { LINE_STOPS } from './line-stops.js';
 
 /**
  * 值得自动弹卡的名君(姓名 → 权重 1–3):滚动经过时自动打开,权重高者优先。
@@ -260,6 +261,8 @@ function fetchSummary(title) {
  * 用户看到的那屏好结果之所以好,是因为「隋末民变」四个字里本就含着「隋」。
  */
 
+const CIRC = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳';
+
 /** 大事记 → 卡片规格。点选与自动跟随共用,不再各写一份 */
 export function evSpec(ev) {
   const span = ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y);
@@ -274,6 +277,8 @@ export function evSpec(ev) {
     // yc：库内自撰简注。无维基条目、或维基摘要抓取失败时，fillCard 拿它
     // 顶上摘要区——对 nb/无 w 判例族而言，这条注恰恰是全库考据最厚的地方
     yc: ev.yl || ev.yc,  // 卡上取长文（yl），无长文退 yc——悬浮 tip 端仍直读 ev.yc（短）
+    // lines：这件事在哪几条故事线上当过站（生成表 line-stops.js）——卡上打角标链去故事页
+    lines: LINE_STOPS[ev.n] || [],
   };
 }
 
@@ -316,6 +321,8 @@ function mkCard(sideClass) {
   });
   const head = h('div', { class: 'kp-sub' });
   const title = h('div', { class: 'kp-title' });
+  // 故事线角标行：凡某线之站，标「X线第③站 →」（库主 2026-09-02 令：卡要连到相关故事线）
+  const lines = h('div', { class: 'kp-lines' });
 
   const ext = h('p', { class: 'kp-ext' });
   const wiki = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '维基百科全文 ↗' });
@@ -337,9 +344,9 @@ function mkCard(sideClass) {
   const close = h('button', { class: 'kp-close', type: 'button', text: '✕' });
   const src = h('div', { class: 'kp-src', text: '摘要实时取自中文维基百科' });
   const el = h('div', { class: `kp ${sideClass}` }, [
-    close, img, head, title, ext, h('div', { class: 'kp-links' }, [wiki, baidu, museum, wsrc, h('span', { class: 'kp-vids' }, [yt, bili])]), src,
+    close, img, head, title, lines, ext, h('div', { class: 'kp-links' }, [wiki, baidu, museum, wsrc, h('span', { class: 'kp-vids' }, [yt, bili])]), src,
   ]);
-  return { el, img, head, title, ext, wiki, baidu, museum, wsrc, yt, bili, close, src };
+  return { el, img, head, title, lines, ext, wiki, baidu, museum, wsrc, yt, bili, close, src };
 }
 
 /** 皇帝卡的取数说明书。库内 387 位君主全有姓名,故标题恒为人名 */
@@ -401,6 +408,17 @@ async function fillCard(card, spec) {
   // 上一位主角若曾落在「全文简注」分支，这一位未必也落——每次换人都先摘帽,
   // 别让角卡/嵌入卡的自然撑高、侧卡的段内解限跟着旧主角赖到新卡上
   card.el.classList.remove('kp-yc-full');
+  // 故事线角标：站序与 story 页 section id 同源（build_line_page.py），链 story/<key>.html#s<n>；
+  // story 页自身若嵌卡则去掉前缀。皇帝卡／朝代卡无 lines 字段，行隐去
+  if (card.lines) {
+    const base = /\/story\//.test(location.pathname) ? '' : 'story/';
+    const ls = spec.lines || [];
+    card.lines.replaceChildren(...ls.map((l) => h('a', {
+      class: 'kp-line', href: `${base}${l.key}.html#s${l.i}`,
+      text: `${l.name}第${CIRC[l.i - 1] || l.i}站 →`, title: `这件事是${l.name}的第 ${l.i} 站，点开读故事线`,
+    })));
+    card.lines.style.display = ls.length ? '' : 'none';
+  }
   // 图片显隐统一走这里:嵌入卡的宽屏两栏只在真有图时启用(kp-haspic),
   // 否则空图轨会给文字凭空让出一条左沟
   const pic = (on) => {
