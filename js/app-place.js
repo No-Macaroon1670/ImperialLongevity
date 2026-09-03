@@ -134,7 +134,8 @@ function buildSegs(turns, members) {
         }
         const sub = { y: start, y2: cur.y2, t: '', who: heir.key, status: cur.status, auto: true,
           note: '天下易主，本地未另记换手', color: colorOfDyn(heir.key) };
-        cur.y2 = Math.max(cur.y, start - 1);
+        // 前一段的讫年：插了易代空窗就停在政权亡年，否则贴到承接者起年之前
+        cur.y2 = Math.max(cur.y, start > d.e + 1 ? d.e : start - 1);
         segs.push(sub);
         cur = sub;
       }
