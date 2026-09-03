@@ -57,4 +57,8 @@ export const OWN_PIC = {
   颐和园: 'img/used/yiheyuan-foxiangge.jpg',
   乾隆石经: 'img/used/guozijian-qianlong-shijing-beilang.jpg',
   北京孔庙进士题名碑: 'img/used/guozijian-kongmiao-dachengmen.jpg',
+  明十三陵: 'img/used/shisanling-shendao.jpg',
+  定陵发掘: 'img/used/dingling-wanli-baozuo.jpg',
+  北海白塔: 'img/used/beihai-baita.jpg',
+  北京国子监: 'img/used/guozijian-biyong-neijing.jpg',
 };
