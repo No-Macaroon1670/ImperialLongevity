@@ -223,6 +223,21 @@ const grp = (label, items) => ({ type: 'group', label, items });
 // 不相等、于是刚点完就把浮层关掉；只问「这一下落在某个 .lc-set 里吗」就没这毛病。
 // 点 summary 自身同样命中 closest 而放行，故与 details 原生开合不打架：
 // 开的那一下不会被同一次点击立刻关回去。
+// 浮层落位（库主 2026-09-03 手机实测「设置在手机上容易被切断」）：CSS 默认 right:0 右对齐，
+// 是按「设置惯在条杆右端」写的；窄屏上条杆折行后「设置」落在左端，右对齐的浮层就整块
+// 甩出视口左缘。开的那一下量一次：右对齐探出左缘就改左对齐，左对齐再探出右缘就贴着视口摆。
+// 齿轮弹层里内层体是 static（见 styles.css section.lc-open 例外），不归这里管。
+function placeLcSetBody(det) {
+  const body = det.querySelector('.lc-set-body');
+  if (!body || getComputedStyle(body).position !== 'absolute') return;
+  body.style.left = ''; body.style.right = '';
+  const vw = document.documentElement.clientWidth, pad = 8;
+  const r = det.getBoundingClientRect(), w = body.getBoundingClientRect().width;
+  if (r.right - w >= pad) return;                       // 右对齐放得下，照旧
+  body.style.right = 'auto'; body.style.left = '0';
+  const over = r.left + w - (vw - pad);
+  if (over > 0) body.style.left = `${-Math.min(over, Math.max(0, r.left - pad))}px`;
+}
 let lcSetCloserBound = false;
 function bindLcSetOutsideClose() {
   if (lcSetCloserBound) return;
@@ -244,7 +259,7 @@ function buildControls(sec) {
       const det = h('details', { class: 'pl-settings lc-set' });
       // render() 每改一个开关就整条重建;不记开合状态的话,勾一下块就合上了
       if (S._lcSetOpen) det.open = true;
-      det.addEventListener('toggle', () => { S._lcSetOpen = det.open; });
+      det.addEventListener('toggle', () => { S._lcSetOpen = det.open; if (det.open) placeLcSetBody(det); });
       bindLcSetOutsideClose();
       det.appendChild(h('summary', { text: c.label }));
       const inner = buildControls({ controls: c.items });   // 递归复用同一台机器
@@ -370,11 +385,33 @@ function setupSectionNav() {
   const narrow = matchMedia('(max-width: 720px)');
   let raf = null;
 
+  // 窄屏「设置」入口（库主 2026-09-03：把设置放在这条上，好让人在河中间也够得到）：
+  // 钉在「回到页首」右侧的齿轮，点开把**当前节**的控件簇整块浮成弹层（section.lc-open，
+  // 窄屏样式见 styles.css 719px 段；宽屏本来就有同名规则）。簇里的「设置」折叠组在弹层内
+  // 走 static 内层体，不会再被视口边裁掉。点弹层外任意处、或黑条收起时，弹层随之收。
+  let curSec = null;
+  const closeLc = () => { for (const s of document.querySelectorAll('section.lc-open')) s.classList.remove('lc-open'); };
+  const gear = h('button', { class: 'sn-gear', type: 'button', text: '⚙', title: '本节设置', 'aria-label': '本节设置' });
+  gear.onclick = (e) => {
+    // 不让这一下冒到 document：页上另有「点空处收起」一族的全局监听，会把刚开的弹层当场关掉
+    e.stopPropagation();
+    if (!curSec) return;
+    const on = curSec.classList.contains('lc-open');
+    closeLc();
+    if (!on) curSec.classList.add('lc-open');
+  };
+  up.bar.appendChild(gear);
+  document.addEventListener('click', (e) => {
+    if (!document.querySelector('section.lc-open')) return;
+    if (e.target instanceof Element && (e.target.closest('.sn-gear') || e.target.closest('.local-controls'))) return;
+    closeLc();
+  });
+
   const set = (o, text, go) => {
     if (o.label !== text) { o.label = text; o.btn.textContent = text; o.btn.onclick = go; }
     o.bar.classList.add('on');
   };
-  const hide = (o) => { o.bar.classList.remove('on'); o.label = null; };
+  const hide = (o) => { o.bar.classList.remove('on'); o.label = null; if (o === up) closeLc(); };
   const jump = (id) => () => (id
     ? document.getElementById(id).scrollIntoView({ block: 'start' })
     : scrollTo({ top: 0, behavior: 'smooth' }));
@@ -393,6 +430,10 @@ function setupSectionNav() {
     }
     const r = idx >= 0 ? document.getElementById(ids[idx]).getBoundingClientRect() : null;
     if (!r || r.height <= vh * 1.5) { hide(up); hide(down); return; }
+    // 齿轮只在当前节真有控件簇时现身；换了节就把上一节的弹层收掉
+    const sec = document.getElementById(ids[idx]);
+    if (sec !== curSec) { closeLc(); curSec = sec; }
+    gear.style.display = sec.querySelector('.local-controls') ? '' : 'none';
 
     const short = (i) => PAGE_SECTIONS[i].title.split('：')[0];
     if (r.top < -vh * 0.4) {

@@ -621,6 +621,22 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
   .sec-nav.up .sn-btn { max-width: calc(100vw - min(260px, 46vw) - 140px); }
   /* 黑条左侧按钮给右边的骰子＋搜索留位 */
   .sec-nav.up .sn-btn { max-width: calc(100vw - min(260px, 46vw) - 96px); }
+  /* 齿轮（本节设置）钉在「回到页首」右侧（库主 2026-09-03：设置放在这条上，河中间也够得到）；
+     左钮再让出一格 */
+  .sec-nav.up .sn-gear {
+    flex: none; width: 34px; height: 34px; margin-left: 6px; padding: 0;
+    border: 1px solid var(--border); border-radius: 999px;
+    background: var(--surface-1); color: var(--text-1); font-size: 1rem; line-height: 1; cursor: pointer;
+  }
+  .sec-nav.up .sn-btn { max-width: calc(100vw - min(260px, 46vw) - 136px); }
+  /* 窄屏齿轮弹层：当前节的控件簇整块浮到黑条下方（宽屏版见 720px 以上那条同名规则）；
+     簇内「设置」折叠组走 section.lc-open 的 static 内层体，不再被视口边裁 */
+  section.lc-open .local-controls:not(.lc-set-body) {
+    position: fixed; top: calc(var(--filters-h, 45px) + 56px); left: 12px; right: 12px; z-index: 69;
+    max-height: calc(100vh - 170px); overflow: auto; margin: 0;
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, .22); padding: 10px 14px;
+  }
 }
 .tl-search input {
   font: inherit; font-size: .84rem; padding: 5px 11px; width: min(260px, 46vw);
