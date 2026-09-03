@@ -11,8 +11,7 @@
 // 永远不会烂,搜索结果也天然比三年前存的某支视频新鲜。
 import { h, fmtYearAxis } from './charts.js';
 import { EVENT_KINDS } from './events.js';
-import { OWN_PIC } from './pics-own-cards.js';
-import { MUSEUM_PIC } from './pics-museum-cards.js';
+import { cardPics } from './pics-own-cards.js';
 import { openPicZoom } from './pic-zoom.js';
 import { LINE_STOPS } from './line-stops.js';
 
@@ -271,8 +270,9 @@ export function evSpec(ev) {
     title: ev.w, sec: ev.ws, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
     // b：百度自己的正名（维基与百度的条目名常不一致，实测 75 条要另写）
     // nb：百度确实没有这个词条，藏掉按钮而不是给个 404
-    baidu: ev.b, noBaidu: !!ev.nb, museum: ev.m, wsrc: ev.wsrc, ownPic: OWN_PIC[ev.n],
-    musPic: MUSEUM_PIC[ev.n],
+    baidu: ev.b, noBaidu: !!ev.nb, museum: ev.m, wsrc: ev.wsrc,
+    // pics：自摄／馆方开放图按 cardPics() 的取图规则合成——main 一张，extra 至多一张（语境／细节）
+    pics: cardPics(ev.n),
     q: ev.ya || ev.n, yt: true,
     // yc：库内自撰简注。无维基条目、或维基摘要抓取失败时，fillCard 拿它
     // 顶上摘要区——对 nb/无 w 判例族而言，这条注恰恰是全库考据最厚的地方
@@ -319,6 +319,12 @@ function mkCard(sideClass) {
   img.addEventListener('click', () => {
     if (img.dataset.zoomcap != null) openPicZoom(img.src, img.dataset.zoomcap);
   });
+  // 第二张（语境／细节，2026-09-03 一条两张 schema）：小图，同样可放大；无则隐
+  const img2 = h('img', { class: 'kp-thumb2 kp-zoomable', alt: '' });
+  img2.style.display = 'none';
+  img2.addEventListener('click', () => {
+    if (img2.dataset.zoomcap != null) openPicZoom(img2.src, img2.dataset.zoomcap);
+  });
   const head = h('div', { class: 'kp-sub' });
   const title = h('div', { class: 'kp-title' });
   // 故事线角标行：凡某线之站，标「X线第③站 →」（库主 2026-09-02 令：卡要连到相关故事线）
@@ -344,9 +350,9 @@ function mkCard(sideClass) {
   const close = h('button', { class: 'kp-close', type: 'button', text: '✕' });
   const src = h('div', { class: 'kp-src', text: '摘要实时取自中文维基百科' });
   const el = h('div', { class: `kp ${sideClass}` }, [
-    close, img, head, title, lines, ext, h('div', { class: 'kp-links' }, [wiki, baidu, museum, wsrc, h('span', { class: 'kp-vids' }, [yt, bili])]), src,
+    close, img, head, title, lines, ext, h('div', { class: 'kp-links' }, [wiki, baidu, museum, wsrc, h('span', { class: 'kp-vids' }, [yt, bili])]), src, img2,
   ]);
-  return { el, img, head, title, lines, ext, wiki, baidu, museum, wsrc, yt, bili, close, src };
+  return { el, img, img2, head, title, lines, ext, wiki, baidu, museum, wsrc, yt, bili, close, src };
 }
 
 /** 皇帝卡的取数说明书。库内 387 位君主全有姓名,故标题恒为人名 */
@@ -428,8 +434,8 @@ async function fillCard(card, spec) {
   pic(false);
   // 本地图两级手选(自摄 pics-own-cards.js > 馆方开放图 pics-museum-cards.js):
   // 立即上图,不等维基;维基缩略图退居替补。图注前缀随图源走。
-  const localPic = spec.ownPic ? { src: spec.ownPic, note: '图为本库自摄' }
-    : spec.musPic ? { src: spec.musPic.src, note: spec.musPic.credit } : null;
+  const pics = spec.pics || null;
+  const localPic = pics ? pics.main : null;
   if (localPic) {
     card.img.src = localPic.src;
     pic(true);
@@ -440,6 +446,16 @@ async function fillCard(card, spec) {
     card.src.textContent = '摘要实时取自中文维基百科';
     card.img.classList.remove('kp-zoomable');
     delete card.img.dataset.zoomcap;
+  }
+  // 第二张：语境／细节（cardPics 只给至多一张）
+  if (card.img2) {
+    const x = pics && pics.extra && pics.extra[0];
+    if (x) {
+      card.img2.src = x.src; card.img2.style.display = ''; card.img2.title = x.note;
+      card.img2.dataset.zoomcap = `${spec.display || spec.title || ''}——${x.note}`;
+    } else {
+      card.img2.style.display = 'none'; card.img2.removeAttribute('src'); delete card.img2.dataset.zoomcap;
+    }
   }
   // 无维基条目的条目(2026-08-21 起允许):收起维基栏与摘要抓取,不空转、
   // 不 404。摘要区改放库内简注(yc)全文顶上——这批条目(nb/无 w 判例族,如

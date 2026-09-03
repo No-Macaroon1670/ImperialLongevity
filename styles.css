@@ -752,6 +752,9 @@ section.card.has-kp:not(.desc-full) > .desc::after {
 /* 本地手选图(自摄/馆方开放图)可点开放大(js/pic-zoom.js);预览是 cover 裁过的,
    灯箱里才见全幅——维基缩略图不挂,光标不撒谎 */
 .kp-thumb.kp-zoomable { cursor: zoom-in; }
+/* 第二张（语境／细节，2026-09-03 一条两张 schema）：小图靠右压在出处行下，不抢主图 */
+.kp-thumb2 { display: block; max-width: 46%; max-height: 110px; object-fit: cover; border-radius: 6px; margin: 8px 0 0 auto; cursor: zoom-in; }
+.kp-embed.on.kp-haspic .kp-thumb2 { grid-column: 2; }
 .kp-sub { font-size: .74rem; color: var(--text-1); opacity: .62; margin-top: 8px; }
 .kp-title { font-weight: 720; font-size: 1.04rem; margin: 1px 0 6px; }
 .kp-ext { font-size: .82rem; line-height: 1.6; margin: 0;

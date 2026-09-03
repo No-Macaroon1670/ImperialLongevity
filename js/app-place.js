@@ -35,8 +35,7 @@ import { evSpec, mountEmbedCard, mdBold } from './knowledge.js';
 import { evMark, dynastyColorSlots, slotVar } from './views-lanes.js';
 import { DYNASTIES, DYN_MAP, ERAS, SUCCESSION, MERGED_INTO, ORTHODOX } from './dynasties.js';
 import { LINE_STOPS } from './line-stops.js';
-import { OWN_PIC } from './pics-own-cards.js';
-import { MUSEUM_PIC } from './pics-museum-cards.js';
+import { cardPics } from './pics-own-cards.js';
 import { PLACES, membersOf, PLACE_END, PLACE_MIN } from './places.js';
 import { GEO_STATS } from './geo-stats.js';
 import { syncCounts } from './counts.js';
@@ -231,8 +230,9 @@ const lineBadges = (ev) => (LINE_STOPS[ev.n] || []).map((l) => h('a', {
  */
 function evCard(ev, tier, side, over, dock) {
   const ovr = over[ev.n];
-  const pic = tier === 1 ? (OWN_PIC[ev.n] ? { src: OWN_PIC[ev.n], credit: '图为本库自摄' }
-    : MUSEUM_PIC[ev.n] || null) : null;
+  // 取图走 cardPics()（馆方开放图当主体、自摄补语境细节的规则集中在那里）；地方线卡只挂主图
+  const pp = tier === 1 ? cardPics(ev.n) : null;
+  const pic = pp ? { src: pp.main.src, credit: pp.main.note } : null;
   const body = ovr && ovr.p && ovr.p.length
     ? ovr.p.map((s) => h('p', { class: 'plc-card-p' }, [richText(s)]))
     : (ev.yc ? [h('p', { class: 'plc-card-p' }, [richText(ev.yc)])] : []);
