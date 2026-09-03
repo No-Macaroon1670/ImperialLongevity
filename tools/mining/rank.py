@@ -51,6 +51,11 @@ def wiki_counts(title):
         host, t = "en.wikipedia.org", title[3:]
     q = urllib.parse.urlencode({
         "action": "query", "format": "json", "redirects": "1", "titles": t,
+        # converttitles:中文维基靠字词转换显示繁简,**不建繁简重定向页**——`w` 写成维基
+        # 没建的那种写法(黨錮之禍/伤寒杂病论/澶渊之盟…)按标题精确查一律 missing,
+        # 三信号全零、分量全压三等,库内 58 条正撞在上头(出链层员 2026-09-02 查出)。
+        # 加这个参数让 API 先做转换再查,回的 title 即正题,pageviews 也据此查。
+        "converttitles": "1",
         "prop": "langlinks|linkshere", "lllimit": "500",
         "lhlimit": "500", "lhnamespace": "0"})
     d = get("https://%s/w/api.php?" % host + q)
@@ -96,9 +101,11 @@ for line in body.splitlines():
     if not m:
         continue
     d = {}
-    for kv in re.finditer(r"(\w+): (?:'([^']*)'|(-?\d+))", m.group(1)):
+    # 字符串值允许 \' 转义(将苑西夏文译本的 w 带 General\'s):旧式 '([^']*)' 在 \' 处截断,
+    # signals.json 里存的就是坏串(出链层员 2026-09-02 查出);读出后反转义
+    for kv in re.finditer(r"(\w+): (?:'((?:[^'\\]|\\.)*)'|(-?\d+))", m.group(1)):
         k, sv, nv = kv.groups()
-        d[k] = sv if sv is not None else int(nv)
+        d[k] = sv.replace("\\'", "'") if sv is not None else int(nv)
     if "w" in d:
         evs.append(d)
 print("事件 %d 条" % len(evs))
