@@ -220,8 +220,10 @@ function applyView() {
   // 窄屏例外（库主 2026-09-03 手机实测「很难左右滑动地图」）：那边整图 760px 宽装在
   // .plate 里横向拖着看（styles.css 720px 断点），pan-y 把横向手势一并掐死，手指落在图上
   // 就只能竖滚页面、拖不动图——全图态须连横向也放行给容器滚动
-  const narrow = window.matchMedia('(max-width: 720px)').matches;
-  svg.style.touchAction = VIEW.z > 1 ? 'none' : (narrow ? 'pan-x pan-y' : 'pan-y');
+  // 二改（同日，库主复测：中国版好了、世界版仍拖不动，面板模拟触控又无法复现）：不再赌浏览器
+  // 的手势仲裁——窄屏全图态回到 pan-y（竖滚仍归浏览器），横向拖由下面 pointer 事件亲手搬
+  // .plate 的 scrollLeft，两版同一条路，与浏览器无关
+  svg.style.touchAction = VIEW.z > 1 ? 'none' : 'pan-y';
   eyeSync();
 }
 
@@ -252,6 +254,7 @@ svg.addEventListener('wheel', (e) => {
 
 // 拖着平移。拖过就不算点击——否则松手时会把选中的链顺手关掉
 let panning = null, suppressClick = false, pinch = null;
+let hscroll = null;   // 窄屏全图态的横向拖：{ id, x, sl, moved }，搬的是 .plate 的 scrollLeft
 svg.style.cursor = 'grab';   // 抓手三态：常态 grab、拖动 grabbing、松手复位（用户票据 2026-08-21）
 const PTRS = new Map();   // pointerId → 屏坐标；两个成员即捏合态
 svg.addEventListener('pointerdown', (e) => {
@@ -266,8 +269,17 @@ svg.addEventListener('pointerdown', (e) => {
     try { svg.setPointerCapture(e.pointerId); } catch (_) { /* 合成指针无捕获权，忽略 */ }
     return;
   }
+  if (VIEW.z <= 1) {
+    // 全图态：宽屏单指留给页面滚动；窄屏整图 760px 装在 .plate 里横向拖着看（720px 断点），
+    // touch-action pan-y 把横向手势留给了我们——亲手搬 scrollLeft，不靠浏览器仲裁
+    // （库主 2026-09-03 手机实测两轮：中国版一度只在某些手势下能拖，世界版拖不动）。
+    // 落在点上也放行起拖（点密处手指没处落），没挪动照旧算点击
+    if (!window.matchMedia('(max-width: 720px)').matches) return;
+    hscroll = { id: e.pointerId, x: e.clientX, sl: $('plate').scrollLeft, moved: false };
+    try { svg.setPointerCapture(e.pointerId); } catch (_) { /* 合成指针无捕获权，忽略 */ }
+    return;                                // 不 preventDefault：竖向滚动仍归浏览器
+  }
   if (e.target.classList && e.target.classList.contains('pl-hit')) return;
-  if (VIEW.z <= 1) return;                 // 全图态单指留给页面滚动
   e.preventDefault();     // 掐掉浏览器的文本选择：不掐，拖图就是满图蓝色选区
   panning = { x: e.clientX, y: e.clientY, cx: VIEW.cx, cy: VIEW.cy, moved: false };
   svg.style.cursor = 'grabbing';
@@ -285,6 +297,12 @@ svg.addEventListener('pointermove', (e) => {
     }
     return;
   }
+  if (hscroll && e.pointerId === hscroll.id) {
+    const dx = e.clientX - hscroll.x;
+    if (Math.abs(dx) > 4) hscroll.moved = true;
+    $('plate').scrollLeft = hscroll.sl - dx;
+    return;
+  }
   if (!panning) return;
   const b = svg.getBoundingClientRect();
   if (Math.abs(e.clientX - panning.x) + Math.abs(e.clientY - panning.y) > 4) panning.moved = true;
@@ -294,6 +312,10 @@ svg.addEventListener('pointermove', (e) => {
 });
 const endPtr = (e) => {
   PTRS.delete(e.pointerId);
+  if (hscroll && e.pointerId === hscroll.id) {
+    if (hscroll.moved) suppressClick = true;   // 拖过就不算点击，与放大态平移同一规矩
+    hscroll = null;
+  }
   if (pinch && PTRS.size < 2) { pinch = null; suppressClick = true; scheduleDraw(); }
   if (panning && panning.moved) { suppressClick = true; scheduleDraw(); }
   if (!PTRS.size) panning = null;
@@ -1377,6 +1399,12 @@ const collapse = () => {
   state.sel = null; state.open.clear(); draw();
 };
 svg.addEventListener('click', collapse);
+// 拖完图松手落在点上，浏览器照样发 click：捕获段先截住，点不开、也不收链
+// （窄屏横向拖允许从点上起拖，这一层才需要；放大态平移不从点上起，无此虞）
+svg.addEventListener('click', (e) => {
+  if (!suppressClick) return;
+  suppressClick = false; e.stopPropagation(); e.preventDefault();
+}, true);
 addEventListener('keydown', (e) => {
   if (LN.key) {
     // 走线时方向键翻站，Esc 退出走线
