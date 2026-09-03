@@ -372,7 +372,14 @@ export function renderLaneTimeline(host, list, opts) {
       const key = b.d.key, par = SPRANG_FROM[key];
       if (!par || MERGED_INTO[key] !== par || !laneOf.has(par)) return null;
       const pb = bands.find((x) => x.d.key === par);
-      return pb && pb.s <= b.s && pb.e >= b.e ? par : null;
+      if (!pb || pb.s > b.s || pb.e < b.e) return null;
+      // 只收「完全代替」的辫流：母河这一段**无君主分段**（共国之于西周、大中之于大理，母河的
+      // 君主格恰好空着）。裂土一部分而母河君主仍在者——张楚之于秦（二世在位）、大齐之于唐、
+      // 太平天国之于清——照常另起泳道（库主 2026-09-02 实测三处叠画：「他们并不是像大中国于
+      // 大理那样完全代替了，只是裂土一部分」）。segs 的 s/x 是真实年份（ds/dx 才是绘图坐标）。
+      const TOLB = 0.5;
+      const parentRules = (pb.segs || []).some((g) => g.s < b.e - TOLB && g.x > b.s + TOLB);
+      return parentRules ? null : par;
     })();
     if (braidParent) { place(b, laneOf.get(braidParent)); continue; }
     let k = -1;
