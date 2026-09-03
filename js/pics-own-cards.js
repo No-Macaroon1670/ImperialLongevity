@@ -55,4 +55,6 @@ export const OWN_PIC = {
   官窑: 'img/used/suining-songci-mingyao-jingchu-banban.jpg',
   圆明园: 'img/used/yuanmingyuan-dashuifa.jpg',
   颐和园: 'img/used/yiheyuan-foxiangge.jpg',
+  乾隆石经: 'img/used/guozijian-qianlong-shijing-beilang.jpg',
+  北京孔庙进士题名碑: 'img/used/guozijian-kongmiao-dachengmen.jpg',
 };
