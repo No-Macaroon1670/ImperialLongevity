@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>拾遗线 · 犁沟中翻出的鼎，废铜堆中认出的尊，深水中网起的铁券。十一站，看没有人在找的东西怎么回来——再看回来那一刻没有人记下的故事，怎么一版一版长成说明牌上的话。</title>
+<meta name="description" content="没有人在找它们。共 11 站。">
+<link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/story/shiyi.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拾遗线">
+<meta property="og:description" content="犁沟中翻出的鼎，废铜堆中认出的尊，深水中网起的铁券。十一站，看没有人在找的东西怎么回来——再看回来那一刻没有人记下的故事，怎么一版一版长成说明牌上的话。">
+<meta property="og:url" content="https://no-macaroon1670.github.io/ImperialLongevity/story/shiyi.html">
+<style>
+:root{
+  --bg:#0e0d0c; --bg2:#161311; --ink:#e9e3d7; --dim:#9a9187; --faint:#5d564e;
+  --rule:#2a2622; --accent:#c0603f; --gold:#c9a959;
+  --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+  font-size:18px;line-height:2.05;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+.epi-verse{padding:3rem 1.2rem 0;text-align:center}
+.epi-verse .vl{font-size:21px;letter-spacing:.38em;line-height:2.35;text-indent:.38em}
+.epi-verse .vby{margin-top:1rem;font-family:var(--sans);font-size:11px;color:var(--faint);letter-spacing:.24em}
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50}
+/* 导轨：宽屏才有。窄屏那点横向空间要留给正文 */
+/* 左栏：导轨在上，小地图在下。两者同住一个固定列——读者眼睛一抬，
+   既知道读到第几节，也知道那一节在地上哪儿 */
+#side{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
+  z-index:40;width:11rem}
+#rail{display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
+/* rdot/rlbl 带前缀与外界脱钩（照 charts.js sw- 家法；库主实测 Rakuten 扩展注入
+   .dot{position:absolute} 把点拽出流压上标签首字，position:static 双保险）。
+   点与标签的间距落在 .rdot 的 margin 上而不靠 flex gap：读者侧环境（插件/旧内核）重写 <a>
+   的 display 时会退成 inline 排布，margin+vertical-align 在两种排布下同样成立，标签永不吃点
+   （2026-08-26 库主线上截图实案，本地净环境不复现；flex 健康时此写法与 gap 像素等价） */
+#rail a{display:flex;align-items:center;color:var(--faint);text-decoration:none;
+  letter-spacing:.04em;transition:color .25s}
+#rail .rdot{position:static;display:inline-block;vertical-align:middle;width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;margin-right:.5rem;transition:transform .25s}
+/* max-width+ellipsis 是超长站题的兜底（判官二席 2026-08-31，配 [:6] 撤硬切）：
+   用省略号，不用无声截断；现库最长站题十字（约114px）不触此限 */
+#rail a .rlbl{display:inline-block;vertical-align:middle;opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap;max-width:9.5rem;overflow:hidden;text-overflow:ellipsis}
+#rail a:hover{color:var(--dim)} #rail a:hover .rlbl{opacity:1;transform:none}
+#rail a.on{color:var(--accent)} #rail a.on .rdot{transform:scale(1.5)}
+#rail a.on .rlbl{opacity:1;transform:none}
+@media(max-width:1180px){#side{display:none}}
+.wrap{max-width:40rem;margin:0 auto;padding:0 1.5rem}
+header.cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
+  padding:6rem 0 4rem;border-bottom:1px solid var(--rule)}
+.kicker{font-family:var(--sans);font-size:12px;letter-spacing:.34em;color:var(--faint);margin-bottom:2.4rem}
+h1{font-size:clamp(2.4rem,8vw,4rem);line-height:1.14;margin:0 0 1.6rem;font-weight:500;letter-spacing:.06em}
+.lede{font-size:1.06rem;color:var(--dim);line-height:2;max-width:30rem;margin:0}
+.meta{margin-top:3.4rem;font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.08em}
+.meta a{color:var(--gold);text-decoration:none;border-bottom:1px solid transparent}
+.meta a:hover{border-bottom-color:var(--gold)}
+section{padding:5.5rem 0;border-bottom:1px solid var(--rule)}
+section.tone{background:var(--bg2)}
+.num{font-family:var(--sans);font-size:11px;letter-spacing:.3em;color:var(--faint)}
+.yr{font-family:var(--sans);font-size:2.6rem;line-height:1;color:var(--rule);margin:.4rem 0 .8rem;
+  font-variant-numeric:tabular-nums;font-weight:700}
+h2{font-size:1.75rem;line-height:1.35;margin:0 0 .5rem;font-weight:500;letter-spacing:.04em}
+.h2-ev{font-size:.95rem;font-weight:400;color:var(--faint);letter-spacing:.02em;white-space:nowrap;margin-left:.35em}
+.sub{font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.1em;margin:0 0 2rem}
+section p{margin:0 0 1.35rem}
+p.beat{color:var(--gold)}
+blockquote{margin:2rem 0;padding-left:1.2rem;border-left:2px solid var(--accent);color:var(--ink)}
+blockquote small{display:block;margin-top:.5rem;font-family:var(--sans);font-size:11px;
+  letter-spacing:.08em;color:var(--faint)}
+.go{display:inline-block;margin:.4rem 0 1.6rem;font-family:var(--sans);font-size:12px;
+  letter-spacing:.08em;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:2px}
+.go:hover{border-bottom-color:var(--gold)}
+details.app{margin-top:2rem;font-family:var(--sans);font-size:13px;line-height:1.85;color:var(--dim)}
+details.app summary{cursor:pointer;color:var(--faint);letter-spacing:.14em;font-size:11px;
+  padding:.5rem 0;border-top:1px solid var(--rule)}
+details.app ul{margin:.8rem 0;padding-left:1.1rem}
+details.app li{margin-bottom:.7rem}
+details.app p{margin:.9rem 0 0}
+.tag{display:inline-block;font-size:10px;letter-spacing:.08em;padding:1px 6px;margin-right:.5rem;
+  border-radius:3px;border:1px solid currentColor;vertical-align:.08em}
+.t-ok{color:#7d9b6e} .t-trad{color:var(--gold)} .t-new{color:#6e8a9b}
+.t-infer{color:#9b8a6e} .t-doubt{color:var(--accent)}
+.src{margin-top:.9rem;display:flex;flex-wrap:wrap;gap:.9rem}
+.src a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule);font-size:12px}
+.src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
+.note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
+/* 配图。图注里那半行是**署名**，CC-BY／CC-BY-SA 要求给出作者与许可 */
+/* 文绕图。竖幅整幅摆着时两侧全空，绕排把那块空白还给文字；
+   窄屏不绕——一栏劈两半两边都读不成 */
+figure.pic{margin:0 0 2rem}
+figure.pic img{display:block;width:100%;height:auto;border-radius:3px}
+@media(min-width:820px){
+  figure.pic{float:left;width:44%;margin:.4rem 1.6rem .8rem 0}
+  figure.pic.pic-wide{float:none;width:100%;margin:.6rem 0 1.2rem}
+  section p,section h2,details.app{clear:none}
+  details.app,.go{clear:both}
+}
+figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
+  line-height:1.8;color:var(--faint)}
+figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
+figure.pic figcaption a:hover{color:var(--dim)}
+/* 一站多图（如落点三张）：不绕排，并排摆成一排——「能看见三样东西」，
+   图就该一次看见三样，不该被文字拆成三处零散的浮块 */
+.pic-trio{display:flex;flex-direction:column;gap:1.4rem;margin:0 0 2rem}
+.pic-trio figure.pic{margin:0}
+@media(min-width:820px){
+  .pic-trio{flex-direction:row}
+  .pic-trio figure.pic{float:none;width:calc(33.333% - .94rem)}
+}
+
+/* ── 地图 ────────────────────────────────────────────────────────
+   开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
+   底图只有海岸线、四个大湖与黄河长江淮河，没有国界（理由见 tools/mining/build_basemap.py）。
+   全程的点一律画出、只是淡；当前那一站才亮——读者要能看见自己走到哪儿，
+   也要能看见还剩多少。 */
+#smap{padding:4rem 0 3.5rem}
+svg.hmap{display:block;width:100%;height:auto}
+svg.rstrip{display:block;width:100%;max-width:640px;height:auto;margin:.4rem 0 .1rem;overflow:visible}
+.rs-base{stroke:var(--rule);stroke-width:1.4}
+.rs-hop{stroke:var(--accent);stroke-width:2.2}
+.rs-done{fill:var(--dim)}
+.rs-todo{fill:none;stroke:var(--faint);stroke-width:1.2}
+.rs-cur{fill:var(--accent)}
+.rs-name{fill:var(--ink);font-family:var(--sans);font-size:11.5px;letter-spacing:.08em}
+.rs-end{fill:var(--faint);font-family:var(--sans);font-size:9.5px;letter-spacing:.04em}
+svg.hmap{margin:1.6rem 0 1rem}
+svg *{vector-effect:non-scaling-stroke}
+.m-dust{fill:#6a6259;opacity:.32}
+.m-idx{fill:var(--dim);font-family:var(--sans);letter-spacing:0}
+.m-coast{fill:none;stroke:var(--rule);stroke-width:1.1}
+.m-river{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.42}
+/* 大湖：一片淡水色，压在海岸之上、河之下（层序归 render_line_map.mjs 的 append 次序）。
+   用河的色相而不是另起一色——湖跟河是一族，换个颜色就成了另一种东西。这一页是
+   深底，故比浅色两端（.mm-lake/.pl-lake）再压一档：填充只到河那道线有效浓度的
+   三成上下，读者一眼知道这是一块水面，但抢不过河、更抢不过站点。
+   填充比描边实：水面不是圈出来的区域。
+   要试「少画一个湖」，不必重跑构建：.m-lake[data-lake="太湖"]{display:none} */
+.m-lake{fill:var(--accent);fill-opacity:.13;stroke:var(--accent);stroke-opacity:.34;stroke-width:.8}
+.m-city{fill:var(--faint);opacity:.75}
+.m-city-t{fill:var(--faint);opacity:.85;font-family:var(--sans)}
+.m-river-t{fill:var(--accent);opacity:.65;font-family:var(--sans)}
+/* 湖名：与河名同色、小一号、更轻——湖是结不是干线（2026-08-26 story 静态图补湖案） */
+.m-lake-t{fill:var(--accent);opacity:.5;font-family:var(--sans)}
+.m-dot{fill:var(--dim);opacity:.5}
+.m-maybe{fill:none;stroke:var(--dim);stroke-width:1.2;opacity:.55;stroke-dasharray:3 2.5}
+.m-held{fill:none;stroke:var(--gold);stroke-width:1.2;opacity:.5}
+/* 贴在框边的方块：东西已经出了这张图的范围（伦敦） */
+.m-off{stroke-dasharray:3 2.5}
+.m-flow{stroke:var(--gold);stroke-width:1;opacity:.35;stroke-dasharray:4 3}
+.m-stop-t{fill:var(--dim);opacity:.8;font-family:var(--sans)}
+/* 现藏之处的馆名。金色，与那个空心方块、那条虚线同一族 */
+.m-held-t{fill:var(--gold);opacity:.75;font-family:var(--sans)}
+/* 当前这一节：亮起来 */
+.m-stop.on .m-dot{fill:var(--accent);opacity:1}
+.m-stop.on .m-maybe{stroke:var(--accent);opacity:1}
+.m-stop.on .m-held,.m-stop.on .m-flow{stroke:var(--gold);opacity:1}
+.m-stop.on .m-stop-t{fill:var(--ink);opacity:1}
+#gname{margin-top:.5rem;font-family:var(--sans);font-size:10.5px;color:var(--faint);
+  line-height:1.6;min-height:2.6em}
+
+/* 点开放大。用 <dialog>：Esc 与背景遮罩都是它自带的，不必自己写一套 */
+button.zoom{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in}
+button.zoom img{transition:opacity .18s}
+button.zoom:hover img{opacity:.86}
+dialog#lb{border:0;padding:0;background:none;max-width:96vw;max-height:96vh;color:var(--ink)}
+dialog#lb::backdrop{background:rgba(8,7,6,.92)}
+#lbi{display:block;max-width:min(96vw,900px);max-height:82vh;width:auto;height:auto;
+  margin:0 auto;border-radius:3px}
+#lbc{max-width:min(96vw,900px);margin:.8rem auto 0;font-family:var(--sans);font-size:12px;
+  line-height:1.8;color:var(--dim)}
+#lbc a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule)}
+#lbx{position:fixed;top:1.1rem;right:1.4rem;width:2.2rem;height:2.2rem;border:0;border-radius:50%;
+  background:rgba(255,255,255,.1);color:var(--ink);font-size:1rem;cursor:pointer}
+#lbx:hover{background:rgba(255,255,255,.2)}
+footer{padding:5rem 0 7rem;font-family:var(--sans);font-size:12.5px;color:var(--faint);line-height:2}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--rule)}
+footer a:hover{color:var(--ink)}
+footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
+@media(max-width:640px){
+  body{font-size:17px;line-height:1.98}
+  section{padding:4rem 0}
+  .yr{font-size:2rem}
+  h1{letter-spacing:.03em}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="side">
+<nav id="rail" aria-label="节次">
+<a href="#s0"><span class="rdot"></span><span class="rlbl">无人在找</span></a>
+<a href="#s1"><span class="rdot"></span><span class="rlbl">鹰落鸡群</span></a>
+<a href="#s2"><span class="rdot"></span><span class="rlbl">按斤称过</span></a>
+<a href="#s3"><span class="rdot"></span><span class="rlbl">旱年那口井</span></a>
+<a href="#s4"><span class="rdot"></span><span class="rlbl">书包里的白石头</span></a>
+<a href="#s5"><span class="rdot"></span><span class="rlbl">烧策照宝</span></a>
+<a href="#s6"><span class="rdot"></span><span class="rlbl">黄纸片儿</span></a>
+<a href="#s7"><span class="rdot"></span><span class="rlbl">两瓮一罐</span></a>
+<a href="#s8"><span class="rdot"></span><span class="rlbl">半塔犹立</span></a>
+<a href="#s9"><span class="rdot"></span><span class="rlbl">渔人一斧</span></a>
+<a href="#s10"><span class="rdot"></span><span class="rlbl">毛巾换金</span></a>
+<a href="#s11"><span class="rdot"></span><span class="rlbl">抓斗下去</span></a>
+<a href="#s12"><span class="rdot"></span><span class="rlbl">撞见</span></a>
+</nav>
+</div>
+<header class="cover"><div class="wrap">
+<div class="kicker">没有人在找它们</div>
+<h1>拾遗线</h1>
+<p class="lede">犁沟中翻出的鼎，废铜堆中认出的尊，深水中网起的铁券。十一站，看没有人在找的东西怎么回来——再看回来那一刻没有人记下的故事，怎么一版一版长成说明牌上的话。</p>
+<div class="meta">共 11 站　·　<a href="../timeline.html#line=shiyi">在图上走一遍 →</a>　·　<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-shiyi.md">资料与出处 ↗</a></div>
+</div></header>
+<section id="s0" class="tone"><div class="wrap">
+<div class="num">序</div>
+<h2>无人在找</h2>
+<p>一座塔塌了一半，另一半在原地立着。一个学生放学回家，在渠边捡起一块白石头。一堆论斤称的废铜中，混着一件西周的尊。黄岩的深水内，渔网网上来一块铁，渔人一斧砍下去。</p>
+<p>这些时刻有一个共同点：没有考古队在场。打井的旱天、放学的路上、废品站的秤旁、撒网的船头——在场的人都在干别的事。</p>
+<p>还有第二个共同点：也没有记录的人在场。东西怎么回来的，回来那一刻是什么样子，全靠事后有人回想着讲；讲一遍，便多一个版本。</p>
+<p>这条线走十一站，追一个问题：没有人在找它们，它们是怎么回来的？顺路看另一件事——一个没人当场记下的故事，怎么一步一步长成博物馆说明牌上那几句话。</p>
+</div></section>
+<section id="s1" data-year="-3249" data-name="陶鹰鼎"><div class="wrap">
+<div class="num">一 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><circle class="rs-cur" cx="26.0" cy="16" r="5.2"/><circle class="rs-todo" cx="84.8" cy="16" r="3"/><circle class="rs-todo" cx="143.6" cy="16" r="3"/><circle class="rs-todo" cx="202.4" cy="16" r="3"/><circle class="rs-todo" cx="261.2" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="378.8" cy="16" r="3"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="614.0" y="35" text-anchor="end">南海一号</text><text class="rs-name" x="26.0" y="35" text-anchor="start">陶鹰鼎</text></svg>
+<div class="yr">前3250</div>
+<h2>鹰落鸡群 <span class="h2-ev">陶鹰鼎</span></h2>
+<p class="sub">前3250　·　文物</p>
+<p>这条线上的第一件东西，出土之后先在一户农家的院子中待了些日子。它是一只鹰，五千多年前的陶鹰，通高三十五点八厘米，两眼圆睁，喙作钩状，鹰背开口，鹰足与尾作三足。今天它在中国国家博物馆，2002 年起不许出境展览。</p>
+<p><strong>一犁翻出来的。</strong>1957 年，陕西华县太平庄，一个农民犁地，犁沟中翻出了它。这个年份最早见于四十年后一篇文章，题目就叫《鹰鼎出土追记》——追记二字，作者自己写在题上。</p>
+<p><strong>先落到鸡群之中。</strong>它在这家院子中做过什么，有两个讲法。流传最广的一版说，主人不识，拿它做了鸡食盆；另一版说，鹰背那个口开得深，鸡够不着，没用成，搁上了阁楼。正式的发掘报告一个字也没写。两版并存，不裁。</p>
+<p><strong>送到考古队手上的是两件。</strong>1958 年秋，考古队在泉护村一带调查，太平庄农民殷思义送来两件东西：这只鸮鼎，和一件小口单耳平底瓶，并且指认了出土地点。这句话写在发掘报告《华县泉护村》之内。当年十二月，考古队清理了那座墓：墓主是一位三十到四十岁的女性，随葬有釜、灶、钵、石器与十四件骨匕。这一站的出处是倒着长的——发现者的名字在最硬的报告中，鸡食盆在最软的传闻中；画面越活，出处越软。</p>
+<p><strong>名字也是后来一层层加的。</strong>报告定名「鸮鼎」；1998 年那篇追记叫它「鹰鼎」；2002 年它以「陶鹰鼎」之名进了禁止出境展览的名录；国博官网今天写「鹰形陶鼎」。「尊」是另一路：1994 年苏秉琦提过一句，说其实叫尊更合适；2022 年《中原文物》一篇论文正式论证——关中仰韶中期没有用鼎的传统，三足中空，腹下不见火烧痕迹，该叫陶鹰尊。通行的讲法把这段倒了个个儿，说它原来叫尊、后来改鼎；实况是鼎名在先，尊是后来的翻案。鸮或鹰，鼎或尊，一件东西四个名字，至今没有合龙。</p>
+<p>认出它要靠什么？这家人没认出来，认出来的人是从别处来的。下一站，认的人蹲在废品站。</p>
+<a class="go" href="../timeline.html#line=shiyi&amp;at=1">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>它不是最早的陶鼎。</strong>维基鼎条图注称裴李岗遗址乳钉纹红陶鼎为「目前发现的中国最古老的鼎」（图注层，未挂引注），裴李岗文化早于本器所属的仰韶文化——最早的名分不在这里。</p>
+</details>
+</div></section>
+<section id="s2" data-year="-1037" data-name="何尊"><div class="wrap">
+<div class="num">二 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="26.0" y1="16" x2="84.8" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-cur" cx="84.8" cy="16" r="5.2"/><circle class="rs-todo" cx="143.6" cy="16" r="3"/><circle class="rs-todo" cx="202.4" cy="16" r="3"/><circle class="rs-todo" cx="261.2" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="378.8" cy="16" r="3"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="614.0" y="35" text-anchor="end">南海一号</text><text class="rs-name" x="84.8" y="35" text-anchor="middle">何尊</text></svg>
+<div class="yr">前1038</div>
+<h2>按斤称过 <span class="h2-ev">何尊</span></h2>
+<p class="sub">前1038　·　西周　·　文物</p>
+<p>鹰鼎在院子中没人认得。这一站的东西，认它的人是常年蹲在那儿等的——它在废品站待了一个月，那一个月它是废铜，论斤。</p>
+<p><strong>先当废铜卖了。</strong>1963 年，宝鸡贾村塬，陈家在屋后的土崖根取土，崖上滚出一件铜器。怎么滚出来的，两个讲法：一说崖上一块土悬着，怕砸人，拿镢头去挖，土块落下，铜器随之滚出；一说是一个雨后的上午，崖面坍了，土中有亮光，用手和小镢头刨出来的——后一版是 2004 年宝鸡市文物局进村调查时，发现者的遗孀说的。陈家拿它装粮食。1965 年 8 月，家里手头紧，把它连同一些废铜装进麻袋，卖给了宝鸡市一家废品收购站，「总共只卖了30元钱」。</p>
+<p><strong>认出它的人常来。</strong>一个月后，宝鸡市博物馆一个姓佟的职工到这家收购站，站上的老职工告诉他最近收了件古铜器，他一看，当天就把它搬回了博物馆。这段故事今天讲得很细：馆长、保管部主任、收购站的名字都齐了，还有一句：博物馆以三十元买回。可是最早能查到的那一版——2005 年央视《国宝档案》的配套文稿——只有「老佟」一个人，三十元是陈家那一麻袋的卖出价，通篇没说博物馆付过钱。三十元买回的写法，2017 年以后才见到：数字没动，角色换了。一个故事在五十年间怎么长，这一站能看见一截。</p>
+<p><strong>肚子里的字，又过了十年才有人看见。</strong>1975 年这件尊到北京展出，清除锈蚀之后，内底露出十二行一百二十二字铭文，发现者一说唐兰，一说马承源。「宅兹中或」四个字自此进了课本——那是它另一段故事，本库的条目已经写了。这一站只说一件事：它进废品站的时候，谁也不知道它腹内有字。</p>
+<p><strong>蹲在废品站的是些什么人。</strong>这不是奇遇，是建制。1972 年夏，北京有色金属供应站的废铜堆，「文物清理拣选小组」的呼玉衡、华以武师徒拣出几块带泥带锈的青铜碎片；鉴定家程长新看过，叫二人回站把那堆废铜「过了一遍筛子」，又拣出几片，拼起来对铭文——是乾隆《西清古鉴》著录过的班簋，清宫旧藏，1900 年流出宫外。据 1981 年的统计，这个小组从 1971 到 1981 年，在废品站拣出的珍贵青铜器有五十九件。一南一北，一件孤例配一组数字：那个年代有一批人，上班就是去废品站翻废铜。</p>
+<p>认出它，靠的是有人在那儿等。可这一站的三十元，已经从卖出价漂成了买回价——东西没动，故事在走。</p>
+<a class="go" href="../timeline.html#line=shiyi&amp;at=2">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>本库 art 类的判准注里，「何尊、商鞅方升、曾侯乙编钟」三件被举作示范例子——编钟早在库内，另两件却从未入库。此条与商鞅方升一并归位。铭文末句「隹王五祀」自带纪年，通篇却不写是哪一位王；成王之说是从开头「隹王初迁宅于成周」推出来的——<strong>营建成周正是成王初年的事</strong>。夏商周断代工程定成王在位前1042至前1021年，五祀即前1038，本条锚年据此换算；另有前1039一说，两说并存不裁。</p>
+<p>近年另有学者据觉公簋铭文主张成王在位仅十八年，若从此说整套推算都要动，故只标中等把握。</p>
+<p><strong>最要紧的四个字，在原器上不是「中国」。</strong>维基文库《何尊銘文》页把铭中每个古文字逐一注出今字，武王克商后告天那一句的释文是「余其宅茲中或，自之乂民」——<strong>「国」在铭文里写作「或」，没有外面那个囗</strong>；该页自注更把话说到底：这个「或」通「國」还是通「域」，两说并存。也就是说，这件被称作「中国」二字最早文字实证的器物，铭文上既没有那个字形，也还没定下那个字义。</p>
+<p><strong>它证明的是这个词的出身，不是这个词今天的意思</strong>：西周人说的「中或」指天下之中的那一块地方，即刚刚营建的成周（今洛阳），与库内汉魏洛阳故城是同一片土。全篇是成王对宗小子的一篇诰，末尾记王赏器主「貝卅朋」，器主用这笔赏赐铸了这件尊——<strong>一篇被读了三千年的铭文，起因是一位叫「何」的年轻人得了三十串贝</strong>。1963年出土于陕西宝鸡贾村塬。</p>
+<p>据2005年前后新华社与央视的报道，此器曾被当作废铜卖进宝鸡市一家废品收购站，由市博物馆职工在废品堆里认出买回——<strong>这段故事的出处是事发四十年后的媒体追述，不是当时的档案，照录不作实</strong>。2002年列首批禁止出境展览文物，现藏宝鸡青铜器博物院。</p>
+</details>
+</div></section>
+<section id="s3" data-year="-220" data-name="兵马俑"><div class="wrap">
+<div class="num">三 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="84.8" y1="16" x2="143.6" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-cur" cx="143.6" cy="16" r="5.2"/><circle class="rs-todo" cx="202.4" cy="16" r="3"/><circle class="rs-todo" cx="261.2" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="378.8" cy="16" r="3"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">陶鹰鼎</text><text class="rs-end" x="614.0" y="35" text-anchor="end">南海一号</text><text class="rs-name" x="143.6" y="35" text-anchor="middle">兵马俑</text></svg>
+<div class="yr">前221</div>
+<h2>旱年那口井 <span class="h2-ev">兵马俑</span></h2>
+<p class="sub">前221　·　秦国　·　文物</p>
+<p>废品站的尊是有人等来的。这一站没人等，东西是自己从井底冒出来的——冒出来的，是一整支军队的一角。</p>
+<p><strong>旱年打井。</strong>1974 年 3 月，陕西大旱。临潼西杨村的村民在村外打井抗旱，掘出了陶片和陶俑的残躯。这里往西一点五公里是秦始皇陵。两千一百多年间，只有《史记》写过地宫之内的水银江河，那一段没有一句写到陵东埋着这些俑；打井的人也没打算往下挖什么，他们要的是水。</p>
+<p><strong>井边有好几个人。</strong>杨志发是最广为人知的发现者；同一口井旁还有别的村民。谁第一个看见，五十年过去，争议没有了结，本库不代裁定。为什么记不清？那天没有人在记。</p>
+<p><strong>接手的是考古队。</strong>此后是进场、编号、发掘：1976 到 1978 年增添了考古、保护、照相、修复的人手，1979 年 10 月 1 日博物馆开放。一号坑、二号坑、三号坑，军阵有多大，本库的条目自己会说；井口以下，让条目讲。</p>
+<p><strong>出土时它们是彩的。</strong>陶俑出土时多带彩绘，一接触空气，颜料便迅速氧化剥落。头一眼的颜色，后来的人看不见了；那一眼是什么样子，只在看见的人的记忆之内。</p>
+<p>底下还有多少？井边那几个人当时不知道。他们连自己谁先看见的，都没记下来。</p>
+<a class="go" href="../timeline.html#line=shiyi&amp;at=3">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>秦始皇陵东侧一点五公里处的陪葬坑群。</p>
+<p><strong>营造年代学界无定论，三说并列</strong>：一说随陵同建，始于始皇即位之初（前246）迄于其死（前210），近四十年；二说据出土带纪年铜兵器等材料，实际集中建造只在统一后的前219至前213年间，约七年；三说同据铜兵器纪年，判工程始于统一（前221）、前209年因陈胜吴广起事、刑徒军被急调前线而停工，前后约十年。三说依据与跨度都不同，本条 y 取统一之年（前221）为居中锚点，u1/u2 按最宽区间给出，与库内秦始皇陵条的起讫同一口径。</p>
+<p>一、二、三号坑共占地两万余平方米：一号坑一万四千二百六十平方米，按已知密度推算约可出土六千件；二号坑约六千平方米，陶俑陶马一千三百余件、战车八十余辆；三号坑仅五百二十平方米，武士俑六十八件、战车一辆、陶马四匹，学界认为是地下军阵的指挥部。陶俑出土时多带彩绘，接触空气后颜料迅速氧化剥落，彩绘保护至今是世界性难题。1974年3月29日临潼西杨村村民打井抗旱掘出陶俑残片；杨志发是最广为人知的发现者，同一口井旁还有别的村民，「谁是第一发现人」至今有争议，本条不代裁定。</p>
+<p>1980年在封土西侧出土两乘大型彩绘铜车马，按真车马二分之一比例复原，零部件三千余个，一号立车、二号安车。「世界第八大奇迹」多篇转述指向1978年9月希拉克参观后的感叹，未核到本人受访记录或档案原文，按接受史素材处理——有此名声，不作原话坐实。1987年「秦始皇陵及兵马俑坑」列入世界文化遗产（名录编号441）——<strong>陵与俑是同一项，不是两项</strong>。</p>
+<p>库内秦始皇陵条讲的是地，此条讲的是物。</p>
+</details>
+</div></section>
+<section id="s4" data-year="-167" data-name="皇后之玺"><div class="wrap">
+<div class="num">四 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="143.6" y1="16" x2="202.4" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-cur" cx="202.4" cy="16" r="5.2"/><circle class="rs-todo" cx="261.2" cy="16" r="3"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="378.8" cy="16" r="3"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">陶鹰鼎</text><text class="rs-end" x="614.0" y="35" text-anchor="end">南海一号</text><text class="rs-name" x="202.4" y="35" text-anchor="middle">皇后之玺</text></svg>
+<div class="yr">前168</div>
+<h2>书包里的白石头 <span class="h2-ev">皇后之玺</span></h2>
+<p class="sub">前168　·　西汉　·　文物</p>
+<p>井中的俑是掘出来的。这一站的东西不用掘，弯腰就有。</p>
+<p><strong>渠边一块白石头。</strong>1968 年 9 月，咸阳，一个十三岁的学生放学回家，在渠边看见一块发光的白色小石头，装进书包带回了家。石头是和田玉，高两厘米，边长二点八厘米，重三十三克，上面蹲一只螭虎，底下四个篆字：皇后之玺。渠离汉高祖与吕后的长陵一公里上下。今天它在陕西历史博物馆，是现存唯一的汉代皇后玉玺实物。</p>
+<p><strong>它到博物馆的路，有三个版本。</strong>2012 年的报道说，他父亲看了说是印章，可能是文物，第二天父子俩把它送到陕西省博物馆；2013 年另一家报纸说，他先给了哥哥，哥哥想把上面的字磨掉、刻自己的名字，太硬没磨动，扔在一旁，半个月后才转到父亲手中；2022 年的回访又说，他是放学后捡废铁时捡到的，父亲带着他步行四个多小时进城。三个版本不变的是结尾：没要报酬，博物馆给了二十元当回家的路费。四十四年后他被请去受表彰，说了一句：「没想到，45年了还有人记得我。」报道的标题也写四十五年——从 1968 到 2012，其实是四十四年。</p>
+<p><strong>藏品页不讲这个故事。</strong>陕西历史博物馆的藏品页通篇没有捡拾的经过，没有那个学生，只有一句推断：出土地点距高祖与吕后合葬墓东侧一千米，故推测是吕后生前所用。而 2012、2013 两篇报道给的方位是「封土之西约一公里」——一东一西，两源相左，本线不裁。藏品页上那几句，是把故事删掉以后剩下的。</p>
+<p><strong>它为什么会躺在地表。</strong>能查到的说法只有一个：2013 年那篇报道转述，「有些专家还认为」它原本供在吕后陵旁的便殿，殿毁之后遗落土中，被水冲到了渠边。专家是谁、原话在哪，没有查到。本线答不出它为什么会躺在那里，也不替它编一个答案。</p>
+<p>从渠边到博物馆这段路，三个版本，各自都很具体。越具体的，越晚。</p>
+<a class="go" href="../timeline.html#line=shiyi&amp;at=4">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>1968年陕西咸阳一少年在渠边拾得的和田玉印，螭虎钮，底部篆刻「皇后之玺」，出土地邻近吕后与高祖合葬墓，推测为吕后所用，是现存唯一的汉代皇后玉玺实物，现藏陕西历史博物馆。</p>
+</details>
+</div></section>
+<section id="s5" data-year="281" data-name="汲冢竹书出土"><div class="wrap">
+<div class="num">五 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="202.4" y1="16" x2="261.2" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-cur" cx="261.2" cy="16" r="5.2"/><circle class="rs-todo" cx="320.0" cy="16" r="3"/><circle class="rs-todo" cx="378.8" cy="16" r="3"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">陶鹰鼎</text><text class="rs-end" x="614.0" y="35" text-anchor="end">南海一号</text><text class="rs-name" x="261.2" y="35" text-anchor="middle">汲冢竹书出土</text></svg>
+<div class="yr">281</div>
+<h2>烧策照宝 <span class="h2-ev">汲冢竹书出土</span></h2>
+<p class="sub">281　·　西晋　·　文化</p>
+<p>前四站的东西，没有人在找。这一站破个例：有人在找，要的是宝；到手的人不要这一样东西。</p>
+<p><strong>烧简照明取宝。</strong>西晋太康二年（281），汲郡（今河南卫辉一带）人不准盗发一座战国魏王的墓——魏襄王，或说安釐王，正史自己就给了两个名字。墓中有竹书数十车。盗墓的人要的是宝物，竹简在他手上是照明的材料。《晋书·束皙传》记：「初發塚者燒策照取寶物，及官收之，多燼簡斷劄，文既殘缺，不復詮次。」等官府去收，简已烧残、断札，次序全乱。</p>
+<p><strong>贼看不上的，是另一部古史。</strong>官府收回的竹简整理出七十五篇，晋武帝把它交给秘书校缀次第，用当时的文字抄写。其中十三篇《纪年》是魏国的史书，与传世典籍多有不合：太甲杀伊尹，而非伊尹放太甲；共伯和摄行天子事，而非周召二相共和。原简后来散佚，今天看到的全是唐宋人转引后辑出的本子，两套说法并存，本库那一条已经写清。盗墓的人拿它照明，官府拿它校书，后人拿它重读古史——同一捆竹简，三种人三种「宝」。</p>
+<p><strong>连哪一年挖的，正史也有三个说法。</strong>《晋书》武帝纪把它系在咸宁五年（279）十月：「汲郡人不準掘魏襄王冢，得竹簡小篆古書十餘萬言，藏于祕府。」束皙传作太康二年，另有文献作太康元年。清人雷学淇替这三个年份排过一个次序：发于咸宁五年，上于京师是太康元年，命官校理是太康二年——发现、上报、整理，三道工序三个年份，各自都不算错。一件事进正史，要走好几步；这里刚好看见三步。</p>
+<p><strong>嵩山下的一枚简。</strong>同一篇传中还记了一件小事：有人在嵩山下捡到一枚竹简，上面两行科斗字，传来传去没人认得。司空张华拿去问束皙，束皙说，这是汉明帝显节陵中的策文。「檢驗果然，時人伏其博識。」捡到的人不认得，认得的人不在场；这枚简怎么到山下的，传中没写。记住这座山——一千七百年后，山上又出了一枚简。</p>
+<p>「宝」由谁定义？盗墓者说了算的那一夜，简是照明的柴火。</p>
+<a class="go" href="../timeline.html#line=shiyi&amp;at=5">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>281年盗墓者在战国魏王墓中发现大批竹简，即《竹书纪年》，记载自五帝传说至战国魏襄王间的编年史事，宋代原本散佚，后人据古籍辑录考订。</p>
+<p><strong>挖出来的这部编年史，与传世典籍所记不合</strong>——最早记下此事的正史是《晉書·卷051》束皙传，该传于墓主本身已两说并存（或称魏襄王墓，或称安釐王冢），于书则称「蓋魏國之史書，大略與《春秋》皆多相應」，而「其中經傳大異」以下列六事。</p>
+<p><strong>六事本库只径引字形无疑的两事</strong>：「太甲殺伊尹」「幽王既亡，有共伯和者攝行天子事，非二相共和也」；另四事（夏年多殷、益干启位启杀之、文丁杀季历、自周受命至穆王百年非穆王寿百岁）维基文库该页有简转繁讹形（「云」作「雲」、「干」作「幹」），本库不照录讹字，也不代为回改，故只述其事不引其字。</p>
+<p><strong>竹书原简久佚，今日所见的「竹书原文」全是唐宋类书与注疏转引后辑得的转述层</strong>，不是可以直接看到的简牍字。王国维《古本竹书纪年辑校》辑得两处最见分别：「舜囚堯，復偃塞丹朱，使不與父相見也」（辑本注出《史記·五帝本紀》正義引《竹書》、《路史·發揮五》注）；「伊尹即位，放大甲。七年，大甲潛出自桐，殺伊尹，乃立其子伊陟、伊奮，命復其父之田宅而中分之」与「仲壬崩，伊尹放大甲于桐，乃自立」（辑本注出《春秋經傳集解·後序》、《尚書·咸有一德》疏、《通鑑外紀》卷三；辑校本该处「咸」作「成」，本库照录不改）。</p>
+<p><strong>传世本写的是另一回事</strong>：《史記·卷001》五帝本纪作「堯崩，三年之喪畢，舜讓辟丹朱於南河之南。諸侯朝覲者不之丹朱而之舜……而後之中國踐天子位焉，是為帝舜」；《史記·卷003》殷本纪作「帝太甲既立三年，不明，暴虐，不遵湯法，亂德，於是伊尹放之於桐宮」，三年后「悔過自責，反善，於是伊尹迺迎帝太甲而授之政」，伊尹「迺作太甲訓三篇，襃帝太甲，稱太宗」（两卷皆逐字核）。</p>
+<p><strong>两套说法并存不裁</strong>：传世本是让与辅政，辑本是囚与自立；辑本内部那两条伊尹文句本库亦照录并列，不合成一句。</p>
+</details>
+</div></section>
+<section id="s6" data-year="700" data-name="除罪金简"><div class="wrap">
+<div class="num">六 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="261.2" y1="16" x2="320.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-done" cx="261.2" cy="16" r="3"/><circle class="rs-cur" cx="320.0" cy="16" r="5.2"/><circle class="rs-todo" cx="378.8" cy="16" r="3"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">陶鹰鼎</text><text class="rs-end" x="614.0" y="35" text-anchor="end">南海一号</text><text class="rs-name" x="320.0" y="35" text-anchor="middle">除罪金简</text></svg>
+<div class="yr">700</div>
+<h2>黄纸片儿 <span class="h2-ev">除罪金简</span></h2>
+<p class="sub">700　·　唐　·　文物</p>
+<p>束皙认出的那枚简，出自一座帝陵。一千七百年后，嵩山峻极峰的石缝之内又露出一枚；这一枚是有人专门塞进去的，塞的时候就没打算让人看见。</p>
+<p><strong>先当它是包点心的纸。</strong>1982 年 5 月 21 日，登封唐庄乡王河村的青年农民屈西怀在峻极峰上，看见石缝中有一片黄色的东西。他最初以为是一张包果子的黄纸片儿——那时当地兴用镀金纸片包点心；拿起来不是纸，又当它是铜片；后来村中识字的人说，这可能是文物。这一段出自 2016 年长沙一个展览的知识页，文案由藏它的河南博物院供，写得像一份笔录，一句一个要素。</p>
+<p><strong>他当时在干什么，两个说法。</strong>那个展览页写：「屈西怀与同伴滚石下山，无意间，发现了石缝中的金简。」新华社 2005 年的报道转述河南博物院陈列部主任的介绍，写的是「上中岳嵩山采药时」。滚石与采药，同一家博物院隔十一年两个口径，本线不把它们缝成采药途中顺便滚石的顺滑版。</p>
+<p><strong>五万元和一封血书。</strong>东西的消息传出去，文物贩子上门。展览页写：「当5万元现金、血书盟誓放在他眼前时，他犹豫难决。当晚他便噩梦连连，于是，打消了交易的念头。」之后政府得知，他把金简献给了国家，得奖金一千五百元，「盖了进新院」——这一句展览页自己注明了来源：「屈西怀说」。连前一夜梦见大水淹了嵩山，也是他自己说的。哪几句是回忆，馆方替读者标好了。</p>
+<p><strong>投给三官九府的一封信。</strong>这片金子长三十六点二厘米，宽八厘米，重二百二十三点五克，双钩楷书六十三字：久视元年（700）七月七日，武则天遣道士胡超投简嵩山，乞三官九府除「武曌」罪名，字中有她自造的「曌」「圀」。这是已知唯一的唐代金简。它在石缝之内待了一千二百八十二年，一个读者也没有，直到一个山民把它当成一张黄纸。连它多长多重，新华社那篇与馆方页也差着零点几厘米、十克——同一件东西，两把尺。</p>
+<p>捡到的人凭什么知道它不是废纸？他先不知道；村里识字的人说可能是文物；再后来，文物贩子用五万元告诉了他。「认」这件事，这一站是分三步走完的。</p>
+<a class="go" href="../timeline.html#line=shiyi&amp;at=6">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>久视元年七月遣道士胡超投于嵩山，为其「大周国主」之身祈三官九府免除罪责。1982年登封农民屈西怀于峻极峰石缝中拾得，为已知唯一的唐代金简；铭文六十三字，含其自造的「曌」「圀」等字</p>
+</details>
+</div></section>
+<section id="s7" data-year="780" data-name="何家村唐代窖藏"><div class="wrap">
+<div class="num">七 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="320.0" y1="16" x2="378.8" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-done" cx="261.2" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-cur" cx="378.8" cy="16" r="5.2"/><circle class="rs-todo" cx="437.6" cy="16" r="3"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">陶鹰鼎</text><text class="rs-end" x="614.0" y="35" text-anchor="end">南海一号</text><text class="rs-name" x="378.8" y="35" text-anchor="middle">何家村唐代窖藏</text></svg>
+<div class="yr">780</div>
+<h2>两瓮一罐 <span class="h2-ev">何家村唐代窖藏</span></h2>
+<p class="sub">780　·　唐　·　文物</p>
+<p>山上那片金子是一个人塞进石缝的。这一站的东西是一家人慌乱中埋的，埋的时候没留一个字。</p>
+<p><strong>工地一铲下去，是一只瓮。</strong>1970 年 10 月 5 日，西安南郊何家村，一处基建工地上，施工的工人挖出一只陶瓮，高六十五厘米、腹径六十厘米，满满一瓮金银器。10 月 11 日，考古人员在北侧不远处又发现一只大小相仿的瓮，瓮口盖着一层银渣，旁边一件银罐，罐内是那只镶金兽首玛瑙杯。两瓮一罐，千余件：金银器皿二百七十一件（一作二百六十五件，两数并见），银铤银饼银板九十件，钱币四百六十六枚。</p>
+<p><strong>意外只有一铲子长。</strong>第一只瓮是工人挖出来的；接手的是考古队，第二只瓮和那件银罐是他们找出来的。本线只管第一铲，之后的事归考古队。</p>
+<p><strong>埋它的人走得太急。</strong>哪一年埋的、谁埋的，三说接力：郭沫若定天宝十五载（756），安史之乱中邠王府的后人所窖；段鹏琦据一件银盖碗的纹样把下限推到德宗朝，又指出出土地点不在邠王府范围之内；齐东方另提租庸使刘震说，荣新江驳其靠不住，说这批东西更像私家财产。东西俱在，埋它的人越考越远。银铤银饼上有铭文，记的是年号、地区、赋役，不是埋藏者的话；瓮中没有一个字交代这是谁埋的、为什么埋。</p>
+<p><strong>同在关中地下，另一处是按仪轨封的。</strong>这批东西与下一站那座地宫同在关中，埋下的年代也相去不远。这边是一家人慌乱中埋的，没留字；那边封藏的时候，有人把日子刻在了碑上。</p>
+<p>仓促埋下的没留字。按仪轨封下的，会留下什么？</p>
+<a class="go" href="../timeline.html#line=shiyi&amp;at=7">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>1970年10月5日西安南郊何家村工地掘出一陶瓮，满贮金银器；10月11日北侧又出一瓮，瓮旁银罐里藏着镶金兽首玛瑙杯。两瓮一罐共出文物千余件，其中金银器皿271件（另有资料作265件，两数并见），银铤银饼银板合九十件，钱币466枚。埋藏在哪一年至今没定，三说接力，皆据今人转述、未核原刊：郭沫若《出土文物二三事》定为天宝十五载（756）安史之乱中邠王李守礼后人所窖；段鹏琦据一件银盖碗的折枝花纹属德宗朝（780—805）式样，把下限往后推，又指出土地点并不在邠王府范围；齐东方另提租庸使刘震说，而刘震正史无载，只见于《太平广记》所收唐传奇《无双传》，荣新江因此驳其靠不住，谓这批东西更像私家财产，或出御赐、或由买卖而来。</p>
+<p>东西俱在，埋它的人却越考越远。本库兽首玛瑙杯、舞马衔杯银壶两条即出自这两瓮。现藏陕西历史博物馆，2010年起以《大唐遗宝》专题常年展出。</p>
+</details>
+</div></section>
+<section id="s8" data-year="873" data-name="法门寺"><div class="wrap">
+<div class="num">八 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="378.8" y1="16" x2="437.6" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-done" cx="261.2" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="378.8" cy="16" r="3"/><circle class="rs-cur" cx="437.6" cy="16" r="5.2"/><circle class="rs-todo" cx="496.4" cy="16" r="3"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">陶鹰鼎</text><text class="rs-end" x="614.0" y="35" text-anchor="end">南海一号</text><text class="rs-name" x="437.6" y="35" text-anchor="middle">法门寺</text></svg>
+<div class="yr">873</div>
+<h2>半塔犹立 <span class="h2-ev">法门寺</span></h2>
+<p class="sub">873–1987　·　唐　·　遗址·建筑</p>
+<p>何家村那两只瓮中没有一个字。这一站的地宫之内，封藏的人把日子刻在了碑上；碑要等塔塌了才看得见。</p>
+<p><strong>塔塌了半边。</strong>1981 年 8 月的一个雨夜，扶风法门寺的真身宝塔——明代重建的十三层砖塔——半壁崩塌，另一半在原地立着。此前十五年，1966 年，曾有人动手挖过塔基，寺中住持以身相殉，塔基没有被掘开。塌了的一半没人动，立着的一半又立了几年，直到 1985 年决定拆除重建。</p>
+<p><strong>清理塔基那天，地宫开了。</strong>1987 年 2 月底重修宝塔，清理塔基；4 月 3 日，塔基下的地宫被打开。这一站到此为止。地宫打开以后的事，另一条线接着讲：地宫内有一张帐，帐上三个字，一千年没人指得出的一件东西由此对上了——那是它的正菜，本线一字不碰。</p>
+<p><strong>封它的人记着日子。</strong>地宫内有两通碑：《大唐咸通启送岐阳真身志文》碑，与监送真身使所立的物账碑，自己记着封藏的日子——咸通十五年正月初四，874 年。唐代皇室先后八次迎送佛骨，咸通十四年懿宗那一次是最后一次，也是最盛的一次；次年僖宗按仪轨把佛指舍利与数千件宫廷供养器封入地宫。此后一千一百一十三年。何家村那两只瓮中一个字没有，这里的碑连日子带清单——按仪轨封下的，留了话。</p>
+<p><strong>从塔下取出来的。</strong>四枚佛指舍利，一枚灵骨、三枚影骨；八重宝函，铜浮屠；出土总数各源作两千三百九十九与两千四百九十九两个数，不取一说。这些东西在塔下待了一千一百多年，上面的塔换过——唐代的四层木塔，明代改成十三层砖塔——它们没动。</p>
+<p>封藏的人算到过重见的这一天吗？碑上刻了封的日子；什么时候再开，不是碑能写的。</p>
+<a class="go" href="../timeline.html#line=shiyi&amp;at=8">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>陕西扶风的皇家寺院，因唐室迎奉佛骨而显。相传创于东汉桓灵间，此说无一手支撑，按传说记；北魏拓跋育重修阿育王寺及塔，隋改名成实道场，唐初复称法门寺（复名年618与624两说并见，不取一说）。显庆四年（659）高宗敕修四层木塔，终唐一代皇室先后八次迎送佛骨——咸通十四年（873）懿宗那一次是最后一次，也是最盛的一次，本条即锚于此。次年正月初四，僖宗按仪轨将佛指舍利连同数千件宫廷供养器封入塔基地宫，地宫出土的《大唐咸通启送岐阳真身志文》碑与监送真身使所立的物账碑，自己记着这个日子。</p>
+<p>此后地宫尘封一千一百余年。1981年宝塔半边坍塌，1987年因重建清理塔基而意外发现地宫，出四枚佛指舍利（一灵骨三影骨）与大批唐代宫廷器物，其中秘色瓷自此有了纪年明确的实物标准器；出土总数各源作两千三百九十九与两千四百九十九两个数，不取一说。</p>
+<p><strong>库内八重宝函、铜浮屠、秘色瓷三条都锚在874年那次封藏，都是从这座塔下取出来的</strong>；本条不与它们争那一年，锚退到873年迎佛骨这件事本身。何家村窖藏（734）是仓促埋下的，此处是按仪轨封下的，性质不同、分量相当。2006年列第六批全国重点文物保护单位，官定时代「南北朝至清」。</p>
+</details>
+</div></section>
+<section id="s9" data-year="897" data-name="钱镠铁券"><div class="wrap">
+<div class="num">九 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="437.6" y1="16" x2="496.4" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-done" cx="261.2" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="378.8" cy="16" r="3"/><circle class="rs-done" cx="437.6" cy="16" r="3"/><circle class="rs-cur" cx="496.4" cy="16" r="5.2"/><circle class="rs-todo" cx="555.2" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">陶鹰鼎</text><text class="rs-end" x="614.0" y="35" text-anchor="end">南海一号</text><text class="rs-name" x="496.4" y="35" text-anchor="middle">钱镠铁券</text></svg>
+<div class="yr">897</div>
+<h2>渔人一斧 <span class="h2-ev">钱镠铁券</span></h2>
+<p class="sub">897　·　唐　·　文物</p>
+<p>地宫是塔压着的。这一站的东西是水压着的——它是传世之物，丢了又回来；全线十一件，只有它在丢之前已经传了三百多年。</p>
+<p><strong>一网上来一块铁。</strong>至元十三年（1276）元兵破台州，钱家的人背着铁券逃难，人死在乱中，券不知去向。几十年后，黄岩州南一处叫泽库的深水之内，一个渔人一网网上来一块铁。他当它是宝物，拿斧头砍了一下试——是铁，扔在角落。邻居一个村学究听说过钱家赐券的传说，按铁价买了下来。两个人都不知道那些字是金的。有人报到钱家，钱家用十斛谷子换了回来。</p>
+<p><strong>一角有斧痕。</strong>元末黄岩人陶宗仪亲眼见过这块券——他的朋友钱贇是钱镠的后人，拿出来给他看：「券詞黃金商嵌，一角有斧痕。」失而复得的经过，他记在《辍耕录》卷十九同一条：「漁意寶物，試斧擊之，則鐵焉，因棄諸幽。」那一角斧痕，想来就是渔人这一斧。这是收藏史最早的一笔，也是目击者写的。可他自己在同一条末尾说，这是三十多年后翻旧纸翻出来才补记的：「轉首已三十余年矣。人生能幾何哉？」目击者的追记，也是追记。</p>
+<p><strong>哪一年网上来的，两套书打架。</strong>陶宗仪写「越再丙子」——从 1276 年那个丙子再过一个丙子，是 1336 年；钱氏家乘一脉（《十国春秋》《履园丛话》）写「至顺二年」，1331 年，「失水五十六年」。前者早出，是同乡目击；后者晚出，给足年号干支。相差五年，本线不裁。</p>
+<p><strong>此后它还进过一回贼手，下过一回井。</strong>光绪三十年（1904）连乾隆赐的宝匣一起被盗，钱氏后人筹款赎回；1938 年日军占嵊县长乐，族人把它蜡封了，沉进一口深井，每夜挑一担泥倒进井中把水搅浑，吃水到远处去挑，七年——这是后裔隔两代的回忆；1945 年 11 月出井。1951 年，长乐商会的会长代表钱氏后人把它上交国家；1959 年浙江省文管会移交中国历史博物馆，国博另一篇文章作 1960 年入藏，两说并存。</p>
+<p>土中的东西等的是一把铲子。它在水底等了五六十年，等的是一个听说过它的人。传世的东西丢了怎么回来——靠有人还记得它。</p>
+<a class="go" href="../timeline.html#line=shiyi&amp;at=9">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>是唐朝颁予吴越王钱镠的丹书铁券，为中国现存年代最早的铁券实物，一级文物，现藏中国国家博物馆。</p>
+</details>
+</div></section>
+<section id="s10" data-year="992" data-name="淳化元宝金钱"><div class="wrap">
+<div class="num">十 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="496.4" y1="16" x2="555.2" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-done" cx="261.2" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="378.8" cy="16" r="3"/><circle class="rs-done" cx="437.6" cy="16" r="3"/><circle class="rs-done" cx="496.4" cy="16" r="3"/><circle class="rs-cur" cx="555.2" cy="16" r="5.2"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">陶鹰鼎</text><text class="rs-name" x="555.2" y="35" text-anchor="middle">淳化元宝金钱</text></svg>
+<div class="yr">992</div>
+<h2>毛巾换金 <span class="h2-ev">淳化元宝金钱</span></h2>
+<p class="sub">992　·　北宋　·　文物</p>
+<p>铁券在水底等的是一个记得它的人。这一站的东西，没有一个人记得它：正史中没有它出生的记录，也没有它入塔的记录。</p>
+<p><strong>清理塔基，挖出了金钱。</strong>1988 年春，五台山中台顶，施工队清理一座佛塔旧址的塔基，挖出了金钱：面文行书「淳化元宝」，背铸两尊像，含金九成六，一枚十二克上下。「淳化」是宋太宗的年号（990–994），钱文传为太宗亲书。它们什么时候供进塔中，正史一个字没有——中国钱币博物馆自己写：「史书中并没有淳化元宝铸造、入藏五台山等情况的确切记载。」现存的那座塔是明代的：金币是宋塔原瘗、明代叠建，还是明代重瘗，没有一个来源处理这个断层。挖塔基的人撞见的是上一次建塔的人；上一次是哪一次，说不清。</p>
+<p><strong>一枚换了一条毛巾。</strong>最先流出去的一两枚，讲法有两个：一说一枚一元钱卖掉、一枚跟小卖部老板换了一条崭新的毛巾；一说两枚一起换了一条毛巾加一块钱。此后是哄抢、公安专案、追缴：首日收缴三百四十七枚，追缴数一源作一千六百八十八枚、一源作二千零四十三枚；最终一千三百四十三枚交中国国家博物馆；总数近两千，各源一千余至两千余不等。国博自记「未追回者，部分流失海外」。数字与数字对不拢，本线照录，不调和。</p>
+<p><strong>连它的「史料」都有人替它编了一份。</strong>有网文说总数「和史料记载的相同，也就是《太平广记》中标注的数量」——《太平广记》成书于太平兴国三年（978），早于淳化年号十余年，又是小说类书，无从记这批钱。另有报道说太宗「巡幸五台山时」铸造——太宗亲至五台山，正史无载；留下记载的是另一件事：太平兴国五年（980）他敕修五台山十寺、造金铜文殊像。这一站，「史料」是怎么长出来的不必比喻：一份从来不存在的史料记载，被人写了出来，还带着书名。</p>
+<p>这座塔下面压着一批没有出生证明的金币。我们脚下还压着多少个「上一次」——本线只画已经回来的。</p>
+<a class="go" href="../timeline.html#line=shiyi&amp;at=10">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>这批金币的第一句话，得先说它没有出生证明。</strong>中国钱币博物馆的馆藏介绍写得直白：「史书中并没有淳化元宝铸造、入藏五台山等情况的确切记载。目前，学术界普遍认为金质淳化元宝是宋初皇室专门铸造敬奉五台山寺庙的供养钱。」东西是真的（含金量96%，径2.3至2.4厘米，重约12克，背缘錾「一」「二」「三」「四」与无字共五式），来历却全靠推——推的抓手是那四个字：行用的淳化元宝铜钱，《续资治通鉴长编》卷三十一系于淳化元年（990）五月：「乙未，又改鑄『淳化元寶』錢，上親書其文，作真、草、行三體。」皇帝亲书钱文自此开端；金币面文与之同名同体，铸窗由此圈定在990至994年之间——锚取窗中，不是取哪一年铸的。</p>
+<p><strong>背面那两尊像，是谁，五个说法。</strong>坐者结跏趺坐于莲花座上：国博称「佛」，泉界通行说观音，钱币博物馆说文殊菩萨（五台山正是文殊道场），另有研究者说是大日如来；立者合十侍立：国博主韦陀说，钱币博物馆主善财童子说（「一说为手持如意的韦驮」），民间读作「童子拜观音」，还有研究者认为立者是宋太宗本人的供养人形象。</p>
+<p><strong>五说并存，本条不裁</strong>——像的眼鼻口是铸成后镌刻的，当年的工匠没留一个字说自己刻的是谁。</p>
+<p><strong>重见天日那几天的事，每一版讲法都不一样。</strong>1988年春，施工队在中台顶佛塔旧址清理塔基挖出金钱；此后的细节全是事后追述：最先流出的一两枚，一说一元卖掉一枚、一枚换了条毛巾，一说两枚一起换了毛巾加一块钱；文管部门首日收缴347枚；次日再出金币时发生哄抢；公安专案侦办后，追缴数一源作1688枚、一源作2043枚，抓获20余人；最终1343枚交中国国家博物馆，中国钱币博物馆亦藏有数枚，另有「1998年由代县法院移交代县博物馆」一说。</p>
+<p>国博自记「未追回者，部分流失海外」；「香港市场一枚换一辆轿车」的流传句，各源皆冠「据传」。</p>
+<p><strong>数字与数字对不拢，本条照录不调和。</strong></p>
+<p><strong>连「史料记载」本身都有人替它编了一份。</strong>有网文称总数「和史料记载的相同，也就是《太平广记》中标注的数量，近2000枚」——《太平广记》成书于太平兴国三年（978），早于淳化年号十余年，且系小说类书，无从记载此钱。另有媒体称太宗「巡幸五台山时烧香敬佛专门铸造」，而太宗亲至五台山正史无载；有实据的是另一层：太平兴国五年（980）太宗敕修五台山十寺、造金铜文殊像安于真容院（《广清凉传》所记，未核原书）。</p>
+<p><strong>皇帝崇佛于五台山是真的，皇帝上过五台山不是。</strong></p>
+<p><strong>它被供进去的那一年，比它被挖出来的那一年更没影。</strong>现存中台顶塔为明代遗构（演教寺祈光塔），金币若原瘗宋塔、明代叠建，或明代重瘗纳入，诸源无一处理此断层——封藏之年连推定窗都给不出，故本条锚铸造窗而非封藏年，与法门寺（物账碑自记封藏日期）恰成对照：那边是「里面的人留了话」，这边是里外都没留。库内同为塔藏钱物者另见应县木塔；同为太宗御书、同在淳化者，淳化阁帖（992）与此钱一帖一钱，皆以皇帝手迹行世。</p>
+</details>
+</div></section>
+<section id="s11" data-year="1160" data-name="南海一号"><div class="wrap">
+<div class="num">十一 / 十一</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="555.2" y1="16" x2="614.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="84.8" cy="16" r="3"/><circle class="rs-done" cx="143.6" cy="16" r="3"/><circle class="rs-done" cx="202.4" cy="16" r="3"/><circle class="rs-done" cx="261.2" cy="16" r="3"/><circle class="rs-done" cx="320.0" cy="16" r="3"/><circle class="rs-done" cx="378.8" cy="16" r="3"/><circle class="rs-done" cx="437.6" cy="16" r="3"/><circle class="rs-done" cx="496.4" cy="16" r="3"/><circle class="rs-done" cx="555.2" cy="16" r="3"/><circle class="rs-cur" cx="614.0" cy="16" r="5.2"/><text class="rs-end" x="26.0" y="35" text-anchor="start">陶鹰鼎</text><text class="rs-name" x="614.0" y="35" text-anchor="end">南海一号</text></svg>
+<div class="yr">1160</div>
+<h2>抓斗下去 <span class="h2-ev">南海一号</span></h2>
+<p class="sub">1160　·　南宋　·　文物</p>
+<p>塔下的金币没人知道它在。这一站海底的船也没人知道它在——海上那支队伍在找另一艘船。</p>
+<p><strong>找的是十八世纪的船。</strong>1987 年 8 月，广东台山上下川岛一带海域。中国交通部广州救捞局与英国一家海上探险救捞公司合作，在这片海域寻找一艘东印度公司的沉船「莱茵堡号」，十八世纪的船。船名怎么写，各家不一：莱茵堡、莱茵斯堡、Rhynsburg，原始档案没有见到；哪一国的东印度公司，中文维基不分，美国国家地理写作荷兰。旁侧声呐扫到疑似的东西，就下抓斗去抓。</p>
+<p><strong>抓斗下去，上来的是宋瓷。</strong>有一天，一抓斗下去，抓上来二百四十七件东西：瓷器、铜器、锡器、镀金器、铁器，其中一百四十二件完整的瓷器和锡器，还有一条一点七二米长的金腰带。中方负责人尹干洪说了一句：「这肯定不是英国人要找的莱茵堡号，这是一条我们中国的沉船。」他制止了继续用抓斗取物。这一段出自 2020 年一篇署名文章，写它的人 1987 年还没有入行，转述的是前辈的话；尹干洪那一句，是三十三年后有人替他记下的。</p>
+<p><strong>它等了两年才有名字。</strong>1989 年 11 月，中日联合调查确认了这艘沉船，中国历史博物馆馆长俞伟超把它命名为「南海一号」；随后因为资金与技术，也因为辽宁绥中三道岗的元代沉船正在发掘，勘察搁置，一搁到 2001 年。整体打捞、十八万件文物、「海上敦煌」，是它后来的事，本库那一条已经写了；抓斗之后的事，本线不讲。</p>
+<p><strong>这一站的记录也是软的。</strong>中文维基的发现节没有一条脚注，英文维基那两句也没有；流传最广的那句话——一把抓上来二百多件瓷器——没有查到出自哪里；查得到的是两个数：二百四十七件，数的是器物；约二百件，数的是瓷器，两个数数的不是一样东西。找的是十八世纪，撞见的是十二世纪。</p>
+<p>要找的没找到，找到的没人在找。它在海底等了八百年，等的是不是这一次——它自己不知道，抓斗也不知道。</p>
+<a class="go" href="../timeline.html#line=shiyi&amp;at=11">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>南宋初年的远洋贸易商船，1987年在广东台山与阳江交界海域发现，2007年以沉箱整体打捞出水——世界水下考古首例。已出土文物约十八万件，以瓷器为大宗，有「海上敦煌」之誉，现藏广东海上丝绸之路博物馆。</p>
+</details>
+</div></section>
+<section id="s12" class="tone"><div class="wrap">
+<div class="num">落点</div>
+<h2>撞见</h2>
+<p>序问：没有人在找它们，它们是怎么回来的。走完十一站，答案摆在桌上——犁地的、蹲废品站的、打井的、放学的、盗墓的、滚石下山的、施工的、修塔的、撒网的、奔着另一艘船去的。它们不是被找到的，是被撞见的。</p>
+<p>露出来的：鹰鼎、地宫。认出来的：尊、班簋、嵩山下那枚竹简。掘出来的：俑、两瓮、金币。捡到的：玉印、金简。捞起来的：铁券、宋船。还有一件，是贼不要的。</p>
+<p>隔了多久，每站报过一次，并排读一遍：五千二百年、三千年、两千二百年、两千一百年、五六百年、一千二百八十二年、一千二百年、一千一百一十三年、五六十年、约一千年、八百年。</p>
+<p>撞见的人不知道自己撞见了什么，所以没有一站的故事是当场记下的：鸡食盆是四十年后的传闻，三十元从卖出价漂成了买回价，书包中那块石头有三个版本，毛巾换金币有两种换法。这条线上离现场最近的一笔记录，是元朝人陶宗仪亲眼见过铁券之后写下的——他自己说，那是三十多年后补记的；离现场最远的一笔在正史，汲冢那一件，《晋书》给了三个年份。</p>
+<p>这些故事的软，不是缺陷，是一切记录出生时的样子。史书中那些不可能有人在场的时刻，也是这样从传闻走到定本的。本线把两层分开写：东西照档案写，故事照追述标。两处答不出的——玉印为什么躺在地表，塔下还压着多少个上一次——照实空着。</p>
+</div></section>
+<footer><div class="wrap">
+本页由 <code>tools/mining/build_line_page.py</code> 从库内数据生成，不手改。长文出自纪录片叙事稿，考据随文写就；凡各源不一致的数字，做法是一个都不给。
+<div class="row">
+<a href="../timeline.html#line=shiyi">在图上走一遍 →</a>
+<a href="index.html">中国帝王寿命数据库</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-shiyi.md" target="_blank" rel="noopener">资料与出处 ↗</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%%E5%%8B%%98%%E8%%AF%%AF&amp;title=%%E5%%8B%%98%%E8%%AF%%AF%%EF%%BC%%9A" target="_blank" rel="noopener">报个错 ↗</a>
+</div></div></footer>
+<dialog id="lb"><button id="lbx" type="button" aria-label="关闭">✕</button><img id="lbi" alt=""><div id="lbc"></div></dialog>
+<script>
+// 进度条与导轨高亮。整页只有这一段脚本，无依赖、无外链。
+var bar=document.getElementById('bar'),links=[].slice.call(document.querySelectorAll('#rail a')),
+    secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+function tick(){
+  var h=document.documentElement,y=h.scrollTop||document.body.scrollTop,
+      m=(h.scrollHeight-h.clientHeight)||1;
+  bar.style.width=(100*y/m)+'%';
+  var at=0;
+  for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].getBoundingClientRect().top<h.clientHeight*0.42) at=i; }
+  for(var j=0;j<links.length;j++) links[j].className=(j===at?'on':'');
+}
+addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
+
+// 点开放大。图注与署名跟着进去——放大了更该说清这是谁的
+var lb=document.getElementById('lb'),lbi=document.getElementById('lbi'),lbc=document.getElementById('lbc');
+[].forEach.call(document.querySelectorAll('button.zoom'),function(b){
+  b.addEventListener('click',function(){
+    lbi.src=b.getAttribute('data-src'); lbi.alt=b.getAttribute('data-cap')||'';
+    var cap=b.getAttribute('data-cap')||'', who=b.getAttribute('data-who')||'',
+        full=b.getAttribute('data-full')||'';
+    lbc.innerHTML='';
+    var t=document.createElement('div'); t.textContent=cap+(cap&&who?'　':'')+who; lbc.appendChild(t);
+    if(full){var a=document.createElement('a'); a.href=full; a.target='_blank'; a.rel='noopener';
+      a.textContent='在 Commons 看原尺寸 ↗'; var d=document.createElement('div');
+      d.style.marginTop='.4rem'; d.appendChild(a); lbc.appendChild(d);}
+    if(lb.showModal) lb.showModal(); else lb.setAttribute('open','');
+  });
+});
+document.getElementById('lbx').addEventListener('click',function(){lb.close?lb.close():lb.removeAttribute('open')});
+lb.addEventListener('click',function(e){ if(e.target===lb) lb.close&&lb.close(); });
+</script>
+</body></html>
