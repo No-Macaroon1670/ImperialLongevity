@@ -30,6 +30,11 @@ def main():
     craft = os.path.join(docs, 'line-%s-craft.md' % key)
     if os.path.exists(os.path.join(docs, 'line-%s-original.html' % key)):
         run('extract_shiku_sources.py')
+    elif os.path.exists(craft) and '【勿抽】' in open(craft, encoding='utf-8').read():
+        # 解说词节已与正本漂移的线（勘合线 2026-09-01 阅前注）：docs/sources-<key>.json 即考据正本，
+        # 再抽会把直接改在 JSON 里的考据卡冲回旧稿——2026-09-02 实撞一次（寇猛重核／湖州镜薛款剔除被冲，git 复原）。
+        # 要让某线走这条路，在 craft 阅前注里标【勿抽】即可；改考据从此只改 JSON。
+        print('── craft 标【勿抽】：sources-%s.json 为考据正本，跳过抽取' % key)
     elif os.path.exists(craft) and '## 三、解说词' in open(craft, encoding='utf-8').read():
         run('craft_to_sources.py', key)
     elif os.path.exists(os.path.join(docs, 'sources-%s.json' % key)):
