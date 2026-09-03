@@ -211,8 +211,11 @@ export function eventLegend(opts, { skip = [] } = {}) {
   const counts = {};
   for (const ev of EVENTS) counts[ev.k] = (counts[ev.k] || 0) + 1;
   const kinds = Object.keys(EVENT_KINDS).filter((k) => counts[k] && !skip.includes(k));
-  for (const [k, meta] of Object.entries(EVENT_KINDS)) {
-    if (!counts[k] || skip.includes(k)) continue;
+  // 色标按词条数降序排（库主 2026-09-02：「王朝长河这些类型也应该按照词条数排列」），
+  // 与首页/地图页同则；EVENT_KINDS 的定义序只管数据，不管图例——多的类在前，一眼看出库的体量分布
+  const order = kinds.slice().sort((a, b) => counts[b] - counts[a]);
+  for (const k of order) {
+    const meta = EVENT_KINDS[k];
     const chip = h('button', {
       type: 'button', class: 'chip ev-chip' + (off.has(k) ? ' off' : ''),
       'aria-pressed': String(!off.has(k)),
