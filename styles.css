@@ -1719,3 +1719,204 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 /* 长简注分段（kp-ext 内块级段） */
 .kp-ext .kp-pr{display:block}
 .kp-ext .kp-pr+.kp-pr{margin-top:.5em}
+
+/* ── 地方线（place lines，2026-09-02）── */
+/* 一条竖轴、两侧挂卡（设计案 docs/idea-placelines.md，库主手绘即此形）。
+   几何全靠一条 --plc-gut：轴走在这条水槽的正中，卡片贴着槽的两壁，
+   连接短线的长度恰是半槽——改一个数，轴、线、圆点一起跟着走。
+   段色 --seg 由 JS 按政权配色（slotVar，与泳道图同一张色表）逐段写在行内，
+   卡色 --ev 按事件类别（--ev-war 等，与全库同一套）逐卡写在行内。 */
+/* 窄屏轴在左（left:16px）、卡阵左缩进 34px，轴心到卡沿正好 16.5px＝半槽，
+   故窄屏的槽宽是 33 而不是 64——短线与圆点都按半槽算，槽宽写错一处，
+   线就会穿过轴戳到轴的另一边去 */
+.plc-line { --plc-gut: 33px; --plc-dot: 9px; margin-top: 14px; }
+
+/* 段：背景随层次淡换（库主令「背景随层次变化」）——4% 的段色足够让相邻两段
+   分得开，又不至于把卡片压在一块彩底上 */
+.plc-seg {
+  position: relative; border-radius: 12px; padding: 2px 0 18px;
+  background: color-mix(in srgb, var(--seg) 4%, transparent);
+}
+.plc-seg + .plc-seg { margin-top: 10px; }
+/* 轴本身。窄屏靠左，宽屏走中缝（见下面的 min-width:720px 段） */
+.plc-seg::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 16px;
+  width: 3px; border-radius: 2px; background: var(--seg); opacity: .5;
+}
+/* 都城期加亮：这座城当没当过首都，是地方线上最要紧的那条身份线索，
+   故轴在这几段变粗、变实——不靠另一种颜色，颜色已经归政权了 */
+.plc-seg.plc-cap::before { width: 5px; opacity: 1; }
+.plc-seg-void { padding-bottom: 6px; }
+
+/* 段头吸顶：长卷滚到一半时，读者总该知道自己正站在哪一段旗下 */
+.plc-seg-h {
+  position: sticky; top: 0; z-index: 3;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px;
+  padding: 8px 10px 8px 34px; border-radius: 10px;
+  background: color-mix(in srgb, var(--page) 88%, transparent);
+  backdrop-filter: blur(3px);
+}
+.plc-seg-y { color: var(--muted); font-size: .78rem; font-variant-numeric: tabular-nums; }
+.plc-seg-t { font-weight: 700; color: var(--text-1); }
+.plc-seg-d {
+  font-size: .76rem; padding: 1px 8px; border-radius: 999px;
+  background: var(--seg); color: var(--page); font-weight: 600;
+}
+.plc-seg-cap {
+  font-size: .74rem; padding: 1px 7px; border-radius: 999px;
+  border: 1px solid var(--seg); color: var(--seg); font-weight: 700;
+}
+.plc-seg-n { color: var(--text-2); flex: 1 1 240px; }
+.plc-seg-s { color: var(--muted); }
+.plc-empty { margin: 6px 0 0 34px; }
+
+/* 时代总结卡：通栏，人写的那一张。没有过关的总结就一张也不画——
+   占位比空白更糟，它在替没做的事占地方（库主裁：总结卡不做半自动） */
+.plc-sum {
+  margin: 10px 0 4px 34px; padding: 12px 16px; border-radius: 10px;
+  background: var(--surface-2); border-left: 3px solid var(--seg);
+}
+.plc-sum-t { margin: 0 0 6px; font-size: 1rem; }
+.plc-sum-p { margin: 0 0 .5em; color: var(--text-2); line-height: 1.7; }
+.plc-sum-p:last-of-type { margin-bottom: 0; }
+.plc-sum-src { margin: 8px 0 0; color: var(--muted); }
+
+/* 卡阵。窄屏一列贴轴，宽屏三栏（卡·水槽·卡）——见下面的 min-width:720px 段 */
+.plc-cards { display: grid; gap: 12px; padding-left: 34px; margin-top: 10px; }
+.plc-card {
+  position: relative; background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 14px; cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.plc-card:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0, 0, 0, .10); }
+.plc-card:focus-visible { outline: 2px solid var(--ev); outline-offset: 2px; }
+.plc-card.sel { border-color: var(--ev); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ev) 35%, transparent); }
+/* 卡与轴之间的短线与圆点（库主手绘上就有这一笔）：线承段色，点承类别色——
+   于是一眼看得出「这是那一段的事」与「这是哪一类的事」两件不同的事 */
+.plc-card::after {
+  content: ""; position: absolute; top: 20px; height: 2px;
+  background: var(--seg); opacity: .55;
+  left: calc(-1 * var(--plc-gut) / 2); width: calc(var(--plc-gut) / 2);
+}
+.plc-card::before {
+  content: ""; position: absolute; top: calc(20px - var(--plc-dot) / 2 + 1px);
+  width: var(--plc-dot); height: var(--plc-dot); border-radius: 50%;
+  background: var(--ev); border: 2px solid var(--page); z-index: 2;
+  left: calc(-1 * var(--plc-gut) / 2 - var(--plc-dot) / 2);
+}
+.plc-card-m { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
+.plc-yr { font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.plc-kind { display: inline-flex; align-items: center; gap: 4px; font-size: .74rem; color: var(--text-2); }
+.plc-kind .ev-glyph, .plc-row .ev-glyph { overflow: visible; flex: none; }
+.plc-card-t { margin: 0 0 4px; font-size: 1.02rem; line-height: 1.35; }
+.plc-t2 .plc-card-t { font-size: .94rem; }
+.plc-card-p { margin: 0 0 .45em; color: var(--text-2); font-size: .86rem; line-height: 1.65; }
+.plc-card-p:last-of-type { margin-bottom: 0; }
+/* 二等卡的注只留三行：二等是「主线之外还有这些」，摊开全文会把一等的排场抹平 */
+.plc-t2 .plc-card-p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.plc-card-fig { margin: 6px 0 8px; }
+.plc-card-pic {
+  display: block; width: 100%; max-height: 260px; object-fit: cover; object-position: center;
+  border-radius: 8px; border: 1px solid var(--border);
+}
+.plc-card-cap { margin-top: 4px; font-size: .72rem; color: var(--muted); }
+/* custom 顶替过正文的卡打一记暗标：读者不必知道，维护者一眼看得出哪张是人写的 */
+.plc-custom { border-left: 3px solid var(--seg); }
+.plc-card-l { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.plc-line-badge {
+  font-size: .72rem; text-decoration: none; color: var(--text-2);
+  border: 1px solid var(--border); border-radius: 999px; padding: 1px 8px;
+}
+.plc-line-badge:hover { background: var(--surface-2); color: var(--text-1); }
+
+/* 三等：折进段末。一行一条，够读者判断要不要点开，不占版面 */
+.plc-more { margin: 10px 0 0 34px; }
+.plc-more > summary {
+  cursor: pointer; font-size: .8rem; color: var(--text-2);
+  padding: 4px 10px; border-radius: 999px; border: 1px dashed var(--border);
+  display: inline-block; list-style: none;
+}
+.plc-more > summary::-webkit-details-marker { display: none; }
+.plc-more[open] > summary { color: var(--text-1); }
+.plc-rows { display: flex; flex-direction: column; gap: 2px; margin-top: 8px; }
+.plc-row {
+  display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+  background: none; border: 0; border-radius: 8px; padding: 5px 8px; cursor: pointer;
+  color: var(--text-1); font: inherit; font-size: .84rem;
+}
+.plc-row:hover { background: var(--surface-2); }
+.plc-row.sel { background: color-mix(in srgb, var(--ev) 16%, transparent); }
+.plc-row-y { color: var(--muted); font-size: .76rem; min-width: 4.6em; font-variant-numeric: tabular-nums; }
+.plc-row-n { color: var(--text-2); }
+.plc-row:hover .plc-row-n { color: var(--text-1); }
+
+/* 知识卡坞：点一张卡弹出来的那一块。卡身复用 knowledge.js 的嵌入卡
+   （.kp-embed），坞只出年份类别、条名与落点三行——与时光舆图阅读坞同一分工：
+   上半说「它为什么算这座城的」，下半说「它是什么」。
+   窄屏贴底、宽屏浮右；浮着不推版面：读者刚点完一张卡，此刻正看着它 */
+.plc-dock {
+  position: fixed; z-index: 60; display: none;
+  left: 8px; right: 8px; bottom: 8px; max-width: 640px; margin-inline: auto;
+  max-height: 58vh; overflow-y: auto;
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .18); padding: 12px 16px 14px;
+}
+.plc-dock.on { display: block; }
+.plc-dock-k { font-size: .76rem; color: var(--muted); }
+.plc-dock-t { font-size: 1.06rem; font-weight: 700; margin: 2px 0; }
+.plc-dock-w { font-size: .74rem; color: var(--text-2); }
+.plc-dock-x {
+  position: absolute; top: 8px; right: 10px; background: none; border: 0;
+  color: var(--muted); font-size: 1rem; cursor: pointer; line-height: 1; padding: 4px;
+}
+.plc-dock-x:hover { color: var(--text-1); }
+/* 坞里的嵌入卡自带一条虚线分隔，图与文的两栏排布也照旧（见 .kp-embed 段） */
+
+/* 索引页：够格开线的地方，按条数排 */
+.plc-index { display: grid; gap: 10px; margin-top: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.plc-index-i {
+  display: flex; flex-direction: column; gap: 3px; text-decoration: none;
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px;
+}
+.plc-index-i:hover { background: var(--surface-2); }
+.plc-index-n { font-size: 1.1rem; font-weight: 700; color: var(--text-1); }
+.plc-index-c { font-size: .82rem; color: var(--text-2); }
+.plc-index-y { color: var(--muted); font-variant-numeric: tabular-nums; }
+.plc-index-k { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; color: var(--text-2); }
+.plc-index-kk { display: inline-flex; align-items: center; gap: 3px; }
+.plc-index-kk .ev-glyph { overflow: visible; flex: none; }
+
+/* 宽屏：轴回到中缝，一等卡左右交错、二等卡贴右列（库主批：手机一条轴在左、
+   单列即可；桌面会空，两边都挂卡）。720px 是本库既有的窄宽分界 */
+@media (min-width: 720px) {
+  .plc-line { --plc-gut: 64px; }
+  .plc-seg::before { left: calc(50% - 1.5px); }
+  .plc-seg.plc-cap::before { left: calc(50% - 2.5px); }
+  .plc-seg-h { padding-left: 10px; justify-content: center; }
+  .plc-empty { text-align: center; margin-left: 0; }
+  .plc-sum { margin-left: 0; margin-right: 0; }
+  .plc-more { margin-left: 0; text-align: center; }
+  .plc-rows { text-align: left; max-width: 620px; margin-inline: auto; }
+  .plc-cards {
+    padding-left: 0; column-gap: 0;
+    grid-template-columns: 1fr var(--plc-gut) 1fr;
+  }
+  .plc-card[data-side="l"] { grid-column: 1; }
+  .plc-card[data-side="r"] { grid-column: 3; }
+  /* 左侧卡的短线与圆点翻到右边去——同一套几何，镜像一次 */
+  .plc-card[data-side="l"]::after { left: auto; right: calc(-1 * var(--plc-gut) / 2); }
+  .plc-card[data-side="l"]::before { left: auto; right: calc(-1 * var(--plc-gut) / 2 - var(--plc-dot) / 2); }
+  /* 二等窄卡：贴轴的一列细卡，与一等的通栏大卡拉开分量差 */
+  .plc-t2 { max-width: 440px; }
+}
+
+/* 更宽的屏：坞不再贴底，改浮在一侧——**所点那张卡的对面那一侧**
+   （JS 写 data-side）。浮层总要盖住一列，盖住刚点开的那张卡最要命：
+   读者会以为自己点丢了。1180px 是 .wrap 的上限，窄于此贴底更稳当 */
+@media (min-width: 1180px) {
+  .plc-dock {
+    left: auto; right: 14px; bottom: auto; top: 50%; transform: translateY(-50%);
+    width: min(380px, 30vw); max-width: none; margin-inline: 0; max-height: 78vh;
+  }
+  .plc-dock[data-side="l"] { left: 14px; right: auto; }
+}
