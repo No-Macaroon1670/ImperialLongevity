@@ -53,4 +53,6 @@ export const OWN_PIC = {
   钧窑: 'img/used/guobo-junyao-tianlanyou-wan.jpg',
   龙泉窑: 'img/used/suining-songci-longquanyao-qingyou-ping.jpg',
   官窑: 'img/used/suining-songci-mingyao-jingchu-banban.jpg',
+  圆明园: 'img/used/yuanmingyuan-dashuifa.jpg',
+  颐和园: 'img/used/yiheyuan-foxiangge.jpg',
 };

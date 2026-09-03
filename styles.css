@@ -1775,6 +1775,9 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .plc-sum {
   margin: 10px 0 4px 34px; padding: 12px 16px; border-radius: 10px;
   background: var(--surface-2); border-left: 3px solid var(--seg);
+  /* 轴线（.plc-seg::before，绝对定位）默认画在静态流内容之上：宽屏通栏时那根线
+     正从卡面文字上穿过（库主 2026-09-03 截图指出）。把卡提到轴之上，线走卡背后 */
+  position: relative; z-index: 1;
 }
 .plc-sum-t { margin: 0 0 6px; font-size: 1rem; }
 .plc-sum-p { margin: 0 0 .5em; color: var(--text-2); line-height: 1.7; }
@@ -1897,6 +1900,14 @@ section.card.river-mode .chart-host.full-bleed > .notes {
   .plc-sum { margin-left: 0; margin-right: 0; }
   .plc-more { margin-left: 0; text-align: center; }
   .plc-rows { text-align: left; max-width: 620px; margin-inline: auto; }
+  /* 轴走中缝之后，凡通栏居中的文字块——留白注、三等折叠钮与其行列、段头——都压在轴上、
+     背后垫页色，让线在它们背后断开：绝对定位的轴默认画在静态流文字之上，线从字面穿过
+     （库主 2026-09-03 两张截图：总结卡文字、「本段本地无条目」一行皆被轴线穿过） */
+  .plc-empty, .plc-more > summary, .plc-rows { position: relative; z-index: 1; }
+  .plc-empty { display: table; margin-inline: auto; padding: 2px 10px; background: var(--page); border-radius: 6px; }
+  .plc-more > summary { background: var(--page); }
+  .plc-rows { background: var(--page); border-radius: 8px; padding: 4px 6px; }
+  .plc-seg-h { background: var(--page); backdrop-filter: none; }
   .plc-cards {
     padding-left: 0; column-gap: 0;
     grid-template-columns: 1fr var(--plc-gut) 1fr;
