@@ -216,8 +216,12 @@ function applyView() {
   VB = [VIEW.cx - vw / 2, VIEW.cy - vh / 2, vw, vh];
   svg.setAttribute('viewBox', VB.join(' '));
   // 触屏让权：全图态单指放行给页面滚动（pan-y），放大后地图独占手势。
-  // 捏合任何时候都归我们——不设 none/pan-y 的话浏览器会拿去缩整页
-  svg.style.touchAction = VIEW.z > 1 ? 'none' : 'pan-y';
+  // 捏合任何时候都归我们——不设 none/pan-y 的话浏览器会拿去缩整页。
+  // 窄屏例外（库主 2026-09-03 手机实测「很难左右滑动地图」）：那边整图 760px 宽装在
+  // .plate 里横向拖着看（styles.css 720px 断点），pan-y 把横向手势一并掐死，手指落在图上
+  // 就只能竖滚页面、拖不动图——全图态须连横向也放行给容器滚动
+  const narrow = window.matchMedia('(max-width: 720px)').matches;
+  svg.style.touchAction = VIEW.z > 1 ? 'none' : (narrow ? 'pan-x pan-y' : 'pan-y');
   eyeSync();
 }
 
