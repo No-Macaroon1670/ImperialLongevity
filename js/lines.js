@@ -1402,7 +1402,7 @@ const SHIYI = [
   {
     t: '烧策照宝',
     b: '太康二年，汲郡人不准盗发魏王墓，烧竹简照明取宝——简不在他的宝单上。',
-    b2: '官府收回时简已烧残断乱，整理出七十五篇，其中魏国史书《纪年》与传世典籍多有不合。哪一年挖的，正史前后给了三个年份，清人把它们排成发现、上报、整理三步。同一篇传还记：有人在嵩山下捡到一枚竹简，没人认得，束皙认出是汉明帝陵中的策文。',
+    b2: '官府收回时简已烧残断乱，整理出七十五篇，其中魏国史书《纪年》与传世典籍多有不合。哪一年挖的，前后有三个年份，《晋书》自己占了两个，清人把它们排成发现、上报、整理三步。同一篇传还记：有人在嵩山下捡到一枚竹简，没人认得，束皙认出是汉明帝陵中的策文。',
     ev: '汲冢竹书出土',
     card: true,
   },
@@ -1718,8 +1718,10 @@ export const LINES = {
     prologue: SB_PRO,
     epilogue: SB_EPI,
     doc: 'line-shibi',
-    // 地理档未建：GEO.shibi 尚无，消费处皆守空（app-map 判 !L.geo、tour 判 opts.geo），
-    // 故本线暂不上舆图与走线小地图；建 geo 档时在 build_geo.py 的 PLACES 补一节
+    // 地理档（2026-09-02 建）：16 定点＋4 无点。地上不是一条路，是一支笔的换手——
+    // 晋、齐两个朝堂起头，咸阳、长安、洛阳、平城、邺城、大都、南京、北京一路接下去。
+    // 《左传》与两部私撰的撰述地无一手，文字狱是通条不是个案：那四站宁可没有图
+    geo: GEO.shibi,
   },
   shenhou: {
     key: 'shenhou',
@@ -1738,8 +1740,10 @@ export const LINES = {
     prologue: SH_PRO,
     epilogue: SH_EPI,
     doc: 'line-shenhou',
-    // 地理档未建：GEO.shenhou 尚无，消费处皆守空（app-map 判 !L.geo、tour 判 opts.geo），
-    // 故本线暂不上舆图与走线小地图；建 geo 档时在 build_geo.py 的 PLACES 补一节
+    // 地理档（2026-09-02 建）：13 定点＋1 无点，其中两站带「藏」——鲁王圹志出金门
+    // 今在台北，康熙遗诏颁于北京今在南港史语所，都是实物。颜氏家训站文一字未提
+    // 地名，成书地亦无一手，宁 null
+    geo: GEO.shenhou,
   },
   zuifa: {
     key: 'zuifa',
@@ -1758,8 +1762,10 @@ export const LINES = {
     prologue: ZF_PRO,
     epilogue: ZF_EPI,
     doc: 'line-zuifa',
-    // 地理档未建：GEO.zuifa 尚无，消费处皆守空（app-map 判 !L.geo、tour 判 opts.geo），
-    // 故本线暂不上舆图与走线小地图；建 geo 档时在 build_geo.py 的 PLACES 补一节
+    // 地理档（2026-09-02 建）：6 定点＋6 无点。无点占一半不是漏，是这条线的实情——
+    // 全境施行的律令没有发生地（商鞅变法、党锢、刺配、开豁贱籍），分头搜捕没有判决地
+    // （诛吕安刘），通条不是个案（清代文字狱）。落点的六站落的都是站文写出来的地名
+    geo: GEO.zuifa,
   },
   dashi: {
     key: 'dashi',
@@ -1778,8 +1784,10 @@ export const LINES = {
     prologue: DA_PRO,
     epilogue: DA_EPI,
     doc: 'line-dashi',
-    // 地理档未建：GEO.dashi 尚无，消费处皆守空（app-map 判 !L.geo、tour 判 opts.geo），
-    // 故本线暂不上舆图与走线小地图；建 geo 档时在 build_geo.py 的 PLACES 补一节
+    // 地理档（2026-09-02 建）：10 定点＋4 无点。落的是**说这四个字的那个朝堂**，
+    // 不是他说的那件事在哪儿——海上之盟落汴京不落会宁府与登州，回河之争落汴京
+    // 不落商胡埽。三处史家断语与一封连年份都给不出的私信，撰地皆无一手，不落
+    geo: GEO.dashi,
   },
   shiyi: {
     key: 'shiyi',
@@ -1798,8 +1806,10 @@ export const LINES = {
     prologue: SY_PRO,
     epilogue: SY_EPI,
     doc: 'line-shiyi',
-    // 地理档未建：GEO.shiyi 尚无，消费处皆守空（app-map 判 !L.geo、tour 判 opts.geo），
-    // 故本线暂不上舆图与走线小地图；建 geo 档时在 build_geo.py 的 PLACES 补一节
+    // 地理档（2026-09-02 建）：11 站站站有点，8 站带「藏」——「出→藏」那条虚线画的
+    // 正是「东西怎么回来」的全程。兵马俑与法门寺就地成馆不画两点，汲冢竹书原简散佚
+    // 无藏点；南海一号的沉没点在海上、无带坐标实体，落上川岛而标签写「海域」认账
+    geo: GEO.shiyi,
   },
 };
 
