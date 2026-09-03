@@ -1920,3 +1920,7 @@ section.card.river-mode .chart-host.full-bleed > .notes {
   }
   .plc-dock[data-side="l"] { left: 14px; right: auto; }
 }
+
+/* 承接续色子段（2026-09-02）：天下易主而本地无换手记录的段，段头压淡 */
+.plc-seg-auto .plc-seg-t { display: none; }
+.plc-seg-auto { opacity: .78; }

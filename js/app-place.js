@@ -33,7 +33,7 @@ import { evSpec, mountEmbedCard, mdBold } from './knowledge.js';
 // 形状与配色一律复用泳道图那一套：同一个库，事件的红三角在哪一页都得是红三角，
 // 政权的色槽在哪一页都得是同一槽（slotVar 与 dynastyColorSlots 即那张色表）
 import { evMark, dynastyColorSlots, slotVar } from './views-lanes.js';
-import { DYNASTIES, DYN_MAP, ERAS } from './dynasties.js';
+import { DYNASTIES, DYN_MAP, ERAS, SUCCESSION, MERGED_INTO, ORTHODOX } from './dynasties.js';
 import { LINE_STOPS } from './line-stops.js';
 import { OWN_PIC } from './pics-own-cards.js';
 import { MUSEUM_PIC } from './pics-museum-cards.js';
@@ -103,11 +103,42 @@ function buildSegs(turns, members) {
     // 与宋得燕山府、1644 大顺入京与清定鼎燕京，两对都在同年。直接减一会算出
     // 「1644 – 1643」这种倒着的区间，看上去像数据错了；夹住之后它自报一个年份，
     // 段身空一线，正好说出「这一年这座城换了两次主」
-    turns.forEach((tn, i) => segs.push({
-      y: tn.y, y2: i + 1 < turns.length ? Math.max(tn.y, turns[i + 1].y - 1) : PLACE_END,
-      t: tn.t, who: tn.who, status: tn.status, note: tn.note, src: tn.src,
-      color: tn.who ? colorOfDyn(tn.who) : '--lane-other',
-    }));
+    turns.forEach((tn, i) => {
+      const end = i + 1 < turns.length ? Math.max(tn.y, turns[i + 1].y - 1) : PLACE_END;
+      const first = {
+        y: tn.y, y2: end,
+        t: tn.t, who: tn.who, status: tn.status, note: tn.note, src: tn.src,
+        color: tn.who ? colorOfDyn(tn.who) : '--lane-other',
+      };
+      segs.push(first);
+      // 换手表只记**本地**换手；天下易主（秦→汉、汉→魏→晋、北朝→隋→唐、明→清）不列
+      //（写手与工程接口约定）。政权带若在段内就亡了，轴色不能赖到下一次本地换手——
+      // 沿 SUCCESSION 找法统承接者续色（承接者多于一个时先取正统序列），无承接者退
+      // MERGED_INTO 的吞并者；易代之际的空窗（秦亡到汉兴）留灰。续出的子段没有段题，
+      // 都城身份沿用（身份只在本地换手处变），按语自报「天下易主」
+      let cur = first;
+      const seen = new Set();
+      while (cur.who && !seen.has(cur.who)) {
+        seen.add(cur.who);
+        const d = DYN_MAP.get(cur.who);
+        if (!d || d.e >= cur.y2) break;
+        const heirs = DYNASTIES.filter((x) => SUCCESSION[x.key] === cur.who && x.s >= d.e - 1 && x.s <= cur.y2);
+        const orth = new Set(ORTHODOX);
+        let heir = heirs.find((x) => orth.has(x.key)) || heirs.sort((a, b) => a.s - b.s)[0];
+        if (!heir) { const m = MERGED_INTO[cur.who]; heir = m ? DYN_MAP.get(m) : null; }
+        if (!heir || heir.s > cur.y2 || heir.e <= d.e) break;
+        const start = Math.max(heir.s, d.e + 1);
+        if (start > d.e + 1) {   // 易代之际无主的年份：不硬派给谁
+          segs.push({ y: d.e + 1, y2: start - 1, t: '', who: null, status: cur.status, auto: true,
+            note: '易代之际，本地未另记换手', color: '--lane-other' });
+        }
+        const sub = { y: start, y2: cur.y2, t: '', who: heir.key, status: cur.status, auto: true,
+          note: '天下易主，本地未另记换手', color: colorOfDyn(heir.key) };
+        cur.y2 = Math.max(cur.y, start - 1);
+        segs.push(sub);
+        cur = sub;
+      }
+    });
   } else {
     if (y0 < ERAS[0].s) segs.push({ y: y0, y2: ERAS[0].s - 1, t: '史前', color: '--lane-other', pre: true });
     // ERAS 各带首尾互相重叠（隋唐 581 起而南北朝记到 589），段界一律取**起年**：
@@ -378,7 +409,7 @@ function segNode(seg, ctx) {
   const { PICKS, OVERRIDES, CARDS, dock } = ctx;
   const dyn = seg.who ? DYN_MAP.get(seg.who) : null;
   const cap = seg.status === '都' || seg.status === '陪都';
-  const head = h('div', { class: 'plc-seg-h' }, [
+  const head = h('div', { class: 'plc-seg-h' + (seg.auto ? ' plc-seg-auto' : '') }, [
     // 只管一年的段（同年再易手）报一个年份，不写「1644 – 1644」
     h('span', { class: 'plc-seg-y', text: seg.y2 > seg.y ? `${fmtYearAxis(seg.y)} – ${fmtYearAxis(seg.y2)}` : fmtYearAxis(seg.y) }),
     h('span', { class: 'plc-seg-t', text: seg.t }),
