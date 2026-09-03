@@ -330,6 +330,10 @@ export const ORDER_HINT = {
   youqiong: 'xiachao',   // 有穷非夏所封（夷族代政），不入 SPRANG；排序归夏侧，紧贴它抢的那条河
   xiyan: 'qianyan',
   dali: 1300,
+  // 大中裂自大理又汇回大理，须与大理同车道相邻：ORDER_HINT 数值不沿 SPRANG_FROM 继承
+  //（familyHead 把数值当 null，父子会各拿一个排序年——扩库丙员 order_probe 实测 dazhong #84、dali #87 隔着西夏），
+  // 故同给 1300，起年再分先后（2026-09-02）
+  dazhong: 1300,
 };
 
 /**
