@@ -1247,7 +1247,12 @@ export function renderLaneTimeline(host, list, opts) {
     if (kp && kp.releasePins) kp.releasePins();
     const lim = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
     const to = Math.max(0, Math.min(lim, px - scroller.clientWidth / 2));
-    host.closest('section.card').scrollIntoView({ block: 'start', behavior: 'instant' });
+    // 竖向只在泳道不在眼前时才动（库主 2026-09-03 手机实测：泳道明明看得见，掷一下骰子却被弹回
+    // 节顶、控件全露、泳道反倒没了）——泳道条已有一截在视口中段就留住页滚，只横滚；
+    // 从别处（搜索、深链、导览）跳来而泳道在屏外，才把本节顶到视口顶
+    const sr = scroller.getBoundingClientRect();
+    const inView = sr.bottom > innerHeight * 0.25 && sr.top < innerHeight * 0.75;
+    if (!inView) host.closest('section.card').scrollIntoView({ block: 'start', behavior: 'instant' });
     const p = o.smooth
       ? glide(() => scroller.scrollLeft, (v) => { scroller.scrollLeft = v; }, to)
       : (scroller.scrollLeft = to, Promise.resolve());
