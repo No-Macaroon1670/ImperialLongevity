@@ -49,8 +49,8 @@ def main():
             if key in have:
                 n_dup += 1; continue
             have.add(key); n_new += 1
-            new_lines.append("  l('%s', '%s', '%s', '%s', %d, '%s');" % (
-                esc(key[0]), esc(key[1]), esc(key[2]), esc(e["cite"]), int(e.get("lv") or 1), esc(e.get("note") or "")))
+            new_lines.append("  l('%s', '%s', '%s', '%s', %d, '%s', '%s');" % (
+                esc(key[0]), esc(key[1]), esc(key[2]), esc(e["cite"]), int(e.get("lv") or 1), esc(e.get("note") or ""), esc(e.get("q") or "")))
             for node in (key[0], key[2]):
                 if node.startswith("p:"):
                     persons_new.setdefault(node[2:], None)

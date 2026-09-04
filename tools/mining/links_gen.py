@@ -50,12 +50,12 @@ def year(s):
 
 def main():
     rows, seen = [], set()
-    def l(src, verb, dst, cite, lv, note=""):
+    def l(src, verb, dst, cite, lv, note="", q=""):
         # 同一事实只存一行：p 字段里同一地名出现两次（苏武牧羊 西安市:行 去而复返）只出一边
         if (src, verb, dst) in seen:
             return
         seen.add((src, verb, dst))
-        rows.append("  l('%s', '%s', '%s', '%s', %d, '%s');" % (esc(src), esc(verb), esc(dst), esc(cite), lv, esc(note)))
+        rows.append("  l('%s', '%s', '%s', '%s', %d, '%s', '%s');" % (esc(src), esc(verb), esc(dst), esc(cite), lv, esc(note), esc(q)))
 
     # ── 承继：每对前后任一行，不贴血缘标签（库主 09-04 澄清：查前后任只是省事，不是要硬加「无血缘」）──
     kin = json.load(io.open(os.path.join(ROOT, "data/kinship.json"), encoding="utf-8"))["pairs"]
@@ -122,7 +122,12 @@ def main():
         rel = p["rel"]; base = rel.split("（")[0]
         if base in KIN_VERB:
             src, dst = (b, a) if "逆向" in rel else (a, b)
-            l(src, KIN_VERB[base], dst, ("人核：" + p.get("src", "")[3:])[:80], int(p.get("cf") or 2), p.get("why", ""))
+            q = ""
+            if p["pred_n"] == "石弘" and p["succ_n"] == "石虎":
+                q = "《晋书》《魏书》首句作「勒之從子」，所列世系却指向从弟；两书自相打架，暂从正文明文"
+            elif p["pred_n"] == "段素隆" and p["succ_n"] == "段素真":
+                q = "《南诏野史》作「姪」、维基作「素廉之孙」，差一辈"
+            l(src, KIN_VERB[base], dst, ("人核：" + p.get("src", "")[3:])[:80], int(p.get("cf") or 2), p.get("why", ""), q)
             nk += 1
     # 非君主的父母登记进 persons.js（与 links_merge 同一处、同一格式）
     PERSONS = os.path.join(ROOT, "js", "persons.js")
@@ -195,8 +200,8 @@ def main():
     out = ("// 机械生成的边（生成物，勿手改）：由 tools/mining/links_gen.py 从 data/kinship.json、events.js 的 p 字段、\n"
            "// era 起讫与君主表在位推出。动词与 id 体例同 links.js；血亲 Wikidata 机读记 lv 2，人核记其 cf。\n"
            "export const LINKS_GEN = [];\n"
-           "function l(src, verb, dst, cite, lv, note) {\n"
-           "  LINKS_GEN.push({ src, verb, dst, cite: cite || '', lv: lv || 1, note: note || '' });\n"
+           "function l(src, verb, dst, cite, lv, note, q) {\n"
+           "  LINKS_GEN.push({ src, verb, dst, cite: cite || '', lv: lv || 1, note: note || '', q: q || '' });\n"
            "}\n" + "\n".join(rows) + "\n")
     io.open(os.path.join(ROOT, "js/links-gen.js"), "w", encoding="utf-8", newline="\n").write(out)
     print("→ js/links-gen.js %d 行" % len(rows))
