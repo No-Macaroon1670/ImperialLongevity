@@ -93,6 +93,20 @@ CSS = """
   --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
   --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
 }
+/* 白天模式（库主 2026-09-04 令，且须由生成器带出、不许逐页手改）：深色是这套页的本色，
+   浅色只在读者按下切换时启用；偏好存 localStorage 'il-theme'，与主站共用一把钥匙。
+   凡写死的色值都要在这里给一个浅色对应，页里其它颜色一律走 token。 */
+:root[data-theme=light]{
+  --bg:#f7f3ec; --bg2:#efe9de; --ink:#1e1a15; --dim:#5c554c; --faint:#a39a8e;
+  --rule:#dcd4c6; --accent:#b04f2e; --gold:#8b6f2e;
+}
+[data-theme=light] .t-ok{color:#4f7a3f} [data-theme=light] .t-new{color:#3f6a80} [data-theme=light] .t-infer{color:#7a6a3f}
+[data-theme=light] .m-dust{fill:#8a8074}
+[data-theme=light] dialog#lb::backdrop{background:rgba(247,243,236,.94)}
+[data-theme=light] #lbx{background:rgba(0,0,0,.08)} [data-theme=light] #lbx:hover{background:rgba(0,0,0,.16)}
+#theme-toggle{position:fixed;top:10px;right:12px;z-index:60;font-family:var(--sans);font-size:11px;letter-spacing:.08em;
+  color:var(--dim);background:var(--bg2);border:1px solid var(--rule);border-radius:999px;padding:4px 10px;cursor:pointer;opacity:.85}
+#theme-toggle:hover{color:var(--ink);opacity:1}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
@@ -263,6 +277,19 @@ footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
 """
 
 JS = """
+// 深浅色切换：本页深色为本色，浅色是读者的选择；存 localStorage 'il-theme'（与主站共用）
+(function(){
+  var b=document.getElementById('theme-toggle'); if(!b) return;
+  var root=document.documentElement;
+  function label(){ b.textContent = root.getAttribute('data-theme')==='light' ? '🌙 深色' : '☀ 浅色'; }
+  label();
+  b.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme')==='light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    try{ localStorage.setItem('il-theme', next); }catch(e){}
+    label();
+  });
+})();
 // 进度条与导轨高亮。整页只有这一段脚本，无依赖、无外链。
 var bar=document.getElementById('bar'),links=[].slice.call(document.querySelectorAll('#rail a')),
     secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
@@ -414,7 +441,7 @@ def main():
     A('<head>')
     A('<meta charset="utf-8">')
     A('<meta name="viewport" content="width=device-width, initial-scale=1">')
-    A('<meta name="color-scheme" content="dark">')
+    A('<meta name="color-scheme" content="dark light">')
     A('<title>%s · %s</title>' % (esc(meta.get('name')), esc(meta.get('lede'))))
     A('<meta name="description" content="%s共 %d 站。">' % (esc(meta.get('sub') + '。'), len(stops)))
     A('<link rel="canonical" href="%s/story/%s.html">' % (SITE, key))
@@ -425,6 +452,9 @@ def main():
     A('<style>%s</style>' % CSS)
     A('</head>')
     A('<body>')
+    # 偏好先于首绘套上，免得先黑后白闪一下；钥匙 il-theme 与主站 shell.js 同一把
+    A('<script>(function(){try{var t=localStorage.getItem("il-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>')
+    A('<button id="theme-toggle" type="button" aria-label="切换深浅色"></button>')
     A('<div id="bar"></div>')
 
     # 导轨：序、十一站、落点

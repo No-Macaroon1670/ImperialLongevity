@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="dark light">
 <title>演艺线 · 五千年前陶盆上十五个人手拉着手。从那儿到今天的剧场，钱换了一路，场子换了一路，围观的人群一直是同一群。</title>
 <meta name="description" content="谁出钱看，艺人站在哪儿。共 9 站。">
 <link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/story/yanyi.html">
@@ -18,6 +18,20 @@
   --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
   --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
 }
+/* 白天模式（库主 2026-09-04 令，且须由生成器带出、不许逐页手改）：深色是这套页的本色，
+   浅色只在读者按下切换时启用；偏好存 localStorage 'il-theme'，与主站共用一把钥匙。
+   凡写死的色值都要在这里给一个浅色对应，页里其它颜色一律走 token。 */
+:root[data-theme=light]{
+  --bg:#f7f3ec; --bg2:#efe9de; --ink:#1e1a15; --dim:#5c554c; --faint:#a39a8e;
+  --rule:#dcd4c6; --accent:#b04f2e; --gold:#8b6f2e;
+}
+[data-theme=light] .t-ok{color:#4f7a3f} [data-theme=light] .t-new{color:#3f6a80} [data-theme=light] .t-infer{color:#7a6a3f}
+[data-theme=light] .m-dust{fill:#8a8074}
+[data-theme=light] dialog#lb::backdrop{background:rgba(247,243,236,.94)}
+[data-theme=light] #lbx{background:rgba(0,0,0,.08)} [data-theme=light] #lbx:hover{background:rgba(0,0,0,.16)}
+#theme-toggle{position:fixed;top:10px;right:12px;z-index:60;font-family:var(--sans);font-size:11px;letter-spacing:.08em;
+  color:var(--dim);background:var(--bg2);border:1px solid var(--rule);border-radius:999px;padding:4px 10px;cursor:pointer;opacity:.85}
+#theme-toggle:hover{color:var(--ink);opacity:1}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
@@ -188,6 +202,8 @@ footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
 </style>
 </head>
 <body>
+<script>(function(){try{var t=localStorage.getItem("il-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<button id="theme-toggle" type="button" aria-label="切换深浅色"></button>
 <div id="bar"></div>
 <div id="side">
 <nav id="rail" aria-label="节次">
@@ -527,6 +543,19 @@ footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
 </div></div></footer>
 <dialog id="lb"><button id="lbx" type="button" aria-label="关闭">✕</button><img id="lbi" alt=""><div id="lbc"></div></dialog>
 <script>
+// 深浅色切换：本页深色为本色，浅色是读者的选择；存 localStorage 'il-theme'（与主站共用）
+(function(){
+  var b=document.getElementById('theme-toggle'); if(!b) return;
+  var root=document.documentElement;
+  function label(){ b.textContent = root.getAttribute('data-theme')==='light' ? '🌙 深色' : '☀ 浅色'; }
+  label();
+  b.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme')==='light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    try{ localStorage.setItem('il-theme', next); }catch(e){}
+    label();
+  });
+})();
 // 进度条与导轨高亮。整页只有这一段脚本，无依赖、无外链。
 var bar=document.getElementById('bar'),links=[].slice.call(document.querySelectorAll('#rail a')),
     secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});

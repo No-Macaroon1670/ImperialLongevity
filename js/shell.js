@@ -620,6 +620,16 @@ export function mountApp({ sections, hero }) {
   // 主题切换（节点引用存模块级 themeBtnRef——重建筛选条/设置块时靠它搬回，见 buildControls/buildFilters）
   const tt = document.getElementById('theme-toggle');
   themeBtnRef = tt;
+  // 偏好持久化（2026-09-04，与故事线页共用 localStorage 'il-theme'）：有存值就套上，按钮字随之
+  try {
+    const saved = localStorage.getItem('il-theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+  } catch { /* 隐私模式 */ }
+  {
+    const cur0 = document.documentElement.getAttribute('data-theme');
+    const dark0 = cur0 === 'dark' || (!cur0 && matchMedia('(prefers-color-scheme: dark)').matches);
+    tt.textContent = dark0 ? '☀ 浅色' : '🌙 深色';
+  }
   // 首屏收编：绑定晚于首次建块，此刻主动搬家一次（此后每次重建由建块方接手）
   const home = document.querySelector('.pl-settings .lc-set-body') || document.getElementById('filters-panel');
   if (home) home.appendChild(tt);
@@ -627,6 +637,7 @@ export function mountApp({ sections, hero }) {
     const cur = document.documentElement.getAttribute('data-theme');
     const next = cur === 'dark' ? 'light' : cur === 'light' ? 'dark' : (matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark');
     document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('il-theme', next); } catch { /* 隐私模式 */ }
     tt.textContent = next === 'dark' ? '☀ 浅色' : '🌙 深色';
     render();
   });
