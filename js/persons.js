@@ -321,5 +321,10 @@ export const PERSONS = [
   { id: '陶克陶胡', name: '陶克陶胡' },
   { id: '冯如', name: '冯如' },
   { id: '林觉民', name: '林觉民' },
+  { id: '班固', name: '班固' },
+  { id: '阿罗本', name: '阿罗本' },
+  { id: '韩熙载', name: '韩熙载' },
+  { id: '侯方域', name: '侯方域' },
+  { id: '李香君', name: '李香君' },
   // @persons-end
 ];
