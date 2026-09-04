@@ -7391,7 +7391,7 @@ export const GEO_EVENTS = {
   ]
  },
  "七略": {
-  "y": -5,
+  "y": -4,
   "k": "cul",
   "r": 3,
   "据": "p",
