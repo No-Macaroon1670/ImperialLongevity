@@ -153,9 +153,15 @@ export function mountSearch(sectionEl, hostOf) {
   // 后者在页面隐藏/后台标签页里不一定按时来(本项目已为此栽过一次),
   // 而「够不够得着搜索框」这件事不该受那些影响。
   const headEl = sectionEl.querySelector('.head') || sectionEl;
-  let headGone = false, sectionHere = false;
+  let headGone = false, sectionHere = false, headH = 0;
   const sync = () => {
     const on = headGone && sectionHere;
+    // 钉住时搜索框／骰子／回页首／齿轮全变 fixed、离开文档流，标题栏会矮下去一行，文档随之变短；
+    // 页面若正停在底部（竖向河流切横向泳道后滚动位被裁到底就是这种时候），文档一短，滚动位被
+    // 顶回来，标题栏又露头→解钉→文档变长→再钉……两个位置之间来回跳，就是库主手机实测的
+    // 「一直想跳到那个标位、不停闪烁」（2026-09-03）。未钉时量一次自然高，钉住时占住这个高。
+    if (!on) headH = headEl.offsetHeight;
+    else if (headH) headEl.style.minHeight = `${headH}px`;
     box.classList.toggle('pinned', on);
     dice.classList.toggle('pinned', on);    // 钉住态：窄屏进顶部黑条，宽屏浮在搜索左侧（2026-08-22 扩桌面）
     totop.classList.toggle('pinned', on);
