@@ -52,6 +52,9 @@ export const SECTIONS = [
       ]),
     ],
     render: (host, l, o) => {
+      // 切视图留住位置：两图各自在 render 开头把旧图视口中央的年份记进 host.__anchorYear
+      // （views-river.js／views-lanes.js 开头几行），新图画完按同一年落位——河流竖着滚到那一年，
+      // 泳道横着滚到那一年并把本节带回视口（views-lanes.js 落位块）。此处不另做一遍。
       // 切换视图时先撤掉河流留在 body 上的固定卡片，否则它会挂在泳道图上
       if (host.__riverCleanup) { host.__riverCleanup(); host.__riverCleanup = null; }
       const river = o.panoramaMode === 'river';

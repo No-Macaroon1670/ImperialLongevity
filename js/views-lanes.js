@@ -1320,6 +1320,14 @@ export function renderLaneTimeline(host, list, opts) {
     const lim = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
     scroller.scrollLeft = Math.max(0, Math.min(lim, x(yr) - scroller.clientWidth / 2));
     host.__yearOfScroll = () => x.invert(scroller.scrollLeft + scroller.clientWidth / 2);
+    // 横向只管了年份，竖向还得把本节带回视口：从河流深处切过来时页滚停在几十屏之外，
+    // 新文档只剩三屏，被浏览器裁到页底，正撞上钉住黑条那一族的翻转——页面在两个滚动位之间
+    // 抖（库主 2026-09-03 手机实测）。只在本节不在视口里时动页滚，平常改个开关重绘不跳
+    const sec = host.closest('section.card');
+    if (sec) {
+      const r = sec.getBoundingClientRect();
+      if (r.bottom < innerHeight * 0.5 || r.top > innerHeight * 0.5) sec.scrollIntoView({ block: 'start', behavior: 'instant' });
+    }
   }
 
   // 图例：只列出当前视口内可见的朝代。色值本身固定不变，

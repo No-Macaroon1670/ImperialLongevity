@@ -289,19 +289,7 @@ function buildControls(sec) {
         boxSeg.appendChild(h('button', {
           type: 'button', class: `seg${on ? ' on' : ''}`, role: 'radio', 'aria-checked': String(on),
           text: lab,
-          onclick: () => {
-            const sec = boxSeg.closest('section');
-            S[c.key] = /^-?\d+$/.test(String(v)) ? +v : v; render();
-            // 竖向河流↔横向泳道两图高度差几十屏：从河流深处切到泳道，滚动位落在新文档之外、
-            // 被浏览器裁到页底，正撞上钉住黑条那一族的翻转（库主 2026-09-03 手机实测「一直想跳到
-            // 那个标位、不停闪烁」）。切完把本节顶到视口顶（让出置顶筛选条），从头看新图
-            if (c.key === 'panoramaMode' && sec && matchMedia('(max-width: 720px)').matches) {
-              requestAnimationFrame(() => {
-                const fh = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--filters-h')) || 45;
-                scrollTo({ top: Math.max(0, sec.getBoundingClientRect().top + scrollY - fh), behavior: 'instant' });
-              });
-            }
-          },
+          onclick: () => { S[c.key] = /^-?\d+$/.test(String(v)) ? +v : v; render(); },
         }));
       }
       wrap.appendChild(h('label', { class: 'seg-label' }, [h('span', { text: c.label }), boxSeg]));
