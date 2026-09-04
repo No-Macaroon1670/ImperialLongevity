@@ -903,5 +903,6 @@ export const PERSONS = [
   { id: '許景澄', name: '許景澄' },
   { id: '袁昶', name: '袁昶' },
   { id: '奕劻', name: '奕劻' },
+  { id: '黄庆 (明)', name: '黄庆', nowiki: true },   // 明嘉靖间市舶指挥，zh 维基无条目（同名三义项皆非其人）
   // @persons-end
 ];
