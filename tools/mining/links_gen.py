@@ -17,6 +17,7 @@
 import collections, io, json, os, re, subprocess, sys
 
 ROOT = r"C:/Users/ziyi_/Claude/imperial-longevity"
+HERE = os.path.dirname(os.path.abspath(__file__))
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 ROLE_VERB = {"生": "生于", "显": "显于", "卒": "卒于", "葬": "葬于", "贬": "贬至", "行": "行至", "造": "造于",
              "立": "立于", "发": "出土于", "现": "现藏于", "址": "址在", "战": "战于", "起": "起于", "都": "都于",
@@ -56,26 +57,85 @@ def main():
         seen.add((src, verb, dst))
         rows.append("  l('%s', '%s', '%s', '%s', %d, '%s');" % (esc(src), esc(verb), esc(dst), esc(cite), lv, esc(note)))
 
-    # ── 血亲／承继 ──
+    # ── 承继：每对前后任一行，不贴血缘标签（库主 09-04 澄清：查前后任只是省事，不是要硬加「无血缘」）──
     kin = json.load(io.open(os.path.join(ROOT, "data/kinship.json"), encoding="utf-8"))["pairs"]
-    nk = nh = 0
+    nh = 0
     for p in kin:
         a, b = "r:%s@%s" % (p["pred_n"], p["d"]), "r:%s@%s" % (p["succ_n"], p["d"])
-        human = str(p.get("src", "")).startswith("人核")
-        lv = (int(p.get("cf") or 2) if human else 2)
-        cite = ("人核：" + p.get("src", "")[3:])[:80] if human else "Wikidata %s／%s（P22/P25 溯三代）" % (p.get("pred_qid"), p.get("succ_qid"))
-        rel = p["rel"]
-        base = rel.split("（")[0]
-        note = p.get("why", "")
-        l(a, "前任", b, cite, 1 if human or p.get("pred_qid") else 3, ("%s；" % rel) + note if rel != "未定" else "血亲未定；" + note)
+        l(a, "前任", b, "库内君主表同政权前后任", 1, "")
         nh += 1
+    # ── 血亲：按 Wikidata 父母字段直接出边，与谁接谁的位无关 ──
+    # 父／母：继任者实体的 P22/P25 指向谁就出一条「谁 父 我」；对方是君主写 r:，不是君主但 zh 维基有条目则登记
+    # 进 persons.js 写 p:（奕譞→载湉一类），都没有则不出。兄弟：同父的君主两两一行（按即位年序）。
+    # 祖孙、叔侄、从兄弟不另出——图上两跳三跳自己走得到。人核补层（十六国／大理等 Wikidata 无 P22 者）
+    # 没有父实体可指，仍按前后任对出一条带类型的边，cite 记「人核」。
+    cache = json.load(io.open(os.path.join(HERE, "kinship-cache.json"), encoding="utf-8"))["ent"]
+    q2r = {}
+    for p in kin:
+        if p.get("pred_qid"):
+            q2r[p["pred_qid"]] = (p["pred_n"], p["d"])
+        if p.get("succ_qid"):
+            q2r[p["succ_qid"]] = (p["succ_n"], p["d"])
+    rs_all = rulers()
+    acc = {(r["n"], r["d"]): (year(r.get("a")) or 0) for r in rs_all}
+    def ids(v):
+        return [x["id"] if isinstance(x, dict) else x for x in v]
+    def adopt(v):
+        return [x for x in v if isinstance(x, dict) and x.get("q")]
+    persons_needed = {}
+    def node_of(q):
+        if q in q2r:
+            return "r:%s@%s" % q2r[q]
+        e = cache.get(q) or {}
+        zh = e.get("zh")
+        if zh and "Q5" in (e.get("P31") or []):
+            persons_needed[zh] = None
+            return "p:" + zh
+        return None
+    nf = nm = nb = 0
+    fathers = collections.defaultdict(list)
+    for q, (n, d) in q2r.items():
+        e = cache.get(q) or {}
+        me = "r:%s@%s" % (n, d)
+        for f in ids(e.get("P22", [])):
+            t = node_of(f)
+            if t:
+                l(t, "父", me, "Wikidata %s P22 → %s" % (q, f), 2, "P22 带养／继限定" if adopt(e.get("P22", [])) else "")
+                nf += 1
+            fathers[f].append(q)
+        for m in ids(e.get("P25", [])):
+            t = node_of(m)
+            if t:
+                l(t, "母", me, "Wikidata %s P25 → %s" % (q, m), 2, "")
+                nm += 1
+    for f, sibs in fathers.items():
+        sibs = sorted(set(s for s in sibs if s in q2r), key=lambda s: acc.get(q2r[s], 0))
+        for i in range(len(sibs)):
+            for j in range(i + 1, len(sibs)):
+                l("r:%s@%s" % q2r[sibs[i]], "兄弟", "r:%s@%s" % q2r[sibs[j]], "Wikidata 同父 %s" % f, 2, "")
+                nb += 1
+    nk = 0
+    for p in kin:
+        if not str(p.get("src", "")).startswith("人核"):
+            continue
+        a, b = "r:%s@%s" % (p["pred_n"], p["d"]), "r:%s@%s" % (p["succ_n"], p["d"])
+        rel = p["rel"]; base = rel.split("（")[0]
         if base in KIN_VERB:
-            verb = KIN_VERB[base]
-            rev = "逆向" in rel
-            src, dst = (b, a) if rev else (a, b)
-            l(src, verb, dst, cite, lv, note)
+            src, dst = (b, a) if "逆向" in rel else (a, b)
+            l(src, KIN_VERB[base], dst, ("人核：" + p.get("src", "")[3:])[:80], int(p.get("cf") or 2), p.get("why", ""))
             nk += 1
-    print("血亲 %d、承继 %d" % (nk, nh))
+    # 非君主的父母登记进 persons.js（与 links_merge 同一处、同一格式）
+    PERSONS = os.path.join(ROOT, "js", "persons.js")
+    if persons_needed and os.path.exists(PERSONS):
+        ps = io.open(PERSONS, encoding="utf-8").read()
+        known = set(x.replace("\\'", "'") for x in re.findall(r"id: '((?:[^'\\]|\\.)*)'", ps))
+        add = [k for k in persons_needed if k not in known]
+        if add:
+            lines = "".join("  { id: '%s', name: '%s' },\n" % (esc(k), esc(re.sub(r"\s*[（(][^（）()]*[）)]$", "", k))) for k in add)
+            ps = ps.replace("  // @persons-end", lines + "  // @persons-end")
+            io.open(PERSONS, "w", encoding="utf-8", newline="\n").write(ps)
+        print("人物表 +%d（君主的非君主父母）" % len(add))
+    print("承继 %d、父 %d、母 %d、兄弟 %d、人核血亲 %d" % (nh, nf, nm, nb, nk))
 
     # ── 事对地 ──
     ev_src = io.open(os.path.join(ROOT, "js/events.js"), encoding="utf-8").read()
