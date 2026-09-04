@@ -21,6 +21,7 @@ P40（子）P3373（兄弟姊妹）对帝王覆盖极好（探针：西汉四帝
     python tools/mining/kinship.py            # 抓取（带缓存）＋出报告
     python tools/mining/kinship.py --offline  # 只用缓存重出报告
 读：js/data-[1-9]*.js（经 node 读 ESM，避免手写解析器）
+读（可选）：data/kinship-fill.json——考据员补核的未定对（卷 docs/desk/kinship-fill-<日期>.md），叠在机读结果之上
 写：tools/mining/kinship-cache.json（Wikidata 实体缓存）、data/kinship.json（成对关系）、
     docs/desk/kinship-<日期>.md（报告）
 """
@@ -327,13 +328,26 @@ def main():
                     row.update(rel="未定", why="祖先链不全（Wikidata 缺 P22）", src="wikidata")
             pairs.append(row)
 
+    # ── 三之二、人核层叠上：data/kinship-fill.json（考据员补核未定对，含 src 引文与 cf）──
+    # 机读判「未定」的对，若人核层有同名对就以人核为准；人核层不覆盖机读已判的对。
+    FILL = os.path.join(ROOT, "data", "kinship-fill.json")
+    if os.path.exists(FILL):
+        fill = {(f["d"], f["pred"], f["succ"]): f for f in json.load(io.open(FILL, encoding="utf-8"))}
+        n = 0
+        for row in pairs:
+            f = fill.get((row["d"], row["pred"], row["succ"]))
+            if f and row["rel"] == "未定":
+                row.update(rel=f["rel"], why=f["why"], src="人核·" + f.get("src", ""), cf=f.get("cf"), gen=f.get("gen"))
+                n += 1
+        print("人核层叠上 %d 对" % n, file=sys.stderr)
+
     json.dump({"generated": time.strftime("%Y-%m-%d"), "depth": DEPTH, "pairs": pairs},
               io.open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
     # ── 四、报告 ──
     cnt = collections.Counter(p["rel"] for p in pairs)
     hit = sum(1 for i in range(len(rulers)) if i in qid_of)
-    L = ["# 帝制君主血亲承继（Wikidata 机读，%s）" % time.strftime("%Y-%m-%d"), "",
+    L = ["# 帝制君主血亲承继（Wikidata 机读＋人核补层，%s）" % time.strftime("%Y-%m-%d"), "",
          "本库帝制君主 %d 位（js/data-1～9），Wikidata 认领 %d 位（%.0f%%）；本朝前后任成对 %d 对。"
          % (len(rulers), hit, hit * 100 / len(rulers), len(pairs)),
          "判法见脚本头注：先溯三代祖先，再按两人到最近公共祖先的代数定名。父子只看继任的 P22/P25，不看 P40。", "",
@@ -350,7 +364,8 @@ def main():
         L.append("| 前任 | 继任 | 关系 | 依据 |")
         L.append("|---|---|---|---|")
         for p in rows:
-            L.append("| %s | %s | %s%s | %s |" % (p["pred"], p["succ"], p["rel"], "（P22 带养/继限定）" if p.get("adopt") else "", p["why"]))
+            tag = "（P22 带养/继限定）" if p.get("adopt") else ("〔人核 cf%s〕" % p.get("cf") if str(p.get("src", "")).startswith("人核") else "")
+            L.append("| %s | %s | %s%s | %s |" % (p["pred"], p["succ"], p["rel"], tag, p["why"]))
         L.append("")
     und = [p for p in pairs if p["rel"] == "未定"]
     L += ["## 未定（候人核，%d 对）" % len(und), "", "| 政权 | 前任 | 继任 | 缘由 |", "|---|---|---|---|"]
