@@ -1,0 +1,5196 @@
+{
+ "generated": "2026-09-04",
+ "depth": 3,
+ "pairs": [
+  {
+   "d": "qin",
+   "pred": "秦始皇",
+   "succ": "秦二世",
+   "pred_n": "嬴政",
+   "succ_n": "胡亥",
+   "pred_qid": "Q7192",
+   "succ_qid": "Q7196",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7192（秦始皇）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qin",
+   "pred": "秦二世",
+   "succ": "秦王子婴",
+   "pred_n": "胡亥",
+   "succ_n": "子婴",
+   "pred_qid": "Q7196",
+   "succ_qid": "Q7203",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q7192（秦始皇）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "汉高祖",
+   "succ": "汉惠帝",
+   "pred_n": "刘邦",
+   "succ_n": "刘盈",
+   "pred_qid": "Q7210",
+   "succ_qid": "Q7214",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7210（刘邦）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "汉惠帝",
+   "succ": "前少帝",
+   "pred_n": "刘盈",
+   "succ_n": "刘恭",
+   "pred_qid": "Q7214",
+   "succ_qid": "Q7217",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7214（漢惠帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "前少帝",
+   "succ": "后少帝",
+   "pred_n": "刘恭",
+   "succ_n": "刘弘",
+   "pred_qid": "Q7217",
+   "succ_qid": "Q7220",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q712301（孝惠張皇后）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "后少帝",
+   "succ": "汉文帝",
+   "pred_n": "刘弘",
+   "succ_n": "刘恒",
+   "pred_qid": "Q7220",
+   "succ_qid": "Q7221",
+   "rel": "叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q7210（刘邦）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "汉文帝",
+   "succ": "汉景帝",
+   "pred_n": "刘恒",
+   "succ_n": "刘启",
+   "pred_qid": "Q7221",
+   "succ_qid": "Q7224",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7221（漢文帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "汉景帝",
+   "succ": "汉武帝",
+   "pred_n": "刘启",
+   "succ_n": "刘彻",
+   "pred_qid": "Q7224",
+   "succ_qid": "Q7225",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7224（汉景帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "汉武帝",
+   "succ": "汉昭帝",
+   "pred_n": "刘彻",
+   "succ_n": "刘弗陵",
+   "pred_qid": "Q7225",
+   "succ_qid": "Q7227",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7225（漢武帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "汉昭帝",
+   "succ": "昌邑王",
+   "pred_n": "刘弗陵",
+   "succ_n": "刘贺",
+   "pred_qid": "Q7227",
+   "succ_qid": "Q7228",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q7225（漢武帝）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "昌邑王",
+   "succ": "汉宣帝",
+   "pred_n": "刘贺",
+   "succ_n": "刘询",
+   "pred_qid": "Q7228",
+   "succ_qid": "Q7230",
+   "rel": "从叔侄",
+   "why": "最近公共祖先 Q7225（漢武帝）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    3
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "汉宣帝",
+   "succ": "汉元帝",
+   "pred_n": "刘询",
+   "succ_n": "刘奭",
+   "pred_qid": "Q7230",
+   "succ_qid": "Q7232",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7230（漢宣帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "汉元帝",
+   "succ": "汉成帝",
+   "pred_n": "刘奭",
+   "succ_n": "刘骜",
+   "pred_qid": "Q7232",
+   "succ_qid": "Q7234",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7232（漢元帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "汉成帝",
+   "succ": "汉哀帝",
+   "pred_n": "刘骜",
+   "succ_n": "刘欣",
+   "pred_qid": "Q7234",
+   "succ_qid": "Q7237",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q7232（漢元帝）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "汉哀帝",
+   "succ": "汉平帝",
+   "pred_n": "刘欣",
+   "succ_n": "刘衎",
+   "pred_qid": "Q7237",
+   "succ_qid": "Q7244",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q7232（漢元帝）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xhan",
+   "pred": "汉平帝",
+   "succ": "孺子婴",
+   "pred_n": "刘衎",
+   "succ_n": "刘婴",
+   "pred_qid": "Q7244",
+   "succ_qid": "Q7247",
+   "rel": "三代内无血缘",
+   "why": "两边父系三代俱全而无公共祖先",
+   "src": "wikidata"
+  },
+  {
+   "d": "ehan",
+   "pred": "汉光武帝",
+   "succ": "汉明帝",
+   "pred_n": "刘秀",
+   "succ_n": "刘庄",
+   "pred_qid": "Q7268",
+   "succ_qid": "Q7271",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7268（汉光武帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ehan",
+   "pred": "汉明帝",
+   "succ": "汉章帝",
+   "pred_n": "刘庄",
+   "succ_n": "刘炟",
+   "pred_qid": "Q7271",
+   "succ_qid": "Q7277",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7271（漢明帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ehan",
+   "pred": "汉章帝",
+   "succ": "汉和帝",
+   "pred_n": "刘炟",
+   "succ_n": "刘肇",
+   "pred_qid": "Q7277",
+   "succ_qid": "Q7280",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7277（漢章帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ehan",
+   "pred": "汉和帝",
+   "succ": "汉殇帝",
+   "pred_n": "刘肇",
+   "succ_n": "刘隆",
+   "pred_qid": "Q7280",
+   "succ_qid": "Q7282",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7280（漢和帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ehan",
+   "pred": "汉殇帝",
+   "succ": "汉安帝",
+   "pred_n": "刘隆",
+   "succ_n": "刘祜",
+   "pred_qid": "Q7282",
+   "succ_qid": "Q7285",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q7277（漢章帝）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ehan",
+   "pred": "汉安帝",
+   "succ": "汉少帝（北乡侯）",
+   "pred_n": "刘祜",
+   "succ_n": "刘懿",
+   "pred_qid": "Q7285",
+   "succ_qid": "Q7288",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q7277（漢章帝）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ehan",
+   "pred": "汉少帝（北乡侯）",
+   "succ": "汉顺帝",
+   "pred_n": "刘懿",
+   "succ_n": "刘保",
+   "pred_qid": "Q7288",
+   "succ_qid": "Q7289",
+   "rel": "从叔侄",
+   "why": "最近公共祖先 Q7277（漢章帝）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    3
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ehan",
+   "pred": "汉顺帝",
+   "succ": "汉冲帝",
+   "pred_n": "刘保",
+   "succ_n": "刘炳",
+   "pred_qid": "Q7289",
+   "succ_qid": "Q7292",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7289（漢順帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ehan",
+   "pred": "汉冲帝",
+   "succ": "汉质帝",
+   "pred_n": "刘炳",
+   "succ_n": "刘缵",
+   "pred_qid": "Q7292",
+   "succ_qid": "Q7293",
+   "rel": "三代内无血缘",
+   "why": "两边父系三代俱全而无公共祖先",
+   "src": "wikidata"
+  },
+  {
+   "d": "ehan",
+   "pred": "汉质帝",
+   "succ": "汉桓帝",
+   "pred_n": "刘缵",
+   "succ_n": "刘志",
+   "pred_qid": "Q7293",
+   "succ_qid": "Q7297",
+   "rel": "三代内无血缘",
+   "why": "两边父系三代俱全而无公共祖先",
+   "src": "wikidata"
+  },
+  {
+   "d": "ehan",
+   "pred": "汉桓帝",
+   "succ": "汉灵帝",
+   "pred_n": "刘志",
+   "succ_n": "刘宏",
+   "pred_qid": "Q7297",
+   "succ_qid": "Q7299",
+   "rel": "从叔侄",
+   "why": "最近公共祖先 Q6852951（刘开）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    3
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ehan",
+   "pred": "汉灵帝",
+   "succ": "汉少帝（弘农王）",
+   "pred_n": "刘宏",
+   "succ_n": "刘辩",
+   "pred_qid": "Q7299",
+   "succ_qid": "Q7301",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7299（漢靈帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ehan",
+   "pred": "汉少帝（弘农王）",
+   "succ": "汉献帝",
+   "pred_n": "刘辩",
+   "succ_n": "刘协",
+   "pred_qid": "Q7301",
+   "succ_qid": "Q7316",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q7299（漢靈帝）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanyue",
+   "pred": "南越武帝",
+   "succ": "南越文帝",
+   "pred_n": "赵佗",
+   "succ_n": "赵眜",
+   "pred_qid": "Q701895",
+   "succ_qid": "Q888526",
+   "rel": "祖孙",
+   "why": "最近公共祖先 Q701895（赵佗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanyue",
+   "pred": "南越文帝",
+   "succ": "南越明王",
+   "pred_n": "赵眜",
+   "succ_n": "赵婴齐",
+   "pred_qid": "Q888526",
+   "succ_qid": "Q839134",
+   "rel": "父子",
+   "why": "最近公共祖先 Q888526（赵眜）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanyue",
+   "pred": "南越明王",
+   "succ": "南越哀王",
+   "pred_n": "赵婴齐",
+   "succ_n": "赵兴",
+   "pred_qid": "Q839134",
+   "succ_qid": "Q839161",
+   "rel": "父子",
+   "why": "最近公共祖先 Q839134（赵婴齐）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanyue",
+   "pred": "南越哀王",
+   "succ": "南越术阳王",
+   "pred_n": "赵兴",
+   "succ_n": "赵建德",
+   "pred_qid": "Q839161",
+   "succ_qid": "Q839130",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q839134（赵婴齐）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wei",
+   "pred": "魏文帝",
+   "succ": "魏明帝",
+   "pred_n": "曹丕",
+   "succ_n": "曹叡",
+   "pred_qid": "Q313333",
+   "succ_qid": "Q378470",
+   "rel": "父子",
+   "why": "最近公共祖先 Q313333（曹丕）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wei",
+   "pred": "魏明帝",
+   "succ": "齐王",
+   "pred_n": "曹叡",
+   "succ_n": "曹芳",
+   "pred_qid": "Q378470",
+   "succ_qid": "Q77822",
+   "rel": "父子",
+   "why": "最近公共祖先 Q378470（曹叡）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": true
+  },
+  {
+   "d": "wei",
+   "pred": "齐王",
+   "succ": "高贵乡公",
+   "pred_n": "曹芳",
+   "succ_n": "曹髦",
+   "pred_qid": "Q77822",
+   "succ_qid": "Q550290",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q313333（曹丕）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wei",
+   "pred": "高贵乡公",
+   "succ": "魏元帝",
+   "pred_n": "曹髦",
+   "succ_n": "曹奂",
+   "pred_qid": "Q550290",
+   "succ_qid": "Q470091",
+   "rel": "从叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q204077（曹操）",
+   "src": "wikidata",
+   "gen": [
+    3,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "shu",
+   "pred": "汉昭烈帝",
+   "succ": "蜀汉后主",
+   "pred_n": "刘备",
+   "succ_n": "刘禅",
+   "pred_qid": "Q245315",
+   "succ_qid": "Q468780",
+   "rel": "父子",
+   "why": "最近公共祖先 Q245315（劉備）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wu",
+   "pred": "吴大帝",
+   "succ": "吴废帝（会稽王）",
+   "pred_n": "孙权",
+   "succ_n": "孙亮",
+   "pred_qid": "Q313327",
+   "succ_qid": "Q470034",
+   "rel": "父子",
+   "why": "最近公共祖先 Q313327（孙权）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wu",
+   "pred": "吴废帝（会稽王）",
+   "succ": "吴景帝",
+   "pred_n": "孙亮",
+   "succ_n": "孙休",
+   "pred_qid": "Q470034",
+   "succ_qid": "Q468767",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q313327（孙权）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wu",
+   "pred": "吴景帝",
+   "succ": "吴末帝",
+   "pred_n": "孙休",
+   "succ_n": "孙皓",
+   "pred_qid": "Q468767",
+   "succ_qid": "Q470030",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q313327（孙权）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xjin",
+   "pred": "晋武帝",
+   "succ": "晋惠帝",
+   "pred_n": "司马炎",
+   "succ_n": "司马衷",
+   "pred_qid": "Q7356",
+   "succ_qid": "Q7357",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7356（司馬炎）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xjin",
+   "pred": "晋惠帝",
+   "succ": "晋怀帝",
+   "pred_n": "司马衷",
+   "succ_n": "司马炽",
+   "pred_qid": "Q7357",
+   "succ_qid": "Q7361",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q7356（司馬炎）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xjin",
+   "pred": "晋怀帝",
+   "succ": "晋愍帝",
+   "pred_n": "司马炽",
+   "succ_n": "司马邺",
+   "pred_qid": "Q7361",
+   "succ_qid": "Q7382",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q7356（司馬炎）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ejin",
+   "pred": "晋元帝",
+   "succ": "晋明帝",
+   "pred_n": "司马睿",
+   "succ_n": "司马绍",
+   "pred_qid": "Q7392",
+   "succ_qid": "Q7393",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7392（晉元帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ejin",
+   "pred": "晋明帝",
+   "succ": "晋成帝",
+   "pred_n": "司马绍",
+   "succ_n": "司马衍",
+   "pred_qid": "Q7393",
+   "succ_qid": "Q7394",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7393（晉明帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ejin",
+   "pred": "晋成帝",
+   "succ": "晋康帝",
+   "pred_n": "司马衍",
+   "succ_n": "司马岳",
+   "pred_qid": "Q7394",
+   "succ_qid": "Q7395",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q2193648（庾文君）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ejin",
+   "pred": "晋康帝",
+   "succ": "晋穆帝",
+   "pred_n": "司马岳",
+   "succ_n": "司马聃",
+   "pred_qid": "Q7395",
+   "succ_qid": "Q7396",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7395（晉康帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ejin",
+   "pred": "晋穆帝",
+   "succ": "晋哀帝",
+   "pred_n": "司马聃",
+   "succ_n": "司马丕",
+   "pred_qid": "Q7396",
+   "succ_qid": "Q7398",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q2193648（庾文君）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ejin",
+   "pred": "晋哀帝",
+   "succ": "晋废帝（海西公）",
+   "pred_n": "司马丕",
+   "succ_n": "司马奕",
+   "pred_qid": "Q7398",
+   "succ_qid": "Q7399",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q706811（周貴人）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ejin",
+   "pred": "晋废帝（海西公）",
+   "succ": "晋简文帝",
+   "pred_n": "司马奕",
+   "succ_n": "司马昱",
+   "pred_qid": "Q7399",
+   "succ_qid": "Q7400",
+   "rel": "叔祖侄孙（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q7392（晉元帝）",
+   "src": "wikidata",
+   "gen": [
+    3,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ejin",
+   "pred": "晋简文帝",
+   "succ": "晋孝武帝",
+   "pred_n": "司马昱",
+   "succ_n": "司马曜",
+   "pred_qid": "Q7400",
+   "succ_qid": "Q7402",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7400（晉簡文帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ejin",
+   "pred": "晋孝武帝",
+   "succ": "晋安帝",
+   "pred_n": "司马曜",
+   "succ_n": "司马德宗",
+   "pred_qid": "Q7402",
+   "succ_qid": "Q7403",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7402（晋孝武帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ejin",
+   "pred": "晋安帝",
+   "succ": "晋恭帝",
+   "pred_n": "司马德宗",
+   "succ_n": "司马德文",
+   "pred_qid": "Q7403",
+   "succ_qid": "Q7404",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1054232（陳歸女）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "chenghan",
+   "pred": "成武帝",
+   "succ": "成哀帝",
+   "pred_n": "李雄",
+   "succ_n": "李班",
+   "pred_qid": "Q712330",
+   "succ_qid": null,
+   "rel": "未定",
+   "why": "未命中 Wikidata：继任",
+   "src": "缺"
+  },
+  {
+   "d": "chenghan",
+   "pred": "成哀帝",
+   "succ": "成幽公",
+   "pred_n": "李班",
+   "succ_n": "李期",
+   "pred_qid": null,
+   "succ_qid": "Q712327",
+   "rel": "未定",
+   "why": "未命中 Wikidata：前任",
+   "src": "缺"
+  },
+  {
+   "d": "chenghan",
+   "pred": "成幽公",
+   "succ": "汉昭文帝",
+   "pred_n": "李期",
+   "succ_n": "李寿",
+   "pred_qid": "Q712327",
+   "succ_qid": "Q712558",
+   "rel": "从叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q11096564（李慕）",
+   "src": "wikidata",
+   "gen": [
+    3,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "chenghan",
+   "pred": "汉昭文帝",
+   "succ": "汉归义侯",
+   "pred_n": "李寿",
+   "succ_n": "李势",
+   "pred_qid": "Q712558",
+   "succ_qid": "Q712772",
+   "rel": "父子",
+   "why": "最近公共祖先 Q712558（李寿）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "hanzhao",
+   "pred": "汉光文帝",
+   "succ": "汉废帝",
+   "pred_n": "刘渊",
+   "succ_n": "刘和",
+   "pred_qid": "Q714159",
+   "succ_qid": null,
+   "rel": "未定",
+   "why": "未命中 Wikidata：继任",
+   "src": "缺"
+  },
+  {
+   "d": "hanzhao",
+   "pred": "汉废帝",
+   "succ": "汉昭武帝",
+   "pred_n": "刘和",
+   "succ_n": "刘聪",
+   "pred_qid": null,
+   "succ_qid": "Q714176",
+   "rel": "未定",
+   "why": "未命中 Wikidata：前任",
+   "src": "缺"
+  },
+  {
+   "d": "hanzhao",
+   "pred": "汉昭武帝",
+   "succ": "汉隐帝",
+   "pred_n": "刘聪",
+   "succ_n": "刘粲",
+   "pred_qid": "Q714176",
+   "succ_qid": "Q1152735",
+   "rel": "父子",
+   "why": "最近公共祖先 Q714176（刘聪）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "hanzhao",
+   "pred": "汉隐帝",
+   "succ": "前赵末帝",
+   "pred_n": "刘粲",
+   "succ_n": "刘曜",
+   "pred_qid": "Q1152735",
+   "succ_qid": "Q1149197",
+   "rel": "三代内无血缘",
+   "why": "两边父系三代俱全而无公共祖先",
+   "src": "wikidata"
+  },
+  {
+   "d": "houzhao",
+   "pred": "后赵明帝",
+   "succ": "后赵海阳王",
+   "pred_n": "石勒",
+   "succ_n": "石弘",
+   "pred_qid": "Q1196190",
+   "succ_qid": "Q1199590",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1196190（石勒）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "houzhao",
+   "pred": "后赵海阳王",
+   "succ": "后赵武帝",
+   "pred_n": "石弘",
+   "succ_n": "石虎",
+   "pred_qid": "Q1199590",
+   "succ_qid": "Q1149441",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "houzhao",
+   "pred": "后赵武帝",
+   "succ": "后赵谯王",
+   "pred_n": "石虎",
+   "succ_n": "石世",
+   "pred_qid": "Q1149441",
+   "succ_qid": "Q1152762",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1149441（石虎）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "houzhao",
+   "pred": "后赵谯王",
+   "succ": "后赵彭城王",
+   "pred_n": "石世",
+   "succ_n": "石遵",
+   "pred_qid": "Q1152762",
+   "succ_qid": "Q1152755",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1149441（石虎）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "houzhao",
+   "pred": "后赵彭城王",
+   "succ": "后赵义阳王",
+   "pred_n": "石遵",
+   "succ_n": "石鉴",
+   "pred_qid": "Q1152755",
+   "succ_qid": "Q283828",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1149441（石虎）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "houzhao",
+   "pred": "后赵义阳王",
+   "succ": "后赵新兴王",
+   "pred_n": "石鉴",
+   "succ_n": "石祗",
+   "pred_qid": "Q283828",
+   "succ_qid": "Q1199583",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1149441（石虎）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qianyan",
+   "pred": "前燕文明王",
+   "succ": "前燕景昭帝",
+   "pred_n": "慕容皝",
+   "succ_n": "慕容儁",
+   "pred_qid": "Q1069778",
+   "succ_qid": "Q1071329",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1069778（慕容皝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qianyan",
+   "pred": "前燕景昭帝",
+   "succ": "前燕幽帝",
+   "pred_n": "慕容儁",
+   "succ_n": "慕容暐",
+   "pred_qid": "Q1071329",
+   "succ_qid": "Q1074804",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1071329（慕容儁）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qianqin",
+   "pred": "前秦景明帝",
+   "succ": "前秦厉王",
+   "pred_n": "苻健",
+   "succ_n": "苻生",
+   "pred_qid": "Q1071647",
+   "succ_qid": "Q1151680",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1071647（苻健）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qianqin",
+   "pred": "前秦厉王",
+   "succ": "前秦宣昭帝",
+   "pred_n": "苻生",
+   "succ_n": "苻坚",
+   "pred_qid": "Q1151680",
+   "succ_qid": "Q967998",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q912248（苻洪）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qianqin",
+   "pred": "前秦宣昭帝",
+   "succ": "前秦哀平帝",
+   "pred_n": "苻坚",
+   "succ_n": "苻丕",
+   "pred_qid": "Q967998",
+   "succ_qid": "Q1153333",
+   "rel": "父子",
+   "why": "最近公共祖先 Q967998（苻坚）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qianqin",
+   "pred": "前秦哀平帝",
+   "succ": "前秦高帝",
+   "pred_n": "苻丕",
+   "succ_n": "苻登",
+   "pred_qid": "Q1153333",
+   "succ_qid": "Q1076719",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "qianqin",
+   "pred": "前秦高帝",
+   "succ": "前秦后主",
+   "pred_n": "苻登",
+   "succ_n": "苻崇",
+   "pred_qid": "Q1076719",
+   "succ_qid": "Q1076723",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1076719（苻登）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "houqin",
+   "pred": "后秦武昭帝",
+   "succ": "后秦文桓帝",
+   "pred_n": "姚苌",
+   "succ_n": "姚兴",
+   "pred_qid": "Q1147266",
+   "succ_qid": "Q1149160",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1147266（姚苌）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "houqin",
+   "pred": "后秦文桓帝",
+   "succ": "后秦末主",
+   "pred_n": "姚兴",
+   "succ_n": "姚泓",
+   "pred_qid": "Q1149160",
+   "succ_qid": "Q1074768",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1149160（姚兴）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "houyan",
+   "pred": "后燕成武帝",
+   "succ": "后燕惠愍帝",
+   "pred_n": "慕容垂",
+   "succ_n": "慕容宝",
+   "pred_qid": "Q1069768",
+   "succ_qid": "Q1076801",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1069768（慕容垂）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "houyan",
+   "pred": "后燕惠愍帝",
+   "succ": "后燕昭武帝",
+   "pred_n": "慕容宝",
+   "succ_n": "慕容盛",
+   "pred_qid": "Q1076801",
+   "succ_qid": "Q1078573",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1076801（慕容宝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "houyan",
+   "pred": "后燕昭武帝",
+   "succ": "后燕昭文帝",
+   "pred_n": "慕容盛",
+   "succ_n": "慕容熙",
+   "pred_qid": "Q1078573",
+   "succ_qid": "Q1071544",
+   "rel": "叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q1069768（慕容垂）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "beiyan",
+   "pred": "北燕惠懿帝",
+   "succ": "北燕文成帝",
+   "pred_n": "高云",
+   "succ_n": "冯跋",
+   "pred_qid": null,
+   "succ_qid": "Q1147737",
+   "rel": "未定",
+   "why": "未命中 Wikidata：前任",
+   "src": "缺"
+  },
+  {
+   "d": "beiyan",
+   "pred": "北燕文成帝",
+   "succ": "北燕昭成帝",
+   "pred_n": "冯跋",
+   "succ_n": "冯弘",
+   "pred_qid": "Q1147737",
+   "succ_qid": "Q1149169",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q10895300（冯安）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanyan",
+   "pred": "南燕献武帝",
+   "succ": "南燕末主",
+   "pred_n": "慕容德",
+   "succ_n": "慕容超",
+   "pred_qid": "Q1069310",
+   "succ_qid": "Q1131653",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q1069778（慕容皝）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xiyan",
+   "pred": "西燕济北王",
+   "succ": "西燕威帝",
+   "pred_n": "慕容泓",
+   "succ_n": "慕容冲",
+   "pred_qid": "Q1149246",
+   "succ_qid": "Q1074358",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1071329（慕容儁）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xiyan",
+   "pred": "西燕威帝",
+   "succ": "西燕末主",
+   "pred_n": "慕容冲",
+   "succ_n": "慕容永",
+   "pred_qid": "Q1074358",
+   "succ_qid": "Q1078581",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "xia",
+   "pred": "夏武烈帝",
+   "succ": "夏废帝",
+   "pred_n": "赫连勃勃",
+   "succ_n": "赫连昌",
+   "pred_qid": "Q254752",
+   "succ_qid": "Q1149447",
+   "rel": "父子",
+   "why": "最近公共祖先 Q254752（赫连勃勃）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xia",
+   "pred": "夏废帝",
+   "succ": "夏末帝",
+   "pred_n": "赫连昌",
+   "succ_n": "赫连定",
+   "pred_qid": "Q1149447",
+   "succ_qid": null,
+   "rel": "未定",
+   "why": "未命中 Wikidata：继任",
+   "src": "缺"
+  },
+  {
+   "d": "beiliang",
+   "pred": "北凉建康公",
+   "succ": "北凉武宣王",
+   "pred_n": "段业",
+   "succ_n": "沮渠蒙逊",
+   "pred_qid": "Q1131409",
+   "succ_qid": "Q1069797",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "beiliang",
+   "pred": "北凉武宣王",
+   "succ": "北凉哀王",
+   "pred_n": "沮渠蒙逊",
+   "succ_n": "沮渠牧犍",
+   "pred_qid": "Q1069797",
+   "succ_qid": "Q1132566",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1069797（沮渠蒙遜）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "houliang",
+   "pred": "后凉懿武帝",
+   "succ": "后凉隐王",
+   "pred_n": "吕光",
+   "succ_n": "吕绍",
+   "pred_qid": "Q1069762",
+   "succ_qid": "Q1078559",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1069762（呂光）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "houliang",
+   "pred": "后凉隐王",
+   "succ": "后凉灵帝",
+   "pred_n": "吕绍",
+   "succ_n": "吕纂",
+   "pred_qid": "Q1078559",
+   "succ_qid": "Q1131418",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1069762（呂光）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "houliang",
+   "pred": "后凉灵帝",
+   "succ": "后凉末主",
+   "pred_n": "吕纂",
+   "succ_n": "吕隆",
+   "pred_qid": "Q1131418",
+   "succ_qid": "Q1131646",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q9627743（呂婆樓）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qianliang",
+   "pred": "前凉武穆王",
+   "succ": "前凉昭王",
+   "pred_n": "张轨",
+   "succ_n": "张寔",
+   "pred_qid": "Q700840",
+   "succ_qid": "Q708279",
+   "rel": "父子",
+   "why": "最近公共祖先 Q700840（張軌）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qianliang",
+   "pred": "前凉昭王",
+   "succ": "前凉成王",
+   "pred_n": "张寔",
+   "succ_n": "张茂",
+   "pred_qid": "Q708279",
+   "succ_qid": null,
+   "rel": "未定",
+   "why": "未命中 Wikidata：继任",
+   "src": "缺"
+  },
+  {
+   "d": "qianliang",
+   "pred": "前凉成王",
+   "succ": "前凉文王",
+   "pred_n": "张茂",
+   "succ_n": "张骏",
+   "pred_qid": null,
+   "succ_qid": "Q712757",
+   "rel": "未定",
+   "why": "未命中 Wikidata：前任",
+   "src": "缺"
+  },
+  {
+   "d": "qianliang",
+   "pred": "前凉文王",
+   "succ": "前凉桓王",
+   "pred_n": "张骏",
+   "succ_n": "张重华",
+   "pred_qid": "Q712757",
+   "succ_qid": "Q712766",
+   "rel": "父子",
+   "why": "最近公共祖先 Q712757（张骏）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qianliang",
+   "pred": "前凉桓王",
+   "succ": "前凉哀王",
+   "pred_n": "张重华",
+   "succ_n": "张曜灵",
+   "pred_qid": "Q712766",
+   "succ_qid": "Q712760",
+   "rel": "父子",
+   "why": "最近公共祖先 Q712766（张重华）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qianliang",
+   "pred": "前凉哀王",
+   "succ": "前凉威王",
+   "pred_n": "张曜灵",
+   "succ_n": "张祚",
+   "pred_qid": "Q712760",
+   "succ_qid": "Q712568",
+   "rel": "叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q712757（张骏）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qianliang",
+   "pred": "前凉威王",
+   "succ": "前凉冲王",
+   "pred_n": "张祚",
+   "succ_n": "张玄靓",
+   "pred_qid": "Q712568",
+   "succ_qid": "Q712763",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q712757（张骏）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qianliang",
+   "pred": "前凉冲王",
+   "succ": "前凉悼王",
+   "pred_n": "张玄靓",
+   "succ_n": "张天锡",
+   "pred_qid": "Q712763",
+   "succ_qid": null,
+   "rel": "未定",
+   "why": "未命中 Wikidata：继任",
+   "src": "缺"
+  },
+  {
+   "d": "song_l",
+   "pred": "宋武帝",
+   "succ": "宋少帝",
+   "pred_n": "刘裕",
+   "succ_n": "刘义符",
+   "pred_qid": "Q49699",
+   "succ_qid": "Q49701",
+   "rel": "父子",
+   "why": "最近公共祖先 Q49699（劉裕）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "song_l",
+   "pred": "宋少帝",
+   "succ": "宋文帝",
+   "pred_n": "刘义符",
+   "succ_n": "刘义隆",
+   "pred_qid": "Q49701",
+   "succ_qid": "Q49702",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q49699（劉裕）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "song_l",
+   "pred": "宋文帝",
+   "succ": "宋元凶",
+   "pred_n": "刘义隆",
+   "succ_n": "刘劭",
+   "pred_qid": "Q49702",
+   "succ_qid": null,
+   "rel": "未定",
+   "why": "未命中 Wikidata：继任",
+   "src": "缺"
+  },
+  {
+   "d": "song_l",
+   "pred": "宋元凶",
+   "succ": "宋孝武帝",
+   "pred_n": "刘劭",
+   "succ_n": "刘骏",
+   "pred_qid": null,
+   "succ_qid": "Q718246",
+   "rel": "未定",
+   "why": "未命中 Wikidata：前任",
+   "src": "缺"
+  },
+  {
+   "d": "song_l",
+   "pred": "宋孝武帝",
+   "succ": "宋前废帝",
+   "pred_n": "刘骏",
+   "succ_n": "刘子业",
+   "pred_qid": "Q718246",
+   "succ_qid": "Q718258",
+   "rel": "父子",
+   "why": "最近公共祖先 Q718246（劉駿）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "song_l",
+   "pred": "宋前废帝",
+   "succ": "宋明帝",
+   "pred_n": "刘子业",
+   "succ_n": "刘彧",
+   "pred_qid": "Q718258",
+   "succ_qid": "Q718195",
+   "rel": "叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q49702（刘义隆）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "song_l",
+   "pred": "宋明帝",
+   "succ": "宋后废帝",
+   "pred_n": "刘彧",
+   "succ_n": "刘昱",
+   "pred_qid": "Q718195",
+   "succ_qid": "Q717946",
+   "rel": "父子",
+   "why": "最近公共祖先 Q718195（劉彧）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "song_l",
+   "pred": "宋后废帝",
+   "succ": "宋顺帝",
+   "pred_n": "刘昱",
+   "succ_n": "刘准",
+   "pred_qid": "Q717946",
+   "succ_qid": "Q718210",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q718195（劉彧）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanqi",
+   "pred": "齐高帝",
+   "succ": "齐武帝",
+   "pred_n": "萧道成",
+   "succ_n": "萧赜",
+   "pred_qid": "Q1194981",
+   "succ_qid": "Q940037",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1194981（蕭道成）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanqi",
+   "pred": "齐武帝",
+   "succ": "郁林王",
+   "pred_n": "萧赜",
+   "succ_n": "萧昭业",
+   "pred_qid": "Q940037",
+   "succ_qid": "Q1141013",
+   "rel": "祖孙",
+   "why": "最近公共祖先 Q940037（齊武帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanqi",
+   "pred": "郁林王",
+   "succ": "海陵王",
+   "pred_n": "萧昭业",
+   "succ_n": "萧昭文",
+   "pred_qid": "Q1141013",
+   "succ_qid": "Q1190405",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q259628（蕭長懋）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanqi",
+   "pred": "海陵王",
+   "succ": "齐明帝",
+   "pred_n": "萧昭文",
+   "succ_n": "萧鸾",
+   "pred_qid": "Q1190405",
+   "succ_qid": "Q1149132",
+   "rel": "三代内无血缘",
+   "why": "两边父系三代俱全而无公共祖先",
+   "src": "wikidata"
+  },
+  {
+   "d": "nanqi",
+   "pred": "齐明帝",
+   "succ": "东昏侯",
+   "pred_n": "萧鸾",
+   "succ_n": "萧宝卷",
+   "pred_qid": "Q1149132",
+   "succ_qid": "Q1336575",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1149132（齊明帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanqi",
+   "pred": "东昏侯",
+   "succ": "齐和帝",
+   "pred_n": "萧宝卷",
+   "succ_n": "萧宝融",
+   "pred_qid": "Q1336575",
+   "succ_qid": "Q1190420",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1149132（齊明帝）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "liang",
+   "pred": "梁武帝",
+   "succ": "梁简文帝",
+   "pred_n": "萧衍",
+   "succ_n": "萧纲",
+   "pred_qid": "Q736726",
+   "succ_qid": "Q1140994",
+   "rel": "父子",
+   "why": "最近公共祖先 Q736726（梁武帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "liang",
+   "pred": "梁简文帝",
+   "succ": "梁豫章王",
+   "pred_n": "萧纲",
+   "succ_n": "萧栋",
+   "pred_qid": "Q1140994",
+   "succ_qid": "Q1059882",
+   "rel": "叔祖侄孙",
+   "why": "最近公共祖先 Q736726（梁武帝）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    3
+   ],
+   "adopt": false
+  },
+  {
+   "d": "liang",
+   "pred": "梁豫章王",
+   "succ": "梁元帝",
+   "pred_n": "萧栋",
+   "succ_n": "萧绎",
+   "pred_qid": "Q1059882",
+   "succ_qid": "Q1149114",
+   "rel": "叔祖侄孙（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q736726（梁武帝）",
+   "src": "wikidata",
+   "gen": [
+    3,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "liang",
+   "pred": "梁元帝",
+   "succ": "梁敬帝",
+   "pred_n": "萧绎",
+   "succ_n": "萧方智",
+   "pred_qid": "Q1149114",
+   "succ_qid": "Q1059979",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1149114（梁元帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xiliang",
+   "pred": "西梁宣帝",
+   "succ": "西梁明帝",
+   "pred_n": "萧詧",
+   "succ_n": "萧岿",
+   "pred_qid": "Q1285740",
+   "succ_qid": "Q836203",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1285740（梁宣帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xiliang",
+   "pred": "西梁明帝",
+   "succ": "西梁靖帝",
+   "pred_n": "萧岿",
+   "succ_n": "萧琮",
+   "pred_qid": "Q836203",
+   "succ_qid": "Q837918",
+   "rel": "父子",
+   "why": "最近公共祖先 Q836203（梁明帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "chen",
+   "pred": "陈武帝",
+   "succ": "陈文帝",
+   "pred_n": "陈霸先",
+   "succ_n": "陈蒨",
+   "pred_qid": "Q718217",
+   "succ_qid": "Q712113",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q14921951（陈文赞）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "chen",
+   "pred": "陈文帝",
+   "succ": "陈废帝",
+   "pred_n": "陈蒨",
+   "succ_n": "陈伯宗",
+   "pred_qid": "Q712113",
+   "succ_qid": null,
+   "rel": "未定",
+   "why": "未命中 Wikidata：继任",
+   "src": "缺"
+  },
+  {
+   "d": "chen",
+   "pred": "陈废帝",
+   "succ": "陈宣帝",
+   "pred_n": "陈伯宗",
+   "succ_n": "陈顼",
+   "pred_qid": null,
+   "succ_qid": "Q718227",
+   "rel": "未定",
+   "why": "未命中 Wikidata：前任",
+   "src": "缺"
+  },
+  {
+   "d": "chen",
+   "pred": "陈宣帝",
+   "succ": "陈后主",
+   "pred_n": "陈顼",
+   "succ_n": "陈叔宝",
+   "pred_qid": "Q718227",
+   "succ_qid": "Q718206",
+   "rel": "父子",
+   "why": "最近公共祖先 Q718227（陈宣帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bwei",
+   "pred": "魏道武帝",
+   "succ": "魏明元帝",
+   "pred_n": "拓跋珪",
+   "succ_n": "拓跋嗣",
+   "pred_qid": "Q1149178",
+   "succ_qid": "Q1071591",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1149178（魏道武帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bwei",
+   "pred": "魏明元帝",
+   "succ": "魏太武帝",
+   "pred_n": "拓跋嗣",
+   "succ_n": "拓跋焘",
+   "pred_qid": "Q1071591",
+   "succ_qid": "Q1194963",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1071591（魏明元帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bwei",
+   "pred": "魏太武帝",
+   "succ": "南安隐王",
+   "pred_n": "拓跋焘",
+   "succ_n": "拓跋余",
+   "pred_qid": "Q1194963",
+   "succ_qid": "Q3275322",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1194963（魏太武帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bwei",
+   "pred": "南安隐王",
+   "succ": "魏文成帝",
+   "pred_n": "拓跋余",
+   "succ_n": "拓跋濬",
+   "pred_qid": "Q3275322",
+   "succ_qid": "Q1074798",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q1194963（魏太武帝）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bwei",
+   "pred": "魏文成帝",
+   "succ": "魏献文帝",
+   "pred_n": "拓跋濬",
+   "succ_n": "拓跋弘",
+   "pred_qid": "Q1074798",
+   "succ_qid": "Q1071582",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1074798（魏文成帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bwei",
+   "pred": "魏献文帝",
+   "succ": "魏孝文帝",
+   "pred_n": "拓跋弘",
+   "succ_n": "元宏",
+   "pred_qid": "Q1071582",
+   "succ_qid": "Q1327614",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1071582（魏献文帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bwei",
+   "pred": "魏孝文帝",
+   "succ": "魏宣武帝",
+   "pred_n": "元宏",
+   "succ_n": "元恪",
+   "pred_qid": "Q1327614",
+   "succ_qid": "Q1194968",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1327614（魏孝文帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bwei",
+   "pred": "魏宣武帝",
+   "succ": "魏孝明帝",
+   "pred_n": "元恪",
+   "succ_n": "元诩",
+   "pred_qid": "Q1194968",
+   "succ_qid": "Q1071618",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1194968（魏宣武帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bwei",
+   "pred": "魏孝明帝",
+   "succ": "魏孝庄帝",
+   "pred_n": "元诩",
+   "succ_n": "元子攸",
+   "pred_qid": "Q1071618",
+   "succ_qid": "Q1074789",
+   "rel": "从叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q1071582（魏献文帝）",
+   "src": "wikidata",
+   "gen": [
+    3,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bwei",
+   "pred": "魏孝庄帝",
+   "succ": "长广王",
+   "pred_n": "元子攸",
+   "succ_n": "元晔",
+   "pred_qid": "Q1074789",
+   "succ_qid": "Q3276215",
+   "rel": "三代内无血缘",
+   "why": "两边父系三代俱全而无公共祖先",
+   "src": "wikidata"
+  },
+  {
+   "d": "bwei",
+   "pred": "长广王",
+   "succ": "魏节闵帝",
+   "pred_n": "元晔",
+   "succ_n": "元恭",
+   "pred_qid": "Q3276215",
+   "succ_qid": "Q1074737",
+   "rel": "三代内无血缘",
+   "why": "两边父系三代俱全而无公共祖先",
+   "src": "wikidata"
+  },
+  {
+   "d": "bwei",
+   "pred": "魏节闵帝",
+   "succ": "安定王",
+   "pred_n": "元恭",
+   "succ_n": "元朗",
+   "pred_qid": "Q1074737",
+   "succ_qid": null,
+   "rel": "未定",
+   "why": "未命中 Wikidata：继任",
+   "src": "缺"
+  },
+  {
+   "d": "bwei",
+   "pred": "安定王",
+   "succ": "魏孝武帝",
+   "pred_n": "元朗",
+   "succ_n": "元修",
+   "pred_qid": null,
+   "succ_qid": "Q1071537",
+   "rel": "未定",
+   "why": "未命中 Wikidata：前任",
+   "src": "缺"
+  },
+  {
+   "d": "xwei",
+   "pred": "魏文帝",
+   "succ": "魏废帝",
+   "pred_n": "元宝炬",
+   "succ_n": "元钦",
+   "pred_qid": "Q2985487",
+   "succ_qid": "Q2660296",
+   "rel": "父子",
+   "why": "最近公共祖先 Q2985487（元宝炬）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xwei",
+   "pred": "魏废帝",
+   "succ": "魏恭帝",
+   "pred_n": "元钦",
+   "succ_n": "元廓",
+   "pred_qid": "Q2660296",
+   "succ_qid": "Q2665689",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q2985487（元宝炬）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bqi",
+   "pred": "齐文宣帝",
+   "succ": "齐废帝",
+   "pred_n": "高洋",
+   "succ_n": "高殷",
+   "pred_qid": "Q712338",
+   "succ_qid": "Q708368",
+   "rel": "父子",
+   "why": "最近公共祖先 Q712338（齐文宣帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bqi",
+   "pred": "齐废帝",
+   "succ": "齐孝昭帝",
+   "pred_n": "高殷",
+   "succ_n": "高演",
+   "pred_qid": "Q708368",
+   "succ_qid": "Q708325",
+   "rel": "叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q1079575（婁昭君）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bqi",
+   "pred": "齐孝昭帝",
+   "succ": "齐武成帝",
+   "pred_n": "高演",
+   "succ_n": "高湛",
+   "pred_qid": "Q708325",
+   "succ_qid": "Q718243",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1079575（婁昭君）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bqi",
+   "pred": "齐武成帝",
+   "succ": "齐后主",
+   "pred_n": "高湛",
+   "succ_n": "高纬",
+   "pred_qid": "Q718243",
+   "succ_qid": "Q718181",
+   "rel": "父子",
+   "why": "最近公共祖先 Q718243（齐武成帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bqi",
+   "pred": "齐后主",
+   "succ": "齐幼主",
+   "pred_n": "高纬",
+   "succ_n": "高恒",
+   "pred_qid": "Q718181",
+   "succ_qid": "Q288135",
+   "rel": "父子",
+   "why": "最近公共祖先 Q718181（齐后主）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bzhou",
+   "pred": "周孝闵帝",
+   "succ": "周明帝",
+   "pred_n": "宇文觉",
+   "succ_n": "宇文毓",
+   "pred_qid": "Q1149222",
+   "succ_qid": "Q1196041",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1071587（宇文泰）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bzhou",
+   "pred": "周明帝",
+   "succ": "周武帝",
+   "pred_n": "宇文毓",
+   "succ_n": "宇文邕",
+   "pred_qid": "Q1196041",
+   "succ_qid": "Q1327591",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1071587（宇文泰）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bzhou",
+   "pred": "周武帝",
+   "succ": "周宣帝",
+   "pred_n": "宇文邕",
+   "succ_n": "宇文赟",
+   "pred_qid": "Q1327591",
+   "succ_qid": "Q1149215",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1327591（周武帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bzhou",
+   "pred": "周宣帝",
+   "succ": "周静帝",
+   "pred_n": "宇文赟",
+   "succ_n": "宇文阐",
+   "pred_qid": "Q1149215",
+   "succ_qid": "Q1149124",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1149215（周宣帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "sui",
+   "pred": "隋文帝",
+   "succ": "隋炀帝",
+   "pred_n": "杨坚",
+   "succ_n": "杨广",
+   "pred_qid": "Q7418",
+   "succ_qid": "Q7419",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7418（杨坚）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "sui",
+   "pred": "隋炀帝",
+   "succ": "隋恭帝",
+   "pred_n": "杨广",
+   "succ_n": "杨侑",
+   "pred_qid": "Q7419",
+   "succ_qid": "Q7420",
+   "rel": "祖孙",
+   "why": "最近公共祖先 Q7419（隋炀帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "sui",
+   "pred": "隋恭帝",
+   "succ": "皇泰主",
+   "pred_n": "杨侑",
+   "succ_n": "杨侗",
+   "pred_qid": "Q7420",
+   "succ_qid": "Q7422",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1062868（楊昭）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐高祖",
+   "succ": "唐太宗",
+   "pred_n": "李渊",
+   "succ_n": "李世民",
+   "pred_qid": "Q9700",
+   "succ_qid": "Q9701",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9700（李淵）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐太宗",
+   "succ": "唐高宗",
+   "pred_n": "李世民",
+   "succ_n": "李治",
+   "pred_qid": "Q9701",
+   "succ_qid": "Q9703",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9701（唐太宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐高宗",
+   "succ": "唐中宗",
+   "pred_n": "李治",
+   "succ_n": "李显",
+   "pred_qid": "Q9703",
+   "succ_qid": "Q9717",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9703（唐高宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐中宗",
+   "succ": "唐睿宗",
+   "pred_n": "李显",
+   "succ_n": "李旦",
+   "pred_qid": "Q9717",
+   "succ_qid": "Q9722",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q9703（唐高宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐睿宗",
+   "succ": "武则天",
+   "pred_n": "李旦",
+   "succ_n": "武曌",
+   "pred_qid": "Q9722",
+   "succ_qid": "Q9738",
+   "rel": "母子（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q9738（武則天）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    0
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "武则天",
+   "succ": "唐殇帝",
+   "pred_n": "武曌",
+   "succ_n": "李重茂",
+   "pred_qid": "Q9738",
+   "succ_qid": "Q9743",
+   "rel": "祖孙",
+   "why": "最近公共祖先 Q9738（武則天）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐殇帝",
+   "succ": "唐玄宗",
+   "pred_n": "李重茂",
+   "succ_n": "李隆基",
+   "pred_qid": "Q9743",
+   "succ_qid": "Q9746",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q9703（唐高宗）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐玄宗",
+   "succ": "唐肃宗",
+   "pred_n": "李隆基",
+   "succ_n": "李亨",
+   "pred_qid": "Q9746",
+   "succ_qid": "Q9749",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9746（唐玄宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐肃宗",
+   "succ": "唐代宗",
+   "pred_n": "李亨",
+   "succ_n": "李豫",
+   "pred_qid": "Q9749",
+   "succ_qid": "Q9753",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9749（唐肅宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐代宗",
+   "succ": "唐德宗",
+   "pred_n": "李豫",
+   "succ_n": "李适",
+   "pred_qid": "Q9753",
+   "succ_qid": "Q9755",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9753（唐代宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐德宗",
+   "succ": "唐顺宗",
+   "pred_n": "李适",
+   "succ_n": "李诵",
+   "pred_qid": "Q9755",
+   "succ_qid": "Q9760",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9755（唐德宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐顺宗",
+   "succ": "唐宪宗",
+   "pred_n": "李诵",
+   "succ_n": "李纯",
+   "pred_qid": "Q9760",
+   "succ_qid": "Q9761",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9760（唐顺宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐宪宗",
+   "succ": "唐穆宗",
+   "pred_n": "李纯",
+   "succ_n": "李恒",
+   "pred_qid": "Q9761",
+   "succ_qid": "Q9763",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9761（唐憲宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐穆宗",
+   "succ": "唐敬宗",
+   "pred_n": "李恒",
+   "succ_n": "李湛",
+   "pred_qid": "Q9763",
+   "succ_qid": "Q9776",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9763（唐穆宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐敬宗",
+   "succ": "唐文宗",
+   "pred_n": "李湛",
+   "succ_n": "李昂",
+   "pred_qid": "Q9776",
+   "succ_qid": "Q9790",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q9763（唐穆宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐文宗",
+   "succ": "唐武宗",
+   "pred_n": "李昂",
+   "succ_n": "李炎",
+   "pred_qid": "Q9790",
+   "succ_qid": "Q9801",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q9763（唐穆宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐武宗",
+   "succ": "唐宣宗",
+   "pred_n": "李炎",
+   "succ_n": "李忱",
+   "pred_qid": "Q9801",
+   "succ_qid": "Q9825",
+   "rel": "叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q9761（唐憲宗）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐宣宗",
+   "succ": "唐懿宗",
+   "pred_n": "李忱",
+   "succ_n": "李漼",
+   "pred_qid": "Q9825",
+   "succ_qid": "Q9886",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9825（唐宣宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐懿宗",
+   "succ": "唐僖宗",
+   "pred_n": "李漼",
+   "succ_n": "李儇",
+   "pred_qid": "Q9886",
+   "succ_qid": "Q9889",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9886（唐懿宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐僖宗",
+   "succ": "唐昭宗",
+   "pred_n": "李儇",
+   "succ_n": "李晔",
+   "pred_qid": "Q9889",
+   "succ_qid": "Q9891",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q9886（唐懿宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "tang",
+   "pred": "唐昭宗",
+   "succ": "唐哀帝",
+   "pred_n": "李晔",
+   "succ_n": "李柷",
+   "pred_qid": "Q9891",
+   "succ_qid": "Q9892",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9891（唐昭宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "hliang",
+   "pred": "梁太祖",
+   "succ": "梁郢王",
+   "pred_n": "朱温",
+   "succ_n": "朱友珪",
+   "pred_qid": "Q1275305",
+   "succ_qid": "Q1138520",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1275305（朱温）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "hliang",
+   "pred": "梁郢王",
+   "succ": "梁末帝",
+   "pred_n": "朱友珪",
+   "succ_n": "朱友贞",
+   "pred_qid": "Q1138520",
+   "succ_qid": "Q1319637",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1275305（朱温）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "htang",
+   "pred": "唐庄宗",
+   "succ": "唐明宗",
+   "pred_n": "李存勖",
+   "succ_n": "李嗣源",
+   "pred_qid": "Q706815",
+   "succ_qid": "Q703646",
+   "rel": "三代内无血缘",
+   "why": "两边父系三代俱全而无公共祖先",
+   "src": "wikidata"
+  },
+  {
+   "d": "htang",
+   "pred": "唐明宗",
+   "succ": "唐闵帝",
+   "pred_n": "李嗣源",
+   "succ_n": "李从厚",
+   "pred_qid": "Q703646",
+   "succ_qid": "Q708431",
+   "rel": "父子",
+   "why": "最近公共祖先 Q703646（唐明宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "htang",
+   "pred": "唐闵帝",
+   "succ": "唐末帝",
+   "pred_n": "李从厚",
+   "succ_n": "李从珂",
+   "pred_qid": "Q708431",
+   "succ_qid": "Q713115",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "hjin",
+   "pred": "晋高祖",
+   "succ": "晋出帝",
+   "pred_n": "石敬瑭",
+   "succ_n": "石重贵",
+   "pred_qid": "Q1189495",
+   "succ_qid": "Q1319472",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q16076933（石紹雍）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "hhan",
+   "pred": "汉高祖",
+   "succ": "汉隐帝",
+   "pred_n": "刘知远",
+   "succ_n": "刘承祐",
+   "pred_qid": "Q708522",
+   "succ_qid": "Q713108",
+   "rel": "父子",
+   "why": "最近公共祖先 Q708522（劉知遠）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "hzhou",
+   "pred": "周太祖",
+   "succ": "周世宗",
+   "pred_n": "郭威",
+   "succ_n": "柴荣",
+   "pred_qid": "Q1188860",
+   "succ_qid": "Q1319646",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "hzhou",
+   "pred": "周世宗",
+   "succ": "周恭帝",
+   "pred_n": "柴荣",
+   "succ_n": "柴宗训",
+   "pred_qid": "Q1319646",
+   "succ_qid": "Q1195669",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1319646（周世宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wuten",
+   "pred": "吴太祖",
+   "succ": "吴烈祖",
+   "pred_n": "杨行密",
+   "succ_n": "杨渥",
+   "pred_qid": "Q1149150",
+   "succ_qid": "Q5195385",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1149150（楊行密）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wuten",
+   "pred": "吴烈祖",
+   "succ": "吴宣帝",
+   "pred_n": "杨渥",
+   "succ_n": "杨隆演",
+   "pred_qid": "Q5195385",
+   "succ_qid": "Q842237",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1149150（楊行密）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wuten",
+   "pred": "吴宣帝",
+   "succ": "吴睿帝",
+   "pred_n": "杨隆演",
+   "succ_n": "杨溥",
+   "pred_qid": "Q842237",
+   "succ_qid": "Q6596990",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1149150（楊行密）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ntang",
+   "pred": "南唐烈祖",
+   "succ": "南唐元宗",
+   "pred_n": "李昪",
+   "succ_n": "李璟",
+   "pred_qid": "Q711844",
+   "succ_qid": "Q718254",
+   "rel": "父子",
+   "why": "最近公共祖先 Q711844（李昪）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ntang",
+   "pred": "南唐元宗",
+   "succ": "南唐后主",
+   "pred_n": "李璟",
+   "succ_n": "李煜",
+   "pred_qid": "Q718254",
+   "succ_qid": "Q378528",
+   "rel": "父子",
+   "why": "最近公共祖先 Q718254（李璟）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qshu",
+   "pred": "前蜀高祖",
+   "succ": "前蜀后主",
+   "pred_n": "王建",
+   "succ_n": "王衍",
+   "pred_qid": "Q708651",
+   "succ_qid": "Q1129329",
+   "rel": "父子",
+   "why": "最近公共祖先 Q708651（王建）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "hshu",
+   "pred": "后蜀高祖",
+   "succ": "后蜀后主",
+   "pred_n": "孟知祥",
+   "succ_n": "孟昶",
+   "pred_qid": "Q1149186",
+   "succ_qid": "Q1071718",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1149186（孟知祥）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nhan",
+   "pred": "南汉高祖",
+   "succ": "南汉殇帝",
+   "pred_n": "刘䶮",
+   "succ_n": "刘玢",
+   "pred_qid": "Q717972",
+   "succ_qid": "Q10900161",
+   "rel": "父子",
+   "why": "最近公共祖先 Q717972（劉龑）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nhan",
+   "pred": "南汉殇帝",
+   "succ": "南汉中宗",
+   "pred_n": "刘玢",
+   "succ_n": "刘晟",
+   "pred_qid": "Q10900161",
+   "succ_qid": "Q6149021",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q717972（劉龑）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nhan",
+   "pred": "南汉中宗",
+   "succ": "南汉后主",
+   "pred_n": "刘晟",
+   "succ_n": "刘鋹",
+   "pred_qid": "Q6149021",
+   "succ_qid": "Q712137",
+   "rel": "父子",
+   "why": "最近公共祖先 Q6149021（劉晟）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "min",
+   "pred": "闽太祖",
+   "succ": "闽嗣王",
+   "pred_n": "王审知",
+   "succ_n": "王延翰",
+   "pred_qid": "Q708354",
+   "succ_qid": "Q2109907",
+   "rel": "父子",
+   "why": "最近公共祖先 Q708354（王審知）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "min",
+   "pred": "闽嗣王",
+   "succ": "闽惠宗",
+   "pred_n": "王延翰",
+   "succ_n": "王延钧",
+   "pred_qid": "Q2109907",
+   "succ_qid": "Q2109927",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q708354（王審知）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "min",
+   "pred": "闽惠宗",
+   "succ": "闽康宗",
+   "pred_n": "王延钧",
+   "succ_n": "王继鹏",
+   "pred_qid": "Q2109927",
+   "succ_qid": "Q2109914",
+   "rel": "父子",
+   "why": "最近公共祖先 Q2109927（王延鈞）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "min",
+   "pred": "闽康宗",
+   "succ": "闽景宗",
+   "pred_n": "王继鹏",
+   "succ_n": "王延羲",
+   "pred_qid": "Q2109914",
+   "succ_qid": "Q2208402",
+   "rel": "叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q708354（王審知）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "min",
+   "pred": "闽景宗",
+   "succ": "闽天德帝",
+   "pred_n": "王延羲",
+   "succ_n": "王延政",
+   "pred_qid": "Q2208402",
+   "succ_qid": "Q8012995",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q708354（王審知）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "chu",
+   "pred": "楚武穆王",
+   "succ": "楚衡阳王",
+   "pred_n": "马殷",
+   "succ_n": "马希声",
+   "pred_qid": "Q1071598",
+   "succ_qid": "Q6146263",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1071598（马殷）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "chu",
+   "pred": "楚衡阳王",
+   "succ": "楚文昭王",
+   "pred_n": "马希声",
+   "succ_n": "马希范",
+   "pred_qid": "Q6146263",
+   "succ_qid": "Q6146182",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1071598（马殷）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "chu",
+   "pred": "楚文昭王",
+   "succ": "楚废王",
+   "pred_n": "马希范",
+   "succ_n": "马希广",
+   "pred_qid": "Q6146182",
+   "succ_qid": "Q11667962",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1071598（马殷）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "chu",
+   "pred": "楚废王",
+   "succ": "楚恭孝王",
+   "pred_n": "马希广",
+   "succ_n": "马希萼",
+   "pred_qid": "Q11667962",
+   "succ_qid": "Q6146232",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1071598（马殷）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "chu",
+   "pred": "楚恭孝王",
+   "succ": "楚留王",
+   "pred_n": "马希萼",
+   "succ_n": "马希崇",
+   "pred_qid": "Q6146232",
+   "succ_qid": "Q11667960",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q1071598（马殷）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wuyue",
+   "pred": "吴越武肃王",
+   "succ": "吴越文穆王",
+   "pred_n": "钱镠",
+   "succ_n": "钱元瓘",
+   "pred_qid": "Q1074727",
+   "succ_qid": "Q893008",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1074727（钱镠）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wuyue",
+   "pred": "吴越文穆王",
+   "succ": "吴越忠献王",
+   "pred_n": "钱元瓘",
+   "succ_n": "钱弘佐",
+   "pred_qid": "Q893008",
+   "succ_qid": "Q6146126",
+   "rel": "父子",
+   "why": "最近公共祖先 Q893008（錢元瓘）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wuyue",
+   "pred": "吴越忠献王",
+   "succ": "吴越忠逊王",
+   "pred_n": "钱弘佐",
+   "succ_n": "钱弘倧",
+   "pred_qid": "Q6146126",
+   "succ_qid": "Q5359565",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q893008（錢元瓘）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "wuyue",
+   "pred": "吴越忠逊王",
+   "succ": "吴越忠懿王",
+   "pred_n": "钱弘倧",
+   "succ_n": "钱俶",
+   "pred_qid": "Q5359565",
+   "succ_qid": "Q1036789",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q893008（錢元瓘）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanping",
+   "pred": "南平武信王",
+   "succ": "南平文献王",
+   "pred_n": "高季兴",
+   "succ_n": "高从诲",
+   "pred_qid": "Q718201",
+   "succ_qid": "Q708099",
+   "rel": "父子",
+   "why": "最近公共祖先 Q718201（高季興）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanping",
+   "pred": "南平文献王",
+   "succ": "南平贞懿王",
+   "pred_n": "高从诲",
+   "succ_n": "高保融",
+   "pred_qid": "Q708099",
+   "succ_qid": "Q6148899",
+   "rel": "父子",
+   "why": "最近公共祖先 Q708099（高從誨）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanping",
+   "pred": "南平贞懿王",
+   "succ": "南平侍中",
+   "pred_n": "高保融",
+   "succ_n": "高保勖",
+   "pred_qid": "Q6148899",
+   "succ_qid": "Q6148923",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q708099（高從誨）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nanping",
+   "pred": "南平侍中",
+   "succ": "南平侍中",
+   "pred_n": "高保勖",
+   "succ_n": "高继冲",
+   "pred_qid": "Q6148923",
+   "succ_qid": "Q6146360",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q708099（高從誨）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bhan",
+   "pred": "汉世祖",
+   "succ": "汉睿宗",
+   "pred_n": "刘崇",
+   "succ_n": "刘承钧",
+   "pred_qid": null,
+   "succ_qid": "Q8013009",
+   "rel": "未定",
+   "why": "未命中 Wikidata：前任",
+   "src": "缺"
+  },
+  {
+   "d": "bhan",
+   "pred": "汉睿宗",
+   "succ": "汉少主",
+   "pred_n": "刘承钧",
+   "succ_n": "刘继恩",
+   "pred_qid": "Q8013009",
+   "succ_qid": "Q10900291",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q712595（劉旻）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "bhan",
+   "pred": "汉少主",
+   "succ": "汉英武帝",
+   "pred_n": "刘继恩",
+   "succ_n": "刘继元",
+   "pred_qid": "Q10900291",
+   "succ_qid": "Q842954",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q10900025（劉氏）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nsong",
+   "pred": "宋太祖",
+   "succ": "宋太宗",
+   "pred_n": "赵匡胤",
+   "succ_n": "赵光义",
+   "pred_qid": "Q7471",
+   "succ_qid": "Q7473",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q7209784（趙弘殷）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nsong",
+   "pred": "宋太宗",
+   "succ": "宋真宗",
+   "pred_n": "赵光义",
+   "succ_n": "赵恒",
+   "pred_qid": "Q7473",
+   "succ_qid": "Q7475",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7473（宋太宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nsong",
+   "pred": "宋真宗",
+   "succ": "宋仁宗",
+   "pred_n": "赵恒",
+   "succ_n": "赵祯",
+   "pred_qid": "Q7475",
+   "succ_qid": "Q7477",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7475（宋真宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nsong",
+   "pred": "宋仁宗",
+   "succ": "宋英宗",
+   "pred_n": "赵祯",
+   "succ_n": "赵曙",
+   "pred_qid": "Q7477",
+   "succ_qid": "Q7479",
+   "rel": "从叔侄",
+   "why": "最近公共祖先 Q7473（宋太宗）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    3
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nsong",
+   "pred": "宋英宗",
+   "succ": "宋神宗",
+   "pred_n": "赵曙",
+   "succ_n": "赵顼",
+   "pred_qid": "Q7479",
+   "succ_qid": "Q7483",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7479（宋英宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nsong",
+   "pred": "宋神宗",
+   "succ": "宋哲宗",
+   "pred_n": "赵顼",
+   "succ_n": "赵煦",
+   "pred_qid": "Q7483",
+   "succ_qid": "Q7484",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7483（宋神宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nsong",
+   "pred": "宋哲宗",
+   "succ": "宋徽宗",
+   "pred_n": "赵煦",
+   "succ_n": "赵佶",
+   "pred_qid": "Q7484",
+   "succ_qid": "Q7486",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q7483（宋神宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nsong",
+   "pred": "宋徽宗",
+   "succ": "宋钦宗",
+   "pred_n": "赵佶",
+   "succ_n": "赵桓",
+   "pred_qid": "Q7486",
+   "succ_qid": "Q7488",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7486（宋徽宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ssong",
+   "pred": "宋高宗",
+   "succ": "宋孝宗",
+   "pred_n": "赵构",
+   "succ_n": "赵昚",
+   "pred_qid": "Q7489",
+   "succ_qid": "Q7492",
+   "rel": "三代内无血缘",
+   "why": "两边父系三代俱全而无公共祖先",
+   "src": "wikidata"
+  },
+  {
+   "d": "ssong",
+   "pred": "宋孝宗",
+   "succ": "宋光宗",
+   "pred_n": "赵昚",
+   "succ_n": "赵惇",
+   "pred_qid": "Q7492",
+   "succ_qid": "Q7494",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7492（宋孝宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ssong",
+   "pred": "宋光宗",
+   "succ": "宋宁宗",
+   "pred_n": "赵惇",
+   "succ_n": "赵扩",
+   "pred_qid": "Q7494",
+   "succ_qid": "Q7496",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7494（宋光宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ssong",
+   "pred": "宋宁宗",
+   "succ": "宋理宗",
+   "pred_n": "赵扩",
+   "succ_n": "赵昀",
+   "pred_qid": "Q7496",
+   "succ_qid": "Q7497",
+   "rel": "三代内无血缘",
+   "why": "两边父系三代俱全而无公共祖先",
+   "src": "wikidata"
+  },
+  {
+   "d": "ssong",
+   "pred": "宋理宗",
+   "succ": "宋度宗",
+   "pred_n": "赵昀",
+   "succ_n": "赵禥",
+   "pred_qid": "Q7497",
+   "succ_qid": "Q7498",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q13649810（趙希瓐）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ssong",
+   "pred": "宋度宗",
+   "succ": "宋恭帝",
+   "pred_n": "赵禥",
+   "succ_n": "赵㬎",
+   "pred_qid": "Q7498",
+   "succ_qid": "Q7500",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7498（宋度宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ssong",
+   "pred": "宋恭帝",
+   "succ": "宋端宗",
+   "pred_n": "赵㬎",
+   "succ_n": "赵昰",
+   "pred_qid": "Q7500",
+   "succ_qid": "Q7501",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q7498（宋度宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ssong",
+   "pred": "宋端宗",
+   "succ": "宋末帝",
+   "pred_n": "赵昰",
+   "succ_n": "赵昺",
+   "pred_qid": "Q7501",
+   "succ_qid": "Q7503",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q7498（宋度宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "liao",
+   "pred": "辽太祖",
+   "succ": "辽太宗",
+   "pred_n": "耶律阿保机",
+   "succ_n": "耶律德光",
+   "pred_qid": "Q4989",
+   "succ_qid": "Q4991",
+   "rel": "父子",
+   "why": "最近公共祖先 Q4989（耶律阿保机）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "liao",
+   "pred": "辽太宗",
+   "succ": "辽世宗",
+   "pred_n": "耶律德光",
+   "succ_n": "耶律阮",
+   "pred_qid": "Q4991",
+   "succ_qid": "Q4992",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q4989（耶律阿保机）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "liao",
+   "pred": "辽世宗",
+   "succ": "辽穆宗",
+   "pred_n": "耶律阮",
+   "succ_n": "耶律璟",
+   "pred_qid": "Q4992",
+   "succ_qid": "Q4993",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q4989（耶律阿保机）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "liao",
+   "pred": "辽穆宗",
+   "succ": "辽景宗",
+   "pred_n": "耶律璟",
+   "succ_n": "耶律贤",
+   "pred_qid": "Q4993",
+   "succ_qid": "Q4997",
+   "rel": "从叔侄",
+   "why": "最近公共祖先 Q4989（耶律阿保机）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    3
+   ],
+   "adopt": false
+  },
+  {
+   "d": "liao",
+   "pred": "辽景宗",
+   "succ": "辽圣宗",
+   "pred_n": "耶律贤",
+   "succ_n": "耶律隆绪",
+   "pred_qid": "Q4997",
+   "succ_qid": "Q5000",
+   "rel": "父子",
+   "why": "最近公共祖先 Q4997（遼景宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "liao",
+   "pred": "辽圣宗",
+   "succ": "辽兴宗",
+   "pred_n": "耶律隆绪",
+   "succ_n": "耶律宗真",
+   "pred_qid": "Q5000",
+   "succ_qid": "Q5005",
+   "rel": "父子",
+   "why": "最近公共祖先 Q5000（辽圣宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "liao",
+   "pred": "辽兴宗",
+   "succ": "辽道宗",
+   "pred_n": "耶律宗真",
+   "succ_n": "耶律洪基",
+   "pred_qid": "Q5005",
+   "succ_qid": "Q5007",
+   "rel": "父子",
+   "why": "最近公共祖先 Q5005（辽兴宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "liao",
+   "pred": "辽道宗",
+   "succ": "天祚帝",
+   "pred_n": "耶律洪基",
+   "succ_n": "耶律延禧",
+   "pred_qid": "Q5007",
+   "succ_qid": "Q5009",
+   "rel": "祖孙",
+   "why": "最近公共祖先 Q5007（辽道宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xixia",
+   "pred": "夏景宗",
+   "succ": "夏毅宗",
+   "pred_n": "李元昊",
+   "succ_n": "李谅祚",
+   "pred_qid": "Q7438",
+   "succ_qid": "Q7443",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7438（李元昊）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xixia",
+   "pred": "夏毅宗",
+   "succ": "夏惠宗",
+   "pred_n": "李谅祚",
+   "succ_n": "李秉常",
+   "pred_qid": "Q7443",
+   "succ_qid": "Q7448",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7443（李諒祚）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xixia",
+   "pred": "夏惠宗",
+   "succ": "夏崇宗",
+   "pred_n": "李秉常",
+   "succ_n": "李乾顺",
+   "pred_qid": "Q7448",
+   "succ_qid": "Q7451",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7448（李秉常）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xixia",
+   "pred": "夏崇宗",
+   "succ": "夏仁宗",
+   "pred_n": "李乾顺",
+   "succ_n": "李仁孝",
+   "pred_qid": "Q7451",
+   "succ_qid": "Q7453",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7451（夏崇宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xixia",
+   "pred": "夏仁宗",
+   "succ": "夏桓宗",
+   "pred_n": "李仁孝",
+   "succ_n": "李纯祐",
+   "pred_qid": "Q7453",
+   "succ_qid": "Q7454",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7453（李仁孝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xixia",
+   "pred": "夏桓宗",
+   "succ": "夏襄宗",
+   "pred_n": "李纯祐",
+   "succ_n": "李安全",
+   "pred_qid": "Q7454",
+   "succ_qid": "Q7456",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q7451（夏崇宗）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xixia",
+   "pred": "夏襄宗",
+   "succ": "夏神宗",
+   "pred_n": "李安全",
+   "succ_n": "李遵顼",
+   "pred_qid": "Q7456",
+   "succ_qid": "Q7457",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "xixia",
+   "pred": "夏神宗",
+   "succ": "夏献宗",
+   "pred_n": "李遵顼",
+   "succ_n": "李德旺",
+   "pred_qid": "Q7457",
+   "succ_qid": "Q7458",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7457（李遵頊）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "xixia",
+   "pred": "夏献宗",
+   "succ": "夏末帝",
+   "pred_n": "李德旺",
+   "succ_n": "李睍",
+   "pred_qid": "Q7458",
+   "succ_qid": "Q7459",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q7457（李遵頊）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "jin",
+   "pred": "金太祖",
+   "succ": "金太宗",
+   "pred_n": "完颜阿骨打",
+   "succ_n": "完颜晟",
+   "pred_qid": "Q5060",
+   "succ_qid": "Q5070",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q7968204（劾里鉢）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "jin",
+   "pred": "金太宗",
+   "succ": "金熙宗",
+   "pred_n": "完颜晟",
+   "succ_n": "完颜亶",
+   "pred_qid": "Q5070",
+   "succ_qid": "Q5071",
+   "rel": "叔祖侄孙",
+   "why": "最近公共祖先 Q7968204（劾里鉢）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    3
+   ],
+   "adopt": false
+  },
+  {
+   "d": "jin",
+   "pred": "金熙宗",
+   "succ": "海陵王",
+   "pred_n": "完颜亶",
+   "succ_n": "完颜亮",
+   "pred_qid": "Q5071",
+   "succ_qid": "Q5072",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q5060（完颜阿骨打）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "jin",
+   "pred": "海陵王",
+   "succ": "金世宗",
+   "pred_n": "完颜亮",
+   "succ_n": "完颜雍",
+   "pred_qid": "Q5072",
+   "succ_qid": "Q5073",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q5060（完颜阿骨打）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "jin",
+   "pred": "金世宗",
+   "succ": "金章宗",
+   "pred_n": "完颜雍",
+   "succ_n": "完颜璟",
+   "pred_qid": "Q5073",
+   "succ_qid": "Q5074",
+   "rel": "祖孙",
+   "why": "最近公共祖先 Q5073（金世宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "jin",
+   "pred": "金章宗",
+   "succ": "卫绍王",
+   "pred_n": "完颜璟",
+   "succ_n": "完颜永济",
+   "pred_qid": "Q5074",
+   "succ_qid": "Q5076",
+   "rel": "叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q5073（金世宗）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "jin",
+   "pred": "卫绍王",
+   "succ": "金宣宗",
+   "pred_n": "完颜永济",
+   "succ_n": "完颜珣",
+   "pred_qid": "Q5076",
+   "succ_qid": "Q5080",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q5073（金世宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "jin",
+   "pred": "金宣宗",
+   "succ": "金哀宗",
+   "pred_n": "完颜珣",
+   "succ_n": "完颜守绪",
+   "pred_qid": "Q5080",
+   "succ_qid": "Q5081",
+   "rel": "父子",
+   "why": "最近公共祖先 Q5080（金宣宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "jin",
+   "pred": "金哀宗",
+   "succ": "金末帝",
+   "pred_n": "完颜守绪",
+   "succ_n": "完颜承麟",
+   "pred_qid": "Q5081",
+   "succ_qid": "Q5069",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "大理太祖",
+   "succ": "段思英",
+   "pred_n": "段思平",
+   "succ_n": "段思英",
+   "pred_qid": "Q3040470",
+   "succ_qid": "Q11125447",
+   "rel": "父子",
+   "why": "最近公共祖先 Q3040470（段思平）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "dali",
+   "pred": "段思英",
+   "succ": "段思良",
+   "pred_n": "段思英",
+   "succ_n": "段思良",
+   "pred_qid": "Q11125447",
+   "succ_qid": "Q11125445",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段思良",
+   "succ": "段思聪",
+   "pred_n": "段思良",
+   "succ_n": "段思聪",
+   "pred_qid": "Q11125445",
+   "succ_qid": "Q11125443",
+   "rel": "父子",
+   "why": "最近公共祖先 Q11125445（段思良）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "dali",
+   "pred": "段思聪",
+   "succ": "段素顺",
+   "pred_n": "段思聪",
+   "succ_n": "段素顺",
+   "pred_qid": "Q11125443",
+   "succ_qid": "Q11125550",
+   "rel": "父子",
+   "why": "最近公共祖先 Q11125443（段思聰）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "dali",
+   "pred": "段素顺",
+   "succ": "段素英",
+   "pred_n": "段素顺",
+   "succ_n": "段素英",
+   "pred_qid": "Q11125550",
+   "succ_qid": "Q11547081",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段素英",
+   "succ": "段素廉",
+   "pred_n": "段素英",
+   "succ_n": "段素廉",
+   "pred_qid": "Q11547081",
+   "succ_qid": "Q11125540",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段素廉",
+   "succ": "段素隆",
+   "pred_n": "段素廉",
+   "succ_n": "段素隆",
+   "pred_qid": "Q11125540",
+   "succ_qid": "Q11125547",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段素隆",
+   "succ": "段素真",
+   "pred_n": "段素隆",
+   "succ_n": "段素真",
+   "pred_qid": "Q11125547",
+   "succ_qid": "Q11547080",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段素真",
+   "succ": "段素兴",
+   "pred_n": "段素真",
+   "succ_n": "段素兴",
+   "pred_qid": "Q11547080",
+   "succ_qid": "Q11547082",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段素兴",
+   "succ": "段思廉",
+   "pred_n": "段素兴",
+   "succ_n": "段思廉",
+   "pred_qid": "Q11547082",
+   "succ_qid": "Q11125441",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段思廉",
+   "succ": "段廉义",
+   "pred_n": "段思廉",
+   "succ_n": "段廉义",
+   "pred_qid": "Q11125441",
+   "succ_qid": "Q11125430",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段廉义",
+   "succ": "段寿辉",
+   "pred_n": "段廉义",
+   "succ_n": "段寿辉",
+   "pred_qid": "Q11125430",
+   "succ_qid": "Q11125356",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段寿辉",
+   "succ": "段正明",
+   "pred_n": "段寿辉",
+   "succ_n": "段正明",
+   "pred_qid": "Q11125356",
+   "succ_qid": "Q835540",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段正明",
+   "succ": "段正淳",
+   "pred_n": "段正明",
+   "succ_n": "段正淳",
+   "pred_qid": "Q835540",
+   "succ_qid": "Q832433",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段正淳",
+   "succ": "段正严",
+   "pred_n": "段正淳",
+   "succ_n": "段正严",
+   "pred_qid": "Q832433",
+   "succ_qid": "Q2213643",
+   "rel": "父子",
+   "why": "最近公共祖先 Q832433（段正淳）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "dali",
+   "pred": "段正严",
+   "succ": "段正兴",
+   "pred_n": "段正严",
+   "succ_n": "段正兴",
+   "pred_qid": "Q2213643",
+   "succ_qid": "Q8007984",
+   "rel": "父子",
+   "why": "最近公共祖先 Q2213643（段和誉）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "dali",
+   "pred": "段正兴",
+   "succ": "段智兴",
+   "pred_n": "段正兴",
+   "succ_n": "段智兴",
+   "pred_qid": "Q8007984",
+   "succ_qid": "Q1929156",
+   "rel": "父子",
+   "why": "最近公共祖先 Q8007984（段正興）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "dali",
+   "pred": "段智兴",
+   "succ": "段智廉",
+   "pred_n": "段智兴",
+   "succ_n": "段智廉",
+   "pred_qid": "Q1929156",
+   "succ_qid": "Q6140529",
+   "rel": "父子",
+   "why": "最近公共祖先 Q1929156（段智興）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "dali",
+   "pred": "段智廉",
+   "succ": "段智祥",
+   "pred_n": "段智廉",
+   "succ_n": "段智祥",
+   "pred_qid": "Q6140529",
+   "succ_qid": "Q11125473",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段智祥",
+   "succ": "段祥兴",
+   "pred_n": "段智祥",
+   "succ_n": "段祥兴",
+   "pred_qid": "Q11125473",
+   "succ_qid": "Q11125539",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "dali",
+   "pred": "段祥兴",
+   "succ": "段兴智",
+   "pred_n": "段祥兴",
+   "succ_n": "段兴智",
+   "pred_qid": "Q11125539",
+   "succ_qid": "Q11125562",
+   "rel": "未定",
+   "why": "祖先链不全（Wikidata 缺 P22）",
+   "src": "wikidata"
+  },
+  {
+   "d": "yuan",
+   "pred": "元太祖（成吉思汗）",
+   "succ": "元太宗",
+   "pred_n": "铁木真",
+   "succ_n": "窝阔台",
+   "pred_qid": "Q720",
+   "succ_qid": "Q7519",
+   "rel": "父子",
+   "why": "最近公共祖先 Q720（成吉思汗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "元太宗",
+   "succ": "元定宗",
+   "pred_n": "窝阔台",
+   "succ_n": "贵由",
+   "pred_qid": "Q7519",
+   "succ_qid": "Q7520",
+   "rel": "父子",
+   "why": "最近公共祖先 Q7519（窝阔台）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "元定宗",
+   "succ": "元宪宗",
+   "pred_n": "贵由",
+   "succ_n": "蒙哥",
+   "pred_qid": "Q7520",
+   "succ_qid": "Q7521",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q234805（孛兒帖）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "元宪宗",
+   "succ": "元世祖",
+   "pred_n": "蒙哥",
+   "succ_n": "忽必烈",
+   "pred_qid": "Q7521",
+   "succ_qid": "Q7523",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q271016（唆鲁禾帖尼）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "元世祖",
+   "succ": "元成宗",
+   "pred_n": "忽必烈",
+   "succ_n": "铁穆耳",
+   "pred_qid": "Q7523",
+   "succ_qid": "Q8468",
+   "rel": "祖孙",
+   "why": "最近公共祖先 Q7523（忽必烈）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "元成宗",
+   "succ": "元武宗",
+   "pred_n": "铁穆耳",
+   "succ_n": "海山",
+   "pred_qid": "Q8468",
+   "succ_qid": "Q8532",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q1036575（真金）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "元武宗",
+   "succ": "元仁宗",
+   "pred_n": "海山",
+   "succ_n": "爱育黎拔力八达",
+   "pred_qid": "Q8532",
+   "succ_qid": "Q8540",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q7076261（答己）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "元仁宗",
+   "succ": "元英宗",
+   "pred_n": "爱育黎拔力八达",
+   "succ_n": "硕德八剌",
+   "pred_qid": "Q8540",
+   "succ_qid": "Q8549",
+   "rel": "父子",
+   "why": "最近公共祖先 Q8540（元仁宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "元英宗",
+   "succ": "泰定帝",
+   "pred_n": "硕德八剌",
+   "succ_n": "也孙铁木儿",
+   "pred_qid": "Q8549",
+   "succ_qid": "Q8560",
+   "rel": "从叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q1036575（真金）",
+   "src": "wikidata",
+   "gen": [
+    3,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "泰定帝",
+   "succ": "天顺帝",
+   "pred_n": "也孙铁木儿",
+   "succ_n": "阿速吉八",
+   "pred_qid": "Q8560",
+   "succ_qid": "Q8653",
+   "rel": "父子",
+   "why": "最近公共祖先 Q8560（元泰定帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "天顺帝",
+   "succ": "元文宗",
+   "pred_n": "阿速吉八",
+   "succ_n": "图帖睦尔",
+   "pred_qid": "Q8653",
+   "succ_qid": "Q8655",
+   "rel": "再从兄弟",
+   "why": "最近公共祖先 Q1036575（真金）",
+   "src": "wikidata",
+   "gen": [
+    3,
+    3
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "元文宗",
+   "succ": "元明宗",
+   "pred_n": "图帖睦尔",
+   "succ_n": "和世㻋",
+   "pred_qid": "Q8655",
+   "succ_qid": "Q8659",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q8532（元武宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "元明宗",
+   "succ": "元宁宗",
+   "pred_n": "和世㻋",
+   "succ_n": "懿璘质班",
+   "pred_qid": "Q8659",
+   "succ_qid": "Q8664",
+   "rel": "父子",
+   "why": "最近公共祖先 Q8659（元明宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "yuan",
+   "pred": "元宁宗",
+   "succ": "元惠宗（顺帝）",
+   "pred_n": "懿璘质班",
+   "succ_n": "妥懽帖睦尔",
+   "pred_qid": "Q8664",
+   "succ_qid": "Q8666",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q8659（元明宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "byuan",
+   "pred": "北元昭宗",
+   "succ": "北元后主",
+   "pred_n": "爱猷识理达腊",
+   "succ_n": "脱古思帖木儿",
+   "pred_qid": "Q8916",
+   "succ_qid": "Q8937",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q8666（元順帝）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明太祖",
+   "succ": "明惠帝（建文）",
+   "pred_n": "朱元璋",
+   "succ_n": "朱允炆",
+   "pred_qid": "Q9957",
+   "succ_qid": "Q9961",
+   "rel": "祖孙",
+   "why": "最近公共祖先 Q9957（朱元璋）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明惠帝（建文）",
+   "succ": "明成祖",
+   "pred_n": "朱允炆",
+   "succ_n": "朱棣",
+   "pred_qid": "Q9961",
+   "succ_qid": "Q9965",
+   "rel": "叔侄（逆向：继任是前任的长辈）",
+   "why": "最近公共祖先 Q1068941（马皇后）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明成祖",
+   "succ": "明仁宗",
+   "pred_n": "朱棣",
+   "succ_n": "朱高炽",
+   "pred_qid": "Q9965",
+   "succ_qid": "Q9972",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9965（明成祖）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明仁宗",
+   "succ": "明宣宗",
+   "pred_n": "朱高炽",
+   "succ_n": "朱瞻基",
+   "pred_qid": "Q9972",
+   "succ_qid": "Q9977",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9972（明仁宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明宣宗",
+   "succ": "明英宗",
+   "pred_n": "朱瞻基",
+   "succ_n": "朱祁镇",
+   "pred_qid": "Q9977",
+   "succ_qid": "Q9983",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9977（明宣宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明英宗",
+   "succ": "明代宗",
+   "pred_n": "朱祁镇",
+   "succ_n": "朱祁钰",
+   "pred_qid": "Q9983",
+   "succ_qid": "Q9988",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q9977（明宣宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明代宗",
+   "succ": "明宪宗",
+   "pred_n": "朱祁钰",
+   "succ_n": "朱见深",
+   "pred_qid": "Q9988",
+   "succ_qid": "Q9991",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q9977（明宣宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明宪宗",
+   "succ": "明孝宗",
+   "pred_n": "朱见深",
+   "succ_n": "朱祐樘",
+   "pred_qid": "Q9991",
+   "succ_qid": "Q9994",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9991（明憲宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明孝宗",
+   "succ": "明武宗",
+   "pred_n": "朱祐樘",
+   "succ_n": "朱厚照",
+   "pred_qid": "Q9994",
+   "succ_qid": "Q10007",
+   "rel": "父子",
+   "why": "最近公共祖先 Q9994（明孝宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明武宗",
+   "succ": "明世宗（嘉靖）",
+   "pred_n": "朱厚照",
+   "succ_n": "朱厚熜",
+   "pred_qid": "Q10007",
+   "succ_qid": "Q10011",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q9991（明憲宗）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明世宗（嘉靖）",
+   "succ": "明穆宗（隆庆）",
+   "pred_n": "朱厚熜",
+   "succ_n": "朱载坖",
+   "pred_qid": "Q10011",
+   "succ_qid": "Q10059",
+   "rel": "父子",
+   "why": "最近公共祖先 Q10011（明世宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明穆宗（隆庆）",
+   "succ": "明神宗（万历）",
+   "pred_n": "朱载坖",
+   "succ_n": "朱翊钧",
+   "pred_qid": "Q10059",
+   "succ_qid": "Q10061",
+   "rel": "父子",
+   "why": "最近公共祖先 Q10059（明穆宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明神宗（万历）",
+   "succ": "明光宗（泰昌）",
+   "pred_n": "朱翊钧",
+   "succ_n": "朱常洛",
+   "pred_qid": "Q10061",
+   "succ_qid": "Q10065",
+   "rel": "父子",
+   "why": "最近公共祖先 Q10061（明神宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明光宗（泰昌）",
+   "succ": "明熹宗（天启）",
+   "pred_n": "朱常洛",
+   "succ_n": "朱由校",
+   "pred_qid": "Q10065",
+   "succ_qid": "Q10066",
+   "rel": "父子",
+   "why": "最近公共祖先 Q10065（明光宗）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "ming",
+   "pred": "明熹宗（天启）",
+   "succ": "明思宗（崇祯）",
+   "pred_n": "朱由校",
+   "succ_n": "朱由检",
+   "pred_qid": "Q10066",
+   "succ_qid": "Q10069",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q10065（明光宗）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nming",
+   "pred": "弘光帝",
+   "succ": "隆武帝",
+   "pred_n": "朱由崧",
+   "succ_n": "朱聿键",
+   "pred_qid": "Q1352743",
+   "succ_qid": "Q45697",
+   "rel": "三代内无血缘",
+   "why": "两边父系三代俱全而无公共祖先",
+   "src": "wikidata"
+  },
+  {
+   "d": "nming",
+   "pred": "隆武帝",
+   "succ": "绍武帝",
+   "pred_n": "朱聿键",
+   "succ_n": "朱聿鐭",
+   "pred_qid": "Q45697",
+   "succ_qid": "Q1046002",
+   "rel": "兄弟",
+   "why": "最近公共祖先 Q11093741（朱器墭）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "nming",
+   "pred": "绍武帝",
+   "succ": "永历帝",
+   "pred_n": "朱聿鐭",
+   "succ_n": "朱由榔",
+   "pred_qid": "Q1046002",
+   "succ_qid": "Q1326844",
+   "rel": "三代内无血缘",
+   "why": "两边父系三代俱全而无公共祖先",
+   "src": "wikidata"
+  },
+  {
+   "d": "qing",
+   "pred": "清太祖",
+   "succ": "清太宗",
+   "pred_n": "努尔哈赤",
+   "succ_n": "皇太极",
+   "pred_qid": "Q311189",
+   "succ_qid": "Q296367",
+   "rel": "父子",
+   "why": "最近公共祖先 Q311189（努尔哈赤）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qing",
+   "pred": "清太宗",
+   "succ": "清世祖（顺治）",
+   "pred_n": "皇太极",
+   "succ_n": "福临",
+   "pred_qid": "Q296367",
+   "succ_qid": "Q310453",
+   "rel": "父子",
+   "why": "最近公共祖先 Q296367（皇太极）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qing",
+   "pred": "清世祖（顺治）",
+   "succ": "清圣祖（康熙）",
+   "pred_n": "福临",
+   "succ_n": "玄烨",
+   "pred_qid": "Q310453",
+   "succ_qid": "Q17790",
+   "rel": "父子",
+   "why": "最近公共祖先 Q310453（順治帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qing",
+   "pred": "清圣祖（康熙）",
+   "succ": "清世宗（雍正）",
+   "pred_n": "玄烨",
+   "succ_n": "胤禛",
+   "pred_qid": "Q17790",
+   "succ_qid": "Q317839",
+   "rel": "父子",
+   "why": "最近公共祖先 Q17790（康熙帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qing",
+   "pred": "清世宗（雍正）",
+   "succ": "清高宗（乾隆）",
+   "pred_n": "胤禛",
+   "succ_n": "弘历",
+   "pred_qid": "Q317839",
+   "succ_qid": "Q19133",
+   "rel": "父子",
+   "why": "最近公共祖先 Q317839（雍正帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qing",
+   "pred": "清高宗（乾隆）",
+   "succ": "清仁宗（嘉庆）",
+   "pred_n": "弘历",
+   "succ_n": "颙琰",
+   "pred_qid": "Q19133",
+   "succ_qid": "Q333178",
+   "rel": "父子",
+   "why": "最近公共祖先 Q19133（乾隆帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qing",
+   "pred": "清仁宗（嘉庆）",
+   "succ": "清宣宗（道光）",
+   "pred_n": "颙琰",
+   "succ_n": "旻宁",
+   "pred_qid": "Q333178",
+   "succ_qid": "Q334351",
+   "rel": "父子",
+   "why": "最近公共祖先 Q333178（嘉庆帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qing",
+   "pred": "清宣宗（道光）",
+   "succ": "清文宗（咸丰）",
+   "pred_n": "旻宁",
+   "succ_n": "奕詝",
+   "pred_qid": "Q334351",
+   "succ_qid": "Q334452",
+   "rel": "父子",
+   "why": "最近公共祖先 Q334351（道光帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qing",
+   "pred": "清文宗（咸丰）",
+   "succ": "清穆宗（同治）",
+   "pred_n": "奕詝",
+   "succ_n": "载淳",
+   "pred_qid": "Q334452",
+   "succ_qid": "Q318811",
+   "rel": "父子",
+   "why": "最近公共祖先 Q334452（咸丰帝）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qing",
+   "pred": "清穆宗（同治）",
+   "succ": "清德宗（光绪）",
+   "pred_n": "载淳",
+   "succ_n": "载湉",
+   "pred_qid": "Q318811",
+   "succ_qid": "Q299710",
+   "rel": "从兄弟",
+   "why": "最近公共祖先 Q334351（道光帝）",
+   "src": "wikidata",
+   "gen": [
+    2,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "qing",
+   "pred": "清德宗（光绪）",
+   "succ": "清逊帝（宣统）",
+   "pred_n": "载湉",
+   "succ_n": "溥仪",
+   "pred_qid": "Q299710",
+   "succ_qid": "Q185152",
+   "rel": "叔侄",
+   "why": "最近公共祖先 Q2982450（奕譞）",
+   "src": "wikidata",
+   "gen": [
+    1,
+    2
+   ],
+   "adopt": false
+  },
+  {
+   "d": "taiping",
+   "pred": "天王",
+   "succ": "幼天王",
+   "pred_n": "洪秀全",
+   "succ_n": "洪天贵福",
+   "pred_qid": "Q334732",
+   "succ_qid": "Q707858",
+   "rel": "父子",
+   "why": "最近公共祖先 Q334732（洪秀全）",
+   "src": "wikidata",
+   "gen": [
+    0,
+    1
+   ],
+   "adopt": false
+  }
+ ]
+}
