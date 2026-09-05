@@ -201,6 +201,9 @@ function wikiOf(title) {
     : { lang: 'zh', t: title };
 }
 
+// 卡脚那句按摘要真正来自哪个语种写（2026-09-05 库主指出：英文条目的卡写着「取自中文维基百科」不对）
+const srcLabel = (spec) => (wikiOf(spec.title).lang === 'en' ? '摘要实时取自英文维基百科' : '摘要实时取自中文维基百科');
+
 /** `**粗体**` 转 `<strong>` 的正本已迁去 `js/text.js`（与 tour.js 的长文栏、
  *  两条 cta 同吃一份）。此处原样 re-export：`app-map.js` 与 `app-place.js`
  *  的既有 import 一行不动，本文件内部（ycParas、fillCard）也照旧直呼其名。 */
@@ -442,11 +445,11 @@ async function fillCard(card, spec) {
   if (localPic) {
     card.img.src = localPic.src;
     pic(true);
-    card.src.textContent = localPic.note + '；摘要实时取自中文维基百科';
+    card.src.textContent = localPic.note + '；' + srcLabel(spec);
     card.img.classList.add('kp-zoomable');
     card.img.dataset.zoomcap = `${spec.display || spec.title || ''}——${localPic.note}`;
   } else {
-    card.src.textContent = '摘要实时取自中文维基百科';
+    card.src.textContent = srcLabel(spec);
     card.img.classList.remove('kp-zoomable');
     delete card.img.dataset.zoomcap;
   }
