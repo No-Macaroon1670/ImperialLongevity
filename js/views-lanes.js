@@ -16,7 +16,7 @@ import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hid
 import { mountKnowledgeCorner, eventSpec, evSpec } from './knowledge.js';
 import { stampHash } from './search.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
-import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, TRANSITIONS, ORTHODOX, SECONDARY } from './dynasties.js';
+import { ERAS, eraAt, SUCCESSION, MERGED_INTO, SPRANG_FROM, TRANSITIONS, ORTHODOX, SECONDARY } from './dynasties.js';
 import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor, evFlags, evRank, evVisible, fanOut, countByKind } from './events.js';
 import { nianhaoSegs, nianhaoTip, nianhaoTitle } from './nianhao.js';
 import { fmtDate } from './schema.js';
@@ -904,7 +904,7 @@ export function renderLaneTimeline(host, list, opts) {
       });
       coatHit.dataset.evi = String(EVENTS.indexOf(ev));
       hoverable(coatHit, () => [
-        { color: 'var(--ev-era)', value: `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}`, label: '治世·中兴' },
+        { color: 'var(--ev-era)', value: `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}`, label: EVENT_KINDS.era.label },   // 09-05 读类表（库主「907 也收」）
         { label: '史称', value: ev.n },
         { label: '所属', value: best.d.name },
         '后世史书对这一段的追认，非当时建制；外框圈出的正是被追认的那几位君主。点它可读词条。',
@@ -1021,7 +1021,7 @@ export function renderLaneTimeline(host, list, opts) {
           hoverable(tHit, () => [
             { color: B.col, value: `${nameOfKey(L.from)} → ${nameOfKey(L.to)}`, label: L.label },
             { label: '史称', value: trans0.n },
-            { label: '时点', value: fmtYearAxis(t0 + (mid - PAD_L) / (W - 2 * PAD_L) * (t1 - t0)) },
+            { label: '时点', value: fmtYearAxis(x.invert(mid)) },   // 2026-09-05 归一 x.invert（D18；floor 取整后与旧手写式零差）
             '同一泳道内首尾相接即为法统相承；此刻痕标出这场交替的名目，点它可读词条。',
           ], () => trans0.n);
           gStrand.appendChild(tHit);
@@ -1059,7 +1059,7 @@ export function renderLaneTimeline(host, list, opts) {
       hoverable(hit, () => [
         { color: col, value: `${nameOfKey(L.from)} → ${nameOfKey(L.to)}`, label: L.label },
         ...(tr ? [{ label: '史称', value: tr.n }] : []),
-        { label: '时点', value: fmtYearAxis(t0 + (evX - PAD_L) / (W - 2 * PAD_L) * (t1 - t0)) },
+        { label: '时点', value: fmtYearAxis(x.invert(evX)) },
         L.kind === 'succ' ? '禅让或称帝改元式的法统相承：前朝的正朔由后朝接过。'
           : L.kind === 'merge' ? '武力吞并或纳土归降：疆土与朝廷并入对方。'
             : '裂土自立：从母体的疆土上分出。',
@@ -1082,8 +1082,10 @@ export function renderLaneTimeline(host, list, opts) {
     if (evi !== undefined && kp && kp.showEvent) {
       const e3 = EVENTS[+evi];
       if (e3) {
-        kp.showEvent({ id: `evt:${e3.w}`, head: `${fmtYearAxis(e3.y)}–${fmtYearAxis(e3.y2)} · 治世·中兴（史书追认）`,
-          title: e3.w, baidu: e3.b || e3.n, q: `${e3.n} 历史`, yt: true, display: e3.n });
+        // 2026-09-05 归一（SSOT 卷 D12，库主定甲案）：此前是全库唯一不走 evSpec 的手搓 spec，
+        // 与搜索／深链路径同 id 而字段不同，撞上 fillCard 的同 id 早退即「残卡黏住」；
+        // 26 条 era 的 b 同日回填（百度义项 id），故 baidu 不再退 n。
+        kp.showEvent(evSpec(e3));
         return;
       }
     }
@@ -1349,7 +1351,7 @@ export function renderLaneTimeline(host, list, opts) {
     const left = scroller.scrollLeft, cw = scroller.clientWidth;
     const y0 = x.invert(left), y1 = x.invert(left + cw), yc = (y0 + y1) / 2;
     const vis2 = bands.filter((b) => b.e > y0 && b.s < y1);
-    const era = ERAS.find((er) => yc >= er.s && yc <= er.e);
+    const era = eraAt(yc);   // 2026-09-05 归一（D17）：半开 [s,e)，与竖河同式；xsz 讫年同日改 -769 使 -770 仍读夏商西周
     const PW = 188, rows = Math.max(1, vis2.reduce((m, b) => Math.max(m, b.lane), 0) + 1);
     const PH = Math.min(rows, 12) * 7 + 4;
     const sx = (t) => Math.max(0, Math.min(PW, (t - y0) / (y1 - y0) * PW));

@@ -34,7 +34,7 @@
 //      与「安全起滑区」。触屏没有悬停，点中君主即高亮、详情进底部固定卡片。
 import { el, h, linear, hoverable, tableView, notes, fmtYearAxis, fmtSpan, fmt1, textWidth, glide } from './charts.js';
 import { DYN_STATS } from './data.js';
-import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS } from './dynasties.js';
+import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS, eraAt } from './dynasties.js';
 import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor, evFlags, evRank, evVisible, fanOut } from './events.js';
 import { nianhaoSegs, nianhaoTip, nianhaoTitle } from './nianhao.js';
 import { fmtDate } from './schema.js';
@@ -1571,7 +1571,7 @@ export function renderRiver(host, list, opts) {
       flashRead();
       // 浮标带时代名:界标画在杆上却匿名,补名是把既有元素的语义读完。
       // ERAS 有重叠期(960–979 两带并置),首匹配即钦定的主叙事(见 dynasties.js)
-      const era = ERAS.find((e2) => tMid >= e2.s && tMid < e2.e);
+      const era = eraAt(tMid);   // 2026-09-05 归一（D17）
       read.textContent = era ? `${fmtYearAxis(tMid)} · ${era.name}` : fmtYearAxis(tMid);
     }
     for (const n of labelNodes) {
