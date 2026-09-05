@@ -18,3 +18,16 @@
 文件名里的 EXIF 拍摄日期能自动读出来，但**署名只写到月**
 （「No-Macaroon1670 摄，2024 年 1 月」），日期精确到天没有意义，反而多给一层行踪。
 EXIF 被剥掉的照片读不出日期，那种要你说一声是哪年哪月。
+
+## 2026-09-05 起：总账与两层处置夹
+
+处理过的照片不再留在这里。跑过识别管线（闸0→闸1→闸2 或 Fable 全盘）的原片按判定搬走：
+
+- `img/processed/<日期-馆次>/` —— 过了识别、无推荐（弃／无对应／对库但可用度低）
+- `img/awaiting/<日期-馆次>/` —— 有推荐（可挂到库内某条／候立条），等裁切上站
+- `img/originals/` —— 已出品者的原片（既有规矩，改名 `<成品名>-orig.jpg`）
+
+**一张一行的总账在 `img/catalog.jsonl`**（`img/catalog.csv` 同内容可开表），记每张的馆次、识别批次与模型、认名、牌文抄录、对库条、判定、可用度、人脸、状态、出品文件名，并按美国馆藏著录体例预留 title／object_type／culture_period／date／materials／color／dimensions／provenance／current_location／accession_no／description／inscription 十二栏——日后另立「中华文物小图库」时 `python tools/mining/photo_ledger.py export` 出去私有字段的公开版即可。账本与处置夹都不入版本库。
+
+所以现在：**这里的文件数仍等于欠账数**，只是欠账里不再混着看过的。
+

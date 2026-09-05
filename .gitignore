@@ -56,3 +56,11 @@ img/originals/
 # 员误建于库根的工作目录（2026-09-02 小政权员 xzq-*）——永不入库；brief 须给绝对会话暂存路径
 scratchpad/
 tools/mining/nianhao_debug.json
+
+# 照片总账与两层处置夹（2026-09-05 库主立，tools/mining/photo_ledger.py）：本地不入库——账本含拍摄时刻与 GPS
+img/processed/
+img/awaiting/
+img/catalog.jsonl
+img/catalog.csv
+img/catalog-public.csv
+img/catalog-moves.log
