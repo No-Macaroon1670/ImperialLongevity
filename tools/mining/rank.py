@@ -149,6 +149,28 @@ for e, a, b, c in zip(evs, zll, zlh, zpv):
     e["score"] = a + b + c
     e["_s"] = (sig[e["w"]]["ll"], sig[e["w"]]["lh"], sig[e["w"]]["pv"])
 
+# ── 页型折中(2026-09-05 库主定「A 折中」)──────────────────────────────
+# 三个信号量的是 `w` 指向的那一页,不是这条事;而页有页型:`wt: person` 的 w 是人物页、
+# `wt: parent` 是母题页,其余是事件页。09-05 实测中位数(能对库的 1465 条):
+#     事件页 1070 条  语言链 4  入链 138  年访问  6449
+#     人物页  265 条  语言链 16 入链 290  年访问 28759
+#     母题页  130 条  语言链 8  入链 241  年访问 10236
+# 人物页三信号都是事件页的二到四倍——挂人物页的事自带一截借来的分(公孙度自立案:
+# 借《公孫度》人物页 lh 500 走 rev 类保底进一等)。上面的 fig 上限只治名人轶事一类,
+# 别类挂人物页不管。这里把每条的分改成「全库同池 z」与「本页型内 z」各半:
+# 全 A(只在页型内比)干跑会让一等线上换血 135 条、人物页条 98→37,力度过大,故折中。
+PAGETYPE_BLEND = 0.5
+_grp = lambda e: e.get("wt") if e.get("wt") in ("person", "parent") else "event"
+for _g in ("event", "person", "parent"):
+    _P = [e for e in evs if _grp(e) == _g]
+    if len(_P) < 2:
+        continue
+    _ga = z([lg(sig[e["w"]]["ll"]) for e in _P])
+    _gb = z([lg(sig[e["w"]]["lh"]) for e in _P])
+    _gc = z([lg(sig[e["w"]]["pv"]) for e in _P])
+    for e, a, b, c in zip(_P, _ga, _gb, _gc):
+        e["score"] = (1 - PAGETYPE_BLEND) * e["score"] + PAGETYPE_BLEND * (a + b + c)
+
 # era(治世·中兴)不参与分级:它们画成皇帝格子的外套,根本不在事件轨上,
 # 占了锚点名额等于让卡片跟随一个图上找不到的东西。
 rankable = [e for e in evs if e["k"] != "era"]
@@ -256,6 +278,7 @@ if promoted:
               % (b0, ("前%d" % -e["y"]) if e["y"] < 0 else e["y"], e["k"], e["n"], e["score"]))
 
 for e in evs:
+    e["_r0"] = e.get("r")            # events.js 现行 r,供 --dry 对照
     e["r"] = tier.get(id(e), 3)
 cnt = defaultdict(int)
 for e in evs:
@@ -275,8 +298,24 @@ print("\n一等里分数最低的 15 条(复核用,看看类别保底有没有�
 for e in sorted([e for e in evs if e["r"] == 1], key=lambda e: e["score"])[:15]:
     print("  %6.2f  %-6s %-4s %s" % (e["score"], fy(e["y"]), e["k"], e["n"]))
 
-json.dump([{"y": e["y"], "n": e["n"], "w": e["w"], "k": e["k"], "r": e["r"],
-            "score": round(e["score"], 3)} for e in evs],
-          io.open(os.path.join(HERE, "ranks.json"), "w", encoding="utf-8"),
-          ensure_ascii=False, indent=0)
-print("\n→ ranks.json")
+DRY = "--dry" in sys.argv
+out_rows = [{"y": e["y"], "n": e["n"], "w": e["w"], "k": e["k"], "r": e["r"],
+             "score": round(e["score"], 3)} for e in evs]
+if DRY:
+    # 干跑:不动 ranks.json,只出与 events.js 现行 r 的对照表(2026-09-05 页型折中案先看后落)
+    json.dump(out_rows, io.open(os.path.join(HERE, "ranks-dry.json"), "w", encoding="utf-8"),
+              ensure_ascii=False, indent=0)
+    ch = [e for e in evs if isinstance(e.get("_r0"), int) and e["_r0"] != e["r"]]
+    up = sorted([e for e in ch if e["_r0"] > e["r"]], key=lambda e: -e["score"])
+    dn = sorted([e for e in ch if e["_r0"] < e["r"]], key=lambda e: -e["score"])
+    print("\n干跑对照:r 变动 %d 条(升 %d、降 %d)——现行 r 取自 events.js" % (len(ch), len(up), len(dn)))
+    for tag, rows in (("升", up), ("降", dn)):
+        print("\n%s级 %d 条:" % (tag, len(rows)))
+        print("  %-6s %-4s %-7s %-16s %s  分数  ll/lh/pv" % ("年", "类", "页型", "条", "现→新"))
+        for e in rows:
+            print("  %-6s %-4s %-7s %-16s  %d→%d  %6.2f  %d/%d/%d" % (fy(e["y"]), e["k"], _grp(e), e["n"][:16], e["_r0"], e["r"], e["score"], e["_s"][0], e["_s"][1], e["_s"][2]))
+    print("\n→ ranks-dry.json(未动 ranks.json)")
+else:
+    json.dump(out_rows, io.open(os.path.join(HERE, "ranks.json"), "w", encoding="utf-8"),
+              ensure_ascii=False, indent=0)
+    print("\n→ ranks.json")
