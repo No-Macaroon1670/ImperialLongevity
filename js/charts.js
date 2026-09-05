@@ -333,7 +333,7 @@ export function glide(read, write, to, { min = 380, max = 1400, perPx = 0.5 } = 
   });
 }
 
-export const fmtYear = (y) => (y <= 0 ? `前${-y + 1}` : String(Math.round(y)));
-export const fmtYearAxis = (y) => (y <= 0 ? `前${-Math.round(y) + 1}` : String(Math.round(y)));
+// 正本迁至 js/year.js（零依赖），此处原样 re-export：十余处 `import { fmtYearAxis } from './charts.js'` 一行不动
+export { fmtYearAxis } from './year.js';
 export const fmt1 = (v) => (v === null || v === undefined || !isFinite(v) ? '—' : v.toFixed(1));
 export const fmt2 = (v) => (v === null || v === undefined || !isFinite(v) ? '—' : v.toFixed(2));

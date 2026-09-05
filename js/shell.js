@@ -360,6 +360,48 @@ function renderHero(host, list) {
   }
 }
 
+// ── 本节控件簇浮层（section.lc-open）的独家开关 ───────────────────────────
+//
+// 归一于 2026-09-04（SSOT 卷 D23）。此前 shell 的 ⚙（.sn-gear）与 search 的 ⚙
+// （.tl-gear）各挂一条 document click，而全景页两颗齿轮同页同节：先注册的
+// shell 那条把 .tl-gear 刚开的弹层当场关掉——点下去什么也不发生（「白点」）。
+// 现在关闭权只此一条，谁要加一颗齿轮，走 registerLcGear 把自己登记进豁免名单。
+//
+// 豁免按**节点**记而不按 class：两颗齿轮的 class 本就不同，逐个登记比堆选择器诚实；
+// 且弹层里的控件每次 render() 整行重建，节点会换，故只对齿轮按钮本身用 contains。
+const LC_GEARS = new Set();
+const closeLc = () => { for (const s of document.querySelectorAll('section.lc-open')) s.classList.remove('lc-open'); };
+let lcCloserBound = false;
+function bindLcClose() {
+  if (lcCloserBound) return;
+  lcCloserBound = true;
+  // 点弹层外任意处即收（小屏上弹层可能盖住齿轮本尊，关不掉——2026-08-24 周末 bug 报）
+  document.addEventListener('click', (e) => {
+    if (!document.querySelector('section.lc-open')) return;
+    const t = e.target;
+    if (t instanceof Element && (t.closest('.local-controls') || [...LC_GEARS].some((g) => g.contains(t)))) return;
+    closeLc();
+  });
+  // Esc 同效（原在 search.js，随关闭权一并搬来；此处补上 search 那份缺的守卫由 closeLc 兜住）
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLc(); });
+}
+/**
+ * 登记一颗「打开本节控件簇」的齿轮：把按钮列入豁免名单，并给它挂上开合。
+ * `sectionEl` 可以是元素，也可以是取元素的函数（shell 自己那颗要随「当前节」走）。
+ * 口径：**同时至多一节开着**——开新的先收旧的，与 2026-08-22 起的实操一致。
+ */
+export function registerLcGear(btn, sectionEl) {
+  LC_GEARS.add(btn);
+  bindLcClose();
+  btn.addEventListener('click', () => {
+    const sec = typeof sectionEl === 'function' ? sectionEl() : sectionEl;
+    if (!sec) return;
+    const on = sec.classList.contains('lc-open');
+    closeLc();
+    if (!on) sec.classList.add('lc-open');
+  });
+}
+
 // ── 上下节导航条 ─────────────────────────────────────────────────────────
 /**
  * 窄屏上的顶／底两条固定条。它们身兼二职：
@@ -390,28 +432,26 @@ function setupSectionNav() {
   // 窄屏样式见 styles.css 719px 段；宽屏本来就有同名规则）。簇里的「设置」折叠组在弹层内
   // 走 static 内层体，不会再被视口边裁掉。点弹层外任意处、或黑条收起时，弹层随之收。
   let curSec = null;
-  const closeLc = () => { for (const s of document.querySelectorAll('section.lc-open')) s.classList.remove('lc-open'); };
   const gear = h('button', { class: 'sn-gear', type: 'button', text: '⚙', title: '本节设置', 'aria-label': '本节设置' });
-  gear.onclick = (e) => {
-    // 不让这一下冒到 document：页上另有「点空处收起」一族的全局监听，会把刚开的弹层当场关掉
-    e.stopPropagation();
-    if (!curSec) return;
-    const on = curSec.classList.contains('lc-open');
-    closeLc();
-    if (!on) curSec.classList.add('lc-open');
-  };
+  registerLcGear(gear, () => curSec);   // 开合与「点外即收」都归上面那一套
+  // 这一下仍不冒到 document——但已**不是**为躲 lc-open 那条监听（本钮已在豁免名单里），
+  // 而是为躲 bindLcSetOutsideClose：冒上去会把弹层里刚展开的「设置」折叠组一并合掉，
+  // 连 S._lcSetOpen 一起翻掉。2026-09-04 归一时逐条核过，故留
+  gear.addEventListener('click', (e) => e.stopPropagation());
   up.bar.appendChild(gear);
-  document.addEventListener('click', (e) => {
-    if (!document.querySelector('section.lc-open')) return;
-    if (e.target instanceof Element && (e.target.closest('.sn-gear') || e.target.closest('.local-controls'))) return;
-    closeLc();
-  });
 
   const set = (o, text, go) => {
     if (o.label !== text) { o.label = text; o.btn.textContent = text; o.btn.onclick = go; }
     o.bar.classList.add('on');
   };
-  const hide = (o) => { o.bar.classList.remove('on'); o.label = null; if (o === up) closeLc(); };
+  // 收黑条时才收弹层——齿轮长在上行这条上，条一走弹层就没人关得掉。
+  // 但**必须先真的开着**：update() 挂在 scroll 上逐帧跑，宽屏在早退前先跑过一次 hide(up)，
+  // 从前那句无条件 closeLc() 于是让桌面端任意一次滚动都把弹层关掉（2026-09-04 修）
+  const hide = (o) => {
+    const was = o.bar.classList.contains('on');
+    o.bar.classList.remove('on'); o.label = null;
+    if (o === up && was) closeLc();
+  };
   const jump = (id) => () => (id
     ? document.getElementById(id).scrollIntoView({ block: 'start' })
     : scrollTo({ top: 0, behavior: 'smooth' }));

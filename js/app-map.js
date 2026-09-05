@@ -39,6 +39,7 @@ import { syncCounts } from './counts.js';
 import { LINES } from './lines.js';
 import { DYNASTIES } from './dynasties.js';
 import { WORLDMAP, projectWorld } from './basemap-world.js';
+import { fmtYearAxis } from './year.js';
 
 // 世界图双版（库主三答定案 2026-08-24，点火 2026-08-31）：W/H 随版切换，
 // 中国版一切不动，世界版只画「有境外落点」的合格条目
@@ -46,8 +47,10 @@ let W = BASEMAP.w, H = BASEMAP.h;
 const $ = (id) => document.getElementById(id);
 const xy = ([lat, lon]) => (state.world ? projectWorld(lon, lat) : project(lon, lat));
 // 天文纪年→前N：**须加一**（-6999＝前7000）。此处原漏加，全图公元前年份
-// 显示皆晚一年，史前三条入库时撞出（2026-08-31）；正本口径见 charts.fmtYearAxis
-const yr = (y) => (y <= 0 ? `前 ${-y + 1}` : `${y}`);
+// 显示皆晚一年，史前三条入库时撞出（2026-08-31）。加一与取整的口径 2026-09-04
+// 收归 js/year.js；本页只保留那个半角空格——「前 221 – 前 210」是舆图坞行的
+// 本地宽排版式（与政权行对齐），紧排与否须库主另裁，故此处是薄壳不是副本。
+const yr = (y) => fmtYearAxis(y).replace('前', '前 ');
 
 /* ── 数据 ─────────────────────────────────────────────────────────────── */
 

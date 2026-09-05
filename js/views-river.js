@@ -35,7 +35,7 @@
 import { el, h, linear, hoverable, tableView, notes, fmtYearAxis, fmt1, textWidth, glide } from './charts.js';
 import { DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS } from './dynasties.js';
-import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor } from './events.js';
+import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor, evFlags, evRank, evVisible } from './events.js';
 import { NIANHAO } from './data-nianhao.js';
 import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName, eventLegend, evMark } from './views-lanes.js';
@@ -739,9 +739,10 @@ export function renderRiver(host, list, opts) {
   // 代价是河面要让出两条边栏。窄到一定程度就不值:十六国九股并流时,
   // 河宽每让出一百像素,每股就少十一像素——名字先挤不下的是河里,不是岸上。
   // 故设河宽下限,让不出边栏时就不设边栏(改由 setupNarrowEvents 走另一套排法)。
-  // 大事记分级独立勾选（evRanks 数组存要看的等级）；全取掉＝无大事记
-  const rkSet = new Set(opts.evRanks || [1, 2, 3]);
-  const showEvents = rkSet.size > 0;
+  // 大事记分级独立勾选（evRanks 数组存要看的等级）；全取掉＝无大事记。
+  // 三个旗标一次算出（events.evFlags），本轮渲染的三个事件层都吃这一份 Set：
+  // 谓词在热路径上要过全库好几遍，不能每处现建（2026-09-04 归一，SSOT 卷 D08）
+  const { evOff, rkSet, showEvents } = evFlags(opts);
   const BAND_MIN = 340;                    // 河宽下限:低于此不再割边栏
   const STRIP_MIN = 70;                    // 边栏下限:窄于此写不下名字
   // 要么给足,要么不给:三四十像素的边栏一个字都摆不下,却照样从河面上割走
@@ -824,15 +825,14 @@ export function renderRiver(host, list, opts) {
   // 分法取 176:120 而非「兵祸/文治」的 72:224——后者更好听,但本库有一百一十二
   // 条文化类(我们有意补进的文学与科技),右岸会挤到掉名字而左岸空着一半。
   if (EV_STRIP > 0) {
-    const evOff = new Set(opts.evOff || []);
     const FS = 10.5, ROW = 12.5;
     const R = { 1: 4, 2: 3, 3: 2.2 };
-    const rk = (e) => e.r || 2;        // 分级勾选（rank 屏蔽）：档外整条不画，标记也不留
+    const rk = evRank;                 // 分级勾选（rank 屏蔽）：档外整条不画，标记也不留
     // 同年错开,与泳道图同理(见 views-lanes.js 的长注)。竖河里时间是纵向的,
     // 故沿河岸上下摊开;同年但分属两岸的本来就不撞,只在同岸内分组。
     const sameYear = new Map();
     for (const e2 of EVENTS) {
-      if (evOff.has(e2.k) || e2.k === 'era' || !rkSet.has(rk(e2))) continue;
+      if (!evVisible(e2, evOff, rkSet, true)) continue;
       const key = `${e2.y}|${LEFT_BANK.has(e2.k) ? 'L' : 'R'}`;
       if (!sameYear.has(key)) sameYear.set(key, []);
       sameYear.get(key).push(e2);
@@ -851,7 +851,7 @@ export function renderRiver(host, list, opts) {
       // 陈桥兵变、靖康之变都一并挡掉了——正是先前特意补回来的那十一条,
       // 补进数据却仍被这里拦在轨外,等于白补。承继细丝的刻痕在河身、
       // 事件点在表头,两处register不同,并存不算重复。
-      if (evOff.has(ev.k) || ev.k === 'era' || !rkSet.has(rk(ev))) continue;
+      if (!evVisible(ev, evOff, rkSet, true)) continue;
       const ty = y(evAnchor(ev)) + fanOf(ev);
       if (ty < -20 || ty > H + 20) continue;
       const kind = EVENT_KINDS[ev.k] || EVENT_KINDS.gov;
@@ -1123,12 +1123,11 @@ export function renderRiver(host, list, opts) {
     //      一边，属于「一边变成另一边」的那一刻，落在过渡的正中即两不亏欠；
     //   ③ 当时只有一个政权在场：无歧义（安史之乱→唐）；
     //   ④ 其余落在**河道之间的缝上**——与②同一个道理：说不准归谁，就不占谁。
-    const evOff = new Set(opts.evOff || []);
     // ROW 13.5 而非字号的 11.5：10px 的字实际占 12px 高，再贴着排就是两行字
     // 挨在一起没有一丝白；13.5 给出一线呼吸
     const FS = 10, ROW = 13.5;
     const R = { 1: 4, 2: 3, 3: 2.3 };
-    const rk = (e) => e.r || 2;        // 分级勾选（rank 屏蔽）：档外整条不画，标记也不留
+    const rk = evRank;                 // 分级勾选（rank 屏蔽）：档外整条不画，标记也不留
     // 二三等要「河道宽松」才放出来，宽松有两个方向：
     //   横向 MIN_W——河道窄到写不下就别挤（十六国的九股并流里，二三等一律不放）；
     //   纵向 PAD ——名字要多大的清净才配写出来。一等按自身高度找空当，二等要
@@ -1203,7 +1202,7 @@ export function renderRiver(host, list, opts) {
     const taken = inkTaken.slice();
     const free = (x0, x1, y0, y1) => !taken.some((p) => x0 < p[1] && x1 > p[0] && y0 < p[3] && y1 > p[2]);
     for (const ev of [...EVENTS].sort((a, b) => rk(a) - rk(b) || a.y - b.y)) {
-      if (evOff.has(ev.k) || ev.k === 'era' || !rkSet.has(rk(ev))) continue;
+      if (!evVisible(ev, evOff, rkSet, true)) continue;
       const ty = y(ev.y);
       if (ty < -20 || ty > H + 20) continue;
       const an = anchorOf(ev);

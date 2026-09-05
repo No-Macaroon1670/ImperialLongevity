@@ -13,6 +13,8 @@
 //   no 备注
 // -----------------------------------------------------------------------------
 
+import { fmtYearAxis } from './year.js';
+
 /** 死因编码。0–5 为需求文档所定义；6「意外/事故」为本库的显式扩展。 */
 export const CAUSE = {
   0: { key: 'natural',  label: '自然死亡', short: '自然', violent: 0 },
@@ -91,7 +93,7 @@ export function parseDate(s) {
 const CN_NUM = '零一二三四五六七八九';
 export function fmtDate(dt, { yearOnly = false } = {}) {
   if (!dt) return '不详';
-  const y = dt.year <= 0 ? `前${-dt.year + 1}年` : `${dt.year}年`;
+  const y = `${fmtYearAxis(dt.year)}年`;   // 天文纪年→前N 的加一口径归 js/year.js（2026-09-04）
   if (yearOnly || dt.precision === 'year') return y;
   if (dt.precision === 'month') return `${y}${dt.month}月`;
   return `${y}${dt.month}月${dt.day}日`;

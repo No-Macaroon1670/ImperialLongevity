@@ -33,6 +33,7 @@ import { evSpec, mountEmbedCard, mdBold } from './knowledge.js';
 // 形状与配色一律复用泳道图那一套：同一个库，事件的红三角在哪一页都得是红三角，
 // 政权的色槽在哪一页都得是同一槽（slotVar 与 dynastyColorSlots 即那张色表）
 import { evMark, dynastyColorSlots, slotVar } from './views-lanes.js';
+import { eventLegend as chipRow } from './events-ui.js';
 import { DYNASTIES, DYN_MAP, ERAS, SUCCESSION, MERGED_INTO, ORTHODOX } from './dynasties.js';
 import { LINE_STOPS } from './line-stops.js';
 import { cardPics } from './pics-own-cards.js';
@@ -301,40 +302,12 @@ function sumCard(seg, cards) {
 /* ── 色标＝筛选钮 ─────────────────────────────────────────────────────── */
 // 与泳道图的 eventLegend 同式而不同数：那边数的是全库，这边只数**本地**——
 // 一座城的类型构成正是地方线要说的事（北京的文化 21 条 vs 战事 3 条）。
-// 交互照抄那边的约定：单击开关一类、双击只看一类、末尾一颗全开/全关。
-let lastChip = { k: null, t: 0 };
+// 交互（单击开关一类、双击只看一类、末尾一颗全开/全关）此前是逐行誊抄的第二份，
+// 2026-09-04 归并到 js/events-ui.js（SSOT 卷 D11）：本地只剩「数本地」与本页的字形尺寸。
 function localLegend(members, off, onChange) {
   const counts = {};
   for (const ev of members) counts[ev.k] = (counts[ev.k] || 0) + 1;
-  const kinds = Object.keys(EVENT_KINDS).filter((k) => counts[k]).sort((a, b) => counts[b] - counts[a]);
-  const row = h('div', { class: 'ev-legend' });
-  for (const k of kinds) {
-    const chip = h('button', {
-      type: 'button', class: 'chip ev-chip' + (off.has(k) ? ' off' : ''),
-      'aria-pressed': String(!off.has(k)),
-      title: off.has(k) ? '点按显示这一类' : '点按隐藏这一类',
-      onclick: () => {
-        const now = Date.now();
-        if (lastChip.k === k && now - lastChip.t < 350) {
-          lastChip = { k: null, t: 0 };
-          onChange(new Set(kinds.filter((x) => x !== k)));
-          return;
-        }
-        const next = new Set(off);
-        if (next.has(k)) next.delete(k); else next.add(k);
-        onChange(next);
-        lastChip = { k, t: Date.now() };
-      },
-    }, [kindGlyph(k), h('span', { text: `${(EVENT_KINDS[k] || {}).label || k} ${counts[k]}` })]);
-    row.appendChild(chip);
-  }
-  row.appendChild(h('button', {
-    type: 'button', class: 'chip ev-chip',
-    title: off.size ? '重新点亮全部类别' : '全部关掉，再点选一类即独看',
-    text: off.size ? '全开' : '全关',
-    onclick: () => onChange(off.size ? new Set() : new Set(kinds)),
-  }));
-  return row;
+  return chipRow({ counts, off, glyph: kindGlyph, onChange, owner: 'place' });
 }
 
 /* ── 页面：一个地方 ───────────────────────────────────────────────────── */

@@ -17,9 +17,10 @@ import { mountKnowledgeCorner, eventSpec, evSpec } from './knowledge.js';
 import { stampHash } from './search.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, TRANSITIONS, ORTHODOX, SECONDARY } from './dynasties.js';
-import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor } from './events.js';
+import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor, evFlags, evRank, evVisible } from './events.js';
 import { NIANHAO } from './data-nianhao.js';
 import { fmtDate } from './schema.js';
+import { eventLegend as chipRow } from './events-ui.js';
 
 const SLOT_VARS = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6', '--s7', '--s8'];
 const OTHER_VAR = '--lane-other';
@@ -201,58 +202,22 @@ export function evMark(kind, cx, cy, r, extra = {}) {
  * `skip` 去掉本视图根本不画的类:治世·中兴在泳道里是皇帝格子外的虚线外套,
  * 河流没有这一层,那个色标点了也不会有任何变化——按不动的开关比没有开关更糟。
  */
-// 双击检测记在模块级:每次点击都整段重绘,原生 dblclick 在重建后的新节点上
-// 永远凑不齐两击,只能自己拿时间戳判(与地图页的双击=只看一类行为对齐)
-let lastChip = { k: null, t: 0 };
-
-export function eventLegend(opts, { skip = [] } = {}) {
-  const off = new Set(opts.evOff || []);
-  const row = h('div', { class: 'ev-legend' });
+// 芯片行本体 2026-09-04 归一到 js/events-ui.js（SSOT 卷 D11），此处只留三件本地事：
+// 全库计数、图下那排的字形尺寸（14/7/5）、以及把 Set 换回 evOff 数组交给 setOpt。
+// `owner` 是双击窗口的分账人：图下这排与导览副卡同页并挂，共用一份就会互相误判成双击。
+export function eventLegend(opts, { skip = [], owner = 'main' } = {}) {
   const counts = {};
   for (const ev of EVENTS) counts[ev.k] = (counts[ev.k] || 0) + 1;
-  const kinds = Object.keys(EVENT_KINDS).filter((k) => counts[k] && !skip.includes(k));
-  // 色标按词条数降序排（库主 2026-09-02：「王朝长河这些类型也应该按照词条数排列」），
-  // 与首页/地图页同则；EVENT_KINDS 的定义序只管数据，不管图例——多的类在前，一眼看出库的体量分布
-  const order = kinds.slice().sort((a, b) => counts[b] - counts[a]);
-  for (const k of order) {
-    const meta = EVENT_KINDS[k];
-    const chip = h('button', {
-      type: 'button', class: 'chip ev-chip' + (off.has(k) ? ' off' : ''),
-      'aria-pressed': String(!off.has(k)),
-      title: off.has(k) ? '点按显示这一类' : '点按隐藏这一类',
-      onclick: () => {
-        const now = Date.now();
-        if (lastChip.k === k && now - lastChip.t < 350) {
-          // 双击＝只看这一类(第一击已切过一次,这里直接以「独看」覆盖)
-          lastChip = { k: null, t: 0 };
-          opts.setOpt('evOff', kinds.filter((x) => x !== k));
-          return;
-        }
-        const next = new Set(off);
-        if (next.has(k)) next.delete(k); else next.add(k);
-        opts.setOpt('evOff', [...next]);
-        // 表在渲染**之后**才起（2026-08-28 库主报「双击坏了」）：setOpt 同步整段重绘，
-        // 库长到千余条后一绘三四百毫秒，第二击排队等它画完才派发——表起早了，
-        // 350ms 窗口永远迟到，双击净效果归零。起表挪到绘完，量的是「画完到下一击」
-        lastChip = { k, t: Date.now() };
-      },
-    });
+  const row = chipRow({
+    counts, off: new Set(opts.evOff || []), skip, owner,
     // 图例画的就是图上那个形状:色标只说得出颜色,而颜色已不是唯一的识别通道
-    const glyph = el('svg', { width: 14, height: 14, viewBox: '0 0 14 14', class: 'ev-glyph' });
-    glyph.appendChild(evMark(k, 7, 7, 5));
-    chip.appendChild(glyph);
-    chip.appendChild(h('span', { text: `${meta.label} ${counts[k]}` }));
-    row.appendChild(chip);
-  }
-  // 类别多到十二种之后,一类类点回来太费手——全开一键复位(与地图页同名同位)。
-  // 双态（2026-08-28 库主点子）：全亮时这颗钮变「全关」——先全关再点一类，
-  // 即是「只看一类」的第二条路，与双击独看互为备份
-  row.appendChild(h('button', {
-    type: 'button', class: 'chip ev-chip',
-    title: off.size ? '重新点亮全部类别' : '全部关掉，再点选一类即独看',
-    text: off.size ? '全开' : '全关',
-    onclick: () => opts.setOpt('evOff', off.size ? [] : kinds.slice()),
-  }));
+    glyph: (k) => {
+      const g = el('svg', { width: 14, height: 14, viewBox: '0 0 14 14', class: 'ev-glyph' });
+      g.appendChild(evMark(k, 7, 7, 5));
+      return g;
+    },
+    onChange: (next) => opts.setOpt('evOff', [...next]),
+  });
   return [h('p', { class: 'muted small', style: 'margin:10px 0 2px', text: '大事记（点色标可按类筛选，双击只看一类）' }), row];
 }
 
@@ -271,9 +236,10 @@ export function renderLaneTimeline(host, list, opts) {
   const slots = dynastyColorSlots();
   const ink = resolveInk(host);
 
-  // 大事记分级独立勾选（evRanks 数组存要看的等级）；全取掉＝无大事记
-  const rkSet = new Set(opts.evRanks || [1, 2, 3]);
-  const showEvents = rkSet.size > 0;
+  // 大事记分级独立勾选（evRanks 数组存要看的等级）；全取掉＝无大事记。
+  // 三个旗标一次算出（events.evFlags），本轮渲染的事件层都吃这一份 Set：
+  // 谓词在热路径上要过全库好几遍，不能每处现建（2026-09-04 归一，SSOT 卷 D08）
+  const { evOff, rkSet, showEvents } = evFlags(opts);
   // 事件名分居分隔线上下两侧,各留五字之高。此前全挤在线下:实测 547 条里
   // 72 条(13%)根本排不下名字,另有 144 条被挤得偏离本位——近三成的名字
   // 站错了地方。分成上下两条独立的争位赛道,两头都松快。
@@ -527,12 +493,11 @@ export function renderLaneTimeline(host, list, opts) {
     const LAB_FS = 10.5, LAB_DY = 11.4;      // 字比初版大一号:9px 竖排在密集处认不出
     const COL_MAX = 5, MAX_COLS = 2;         // 一列五字,超出折第二列(最多两列十字)
     const slots = { up: [], dn: [] };   // 上下各争各的位子,互不相扰
-    const evOff = new Set(opts.evOff || []);
     // **分量决定先后**:此前是按年份顺序抢位子,于是一条无名小事只要年份靠前,
     // 就能把「安史之乱」的名字挤掉——图上留下的是编排的偶然,不是历史的轻重。
     // 现在一等先挑位子,二等次之,三等垫底(r 见 js/events.js:按维基三项指标定)。
     // 画的次序反过来:三等先落笔,一等最后压顶,免得小点盖住大点。
-    const rk = (ev) => ev.r || 2;      // 分级勾选（rank 屏蔽）：档外不入组不落笔
+    const rk = evRank;                 // 分级勾选（rank 屏蔽）：档外不入组不落笔
     // **同年错开**。此前同一年的几条事件坐标完全相同,命中区整块重叠,
     // 于是每年只有最后画上去的那条点得开——用户点「开凿大运河」,
     // 弹出来的是同年的「赵州桥建成」。实测 129 条事件挤在 59 个年份上
@@ -540,7 +505,8 @@ export function renderLaneTimeline(host, list, opts) {
     // 按年分组横向摊开,标准档 7px 合半年,肉眼几乎看不出,但各自可点、也各自可留名。
     const sameYear = new Map();
     for (const e2 of EVENTS) {
-      if (evOff.has(e2.k) || e2.k === 'era' || !rkSet.has(rk(e2))) continue;
+      // 建组**含 tr**：带 tr 的事件在此占位却不落笔（见下），这道空当是现行排布
+      if (!evVisible(e2, evOff, rkSet, true)) continue;
       if (!sameYear.has(e2.y)) sameYear.set(e2.y, []);
       sameYear.get(e2.y).push(e2);
     }
@@ -569,8 +535,9 @@ export function renderLaneTimeline(host, list, opts) {
       // 陈桥兵变、靖康之变都一并挡掉了——正是先前特意补回来的那十一条,
       // 补进数据却仍被这里拦在轨外,等于白补。承继细丝的刻痕在河身、
       // 事件点在表头,两处register不同,并存不算重复。
-      if (evOff.has(ev.k) || ev.k === 'era' || !rkSet.has(rk(ev))) continue;
+      if (!evVisible(ev, evOff, rkSet, true)) continue;
       // 视图分工（2026-08-20 用户裁）：带 tr 的事件在时间轴归承继箭头表现（箭头可点出卡），此处不画点；地图不看 tr 照常画
+      // **这一跳留在调用点**：上面建组时不跳，同年组里它照旧占着位子（详见 events.js 的谓词注）
       if (ev.tr) continue;
       const ex = x(evAnchor(ev)) + fanOf(ev);
       if (ex < PAD_L - 40 || ex > W - PAD_L + 40) continue;
@@ -750,7 +717,7 @@ export function renderLaneTimeline(host, list, opts) {
     // 左右各内缩 1px：紧邻的两朝之间因此留出 2px 底色缝，靠留白分隔而非描边
     const st = DYN_STATS.get(b.d.key);
     const trackTip = () => [
-      { color: col, value: `${b.d.s <= 0 ? `前${-b.d.s + 1}` : b.d.s}–${b.d.e}`, label: '国祚' },
+      { color: col, value: `${fmtYearAxis(b.d.s)}–${fmtYearAxis(b.d.e)}`, label: '国祚' },
       { label: '历时', value: `${st.span} 年` },
       { label: '皇帝', value: `${st.n} 位（当前筛选 ${b.n} 位）` },
       { label: 'DSI', value: st.dsi === null ? '—' : `${fmt1(st.dsi)} 年/帝` },

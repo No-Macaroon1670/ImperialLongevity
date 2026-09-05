@@ -16,7 +16,7 @@ import { h, fmtYearAxis } from './charts.js';
 import { EMPERORS, DYNASTIES } from './data.js';
 import { EVENTS, EVENT_KINDS } from './events.js';
 import { norm, withPy, scoreKeys } from './search-core.js';
-import { tlProbe } from './shell.js';
+import { tlProbe, registerLcGear } from './shell.js';
 
 // 匹配核（norm/withPy/scoreKeys）在 search-core.js——地图搜索同用，只此一份。
 
@@ -130,18 +130,12 @@ export function mountSearch(sectionEl, hostOf) {
   // 类挂控件自身就会一点选项弹层即合
   const gear = h('button', {
     class: 'chip tl-gear', type: 'button', title: '视图与显示设置',
-    onclick: () => sectionEl.classList.toggle('lc-open'),
   }, [h('span', { text: '⚙' })]);
+  // 开合与「点弹层外即收／Esc 即收」都归 shell 那一套（2026-09-04 归一，SSOT 卷 D23）：
+  // 本模块此前自带一条 document click 与一条 Esc，与 shell 的同名监听在全景页撞车——
+  // 两颗齿轮同页同节，先注册的 shell 那条把这颗刚开的弹层当场关掉，读者看到的是「白点」
+  registerLcGear(gear, sectionEl);
   (sectionEl.querySelector('.head') || sectionEl).appendChild(gear);
-  // 小屏上弹层可能盖住齿轮本尊，关不掉（2026-08-24 周末bug报）：点弹层外即关，Esc 同效
-  document.addEventListener('click', (e) => {
-    if (!sectionEl.classList.contains('lc-open')) return;
-    if (e.target.closest('.local-controls') || e.target.closest('.tl-gear')) return;
-    sectionEl.classList.remove('lc-open');
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') sectionEl.classList.remove('lc-open');
-  });
   const totop = h('button', {
     class: 'chip tl-totop', type: 'button', title: '回到页首',
     onclick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),

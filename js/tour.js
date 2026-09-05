@@ -335,7 +335,9 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     const river = (hostOf() && hostOf().__locate || {}).view === 'river';
     const [, row] = eventLegend(
       { evOff: S.evOff, setOpt: (k, v) => { S[k] = v; render(); buildAside(true); } },
-      { skip: river ? ['era'] : [] },
+      // owner：双击窗口按「哪一排」分账。副卡与图下那排同页并挂，共用一份的话，
+      // 两排里同名色标 350ms 内各点一次就被误判成「双击独看」（2026-09-04 解此串扰）
+      { skip: river ? ['era'] : [], owner: 'tour-aside' },
     );
     aside.appendChild(h('div', { class: 'tour-aside-h', text: '大事记类别 · 点一下开关' }));
     aside.appendChild(row);

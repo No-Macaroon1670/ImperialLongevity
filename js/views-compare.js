@@ -3,6 +3,7 @@ import { el, h, linear, band, ticks, Frame, hoverable, legend, tableView, notes,
 import { GROUPINGS, DYN_STATS, survivalInput, EMPERORS, DYNASTIES } from './data.js';
 import { describe, welch, mannWhitney, spearman, linreg, bootstrapMeanCI, kaplanMeier, logRank, coxPH, fmtP } from './stats.js';
 import { fmtDate, FLAG_LABEL } from './schema.js';
+import { fmtYearAxis } from './year.js';
 
 const SLOTS = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)', 'var(--s5)', 'var(--s6)'];
 
@@ -476,7 +477,7 @@ export function renderAudit(host) {
     { caption: '朝代长带上的空档逐条核查（针对完整数据集，不受过滤器影响）' }));
   host.lastChild.setAttribute('open', '');
 }
-const fmtY = (y) => (y <= 0 ? `前${-Math.round(y) + 1}` : String(Math.round(y)));
+const fmtY = fmtYearAxis;   // 本文件旧有的同式副本，正本在 js/year.js（2026-09-04 归一）
 
 // ── 数据库表 ─────────────────────────────────────────────────────────────
 export function renderDatabase(host, list, opts) {
