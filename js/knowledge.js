@@ -475,7 +475,7 @@ async function fillCard(card, spec) {
     card.wiki.style.display = 'none';
     card.baidu.style.display = spec.baidu ? '' : 'none';
     if (spec.baidu) card.baidu.href = /^https?:/.test(spec.baidu) ? spec.baidu
-      : `https://baike.baidu.com/item/${encodeURIComponent(spec.baidu)}`;
+      : `https://baike.baidu.com/item/${spec.baidu.split('#')[0].split('/').map(encodeURIComponent).join('/')}` + (spec.baidu.includes('#') ? '#' + spec.baidu.split('#')[1] : '');
     card.museum.href = spec.museum || '#';
     card.museum.style.display = spec.museum ? '' : 'none';
     card.wsrc.href = spec.wsrc ? 'https://zh.wikisource.org/wiki/' + spec.wsrc.split('/').map(encodeURIComponent).join('/') : '#';
@@ -522,7 +522,10 @@ async function fillCard(card, spec) {
     card.baidu.textContent = '相关文献 ↗';
   } else {
     const bdName = raw.replace(/\s*[（(][^）)]*[）)]\s*$/, '');
-    card.baidu.href = `https://baike.baidu.com/item/${bdName.split('/').map(encodeURIComponent).join('/')}`;
+    // `b` 可带节锚「名/id#7」（2026-09-05 库主定：词条本身不是同物、但有一节专讲此物时，链到那一节）——
+    // 锚号是百度目录的 data-index，# 后不编码
+    const [bdPath, bdAnchor] = bdName.split('#');
+    card.baidu.href = `https://baike.baidu.com/item/${bdPath.split('/').map(encodeURIComponent).join('/')}` + (bdAnchor ? `#${bdAnchor}` : '');
     card.baidu.textContent = '百度百科 ↗';
   }
   card.baidu.style.display = (spec.noBaidu || enOnly) ? 'none' : '';
