@@ -97,7 +97,7 @@ src = io.open(os.path.join(ROOT, "js/events.js"), encoding="utf-8").read()
 body = src[src.index("export const EVENTS = ["):]
 evs = []
 for line in body.splitlines():
-    m = re.match(r"\s*\{ (.*) \},?$", line)
+    m = re.match(r"\s*\{ (.*) \},?(?:\s*//.*)?$", line)   # 行尾 // 注释合法（2026-09-05）
     if not m:
         continue
     d = {}

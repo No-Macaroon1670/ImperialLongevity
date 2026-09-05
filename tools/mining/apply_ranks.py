@@ -23,7 +23,7 @@ head, body = src[:src.index("export const EVENTS")], src[src.index("export const
 hit = miss = 0
 out = []
 for ln in body.split("\n"):
-    m = re.match(r"^(  \{ )(.*?)(,?\s*\},?)$", ln)
+    m = re.match(r"^(  \{ )(.*?)(,?\s*\},?)(\s*//.*)?$", ln)   # 第 4 组：行尾注释，原样保住（2026-09-05）
     if not m:
         out.append(ln)
         continue
@@ -42,7 +42,7 @@ for ln in body.split("\n"):
     # 去掉旧的 r,再统一补到末尾——原先 r 的位置各行不一(有的在 ya 前有的在后),
     # 就地替换要写好几种模式,不如摘掉重挂
     inner = re.sub(r",\s*r: \d+", "", inner).rstrip().rstrip(",")
-    out.append("%s%s, r: %d }," % (m.group(1), inner, ranks[key]))
+    out.append("%s%s, r: %d },%s" % (m.group(1), inner, ranks[key], m.group(4) or ""))
 
 print("配上 %d 条,配不上 %d 条" % (hit, miss))
 if miss:

@@ -288,7 +288,7 @@ def load_events():
     src = io.open(os.path.join(ROOT, 'js/events.js'), encoding='utf-8').read()
     body = src[src.find('export const EVENTS'):]
     evs = []
-    for m in re.finditer(r"\{ y: (-?\d+),(.*?)\},\n", body, re.S):
+    for m in re.finditer(r"\{ y: (-?\d+),(.*?)\},[ \t]*(?://[^\n]*)?\n", body, re.S):   # 行尾 // 注释合法（2026-09-05）
         b = m.group(2)
         def f(k):
             mm = re.search(r"%s: '([^']*)'" % k, b)

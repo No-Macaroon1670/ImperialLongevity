@@ -22,6 +22,8 @@ for i, line in enumerate(body.splitlines(), 1):
     t = line.strip()
     if not t.startswith("{ y:"):
         continue
+    # 行尾注释合法（2026-09-05 库主定「真需求就改结构」）：`},   // 来源卷…`——只剥 `},` 之后的，串内 // 不碰
+    t = re.sub(r"(\},)\s*//.*$", r"\1", t)
     def err(msg):
         global bad
         bad += 1
