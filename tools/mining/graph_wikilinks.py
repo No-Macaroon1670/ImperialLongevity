@@ -51,6 +51,42 @@ API，配额按 IP 共享，撞 429 时服务器让等十几到五十几秒—�
 留着它是为了让改停用表／改判类／改名次口径这些事都能零外呼重算。
 
 用法见文件末尾 main() 的 --help，或 docs/desk/graph-wikilinks-20260902.md。
+
+────────────────────────────────────────────────────────────────────────────
+**2026-09-04 改：出链一侧改从 wikitext 正文取，不再用 prop=links。**
+
+原因是 09-04 库外指向榜（docs/desk/ballot-outbound-20260904.md 卷末第一则）
+实测出来的：`prop=links` 回的是**模板展开之后**的链接，条目底部的导航框
+（`Template:中國歷史事件`、`Template:禁止出境展览文物` 这一类）会把同族的
+一二百个条目两两全链一遍，API 照单收录，不区分「正文里编者顺手打的」与
+「模板机械展开的」。那一榜 80 个页对了一遍库：渲染出链命中 5126 条，
+正文里编者真手写的只有 1122 条，**存活 21.9%**；十个页的正文里与库内
+一个直接链接都没有，被指数全由模板给。最直接的物证是第 10 号明乡人的
+命中表就是第 4 号江西填湖广那张表的前 63 行，一字不差——那不是十几个
+枢纽，是同一个框数了十几遍。
+
+本层要问的是「讲这件事时绕不开哪些别的事」，答案得是**编者写正文时想到的**，
+不是模板维护者一次性挂上去的。故改取页面 wikitext（`prop=revisions&rvprop=
+content&rvslots=main`，取不到的单页退 `action=raw`），自写解析只认正文里的
+`[[目标|显示]]`：
+
+  剥掉  `{{…}}` 模板（含嵌套、多行；Navbox／Infobox／hatnote 都在其中）、
+        `<ref>…</ref>`、`<!-- -->`、`<nowiki>`/`<math>`/`<gallery>` 等标签块
+  留下  `{| |}` 表格里的方括号链接（表格是编者手写的，与模板不同族）
+  不算  `[[File:`／`[[Category:`／`[[en:` 这类命名空间与跨语言前缀
+        （`[[File:…|caption [[某条]]…]]` 的**图注内层链接照收**，外层滤掉）
+  规整  `#` 锚点截掉、下划线→空格、连续空白（含全角 U+3000）折一个、
+        首字母大写——都是 MediaWiki 自己的标题规矩
+
+**缓存存的是链接目标原串（`links_text`），不是命中表**。这是与旧写法
+（`out_hits` 抓时就算好）的一处要紧分别：命中在 compute() 里现算，于是
+往 events.js 加了新条目、改了别名口径，`--offline` 重跑一遍就认得出，
+不必回头重抓。旧的 `out_hits` 字段原样留着（`--rendered-out` 可切回去比对），
+不删——它是这次改动唯一的对照物。
+
+**增量**：只抓没有 `text_fetched` 的；`--recheck-text` 用 `rvprop=ids`
+（不带正文，五十个一发）比对 revid，只把改过的页挑出来重抓；
+`--refresh-text` 全量重取。抓失败一律不写盘（外呼批取失败必不写盘之规）。
 """
 import argparse
 import io
@@ -63,6 +99,16 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from collections import Counter, defaultdict
+
+# 这台机器默认 cp1252，不裹一层输出中文即炸（全库通例）。
+# `line_buffering=True` 不可省：这一层裹上去之后就是它在管缓冲，`python -u`
+# 只管得到原来那个 stdout——重定向到日志文件时，进度一行也看不见（实测跑了
+# 一分半钟日志还是 0 字节，看着像卡死）。
+try:
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8",
+                                  line_buffering=True)
+except Exception:
+    pass
 
 ROOT = r"C:/Users/ziyi_/Claude/imperial-longevity"
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -317,12 +363,362 @@ def norm(s):
     return re.sub(r"[\s_]+", "", (s or "")).strip().lower()
 
 
+# ── wikitext 正文取链 ───────────────────────────────────────────────────────
+# 见档头 2026-09-04 那一节：prop=links 回的是模板展开后的链接，导航框把同族
+# 一二百条两两全链一遍，实测只有 21.9% 是编者手写的。以下几个函数把正文
+# 从源码里剥出来，再只认剥完之后还站着的方括号。
+
+# 先剥的几类：注释、脚注、以及内容不算正文的标签块。
+# `<gallery>` 剥不剥两说——图廊里的一行是 `File:X.jpg|图注`，图注是人写的，
+# 可那一整块的功能是配图不是行文，且 File: 前缀本就滤掉，剥掉最省事。
+RE_COMMENT = re.compile(r"<!--.*?-->", re.S)
+RE_REF = re.compile(r"<ref\b[^>]*?/\s*>|<ref\b[^>]*?>.*?</\s*ref\s*>", re.S | re.I)
+RE_TAGBLOCK = re.compile(
+    r"<\s*(nowiki|math|chem|syntaxhighlight|source|pre|score|timeline|graph|"
+    r"gallery|imagemap|mapframe|maplink|templatestyles|references)\b[^>]*>"
+    r".*?<\s*/\s*\1\s*>", re.S | re.I)
+RE_TAGSELF = re.compile(
+    r"<\s*(references|templatestyles|mapframe|maplink|nowiki)\b[^>]*/\s*>",
+    re.S | re.I)
+# 内层优先的模板剥法：只认「里头再没有花括号」的那一对，反复剥到不动为止。
+# 不用栈式扫描是因为源码里偶有不配对的 `{{`（多半在被剥掉的 nowiki 之外的
+# 残句里），栈式扫描撞上它会把整篇正文一路吃到文末——宁可漏剥一个坏模板，
+# 不可吞掉半篇文章。
+RE_TPL_INNER = re.compile(r"\{\{[^{}]*\}\}", re.S)
+
+# 命名空间前缀：这些不是正文里指向另一件事的链接。
+NS_PREFIX = re.compile(
+    r"^(?:file|image|media|媒体|媒體|檔案|文件|圖像|图像|圖片|图片|"
+    r"category|分类|分類|template|模板|help|帮助|幫助|"
+    r"wikipedia|wp|project|portal|主题|主題|talk|讨论|討論|"
+    r"user|用户|用戶|special|特殊|module|模块|模組|mediawiki|"
+    r"book|draft|topic|timedtext|gadget|s|q|b|v|n|m|d|c|w|meta|commons|"
+    r"wikt|wiktionary|wikisource|wikiquote|wikibooks|wikinews|wikivoyage|"
+    r"wikispecies|wikidata|voy|species|mw|incubator|arxiv|doi|iso639-3)"
+    r"(?:\s+talk)?\s*:", re.I)
+# 跨语言前缀（ISO-639-1 全表 + 中文变体 + 几个常见的非标准码）。
+# 判错的代价不对称：多滤一个，无非是 n_links_text 这个分母小一点；
+# 少滤一个，那条链接反正也对不上库内索引，不会造出假边。
+LANG_CODES = set("""aa ab ae af ak am an ar as av ay az ba be bg bh bi bm bn bo br bs
+ca ce ch co cr cs cu cv cy da de dv dz ee el en eo es et eu fa ff fi fj fo fr fy
+ga gd gl gn gu gv ha he hi ho hr ht hu hy hz ia id ie ig ii ik io is it iu ja jv
+ka kg ki kj kk kl km kn ko kr ks ku kv kw ky la lb lg li ln lo lt lu lv mg mh mi
+mk ml mn mr ms mt my na nb nd ne ng nl nn no nr nv ny oc oj om or os pa pi pl ps
+pt qu rm rn ro ru rw sa sc sd se sg si sk sl sm sn so sq sr ss st su sv sw ta te
+tg th ti tk tl tn to tr ts tt tw ty ug uk ur uz ve vi vo wa wo xh yi yo za zh zu
+simple nan yue wuu gan hak cdo zh-cn zh-tw zh-hk zh-mo zh-sg zh-my zh-hans
+zh-hant zh-min-nan zh-classical zh-yue bat-smg be-tarask roa-tara map-bms
+nds nds-nl fiu-vro als bar ceb war min sh scn vec lmo pms nap eml""".split())
+RE_LANGPFX = re.compile(r"^([A-Za-z][A-Za-z0-9_-]{0,11})\s*:")
+
+
+def strip_wikitext(s):
+    """把 wikitext 剥成「正文」：去注释、脚注、标签块、模板。
+
+    表格 `{| … |}` **留着**：那是编者手写的正文结构（大事年表、器物一览、
+    传世本对照），里头的方括号链接与散文里的同源。代价说在明处——碑刻类、
+    出土文物类的条目常有「同批出土器物」表，那种表会把一批兄弟条目列全，
+    与导航模板的效果有几分像；但它是一页一表、一人一手写的，不是几百页
+    共用一个框，故不与模板同罪。
+    """
+    s = RE_COMMENT.sub(" ", s or "")
+    s = RE_REF.sub(" ", s)
+    s = RE_TAGBLOCK.sub(" ", s)
+    s = RE_TAGSELF.sub(" ", s)
+    for _ in range(60):
+        s2 = RE_TPL_INNER.sub(" ", s)
+        if s2 == s:
+            break
+        s = s2
+    return s
+
+
+def raw_links(s):
+    """扫出全部 `[[…]]`，**内外层都要**。
+
+    为的是 `[[File:某.jpg|thumb|图注里还有 [[某条目]]]]` 这种：外层是图，
+    内层是编者在图注里写的真链接。栈式扫描把两层都吐出来，外层被
+    NS_PREFIX 滤掉，内层留下。不配对的方括号一律丢弃（stack 为空时的 `]]`
+    直接跳过），不会像模板那样吃掉后文。
+    """
+    res, stack, i, n = [], [], 0, len(s)
+    while i < n:
+        if s.startswith("[[", i):
+            stack.append(i + 2)
+            i += 2
+        elif s.startswith("]]", i):
+            if stack:
+                res.append(s[stack.pop():i])
+            i += 2
+        else:
+            i += 1
+    return res
+
+
+def link_target(raw):
+    """`[[目标|显示]]` 里的目标，按 MediaWiki 的标题规矩规整；不是正文链接回 None。
+
+    规整这几样（都是 MediaWiki 自己做的，不做就对不上别名表）：
+      * `|` 之后是显示文字，截掉；`#` 之后是段锚点，截掉
+      * 下划线当空格；连续空白折成一个（`\\s` 认得全角空格 U+3000）
+      * 首字母大写——中文无所谓，`en:` 那一池要紧
+      * 开头的 `:`（`[[:Category:X]]` 这种「显示出来的分类链接」）剥掉再判前缀
+    """
+    t = raw.split("|", 1)[0]
+    t = t.split("#", 1)[0]
+    t = t.replace("_", " ")
+    t = re.sub(r"\s+", " ", t).strip()
+    while t.startswith(":"):
+        t = t[1:].strip()
+    if not t or t.startswith("[") or t.startswith("{"):
+        return None
+    if NS_PREFIX.match(t):
+        return None
+    m = RE_LANGPFX.match(t)
+    if m and m.group(1).lower() in LANG_CODES:
+        return None
+    return t[0].upper() + t[1:]
+
+
+def parse_wikitext_links(text):
+    """一页 wikitext → 正文链接目标（按首见去重，保序）。"""
+    seen, out = set(), []
+    for raw in raw_links(strip_wikitext(text)):
+        t = link_target(raw)
+        if t and t not in seen:
+            seen.add(t)
+            out.append(t)
+    return out
+
+
+RE_REDIRECT = re.compile(
+    r"^\s*#\s*(?:REDIRECT|重定向|重新導向|重新导向|轉址|转址)\s*:?\s*\[\[([^\]|#]+)",
+    re.I)
+
+
+def fetch_wikitext_batch(host, titles):
+    """一发取几个页的最新 wikitext。回 **按传进来的标题作键** 的
+    {title: {"text":…, "revid":…}}（或 {"missing": True}）。
+
+    `rvslots=main` 是新版 API 的写法（老写法 `rvprop=content` 不带 slots
+    会回一句 deprecation 警告并照给，但迟早要断）。批取的账：一发八个页，
+    一千四百五十个页只要一百八十来发——比 prop=links 那一侧（八百发）还省，
+    因为限流数的是请求数不是数据量。
+
+    带 `redirects=1`＋`converttitles=1`，再把 API 自己回的三张映射表
+    （normalized／converted／redirects）反过来查，才能按**传进来的**标题交货。
+    正常路径上传进来的已是阶段〇解析好的正名，用不着这一层；可阶段〇
+    若解漏了一个（繁简变体、事后新建的重定向），少了它这一发就白抓——
+    实测「江西填湖廣」「安史之乱」两个写法回的都是 `#重定向` 桩子，
+    28 字节、一条链接，看着像抓到了其实什么也没有。
+    """
+    d = api(host, {"titles": "|".join(titles), "prop": "revisions",
+                   "rvprop": "content|ids", "rvslots": "main",
+                   "redirects": "1", "converttitles": "1"})
+    if d in (None, "?"):
+        return d
+    q = d.get("query", {})
+    hop = {}
+    for key in ("normalized", "converted", "redirects"):
+        for x in q.get(key, []) or []:
+            hop[x["from"]] = x["to"]
+
+    def final(t, n=0):
+        return t if (t not in hop or n > 5) else final(hop[t], n + 1)
+
+    by_title = {}
+    for p in q.get("pages", []) or []:
+        t = p.get("title")
+        if p.get("missing"):
+            by_title[t] = {"missing": True}
+            continue
+        revs = p.get("revisions") or []
+        if not revs:
+            continue
+        sl = (revs[0].get("slots") or {}).get("main") or {}
+        c = sl.get("content")
+        if c is None:
+            c = revs[0].get("content")       # 老 formatversion 的回法
+        if c is None:
+            continue
+        by_title[t] = {"text": c, "revid": revs[0].get("revid"),
+                       "title": t}
+    return {t: by_title.get(final(t)) for t in titles
+            if by_title.get(final(t)) is not None}
+
+
+def fetch_wikitext_raw(host, title):
+    """单页兜底：`action=raw` 直取源码（METHODS「四道活路」第②条）。
+
+    API 那一侧偶有一发里某个页没回正文（结果体积到顶、或那一页正被编辑）。
+    raw 与 API 同时段畅通程度不同，换它常常一次即通。
+    """
+    url = "https://%s/w/index.php?%s" % (
+        host, urllib.parse.urlencode({"title": title, "action": "raw"}))
+    for attempt in range(4):
+        try:
+            r = urllib.request.urlopen(
+                urllib.request.Request(url, headers=UA), timeout=60)
+            STATS["req"] += 1
+            time.sleep(SLEEP)
+            return r.read().decode("utf-8", "replace")
+        except urllib.error.HTTPError as ex:
+            if ex.code == 404:
+                return None
+            time.sleep(min(30 * (attempt + 1), 120))
+        except Exception:
+            time.sleep(min(30 * (attempt + 1), 120))
+    return None
+
+
+def crawl_text(evs, cache, limit=None, refresh=False, batch=8):
+    """阶段二：取 wikitext，解析出正文链接，只存目标原串（命中在 compute 现算）。
+
+    增量：跳过已有 `text_fetched` 的。`w` 改了就是新键，自然会重抓；
+    页面自身改了要靠 `--recheck-text` 比 revid 挑出来（那一发不带正文，
+    五十个一批，几乎不花钱）。
+    """
+    order = ws_of(evs)
+    if refresh:
+        for w in order:
+            c = cache.get(w)
+            if isinstance(c, dict):
+                for k in ("text_fetched", "links_text", "n_links_text",
+                          "revid", "wt_chars", "text_missing"):
+                    c.pop(k, None)
+    resolve_all(order, cache)
+    todo = [w for w in order
+            if not (cache.get(w) or {}).get("text_fetched")
+            and not (cache.get(w) or {}).get("missing")]
+    print("阶段二 正文取链：有 w 的页 %d，已取正文 %d，待取 %d%s"
+          % (len(order),
+             sum(1 for w in order if (cache.get(w) or {}).get("text_fetched")),
+             len(todo), ("（本轮只取前 %d 个）" % limit) if limit else ""))
+    if not todo:
+        return cache
+    # 打乱的理由同 crawl()：events.js 按年代排，照原序取，中途一停手里就是
+    # 「史前到先秦」那一段，算出来的榜整片偏向早期。固定种子保证可重现。
+    import random
+    random.Random(20260904).shuffle(todo)
+    if limit:
+        todo = todo[:limit]
+
+    t0, done = time.time(), 0
+    for host in ("zh.wikipedia.org", "en.wikipedia.org"):
+        grp = [w for w in todo if split_host(w)[0] == host]
+        for i in range(0, len(grp), batch):
+            chunk = grp[i:i + batch]
+            t_of = {}
+            for w in chunk:
+                t_of.setdefault(
+                    (cache.get(w) or {}).get("title") or split_host(w)[1],
+                    []).append(w)
+            titles = sorted(t_of)
+            r = fetch_wikitext_batch(host, titles)
+            if r in (None, "?"):
+                print("  ? 一批未取到（%s…），留待重跑" % titles[0])
+                continue
+            for t in titles:
+                v = r.get(t)
+                if v is None:                       # 这一发没回它：单页 raw 兜底
+                    txt = fetch_wikitext_raw(host, t)
+                    v = {"text": txt, "revid": None} if txt is not None else None
+                if v is None:
+                    print("  ? %s 正文未取到（API 与 raw 皆空），留待重跑" % t)
+                    continue
+                # 兜底之二：拿回来的是 `#重定向 [[X]]` 桩子（二三十字节、
+                # 一条链接）——照抓不误就成了一页假数据。追一跳。
+                for _ in range(3):
+                    m = RE_REDIRECT.match(v.get("text") or "")
+                    if not m:
+                        break
+                    tgt = m.group(1).strip()
+                    print("    · %s 是重定向桩，追到 %s" % (t, tgt))
+                    r2 = fetch_wikitext_batch(host, [tgt])
+                    if r2 in (None, "?") or not r2.get(tgt):
+                        break
+                    v = r2[tgt]
+                for w in t_of[t]:
+                    c = cache.setdefault(w, {})
+                    if v.get("missing"):
+                        c.update({"text_fetched": True, "text_missing": True,
+                                  "links_text": [], "n_links_text": 0})
+                        continue
+                    links = parse_wikitext_links(v["text"])
+                    c.update({"text_fetched": True, "revid": v.get("revid"),
+                              "wt_chars": len(v["text"]),
+                              "links_text": links, "n_links_text": len(links)})
+                    done += 1
+            save(cache)
+            el = time.time() - t0
+            print("  …%d/%d 页（%d 发请求，均 %.1fs/页，余约 %.0f 分）"
+                  % (done, len(todo), STATS["req"], el / max(done, 1),
+                     el / max(done, 1) * (len(todo) - done) / 60))
+    return cache
+
+
+def recheck_text(evs, cache, batch=50):
+    """比 revid，把维基那边改过的页挑出来重取（本身不带正文，几乎不花钱）。"""
+    order = [w for w in ws_of(evs)
+             if (cache.get(w) or {}).get("text_fetched")
+             and (cache.get(w) or {}).get("revid")]
+    if not order:
+        return []
+    print("正文时效复核：%d 个已取页比对 revid（%d 个一发）" % (len(order), batch))
+    stale = []
+    for host in ("zh.wikipedia.org", "en.wikipedia.org"):
+        grp = [w for w in order if split_host(w)[0] == host]
+        for i in range(0, len(grp), batch):
+            chunk = grp[i:i + batch]
+            t_of = {}
+            for w in chunk:
+                t_of.setdefault(
+                    (cache.get(w) or {}).get("title") or split_host(w)[1],
+                    []).append(w)
+            d = api(host, {"titles": "|".join(sorted(t_of)),
+                           "prop": "revisions", "rvprop": "ids"})
+            if d in (None, "?"):
+                print("  ? 一批未取到，跳过")
+                continue
+            for p in d.get("query", {}).get("pages", []) or []:
+                revs = p.get("revisions") or []
+                if not revs:
+                    continue
+                now = revs[0].get("revid")
+                for w in t_of.get(p.get("title"), []):
+                    if cache[w].get("revid") != now:
+                        stale.append(w)
+    for w in stale:
+        for k in ("text_fetched", "links_text", "n_links_text", "revid",
+                  "wt_chars", "text_missing"):
+            cache[w].pop(k, None)
+    save(cache)
+    print("  维基那边改过的 %d 个页已清标记，本轮重取：%s"
+          % (len(stale), "、".join(stale[:12]) or "无"))
+    return stale
+
+
 # ── 抓取主循环 ──────────────────────────────────────────────────────────────
 def save(cache):
+    """写盘：先写 .tmp 再原子替换。
+
+    `os.replace` 要重试是 Windows 的账：**别的进程只要正打开着这个文件读，
+    替换就 WinError 5**。2026-09-04 实测——主循环每隔几秒 `json.load` 一次
+    缓存看进度，正撞上抓取进程的替换，整条管线在第 752 页上崩掉
+    （已抓的没丢，缓存是每批落一次盘的）。重试八次、越退越久，
+    比让一趟活儿死在一次读取上划算。
+    """
     tmp = CACHE + ".tmp"
     json.dump(cache, io.open(tmp, "w", encoding="utf-8"),
               ensure_ascii=False, separators=(",", ":"))
-    os.replace(tmp, CACHE)
+    for attempt in range(8):
+        try:
+            os.replace(tmp, CACHE)
+            return
+        except PermissionError:
+            if attempt == 7:
+                raise
+            time.sleep(0.4 * (attempt + 1))
 
 
 def ws_of(evs):
@@ -566,16 +962,48 @@ def is_stop(title):
     return any(re.search(p, title) for p in STOP_PAT)
 
 
-def compute(evs, cache, use_nya=False):
+def hits_from_text(evs, cache, use_nya=False):
+    """正文链接目标 → 库内条目命中。**在这里现算，不在抓取时算死**。
+
+    与旧写法（`out_hits` 抓时算好、存命中表）的分别：缓存里存的是链接目标
+    原串，索引现建现查。于是往 events.js 加了新条目、改了别名口径，
+    `--offline` 重跑一遍就认得出，不必回头重抓。代价是缓存里多了一份
+    目标串表（一页一二百条），换来的是这一层从此可零外呼重算。
+    """
+    idx_w, idx_nya = build_str_index(evs, cache)
+    out, out_nya = {}, {}
+    for e in evs:
+        w = e.get("w")
+        c = cache.get(w or "")
+        if not c or not c.get("text_fetched"):
+            continue
+        me, host = e["n"], split_host(w)[0]
+        h, hn = set(), set()
+        for t in c.get("links_text") or []:
+            k = (host, norm(t))
+            h |= idx_w.get(k) or set()
+            hn |= idx_nya.get(k) or set()
+        out[me] = h - {me}
+        out_nya[me] = (hn - h) - {me}
+    if use_nya:
+        for n in out:
+            out[n] = out[n] | out_nya.get(n, set())
+    return out, out_nya
+
+
+def compute(evs, cache, use_nya=False, use_rendered=False, out_only=False):
     """把缓存折成图：节点＝事件 n，边＝甲的维基页 --wikilink--> 乙。
 
     边有两个独立来源，**取并集**，各自补对方的洞：
-      out  甲页的出链里出现了乙（按写法查别名表）——不受入链 500 封顶之限，
-           但漏中文维基字词转换自动落地的那种写法
+      out  甲页的**正文**里编者手写了乙（wikitext 解析 + 别名表）——不受
+           入链 500 封顶之限，但漏中文维基字词转换自动落地的那种写法
       in   乙页的入链里出现了甲（按 pageid 认人）——写法怎么变都认得出，
            但热门条目入链上万，只取得到头 500 条
     每条边记 `via`：both／out／in。两者的差额就是各自盲点的大小，
     报告「盲点」节量的正是它。
+
+    `use_rendered=True` 切回 2026-09-04 以前的出链口径（prop=links，含模板
+    展开）——留着只为对照，日常别用：那一侧四条边里有三条是导航框造的。
     """
     by_pid = defaultdict(list)
     for e in evs:
@@ -585,17 +1013,22 @@ def compute(evs, cache, use_nya=False):
             continue
         by_pid[(split_host(w)[0], c["pageid"])].append(e["n"])
 
+    text_hits, text_nya = ({}, {}) if use_rendered \
+        else hits_from_text(evs, cache, use_nya)
     out_hits, in_hits = defaultdict(set), defaultdict(set)
     for e in evs:
         w = e.get("w")
         c = cache.get(w or "")
-        if not c or not c.get("fetched"):
+        if not c or not (c.get("fetched") or c.get("text_fetched")):
             continue
         me, host = e["n"], split_host(w)[0]
-        h = set(c.get("out_hits") or [])
-        if use_nya:
-            h |= set(c.get("out_hits_nya") or [])
-        out_hits[me] = h - {me}
+        if use_rendered:
+            h = set(c.get("out_hits") or [])
+            if use_nya:
+                h |= set(c.get("out_hits_nya") or [])
+            out_hits[me] = h - {me}
+        elif me in text_hits:
+            out_hits[me] = text_hits[me]
         if "bl_hits" in c:                  # 瘦身过的缓存：命中已折好
             for s in c["bl_hits"]:
                 if s != me:
@@ -609,7 +1042,12 @@ def compute(evs, cache, use_nya=False):
     edges, out_deg, in_deg = [], Counter(), Counter()
     via_cnt = Counter()
     allpairs = {(s, t) for s, ts in out_hits.items() for t in ts}
-    allpairs |= {(s, t) for s, ts in in_hits.items() for t in ts}
+    # `--out-only`：只留正文认的边。要紧处在于 **in 一侧（linkshere）与旧的
+    # prop=links 是同一个病**——甲底部挂的导航框链了乙，linkshere 照样记一笔。
+    # 出链侧改从正文取，滤掉的只是这条边的一半；并集一取，那半条又从 in 侧
+    # 绕回来了。口径怎么定是库主的事（见交卷单第七节），此处只把开关备好。
+    if not out_only:
+        allpairs |= {(s, t) for s, ts in in_hits.items() for t in ts}
     for s, t in sorted(allpairs):
         o = t in out_hits.get(s, ())
         i = t in in_hits.get(s, ())
@@ -637,7 +1075,8 @@ def compute(evs, cache, use_nya=False):
             in_deg_one[e["t"]] += 1
     return {"by_pid": by_pid, "edges": edges, "out_deg": out_deg,
             "in_deg": in_deg, "in_deg_one": in_deg_one,
-            "hits": out_hits, "blhits": in_hits,
+            "hits": out_hits, "blhits": in_hits, "nya": text_nya,
+            "rendered": use_rendered,
             "via": via_cnt, "ev_by_n": {e["n"]: e for e in evs}}
 
 
@@ -839,6 +1278,7 @@ def dump_json(evs, cache, g, rows, outdir, kinds=None):
               "wl_in_oneway": g["in_deg_one"].get(e["n"], 0),
               "wl_out": g["out_deg"].get(e["n"], 0),
               "n_links": (cache.get(e.get("w") or "") or {}).get("n_links", 0),
+              "n_links_text": (cache.get(e.get("w") or "") or {}).get("n_links_text", 0),
               "n_backlinks": (cache.get(e.get("w") or "") or {}).get("n_backlinks", 0)}
              for e in evs]
     edges = [{"s": "ev:" + x["s"], "t": "ev:" + x["t"],
@@ -858,30 +1298,118 @@ def dump_json(evs, cache, g, rows, outdir, kinds=None):
     return p
 
 
+def out_pairs(evs, cache, mode, use_nya=False, only_w=None):
+    """出链侧的边集合（不并入链侧），mode ∈ {"rendered","text"}。对照用。
+
+    `evs` always 传**全库**——索引要拿全库建，否则比的是索引大小不是口径；
+    要限定源页就用 `only_w`（一组 `w` 字符串）。这一处栽过：第一版把子集
+    传进来当索引，新口径当场算出零条边，看着像解析器坏了。
+    """
+    pairs = set()
+    if mode == "text":
+        hits = hits_from_text(evs, cache, use_nya)[0]
+        for e in evs:
+            if only_w is not None and e.get("w") not in only_w:
+                continue
+            for t in hits.get(e["n"], ()):
+                pairs.add((e["n"], t))
+        return pairs
+    for e in evs:
+        if only_w is not None and e.get("w") not in only_w:
+            continue
+        c = cache.get(e.get("w") or "") or {}
+        if not c.get("fetched"):
+            continue
+        h = set(c.get("out_hits") or [])
+        if use_nya:
+            h |= set(c.get("out_hits_nya") or [])
+        pairs |= {(e["n"], t) for t in h if t != e["n"]}
+    return pairs
+
+
+def compare_out(evs, cache, sample=20):
+    """新旧出链口径对照：prop=links（含模板展开）vs wikitext 正文。
+
+    只在**两侧都取过的那批页**上比，否则比的是抓取进度不是口径。
+    """
+    both_w = {e["w"] for e in evs if e.get("w")
+              and (cache.get(e["w"]) or {}).get("fetched")
+              and (cache.get(e["w"]) or {}).get("text_fetched")}
+    if not both_w:
+        return
+    old = out_pairs(evs, cache, "rendered", only_w=both_w)
+    new = out_pairs(evs, cache, "text", only_w=both_w)
+    only_old, only_new = sorted(old - new), sorted(new - old)
+    print("\n══ 出链口径对照（%d 个页两侧都取过）══" % len(both_w))
+    print("  旧 out（prop=links，模板展开后）%d 条边" % len(old))
+    print("  新 out（wikitext 正文）%d 条边（存活 %.1f%%）"
+          % (len(new), 100.0 * len(new & old) / max(len(old), 1)))
+    print("  两者都有 %d ｜ 只在旧的 %d ｜ 只在新的 %d"
+          % (len(new & old), len(only_old), len(only_new)))
+    src_old = Counter(s for s, _ in old)
+    src_new = Counter(s for s, _ in new)
+    drop = sorted(((src_old[s] - src_new.get(s, 0), s) for s in src_old),
+                  reverse=True)[:12]
+    print("  掉得最多的源页前 12（旧→新）：%s"
+          % "、".join("%s %d→%d" % (s, src_old[s], src_new.get(s, 0))
+                      for _, s in drop))
+    gone = [s for s in src_old if not src_new.get(s)]
+    print("  正文里与库内一个直接链接都没有的源页 %d 个：%s"
+          % (len(gone), "、".join(sorted(gone)[:12])))
+    import random
+    rnd = random.Random(20260904)
+    print("  ── 只在旧的（抽 %d 条人眼看）──" % sample)
+    for s, t in rnd.sample(only_old, min(sample, len(only_old))):
+        print("    %s → %s" % (s, t))
+    print("  ── 只在新的（抽 %d 条人眼看）──" % sample)
+    for s, t in rnd.sample(only_new, min(sample, len(only_new))):
+        print("    %s → %s" % (s, t))
+    return {"old": old, "new": new}
+
+
 def report(evs, cache, g, rows, kinds=None, diag=None):
     """报告要用的数字全在这里打一遍——报告是照这份输出誊的，不另手算。"""
     kinds = kinds or {}
-    have = [e for e in evs if e.get("w") and cache.get(e["w"], {}).get("fetched")
+    getc = lambda e, k, d=0: (cache.get(e.get("w") or "") or {}).get(k, d)
+    have = [e for e in evs if e.get("w")
+            and (cache.get(e["w"], {}).get("fetched")
+                 or cache.get(e["w"], {}).get("text_fetched"))
             and not cache[e["w"]].get("missing")]
-    miss = [e for e in evs if e.get("w") and not cache.get(e["w"], {}).get("fetched")]
+    miss = [e for e in evs if e.get("w")
+            and not (cache.get(e["w"], {}).get("fetched")
+                     or cache.get(e["w"], {}).get("text_fetched"))]
+    miss_in = [e for e in evs if e.get("w") and not cache.get(e["w"], {}).get("fetched")]
     nopage = [e["n"] for e in evs if e.get("w") and cache.get(e["w"], {}).get("missing")]
     print("\n══ 总账 ══")
-    print("库内条目 %d，其中有 w 者 %d，抓到页者 %d，未抓 %d（其中维基无此条目 %d）"
+    print("库内条目 %d，其中有 w 者 %d，有数据者 %d，两侧皆无 %d（其中维基无此条目 %d）"
           % (len(evs), sum(1 for e in evs if e.get("w")), len(have), len(miss), len(nopage)))
+    print("  出链侧（正文）已取 %d 条；入链侧（linkshere）已取 %d 条，未取 %d"
+          % (sum(1 for e in evs if e.get("w")
+                 and cache.get(e["w"], {}).get("text_fetched")),
+             sum(1 for e in evs if e.get("w")
+                 and cache.get(e["w"], {}).get("fetched")), len(miss_in)))
     print("去重维基页 %d；边 %d 条；平均每条牵出 %.2f 条库内条目"
           % (len({e["w"] for e in have}), len(g["edges"]),
              len(g["edges"]) / max(len(have), 1)))
-    tot_links = sum(cache[e["w"]]["n_links"] for e in have)
-    tot_bl = sum(cache[e["w"]]["n_backlinks"] for e in have)
-    print("出链总数 %d（命中 %d，命中率 %.3f%%）；入链总数 %d"
-          % (tot_links, g["via"]["both"] + g["via"]["out"],
-             100.0 * (g["via"]["both"] + g["via"]["out"]) / max(tot_links, 1), tot_bl))
+    hav_t = [e for e in have if getc(e, "text_fetched")]
+    tot_txt = sum(getc(e, "n_links_text") for e in hav_t)
+    print("正文取链：已取正文 %d 页，正文链接 %d 条（均 %.0f 条/页）"
+          % (len({e["w"] for e in hav_t}), tot_txt, tot_txt / max(len(hav_t), 1)))
+    tot_links = sum(getc(e, "n_links") for e in have)
+    tot_bl = sum(getc(e, "n_backlinks") for e in have)
+    src = "prop=links（渲染后，含模板）" if g.get("rendered") else "wikitext 正文"
+    tot_out = tot_links if g.get("rendered") else tot_txt
+    print("出链一侧取自 %s：出链总数 %d（命中 %d，命中率 %.3f%%）；入链总数 %d"
+          % (src, tot_out, g["via"]["both"] + g["via"]["out"],
+             100.0 * (g["via"]["both"] + g["via"]["out"]) / max(tot_out, 1), tot_bl))
     trunc = [e["n"] for e in have if cache[e["w"]].get("links_truncated")]
-    print("出链翻页截断 %d 条（各取前 %d 条出链）：%s"
+    print("（旧口径遗留）出链翻页截断 %d 条（各取前 %d 条出链）：%s"
           % (len(trunc), MAX_LINK_PAGES * 500, "、".join(trunc[:8])))
     bt = [e["n"] for e in have if cache[e["w"]].get("bl_truncated")]
     print("入链达 %d 封顶 %d 条" % (BACKLINK_CAP, len(bt)))
     print("请求 %d，429 %d 次，退避 %d 次" % (STATS["req"], STATS["http429"], len(STATS["backoff"])))
+
+    compare_out(evs, cache)
 
     print("\n══ 两向互证 ══")
     v = g["via"]
@@ -898,14 +1426,20 @@ def report(evs, cache, g, rows, kinds=None, diag=None):
     only_in = [(x["s"], x["t"]) for x in g["edges"] if x["via"] == "in"]
     cut_in = [(s, t) for s, t in only_in
               if cache.get((ev_have.get(s) or {}).get("w") or "", {}).get("links_truncated")]
-    print("  只入链认的 %d 条里，来源页出链被翻页截断：%d；"
-          "余 %d 条多为字词转换写法（出链侧的写法不在别名表内）"
+    # 2026-09-04 改口径之后，这一栏的语义变了：出链侧只认正文，于是「只入链认」
+    # 里多出一大类**本该如此**的边——甲的导航模板链了乙（linkshere 照收），
+    # 甲的正文里没写乙。那不是盲点，正是这次要滤掉的东西。真盲点仍是
+    # 中文维基的字词转换写法（[[三星堆遺址]] 不建重定向页也能落到简体页上）。
+    print("  只入链认的 %d 条里，来源页出链被翻页截断（旧口径遗留）：%d；"
+          "余 %d 条＝甲的模板链了乙而正文没写（正是本层要滤的）＋字词转换写法"
           % (len(only_in), len(cut_in), len(only_in) - len(cut_in)))
     for s, t in [p for p in only_out if p not in cut_bad][:8]:
         print("    只出链认：%s → %s" % (s, t))
     for s, t in [p for p in only_in if p not in cut_in][:8]:
         print("    只入链认：%s → %s" % (s, t))
-    nya = sum(len(cache[e["w"]].get("out_hits_nya") or []) for e in have)
+    nya = (sum(len(cache[e["w"]].get("out_hits_nya") or []) for e in have)
+           if g.get("rendered")
+           else sum(len(v) for v in (g.get("nya") or {}).values()))
     print("  备轨（库内自拟名 n／雅名 ya 撞上的额外命中，默认不入边）：%d 处" % nya)
     if diag:
         print("\n  ── 不对称抽样诊断（查是不是重定向中转）──")
@@ -947,9 +1481,9 @@ def report(evs, cache, g, rows, kinds=None, diag=None):
         ind = sorted(g["in_deg"].get(e["n"], 0) for e in pool)
         outd = sorted(g["out_deg"].get(e["n"], 0) for e in pool)
         med = lambda a: a[len(a) // 2] if a else 0
-        nl = sorted(cache[e["w"]]["n_links"] for e in pool)
-        nb = sorted(cache[e["w"]]["n_backlinks"] for e in pool)
-        print("  %-8s %4d 条 | 入度中位 %3d 均 %5.1f | 出度中位 %3d | 维基出链中位 %4d | 维基入链中位 %4d"
+        nl = sorted(getc(e, "n_links_text") for e in pool)
+        nb = sorted(getc(e, "n_backlinks") for e in pool)
+        print("  %-8s %4d 条 | 入度中位 %3d 均 %5.1f | 出度中位 %3d | 正文链接中位 %4d | 维基入链中位 %4d"
               % (wt, len(pool), med(ind), sum(ind) / len(ind), med(outd), med(nl), med(nb)))
     shared = defaultdict(list)
     for e in have:
@@ -972,9 +1506,9 @@ def report(evs, cache, g, rows, kinds=None, diag=None):
     z = [e for e in have if e.get("r") == 1 and g["in_deg"].get(e["n"], 0) == 0]
     print("  （共 %d 条，占 r=1 的 %.1f%%）"
           % (len(z), 100.0 * len(z) / max(sum(1 for e in have if e.get("r") == 1), 1)))
-    for e in sorted(z, key=lambda e: -cache[e["w"]]["n_backlinks"])[:30]:
+    for e in sorted(z, key=lambda e: -getc(e, "n_backlinks"))[:30]:
         print("  库出%3d 维基入链%4d | k=%-4s wt=%-7s %-7s %s"
-              % (g["out_deg"].get(e["n"], 0), cache[e["w"]]["n_backlinks"],
+              % (g["out_deg"].get(e["n"], 0), getc(e, "n_backlinks"),
                  e.get("k"), e.get("wt", "exact"), fy(e["y"]), e["n"]))
 
     print("\n══ 库外指向榜前 80（去总述页）══")
@@ -1012,6 +1546,26 @@ def main():
                          "（幂等；抓完自动做一次，此参数用于对旧缓存补做）")
     ap.add_argument("--use-nya", action="store_true",
                     help="把库内自拟名 n／雅名 ya 撞上的命中也算作边（默认不算）")
+    # ── 出链一侧（2026-09-04 起从 wikitext 正文取，见档头）──
+    ap.add_argument("--skip-text", action="store_true",
+                    help="不取 wikitext（只跑入链一侧）")
+    ap.add_argument("--skip-in", action="store_true",
+                    help="不跑入链一侧（prop=links|linkshere），只取正文出链")
+    ap.add_argument("--text-batch", type=int, default=8, metavar="N",
+                    help="正文一发取几个页（默认 8）")
+    ap.add_argument("--text-limit", type=int, metavar="N",
+                    help="本轮最多取几个页的正文（试跑用）")
+    ap.add_argument("--refresh-text", action="store_true",
+                    help="正文全量重取（不吃缓存）")
+    ap.add_argument("--recheck-text", action="store_true",
+                    help="先比 revid，把维基那边改过的页挑出来重取（不带正文，几乎不花钱）")
+    ap.add_argument("--rendered-out", action="store_true",
+                    help="出链切回 2026-09-04 以前的口径（prop=links，含导航模板"
+                         "展开后的链接）——只为对照，日常别用")
+    ap.add_argument("--out-only", action="store_true",
+                    help="只留正文认的边，不并入链一侧。入链（linkshere）与旧的"
+                         "prop=links 是同一个病：导航框链过来的它照记，"
+                         "并集一取，滤掉的模板边又从 in 侧绕回来")
     # 默认不写 JSON：这两份是分析中间物，不是库件，落进仓库只会积垢。
     # 要就显式给一个库外目录（如本轮的 scratchpad/wikilinks/）。
     ap.add_argument("--out", default="", help="JSON 输出目录（不给则只打印报告）")
@@ -1021,13 +1575,21 @@ def main():
     print("事件 %d 条" % len(evs))
     cache = json.load(io.open(CACHE, encoding="utf-8")) if os.path.exists(CACHE) else {}
     if not a.offline:
-        cache = crawl(evs, cache, limit=a.limit, refresh=a.refresh,
-                      batch=a.batch, retry_missing=a.retry_missing,
-                      rounds=a.rounds)
-        compact(evs, cache)          # 抓完顺手折起来，免得缓存越滚越肥
+        # 出链一侧：先取正文（一百八十来发就跑完，比入链那一侧便宜一个量级）
+        if not a.skip_text:
+            if a.recheck_text:
+                recheck_text(evs, cache)
+            cache = crawl_text(evs, cache, limit=a.text_limit,
+                               refresh=a.refresh_text, batch=a.text_batch)
+        if not a.skip_in:
+            cache = crawl(evs, cache, limit=a.limit, refresh=a.refresh,
+                          batch=a.batch, retry_missing=a.retry_missing,
+                          rounds=a.rounds)
+            compact(evs, cache)      # 抓完顺手折起来，免得缓存越滚越肥
     elif a.compact:
         compact(evs, cache)
-    g = compute(evs, cache, use_nya=a.use_nya)
+    g = compute(evs, cache, use_nya=a.use_nya, use_rendered=a.rendered_out,
+                out_only=a.out_only)
     rows = outside_ranking(evs, cache, g)
 
     if a.probe_disambig and not a.offline:
