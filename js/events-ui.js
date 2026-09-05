@@ -13,7 +13,7 @@
 // 自然成了调用方的事（图下那排 14/7/5，地方页 13/6.5/4.6，画的本来就是同一个 evMark）。
 // -----------------------------------------------------------------------------
 import { h } from './charts.js';
-import { EVENT_KINDS } from './events.js';
+import { EVENT_KINDS, kindLabel, kindsByCount } from './events.js';
 
 // 双击检测**不能**记在节点上：每次点击都整段重绘，原生 dblclick 在重建后的新
 // 节点上永远凑不齐两击（这也是 2026-08-28 库主报「双击坏了」的由来）。
@@ -35,10 +35,9 @@ const LAST = new Map();
  */
 export function eventLegend({ counts, off, glyph, skip = [], onChange, owner = 'main' }) {
   const row = h('div', { class: 'ev-legend' });
-  const kinds = Object.keys(EVENT_KINDS).filter((k) => counts[k] && !skip.includes(k));
-  // 色标按词条数降序排（库主 2026-09-02：「王朝长河这些类型也应该按照词条数排列」），
-  // 与首页/地图页同则；EVENT_KINDS 的定义序只管数据，不管图例——多的类在前，一眼看出库的体量分布
-  const order = kinds.slice().sort((a, b) => counts[b] - counts[a]);
+  // 色标按词条数降序排（正本 events.kindsByCount，地图页与地方页同则）。
+  // **注册表驱动**：宇宙取 EVENT_KINDS 的定义序，未登记的新类整类不出现
+  const order = kindsByCount(counts, { universe: Object.keys(EVENT_KINDS), skip });
   for (const k of order) {
     const chip = h('button', {
       type: 'button', class: 'chip ev-chip' + (off.has(k) ? ' off' : ''),
@@ -61,7 +60,7 @@ export function eventLegend({ counts, off, glyph, skip = [], onChange, owner = '
         // 350ms 窗口永远迟到，双击净效果归零。起表挪到绘完，量的是「画完到下一击」
         LAST.set(owner, { k, t: Date.now() });
       },
-    }, [glyph(k), h('span', { text: `${(EVENT_KINDS[k] || {}).label || k} ${counts[k]}` })]);
+    }, [glyph(k), h('span', { text: `${kindLabel(k)} ${counts[k]}` })]);
     row.appendChild(chip);
   }
   // 类别多到十二种之后,一类类点回来太费手——全开一键复位(与地图页同名同位)。

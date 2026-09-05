@@ -239,6 +239,46 @@ export const evAnchor = (ev) => ev.y;
 export const evRank = (ev) => ev.r || 2;
 
 /**
+ * 类别牌名（2026-09-04 归一，SSOT 卷 D04）。此前十处同式散在六个文件里，
+ * 兜底还是两样：一半退裸 key、一半退「大事」。
+ *
+ * **兜底今天不可达**：EVENT_KINDS 登记 12 个键，EVENTS 恰好只用这 12 个，
+ * 且个个有 label（实测）。故统一退裸 key 是零行为差，而裸 key 比「大事」
+ * 好——真漏登记时屏幕上会直接显出那个键名，一眼可查。
+ *
+ * 但**真正该补的不是兜底**：`app-place.js` 与 `views-lanes.js` 的键集派生自
+ * EVENT_KINDS，未登记的新类不是「露出兜底」而是**整类静默消失**。该补的是
+ * `tools/lint-events.py` 加一条「k 必在 EVENT_KINDS」（该脚本查 d 键的写法可
+ * 直接照抄）——本轮只许改 js/，故这一笔记在这里候办。
+ */
+export const kindLabel = (k) => (EVENT_KINDS[k] || {}).label || k;
+
+/**
+ * 按类计数（2026-09-04 归一，SSOT 卷 D10）。语料由调用方自备——图下图例数全库、
+ * 地方页只数本地成员、地图页只数有落点的行，「数哪一堆」正是各页要说的事。
+ */
+export function countByKind(rows) {
+  const counts = {};
+  for (const r of rows) counts[r.k] = (counts[r.k] || 0) + 1;
+  return counts;
+}
+
+/**
+ * 按条数降序排类（库主 2026-09-02：「王朝长河这些类型也应该按照词条数排列」）。
+ *
+ * `universe` **必须留参、不许写死**：图例走注册表驱动（`EVENT_KINDS` 的定义序，
+ * 未登记的新类整类不出现），地图页走数据驱动（`EV_ROWS` 里出现过的类，它那份
+ * KINDS 还兼作「可关类别全集」）。两种宇宙给的兜底次序不同，混不得。
+ *
+ * **并列口径钉在这里一次**：`sort` 在 ES2019 之后是稳定的，故同条数者保持
+ * `universe` 里的先后。今天 liv:30/era:26、liv:23/dis:16 已经很近，真撞上时
+ * 三处会一致地按各自宇宙的原序排，而不是各随各的实现漂。
+ */
+export function kindsByCount(counts, { universe = Object.keys(counts), skip = [] } = {}) {
+  return universe.filter((k) => counts[k] && !skip.includes(k)).sort((a, b) => counts[b] - counts[a]);
+}
+
+/**
  * 一次算出事件层的三个旗标。放在每轮渲染的开头调一次，
  * 别在谓词里现建 Set——事件层每次重绘要过全库好几遍（EVENTS 现一千五百余条）。
  * `evRanks` 全取掉＝无大事记（showEvents 为假，整层不画）。
@@ -256,6 +296,43 @@ export function evVisible(ev, evOff, rkSet, skipEra) {
   if (evOff.has(ev.k)) return false;
   if (skipEra && ev.k === 'era') return false;
   return rkSet.has(evRank(ev));
+}
+
+/**
+ * 同年事件扇出（2026-09-04 归一，SSOT 卷 D09）。纯函数，无 DOM 无状态。
+ *
+ * 病根：同一年的几条事件坐标完全相同，命中区整块重叠，每年只有最后画上去的
+ * 那条点得开——点「开凿大运河」弹出同年的「赵州桥建成」。按 key 分组摊开，
+ * 各自可点、也各自可留名。组内按 `o`（年内次序）排：早先合并脚本按**名字**排，
+ * 于是 1449 年「北京保卫战」排到了「土木堡之变」左边（八月的事跑到十月后头）；
+ * 无月序可考的留 `o` 空缺，彼此相对位置不表意。
+ *
+ * 两视图的差异全在参数里：泳道键 ＝ 年、步长 7px、横轴；竖河键 ＝ 年+岸、
+ * 步长 6px、纵轴（同年但分属两岸的本来就不撞，只在同岸内分组）。
+ *
+ * **`visible` 收的必须是「建组用」的那版名单**，不是落笔用的那版：带 tr 的事件
+ * 在泳道进组占位却不落笔（-1045 同年六条只画五个，留一道 7px 空当）。谁把落笔
+ * 那版喂进来，同年坐标就整体挪位。窄屏河内事件层（二维占位表）不参与扇出。
+ *
+ * @param events  全库（或本层的候选集）
+ * @param keyOf   分组键
+ * @param step    相邻两条的像素间距
+ * @param visible 入组门槛；不传则全收
+ * @returns fanOf(ev) → 相对锚点的偏移量（组内独一条为 0）
+ */
+export function fanOut(events, { keyOf, step, visible }) {
+  const groups = new Map();
+  for (const e of events) {
+    if (visible && !visible(e)) continue;
+    const k = keyOf(e);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(e);
+  }
+  for (const g of groups.values()) g.sort((a, b) => (a.o || 99) - (b.o || 99));
+  return (e) => {
+    const g = groups.get(keyOf(e));
+    return g && g.length > 1 ? (g.indexOf(e) - (g.length - 1) / 2) * step : 0;
+  };
 }
 
 export const EVENTS = [

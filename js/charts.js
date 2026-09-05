@@ -1,15 +1,8 @@
 // charts.js — SVG 图表基元：坐标轴、刻度、图例、悬停提示、表格视图
-const NS = 'http://www.w3.org/2000/svg';
-
-export function el(tag, attrs = {}, children = []) {
-  const n = document.createElementNS(NS, tag);
-  for (const [k, v] of Object.entries(attrs)) {
-    if (v === null || v === undefined) continue;
-    n.setAttribute(k, v);
-  }
-  for (const c of [].concat(children)) n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
-  return n;
-}
+// SVG 元素工厂的正本迁至 js/dom.js（零 DOM 副作用叶子模块，plate 系同吃一份）：
+// 此处原样 re-export，全库几十条 `import { el } from './charts.js'` 一行不动
+import { el } from './dom.js';
+export { el };          // 本文件内部也照旧直呼其名
 export function h(tag, attrs = {}, children = []) {
   const n = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
@@ -334,6 +327,6 @@ export function glide(read, write, to, { min = 380, max = 1400, perPx = 0.5 } = 
 }
 
 // 正本迁至 js/year.js（零依赖），此处原样 re-export：十余处 `import { fmtYearAxis } from './charts.js'` 一行不动
-export { fmtYearAxis } from './year.js';
+export { fmtYearAxis, fmtSpan } from './year.js';
 export const fmt1 = (v) => (v === null || v === undefined || !isFinite(v) ? '—' : v.toFixed(1));
 export const fmt2 = (v) => (v === null || v === undefined || !isFinite(v) ? '—' : v.toFixed(2));

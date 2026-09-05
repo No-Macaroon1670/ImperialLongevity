@@ -29,11 +29,17 @@ import {
   el, softStroke, haloText, lakeLayer, LabelSolver, placeCandidates, NUDGES,
   graticulePath, reader, ANCHORS, RIVER_TAGS, LAKE_TAGS,
 } from './plate.js';
+// **只取 inFrame 一样**：plate-line.js 里另有一个写死中国投影的 xy，与本页
+// 随 state.world 切换的同名 xy 会撞名。依赖成本为零——plate-line 只吃
+// basemap.js 与 plate.js，两者本页已引，且它模块体里一行 DOM 都没有。
+import { inFrame, runJobs } from './plate-line.js';
+import { HOLD_ROLES } from './geo-roles.js';
+import { pickDifferent, restartRoll } from './ui-dice.js';
 import { GEO_EVENTS } from './geo-events.js';
 import { GEO_DYN } from './geo-dynasties.js';
-import { EVENT_KINDS, EVENTS } from './events.js';
+import { EVENT_KINDS, EVENTS, kindLabel as evKindLabel, countByKind, kindsByCount } from './events.js';
 import { evSpec, mountEmbedCard, mdBold } from './knowledge.js';
-import { buildLineCatalog } from './line-catalog.js';
+import { buildLineCatalog, lineFromHash, lineHash } from './line-catalog.js';
 import { TERR } from './territories.js';
 import { syncCounts } from './counts.js';
 import { LINES } from './lines.js';
@@ -61,8 +67,10 @@ const DYN_ROWS = Object.entries(GEO_DYN).map(([k, v]) => ({
 const HAS_DYN = DYN_ROWS.length > 0;
 const ALL = EV_ROWS.concat(DYN_ROWS);
 
-const KINDS = [...new Set(EV_ROWS.map((r) => r.k))]
-  .sort((a, b) => EV_ROWS.filter((r) => r.k === b).length - EV_ROWS.filter((r) => r.k === a).length);
+// **数据驱动**的宇宙（与图例那边的注册表驱动相对）：图上出现过的类，按条数降序。
+// 这份 KINDS 还兼作「可关类别全集」，故不能换成 EVENT_KINDS 的定义序
+const EV_COUNTS = countByKind(EV_ROWS);
+const KINDS = kindsByCount(EV_COUNTS, { universe: [...new Set(EV_ROWS.map((r) => r.k))] });
 
 const YEARS = ALL.map((r) => r.y);
 const Y_LO = Math.min(...YEARS), Y_HI = Math.max(...YEARS);
@@ -120,7 +128,7 @@ const idOf = (r) => `${r['层']}:${r.n}`;
 window.__map = { state, ALL, TERR, idOf: null };
 window.__map.idOf = idOf;
 const trueXY = (r) => xy(r['链'][r._pi !== undefined ? r._pi : mainIdx(r)]['点']);
-const kindLabel = (r) => (r['层'] === 'dyn' ? '政权' : (EVENT_KINDS[r.k] || {}).label || r.k);
+const kindLabel = (r) => (r['层'] === 'dyn' ? '政权' : evKindLabel(r.k));
 
 /* ── 骨架 ─────────────────────────────────────────────────────────────── */
 
@@ -662,13 +670,13 @@ function drawChain(row, ax, ay) {
   // 易县→纽约→伦敦→费城→多伦多的巡游，实情是一组造像四散各馆，
   // 馆与馆之间毫无因果。故藏点各自从上一个非收藏节点散射连出，
   // 藏点之间不画箭头；整链皆藏点（富春两半、黄庭经两摹）则只摆点不画线
-  const HOLD = new Set(['现', '摹', '仿']);
+  // 收藏族 {现,摹,仿} 的正本在 geo-roles.js（下面读数面板那处与地方线同吃一份）
   for (let i = 0; i + 1 < seq.length; i += 1) {
     const a = seq[i], b = seq[i + 1];
-    if (HOLD.has(chain[a]['角']) && HOLD.has(chain[b]['角'])) {
+    if (HOLD_ROLES.has(chain[a]['角']) && HOLD_ROLES.has(chain[b]['角'])) {
       let src = -1;
       for (let j = i; j >= 0; j -= 1) {
-        if (!HOLD.has(chain[seq[j]]['角'])) { src = seq[j]; break; }
+        if (!HOLD_ROLES.has(chain[seq[j]]['角'])) { src = seq[j]; break; }
       }
       if (src >= 0) legs.push([src, b]);
     } else legs.push([a, b]);
@@ -761,9 +769,8 @@ function say(row, pin) {
     const peiC = chain.filter((c) => c['角'] === '陪');
     // 分藏不成行迹（与链的画法同一条规矩）：尾部连续两个及以上藏点不再用
     // 箭头串起，改记「分藏」——箭头是因果，分藏没有因果
-    const HOLD2 = new Set(['现', '摹', '仿']);
     const tail = [];
-    while (seqC.length && HOLD2.has(seqC[seqC.length - 1]['角'])) tail.unshift(seqC.pop());
+    while (seqC.length && HOLD_ROLES.has(seqC[seqC.length - 1]['角'])) tail.unshift(seqC.pop());
     const nm = (c) => `${c['名']}·${c['角']}${hidOut(c) ? '（图外）' : ''}`;
     let t;
     if (tail.length >= 2) {
@@ -1247,13 +1254,9 @@ function draw() {
     rd.unpin(); goOff(); EMB.hide(); clearExtent();
   }
 
-  for (const j of jobs) {
-    solver.job({
-      nodes: j.h.nodes, priority: j.pri, candidates: j.cands,
-      apply: ([dx, dy, anchor]) => j.h.at(j.p[0] + dx, j.p[1] + dy, anchor || 'middle'),
-    });
-  }
-  const { hidden } = solver.solve();
+  // 交排版器那六行在 plate-line.js 的 runJobs（小地图与构建期大图同吃一份）：
+  // 本页 11 处 jobs.push 全是 `{h, p, pri, cands}`，正是它的契约
+  const { hidden } = runJobs(solver, jobs);
   tally(rows, gs2, packed, folded, hidden);
   centreOnce(rows);
 }
@@ -1272,15 +1275,22 @@ function tally(rows, gs, packed, folded, hidden) {
   $('plate-tally').textContent = `${bits.join('；')}。`;
 }
 
+/** 窄屏上把视口横向挪到图上的某一点（走线跳站与首绘居中同吃一份）。
+ *  图没比框宽就什么都不做——`plate` 不溢出时 scrollLeft 本来就无处可去。 */
+function centreOnX(vx) {
+  const box = $('plate');
+  if (box.scrollWidth <= box.clientWidth + 1) return;
+  box.scrollLeft = Math.max(0, (vx / W) * box.scrollWidth - box.clientWidth / 2);
+}
+
 // 窄屏上图比框宽，进来时默认停在最左边——而最左边是新疆以西的空海。
 // 故第一次画完把视口挪到点最密处。**只做一次**：之后读者拖到哪儿是他的事
 function centreOnce(rows) {
   if (centred || !rows.length || VIEW.z > 1) return;
-  const box = $('plate');
-  if (box.scrollWidth <= box.clientWidth + 1) { centred = true; return; }
   const xs = rows.map((r) => trueXY(r)[0]).sort((a, b) => a - b);
-  box.scrollLeft = Math.max(0, (xs[Math.floor(xs.length / 2)] / W) * box.scrollWidth
-    - box.clientWidth / 2);
+  centreOnX(xs[Math.floor(xs.length / 2)]);
+  // 「做过了」这件事留在调用点：图没溢出时也算做过（原样保留），
+  // 否则这颗一次性的旗子会被走线跳站顺手消费掉
   centred = true;
 }
 
@@ -1304,8 +1314,8 @@ function mountKinds() {
     bar.appendChild(b);
   };
   for (const k of KINDS) {
-    const n = EV_ROWS.filter((r) => r.k === k).length;
-    chip(`k-${k}`, `<span class="pl-swatch"></span>${(EVENT_KINDS[k] || {}).label || k} ${n}`,
+    const n = EV_COUNTS[k];
+    chip(`k-${k}`, `<span class="pl-swatch"></span>${evKindLabel(k)} ${n}`,
       () => state.layers.has('ev') && !state.off.has(k),
       () => {
         if (!state.layers.has('ev')) { state.layers.add('ev'); state.off = new Set(KINDS.filter((x) => x !== k)); return; }
@@ -1427,12 +1437,9 @@ addEventListener('keydown', (e) => {
 function fillCoverage() {
   const host = $('plate-cover');
   if (!host) return;
-  const total = {}, got = {};
-  for (const e of EVENTS) {
-    if (e.k === 'era' && !EVENT_KINDS[e.k]) continue;
-    total[e.k] = (total[e.k] || 0) + 1;
-  }
-  for (const r of EV_ROWS) got[r.k] = (got[r.k] || 0) + 1;
+  // era 那道门原样保留（今日 EVENT_KINDS.era 有登记，这一句是防将来撤登记）
+  const total = countByKind(EVENTS.filter((e) => e.k !== 'era' || EVENT_KINDS[e.k]));
+  const got = countByKind(EV_ROWS);
   const rows = Object.keys(total)
     .map((k) => ({ k, t: total[k], g: got[k] || 0 }))
     .sort((a2, b2) => (b2.g / b2.t) - (a2.g / a2.t) || b2.t - a2.t);
@@ -1440,13 +1447,13 @@ function fillCoverage() {
   host.innerHTML = '';
   for (const x of rows.filter((y) => y.g)) {
     const li = document.createElement('li');
-    li.innerHTML = `<strong>${(EVENT_KINDS[x.k] || {}).label || x.k}</strong>　`
+    li.innerHTML = `<strong>${evKindLabel(x.k)}</strong>　`
       + `${x.t} 条落得下 ${x.g} 条（${Math.round((100 * x.g) / x.t)}%）`;
     host.appendChild(li);
   }
   if (none.length) {
     const li = document.createElement('li');
-    li.innerHTML = `<strong>${none.map((x) => `${(EVENT_KINDS[x.k] || {}).label || x.k} ${x.t} 条`).join('、')}</strong>`
+    li.innerHTML = `<strong>${none.map((x) => `${evKindLabel(x.k)} ${x.t} 条`).join('、')}</strong>`
       + '　一条都落不下';
     host.appendChild(li);
   }
@@ -1552,9 +1559,7 @@ function drawLn() {
       // 现藏可能在图外（《金刚经》在伦敦）：照链的规矩，朝真实大圆方位画到边上
       const [px, py] = xy(rp);
       let [qx, qy] = xy(g['现藏']);
-      const [w0, s0, e0, n0] = BASEMAP.bbox;
-      const out = !(g['现藏'][1] >= w0 && g['现藏'][1] <= e0
-        && g['现藏'][0] >= s0 && g['现藏'][0] <= n0);
+      const out = !inFrame(g['现藏']);
       if (out) {
         const th = bearing(rp, g['现藏']);
         qx = px + (W + H) * 2 * Math.sin(th);
@@ -1578,13 +1583,7 @@ function drawLn() {
   }
   const solver = new LabelSolver();
   gLn.querySelectorAll('circle, rect').forEach((n) => solver.obstacle(n));
-  for (const j of jobs) {
-    solver.job({
-      nodes: j.h.nodes, priority: j.pri, candidates: j.cands,
-      apply: ([dx, dy, anchor]) => j.h.at(j.p[0] + dx, j.p[1] + dy, anchor || 'middle'),
-    });
-  }
-  solver.solve();
+  runJobs(solver, jobs);
 }
 
 function lnGoto(i) {
@@ -1601,18 +1600,17 @@ function lnGoto(i) {
     const read = LN.bar.querySelector('[data-a=read]');
     const tl = LN.bar.querySelector('[data-a=tl]');
     if (read) read.href = st.read || `story/${LN.key}.html`;
-    if (tl) tl.href = `timeline.html#line=${LN.key}&at=${LN.at}`;
+    if (tl) tl.href = `timeline.html${lineHash(LN.key, LN.at)}`;
     LN.bar.querySelector('[data-a=prev]').disabled = LN.at === 0;
     const nx = LN.bar.querySelector('[data-a=next]');
     nx.textContent = LN.at === LN.stops.length - 1 ? '走完了' : '下一站 →';
     nx.disabled = LN.at === LN.stops.length - 1;
   }
-  // 窄屏：把视口挪到当前站
-  const box = $('plate');
+  // 窄屏：把视口挪到当前站（与首绘居中同一个 centreOnX；**这里没有那道
+  // `VIEW.z <= 1` 闸**，缩放是纯 viewBox 实现，z>1 时算出的位置与当前视口
+  // 无关——属潜伏小 bug，原样保留，不混在归一里悄悄补上）
   const rp = st.g && lnRep(st.g);
-  if (rp && box.scrollWidth > box.clientWidth + 1) {
-    box.scrollLeft = Math.max(0, (xy(rp)[0] / W) * box.scrollWidth - box.clientWidth / 2);
-  }
+  if (rp) centreOnX(xy(rp)[0]);
 }
 
 function enterLine(key, at) {
@@ -1653,15 +1651,8 @@ function exitLine() {
   draw();
 }
 
-function lnFromHash() {
-  const m = /(?:^|[#&])line=([a-z0-9_-]+)/i.exec(location.hash || '');
-  if (!m) return null;
-  const a2 = /(?:^|[#&])at=(\d+)/.exec(location.hash || '');
-  return { key: m[1], at: a2 ? Number(a2[1]) : 0 };
-}
-
 addEventListener('hashchange', () => {
-  const k = lnFromHash();
+  const k = lineFromHash();
   if (k) enterLine(k.key, k.at);
   else exitLine();
 });
@@ -1675,7 +1666,7 @@ function mountLineChips() {
   const geoLines = Object.values(LINES).filter((L) => L.geo);
   const cat = buildLineCatalog({
     lines: geoLines,
-    onPick: (L) => { history.replaceState(null, '', `#line=${L.key}`); enterLine(L.key, 0); },
+    onPick: (L) => { history.replaceState(null, '', lineHash(L.key)); enterLine(L.key, 0); },
   });
   const btn = document.createElement('button');
   btn.type = 'button';
@@ -1732,14 +1723,9 @@ function mountLineChips() {
     let pool = shown();
     if (pool.length < 2) pool = ALL;
     if (pool.length < 2) return;
-    let pick = null;
-    for (let a2 = 0; a2 < 8 && (!pick || pick === lastPick); a2 += 1) {
-      pick = pool[Math.floor(Math.random() * pool.length)];
-    }
+    const pick = pickDifferent(pool, lastPick);   // 取样与动画重启在 ui-dice.js，时间轴同吃
     lastPick = pick;
-    dice.classList.remove('rolling');
-    void dice.offsetWidth;               // 重启动画：不回流的话连按第二下不动（时间轴同注）
-    dice.classList.add('rolling');
+    restartRoll(dice);
     locate(pick);
   });
   sbox.append(sin, dice, btn, globe, slist);   // 骰子居右（用户指定：不另起一行）；书钮再靠右（2026-08-26 库主令）；地球钮贴书钮（2026-08-31 库主令「就在故事线旁边」，窄屏专有）
@@ -1814,6 +1800,6 @@ mountLineChips();
 mountYear();
 mountSettings();
 {
-  const k0 = lnFromHash();
+  const k0 = lineFromHash();
   if (k0) enterLine(k0.key, k0.at);
 }

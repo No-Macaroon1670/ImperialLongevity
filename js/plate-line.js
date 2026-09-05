@@ -6,7 +6,7 @@
 //
 //   js/minimap.js                       时间轴走线的右下小地图（运行时）
 //   tools/mining/render_line_map.mjs    故事页那张大图（构建时，在 node 里跑）
-//   js/app-map.js                       地图页（取景是交互缩放，暂只取标签那几样）
+//   js/app-map.js                       地图页（取景是交互缩放，暂只取 inFrame 一样）
 //
 // 以前这几样各写各的：minimap 的 fit/clamp/everyPoint 与 build_line_page.py 的
 // fit_box/clamp/build_marks 是同一件事的两种写法，而且**已经走样**——python 那份

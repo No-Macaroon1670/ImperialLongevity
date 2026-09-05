@@ -12,13 +12,13 @@
 //      改为朝代长带后只需 9 条，且长带本身有足够宽度容纳名称。
 //   3. 朝代名在带首，并在横向滚动时吸附于视口左缘（不越出本带范围），
 //      因此任何时刻都能读出正在看的是哪一朝。
-import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hideTip, fmtYearAxis, fmt1, scrollHint, glide } from './charts.js';
+import { el, h, linear, ticks, hoverable, legend, tableView, notes, showTip, hideTip, fmtYearAxis, fmtSpan, fmt1, scrollHint, glide } from './charts.js';
 import { mountKnowledgeCorner, eventSpec, evSpec } from './knowledge.js';
 import { stampHash } from './search.js';
 import { DYNASTIES, DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, TRANSITIONS, ORTHODOX, SECONDARY } from './dynasties.js';
-import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor, evFlags, evRank, evVisible } from './events.js';
-import { NIANHAO } from './data-nianhao.js';
+import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor, evFlags, evRank, evVisible, fanOut, countByKind } from './events.js';
+import { nianhaoSegs, nianhaoTip, nianhaoTitle } from './nianhao.js';
 import { fmtDate } from './schema.js';
 import { eventLegend as chipRow } from './events-ui.js';
 
@@ -206,8 +206,7 @@ export function evMark(kind, cx, cy, r, extra = {}) {
 // 全库计数、图下那排的字形尺寸（14/7/5）、以及把 Set 换回 evOff 数组交给 setOpt。
 // `owner` 是双击窗口的分账人：图下这排与导览副卡同页并挂，共用一份就会互相误判成双击。
 export function eventLegend(opts, { skip = [], owner = 'main' } = {}) {
-  const counts = {};
-  for (const ev of EVENTS) counts[ev.k] = (counts[ev.k] || 0) + 1;
+  const counts = countByKind(EVENTS);
   const row = chipRow({
     counts, off: new Set(opts.evOff || []), skip, owner,
     // 图例画的就是图上那个形状:色标只说得出颜色,而颜色已不是唯一的识别通道
@@ -503,21 +502,13 @@ export function renderLaneTimeline(host, list, opts) {
     // 弹出来的是同年的「赵州桥建成」。实测 129 条事件挤在 59 个年份上
     // (1900 年有四条),即四分之一的事件层点不开,且看见的名字与点开的常非一物。
     // 按年分组横向摊开,标准档 7px 合半年,肉眼几乎看不出,但各自可点、也各自可留名。
-    const sameYear = new Map();
-    for (const e2 of EVENTS) {
-      // 建组**含 tr**：带 tr 的事件在此占位却不落笔（见下），这道空当是现行排布
-      if (!evVisible(e2, evOff, rkSet, true)) continue;
-      if (!sameYear.has(e2.y)) sameYear.set(e2.y, []);
-      sameYear.get(e2.y).push(e2);
-    }
-    // 组内按 o(年内次序)排:此前是合并脚本按**名字**排的,于是 1449 年
-    // 「北京保卫战」排到了「土木堡之变」左边——八月的事跑到十月的事后头。
-    // 无月序可考的留 o 空缺,彼此相对位置不表意。
-    for (const g of sameYear.values()) g.sort((a2, b2) => (a2.o || 99) - (b2.o || 99));
-    const fanOf = (e2) => {
-      const g = sameYear.get(e2.y);
-      return g && g.length > 1 ? (g.indexOf(e2) - (g.length - 1) / 2) * 7 : 0;
-    };
+    // 分组、按 o 排、对称偏移三件事在 events.js 的 fanOut 里（竖河同吃一份）。
+    // 建组**含 tr**：带 tr 的事件在此占位却不落笔（见下），这道空当是现行排布
+    const fanOf = fanOut(EVENTS, {
+      keyOf: (e2) => e2.y,
+      step: 7,
+      visible: (e2) => evVisible(e2, evOff, rkSet, true),
+    });
     const gEvLead = el('g', { class: 'ev-lead' });
     head.appendChild(gEvLead);
     const gEv = [3, 2, 1].map((r) => { const g = el('g', { class: `ev-tier ev-r${r}` }); head.appendChild(g); return [r, g]; });
@@ -634,7 +625,7 @@ export function renderLaneTimeline(host, list, opts) {
       hoverable(hit, tipOf, () => ev.ya || ev.n);
       g.appendChild(hit);
       function tipOf() { return [
-        { color: `var(--ev-${ev.k})`, value: ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y), label: kind.label },
+        { color: `var(--ev-${ev.k})`, value: fmtSpan(ev.y, ev.y2), label: kind.label },
         { label: '事件', value: ev.n },
         ...(ev.yc ? [ev.yc] : []),
         ...(isSpan ? ['图上只标起点：这类制度或交流延续百年以上，画成长条会与邻近事件互撞，跨度见上方年份。'] : []),
@@ -840,42 +831,32 @@ export function renderLaneTimeline(host, list, opts) {
   // **默认侧在带下缘之外**；主线交替期两朝同轨并立时，上半轨那一朝的线
   // 翻到带上缘——各贴各的外侧，两套年号不会读串（2026-08-28 库主定的边角）。
   // 名字不上图（细线容不下字），悬停读年号、起讫与在位君主。
-  const NH_VARS = ['--nh-1', '--nh-2', '--nh-3', '--nh-4'];
+  // 段的裁剪、色序与悬停卡在 js/nianhao.js（竖河同吃一份）；这里只管 rect 画法
   const clearNianhao = () => { gNian.innerHTML = ''; };
   const drawNianhao = (filterKey) => {
     clearNianhao();
     if (nhMode === 'off') return;
     for (const b of bands) {
       if (filterKey && b.d.key !== filterKey) continue;
-      const list2 = NIANHAO[b.d.key];
-      if (!list2) continue;
       const y0 = b.lane * LANE_H + 4;
-      list2.forEach((nh, i) => {
-        // 讫年含当年（建元讫-134，翌年改元元光），线画到 e+1；带被筛选截短时随带裁
-        const s0 = Math.max(nh.s, b.s), e0 = Math.min(nh.e + 1, b.e);
-        if (e0 - s0 <= 0) return;
-        for (const p of spanParts(b, s0, e0)) {
+      for (const seg of nianhaoSegs(b)) {
+        const { nh, colorVar } = seg;
+        for (const p of spanParts(b, seg.s, seg.e)) {
           const gy = p.slot === 0 ? y0 + TRACK_Y - 3 : y0 + TRACK_Y + TRACK_H + 0.5;
           const px0 = x(p.x0), px1 = x(p.x1);
           gNian.appendChild(el('rect', {
             x: px0 + 0.5, y: gy, width: Math.max(1, px1 - px0 - 1), height: 3,
-            fill: `var(${NH_VARS[i % NH_VARS.length]})`, 'pointer-events': 'none',
+            fill: `var(${colorVar})`, 'pointer-events': 'none',
           }));
           // 3px 摸不准，命中带上下各放宽 2px 专吃悬停
           const hit = el('rect', {
             x: px0, y: gy - 2, width: Math.max(4, px1 - px0), height: 7,
             fill: 'transparent', class: 'mark',
           });
-          hoverable(hit, () => [
-            { color: `var(${NH_VARS[i % NH_VARS.length]})`,
-              value: `${fmtYearAxis(nh.s)}–${fmtYearAxis(nh.e)}`, label: '年号起讫' },
-            { label: '历时', value: `${nh.e - nh.s + 1} 年` },
-            ...(nh.emp ? [{ label: '改元之君', value: nh.emp }] : []),
-            '年号起讫按年粒度；改元常在年中，同一年正月与腊月可分属两个年号。',
-          ], () => `${b.d.name}·${nh.n}`);
+          hoverable(hit, () => nianhaoTip(nh, b, colorVar), () => nianhaoTitle(b, nh));
           gNian.appendChild(hit);
         }
-      });
+      }
     }
   };
   if (nhMode === 'all') drawNianhao(null);

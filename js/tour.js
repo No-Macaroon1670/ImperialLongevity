@@ -31,6 +31,7 @@ import { eventLegend } from './views-lanes.js';
 import { EMPERORS } from './data.js';
 import { EVENTS } from './events.js';
 import { mountMinimap } from './minimap.js';
+import { mdBold } from './text.js';
 
 // 走到第几站也要记:面板右上角就是个 ✕,误触一下就没了,
 // 再从第一站走一遍是惩罚读者手滑
@@ -270,11 +271,10 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
   const fillLong = (st) => {
     body.innerHTML = '';
     for (const t of st.long) {
-      // **粗体** 转 <strong>，与 cta 同一条路径（文案是本库里的字面量，非外来输入）。
+      // **粗体** 转 <strong>，与 cta 同一条路径（正本在 text.js）。
       // 落点那段的「**或曰**」就靠它——那两个字是整条线的钥匙，不能让星号露出来
       const el = h('p', { class: 'tour-p' + (/^「/.test(t) ? ' tour-q' : '') });
-      el.innerHTML = t.replace(/&/g, '&amp;').replace(/</g, '&lt;')
-        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      el.innerHTML = mdBold(t);
       body.appendChild(el);
     }
   };
@@ -523,13 +523,10 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     body2.textContent = (wideProse || longOn) ? '' : (st.b2 || '');
     body2.style.display = (!wideProse && !longOn && st.b2) ? '' : 'none';
     more.classList.toggle('flat', wideProse);
-    // 与 cta2 同一条路径：**粗体** 转 <strong>（文案是本文件的字面量，非外来输入）
-    cta.innerHTML = (st.cta || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    // 与 cta2、长文栏同一条路径：**粗体** 转 <strong>（正本在 text.js）
+    cta.innerHTML = mdBold(st.cta);
     cta.style.display = st.cta ? '' : 'none';
-    // **粗体** 转 <strong>。文案是本文件里的字面量,不是外来输入
-    cta2.innerHTML = (st.cta2 || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    cta2.innerHTML = mdBold(st.cta2);
     cta2.style.display = st.cta2 ? '' : 'none';
     extra.innerHTML = '';
     if (st.go2) {

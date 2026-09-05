@@ -9,11 +9,13 @@
 // 重定向——刘彻→汉武帝),页面不预存词条内容。百度百科无 CORS 接口只给
 // 直达链接;「相关视频」给 YouTube 搜索直链而非具体视频——不预存链接就
 // 永远不会烂,搜索结果也天然比三年前存的某支视频新鲜。
-import { h, fmtYearAxis } from './charts.js';
-import { EVENT_KINDS } from './events.js';
+import { h, fmtYearAxis, fmtSpan } from './charts.js';
+import { kindLabel } from './events.js';
 import { cardPics } from './pics-own-cards.js';
 import { openPicZoom } from './pic-zoom.js';
 import { LINE_STOPS } from './line-stops.js';
+import { mdBold } from './text.js';
+import { lineBadgeSpec, storyBase } from './line-badge.js';
 
 /**
  * 值得自动弹卡的名君(姓名 → 权重 1–3):滚动经过时自动打开,权重高者优先。
@@ -199,14 +201,10 @@ function wikiOf(title) {
     : { lang: 'zh', t: title };
 }
 
-/** `**粗体**` 转 `<strong>`——库内简注（`yc`）的唯一标记语法，与 tour.js 的
- *  长文栏同一条约定：先转义 &/<（数据是自己库里的字面量，非外来输入，
- *  但走 innerHTML 前照例转义，无成本、免后患），再拆星号。给需要按
- *  innerHTML 落地的简注文本用（fillCard 的无维基分支、地图悬停小卡）。 */
-export function mdBold(s) {
-  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-}
+/** `**粗体**` 转 `<strong>` 的正本已迁去 `js/text.js`（与 tour.js 的长文栏、
+ *  两条 cta 同吃一份）。此处原样 re-export：`app-map.js` 与 `app-place.js`
+ *  的既有 import 一行不动，本文件内部（ycParas、fillCard）也照旧直呼其名。 */
+export { mdBold };
 
 // 长简注上卡的断行（2026-08-26 库主令「注意断行」）：库文层次以 **层首** 起层，
 // 照此骨架自动分段——kp-ext 是 <p>，段用块级 span，不嵌 p。短文无断点，天然单段。
@@ -266,13 +264,12 @@ function fetchSummary(title) {
  * 用户看到的那屏好结果之所以好,是因为「隋末民变」四个字里本就含着「隋」。
  */
 
-const CIRC = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳';
 
 /** 大事记 → 卡片规格。点选与自动跟随共用,不再各写一份 */
 export function evSpec(ev) {
-  const span = ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y);
+  const span = fmtSpan(ev.y, ev.y2);
   return {
-    id: `evt:${ev.w || ev.n}${ev.ws || ''}`, head: `${span} · ${(EVENT_KINDS[ev.k] || {}).label || '大事'}`,
+    id: `evt:${ev.w || ev.n}${ev.ws || ''}`, head: `${span} · ${kindLabel(ev.k)}`,
     title: ev.w, sec: ev.ws, display: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
     // b：百度自己的正名（维基与百度的条目名常不一致，实测 75 条要另写）
     // nb：百度确实没有这个词条，藏掉按钮而不是给个 404
@@ -423,12 +420,12 @@ async function fillCard(card, spec) {
   // 故事线角标：站序与 story 页 section id 同源（build_line_page.py），链 story/<key>.html#s<n>；
   // story 页自身若嵌卡则去掉前缀。皇帝卡／朝代卡无 lines 字段，行隐去
   if (card.lines) {
-    const base = /\/story\//.test(location.pathname) ? '' : 'story/';
+    const base = storyBase();
     const ls = spec.lines || [];
-    card.lines.replaceChildren(...ls.map((l) => h('a', {
-      class: 'kp-line', href: `${base}${l.key}.html#s${l.i}`,
-      text: `${l.name}第${CIRC[l.i - 1] || l.i}站 →`, title: `这件事是${l.name}的第 ${l.i} 站，点开读故事线`,
-    })));
+    card.lines.replaceChildren(...ls.map((l) => {
+      const b = lineBadgeSpec(l, { base });
+      return h('a', { class: 'kp-line', href: b.href, text: b.text, title: b.title });
+    }));
     card.lines.style.display = ls.length ? '' : 'none';
   }
   // 图片显隐统一走这里:嵌入卡的宽屏两栏只在真有图时启用(kp-haspic),
@@ -569,8 +566,36 @@ async function fillCard(card, spec) {
 }
 
 /**
- * 河流两翼卡。左翼**朝代**(时代背景):自动跟随视口中带里可见时长最长的
- * 朝代;右翼**皇帝**(个人):视口中带权重最高的名君。点选任一君主时两卡
+ * 视口里的**主导朝代**（2026-09-04 归一，SSOT 卷 D20）。河流与泳道各喂自己的
+ * 段集合与轴：河流数君主段的纵向重叠，泳道数底带的横向重叠——两者都是「一朝
+ * 可能分成数段」，故按 `band.d.key` 累加而不是取单段最长。
+ *
+ * **取消条件不在这里**：河流那处是 `!pinned.dyn && !mqLeft.matches`、泳道那处
+ * 是 `!pinned.dyn`（导览关掉 auto 后河流留住朝代卡、泳道每次滚动就收掉），
+ * 两处的 if/else 外壳与 eventSlot 差异照旧留在各自 mount 里。
+ *
+ * @param segments 段集合（每段要有 `.band`）
+ * @param lo/hi    视口在本轴上的两端
+ * @param spanOf   (seg) => [起, 讫]，本轴上的段身量
+ * @param skip     (band) => 这一朝是否已被读者拉黑
+ */
+function dominantBand(segments, lo, hi, { spanOf, skip }) {
+  const acc = new Map();       // 一朝可能分成数段：底带被交替期切开、君主段本就逐位一段
+  let best = null, bestV = 0;
+  for (const seg of segments) {
+    const [a, b] = spanOf(seg);
+    const ov = Math.min(b, hi) - Math.max(a, lo);
+    if (ov <= 0 || skip(seg.band)) continue;
+    const v = (acc.get(seg.band.d.key) || 0) + ov;
+    acc.set(seg.band.d.key, v);
+    if (v > bestV) { bestV = v; best = seg.band; }
+  }
+  return best;
+}
+
+/**
+ * 河流两翼卡。左翼**朝代**(时代背景):自动跟随视口中带里**君主段可见时长**
+ * 累加最多的朝代(名实以此为准,不是「可见时长最长的一段」);右翼**皇帝**(个人):视口中带权重最高的名君。点选任一君主时两卡
  * 联动钉住——右卡其人、左卡其朝。✕ 各自关闭并拉黑,不在原地重弹。
  * 左翼 ≥1280px(CSS 同步),右翼 ≥1100px。
  */
@@ -668,16 +693,10 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
       const cur = empNodes.find((n) => n.e.id === cards.emp.el.dataset.key);
       let best = cur ? cur.band : null;
       if (!best || dismissed.dyn.has(`dyn:${best.d.key}`)) {
-        const span = new Map();
-        let bestV = 0;
-        best = null;
-        for (const n of empNodes) {
-          const ov = Math.min(n.y1, y1) - Math.max(n.y0, y0);
-          if (ov <= 0 || dismissed.dyn.has(`dyn:${n.band.d.key}`)) continue;
-          const v = (span.get(n.band.d.key) || 0) + ov;
-          span.set(n.band.d.key, v);
-          if (v > bestV) { bestV = v; best = n.band; }
-        }
+        best = dominantBand(empNodes, y0, y1, {
+          spanOf: (n) => [n.y0, n.y1],
+          skip: (band) => dismissed.dyn.has(`dyn:${band.d.key}`),
+        });
       }
       if (best) fillCard(cards.dyn, dynSpec(best));
       else hide('dyn');
@@ -885,16 +904,10 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
       const cur = items.find((it) => it.e.id === cards.emp.el.dataset.key);
       let best = cur ? cur.band : null;
       if (!best || dismissed.dyn.has(`dyn:${best.d.key}`)) {
-        const seen = new Map();
-        best = null;
-        let bestW = 0;
-        for (const br of bands) {
-          const ov = Math.min(br.x1, x1) - Math.max(br.x0, x0);
-          if (ov <= 0 || dismissed.dyn.has(`dyn:${br.band.d.key}`)) continue;
-          const w = (seen.get(br.band.d.key) || 0) + ov;    // 一朝可能分成数段底带
-          seen.set(br.band.d.key, w);
-          if (w > bestW) { bestW = w; best = br.band; }
-        }
+        best = dominantBand(bands, x0, x1, {
+          spanOf: (br) => [br.x0, br.x1],
+          skip: (band) => dismissed.dyn.has(`dyn:${band.d.key}`),
+        });
       }
       if (best) show('dyn', dynSpec(best));
       else hide('dyn');

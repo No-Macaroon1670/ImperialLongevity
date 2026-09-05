@@ -5,7 +5,7 @@
 import { mountApp } from './shell.js';
 import { SECTIONS } from './sections-panorama.js';
 import { mountSearch } from './search.js';
-import { buildLineCatalog } from './line-catalog.js';
+import { buildLineCatalog, lineFromHash, lineHash } from './line-catalog.js';
 import { mountTour } from './tour.js';
 import { lineOf, LINES } from './lines.js';
 import { EMPERORS, DYNASTIES } from './data.js';
@@ -70,7 +70,7 @@ function syncThemeLabel() {
 // 点一条才进去——选择在读者手里，不在按钮上。
 const { el: catalog, open: openCatalog } = buildLineCatalog({
   lines: Object.values(LINES),
-  onPick: (line) => { history.replaceState(null, '', `#line=${line.key}`); openLine(line.key); },
+  onPick: (line) => { history.replaceState(null, '', lineHash(line.key)); openLine(line.key); },
 });
 {
   const head = panorama.querySelector('.head') || panorama;
@@ -90,12 +90,6 @@ const { el: catalog, open: openCatalog } = buildLineCatalog({
   head.appendChild(btn);
 }
 
-const lineFromHash = () => {
-  const m = /(?:^|[#&])line=([a-z0-9_-]+)/i.exec(location.hash || '');
-  if (!m) return null;
-  const a = /(?:^|[#&])at=(\d+)/i.exec(location.hash || '');
-  return { key: m[1].toLowerCase(), at: a ? Number(a[1]) : undefined };
-};
 addEventListener('hashchange', () => { const k = lineFromHash(); if (k) openLine(k.key, k.at); });
 // 首屏：等图渲染完再拉线，否则第一站落位时还没有可量的图
 {

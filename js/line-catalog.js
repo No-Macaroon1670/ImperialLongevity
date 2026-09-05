@@ -7,6 +7,30 @@
 // 顶下去（本件立案的病根）。样式沿用 styles.css 的 .line-catalog 族，两页同源。
 const REPO = 'https://github.com/No-Macaroon1670/ImperialLongevity';
 
+/**
+ * 故事线深链 `#line=<key>&at=<n>` 的读与写（2026-09-04 归一，SSOT 卷 D22）。
+ *
+ * 契约本是一份、实现原有两份：`app-map.js` 与 `app-timeline.js` 各写一对正则，
+ * 两页还互相生成对方的链接（图页行程条上那颗「到时间轴上走这一站 ↗」）。
+ * 两份之间今天并不对称——图页那份 key 不转小写、`at` 的正则没有 `/i`，
+ * 于是 `map.html#line=Chibi` 静默死掉而 `timeline.html#line=Chibi` 开得了线。
+ *
+ * 默认 at **不进签名**：两页落点（`app-timeline.js` 的 openLine、`app-map.js` 的
+ * enterLine）都已把 undefined 压成 0。「续走上次那一站」是 tour.js 的无参
+ * start()，与 hash 无关。接线（图页的 `else exitLine()`、时间轴页的无 else）
+ * 留在各页。
+ */
+export function lineFromHash() {
+  const m = /(?:^|[#&])line=([a-z0-9_-]+)/i.exec(location.hash || '');
+  if (!m) return null;
+  const a = /(?:^|[#&])at=(\d+)/i.exec(location.hash || '');
+  return { key: m[1].toLowerCase(), at: a ? Number(a[1]) : undefined };
+}
+
+/** 反向：`lineHash('chibi')` → `#line=chibi`；带站号 → `#line=chibi&at=3`。
+ *  `at` 为 0 照写（行程条的链接一向带 `&at=0`），只有不传时才省略。 */
+export const lineHash = (key, at) => `#line=${key}${at == null ? '' : `&at=${at}`}`;
+
 export function buildLineCatalog({ lines, onPick }) {
   const catalog = document.createElement('div');
   catalog.className = 'line-catalog';

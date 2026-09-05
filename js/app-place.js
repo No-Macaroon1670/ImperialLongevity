@@ -26,8 +26,8 @@
 //   **卡上是短注，卡里是长文**。卡面取 `yc`（短，与悬浮 tip 同一档），
 //   点开的知识卡走 evSpec 取 `yl||yc`（长）——同库内既有分工，不另立一套。
 
-import { h, el, fmtYearAxis } from './charts.js';
-import { EVENTS, EVENT_KINDS } from './events.js';
+import { h, el, fmtYearAxis, fmtSpan } from './charts.js';
+import { EVENTS, kindLabel, countByKind, kindsByCount } from './events.js';
 import { GEO_EVENTS } from './geo-events.js';
 import { evSpec, mountEmbedCard, mdBold } from './knowledge.js';
 // 形状与配色一律复用泳道图那一套：同一个库，事件的红三角在哪一页都得是红三角，
@@ -38,13 +38,12 @@ import { DYNASTIES, DYN_MAP, ERAS, SUCCESSION, MERGED_INTO, ORTHODOX } from './d
 import { LINE_STOPS } from './line-stops.js';
 import { cardPics } from './pics-own-cards.js';
 import { PLACES, membersOf, PLACE_END, PLACE_MIN } from './places.js';
+import { lineBadgeSpec } from './line-badge.js';
 import { GEO_STATS } from './geo-stats.js';
 import { syncCounts } from './counts.js';
 
 const $ = (id) => document.getElementById(id);
 const host = $('place');
-// 圈码与 knowledge.js 的角标同源（那边的 CIRC 没导出，抄一行比为它开一个导出干净）
-const CIRC = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳';
 
 /* ── 取地方 ───────────────────────────────────────────────────────────── */
 
@@ -195,8 +194,8 @@ function mountDock() {
       // 坞落在**所点那张卡的对面**：宽屏上坞是浮层，浮在哪边就盖住哪边一列，
       // 盖住的若正是刚点开的那张卡，读者会以为自己点丢了。折叠条（居中）默认落右
       box.dataset.side = node && node.dataset && node.dataset.side === 'r' ? 'l' : 'r';
-      const kind = (EVENT_KINDS[ev.k] || {}).label || '大事';
-      kicker.textContent = `${ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y)} · ${kind}`;
+      const kind = kindLabel(ev.k);
+      kicker.textContent = `${fmtSpan(ev.y, ev.y2)} · ${kind}`;
       title.textContent = ev.n;
       // 落点小字：这条为什么算北京的。归地是个判断，判断就该看得见
       where.textContent = '本地落点：' + ev.hits.map((x) => x.名 + '（' + x.角 + (x.km !== undefined ? ` ${x.km}km` : '') + '）').join('、');
@@ -217,12 +216,13 @@ const kindGlyph = (k) => {
 
 /** 故事线角标：凡某线之站，卡上标一条链去故事页对应站（库主 2026-09-02 令）。
  *  站序与 story/<key>.html 的 section id 同源（build_line_page.py 生成 LINE_STOPS）。 */
-const lineBadges = (ev) => (LINE_STOPS[ev.n] || []).map((l) => h('a', {
-  class: 'plc-line-badge', href: `story/${l.key}.html#s${l.i}`,
-  title: `这件事是${l.name}的第 ${l.i} 站，点开读故事线`,
-  text: `${l.name}第${CIRC[l.i - 1] || l.i}站 →`,
-  onclick: (e) => e.stopPropagation(),        // 角标是去别处的门，别把它读成「点开这张卡」
-}));
+const lineBadges = (ev) => (LINE_STOPS[ev.n] || []).map((l) => {
+  const b = lineBadgeSpec(l);                 // 三串字的正本在 line-badge.js，知识卡同吃
+  return h('a', {
+    class: 'plc-line-badge', href: b.href, title: b.title, text: b.text,
+    onclick: (e) => e.stopPropagation(),      // 角标是去别处的门，别把它读成「点开这张卡」
+  });
+});
 
 /**
  * 一张事件卡。一等带图（有本地手选图才上，维基缩略图留给知识卡去拉——
@@ -244,8 +244,8 @@ function evCard(ev, tier, side, over, dock) {
     style: `--ev: var(--ev-${ev.k})`,
   }, [
     h('div', { class: 'plc-card-m' }, [
-      h('span', { class: 'plc-yr', text: ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y) }),
-      h('span', { class: 'plc-kind' }, [kindGlyph(ev.k), h('span', { text: (EVENT_KINDS[ev.k] || {}).label || '大事' })]),
+      h('span', { class: 'plc-yr', text: fmtSpan(ev.y, ev.y2) }),
+      h('span', { class: 'plc-kind' }, [kindGlyph(ev.k), h('span', { text: kindLabel(ev.k) })]),
     ]),
     h('h3', { class: 'plc-card-t', text: ovr && ovr.t ? ovr.t : ev.n }),
     pic ? h('figure', { class: 'plc-card-fig' }, [
@@ -305,8 +305,7 @@ function sumCard(seg, cards) {
 // 交互（单击开关一类、双击只看一类、末尾一颗全开/全关）此前是逐行誊抄的第二份，
 // 2026-09-04 归并到 js/events-ui.js（SSOT 卷 D11）：本地只剩「数本地」与本页的字形尺寸。
 function localLegend(members, off, onChange) {
-  const counts = {};
-  for (const ev of members) counts[ev.k] = (counts[ev.k] || 0) + 1;
+  const counts = countByKind(members);
   return chipRow({ counts, off, glyph: kindGlyph, onChange, owner: 'place' });
 }
 
@@ -428,8 +427,7 @@ function segNode(seg, ctx) {
 function renderIndex(badKey) {
   const rows = Object.values(PLACES).map((p) => {
     const ms = membersOf(p, EVENTS, GEO_EVENTS);
-    const kinds = {};
-    for (const ev of ms) kinds[ev.k] = (kinds[ev.k] || 0) + 1;
+    const kinds = countByKind(ms);
     return { p, ms, kinds };
   }).filter((r) => r.ms.length >= PLACE_MIN).sort((a, b) => b.ms.length - a.ms.length);
 
@@ -446,8 +444,8 @@ function renderIndex(badKey) {
       h('span', { class: 'plc-index-n', text: p.name }),
       h('span', { class: 'plc-index-c', text: `${ms.length} 条` }),
       h('span', { class: 'plc-index-y small', text: `${fmtYearAxis(ms[0].y)} – ${fmtYearAxis(ms[ms.length - 1].y)}` }),
-      h('span', { class: 'plc-index-k small' }, Object.entries(kinds).sort((a, b) => b[1] - a[1]).slice(0, 4)
-        .map(([k, c]) => h('span', { class: 'plc-index-kk' }, [kindGlyph(k), h('span', { text: `${(EVENT_KINDS[k] || {}).label || k} ${c}` })]))),
+      h('span', { class: 'plc-index-k small' }, kindsByCount(kinds).slice(0, 4)
+        .map((k) => h('span', { class: 'plc-index-kk' }, [kindGlyph(k), h('span', { text: `${kindLabel(k)} ${kinds[k]}` })]))),
     ]))) : h('p', { class: 'muted small', text: '暂无够格开线的地方。' }),
   );
 }

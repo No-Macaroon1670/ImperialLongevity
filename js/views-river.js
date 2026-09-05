@@ -32,11 +32,11 @@
 //   5. **不套滚动容器 + 点选而非悬停。** 竖向内容再嵌一层竖向滚动是滚动陷阱，
 //      本图直接交给页面滚，全页只有一个滚动器；顶／底两条固定条充当上下节跳转
 //      与「安全起滑区」。触屏没有悬停，点中君主即高亮、详情进底部固定卡片。
-import { el, h, linear, hoverable, tableView, notes, fmtYearAxis, fmt1, textWidth, glide } from './charts.js';
+import { el, h, linear, hoverable, tableView, notes, fmtYearAxis, fmtSpan, fmt1, textWidth, glide } from './charts.js';
 import { DYN_STATS } from './data.js';
 import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS } from './dynasties.js';
-import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor, evFlags, evRank, evVisible } from './events.js';
-import { NIANHAO } from './data-nianhao.js';
+import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor, evFlags, evRank, evVisible, fanOut } from './events.js';
+import { nianhaoSegs, nianhaoTip, nianhaoTitle } from './nianhao.js';
 import { fmtDate } from './schema.js';
 import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName, eventLegend, evMark } from './views-lanes.js';
 import { mountKnowledge, evSpec } from './knowledge.js';
@@ -732,6 +732,10 @@ export function renderRiver(host, list, opts) {
   pxYear = Math.min(pxYear, Math.max(3, 45000 / (t1 - t0)));
   const H = Math.round((t1 - t0) * pxYear);
   const y = linear([t0, t1], [0, H]);
+  // 年份域 → 百分比。滑杆那一族（渐变色标、时代界标、拖动落点、浮标读数）
+  // 原先各自手写一遍 `(t - t0) / (t1 - t0)`，四份；立成一把比例尺，
+  // 逆向也就现成（scrubTo 拿的是轨道几何 f∈[0,1]，故乘 100 再 invert）
+  const pct = linear([t0, t1], [0, 100]);
   // ── 两岸的事件轨 ────────────────────────────────────────────────────────
   // 竖河远比横轴适合装事件:同样是密集的一个十年,横轴上只有一百四十像素要塞
   // 十条名字,竖河里那是**一百四十像素的高**,一条名字才占十六——于是名字可以
@@ -830,18 +834,11 @@ export function renderRiver(host, list, opts) {
     const rk = evRank;                 // 分级勾选（rank 屏蔽）：档外整条不画，标记也不留
     // 同年错开,与泳道图同理(见 views-lanes.js 的长注)。竖河里时间是纵向的,
     // 故沿河岸上下摊开;同年但分属两岸的本来就不撞,只在同岸内分组。
-    const sameYear = new Map();
-    for (const e2 of EVENTS) {
-      if (!evVisible(e2, evOff, rkSet, true)) continue;
-      const key = `${e2.y}|${LEFT_BANK.has(e2.k) ? 'L' : 'R'}`;
-      if (!sameYear.has(key)) sameYear.set(key, []);
-      sameYear.get(key).push(e2);
-    }
-    for (const g of sameYear.values()) g.sort((a2, b2) => (a2.o || 99) - (b2.o || 99));
-    const fanOf = (e2) => {
-      const g = sameYear.get(`${e2.y}|${LEFT_BANK.has(e2.k) ? 'L' : 'R'}`);
-      return g && g.length > 1 ? (g.indexOf(e2) - (g.length - 1) / 2) * 6 : 0;
-    };
+    const fanOf = fanOut(EVENTS, {
+      keyOf: (e2) => `${e2.y}|${LEFT_BANK.has(e2.k) ? 'L' : 'R'}`,
+      step: 6,
+      visible: (e2) => evVisible(e2, evOff, rkSet, true),
+    });
     const taken = { L: [], R: [] };
     const maxCh = Math.max(3, Math.floor((EV_STRIP - 22) / FS));
     // 分量高的先挑位子(同泳道图),缩放小的年代只留一等的名字
@@ -886,7 +883,7 @@ export function renderRiver(host, list, opts) {
       evNodes.push({ ev, y: ty, left });
       hoverable(hit, () => [
         { color: `var(--ev-${ev.k})`, label: kind.label,
-          value: ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y) },
+          value: fmtSpan(ev.y, ev.y2) },
         { label: '事件', value: ev.n },
         ...(ev.yc ? [ev.yc] : []),
         '点它可在卡片里读这条大事记的词条。',
@@ -1293,7 +1290,7 @@ export function renderRiver(host, list, opts) {
       hit.dataset.evi = String(EVENTS.indexOf(ev));
       hoverable(hit, () => [
         { color: `var(--ev-${ev.k})`, label: kind.label,
-          value: ev.y2 ? `${fmtYearAxis(ev.y)}–${fmtYearAxis(ev.y2)}` : fmtYearAxis(ev.y) },
+          value: fmtSpan(ev.y, ev.y2) },
         { label: '事件', value: ev.n },
         ...(ev.yc ? [ev.yc] : []),
         ...(an.key ? [] : ['画在河道之间的缝上：改朝换代本就发生在两条河之间；'
@@ -1366,7 +1363,6 @@ export function renderRiver(host, list, opts) {
       if (last && s.a - last.z < EPS) last.z = s.z;
       else uni.push({ a: s.a, z: s.z });
     }
-    const pct = (t) => ((t - t0) / (t1 - t0)) * 100;
     const gs = [];
     for (const u of uni.filter((u2) => u2.z - u2.a >= 5)) {
       let p1 = pct(u.a), p2 = pct(u.z);
@@ -1379,8 +1375,9 @@ export function renderRiver(host, list, opts) {
   }
   scrub.appendChild(track);
   for (const era of ERAS) {
-    const f = (era.e - t0) / (t1 - t0);
-    if (f > 0.02 && f < 0.98) scrub.appendChild(h('div', { class: 'rs-era', style: `top:${(f * 100).toFixed(2)}%` }));
+    const p = pct(era.e);
+    const f = p / 100;
+    if (f > 0.02 && f < 0.98) scrub.appendChild(h('div', { class: 'rs-era', style: `top:${p.toFixed(2)}%` }));
   }
   scrub.appendChild(thumb);
   scrub.appendChild(read);
@@ -1395,7 +1392,7 @@ export function renderRiver(host, list, opts) {
   const scrubTo = (clientY) => {
     const r = scrub.getBoundingClientRect();
     const f = Math.min(1, Math.max(0, (clientY - r.top) / r.height));
-    const t = t0 + f * (t1 - t0);
+    const t = pct.invert(f * 100);      // f 是轨道几何的 0–1 比例，不是 pct 的单位
     const wrapTop = wrap.getBoundingClientRect().top + scrollY;
     scrollTo({ top: wrapTop + y(t) - innerHeight * 0.45, behavior: 'instant' });
   };
@@ -1418,34 +1415,26 @@ export function renderRiver(host, list, opts) {
   // 视觉上像左缘让出了一线河床。画法与「称帝前掌权窄条」同族（贴左缘采样、
   // 极窄河道由 polyPath 的最小宽闸门自动裁掉），悬停出年号名。
   const nhMode = opts.laneNianhao || 'sel';
-  const NH_VARS = ['--nh-1', '--nh-2', '--nh-3', '--nh-4'];
+  // 段的裁剪、色序与悬停卡在 js/nianhao.js（泳道同吃一份）；这里只管垫带画法。
+  // **b.s 在本视图是重算过的**（剔掉称帝前掌权期），nianhaoSegs 读的就是传进去
+  // 的这个 band，故元「中统」被 1271 整段裁掉、吴「黄武」只剩 229 一年，照旧
   const clearNianhao = () => { gNian.innerHTML = ''; };
   const drawNianhao = (filterKey) => {
     clearNianhao();
     if (nhMode === 'off') return;
     for (const b of bands) {
       if (filterKey && b.d.key !== filterKey) continue;
-      const list2 = NIANHAO[b.d.key];
-      if (!list2) continue;
-      list2.forEach((nh, i) => {
-        // 讫年含当年（建元讫-134，翌年改元元光），画到 e+1；带被筛选截短时随带裁
-        const ta = Math.max(nh.s, b.s), tb = Math.min(nh.e + 1, b.e);
-        if (tb - ta <= 0) return;
-        const s0 = sample(b.d.key, ta, tb);
+      for (const seg of nianhaoSegs(b)) {
+        const { nh, colorVar } = seg;
+        const s0 = sample(b.d.key, seg.s, seg.e);
         const strip = polyPath(s0.map((p) => ({ t: p.t, x0: p.x0 + 0.8, x1: Math.min(p.x0 + 3.8, p.x1) })), y, 0);
-        if (!strip) return;
+        if (!strip) continue;
         const under = polyPath(s0.map((p) => ({ t: p.t, x0: p.x0, x1: Math.min(p.x0 + 4.6, p.x1) })), y, 0);
         if (under) gNian.appendChild(el('path', { d: under, fill: 'var(--page)', opacity: .85, 'pointer-events': 'none' }));
-        const node = el('path', { d: strip, fill: `var(${NH_VARS[i % NH_VARS.length]})`, class: 'mark' });
-        hoverable(node, () => [
-          { color: `var(${NH_VARS[i % NH_VARS.length]})`,
-            value: `${fmtYearAxis(nh.s)}–${fmtYearAxis(nh.e)}`, label: '年号起讫' },
-          { label: '历时', value: `${nh.e - nh.s + 1} 年` },
-          ...(nh.emp ? [{ label: '改元之君', value: nh.emp }] : []),
-          '年号起讫按年粒度；改元常在年中，同一年正月与腊月可分属两个年号。',
-        ], () => `${b.d.name}·${nh.n}`);
+        const node = el('path', { d: strip, fill: `var(${colorVar})`, class: 'mark' });
+        hoverable(node, () => nianhaoTip(nh, b, colorVar), () => nianhaoTitle(b, nh));
         gNian.appendChild(node);
-      });
+      }
     }
   };
   if (nhMode === 'all') drawNianhao(null);
@@ -1576,9 +1565,9 @@ export function renderRiver(host, list, opts) {
     if (hint) hint.classList.toggle('on', inView);
     if (inView) {
       const tMid = Math.min(t1, Math.max(t0, y.invert(-box.top + innerHeight * 0.45)));
-      const pct = `${(((tMid - t0) / (t1 - t0)) * 100).toFixed(2)}%`;
-      thumb.style.top = pct;
-      read.style.top = pct;
+      const topPct = `${pct(tMid).toFixed(2)}%`;
+      thumb.style.top = topPct;
+      read.style.top = topPct;
       flashRead();
       // 浮标带时代名:界标画在杆上却匿名,补名是把既有元素的语义读完。
       // ERAS 有重叠期(960–979 两带并置),首匹配即钦定的主叙事(见 dynasties.js)

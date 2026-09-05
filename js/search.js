@@ -12,10 +12,11 @@
 //
 // 两个视图各自实现同名的 `host.__locate`（year/emperor/dynasty/event），
 // 本模块只管说「去哪儿」，不必知道那一张是横滚还是竖滚。
-import { h, fmtYearAxis } from './charts.js';
+import { h, fmtYearAxis, fmtSpan } from './charts.js';
 import { EMPERORS, DYNASTIES } from './data.js';
-import { EVENTS, EVENT_KINDS } from './events.js';
+import { EVENTS, kindLabel } from './events.js';
 import { norm, withPy, scoreKeys } from './search-core.js';
+import { pickDifferent, restartRoll } from './ui-dice.js';
 import { tlProbe, registerLcGear } from './shell.js';
 
 // 匹配核（norm/withPy/scoreKeys）在 search-core.js——地图搜索同用，只此一份。
@@ -43,11 +44,11 @@ function buildIndex() {
     // (孤注一掷),条目却挂在人身上(寇准),两者是不同的东西。搜「寇准」本来
     // 就命中得了(keys 里有 ev.w),可结果行只写「孤注一掷」,读者既不知道
     // 它为什么匹配,也不知道讲的是谁。其余各类的 n 与 w 说的是同一件事,不必赘写。
-    const kind = (EVENT_KINDS[ev.k] || {}).label || '大事';
+    const kind = kindLabel(ev.k);
     const who = ev.k === 'fig' && ev.w && ev.w !== ev.n ? ` · ${ev.w}` : '';
     idx.push({
       kind: 'ev', id: i, k: ev.k, label: ev.ya ? `${ev.ya}（${ev.n}）` : ev.n,
-      sub: `${kind} · ${fmtYearAxis(ev.y)}${ev.y2 ? `–${fmtYearAxis(ev.y2)}` : ''}${who}`,
+      sub: `${kind} · ${fmtSpan(ev.y, ev.y2)}${who}`,
       // 雅名也要能搜:图上写的是「破釜沉舟」,搜这四个字却找不到巨鹿之战,
       // 等于把刚教给读者的名字又藏起来
       keys: withPy([ev.n, ev.w, ev.ya].filter(Boolean).map(norm)), y: ev.y, raw: ev.n,
@@ -113,14 +114,9 @@ export function mountSearch(sectionEl, hostOf) {
         ? idx.filter((it) => it.kind === 'emp').concat(evPool)
         : idx.filter((it) => it.kind === 'emp' || it.kind === 'dyn');
       if (pool.length < 2) return;
-      let pick = null;
-      for (let a = 0; a < 8 && (!pick || pick === lastPick); a++) {
-        pick = pool[Math.floor(Math.random() * pool.length)];
-      }
+      const pick = pickDifferent(pool, lastPick);   // 取样与动画重启在 ui-dice.js，舆图同吃
       lastPick = pick;
-      dice.classList.remove('rolling');
-      void dice.offsetWidth;                 // 重启动画:不回流的话连按第二下不动
-      dice.classList.add('rolling');
+      restartRoll(dice);
       go(pick, { smooth: true });
     },
   }, [h('span', { class: 'tl-dice-face', text: '🎲' }), h('span', { text: '随便看看' })]);
