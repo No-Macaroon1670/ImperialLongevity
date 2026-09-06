@@ -79,6 +79,23 @@ def wiki_counts(title):
         out["title"] = "en:" + out["title"]
     return out
 
+def ref_count(title):
+    """正文里 <ref …> 定义数——量的是这一页写得多熟,不是这件事多重要。
+    只用作「捞底」(三等而引据多者升二等),不进分数、不设门槛:2026-09-06 干跑实证,
+    门槛会降泰山封禅／司马迁著史记／三省六部制这类事大页薄的条,方向反了;
+    捞底则把黑石号(54 引据仍在三等)这类失手捞回来。en: 前缀查英文站。"""
+    host, t = "zh.wikipedia.org", title
+    if title.startswith("en:"):
+        host, t = "en.wikipedia.org", title[3:]
+    q = urllib.parse.urlencode({"action": "query", "format": "json", "formatversion": 2, "redirects": 1, "converttitles": 1,
+                                "prop": "revisions", "rvprop": "content", "rvslots": "main", "titles": t})
+    d = get("https://%s/w/api.php?%s" % (host, q))
+    try:
+        txt = d["query"]["pages"][0]["revisions"][0]["slots"]["main"]["content"]
+    except Exception:
+        return 0
+    return len(re.findall(r"<ref[^>/]*>", txt))
+
 def pageviews(title):
     """近十二个月访问量之和(user 流量,排除爬虫)。en: 前缀查英文项目"""
     project = "zh.wikipedia"
@@ -124,6 +141,7 @@ for i, e in enumerate(todo, 1):
     if pv == "?":
         print("  ? %s 访问量限流,留待重跑" % e["n"]); continue
     c["pv"] = pv
+    c["refs"] = ref_count(c["title"])   # 引据数(2026-09-06 库主定「捞底」用)
     sig[e["w"]] = c
     if i % 25 == 0:
         json.dump(sig, io.open(SIG, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
@@ -276,6 +294,17 @@ if promoted:
     for b0, e in promoted:
         print("  %5d 年代格  %-6s %-4s %s (%.2f)"
               % (b0, ("前%d" % -e["y"]) if e["y"] < 0 else e["y"], e["k"], e["n"], e["score"]))
+
+# ── 引据捞底(2026-09-06 库主定「捞回吧」)──────────────────────────────
+# 三等而正文引据 ≥ REFS_RESCUE 者升二等。不进一等(一等仍由分数＋保底定),不进分数。
+# 干跑:≥20 捞 35 条(黑石号／致远舰／高昌故城／王小波李顺起义／北庭故城／学古编／回河之争／
+# 圆明园兽首／五星出东方锦／元嘉北伐／潮州木雕／雍熙北伐／关林／明代白银货币化…),无一不该在二等。
+REFS_RESCUE = 20
+rescued = [e for e in rankable if tier.get(id(e), 3) == 3 and (sig[e["w"]].get("refs") or 0) >= REFS_RESCUE]
+for e in rescued:
+    tier[id(e)] = 2
+if rescued:
+    print("引据捞底 %d 条升二等:%s" % (len(rescued), "、".join(e["n"] for e in rescued[:12]) + ("…" if len(rescued) > 12 else "")))
 
 for e in evs:
     e["_r0"] = e.get("r")            # events.js 现行 r,供 --dry 对照
