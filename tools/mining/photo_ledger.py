@@ -91,7 +91,8 @@ def build():
         for f in sorted(glob.glob(os.path.join(st, 'out', 'f*.json'))): absorb(f, load_json(f), 'fable-' + os.path.basename(st))
     # ②′ 闸1 判 keep=false 而未进闸2 的：也算过了管线（判定「闸1弃」）
     for gf in sorted(glob.glob(os.path.join(SCRATCH, 'stations', '*', 'out', 'gate1-*.json'))) + sorted(glob.glob(os.path.join(SCRATCH, 'difftest', 'out', 'gate1-*.json'))):
-        for ph in load_json(gf).get('photos', []):
+        _g = load_json(gf); _g = _g if isinstance(_g, dict) else {'photos': [x for x in _g if isinstance(x, dict) and 'file' in x]}  # 闸1 员偶写裸 list
+        for ph in _g.get('photos', []):
             r = rows.get(ph.get('file'))
             if not r or r.get('pass'): continue
             r['pass'] = 'gate1-' + os.path.basename(os.path.dirname(os.path.dirname(gf)))
