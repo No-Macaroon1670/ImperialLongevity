@@ -21,6 +21,7 @@
   python tools/mining/photo_ledger.py status           # 各状态计数
   python tools/mining/photo_ledger.py move [--dry] [--with-deployed]   # 按状态搬文件（幂等，写 img/catalog-moves.log；已出品者默认不搬，须目验）
   python tools/mining/photo_ledger.py export           # 公开版 img/catalog-public.csv
+  python tools/mining/photo_ledger.py patch <json…>    # 并入著录员产物（只填空栏）
 
 字段（本库侧）：file／path／id（dHash）／taken（私）／lat／lon（私）／session／museum／pass（识别批次·模型）／
   kind／name／name_src／era／label_text／match_n／match_how／verdict／q／role／faces／crop_needed／dup_of／note／
@@ -54,9 +55,11 @@ def build():
     lib = {r['n'] for r in load_json(os.path.join(SCRATCH, 'lib-index.json'))}
     # ① 闸0：两份清单，原片所在夹不同
     rows = collections.OrderedDict()
-    for gf, folder in ((os.path.join(DESK, 'photo-gate0-20260904.json'), 'img/inbox'), (os.path.join(DESK, 'photo-gate0-20260905.json'), 'img/inbox/DiffTest')):
-        if not os.path.exists(gf): continue
-        for r in load_json(gf)['rows']:
+    # 闸0 清单按文件名序全读（后来的同名文件覆盖先前的）；原片所在夹取清单自记的 folder
+    for gf in sorted(glob.glob(os.path.join(DESK, 'photo-gate0-*.json'))):
+        g = load_json(gf)
+        folder = os.path.relpath(g.get('folder') or os.path.join(ROOT, 'img', 'inbox'), ROOT).replace(os.sep, '/')
+        for r in g['rows']:
             rows[r['file']] = {'file': r['file'], 'path': folder + '/' + r['file'], 'id': r.get('hash', ''), 'taken': r.get('ts') or '', 'lat': r.get('lat'), 'lon': r.get('lon'),
                                'session': (r.get('ts') or '未知')[:10], 'museum': '', 'pass': '', 'status': 'inbox'}
     # ② 识别结果：主库各包（Fable 09-05）＋ DiffTest（Opus 闸2 优先，Fable 补）
@@ -188,6 +191,24 @@ def export():
             w.writerow([r.get(c, '') if c != 'photo_month' else (r.get('taken') or '')[:7] for c in cols])
     print('公开版 →', os.path.relpath(out, ROOT), '（去私有字段、去人脸照）')
 
+def patch(paths):
+    """并入著录员产物（catalog-fill 工作流的 <batch>.json：{batch, rows:[{file, title, …, confidence}]}）：
+    只填账本里为空的 tombstone 栏；著录员 confidence 记进 note 之外的 catalog_conf 栏。"""
+    rows = read(); by = {r['file']: r for r in rows}; n = 0; touched = 0
+    for p in paths:
+        for row in load_json(p).get('rows', []):
+            r = by.get(row['file'])
+            if not r: continue
+            ch = False
+            for k in TOMB:
+                v = (row.get(k) or '').strip()
+                if v and not (r.get(k) or '').strip(): r[k] = v; ch = True
+            if row.get('confidence'): r['catalog_conf'] = row['confidence']; ch = True
+            n += 1; touched += ch
+    with io.open(LEDGER, 'w', encoding='utf-8', newline='\n') as fh:
+        for r in rows: fh.write(json.dumps(r, ensure_ascii=False) + '\n')
+    print('著录并入：读 %d 行，改 %d 行' % (n, touched))
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else 'status'
-    {'build': build, 'status': status, 'move': lambda: move('--dry' in sys.argv, '--with-deployed' in sys.argv), 'export': export}[cmd]()
+    {'build': build, 'status': status, 'move': lambda: move('--dry' in sys.argv, '--with-deployed' in sys.argv), 'export': export, 'patch': lambda: patch(sys.argv[2:])}[cmd]()
