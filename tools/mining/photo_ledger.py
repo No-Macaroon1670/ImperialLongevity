@@ -85,6 +85,17 @@ def build():
         absorb(f, load_json(f), 'opus-20260905')
     for f in sorted(glob.glob(os.path.join(SCRATCH, 'difftest', 'out', 'f*.json'))):
         absorb(f, load_json(f), 'fable-20260905')
+    # 各站（stations/<站>/out）：Opus 闸2 优先，Fable 补
+    for st in sorted(glob.glob(os.path.join(SCRATCH, 'stations', '*'))):
+        for f in sorted(glob.glob(os.path.join(st, 'out', 'o*.json'))): absorb(f, load_json(f), 'opus-' + os.path.basename(st))
+        for f in sorted(glob.glob(os.path.join(st, 'out', 'f*.json'))): absorb(f, load_json(f), 'fable-' + os.path.basename(st))
+    # ②′ 闸1 判 keep=false 而未进闸2 的：也算过了管线（判定「闸1弃」）
+    for gf in sorted(glob.glob(os.path.join(SCRATCH, 'stations', '*', 'out', 'gate1-*.json'))) + sorted(glob.glob(os.path.join(SCRATCH, 'difftest', 'out', 'gate1-*.json'))):
+        for ph in load_json(gf).get('photos', []):
+            r = rows.get(ph.get('file'))
+            if not r or r.get('pass'): continue
+            r['pass'] = 'gate1-' + os.path.basename(os.path.dirname(os.path.dirname(gf)))
+            r['kind'] = ph.get('cat') or ''; r['name'] = ph.get('what') or ''; r['name_src'] = '闸1'; r['q'] = 0; r['faces'] = bool(ph.get('faces')); r['gate1_only'] = True
     # ③ 馆次名：本包多数票；DiffTest 定名
     for r in rows.values():
         v = museum_votes.get(r['session'])
@@ -94,6 +105,7 @@ def build():
     for r in rows.values():
         n = (r.get('match_n') or '').strip(); q = r.get('q') or 0
         if not r.get('pass'): r['verdict'] = '未判'; r['status'] = 'inbox'; continue
+        if r.get('gate1_only'): r['verdict'] = '闸1弃'; r['status'] = 'processed'; continue
         if n in lib and q >= 2: r['verdict'] = '可挂'
         elif r.get('new_candidate'): r['verdict'] = '候立条'
         elif n in lib: r['verdict'] = '对库·q低'
