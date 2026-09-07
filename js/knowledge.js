@@ -16,6 +16,9 @@ import { openPicZoom } from './pic-zoom.js';
 import { LINE_STOPS } from './line-stops.js';
 import { mdBold } from './text.js';
 import { lineBadgeSpec, storyBase } from './line-badge.js';
+// 边表只在这里进场，而且是**懒的**：links-index.js 自己只有几 KB，两张边表
+// （合 57 万字节）到第一次开卡才 import()——见该文件头注。
+import { relOf, citeMeta } from './links-index.js';
 
 /**
  * 值得自动弹卡的名君(姓名 → 权重 1–3):滚动经过时自动打开,权重高者优先。
@@ -240,7 +243,11 @@ function fetchSummary(title) {
     const wk = wikiOf(title);
     CACHE.set(title, fetch(`https://${wk.lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wk.t)}`)
       .then((r) => {
-        if (!r.ok) { if (r.status !== 404) CACHE.delete(title); return null; }
+        // 404 与「这一次没取到」要分开（2026-09-07）：前者是**维基没有这个条目**，
+        // 是个确定的事实，可以据此把「维基百科全文 ↗」那条链子藏掉（见 fillCard 尾）；
+        // 后者是限流／断网／CORS，条目多半好好的，藏链子反而是误伤。
+        // 两者以前都返回 null，卡上于是给红链配一句「下方链接仍可直达」——当场就是假的。
+        if (!r.ok) { if (r.status !== 404) { CACHE.delete(title); return null; } return { notFound: true }; }
         return r.json();
       })
       .then((j) => {
@@ -285,8 +292,36 @@ export function evSpec(ev) {
     yc: ev.yl || ev.yc,  // 卡上取长文（yl），无长文退 yc——悬浮 tip 端仍直读 ev.yc（短）
     // lines：这件事在哪几条故事线上当过站（生成表 line-stops.js）——卡上打角标链去故事页
     lines: LINE_STOPS[ev.n] || [],
+    // rel：边表里的节点 id（links.js 头注的体例）。fillCard 据此取「必然联系」栏，
+    // 取不到边就整栏不出——不留空壳
+    rel: `ev:${ev.n}`,
   };
 }
+
+/**
+ * 人物卡的取数说明书（2026-09-07 新立）。库内此前没有「人」这一档卡：
+ * 尉迟敬德、周亚夫、吕雉这些人只在边表里当端点，点开无处可去。
+ * persons.js 的 id **多数**是中文维基条目正名（消歧义后的），故标题取 id；
+ * name 是显示名（异体字、繁简的那一面，如 鄧騭／邓骘）。
+ * 不给视频：一个人物条目搜出来的多半是影视剧片段，与本库要讲的事无关。
+ *
+ * alt 退一步（复核员 2026-09-07 实测：抽样 142 个 id 有 5 个不是真条目名，约 3.5%）：
+ * 「葭萌 (战国)」在维基是 404，去掉消歧义后缀的「葭萌」才是条目——那个括号是
+ * 员为区分同名人加的，不该跟着出门。fillCard 早有「本名取不到退一步再取」这条路
+ * （庙号那一支），这里白捡：取到了连维基链接也会按 content_urls 一并改对。
+ * 真无条目的那几位（阳城延、李静训、叶春善）由 fillCard 尾部收拾——见那里的注。
+ */
+export const personSpec = (id, name) => ({
+  id: `p:${id}`,
+  head: '人物',
+  title: id,
+  alt: name && name !== id ? name : null,
+  display: name || id,
+  baidu: name || id,
+  q: name || id,
+  yt: false,
+  rel: `p:${id}`,
+});
 
 /**
  * 手机单卡。侧卡要 1100px、角卡要 1000px 才放得下,窄屏于是**一张也弹不出来**——
@@ -354,11 +389,21 @@ function mkCard(sideClass) {
   const wsrc = h('a', { class: 'kp-a', target: '_blank', rel: 'noopener', text: '维基文库原文 ↗',
     title: '文库为志愿者转录本——底本与校对状态见其页面说明' });
   const close = h('button', { class: 'kp-close', type: 'button', text: '✕' });
-  const src = h('div', { class: 'kp-src', text: '摘要实时取自中文维基百科' });
+  // 卡脚分两半，各写各的（2026-09-07 改）：左半 srcTxt 是摘要的来处，fillCard 里有
+  // 三支会整句重写它（本地图注／库内简注／拉取失败）；右半 srcRel 是关系的来处，
+  // renderRel 画完就点亮。合在一个 textContent 里的时候，这句「关系出自本库边表」
+  // 得等维基那一次跨洋往返回来才补得上，中途换了人就永远补不上了（复核员实测）
+  const srcTxt = h('span', { class: 'kp-src-t', text: '摘要实时取自中文维基百科' });
+  const srcRel = h('span', { class: 'kp-src-rel' });
+  const src = h('div', { class: 'kp-src' }, [srcTxt, srcRel]);
+  // 必然联系栏：夹在摘要与链接行之间——先说它是什么（摘要），再说它跟谁有关（边），
+  // 最后才是出门的链接。无边时整栏 display:none，不留空壳（fillCard → renderRel）
+  const rel = h('div', { class: 'kp-rel' });
+  rel.style.display = 'none';
   const el = h('div', { class: `kp ${sideClass}` }, [
-    close, img, head, title, lines, ext, h('div', { class: 'kp-links' }, [wiki, baidu, museum, wsrc, h('span', { class: 'kp-vids' }, [yt, bili])]), src, img2,
+    close, img, head, title, lines, ext, rel, h('div', { class: 'kp-links' }, [wiki, baidu, museum, wsrc, h('span', { class: 'kp-vids' }, [yt, bili])]), src, img2,
   ]);
-  return { el, img, img2, head, title, lines, ext, wiki, baidu, museum, wsrc, yt, bili, close, src };
+  return { el, img, img2, head, title, lines, ext, rel, wiki, baidu, museum, wsrc, yt, bili, close, src, srcTxt, srcRel };
 }
 
 /** 皇帝卡的取数说明书。库内 387 位君主全有姓名,故标题恒为人名 */
@@ -380,6 +425,8 @@ const empSpec = (item) => {
     baidu: e.wk ? (e.dynKey === 'xiachao' ? nm : e.temple) : nm,
     q: `${dyn.name} ${nm}`,
     yt: NOTABLE.has(e.name),
+    // 边表里君主的 id 是「本名@政权键」（links.js 头注），与 e.id 那套 `dynKey-序号` 不同源
+    rel: `r:${e.name}@${e.dynKey}`,
   };
 };
 /** 朝代卡的取数说明书。维基与百度各取各的正名(见 DYN_WIKI / DYN_BAIDU) */
@@ -393,6 +440,7 @@ const dynSpec = (band) => {
     baidu: DYN_BAIDU[d.name] || d.name,
     q: `${wk} 纪录片`,
     yt: true,
+    rel: `d:${d.key}`,
   };
 };
 
@@ -410,10 +458,160 @@ export const eventSpec = (tr, fromName, toName) => ({
   display: tr.n,          // 卡面用简体常用名,链接才用各家的正名
 });
 
+/** 边表里的一头 → 该开哪张卡。loc: 库内没有地点卡,故返回 null(胶囊画成不可点的灰片) */
+function specOfItem(it) {
+  if (it.kind === 'ev') return evSpec(it.ref);
+  if (it.kind === 'r') return empSpec(it.ref);            // { e, band } 由 links-index 配好
+  if (it.kind === 'p') return personSpec(it.ref.id, it.ref.name);
+  if (it.kind === 'd') return dynSpec({ d: it.ref });
+  return null;
+}
+
+/**
+ * 卡内换页。**不另开一张卡**——读者点的是「这件事跟谁有关」，答案该落在原地,
+ * 而不是把屏幕上再叠一张（桌面已有四张卡，泳道角卡只有两个格）。
+ * 换页时把上一张记进 `_relPrev`，头行左侧于是长出「← 返回」。
+ * 栈深只做一级（库主定案）：再深就成了浏览器历史，那是另一件事。
+ *
+ * **换页即视同钉住**（2026-09-07 补）：卡有两态——被点选钉住的（pinned）与自动跟随的。
+ * 泳道页的朝代卡／君主卡默认就是跟随态，读者从关系栏点进另一条之后，下一次滚动
+ * update() 会按视口把这张卡重填，换页与返回栈一起没（复核员实测：跟随到「禹」的
+ * 君主卡点进「大禹治水」，横滚 300px 即变成秦始皇）。钩子由各 mount 自己登记——
+ * 谁管着 pinned 谁登记，knowledge 不去碰 views-lanes 的状态。
+ */
+function navCard(card, spec, prev) {
+  card._relNav = { prev: prev || null };
+  if (card.onNav) card.onNav(spec);
+  return fillCard(card, spec);
+}
+
+/** 一枚胶囊：年份小字（事）＋名字＋所属政权小标签（事）＋ⓦ（机读边） */
+function nodeChip(card, it) {
+  const kids = [];
+  if (it.yr) kids.push(h('span', { class: 'yr', text: it.yr }));
+  kids.push(document.createTextNode(it.name));
+  if (it.dyn) kids.push(h('span', { class: 'dyn', text: it.dyn }));
+  if (it.wd) kids.push(h('span', { class: 'wd', text: 'ⓦ', title: '机读自 Wikidata' }));
+  if (!it.ok) {
+    return h('span', { class: 'kp-node kp-node-off',
+      title: it.kind === 'loc' ? '库内没有地点卡' : '库内暂无此条的卡' }, kids);
+  }
+  return h('a', {
+    class: 'kp-node', href: '#',
+    onclick: (e) => {
+      e.preventDefault(); e.stopPropagation();
+      const s = specOfItem(it);
+      if (s) navCard(card, s, card._relSpec);
+    },
+  }, kids);
+}
+
+/**
+ * 「必然联系」栏。数据出自 js/links.js（手核）与 js/links-gen.js（机械生成），
+ * 取数与分组全在 js/links-index.js，这里只管画。
+ *
+ * **默认收成一行**（库主 2026-09-04 定）：一张卡上先是摘要，边表再摊开七八行，
+ * 卡就成了一张表；收起态只露第一组，点头行才全展开。泳道角卡定高 196px，
+ * 收起态那一行正好塞得进；展开时给卡身挂 kp-rel-open，让它像 kp-yc-full 那样撑高。
+ */
+async function renderRel(card, spec) {
+  const box = card.rel;
+  if (!box) return;
+  box.replaceChildren();
+  box.style.display = 'none';
+  box.classList.add('is-collapsed');
+  card.srcRel.textContent = '';
+  // kp-rel-open：展开态（角卡据此撑高）；kp-has-rel：本卡有关系栏——
+  // 角卡的定高要为它再让一档：摘要收到两行、头图矮 20px、定高 196→200
+  // （连故事线角标一起时 248）。三档的量法见 styles.css 的 .kp-corner 段
+  card.el.classList.remove('kp-rel-open', 'kp-has-rel');
+  if (!spec.rel) return;
+  let data = null;
+  try { data = await relOf(spec.rel); } catch { data = null; }
+  if (card.el.dataset.key !== spec.id) return;     // 等待期间已换人
+  if (!data) return;                               // 无边即整栏不出，不留空壳
+
+  const back = h('button', {
+    class: 'kp-rel-back', type: 'button', text: '← 返回',
+    onclick: (e) => { e.stopPropagation(); if (card._relPrev) navCard(card, card._relPrev, null); },
+  });
+  back.style.display = card._relPrev ? '' : 'none';
+  const hd = h('div', { class: 'kp-rel-h' }, [
+    h('span', { class: 'kp-rel-hl' }, [back, h('b', { text: '必然联系' })]),
+    h('span', { class: 'kp-rel-hr' }, [
+      `边 ${data.count}${data.wd ? ' · ⓦ 机读' : ''}`,
+      h('span', { class: 'kp-rel-caret', text: '▸' }),
+    ]),
+  ]);
+  hd.addEventListener('click', () => {
+    const collapsed = box.classList.toggle('is-collapsed');
+    card.el.classList.toggle('kp-rel-open', !collapsed);
+  });
+  box.appendChild(hd);
+
+  const nGroups = data.secs.reduce((a, s) => a + s.groups.length, 0);
+  // 小标题一律立，独一节也立（2026-09-07 改）：组标签说的是**对面那一头**是什么，
+  // 节名说的才是这一节从哪个角度看——遗址类条目的「所在地 · 山顶洞人」离了
+  // 「此地发生」这个节名就读反了（周口店遗址实测，那张卡恰好只有这一节）
+  let first = true;
+  for (const sec of data.secs) {
+    box.appendChild(h('div', { class: 'kp-rel-sec', text: sec.title }));
+    for (const g of sec.groups) {
+      const row = h('div', { class: `kp-rel-g${first ? ' kp-rel-first' : ''}` }, [
+        h('span', { class: 'kp-rel-role', text: g.label }),
+        h('span', { class: 'kp-rel-names' }, g.items.map((it) => nodeChip(card, it))),
+        first && nGroups > 1 ? h('span', { class: 'kp-rel-ell', text: '…' }) : null,
+      ].filter(Boolean));
+      // 引文按组折起：每边一行「名：引文」，层级／注／存疑跟在后面作小字。
+      // 默认收着——引文是给要追到底的人看的，不是每次开卡都要读一遍的东西
+      const cites = h('div', { class: 'kp-rel-cites' }, g.cites.map((c) => {
+        const m = citeMeta(c);
+        return h('div', { class: 'cite' }, [
+          `${c.name}：${c.cite || '（此边未附引文）'}`,
+          m ? h('span', { class: 'kp-rel-meta', text: ` ${m}` }) : null,
+        ].filter(Boolean));
+      }));
+      cites.hidden = true;
+      row.appendChild(h('button', {
+        class: 'kp-rel-cite', type: 'button', text: '引', title: '这一组各边的引文',
+        onclick: (e) => { e.stopPropagation(); cites.hidden = !cites.hidden; },
+      }));
+      box.appendChild(row);
+      box.appendChild(cites);
+      first = false;
+    }
+  }
+  box.style.display = '';
+  card.el.classList.add('kp-has-rel');
+  // 卡脚右半：关系这一半的来处。它是自己一个节点（见 mkCard 的注），
+  // 故不必等摘要那三支写完、也不怕被它们抹掉——边画完就点亮
+  // 前头那个「 · 」由 CSS 的 ::before 补（styles.css 的 .kp-src-rel）：
+  // 摘要那一半有时是空的（人物卡无维基条目、无图注），空半截前头挂个点号很难看
+  card.srcRel.textContent = '关系出自本库边表';
+}
+
+/**
+ * 点火关系栏，**不等它**。renderRel 内部已把 relOf 圈进 try，这里再兜一层：
+ * 无人 await 的 promise 若被拒，浏览器会记一条 unhandledrejection 到控制台，
+ * 而关系栏画不出来本不该惊动读者——整栏不出即可。
+ */
+function relFire(card, spec) {
+  renderRel(card, spec).catch(() => {});
+}
+
 /** 共用的填卡逻辑:写入词条链接、实时拉取维基摘要 */
 async function fillCard(card, spec) {
+  // 卡内换页的返回栈：navCard 置位、这里消费。外部（滚动跟随、点图）来的
+  // 填卡没有置位，返回栈随之清空——上一张已不在同一条阅读线上了
+  const nav = card._relNav; card._relNav = null;
   if (card.el.dataset.key === spec.id) { card.el.classList.add('on'); return; }
   card.el.dataset.key = spec.id;
+  card._relPrev = nav ? nav.prev : null;
+  card._relSpec = spec;
+  // kp-navd：这张卡此刻显示的**不是**宿主替它选的那一条，而是读者从关系栏点进来的。
+  // 嵌入卡（舆图阅读坞、地方线）平时把年份类别行与标题行交给坞行去念，故藏起自己那两行；
+  // 一旦换了页，坞行说的就是上一条了——这时候卡必须自己报名字
+  card.el.classList.toggle('kp-navd', !!card._relPrev);
   card.head.textContent = spec.head;
   card.title.textContent = spec.display || spec.title;
   card.ext.textContent = '…';
@@ -430,6 +628,10 @@ async function fillCard(card, spec) {
       return h('a', { class: 'kp-line', href: b.href, text: b.text, title: b.title });
     }));
     card.lines.style.display = ls.length ? '' : 'none';
+    // kp-has-lines：角卡的定高要不要为角标再让一档，全看这一位有没有角标
+    // （styles.css 的 .kp-corner 段——162 个故事线站里 144 个同时有边，
+    // 两栏一起摆的那一档必须显式量过，否则角标会被 196px 的裁切线切掉）
+    card.el.classList.toggle('kp-has-lines', ls.length > 0);
   }
   // 图片显隐统一走这里:嵌入卡的宽屏两栏只在真有图时启用(kp-haspic),
   // 否则空图轨会给文字凭空让出一条左沟
@@ -445,11 +647,11 @@ async function fillCard(card, spec) {
   if (localPic) {
     card.img.src = localPic.src;
     pic(true);
-    card.src.textContent = localPic.note + '；' + srcLabel(spec);
+    card.srcTxt.textContent = localPic.note + '；' + srcLabel(spec);
     card.img.classList.add('kp-zoomable');
     card.img.dataset.zoomcap = `${spec.display || spec.title || ''}——${localPic.note}`;
   } else {
-    card.src.textContent = srcLabel(spec);
+    card.srcTxt.textContent = srcLabel(spec);
     card.img.classList.remove('kp-zoomable');
     delete card.img.dataset.zoomcap;
   }
@@ -484,12 +686,13 @@ async function fillCard(card, spec) {
     if (spec.yc) {
       card.ext.innerHTML = ycParas(spec.yc);
       card.el.classList.add('kp-yc-full');
-      card.src.textContent = localPic ? localPic.note + '；本库自撰简注' : '本库自撰简注';
+      card.srcTxt.textContent = localPic ? localPic.note + '；本库自撰简注' : '本库自撰简注';
     } else {
       card.ext.textContent = '中文维基无此条目；本条考据见库内简注与馆藏页。';
-      card.src.textContent = localPic ? localPic.note : '';
+      card.srcTxt.textContent = localPic ? localPic.note : '';
     }
     card.el.classList.add('on');
+    relFire(card, spec);
     return;
   }
   // 有些事**没有独立条目**,只是某篇通史里的一节(东汉末那串大疫见《中國瘟疫史·漢朝》)。
@@ -542,16 +745,24 @@ async function fillCard(card, spec) {
   card.yt.style.display = spec.yt ? '' : 'none';
   card.bili.style.display = spec.yt ? '' : 'none';
   card.el.classList.add('on');
+  // 关系栏与摘要各走各的（点火即不管）：边表是本地的（毫秒），维基摘要要过网
+  // （半秒到几秒，且 fetchSummary 无超时）。读者不必为一次跨洋往返等着看本库
+  // 自己就有的东西——卡脚那句出处也已改成各写各的，不再排在摘要后面
+  relFire(card, spec);
   let s = await fetchSummary(spec.title);
   if (card.el.dataset.key !== spec.id) return;             // 等待期间已换人
   // 本名常常不是条目所在:李纯既是唐宪宗、也是当代演员,取回来的是一页义项列表,
   // 卡上于是只剩「未能实时拉取」,而「维基百科全文」也指着那页消歧义(用户实测)。
   // 退到庙号再取一次——帝王的条目多半就立在那儿。取到了连带把链接也改对,
   // 因为下面的 wiki.href 是按取回的 content_urls 重写的
+  // gone：维基**确实没有**这个条目（404），区别于「这一次没取到」（见 fetchSummary）。
+  // 退一步再取时两次都得是 404 才算数
+  let gone = !!(s && s.notFound);
   if ((!s || !s.extract || s.type === 'disambiguation') && spec.alt) {
     const s2 = await fetchSummary(spec.alt);
     if (card.el.dataset.key !== spec.id) return;
     if (s2 && s2.extract && s2.type !== 'disambiguation') s = s2;
+    else gone = gone && !!(s2 && s2.notFound);
   }
   if (s && s.extract && s.type !== 'disambiguation') {
     card.title.textContent = spec.display || s.title || spec.title;
@@ -565,7 +776,18 @@ async function fillCard(card, spec) {
     // 别空手,库内简注顶上——待遇与「无维基条目」分支相同(全文、kp-yc-full)
     card.ext.innerHTML = ycParas(spec.yc);
     card.el.classList.add('kp-yc-full');
-    card.src.textContent = localPic ? localPic.note + '；本库自撰简注' : '本库自撰简注';
+    card.srcTxt.textContent = localPic ? localPic.note + '；本库自撰简注' : '本库自撰简注';
+  } else if (gone && spec.head === '人物') {
+    // 人物卡是本轮新开的一档（边表里的 p: 端点此前点不开），而 persons.js 的 id
+    // 并不都是真的中文维基条目名——实测抽样 142 个有 5 个 404（阳城延 (西汉)、
+    // 李静训 (隋)、叶春善 (清) 这类；葭萌 (战国) 那种去括号能救的已由 spec.alt 救了）。
+    // 这时候还写「下方链接仍可直达」，那条「维基百科全文 ↗」指着的就是一个红链——
+    // 一句当场可证的假话。照 `!spec.title` 那一支的既有做法：藏链、改文案
+    card.wiki.style.display = 'none';
+    card.ext.textContent = '中文维基没有此人的条目;本卡由本库边表立目,下方百度百科或可参看。';
+    // 一个字的摘要也没取到，卡脚就别再自称「摘要实时取自中文维基百科」
+    // （关系那一半是另一个节点，照旧亮着——见 mkCard）
+    card.srcTxt.textContent = localPic ? localPic.note : '';
   } else {
     card.ext.textContent = '未能实时拉取维基摘要(可能无词条或网络受限),下方链接仍可直达。';
   }
@@ -627,6 +849,9 @@ export function mountKnowledge(empNodes, wrap, evNodes = []) {
   // 下一张，观感是「✕ 没用」（用户实测：关掉康熙，滚一格回来顺治）。
   // 静音到明确点选（钉卡）或跳转（releasePins）为止。
   const muted = { dyn: false, emp: false, evL: false, evR: false };
+  // 关系栏换页即视同钉住（见 navCard 的注）：不钉的话，跟随态的卡在读者点进
+  // 另一条之后，下一次滚动就被视口重填，换页与返回栈一起没
+  for (const k of ALL) cards[k].onNav = (spec) => { pinned[k] = spec.id; muted[k] = false; };
   // 自动跟随的总闸。导览与故事线开着时关掉——那两样的意思是「此刻看这一处」，
   // 而自动卡每滚一屏换一批，正好在拆台（用户实测：讲龙门石窟，旁边摆着南梁、
   // 萧衍、三省六部制，桌面同时五张卡）。关的只是自动跟随，声明要开的照开
@@ -828,6 +1053,9 @@ export function mountKnowledgeCorner(items, bands, scroller, sectionEl) {
   // 关闭即静音整个卡位（同河流侧注）：不静音的话 dismissed 只除名当前主角，
   // 下一帧自动跟随立刻补位下一张，观感是「✕ 没用」
   const muted = { dyn: false, emp: false };
+  // 关系栏换页即视同钉住（同河流侧，见 navCard 的注）。泳道页这两张默认就是跟随态，
+  // 不钉的话读者点进去、一横滚卡就换人（复核员实测：禹→大禹治水，滚 300px 变秦始皇）
+  for (const k of ['dyn', 'emp']) cards[k].onNav = (spec) => { pinned[k] = spec.id; muted[k] = false; };
   let auto = true;                 // 自动跟随总闸（同河流侧，见 setAuto）
   // 让位按**最外侧被占的槽**算,不是按卡数:朝代卡的槽在右起 352–674px,
   // 皇帝卡在 16–338px。只剩朝代卡时(视窗里没有名君、或皇帝卡被关掉——

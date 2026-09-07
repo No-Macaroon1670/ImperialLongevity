@@ -460,6 +460,22 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
 .kp-embed .kp-close { display: none; }  /* 收起归地图的取消选中,不另设叉 */
 /* 卡的年份类别行与标题行由坞行代任,不重复念一遍(用户指出);起讫年并回坞行 */
 .kp-embed .kp-sub, .kp-embed .kp-title { display: none; }
+/* 例外：读者从「必然联系」栏点进另一条之后（knowledge.js 挂 kp-navd），
+   坞行念的还是上一条——这时候卡得自己报名字，否则标题与内容对不上 */
+.kp-embed.kp-navd .kp-sub, .kp-embed.kp-navd .kp-title { display: block; }
+/* ……而**陈的那几行要一起收掉**（2026-09-07 复核员指出）：光让卡自报名字，
+   一屏里就有两个打架的题名（坞行写「靖康之变」、卡里写「宋徽宗」），
+   何况舆图坞行末那条「在时间轴上看这一条 →」是活链——点下去跳走的是**上一条**。
+   两处坞各收各的：舆图是 .pl-read（map.html），地方线是 .plc-dock（app-place.js）。
+   用 :has() 是因为这两处坞的 DOM 归 app-map／app-place 管，不该为一个显隐去动它们；
+   老浏览器不认 :has 时整条规则作废，退回本条修补前的样子，不会更糟 */
+.pl-read:has(.kp-embed.kp-navd) > .pl-read-k,
+.pl-read:has(.kp-embed.kp-navd) > .pl-read-t,
+.pl-read:has(.kp-embed.kp-navd) > .pl-read-n,
+.pl-read:has(.kp-embed.kp-navd) > .pl-read-go,
+.plc-dock:has(.kp-embed.kp-navd) > .plc-dock-k,
+.plc-dock:has(.kp-embed.kp-navd) > .plc-dock-t,
+.plc-dock:has(.kp-embed.kp-navd) > .plc-dock-w { display: none; }
 .kp-embed { background: transparent; }  /* 底色随坞:自带 surface-1 会成一块异色补丁(用户指出) */
 /* 嵌卡缩略图:基类的 cover+top 在千像素宽的坞里只剩个头(用户实测)——
    嵌入态改等比完整显示,竖构图不再被拦腰 */
@@ -474,7 +490,7 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
     column-gap: 16px; align-items: start; }
   .kp-embed.on.kp-haspic .kp-thumb { grid-row: 1 / span 4; width: 100%; max-height: 280px; margin: 0; }
   .kp-embed.on.kp-haspic .kp-ext, .kp-embed.on.kp-haspic .kp-links,
-  .kp-embed.on.kp-haspic .kp-src { grid-column: 2; }
+  .kp-embed.on.kp-haspic .kp-rel, .kp-embed.on.kp-haspic .kp-src { grid-column: 2; }
 }
 
 /* 工具条里的设置折叠块:与地图页同款形态,挤在一行控件之间 */
@@ -696,8 +712,12 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
      会以同权重却更靠后的位置压掉 .kp{display:none}——没被自动跟随填过、
      或被 ✕ 静音的空卡就一直挂在版面上（用户 iPad 实测：一张只有链接
      没有内容的白卡）。网格参数留在这里，display 由 .on 决定 */
+  /* 第 4 行是 2026-09-07 为「必然联系」栏新加的（原来只有四行）：
+     摘要那一行仍吃 1fr，关系栏与卡脚各占一行，故 rows 从四条变五条。
+     故事线角标在第 6 行——那是**隐式行**（这里只声明到第五条），它由下面
+     .kp-corner .kp-lines 显式钉住；隐式行自动 auto 高，够用 */
   grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-rows: auto auto 1fr auto; column-gap: 12px;
+  grid-template-rows: auto auto 1fr auto auto; column-gap: 12px;
 }
 /* 控制列 | 卡区 并排；窄了卡区整体换行到控制列之下，谁也不盖谁 */
 .ctrl-row { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
@@ -717,7 +737,33 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
 .kp-corner .kp-sub, .kp-corner .kp-title, .kp-corner .kp-ext { min-width: 0; }
 .kp-corner .kp-sub { grid-column: 2; grid-row: 1; margin-top: 0; }
 .kp-corner .kp-title { grid-column: 2; grid-row: 2; font-size: .96rem; margin: 1px 0 4px; }
-.kp-corner .kp-ext { grid-column: 2; grid-row: 3; font-size: .77rem; line-height: 1.55; -webkit-line-clamp: 4; }
+/* 摘要按**行数封顶**，用 max-height 不用 -webkit-line-clamp（2026-09-07 改）：
+   .kp-ext 是这张网格的直接子项，而 grid item 的 display 会被 blockify——
+   Chrome 把 -webkit-box 变成 flow-root，clamp 随之失效（复核员实测：唐德宗卡
+   computed display 是 flow-root、clamp 值还写着 2，实际排了 4 行）。
+   原先那条 clamp:4 也是同样的死规则，只是没人量过。
+   现在这两条是真在干活的：4 行＝4×1.55em，超出的部分**硬切**（无省略号——
+   要省略号得另套一层 wrapper，而 .kp-ext 的 textContent 在 fillCard 里被六处
+   写来写去，套壳的代价比一个硬切口大）。 */
+.kp-corner .kp-ext { grid-column: 2; grid-row: 3; font-size: .77rem; line-height: 1.55;
+  max-height: 6.2em; overflow: hidden; }
+/* 有关系栏时摘要让出两行：196px 的定高要装下 摘要＋关系栏＋卡脚＋故事线角标四样。
+   角卡的摘要本就是引子（点开维基读全文），关系栏这一行是本库自己的东西，
+   在这块地方它比第三、第四行摘要更值钱 */
+.kp-corner.kp-has-rel .kp-ext { max-height: 3.1em; }
+/* 头图矮 20px：角卡前三行的高度下限是**头图**（它 grid-row: 1/span 3），
+   摘要收几行都撬不动它——实测收到两行，卡脚照样被挤出 196px 之外。
+   96px 仍是一张看得清的竖构图缩略图，而让出的这 20px 正好装下关系栏那一行 */
+.kp-corner.kp-has-rel .kp-thumb { height: 96px; }
+/* 第二张图（语境／细节）不上角卡：196px 高的卡本来就摆不下两张图——
+   加关系栏之前它就已经被裁掉四分之三（复核员对拍：石鼓卡上它落在 y=162、
+   高 94，而卡内只到 194）。留着它只是把一条裁切线画在一张图的脸上。
+   侧卡／嵌入卡／手机单卡照旧显示，点头图放大那条路也没动 */
+.kp-corner .kp-thumb2 { display: none; }
+/* 角卡里的关系栏一律紧排：这里每一个像素都要跟摘要抢 */
+.kp-corner .kp-rel-h { margin-bottom: 3px; }
+.kp-corner .kp-rel-g { margin: 1px 0; }
+.kp-corner.kp-has-rel .kp-src { margin-top: 2px; }
 .kp-corner .kp-links {
   grid-column: 3; grid-row: 1 / span 3; align-self: start;
   display: flex; flex-direction: column; gap: 4px;
@@ -725,7 +771,28 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
   font-size: .76rem; white-space: nowrap;
 }
 .kp-corner .kp-vids { display: flex; flex-direction: column; gap: 4px; }
-.kp-corner .kp-src { grid-column: 1 / -1; grid-row: 4; margin-top: 4px; }
+/* 关系栏钉在第 2 列第 4 行（摘要之下、卡脚之上）。角卡定高 196px 且 overflow:hidden，
+   收起态那一行正好塞得下；展开时 JS 给卡身挂 kp-rel-open，比照 kp-yc-full 撑高 */
+.kp-corner .kp-rel { grid-column: 2; grid-row: 4; margin-top: 4px; padding-top: 5px; }
+.kp-corner .kp-src { grid-column: 1 / -1; grid-row: 5; margin-top: 4px; }
+/* 故事线角标钉在最后一行。**它是最容易被 196px 那条裁切线切掉的东西**
+   （复核员实测：加关系栏后龙门石窟只露 4px、石鼓一点不露；全库 162 个故事线站
+   里 144 个同时有边，是普遍情形不是个例），故两件事一起做：
+     ① 这里显式钉位，不再听凭自动落位塞进第 1 列的空当；
+     ② 有角标又有关系栏的那一档把定高放到 224px（下一条）——四样内容摆一张卡，
+        196 是量不出来的。这一档卡本就比同排的另一张高，两张卡按 flex 顶端对齐，
+        高的那张往下长，不挤任何人 */
+.kp-corner .kp-lines { grid-column: 1 / -1; grid-row: 6; margin-top: 3px; }
+/* 定高分三档，都是量出来的（1440×900 实测）：
+     无关系栏     196  ——原值不动
+     有关系栏     200  ——内容 197：+4 只为不把卡底那条内边距切掉
+     再加角标     248  ——内容 222（一排角标）；熹平石经／皇史宬那两条挂三枚角标，
+                        窄屏折成两排还得再高 22，248 是给它们留的余量。
+   max-height 只封顶不撑高：没长到那儿的卡照旧是内容多高卡多高，
+   故这两档不会给任何一张卡凭空添白 */
+.kp-corner.kp-has-rel { max-height: 200px; }
+.kp-corner.kp-has-rel.kp-has-lines { max-height: 248px; }
+.kp-corner.kp-rel-open { max-height: none; overflow: visible; }
 /* 硬隐的断点随「卡优先」下移:单卡 999→680、双卡 1199→1010。
    低于 680px 才真的摆不下角卡,那时交给贴底的手机单卡(.kp-solo)。
    这两条带 !important,不下移的话上面那些让位规则会被它们压掉 */
@@ -792,6 +859,10 @@ section.card.has-kp:not(.desc-full) > .desc::after {
 .kp-solo.kp-yc-full .kp-ext,
 body.tour-on .kp-solo.kp-yc-full .kp-ext {
   display: block; -webkit-line-clamp: unset; overflow: visible;
+  /* 角卡那条按行数封顶的 max-height（见 .kp-corner .kp-ext）也要一并解除——
+     只解 clamp 不解 max-height 的话，长文会被切在第四行、还因 overflow:visible
+     漫到关系栏上（2026-09-07 补） */
+  max-height: none;
 }
 .kp-corner.kp-yc-full { max-height: none; overflow: visible; }
 .kp-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; font-size: .8rem; }
@@ -803,6 +874,63 @@ body.tour-on .kp-solo.kp-yc-full .kp-ext {
 /* 两个视频链接绑成一组：要换行一起换，绝不把哔哩哔哩单独挤到下一行（用户实测） */
 .kp-vids { display: inline-flex; gap: 12px; white-space: nowrap; }
 .kp-links a:hover { text-decoration: underline; }
+
+/* 卡脚右半（关系的来处）与左半（摘要的来处）之间的分隔点由 CSS 补：
+   左半有时整句都没有（人物卡无维基条目、无本地图注），那时右半自己开头，
+   前面不该挂一个孤零零的点号 */
+.kp-src-rel:not(:empty)::before { content: ' · '; }
+.kp-src-t:empty + .kp-src-rel::before { content: none; }
+
+/* ── 必然联系栏（2026-09-07 立；样稿 docs/desk/mock-links-card.html）────────
+   边表（js/links.js 手核 ＋ js/links-gen.js 生成）上卡的那一栏，夹在摘要与
+   链接行之间：先说它是什么，再说它跟谁有关，最后才是出门的链接。
+   **默认收成一行**——一张卡上摘要之后再摊七八行边，卡就成了一张表；
+   收起态只露第一组，点头行才全展开（JS 侧 is-collapsed / kp-rel-open）。
+   颜色一律走 token 与 color-mix，暗色模式自动跟上，不另写一份。 */
+.kp-rel { margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 8px; }
+.kp-rel-h { font-size: .72rem; opacity: .55; letter-spacing: .04em; margin: 0 0 6px;
+  display: flex; justify-content: space-between; align-items: baseline; gap: 8px; cursor: pointer; }
+.kp-rel-h:hover { opacity: .82; }
+.kp-rel-h b { font-weight: 600; }
+.kp-rel-hl, .kp-rel-hr { display: inline-flex; align-items: baseline; gap: 2px; white-space: nowrap; }
+/* 「← 返回」：卡内换页只做一级栈（见 knowledge.js 的 navCard），无上一张时藏起 */
+.kp-rel-back { font: inherit; color: inherit; background: none; border: 0;
+  padding: 0 6px 0 0; cursor: pointer; opacity: .85; }
+.kp-rel-back:hover { opacity: 1; text-decoration: underline; }
+.kp-rel-caret { display: inline-block; margin-left: 4px; transition: transform .15s ease; }
+.kp-rel:not(.is-collapsed) .kp-rel-caret { transform: rotate(90deg); }
+.kp-rel-sec { font-size: .7rem; opacity: .5; margin: 8px 0 2px; }
+.kp-rel-g { display: flex; align-items: baseline; gap: 8px; margin: 3px 0; font-size: .78rem; line-height: 1.6; }
+.kp-rel-role { flex: 0 0 4.6em; opacity: .62; text-align: right; }
+.kp-rel-names { display: flex; flex-wrap: wrap; gap: 4px 6px; min-width: 0; }
+/* 胶囊内不折行：窄容器（地方线的坞只有两百来像素）里断在词中间，
+   「南京市」会被劈成两行压在一枚药丸里（实测）——宁可整枚换行 */
+.kp-rel .kp-node { font-size: .76rem; padding: 0 8px; border-radius: 999px; white-space: nowrap;
+  border: 1px solid rgba(127, 127, 127, .45); text-decoration: none; color: inherit; cursor: pointer; }
+.kp-rel a.kp-node:hover { background: color-mix(in srgb, var(--text-1) 6%, transparent); }
+/* 灰胶囊：库内没有这一头的卡（地点全体，以及个别未入表的人）——不假装点得开 */
+.kp-rel .kp-node-off { opacity: .5; cursor: default; }
+.kp-rel .yr { opacity: .55; font-size: .7rem; margin-right: 4px; }
+.kp-rel .dyn { font-size: .68rem; padding: 0 5px; border-radius: 4px;
+  background: color-mix(in srgb, var(--ev-gov) 16%, transparent); margin-left: 4px; opacity: .85; }
+.kp-rel .wd { font-size: .66rem; opacity: .45; margin-left: 2px; }
+/* 行尾的「引」钮：这一组各边的引文，默认收着——引文是给要追到底的人看的 */
+.kp-rel-cite { font: inherit; font-size: .68rem; line-height: 1.4; color: inherit;
+  background: none; border: 1px solid rgba(127, 127, 127, .35); border-radius: 4px;
+  padding: 0 4px; margin-left: 2px; opacity: .5; cursor: pointer; flex: 0 0 auto; }
+.kp-rel-cite:hover { opacity: 1; }
+.kp-rel .cite { font-size: .72rem; opacity: .62; margin: 1px 0 4px 5.4em; line-height: 1.5; }
+.kp-rel .cite::before { content: '引 '; opacity: .6; }
+.kp-rel-meta { opacity: .62; font-size: .66rem; }
+/* 收起态：只留第一组一行，横向截断，尾巴上一个省略号说明「还有」 */
+.kp-rel-ell { display: none; opacity: .5; flex: 0 0 auto; }
+.kp-rel.is-collapsed .kp-rel-ell { display: inline; }
+.kp-rel.is-collapsed .kp-rel-sec,
+.kp-rel.is-collapsed .kp-rel-cites,
+.kp-rel.is-collapsed .kp-rel-cite,
+.kp-rel.is-collapsed .kp-rel-g { display: none; }
+.kp-rel.is-collapsed .kp-rel-g.kp-rel-first { display: flex; overflow: hidden; }
+.kp-rel.is-collapsed .kp-rel-first .kp-rel-names { flex-wrap: nowrap; overflow: hidden; }
 /* ✕ 自带底衬：卡首是词条头图，一个没有底的叉压在照片上就看不见了
    （用户实测：那张塔的照片正好把叉吃掉）。给它一枚半透明圆片，
    于是无论压在照片、纯色还是文字上，它都还是那枚可按的叉。
