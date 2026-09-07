@@ -10,7 +10,9 @@ P40（子）P3373（兄弟姊妹）对帝王覆盖极好（探针：西汉四帝
 然后拿前任与继任在这棵祖先树上的位置定名——两人到最近公共祖先的代数 (a, b)：
   (0,1) 父子／母子   (1,1) 兄弟   (0,2) 祖孙   (1,2) 叔侄   (2,2) 从兄弟
   (0,3) 曾祖孙       (1,3) 叔祖侄孙   (2,3) 从叔侄   (3,3) 再从兄弟
-三代内无公共祖先而两边祖先都抓到了 → 「三代内无血缘」（篡、禅、推举、异姓）；
+三代内无公共祖先而两边祖先都抓到了 → 再按本名姓氏拆两类（库主 2026-09-07 裁：宗室与否不重要，看血）：
+  「同族三代外」同姓（同一氏族）而公共祖先在三代以外（汉平帝→孺子婴、宋高宗→孝宗）；
+  「异姓」不同姓（篡、禅、推举、养子——养子按本姓算异姓，如李嗣源、李从珂、高云）；
 任一边祖先缺 → 「未定」，列给人核（员或库主）。注意父子边不看 P40（子女表常年不全），
 只看继任的 P22/P25；而 Wikidata 的 P22 偶尔填的是养父，本脚本照录并标 P1039 限定词。
 
@@ -114,6 +116,40 @@ def year(s):
     if not s:
         return None
     return -int(s[2:].split("-")[0]) if s.startswith("BC") else int(s.split("-")[0])
+
+
+COMPOUND = ("慕容", "沮渠", "拓跋", "宇文", "赫连", "赫連", "秃发", "禿髮", "乞伏", "司马", "司馬", "耶律", "完颜", "完顏",
+            "孛儿只斤", "爱新觉罗", "愛新覺羅", "呼延", "独孤", "獨孤", "长孙", "長孫", "尉迟", "尉遲", "诸葛", "諸葛", "公孙", "公孫",
+            "皇甫", "令狐", "夏侯", "欧阳", "歐陽", "淳于", "单于", "萬俟", "万俟", "钟离", "鍾離", "闾丘", "閭丘", "段干", "百里", "鲜于", "鮮于")
+# 养子／改姓：按本姓算异姓（库主 2026-09-07 裁）。键 (政权, 前任, 继任) → 判语
+ADOPT = {("htang", "唐庄宗", "唐明宗"): ("异姓（养子）", "李嗣源本沙陀人、无姓氏，李克用养为己子，与李存勖为养兄弟"),
+         ("htang", "唐闵帝", "唐末帝"): ("异姓（养子）", "李从珂本姓王，明宗掳养为己子"),
+         ("beiyan", "北燕惠懿帝", "北燕文成帝"): ("异姓", "高云本高句丽支庶（慕容宝养子，复姓高），冯跋长乐信都汉人")}
+
+
+def surname(n):
+    n = (n or "").strip()
+    for c in COMPOUND:
+        if n.startswith(c):
+            return c
+    return n[:1]
+
+
+def split_nokin(row):
+    """「三代内无血缘」→「同族三代外」／「异姓」；写回 rel 与 why。"""
+    if row.get("rel") != "三代内无血缘":
+        return
+    key = (row["d"], row["pred"], row["succ"])
+    if key in ADOPT:
+        row["rel"], w = ADOPT[key]
+        row["why"] = w + "；" + row.get("why", ""); return
+    sa, sb = surname(row.get("pred_n")), surname(row.get("succ_n"))
+    if not sa or not sb:
+        row["rel"] = "三代内无血缘（姓氏不明）"; return
+    if sa == sb:
+        row["rel"] = "同族三代外"; row["why"] = "同姓 %s 而无三代内公共祖先；" % sa + row.get("why", "")
+    else:
+        row["rel"] = "异姓"; row["why"] = "前任 %s 氏、继任 %s 氏；" % (sa, sb) + row.get("why", "")
 
 
 def main():
@@ -341,6 +377,8 @@ def main():
                 n += 1
         print("人核层叠上 %d 对" % n, file=sys.stderr)
 
+    for row in pairs:
+        split_nokin(row)
     json.dump({"generated": time.strftime("%Y-%m-%d"), "depth": DEPTH, "pairs": pairs},
               io.open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
