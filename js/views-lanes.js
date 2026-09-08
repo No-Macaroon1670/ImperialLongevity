@@ -217,7 +217,10 @@ export function eventLegend(opts, { skip = [], owner = 'main' } = {}) {
     },
     onChange: (next) => opts.setOpt('evOff', [...next]),
   });
-  return [h('p', { class: 'muted small', style: 'margin:10px 0 2px', text: '大事记（点色标可按类筛选，双击只看一类）' }), row];
+  // 小标题只留名字（2026-09-08 去 clutter 案 B4）：两种手势本就该挂在手势作用的
+  // 那个元件上——「点按隐藏这一类；双击只看这一类」现在写在每颗芯片自己的
+  // title／aria-label 里（js/events-ui.js），四家图例同变
+  return [h('p', { class: 'muted small', style: 'margin:10px 0 2px', text: '大事记' }), row];
 }
 
 // ── 主渲染 ───────────────────────────────────────────────────────────────
@@ -1304,9 +1307,17 @@ export function renderLaneTimeline(host, list, opts) {
   key.push('浅色半高＝称帝前掌权');
   if (markViolent) key.push('▲＝非正常死亡');
   if (hasMicro) key.push('极短政权仅存色点');
-  if (nhMode === 'all') key.push('带下缘细线＝年号（改元即换色；并立期上半轨移至带上缘）');
-  else if (nhMode === 'sel') key.push('点选朝代可显年号线（设置·纪年可改全显）');
-  key.push('点选可显承继丝（详见下方说明）');
+  // 「泳道可回收」从前在 timeline.html #how、本文件折叠块、页首 lede 里各说一遍
+  // （2026-09-08 去 clutter 案 C4/E4 三处收一）：它是读这张图的语法，归图例行
+  key.push(`行不归属朝代：占用行数＝当时并存政权数（${bands.length} 政权装进 ${nLanes} 行）`);
+  // 配色口径同理（C6）：「同色」是复用槽位不是同族，不说会真的读错
+  if (byDynasty) key.push('同色≠同朝：不重叠者复用颜色，边缘政权取灰');
+  if (nhMode === 'all') key.push('带下缘细线＝年号');
+  else if (nhMode === 'sel') key.push('点选朝代可显年号线');
+  // 线型三种与交界短痕（C1／E5）：从前一句写在图例行、一句写在折叠块首段、
+  // 一句写在 #how 那一节——同一件事三处各说一遍，现在只在图例行说
+  key.push('点选显承继丝：粗＝承统、细＝亡入、虚＝裂自');
+  key.push('交界短痕＝可点的改朝换代');
   staticLegend.appendChild(h('p', { class: 'muted small', style: 'margin:8px 0 0', text: key.join(' · ') }));
 
   if (showEvents) for (const n of eventLegend(opts)) staticLegend.appendChild(n);
@@ -1456,36 +1467,35 @@ export function renderLaneTimeline(host, list, opts) {
   requestAnimationFrame(sync);
   fitHeight();                          // 首绘立即定高（锚点已落好）
 
-  const greyN = [...slots.values()].filter((v) => v < 0).length;
+  // 折叠块：从前六段 970 字，逐段讲「为什么这样排」——那属于 about.html／README，
+  // 不属于图旁（2026-09-08 去 clutter 案 B5）。留下的三行是**不看会读错**的口径：
+  // 首行的史观、名义重叠的挤压、起讫年份的定义；其余原文（正统交替期三例、
+  // 北方主线两段、泳道回收算法、配色槽位）已整理进 docs/desk/about-src-timeline.md。
   const stacked = bands.filter((b) => b.subs > 1);
-  host.appendChild(notes([
-    '图例详解——斜纹有两处语义，不可混读：**底轨**上的斜纹标「新旧并立」的交替期（上半轨前朝、下半轨后朝，正统行与北方主线共用此画法）；**君主格**上的斜纹＋半透明标「低置信年份」——推算所得（传统系年铺入，或诸家体系并存取其一），依据见各条悬停备注。点选朝代或皇帝会点亮承继丝：粗实线＝法统相承、细实线＝亡入、虚线＝裂自；「全部承继关系」开关可整图齐显。画宽装不下自己名字的极短政权（桓楚、中华帝国）只画色点，名字在悬停里。',
-    useTop && `第一行为正统序列专用（${orth.length} 朝），不参与泳道回收，任何割据政权都不会挤进来，`
-      + `于是它自成一条贯通两千年的主线；其余政权一律平等地排在下方，不含褒贬。`
-      + `斜纹段为正统交替期——陈与隋并立八年、南宋与元并立七十三年、明与清并立二十八年，`
-      + `正统归属要到那一段结束才由后世定下来。采用《资治通鉴》以降的传统正统观`
-      + `（三国承曹魏、南北朝承南朝、五代承中原五朝），这是史观选择而非史实：`
-      + `北魏、辽、金、西夏在各自时代同样自居正统。`,
-    useSecond && `第二行优先安排「北方政权主线」：386–581 年的北魏→西魏→北周，与 916–1234 年的辽→金。`
-      + `中国史上这两段都是南北法统长期并行，而正统行都取南方为正朔，北方政权便会被挤到下方各行，`
-      + `对峙关系反倒读不出来。两次都以「并入第一行」收束——581 年北周禅隋、元既已入正统行——`
-      + `恰好呈现北方政权最终统合天下的节奏。线内交替（辽金并立十年）沿用与正统行相同的上下半轨画法。`
-      + `该行并不独占：两段线合计约 500 年，其余时段照常参与回收。`
-      + `西夏与辽、金三方并立，不入此线，平等排在下方。`,
-    `共 ${bands.length} 个政权装入 ${nLanes} 条泳道。泳道不归属任何朝代：某朝终结后该行即被后来的政权接管，`
-      + `因此同一时刻占用的行数就是当时并存的政权数（最挤的 937 年有十一个政权）。`,
-    `同朝代内前帝崩与后帝即位常落在同一个月，史料精确到月即产生名义上的重叠——这类不足半年的重叠一律`
-      + `就地挤压（交界取中点、两段各退一半），仍并排在同一行；只有真正并立称帝者才分层错开，`
-      + `当前有 ${stacked.length} 例${stacked.length ? `（${stacked.map((b) => b.d.name).join('、')}）` : ''}。`
-      + `分段的绘图宽度因此可能比真实在位期短几个月，悬停与数据表给出的始终是真实日期。`,
-    byDynasty
-      ? `配色按具体朝代，时间上重叠者必为异色，不重叠者复用槽位（唐与明同色不会造成混淆）；`
-        + `并存政权最多达 11 个而分类色板仅 8 槽，故有 ${greyN} 个边缘割据政权折入中性灰——`
-        + `每条带都直接标注朝代名，颜色只是辅助。`
-      : '配色沿用全局语义：蓝＝大一统，橙＝分裂。',
-  ], { label: '排布规则与史观说明' }));
+  const fold = notes([
+    '首行是正统序列，取《资治通鉴》以降的传统正统观（三国承曹魏、南北朝承南朝、五代承中原五朝）'
+      + '——这是史观选择，不是史实：北魏、辽、金、西夏在各自时代同样自居正统。',
+    `同朝代内前帝崩与后帝即位常落在同一个月，这类不足半年的名义重叠一律就地挤压`
+      + `（真正并立称帝者才分层错开，当前 ${stacked.length} 例）；分段的绘图宽度因此可能比真实在位期`
+      + `短几个月，悬停与数据表给出的始终是真实日期。`,
+    h('p', { class: 'muted small' }, [
+      '政权起讫由「实际有君主在位」决定，不回退到朝代元数据的年份；确无君主的年份由',
+      h('a', { href: 'index.html#audit', text: '空档审计' }),
+      '逐条列出，不靠底带掩盖。',
+    ]),
+  ], { label: '排布口径' });
+  if (fold) {
+    // 「summary 带一句」（§一.2）：把手上是**名词短语＋那一句不看会误读的口径**，
+    // 于是收着的时候也知道里面管的是什么事
+    fold.querySelector('summary').replaceChildren(
+      h('strong', { text: '排布口径' }),
+      h('span', { class: 'sm-sep', text: '·' }),
+      document.createTextNode('首行的正统是史观选择，不是史实'),
+    );
+    host.appendChild(fold);
+  }
 
-  host.appendChild(tableView(
+  const tbl = tableView(
     ['泳道', '朝代', '起讫', '历时(年)', '皇帝数', 'DSI', '大一统'],
     bands.slice().sort((a, b) => a.s - b.s).map((b) => {
       const st = DYN_STATS.get(b.d.key);
@@ -1493,5 +1503,29 @@ export function renderLaneTimeline(host, list, opts) {
         st.dsi === null ? null : st.dsi.toFixed(1), b.d.u ? '是' : '否'];
     }),
     { caption: '泳道分配与朝代一览' },
-  ));
+  );
+  {
+    // 三个数从正文搬到把手上（§一.3）：读者要的是「这图有多挤」，
+    // 而这三个数正是这张表的口径。title 与 aria-label 同一份字。
+    //
+    // 峰值**现算**（2026-09-08 复核指出）：原先这里写死 `937 年十一个政权并存`，
+    // 而同一句里的另两个数是现算的，同页竖向河流的图例又现算出「最挤处 936 年 10 股」——
+    // 三个数不同源，读者在一张页面上就看到两种说法。写死的那对来自 DYNASTIES 元数据
+    // （937 年确有 17 条元数据区间重叠），可泳道画的是**实际有君主在位**的带，
+    // 口径根本不是一个。故按本图自己的带做一次扫描线：与河流的 slices 同一份 bands，
+    // 两处数字天然对得上。
+    // 端点同年先减后加：前朝止于 923、后朝立于 923 是接续不是并存（buildBands 的年精度
+    // 缝合已把这种缝贴合掉，这里再守一道）。
+    const cuts = [];
+    for (const b of bands) cuts.push({ t: b.s, d: 1 }, { t: b.e, d: -1 });
+    cuts.sort((a, b) => a.t - b.t || a.d - b.d);
+    let cur = 0, peak = 0, peakT = bands[0].s;
+    for (const c of cuts) { cur += c.d; if (cur > peak) { peak = cur; peakT = c.t; } }
+    const tip = `${bands.length} 个政权 · ${nLanes} 条泳道 · 最挤处 ${fmtYearAxis(peakT)} 年 ${peak} 个并存`;
+    const sum = tbl.querySelector('summary');
+    sum.title = tip;
+    sum.setAttribute('aria-label', `${sum.textContent}：${tip}`);
+    sum.classList.add('has-tip');
+  }
+  host.appendChild(tbl);
 }

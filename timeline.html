@@ -25,33 +25,19 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🌊%3C/text%3E%3C/svg%3E">
 </head>
-<body>
+<body data-page="timeline">
 
 <div class="wrap">
   <header class="masthead">
     <div class="kicker">Dynastic Concurrency · Succession Network · Interactive Timeline</div>
-    <h1>王朝之河</h1>
+    <div class="mh-row"><h1>王朝之河</h1></div>
+    <!-- lede 只留那一句核心（2026-09-08 去 clutter 案 §一.5）：从前这里 445 字，
+         一半在替别的页写 lede、一半是版式自述与手势说明。手势归就地提示件
+         （.river-hint／坞行／🎲 钮自带字），画法归图例行，来龙去脉归 about.html。
+         页首互链一行由 js/sib-nav.js 挂进 .mh-row，四页同一份字面。 -->
     <p class="lede">
-      自夏初到清末约四千年的政权全景：<strong>河宽即当时并存的政权数</strong>——一股是天下一统，数股是分裂割据，
-      重新统一时几股再合为一体。
-      <span class="lede-desk">横向泳道则把 <span data-il-count="dyn">93</span> 个政权铺成可回收的长带，
-      正统序列独占首行、北方主线次行，承继与亡入以细丝相连，点选即读那一场改朝换代。</span>
-      开卷落在<strong>秦始皇并六国的那一年</strong>——四千年的中点、帝制的门口：向前（更早）是列国争雄与三代，
-      向后是你熟悉的帝国史。
-      <span class="lede-desk">共和元年（前841）以前没有确切纪年，夏与商前期的君主格按传统系年推算铺入，
-      图上以<strong>斜纹半透明</strong>与实证段区分——那些是坐标，不是记载。
-      竖向河流顺着页面滚动、不套容器；大事记宽屏画于两岸、窄屏直接画进河道。
-      点开任一政权或君主即得知识卡：摘要实时取自中文维基百科，另附全文、百度百科、视频直达，文物条目直达持有机构的馆藏页。</span>
-      <span class="lede-touch">共和元年（前841）以前没有确切纪年——<strong>斜纹半透明</strong>的格子是传统系年铺入的低置信坐标，不是记载。
-      大事记直接画进河道：<strong>轻点看名字，双击读词条</strong>；顶栏的 🎲 随便看看。</span>
+      <strong>河宽＝当时并存的政权数</strong>：一股一统，数股割据；开卷落在秦并六国（前221），往上更早、往下更近。
       <button id="theme-toggle" class="linkish theme-toggle">🌙 深色</button>
-    </p>
-    <p class="small" style="color:var(--text-2);margin-top:6px">
-      同一份数据的另外几种读法：<a href="index.html">中国帝王寿命数据库</a>按人算命数
-      （<span data-il-count="emp">689</span> 位君主的生卒、在位与死因，用生存分析回答「帝王的寿命由什么决定」）；
-      <a href="map.html">时光舆图</a>按地方铺开——<span data-il-count="geo">732</span> 条大事在图上各有落点，
-      条目点开还能看它去过哪儿；<strong>图上空着的地方不是没发生过事，是那些条目查不到地点</strong>。
-      <a href="place.html">地方线</a>站在一座城里看四千年——同一批条目按一座城排成一条竖轴，轴按政权换手分段。
     </p>
   </header>
 </div>
@@ -61,36 +47,13 @@
 
   <main id="sections"></main>
 
-  <section class="card" id="how">
-    <div class="head"><h2>这张图怎么读</h2></div>
-    <div class="grid2">
-      <div>
-        <h3>竖向河流</h3>
-        <ul class="small" style="color:var(--text-2)">
-          <li><strong>河宽恒定，只按政权数均分。</strong>本库没有疆域数据，若让分叉宽窄表示「谁更大」，那是在画我们并不掌握的东西。唯一的视觉变量「分叉数」正好等于那一刻并存的政权数。</li>
-          <li><strong>交替处不断流。</strong>禅让画成宽阔的河口，隔着空窗的承统（秦→汉、汉→新）画成细颈贯穿空窗，断流只留给无承继关系的真正终结。</li>
-          <li><strong>亡国是汇流，不是蒸发。</strong>政权终结时河道弯向吞并者的河岸并没入其下；隔着第三条河道时改画半透明的穿流带。</li>
-        </ul>
-      </div>
-      <div>
-        <h3>横向泳道</h3>
-        <ul class="small" style="color:var(--text-2)">
-          <li><strong>泳道可回收。</strong>一条泳道不归属任何朝代，某朝终结后即被后来者接管，于是任一时刻被占用的行数＝当时并存的政权数。<span data-il-count="dyn">93</span> 个政权装进 9 行，容得下最挤的 937 年（十一国并存）。</li>
-          <li><strong>承继细丝点选才现。</strong>锚在事件年份、贴车道边缘进出、从所经政权身下穿过；有名有姓的交替（陈桥兵变、靖康之变）在交界处刻一道可点的短痕。</li>
-          <li><strong>知识卡实时取自维基。</strong>朝代与皇帝各一张，随滚动跟随视野；页面不预存任何词条内容。</li>
-        </ul>
-      </div>
-    </div>
-  </section>
 
   <footer class="foot">
-    <p>王朝之河 · 中国帝王寿命数据库的全景视图。纯静态单页，无外部依赖、无构建步骤；词条摘要实时取自中文维基百科，文物与遗产条目另附持有机构的馆藏页直达。</p>
-    <p>政权起讫由「实际有君主在位」决定，不回退到朝代元数据的年份；确无君主的年份由<a href="index.html#audit">空档审计</a>逐条列出，不靠底带掩盖。</p>
     <p class="foot-cta">
       <a class="chip foot-btn" href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%E5%8B%98%E8%AF%AF&amp;title=%E5%8B%98%E8%AF%AF%EF%BC%9A"
          target="_blank" rel="noopener">发现错漏？来提一条 ↗</a>
       <a class="chip foot-btn foot-btn-2" href="https://github.com/No-Macaroon1670/ImperialLongevity" target="_blank" rel="noopener">源码与数据 ↗</a>
-      <span class="foot-note">数据与文案都在版本库里，逐条注了出处；指出哪一条不对，比笼统说「有错」有用得多。</span>
+      <span class="foot-note">指出哪一条不对，比笼统说「有错」有用。</span>
     </p>
   </footer>
 </div>

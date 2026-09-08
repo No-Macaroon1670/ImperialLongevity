@@ -2,22 +2,35 @@
 //
 // 与统计页共用 shell.js 的状态、筛选、渲染循环与后台自愈；本页只装全景章节，
 // 不要页首统计条(那属于寿命数据库)。
-import { mountApp } from './shell.js';
+import { mountApp, mountSib } from './shell.js';
 import { SECTIONS } from './sections-panorama.js';
 import { mountSearch } from './search.js';
 import { buildLineCatalog, lineFromHash, lineHash } from './line-catalog.js';
 import { buildPlaceCatalog } from './place-catalog.js';
 import { mountTour } from './tour.js';
 import { lineOf, LINES } from './lines.js';
-import { EMPERORS, DYNASTIES } from './data.js';
-import { EVENTS } from './events.js';
-import { GEO_STATS } from './geo-stats.js';
-import { syncCounts as fillCounts } from './counts.js';
 
 mountApp({ sections: SECTIONS, hero: false });
+// 页首互链一行（2026-09-08 去 clutter 案 §一.1）：登记表与渲染都在零依赖叶子
+// js/sib-nav.js，shell 只转手一份。越早挂越好——JS 到货前 .mh-row 已在 HTML 里，
+// 挂上去不跳版
+mountSib();
 
 const panorama = document.getElementById('panorama');
 const chartHost = () => document.querySelector('#panorama .chart-host');
+
+// 工具簇：节题独占一行、五颗入口另起一行（库主 2026-09-08 追加 §六.2 的「路 B」）。
+// 从前题与 ⚙🧭📖📍🎲＋搜索框挤在同一条 flex 行上——宽屏像标题拖了条小尾巴，
+// 窄屏则题折两行、钮再折第三行，宽窄两副样子。收进一个显式容器之后：
+//   ① 版式恒定两行，宽窄同构（.sec-tools 是 flex-basis:100% 的整行）；
+//   ② 钉住态由**容器一个人** position:fixed，簇内各钮回到流内排布——
+//      从前是六颗钮各自 fixed、各写一条 right: calc(…+40px+80px+120px) 的偏移，
+//      加一颗钮就得把后面几条常数全改一遍，且实测已撞过（📍 与黑条左钮差 2px）。
+// tour.js／search.js 各自的 append 点改成先找 .sec-tools，找不到才退回 .head，
+// 于是不载本容器的页（统计页、故事线深链页）行为一字不变。
+const tools = document.createElement('div');
+tools.className = 'sec-tools';
+(panorama.querySelector('.head') || panorama).appendChild(tools);
 
 // 导览先挂:两者都往 .head 里塞按钮,而搜索框靠 margin-left:auto 顶到最右,
 // 先挂的导览按钮才会留在标题这一侧
@@ -74,7 +87,7 @@ const { el: catalog, open: openCatalog } = buildLineCatalog({
   onPick: (line) => { history.replaceState(null, '', lineHash(line.key)); openLine(line.key); },
 });
 {
-  const head = panorama.querySelector('.head') || panorama;
+  const head = tools;
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'chip tour-launch line-launch';
@@ -92,7 +105,8 @@ const { el: catalog, open: openCatalog } = buildLineCatalog({
 
   // 地方线目录（库主 2026-09-07 令）：与骰子、故事线同一簇、同一元件规格——
   // 三颗钮问的是三个不同的「从哪儿进去」：🎲 随手一条、📖 挑一条读法、📍 挑一座城。
-  // 钉住态同样只留图标，右偏移在 styles.css 里再让一格（见 .place-launch.pinned）
+  // 钉住态由 .sec-tools.pinned 整簇接管（逐钮的 .place-launch.pinned 一族已随
+  // 2026-09-08 的工具簇改造整段删掉）：簇内各钮按 flex 排队，无需手算右偏移
   const { open: openPlaces } = buildPlaceCatalog();
   const pbtn = document.createElement('button');
   pbtn.type = 'button';
@@ -119,11 +133,9 @@ addEventListener('hashchange', () => { const k = lineFromHash(); if (k) openLine
 // 搜索与深链:两千年的长卷,得能搜得到、也发得出(见 js/search.js)
 mountSearch(panorama, chartHost);
 
-/**
- * 正文里的「N 位君主 / N 个政权」由数据现算，不写死。
- *
- * 起因：补进南越（一政权、五君主）之后，四个文件里的「382 位」「65 个政权」
- * 全成了错的，得手工逐处改——而这类数字**每次增补都会再错一次**。
- * HTML 里仍留着一个值作兜底（脚本没跑起来时不至于空着），运行时按实际覆盖。
- */
-fillCounts({ emp: EMPERORS.length, dyn: DYNASTIES.length, ev: EVENTS.length, geo: GEO_STATS.ev });
+// 从前这里还有一句 syncCounts({emp,dyn,ev,geo})：它回填的是页首那段「同一份数据的
+// 另外几种读法」里的 data-il-count（去 clutter 案 §一.1 整段撤掉，换成 nav.sib）。
+// counts.js 是一次性 querySelectorAll、不带 MutationObserver，全页零个 data-il-count
+// 之后那一句只是空跑一次循环，还顺带把 EMPERORS/EVENTS/GEO_STATS 三份数据拖进本模块
+// 的依赖图。本页要数字的地方（泳道图例、数据表把手）各自现算，不经 counts。
+// 别处仍在用：map.html 三处、about.html 四处（app-map.js／app-about.js 各自调）。
