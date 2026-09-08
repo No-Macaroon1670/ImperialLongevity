@@ -397,12 +397,18 @@ function segNode(seg, ctx) {
   // 一等左右交错、二等一律贴右：交错是给一等的排场，二等挤在同一侧成一列，
   // 读起来才像「主线之外还有这些」，而不是又一批同等分量的东西
   const three = [];
-  let flip = 0;
+  let flip = 0, row = 0;
   const cards = h('div', { class: 'plc-cards' });
   for (const ev of seg.items) {
     const t = tierOf(ev, PICKS);
     if (t === 3) { three.push(ev); continue; }
-    cards.appendChild(evCard(ev, t, t === 1 ? (flip++ % 2 ? 'r' : 'l') : 'r', OVERRIDES, dock));
+    const card = evCard(ev, t, t === 1 ? (flip++ % 2 ? 'r' : 'l') : 'r', OVERRIDES, dock);
+    // 每张卡显式占自己一行。不写行，网格自动摆位会让「左卡跟在右卡后」另起一行、
+    // 「右卡跟在左卡后」挤进同一行——并不并排只看 DOM 先后，与年份无关；并排的那对
+    // 共用一个轴点，前606 与前293 看着像同时（库主 2026-09-08 两张截图）。行一钉，
+    // 一等的左右交错就是真正的之字形，时间从上往下单调
+    card.style.gridRow = String(++row);
+    cards.appendChild(card);
   }
 
   const fold = three.length ? h('details', { class: 'plc-more' }, [
