@@ -16,29 +16,23 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🗺%3C/text%3E%3C/svg%3E">
 </head>
-<body>
+<body data-page="map">
 
 <div class="wrap">
   <header class="masthead">
     <div class="kicker">Geographic Coverage · What the Record Can Locate</div>
-    <h1>时光舆图</h1>
+    <!-- .mh-row 手写一份：JS 到货前不跳版（mountSib 找不到它时会就地裹一个）。
+         那段「同一份数据的另外几种读法」整段退役 → js/sib-nav.js 的 SIB_PAGES，
+         五页同一份字面、释义进 title（2026-09-08 去 clutter 案 §一.1）。 -->
+    <div class="mh-row"><h1>时光舆图</h1></div>
+    <!-- 页首只留一句：不看就会误读的那一句（§一.5）。原先加粗的「一条目只出一个点；
+         点它一下……」是画法、不是核心概念（库主 09-07：「刚开始 plan 时说的话」），
+         读数坞 IDLE 就地在说，页首不再说第二遍；苏轼／六骏／苏武三例与那段推演
+         挪去 docs/geo-model.md。静态数字只是无 JS 时的兜底，data-il-count 会回填。 -->
     <p class="lede">
-      本库有 <span data-il-count="ev">874</span> 条大事记，眼下查得到地点的
-      <span data-il-count="geo">86</span> 条画在这里。
-      <strong>一条目只出一个点；点它一下，它去过的地方才连成一条线。</strong>
-      <span class="lede-desk">
-        苏轼生于眉州、显于黄州、卒于常州；昭陵六骏凿在昭陵，如今四骏在西安碑林、两骏在费城；
-        苏武从长安出使，在北海牧了十九年羊，又回到长安。把这些压成一个点，
-        丢掉的正是这条目最要紧的那部分；全都画上去，图又会糊成一片。
-        所以：库里记全，图上只出主点，点选才展开，松开就收回去。
-        图上留白的地方不是没发生过事，是那些条目没有地点可查。
-      </span>
+      本库 <span data-il-count="ev">1700</span> 条大事记里查得到地点的
+      <span data-il-count="geo">1411</span> 条画在这里。没画上的一半是制度条，井田、分封、变法这类事没有一个地方可落。
       <button id="theme-toggle" class="linkish theme-toggle">🌙 深色</button>
-    </p>
-    <p class="small" style="color:var(--text-2);margin-top:6px">
-      同一份数据的另外几种读法：<a href="timeline.html"><strong>王朝之河</strong></a>按时间铺开，
-      <a href="index.html">中国帝王寿命数据库</a>按人算命数，
-      <a href="place.html"><strong>地方线</strong></a>站在一座城里看四千年——这张图上摊开的一簇，在那儿是一条竖轴。
     </p>
   </header>
 </div>
@@ -49,31 +43,33 @@
 
     <div class="pl-controls">
       <div class="pl-kinds" id="plate-kinds"></div>
-      <label class="pl-year" title="事件截至此年，政权取当时并存的；刻度按事件密度排布，不按年；拉到最右为全部">
-        <span class="pl-year-lab">年代</span>
+      <label class="pl-year" title="截至此年，政权取当时并存的；刻度按事件密度，不按年；最右为全部">
+        <span class="pl-year-lab has-tip">年代</span>
         <input type="range" id="plate-year" list="plate-year-ticks" aria-label="只看这一年之前的落点">
         <datalist id="plate-year-ticks"></datalist>
         <output id="plate-year-out">全部</output>
       </label>
       <details class="pl-settings">
         <summary>设置</summary>
+        <!-- 五条按语各压到一行（§二 map B5）：留的是「关掉会看见什么」，
+             删的是「为什么这样画」（「山画出来自己会说话」那类）。 -->
         <label><input type="checkbox" id="pl-set-alive" checked>
-          都城只画滑块所指年份仍存续的政权<span class="pl-set-why">——关掉则亡了的政权的都城也一直留着（「截至」逻辑）</span></label>
+          都城只画滑块所指年份仍存续的政权<span class="pl-set-why">——关掉则亡了的政权都城也留着</span></label>
         <label><input type="checkbox" id="pl-set-ext" checked>
-          政权选中时铺盛时疆域示意<span class="pl-set-why">——毛边色块由四至引文的锚点粗描而成，示意而已，不是边界</span></label>
+          政权选中时铺盛时疆域示意<span class="pl-set-why">——四至引文锚点粗描，非边界</span></label>
         <label><input type="checkbox" id="pl-set-terr" checked>
-          画地形骨架<span class="pl-set-why">——山脉、高原、盆地的轮廓与名字。点为什么密在中原、稀在高原，山画出来自己会说话</span></label>
+          画地形骨架<span class="pl-set-why">——山脉、高原、盆地轮廓</span></label>
         <label><input type="checkbox" id="pl-set-low" checked>
-          画低置信的点<span class="pl-set-why">——半透明那些：今地属传统比定、推定。关掉只留查得实的</span></label>
+          画低置信的点<span class="pl-set-why">——半透明那些，今地属推定</span></label>
         <label><input type="checkbox" id="pl-set-auto" checked>
-          画自动取的坐标<span class="pl-set-why">——从条目自己的维基页顺手拿的、没人逐条核过。关掉只留人核过的</span></label>
+          画自动取的坐标<span class="pl-set-why">——条目维基页自带、未逐条核过</span></label>
       </details>
     </div>
 
     <div class="pl-stage">
       <div class="pl-stage-map">
         <div class="plate" id="plate"></div>
-        <p class="pl-scroll-hint">图比屏幕宽，左右拖着看——缩到一屏宽的话字就糊了。</p>
+        <p class="pl-scroll-hint">图比屏幕宽，左右拖着看。</p>
       </div>
       <div class="pl-read" id="plate-read">
         <div class="pl-read-k" data-read="kicker"></div>
@@ -85,76 +81,56 @@
 
     <p class="small pl-tally" id="plate-tally" style="color:var(--text-2)"></p>
 
-    <div class="notice" style="margin-top:14px">
-      <strong>这张图不画什么。</strong>
-      <strong>没有国界</strong>——底图只有海岸线与黄河、长江。国界的画法有争议，一张小图没必要卷进去；
-      页名叫「王朝之河」，两条河本来就是主角。
-      <strong>疆域只画约略示意</strong>——早先这里写的是「没有疆域」，理由是画出来的每一条边界线都是我们不掌握的东西；这个理由今天仍然成立，所以图上仍然没有边界<strong>线</strong>：政权选中时铺的那块毛边低透明色块，是从正史与维基的四至<strong>文字</strong>（「东至海暨朝鲜，西至临洮、羌中……」）推出的锚点粗描——每个顶点能指回一句引文，粗糙是构造出来的。古之疆域本非线状，盛时更只是一瞬，色块四缘的模糊正是这两句话的画法。
-      <strong>河道是今天的河道</strong>——黄河历史上改道二十余次，1128 到 1855 的七百年间夺淮入海，
-      河口在今道以南数百公里。图上的河只是参照线，不是任何一个朝代的河；
-      黄河边上的点，未必在当年的黄河边上。
-      <strong>落在图框外的整条不收</strong>：《金刚经》现藏伦敦、宝船去过东非，硬贴到图边上会让读者以为它就在那儿。
-      <strong>地名是判断，坐标是事实</strong>：落在出土地还是现藏地由人挑，
-      挑定之后坐标一律从维基抓、不手打。这条分界与本库「选图是策展判断、许可与署名从 Commons 抓」是同一条。
-      <strong>今地不确定的画成半透明</strong>——涿鹿、鸣条这些上古战场的今地属传统比定，
-      形状说有这回事，透明度说别拿它当准。
-    </div>
+    <!-- 三块口径一律默认闭合（§一.2）：读一遍够、随时想查的话题不该常驻正文。
+         把手写成「名词短语 · 那一句不看会误读的口径」，开合不记 localStorage。
+         删去的设计理由与对旧版本的解释各有去处：
+         「国界画法有争议」「粗糙是构造出来的」「古之疆域本非线状」→ docs/geo-territories.md；
+         「地名是判断，坐标是事实」→ docs/METHODS.md；读者面的问答本 → about.html。 -->
+    <details class="notes" style="margin-top:14px">
+      <summary><strong>这张图不画什么</strong><span class="sm-sep">·</span>没有国界，也没有边界线</summary>
+      <p><strong>疆域只画约略示意</strong>：政权选中时铺的那块毛边色块，由正史与维基的四至<strong>引文</strong>锚点粗描而成，不是边界线。</p>
+      <p><strong>河道是今天的河道</strong>：黄河 1128 到 1855 的七百年间夺淮入海，河口在今道以南数百公里。黄河边上的点，未必在当年的黄河边上。</p>
+      <p><strong>落在图框外的整条不收</strong>：《金刚经》现藏伦敦、宝船去过东非，硬贴到图边上会让读者以为它就在那儿。</p>
+      <p><strong>今地不确定的画成半透明</strong>：涿鹿、鸣条这些上古战场的今地属传统比定——形状说有这回事，透明度说别拿它当准。</p>
+    </details>
 
     <div class="grid2" style="margin-top:14px">
-      <div>
-        <h3>哪一类落得下，哪一类落不下</h3>
-        <p class="small" style="color:var(--text-2)">
-          落得下与落不下，几乎完全由<strong>类别</strong>决定，而不是由重要程度决定：
-        </p>
+      <!-- 十二个数字的正本已挂到上方各类别 chip 的 title＋aria-label（app-map.js mountKinds）：
+           桌面读者悬停即见，不必打开这一块。这份列表是**触屏兜底**（库主令：这一节默认
+           隐藏，手机用户想看也能看）——悬停不了的地方总得有一条读得到数字的路。
+           #plate-cover 这个 id 要留着：fillCoverage 现算现填，页上一个手写数字都没有。 -->
+      <details class="notes pl-cover">
+        <summary><strong>哪一类落得下</strong><span class="sm-sep">·</span>几乎全由类别决定，不由重要程度决定</summary>
         <ul class="small" id="plate-cover" style="color:var(--text-2)"></ul>
-        <p class="small" style="color:var(--text-2)">
-          制度类大多不落点，这是有意的：<strong>全境施行的诏令没有一个发生地</strong>。
-          「书同文」「推恩令」颁行天下，落在都城不是「它在那儿发生」，是「诏书从那儿发出去」
-          ——两回事，混起来会让读者以为制度史集中在几座城里。只有记载明指一地的才落
-          （盘庚迁殷、官办交子行于四川、昭勋阁二十四功臣就在昭勋阁）。
-        </p>
-      </div>
-      <div>
-        <h3>点与线怎么读</h3>
+        <p><strong>制度类大多不落点</strong>：全境施行的诏令没有发生地，只有记载明指一地的才落（盘庚迁殷、官办交子行于四川）。</p>
+      </details>
+      <details class="notes">
+        <summary><strong>点与线怎么读</strong><span class="sm-sep">·</span>一条目只出一个点，点它才展开</summary>
         <ul class="small" style="color:var(--text-2)">
-          <li><strong>一条目只出一个点。</strong>主点取哪一个是判断：人取<strong>显赫之地</strong>（不是出生地也不是墓地），
-            文物取<strong>现藏地</strong>，战事取<strong>主说</strong>，政权取<strong>主都</strong>。逐条判据见
-            <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/geo-model.md" target="_blank" rel="noopener">落点模型</a>。</li>
-          <li><strong>点名后的单字是此地与条目的关系</strong>：生＝出生地、显＝显赫成事之地、卒＝逝世地、
-            葬＝埋葬原置之地、贬＝贬所、行＝行迹中途、都＝都城、迁＝迁都之后的都城、陪＝与正都并存的陪都、说＝诸说之一、
-            造＝制作地、立＝建立树立之地、发＝出土发现地、现＝现藏现陈之地、址＝遗址本体、
-            战＝交战地、起＝起事地、灾＝受灾中心、颁＝颁行地。</li>
-          <li><strong>点一下展开行迹</strong>：按时序连线，一段一个箭头。
-            同一段路来回走的，两程各自错开一点——一条线画两遍等于只画了一遍，读者看不出他回来过。
-            再点一下、或按 Esc，链收回去。</li>
-          <li><strong>诸说不连线</strong>：赤壁在哪儿至今没定论，主说画实心，其余画空心圈。
-            连成线会把「并存的主张」画成「先后的行迹」，那是两回事。</li>
-          <li><strong>半透明的点是低置信</strong>：今地属传统比定、推定，或只由国别推出。
-            与本库先秦年代用斜纹表低置信是同一个语汇——形状说有这回事，透明度说别拿它当准。</li>
-          <li><strong>挨得近的点散开画，并拉一根细线回真位置。</strong>
-            这张图一千单位横跨六十二度经度，挪二十单位就是一百多公里——散开是为了点得中，
-            细线是为了别让读者忘了它本来在哪儿。</li>
-          <li><strong>一处超过八条收成一个点，半径随条数长</strong>，点大即那地方事多。点开摊成一环。</li>
-          <li><strong>图外的地方不画在图上</strong>，只在信息栏里写。但方向是真的：
-            链走到图外时，线朝那个方向画到视口边缘为止。苏武那趟北海之行，
-            图上看不见那个湖，看得见他往北去了。</li>
+          <li><strong>主点</strong>：人取显赫之地，文物取现藏地，战事取主说，政权取主都（详见
+            <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/geo-model.md" target="_blank" rel="noopener">落点模型</a>；
+            点名后那个单字的意思，坞里就地写着）。</li>
+          <li><strong>点一下展开行迹</strong>，一段一个箭头；再点一下或按 Esc 收回。</li>
+          <li><strong>诸说不连线</strong>：主说实心，其余空心圈。</li>
+          <li><strong>挨得近的点散开画</strong>，细线指回真位置。</li>
+          <li><strong>一处超过八条收成一个点，半径随条数长</strong>。点开摊成一环。</li>
+          <li><strong>图外的地方只写在坞里</strong>；链走到图外时，线朝那个方向画到图边为止。</li>
           <li><strong>大小是分量、颜色是类别</strong>，都与时间轴同一套。</li>
         </ul>
-      </div>
+      </details>
     </div>
   </section>
 
   <footer class="foot">
-    <p>时光舆图 · 中国帝王寿命数据库的地理视图。纯静态单页，无外部依赖、无构建步骤。
-      底图取自 Natural Earth 1:50m physical（公共领域），只留海岸线与黄河、长江；
+    <!-- 页脚只留该页的来源与许可一行（§一.8）：「纯静态单页、无外部依赖」是施工自白
+         （家在 README），覆盖率探针的脚本路径归 docs/METHODS.md——读者不需要它。 -->
+    <p>底图 Natural Earth 1:50m physical（公共领域），只留海岸线与黄河、长江；
       落点坐标取自中文维基百科条目的主坐标（P625，CC0）。</p>
-    <p>覆盖率是实测的，不是估的：见 <code>tools/mining/probe_geo_coverage.py</code> 与
-      <code>docs/geo-events-probe.json</code>。查不到坐标的条目一条也不硬填。</p>
     <p class="foot-cta">
       <a class="chip foot-btn" href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%E5%8B%98%E8%AF%AF&amp;title=%E5%8B%98%E8%AF%AF%EF%BC%9A"
          target="_blank" rel="noopener">发现错漏？来提一条 ↗</a>
       <a class="chip foot-btn foot-btn-2" href="https://github.com/No-Macaroon1670/ImperialLongevity" target="_blank" rel="noopener">源码与数据 ↗</a>
-      <span class="foot-note">数据与文案都在版本库里，逐条注了出处；指出哪一条不对，比笼统说「有错」有用得多。</span>
+      <span class="foot-note">指出哪一条不对，比笼统说「有错」有用。</span>
     </p>
   </footer>
 </div>

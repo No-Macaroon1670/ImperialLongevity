@@ -49,6 +49,7 @@ import { LINES } from './lines.js';
 import { DYNASTIES } from './dynasties.js';
 import { WORLDMAP, projectWorld } from './basemap-world.js';
 import { fmtYearAxis } from './year.js';
+import { mountSib } from './sib-nav.js';
 
 // 世界图双版（库主三答定案 2026-08-24，点火 2026-08-31）：W/H 随版切换，
 // 中国版一切不动，世界版只画「有境外落点」的合格条目
@@ -60,6 +61,10 @@ const xy = ([lat, lon]) => (state.world ? projectWorld(lon, lat) : project(lon, 
 // 收归 js/year.js；本页只保留那个半角空格——「前 221 – 前 210」是舆图坞行的
 // 本地宽排版式（与政权行对齐），紧排与否须库主另裁，故此处是薄壳不是副本。
 const yr = (y) => fmtYearAxis(y).replace('前', '前 ');
+
+// 页首互链一行（js/sib-nav.js，五页同一份字面）。本页不载 shell.js，故直接吃叶子。
+// 挂得越早越好——页首晚一拍长出一行来会跳版
+mountSib();
 
 /* ── 数据 ─────────────────────────────────────────────────────────────── */
 
@@ -74,6 +79,18 @@ const ALL = EV_ROWS.concat(DYN_ROWS);
 // 这份 KINDS 还兼作「可关类别全集」，故不能换成 EVENT_KINDS 的定义序
 const EV_COUNTS = countByKind(EV_ROWS);
 const KINDS = kindsByCount(EV_COUNTS, { universe: [...new Set(EV_ROWS.map((r) => r.k))] });
+
+// 各类**库内总数**（EV_COUNTS 是同一批类在图上的落点数）。从前只有页尾的
+// fillCoverage 现算一次，2026-09-08 起类别 chip 的 title 也要它——十二行数字由
+// 常显正文改挂 tooltip（库主：「dynamically place in category tooltip，hover 时告诉你
+// total 里多少 mappable」），故提到模块级一份，两处同吃，免得将来改口径漏改一处。
+// era 那道门原样带过来（今日 EVENT_KINDS.era 有登记，这一句是防将来撤登记）。
+const KIND_TOTAL = countByKind(EVENTS.filter((e) => e.k !== 'era' || EVENT_KINDS[e.k]));
+/** 一类的库内／图上两个数，写成 chip 与列表共用的一句。t 为 0 时不编数字。 */
+const coverBits = (k) => {
+  const t = KIND_TOTAL[k] || 0, g = EV_COUNTS[k] || 0;
+  return t ? `库内 ${t} 条，图上 ${g} 条（${Math.round((100 * g) / t)}%）` : `图上 ${g} 条`;
+};
 
 const YEARS = ALL.map((r) => r.y);
 const Y_LO = Math.min(...YEARS), Y_HI = Math.max(...YEARS);
@@ -489,8 +506,16 @@ const ROLE_GLOSS = {
   都: '都城', 起: '起事地', 迁: '迁都之后的都城', 陪: '与正都并存的陪都', 灾: '受灾中心',
   说: '诸说之一', 颁: '颁行地', 摹: '著名临摹本、拓本所在', 仿: '化石模型、复制件所在',
 };
+// 坞的待机三行＝本页唯一「有人替读者讲操作」的地方，页首的操作句全归到这儿
+// （2026-09-08 去 clutter 案 §一.4）。两处修剪：
+//   ① 触屏没有「指到」这回事（views-river.js 的 coarse 分支同例）——悬停不了的
+//      设备上写「指到点上」是骗人；
+//   ② 「双击类别芯片只看那一类」删：chip 自己的 title 已写着同一句，说两遍是 clutter。
 const IDLE = ['这张图', '一条目一个点',
-  '指到点上看名字，点一下展开它去过的地方。半透明的点是今地不确定；带数字的大点是挤在一处的一簇——大簇点一下先拉近，贴近了再点就地散开；双击下方类别芯片只看那一类，「全开」复原。'];
+  (matchMedia('(pointer: coarse)').matches
+    ? '点一下看名字并展开它去过的地方；'
+    : '指到点上看名字，点一下展开它去过的地方；')
+  + '半透明＝今地不确定；带数字的大点是一簇，点一下拉近、再点散开。'];
 const rd = reader($('plate-read'), IDLE);
 // 嵌入条卡(用户提议的 meld):钉住一条时在元信息行下长出河页同款条卡。
 const EMB = mountEmbedCard($('plate-read'));
@@ -896,7 +921,7 @@ function say(row, pin) {
   }
   if (!state.world && row['外主'] >= 0) bits.push(`主点其实在${chain[row['外主']]['名']}，出了这张图的范围`);
   if (here['约']) bits.push('今地属推定，故画成半透明');
-  if (row['据'] === 'w') bits.push('坐标取自该条目的维基页，没有人核过它是不是这件事发生的地方');
+  if (row['据'] === 'w') bits.push('坐标自动取自维基页，未经人核');
   const kick = row['层'] === 'dyn'
     ? `${yr(row.y)} – ${yr(row.e)}　政权`
     : `${yr(row.y)}　${kindLabel(row)}`;
@@ -905,7 +930,8 @@ function say(row, pin) {
     // 政权钉住时铺盛时疆域示意；示警随坞行走（与「今地属推定」同一层级语言）
     if (row['层'] === 'dyn' && state.showExtent && TERR[row.key]) {
       const snap = drawExtent(row.key);
-      if (snap) bits.push(`底色为疆域约略示意，据${yr(snap.y)}前后（${snap.span}）——四至锚点粗描，非精确边界，古之疆域本非线状`);
+      // 「古之疆域本非线状」是设计理由（家在 docs/geo-territories.md），坞行只说读法
+      if (snap) bits.push(`底色＝${yr(snap.y)}前后（${snap.span}）盛时疆域示意，非边界`);
     } else clearExtent();   // 无疆域数据的政权也要清——否则明→东晋换选时明的大块滞留（实测踩到）
     // meld 去重:卡的头两行(年份类别、标题)已由 CSS 藏掉,坞行代任;
     // 卡头本来更全的起讫年并回坞行,别把 892–1252 缩成 892
@@ -1380,18 +1406,29 @@ function draw() {
   centreOnce(rows);
 }
 
-/** 这行字要随筛选走：写死「八十多个」的话，年代滑到只剩四条时它还在这么说。 */
+/** 这行字要随筛选走：写死「八十多个」的话，年代滑到只剩四条时它还在这么说。
+ *
+ *  2026-09-08 去 clutter（§二 map B8）：**常显只剩第一句**——四组数字加两句解释
+ *  常驻图下是 clutter，而后三组（散开／聚合／标名）说的都是「你看见的和实际的
+ *  差在哪」，属口径，归这行自己的 title。选中态那句例外，它是**活状态**
+ *  （「我现在展开着一条」），必须看得见，否则读者不知道怎么退出来。 */
 function tally(rows, gs, packed, folded, hidden) {
-  const bits = [`图上 ${rows.length} 条落点，落在 ${gs.length} 处`];
-  if (packed) bits.push(`其中 ${packed} 条挨得太近、已散开画（细线指回它真正的位置）`);
-  if (folded) bits.push(`${folded} 条收在聚合点里，点开摊平`);
-  if (state.sel) {
-    bits.push('已展开一条的行迹；再点一下那个点，或按 Esc，收回去');
-  } else {
-    const one = rows.filter((r) => r.r === 1).length;
-    bits.push(`标了名字的是一等的 ${one} 条${hidden ? `（${hidden} 条撞位未标）` : ''}，其余把指针放上去就读得到`);
-  }
-  $('plate-tally').textContent = `${bits.join('；')}。`;
+  const node = $('plate-tally');
+  const head = `图上 ${rows.length} 条落点，落在 ${gs.length} 处。`;
+  const tips = [];
+  if (packed) tips.push(`${packed} 条挨得太近、已散开画，细线指回真位置`);
+  if (folded) tips.push(`${folded} 条收在聚合点里，点开摊平`);
+  const one = rows.filter((r) => r.r === 1).length;
+  tips.push(`标了名字的是一等的 ${one} 条${hidden ? `（${hidden} 条撞位未标）` : ''}`);
+  const tip = `${tips.join('；')}。`;
+  node.textContent = state.sel ? `${head}已展开行迹；再点一下或 Esc 收回。` : head;
+  node.title = tip;
+  // 悬停读得到的那一句，读屏也要读得到（把手与字同一份，§一.3）。
+  // `role="note"` 是为这条 aria-label 开的门：`<p>` 的隐含角色 paragraph
+  // **不许命名**，aria-label 挂上去会被读屏整个忽略，那一句就等于没写
+  node.setAttribute('role', 'note');
+  node.setAttribute('aria-label', node.textContent + tip);
+  node.classList.add('has-tip');
 }
 
 /** 窄屏上把视口横向挪到图上的某一点（走线跳站与首绘居中同吃一份）。
@@ -1421,11 +1458,18 @@ function mountKinds() {
   const refresh = () => { syncs.forEach((f) => f()); draw(); };
   /* 单击开关一类；**双击只看这一类**（类别多了之后逐个关太费手，用户提的）。
      双击前浏览器会先派发两次单击，把这一类翻了两遍等于没翻，净效果正好是独显 */
-  const chip = (cls, html, isOn, toggle, solo) => {
+  /* tip：这一类的库内／图上两个数（2026-09-08 起「哪一类落得下」十二行由常显正文
+     改挂到这里，库主令）。title 与 aria-label 写同一份字——悬停与读屏读到的该是
+     一句话；`has-tip` 是那道虚下划线把手（触屏由 CSS 自动撤掉，悬停不了的地方
+     画个把手是骗人，那边走页下默认闭合的 details 兜底）。 */
+  const chip = (cls, html, isOn, toggle, solo, tip) => {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = `chip pl-chip ${cls}`;
-    b.title = '单击开关；双击只看这一类';
+    const txt = `${tip ? `${tip}。` : ''}单击开关；双击只看这一类`;
+    b.title = txt;
+    b.setAttribute('aria-label', txt);
+    if (tip) b.classList.add('has-tip');
     b.innerHTML = html;
     syncs.push(() => b.classList.toggle('on', isOn()));
     b.addEventListener('click', () => { toggle(); refresh(); });
@@ -1434,19 +1478,23 @@ function mountKinds() {
   };
   for (const k of KINDS) {
     const n = EV_COUNTS[k];
-    chip(`k-${k}`, `<span class="pl-swatch"></span>${evKindLabel(k)} ${n}`,
+    // 字面裹进 span：`.chip.has-tip > span:last-child` 只给最后那格字划虚线，
+    // 色点不划。从前这里是个裸文本节点，把手会落到那颗小圆点上
+    chip(`k-${k}`, `<span class="pl-swatch"></span><span>${evKindLabel(k)} ${n}</span>`,
       () => state.layers.has('ev') && !state.off.has(k),
       () => {
         if (!state.layers.has('ev')) { state.layers.add('ev'); state.off = new Set(KINDS.filter((x) => x !== k)); return; }
         if (state.off.has(k)) state.off.delete(k); else state.off.add(k);
       },
-      () => { state.layers = new Set(['ev']); state.off = new Set(KINDS.filter((x) => x !== k)); });
+      () => { state.layers = new Set(['ev']); state.off = new Set(KINDS.filter((x) => x !== k)); },
+      `${evKindLabel(k)}：${coverBits(k)}`);
   }
   if (HAS_DYN) {
-    chip('k-dyn', `<span class="pl-swatch"></span>政权都城 ${DYN_ROWS.length}`,
+    chip('k-dyn', `<span class="pl-swatch"></span><span>政权都城 ${DYN_ROWS.length}</span>`,
       () => state.layers.has('dyn'),
       () => { if (state.layers.has('dyn')) state.layers.delete('dyn'); else state.layers.add('dyn'); },
-      () => { state.layers = new Set(['dyn']); });
+      () => { state.layers = new Set(['dyn']); },
+      `${DYN_ROWS.length} 个政权有都城坐标`);
   }
   // 全开：一键回到什么都画的状态。类别一多，逐个点开比逐个点关还费手。
   // 双态（2026-08-28 库主点子，与泳道图例同款）：全亮时这颗钮变「全关」——
@@ -1552,22 +1600,24 @@ addEventListener('keydown', (e) => {
  *
  * 这一节原本是手写的一串数字，补了一批数据之后**整段全错**——
  * 「文物 159 条落得下 5 条」变成了落得下 7 条，而页上还写着 5。
- * 凡是会随数据变的数字都不该手写，这是本库的通例。 */
+ * 凡是会随数据变的数字都不该手写，这是本库的通例。
+ *
+ * 2026-09-08 起这份列表**收进默认闭合的 details**，正本挂在各类别 chip 的 title 上
+ * （同一对数由模块级 KIND_TOTAL／EV_COUNTS 供，两处不各算一遍）。列表留着不是冗余：
+ * 触屏悬停不了，这是那边唯一读得到数字的路（库主：「这一节默认隐藏，手机用户想看也能看」）。
+ * 行格式随之压成「文物 251/255（98%）」——同一份数字，短一半。 */
 function fillCoverage() {
   const host = $('plate-cover');
   if (!host) return;
-  // era 那道门原样保留（今日 EVENT_KINDS.era 有登记，这一句是防将来撤登记）
-  const total = countByKind(EVENTS.filter((e) => e.k !== 'era' || EVENT_KINDS[e.k]));
-  const got = countByKind(EV_ROWS);
-  const rows = Object.keys(total)
-    .map((k) => ({ k, t: total[k], g: got[k] || 0 }))
+  const rows = Object.keys(KIND_TOTAL)
+    .map((k) => ({ k, t: KIND_TOTAL[k], g: EV_COUNTS[k] || 0 }))
     .sort((a2, b2) => (b2.g / b2.t) - (a2.g / a2.t) || b2.t - a2.t);
   const none = rows.filter((x) => !x.g);
   host.innerHTML = '';
   for (const x of rows.filter((y) => y.g)) {
     const li = document.createElement('li');
     li.innerHTML = `<strong>${evKindLabel(x.k)}</strong>　`
-      + `${x.t} 条落得下 ${x.g} 条（${Math.round((100 * x.g) / x.t)}%）`;
+      + `${x.g}/${x.t}（${Math.round((100 * x.g) / x.t)}%）`;
     host.appendChild(li);
   }
   if (none.length) {
