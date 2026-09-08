@@ -16,28 +16,17 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E📍%3C/text%3E%3C/svg%3E">
 </head>
-<body>
+<body data-page="place">
 
 <div class="wrap">
   <header class="masthead">
     <div class="kicker">Place Lines · One City, Four Thousand Years</div>
-    <h1 id="plc-h1">地方线</h1>
+    <!-- .mh-row 手写一份（不靠 mountSib 就地裹）：JS 到货前页首不跳版。
+         互链一行的字面与释义在 js/sib-nav.js，五页共用一份 -->
+    <div class="mh-row"><h1 id="plc-h1">地方线</h1></div>
     <p class="lede">
-      别的读法按时间铺、按人算、按图撒点，这一种<strong>站在一个地方不动，看头顶换旗</strong>。
-      一座城在本库里的全部条目沿一条竖轴排开：<strong>轴按政权换手分段</strong>，
-      一等大卡左右交错、二等窄卡贴着轴、三等折进段末，点任一张即开知识卡。
-      <span class="lede-desk">
-        归地看的是<strong>事发在哪儿</strong>，不是<strong>东西现在在哪儿</strong>：造、出土、遗址、交战、行迹、建都、受灾都算，
-        <strong>现藏地不算</strong>——否则国家博物馆所在地会把全国的文物吞进来。
-        条目全部运行时现抽，<code>events.js</code> 一改这条线就跟着变；
-        人写的那一半（换手表、时代总结、精选）另存一处，缺席时轴退回按时代分段，页面照常。
-      </span>
+      <strong>站在一座城里看头顶换旗</strong>：轴按政权换手分段、不按年等距，点卡开知识卡。
       <button id="theme-toggle" class="linkish theme-toggle">🌙 深色</button>
-    </p>
-    <p class="small" style="color:var(--text-2);margin-top:6px">
-      同一份数据的另外三种读法：<a href="timeline.html"><strong>王朝之河</strong></a>按时间铺开，
-      <a href="index.html">中国帝王寿命数据库</a>按人算命数，
-      <a href="map.html">时光舆图</a>按地方铺开——<span data-il-count="geo">732</span> 条大事在图上各有落点。
     </p>
   </header>
 </div>
@@ -50,17 +39,14 @@
   </main>
 
   <footer class="foot">
-    <p>地方线 · 中国帝王寿命数据库的地方视图。纯静态单页，无外部依赖、无构建步骤；
-      条目、分段与分档全部在浏览器里现算，页面不预存任何抽取结果。
-      词条摘要实时取自中文维基百科，文物条目另附持有机构的馆藏页直达。</p>
-    <p>归地判据（落点角色与主点取法）见 <code>docs/geo-model.md</code>，
-      地方线的设计裁语见 <code>docs/idea-placelines.md</code>；时代总结与换手表逐条注出处，
-      没有过关的总结就不画卡——空占位比空白更糟。</p>
+    <!-- 脚注只留「来源与许可」一行（去 clutter 案 §一.8）：施工自白（纯静态、现算、
+         docs 路径）与「逐条注出处」的自我评价挪去 about.html，出处由段头的「出处」钮自证 -->
+    <p>词条摘要取自中文维基百科。</p>
     <p class="foot-cta">
       <a class="chip foot-btn" href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%E5%8B%98%E8%AF%AF&amp;title=%E5%8B%98%E8%AF%AF%EF%BC%9A"
          target="_blank" rel="noopener">发现错漏？来提一条 ↗</a>
       <a class="chip foot-btn foot-btn-2" href="https://github.com/No-Macaroon1670/ImperialLongevity" target="_blank" rel="noopener">源码与数据 ↗</a>
-      <span class="foot-note">数据与文案都在版本库里，逐条注了出处；指出哪一条不对，比笼统说「有错」有用得多。</span>
+      <span class="foot-note">指出哪一条不对，比笼统说「有错」有用。</span>
     </p>
   </footer>
 </div>

@@ -19,6 +19,15 @@
 //   **空段照画**。北京在前 1022 到 696 之间一条都没有（燕都之后、幽州之前）。
 //   把空段抽掉会让轴看上去连绵不绝，而那段空白正是这座城在史料里的形状——
 //   与本库「图上的留白说的是记录的形状，不是历史的形状」同一条。空段只占一行。
+//   但**连着好几段机器续色的空段并成一条细带**（2026-09-08 库主拍板③）：北京
+//   前220–313 连着八段、535–619 连着五段，段段没条目、段段只写「天下易主，本地
+//   未另记换手」，铺开是八行同样的话。并成一带之后，那几百年在轴上仍占一格（空白
+//   还是空白），政权名并列成丸子（换了几次旗还看得见），只是不再一段一行地重复。
+//   人写过的段（有段题、有按语）一律不并——那是内容，不是机器的复读。
+//
+//   **出处默认收起**（2026-09-08 库主拍板④）。换手表 30 条与总结卡 8 张的出处
+//   共 2700 余字，全显时把每个段头撑成三行。默认收、页首一颗「出处」钮全开全关，
+//   段头留一个极小的「¶」示意这一段有出处可单独展开——收起不是删，是先让轴看得见。
 //
 //   **一行一卡，不并排**。宽屏上一等卡左右交错，理论上可以两卡并成一行省地方，
 //   但那样一来两张卡的先后就要读者自己猜。时间轴上顺序比密度重要，故每卡独占一行。
@@ -29,6 +38,7 @@
 import { h, el, fmtYearAxis, fmtSpan } from './charts.js';
 import { EVENTS, kindLabel, countByKind, kindsByCount } from './events.js';
 import { GEO_EVENTS } from './geo-events.js';
+import { buildPlaceCatalog } from './place-catalog.js';
 import { evSpec, mountEmbedCard, mdBold } from './knowledge.js';
 // 形状与配色一律复用泳道图那一套：同一个库，事件的红三角在哪一页都得是红三角，
 // 政权的色槽在哪一页都得是同一槽（slotVar 与 dynastyColorSlots 即那张色表）
@@ -40,8 +50,7 @@ import { cardPics } from './pics-own-cards.js';
 import { PLACES, membersOf, PLACE_END, PLACE_MIN } from './places.js';
 import { mountThemeToggle } from './theme.js';
 import { lineBadgeSpec } from './line-badge.js';
-import { GEO_STATS } from './geo-stats.js';
-import { syncCounts } from './counts.js';
+import { mountSib } from './sib-nav.js';
 
 const $ = (id) => document.getElementById(id);
 const host = $('place');
@@ -50,6 +59,51 @@ const host = $('place');
 
 const KEY = new URLSearchParams(location.search).get('key');
 const PLACE = KEY ? PLACES[KEY] : null;
+
+/* ── 出处的显隐 ───────────────────────────────────────────────────────── */
+// 出处**不删、默认收**（去 clutter 案 §一.6、库主拍板④）。为什么用节点自己的
+// `hidden` 而不是像 shell.js 那样挂一个 class 到容器上：本页的出处散在两处
+// （段头 .plc-seg-s、总结卡 .plc-sum-src），而段头的「¶」要能单独开一段——
+// 一段开着、别的收着这个态，class 开关表达不了，节点自报最直白。
+// 键名与 shell.js 的 il.* 一族同族，只管这一页。
+const SRC_KEY = 'il.src.place';
+let srcOn = false;
+try { srcOn = localStorage.getItem(SRC_KEY) === '1'; } catch { /* 隐私模式 */ }
+
+/** 建一个出处节点，按当前总开关定初始显隐（draw() 重画时新节点自动跟上）。 */
+function srcNode(tag, cls, txt) {
+  // h() 走 setAttribute，`hidden: false` 会写成 hidden="false" 而 HTML 照样藏起来；
+  // 故显隐一律走属性节点的 .hidden 属性，不进 h() 的 attrs
+  const n = h(tag, { class: cls, text: txt });
+  n.hidden = !srcOn;
+  return n;
+}
+
+/** 段头那颗极小的「¶」：示意这一段有出处，点它单独开合这一段。 */
+function pilcrow(node) {
+  const b = h('button', {
+    class: 'linkish', type: 'button',
+    style: 'font-size:.72rem;line-height:1;padding:0 3px;color:var(--muted)',
+    title: '出处（点开只开这一段；页首「出处」钮全开全关）',
+    'aria-label': '这一段的出处', 'aria-expanded': String(srcOn), text: '¶',
+    onclick: (e) => {
+      e.stopPropagation();
+      node.hidden = !node.hidden;
+      b.setAttribute('aria-expanded', String(!node.hidden));
+    },
+  });
+  return b;
+}
+
+/** 总开关：全页出处一齐开合，并把每颗「¶」的 aria-expanded 拨回同一态。 */
+function setSrcAll(on) {
+  srcOn = on;
+  try { localStorage.setItem(SRC_KEY, on ? '1' : '0'); } catch { /* 隐私模式 */ }
+  for (const n of document.querySelectorAll('.plc-seg-s, .plc-sum-src')) n.hidden = !on;
+  for (const b of document.querySelectorAll('.plc-seg-h .linkish, .plc-sum-t .linkish')) {
+    b.setAttribute('aria-expanded', String(on));
+  }
+}
 
 /* ── 分档 ─────────────────────────────────────────────────────────────── */
 // 一等：r===1，或列在精选里（PICKS）——库主定的「curation 与算法分开」：
@@ -293,10 +347,13 @@ function foldRow(ev, dock) {
 function sumCard(seg, cards) {
   const c = cards[seg.t];
   if (!c || !c.p || !c.p.length) return null;
+  // 出处默认收（§一.6）：卡题末缀一颗「¶」，与段头同一副手感
+  const src = c.src && c.src.length
+    ? srcNode('p', 'plc-sum-src small', '出处：' + c.src.join('；')) : null;
   return h('section', { class: 'plc-sum' }, [
-    h('h3', { class: 'plc-sum-t', text: seg.t }),
+    h('h3', { class: 'plc-sum-t' }, [seg.t, src ? pilcrow(src) : null]),
     ...c.p.map((s) => h('p', { class: 'plc-sum-p' }, [richText(s)])),
-    c.src && c.src.length ? h('p', { class: 'plc-sum-src small', text: '出处：' + c.src.join('；') }) : null,
+    src,
   ]);
 }
 
@@ -307,6 +364,9 @@ function sumCard(seg, cards) {
 // 2026-09-04 归并到 js/events-ui.js（SSOT 卷 D11）：本地只剩「数本地」与本页的字形尺寸。
 function localLegend(members, off, onChange) {
   const counts = countByKind(members);
+  // 「本地类型构成（点色标筛选，双击只看一类）」那行小字撤了（去 clutter 案 D-B3）：
+  // 操作句归就地提示，不占正文——两种手势现在都写在芯片自己的 title 里，
+  // 正本在 events-ui.js 那一句（四家同变），本页不另抄一份
   return chipRow({ counts, off, glyph: kindGlyph, onChange, owner: 'place' });
 }
 
@@ -329,16 +389,19 @@ async function renderPlace(place) {
   const tiers = { 1: 0, 2: 0, 3: 0 };
   for (const ev of members) tiers[tierOf(ev, PICKS)]++;
 
-  // 顶部统计一句：全自动，随库长。数字写死的话每次增补都会再错一次（counts.js 同理）
+  // 顶部统计一句：全自动，随库长。数字写死的话每次增补都会再错一次（counts.js 同理）。
+  // 常显只留三格「多少条 · 从哪年到哪年 · 几个转折」；分档口径、归地半径与首尾两条
+  // 的条名进 title（去 clutter 案 D-B2：数字与口径挂到它说明的那个元件上）
   const first = members[0], last = members[members.length - 1];
+  const brief = `本地共 ${members.length} 条`;
+  const tip = `一等 ${tiers[1]}、二等 ${tiers[2]}、三等 ${tiers[3]}：一等是 r=1 或人写的精选，二三等照 r 分。`
+    + `凡本库条目的落点地名对得上${place.name}，或坐标在城中心 ${place.radiusKm} 公里内，即算这座城的一条。`
+    + (members.length ? `最早的是${first.n}，最晚的是${last.n}。` : '');
   const tally = h('p', { class: 'small plc-tally' }, [
-    h('strong', { text: `本地共 ${members.length} 条` }),
+    h('strong', { class: 'has-tip', title: tip, 'aria-label': `${brief}。${tip}`, text: brief }),
     h('span', {
-      text: `：一等 ${tiers[1]}、二等 ${tiers[2]}、三等 ${tiers[3]}；`
-        + (members.length
-          ? `最早 ${fmtYearAxis(first.y)}（${first.n}），最晚 ${fmtYearAxis(last.y)}（${last.n}）。`
-          : '（本地暂无条目。）')
-        + (TURNS.length ? `轴按 ${TURNS.length} 个转折分段。` : '换手表未到，轴暂按时代分段。'),
+      text: (members.length ? ` · ${fmtYearAxis(first.y)} – ${fmtYearAxis(last.y)}` : ' · 本地暂无条目')
+        + (TURNS.length ? ` · ${TURNS.length} 个转折` : ' · 换手表未到，轴暂按时代分段'),
     }),
   ]);
 
@@ -350,32 +413,105 @@ async function renderPlace(place) {
     // 留着它开着，读者再点同一条时会先关一次（坞记着「当前是它」），像是点不动
     dock.hide();
     legendWrap.replaceChildren(
-      h('p', { class: 'muted small', style: 'margin:10px 0 4px', text: '本地类型构成（点色标筛选，双击只看一类）' }),
       localLegend(members, off, (next) => { off.clear(); for (const k of next) off.add(k); draw(); }),
     );
     const shown = members.filter((ev) => !off.has(ev.k));
-    lineBox.replaceChildren(...buildSegs(TURNS, shown).map((seg) => segNode(seg, { PICKS, OVERRIDES, CARDS, dock })));
+    lineBox.replaceChildren(...packSegs(buildSegs(TURNS, shown))
+      .map((x) => (x.band ? bandNode(x.band) : segNode(x.seg, { PICKS, OVERRIDES, CARDS, dock }))));
   };
+
+  // 页级口径块：**放第一张图之上**（去 clutter 案 §一.2）。从前它压在四十来段之后的页尾，
+  // 读者滚完全页才见口径，等于没说
+  const how = h('details', { class: 'notes' }, [
+    h('summary', {}, [
+      h('strong', { text: '这条线是怎么抽出来的' }),
+      h('span', { class: 'sm-sep', text: '·' }),
+      '现藏地不算',
+    ]),
+    h('p', {}, [
+      `凡本库条目的落点落在${place.name}——地名对得上，或坐标在城中心 ${place.radiusKm} 公里内——即算这座城的一条。`,
+      h('strong', { text: '但现藏地不算：' }),
+      '藏在这里的东西未必是这里的事。'
+      + '造、发（出土）、址、战、行、都、迁、灾、显、说都算，摹本与复制件同现藏一并不计。',
+    ]),
+    h('p', {}, [
+      h('strong', { text: '轴不按年等距。' }),
+      '段界是政权换手（人核过的换手表）或时代（换手表未到时的兜底），段与段之间不成比例；'
+      + '空段照画——空着的那一段，是史料里没记这座城，不是这座城没有事。',
+    ]),
+  ]);
+
+  // 「出处」总开关：与页首 h2 同一行（.desc-toggle 自带 margin-left:auto 顶到最右）。
+  // 只借 shell.js 那颗钮的样子，不借它的 JS——本页不载 shell
+  const srcBtn = h('button', {
+    class: 'chip desc-toggle', type: 'button', 'aria-pressed': String(srcOn),
+    title: '换手表与总结卡的出处。默认收起，段头的「¶」可只开一段',
+    text: '出处',
+    onclick: () => {
+      setSrcAll(srcBtn.getAttribute('aria-pressed') !== 'true');
+      srcBtn.setAttribute('aria-pressed', String(srcOn));
+    },
+  });
+  // 换城走 📍 目录浮层（与全景页、舆图页顶栏那颗钮同一件）：地方线没有索引页，
+  // 也不在页首互链里——它同故事线一样从页内进（库主 2026-09-08）
+  const back = h('button', { class: 'chip', type: 'button', text: '📍 换一座城', onclick: () => pcat.open() });
+
   draw();
 
+  // 节题独占一行、工具另起一行（库主 2026-09-08 追加 §六.2），全景页同一套。
+  // 从前三件挤在一条 flex 行上：1440 宽三者同行，375 宽却折成三行——h2 一行、
+  // 「← 换一座城」一行、「出处」被 .desc-toggle 的 margin-left:auto 顶到第三行
+  // 右缘孤零零挂着。宽窄两副样子正是这条拍板要消灭的那种。收进显式的
+  // `.sec-tools`（flex-basis:100%）之后恒定两行，两屏同构
   host.replaceChildren(
-    h('div', { class: 'head' }, [h('h2', { text: `${place.name} · 一条竖轴上的大事记` })]),
-    tally, legendWrap, lineBox,
-    h('div', { class: 'notice', style: 'margin-top:16px' }, [
-      h('p', { style: 'margin:0' }, [
-        h('strong', { text: '这条线是怎么抽出来的。' }),
-        `凡本库条目的落点落在${place.name}——地名对得上，或坐标在城中心 ${place.radiusKm} 公里内——即算这座城的一条。`,
-        h('strong', { text: '但现藏地不算：' }),
-        '藏在这里的东西未必是这里的事，否则国博、故宫所在地会把全国的文物吞进来。'
-        + '造、发（出土）、址、战、行、都、迁、灾、显、说都算，摹本与复制件同现藏一并不计。',
-      ]),
-      h('p', { style: 'margin:6px 0 0' }, [
-        h('strong', { text: '轴不按年等距。' }),
-        '段界是政权换手（人核过的换手表）或时代（换手表未到时的兜底），段与段之间不成比例；'
-        + '空段照画——空着的那一段，是史料里没记这座城，不是这座城没有事。',
-      ]),
+    h('div', { class: 'head sec-head' }, [
+      h('h2', { text: `${place.name} · 一条竖轴上的大事记` }),
+      h('div', { class: 'sec-tools' }, [back, srcBtn]),
     ]),
+    tally, how, legendWrap, lineBox,
   );
+}
+
+/** 段的年份字面。只管一年的段（同年再易手）报一个年份，不写「1644 – 1644」。 */
+const segYears = (y, y2) => (y2 > y ? `${fmtYearAxis(y)} – ${fmtYearAxis(y2)}` : fmtYearAxis(y));
+
+/**
+ * 连着的机器续色空段并成一条细带（库主拍板③）。**只并机器的复读**：
+ * `auto`（天下易主／易代之际续出来的段）且段内一条都没有，且连着两段以上。
+ * 人写过的段一律不并，哪怕它也空着——那一行有段题、有按语，是内容。
+ * 返回 `[{seg}|{band:[seg,…]}]`，渲染时一带出一节，轴上仍占一格。
+ */
+function packSegs(segs) {
+  const out = [];
+  const mergeable = (s) => s.auto && s.items.length === 0;
+  for (let i = 0; i < segs.length; i++) {
+    if (!mergeable(segs[i])) { out.push({ seg: segs[i] }); continue; }
+    let j = i;
+    while (j + 1 < segs.length && mergeable(segs[j + 1])) j++;
+    if (j > i) { out.push({ band: segs.slice(i, j + 1) }); i = j; }
+    else out.push({ seg: segs[i] });
+  }
+  return out;
+}
+
+/** 一条细带：年跨度 ＋ 并列的政权丸子 ＋「N 段无本地条目」。段题与按语都不写。 */
+function bandNode(run) {
+  const why = '天下易主或易代之际，本地未另记换手：政权带按法统承接续色，段题空着。'
+    + `这 ${run.length} 段本库没有这座城的条目。`;
+  const pills = [];
+  for (const sg of run) {
+    const d = sg.who ? DYN_MAP.get(sg.who) : null;
+    // 无主的空窗（秦亡到汉兴）没有丸子可摆——它在「N 段」的数里，不硬派给谁
+    if (d) pills.push(h('span', { class: 'plc-seg-d', style: `--seg: var(${sg.color})`, text: d.name }));
+  }
+  const head = h('div', { class: 'plc-seg-h plc-seg-auto' }, [
+    h('span', { class: 'plc-seg-y has-tip', title: why, 'aria-label': why,
+      text: segYears(run[0].y, run[run.length - 1].y2) }),
+    ...pills,
+    h('span', { class: 'plc-seg-n small', text: `${run.length} 段无本地条目` }),
+  ]);
+  // 带色取中性灰：一带跨好几朝，轴上再挑一朝的颜色代表它就是撒谎
+  return h('section', { class: 'plc-seg plc-seg-void plc-seg-band', style: '--seg: var(--lane-other)' }, [head]);
 }
 
 /** 一段：段头（年范围、题、政权、都城身份、按语）＋总结卡＋卡阵＋折叠的三等条。 */
@@ -383,15 +519,24 @@ function segNode(seg, ctx) {
   const { PICKS, OVERRIDES, CARDS, dock } = ctx;
   const dyn = seg.who ? DYN_MAP.get(seg.who) : null;
   const cap = seg.status === '都' || seg.status === '陪都';
+  // 出处默认收（§一.6）：有出处的段头缀一颗「¶」，点它只开这一段
+  const src = seg.src ? srcNode('span', 'plc-seg-s small', `（${seg.src}）`) : null;
+  // 机器续色段那句按语（「天下易主，本地未另记换手」）是**口径不是信息**，
+  // 十五段各说一遍。收进年份的 title，段头只留年份＋政权丸子（去 clutter 案 D-B7）
   const head = h('div', { class: 'plc-seg-h' + (seg.auto ? ' plc-seg-auto' : '') }, [
-    // 只管一年的段（同年再易手）报一个年份，不写「1644 – 1644」
-    h('span', { class: 'plc-seg-y', text: seg.y2 > seg.y ? `${fmtYearAxis(seg.y)} – ${fmtYearAxis(seg.y2)}` : fmtYearAxis(seg.y) }),
+    h('span', {
+      class: 'plc-seg-y' + (seg.auto && seg.note ? ' has-tip' : ''),
+      title: seg.auto && seg.note ? seg.note : null,
+      'aria-label': seg.auto && seg.note ? `${segYears(seg.y, seg.y2)}：${seg.note}` : null,
+      text: segYears(seg.y, seg.y2),
+    }),
     h('span', { class: 'plc-seg-t', text: seg.t }),
     dyn ? h('span', { class: 'plc-seg-d', text: dyn.name }) : null,
     // 都城期加亮：这座城当没当过首都，是地方线上最要紧的一条身份线索
     seg.status && seg.status !== '非都' ? h('span', { class: 'plc-seg-cap', text: seg.status }) : null,
-    seg.note ? h('span', { class: 'plc-seg-n small', text: seg.note }) : null,
-    seg.src ? h('span', { class: 'plc-seg-s small', text: `（${seg.src}）` }) : null,
+    seg.note && !seg.auto ? h('span', { class: 'plc-seg-n small', text: seg.note }) : null,
+    src ? pilcrow(src) : null,
+    src,
   ]);
 
   // 一等左右交错、二等一律贴右：交错是给一等的排场，二等挤在同一侧成一列，
@@ -427,47 +572,35 @@ function segNode(seg, ctx) {
   }, [head, sum, empty, cards, fold]);
 }
 
-/* ── 页面：索引 ───────────────────────────────────────────────────────── */
-// 够格才列（成员 ≥ PLACE_MIN 条），按条数降序；不够格的地名不列——
-// 一条只有七条大事的「地方线」不是线，是一张单子，读者该回时光舆图去看点。
-function renderIndex(badKey) {
-  const rows = Object.values(PLACES).map((p) => {
-    const ms = membersOf(p, EVENTS, GEO_EVENTS);
-    const kinds = countByKind(ms);
-    return { p, ms, kinds };
-  }).filter((r) => r.ms.length >= PLACE_MIN).sort((a, b) => b.ms.length - a.ms.length);
-
-  // replaceChildren 把 null 当字符串「null」写进页面（库主 2026-09-08 截图实见），故先把空项滤掉
+/* ── 页面：不带城名／城名写错 ────────────────────────────────────────── */
+// 地方线没有索引页（库主 2026-09-08：「这个页面也没加什么。故事线都没开页面」）：
+// 不带 key 或 key 写错时，就地弹 📍 目录浮层——与全景页、舆图页顶栏那颗钮开的是同一件，
+// 挑城的地方只有这一处。key 写错与不带 key 是两回事：写错要说出来，否则读者会以为这个地方一条都没有
+function renderFallback(badKey) {
   host.replaceChildren(...[
-    h('div', { class: 'head' }, [h('h2', { text: '选一座城' })]),
-    // key 写错与不带 key 是两回事：写错要说出来，否则读者会以为这个地方一条都没有
-    badKey ? h('p', { class: 'notice warn', text: `没有「${badKey}」这条地方线，眼下有线的城列在下面。` }) : null,
-    // 门槛与「为什么不够的城不列」是口径，不是读者要读的话（去 clutter 规矩）：只留在 title 里
-    h('p', { class: 'small', style: 'color:var(--text-2)', text: '按条数排。',
-      title: `成员满 ${PLACE_MIN} 条的城才成线；不够的城，其条目在时光舆图上各有落点。` }),
-    rows.length ? h('div', { class: 'plc-index' }, rows.map(({ p, ms, kinds }) => h('a', {
-      class: 'plc-index-i', href: `place.html?key=${encodeURIComponent(p.key)}`,
-    }, [
-      h('span', { class: 'plc-index-n', text: p.name }),
-      h('span', { class: 'plc-index-c', text: `${ms.length} 条` }),
-      h('span', { class: 'plc-index-y small', text: `${fmtYearAxis(ms[0].y)} – ${fmtYearAxis(ms[ms.length - 1].y)}` }),
-      h('span', { class: 'plc-index-k small' }, kindsByCount(kinds).slice(0, 4)
-        .map((k) => h('span', { class: 'plc-index-kk' }, [kindGlyph(k), h('span', { text: `${kindLabel(k)} ${kinds[k]}` })]))),
-    ]))) : h('p', { class: 'muted small', text: '暂无够格开线的地方。' }),
+    badKey ? h('p', { class: 'notice warn', text: `没有「${badKey}」这条地方线。` }) : null,
+    h('p', { class: 'small' }, [
+      h('button', { class: 'chip', type: 'button', text: '📍 选一座城', onclick: () => pcat.open() }),
+    ]),
   ].filter(Boolean));
+  pcat.open();
 }
 
 /* ── 起 ───────────────────────────────────────────────────────────────── */
-if (PLACE) renderPlace(PLACE);
-else renderIndex(KEY);
-
-// 页首那几个数字由数据现算（counts.js 的唯一实现）：写死的数字每次增补都会再错一次
-syncCounts({ ev: EVENTS.length, dyn: DYNASTIES.length, geo: GEO_STATS.ev });
-
+// 页首两件事赶在渲染之前办完，免得页首先空一拍再跳版。
 // 主题按钮：本页不走 shell.js 的渲染循环，走 theme.js 那一份（读存值、搬出 lede、持久化）。
-// 家安在标题行末：本页没有「设置」块，留在 lede 里会被那条 display:none 藏一辈子（2026-09-07 库主实测缺开关）
+// 家安在标题行末：本页没有「设置」块，留在 lede 里会被那条 display:none 藏一辈子
+// （2026-09-07 库主实测缺开关）。**排在 mountSib 之前**——互链一行靠 margin-left:auto
+// 顶到最右，窄屏又整行独占；按钮排在它后面会被挤成第三行
 {
   const h1 = document.getElementById('plc-h1');
-  const home = h1 ? h1.parentNode : null;
-  mountThemeToggle(home);
+  mountThemeToggle(h1 ? h1.parentNode : null);
 }
+// 页首互链一行：字面与释义的正本在 js/sib-nav.js，五页共用一份（去 clutter 案 §一.1）。
+// 从前这里是一段 64 字散文，替另外三页各写了一句 lede；现在名字自明，释义进 title
+mountSib();
+// 📍 目录浮层：单城页「换一座城」与无城名兜底共用这一件
+const pcat = buildPlaceCatalog();
+
+if (PLACE) renderPlace(PLACE);
+else renderFallback(KEY);
