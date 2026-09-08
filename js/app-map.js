@@ -42,6 +42,7 @@ import { evSpec, mountEmbedCard, mdBold } from './knowledge.js';
 import { buildLineCatalog, lineFromHash, lineHash } from './line-catalog.js';
 import { buildPlaceCatalog } from './place-catalog.js';
 import { PLACES, placeOfLoc, membersOf } from './places.js';
+import { mountThemeToggle } from './theme.js';
 import { TERR } from './territories.js';
 import { syncCounts } from './counts.js';
 import { LINES } from './lines.js';
@@ -1579,16 +1580,9 @@ function fillCoverage() {
 
 syncCounts({ ev: EVENTS.length, geo: EV_ROWS.length, dyn: DYN_ROWS.length });
 
-// 主题按钮。本页不走 shell.js（没有筛选、章节、渲染循环要它管），故这几行是自己的
-const tt = $('theme-toggle');
-tt.addEventListener('click', () => {
-  const root = document.documentElement;
-  const cur = root.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : cur === 'light' ? 'dark'
-    : (matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark');
-  root.setAttribute('data-theme', next);
-  tt.textContent = next === 'dark' ? '☀ 浅色' : '🌙 深色';
-});
+// 主题按钮。本页不走 shell.js，走 theme.js 那一份：读存值、把按钮搬出 lede 进「设置」块、持久化。
+// 原先只绑点击、没搬家，按钮一直被 .lede .theme-toggle{display:none} 藏着（库主 2026-09-07 实测舆图「设置」缺日夜开关）
+mountThemeToggle(document.querySelector('.pl-settings'), { onChange: () => dispatchEvent(new Event('resize')) });
 
 /* ── 地图走法：同一条故事线，在地图上走 ─────────────────────────────
    与时间轴的走法（tour.js）**共用同一份数据**：站表在 js/lines.js、
