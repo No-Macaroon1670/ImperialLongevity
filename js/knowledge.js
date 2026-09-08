@@ -403,8 +403,13 @@ function mkCard(sideClass) {
   // 最后才是出门的链接。无边时整栏 display:none，不留空壳（fillCard → renderRel）
   const rel = h('div', { class: 'kp-rel' });
   rel.style.display = 'none';
+  // img2 紧跟 img（库主 2026-09-08 令）：第二张是主图的语境／细节，
+  // 从前它排在出处行之后、落到卡底右下角——读者读完摘要、链接、出处，
+  // 末了在角上撞见一张跟正文隔了三栏的小图，读不出「这是同一件东西的另一面」。
+  // 落位样式在 styles.css `.kp-thumb2` 一族（嵌入卡两栏归第 1 列主图之下），
+  // 两处必须同改：只挪 DOM 不改 CSS，嵌入卡里它会跳去右栏第一处空格
   const el = h('div', { class: `kp ${sideClass}` }, [
-    close, img, head, title, lines, ext, rel, h('div', { class: 'kp-links' }, [wiki, baidu, museum, wsrc, h('span', { class: 'kp-vids' }, [yt, bili])]), src, img2,
+    close, img, img2, head, title, lines, ext, rel, h('div', { class: 'kp-links' }, [wiki, baidu, museum, wsrc, h('span', { class: 'kp-vids' }, [yt, bili])]), src,
   ]);
   return { el, img, img2, head, title, lines, ext, rel, wiki, baidu, museum, wsrc, yt, bili, close, src, srcTxt, srcRel };
 }

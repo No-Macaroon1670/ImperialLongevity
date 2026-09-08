@@ -31,18 +31,39 @@ const LAST = new Map();
  *                 （治世·中兴在泳道是皇帝格外的虚线外套，竖河没有这一层）。
  * @param onChange (nextOff: Set) => void，由调用方决定是写 evOff＋setOpt 还是自己 draw()。
  * @param owner    这一排的身份，双击窗口按它分账。同一处图例重绘前后须给同一个值。
+ * @param titleOf  可选。`(k, isOff) => string`，这一类芯片的 tooltip 全文。
+ *                 缺省只说手势（「点按隐藏这一类；双击只看这一类」）。
+ *
+ *                 2026-09-08 去 clutter 案 §一.3 开的口子：库主令「数字与口径
+ *                 dynamically place in category tooltip」，而**各页的口径不是一句话**
+ *                 ——舆图要「库内 255 条，图上 251 条（98%）」，地方页要「本地 N 条
+ *                 ／全库 M 条」，泳道要别的。故本模块不认得那些数，只收一个回调：
+ *                 谁有数谁自己编那句话，手势句仍由本模块统一缀在后面（四家同变的
+ *                 好处不能丢）。给了 titleOf 的芯片自动带上 `.has-tip` 那道虚下划线
+ *                 把手——缺省那句是操作提示不是口径，不配把手（把手的约定见
+ *                 docs/desk/declutter-shared-howto-20260908.md §5）。
  * @returns 芯片行节点（div.ev-legend）
  */
-export function eventLegend({ counts, off, glyph, skip = [], onChange, owner = 'main' }) {
+export function eventLegend({ counts, off, glyph, skip = [], onChange, owner = 'main', titleOf }) {
   const row = h('div', { class: 'ev-legend' });
   // 色标按词条数降序排（正本 events.kindsByCount，地图页与地方页同则）。
   // **注册表驱动**：宇宙取 EVENT_KINDS 的定义序，未登记的新类整类不出现
   const order = kindsByCount(counts, { universe: Object.keys(EVENT_KINDS), skip });
   for (const k of order) {
+    // 手势句四家同一份（「双击只看这一类」此前只有舆图页的 chip 写着，别三家
+    // 藏着这手势不说）；口径句由调用方的 titleOf 供，缺省没有
+    const gesture = `${off.has(k) ? '点按显示这一类' : '点按隐藏这一类'}；双击只看这一类`;
+    const tip = titleOf ? titleOf(k, off.has(k)) : '';
+    const txt = tip ? `${tip}。${gesture}` : gesture;
     const chip = h('button', {
-      type: 'button', class: 'chip ev-chip' + (off.has(k) ? ' off' : ''),
+      type: 'button',
+      class: `chip ev-chip${off.has(k) ? ' off' : ''}${tip ? ' has-tip' : ''}`,
       'aria-pressed': String(!off.has(k)),
-      title: off.has(k) ? '点按显示这一类' : '点按隐藏这一类',
+      title: txt,
+      // 缺省不写 aria-label：芯片本来的可及名就是它显示的「文物 251」，覆盖掉反而丢字。
+      // 给了 titleOf 才写——**约定 tip 以类名打头**（「文物：库内 255 条…」），
+      // 覆盖之后名字仍在
+      'aria-label': tip ? txt : undefined,
       onclick: () => {
         const last = LAST.get(owner) || { k: null, t: 0 };
         const now = Date.now();

@@ -4,6 +4,13 @@ import { EMPERORS, DYNASTIES, DYN_STATS, GROUPINGS, COVARIATES } from './data.js
 import { ERAS } from './dynasties.js';
 import { describe, fmtP } from './stats.js';
 
+// 页首互链一行（2026-09-08 去 clutter 案 §一.1）。件在零依赖叶子 js/sib-nav.js——
+// 舆图页与地方线页不载 shell（它 import 整个 data.js），故实现放叶子里，
+// 这里只 re-export 一份给统计页与全景页：五页拿到的是同一张登记表。
+// 注意 `export { X } from` **不把名字带进本模块作用域**（SSOT 卷工序坑），
+// 本模块自己不调它，页面各自 import { mountSib } 后调用。
+export { mountSib, SIB_PAGES } from './sib-nav.js';
+
 // ── 状态 ─────────────────────────────────────────────────────────────────
 const S = {
   unified: new Set([1, 0]),                 // 大一统 / 分裂
@@ -68,8 +75,13 @@ function filtered() {
 }
 
 // ── 一级过滤器 UI ────────────────────────────────────────────────────────
-function chip(label, active, onClick, dotColor) {
+// tip：可选的口径 tooltip（2026-09-08 去 clutter 案 §一.3）。从前这类口径写在
+// 页首那块 258 字 .notice 里（「0＝无明确记载，不是确证不存在」这类），读者读到
+// 时还没见着 chip，见着 chip 时又早忘了；挂到它说明的那颗按钮上才配得起来。
+// aria-label 与 title 同一份字，虚下划线把手由 .has-tip 给（触屏下 CSS 自动撤把手）
+function chip(label, active, onClick, dotColor, tip) {
   const b = h('button', { class: 'chip', 'aria-pressed': String(active), onclick: onClick });
+  if (tip) { b.title = tip; b.setAttribute('aria-label', `${label}：${tip}`); b.classList.add('has-tip'); }
   if (dotColor) { const d = h('span', { class: 'il-dot' }); d.style.background = dotColor; b.appendChild(d); }
   // 勾号**常驻占位**、未选态只隐形（库主实测案 2026-08-31：点掉大事记一二三等，
   // ✓ 进出让按钮忽宽忽窄，控件行一缩、同容器的词条卡跟着漂）——宽度恒定即无重排
@@ -140,7 +152,8 @@ function buildFilters(host) {
   const g3 = h('div', { class: 'fgroup' }, [h('span', { class: 'flabel', text: '仅限' })]);
   g3.appendChild(chip('开国皇帝', S.onlyFounder, () => { S.onlyFounder = !S.onlyFounder; render(); }));
   g3.appendChild(chip('亡国之君', S.onlyLast, () => { S.onlyLast = !S.onlyLast; render(); }));
-  g3.appendChild(chip('丹药组', S.onlyAlchemy, () => { S.onlyAlchemy = !S.onlyAlchemy; render(); }));
+  g3.appendChild(chip('丹药组', S.onlyAlchemy, () => { S.onlyAlchemy = !S.onlyAlchemy; render(); }, null,
+    '有明确服丹记载者。留空一律读作「无明确记载」而非「确证不曾服食」——暴卒的皇帝更容易被史官追记服丹之事'));
   row.appendChild(g3);
 
   const g4 = h('div', { class: 'fgroup' }, [h('span', { class: 'flabel', text: '时代' })]);
@@ -156,7 +169,7 @@ function buildFilters(host) {
       if (on) preQ.forEach((k) => S.eras.add(k));
       else preQ.forEach((k) => S.eras.delete(k));
       render();
-    }));
+    }, null, '一键滤除先秦：先秦年代分三层，夏与商前期是传统系年铺入的低置信坐标；点它即得秦以降的干净样本'));
   }
   row.appendChild(g4);
 
@@ -201,12 +214,17 @@ function buildFilters(host) {
 
 // ── 版块定义 ─────────────────────────────────────────────────────────────
 // when：可选谓词，仅在当前状态满足时才显示该控件（如泳道专属选项）
-const sel = (key, label, options, when) => ({ type: 'select', key, label, options, when });
+// opts.title：挂在这颗控件上的口径 tooltip（2026-09-08 拍板⑦）。缺省无，行为不变
+const sel = (key, label, options, when, opts = {}) =>
+  ({ type: 'select', key, label, options, when, title: opts.title });
 const tog = (key, label, when) => ({ type: 'toggle', key, label, when });
 // 只有两三个选项时用分段器而非下拉：下拉把另一个选项藏起来，读者得先点开
 // 才知道有得选，换一次要两下；分段器两个都摆在明面上，换一次一下。
 let themeBtnRef = null;   // 深色开关的活节点：谁建「设置」块谁把它接走（2026-08-22 统一令）
-const seg = (key, label, options, when) => ({ type: 'seg', key, label, options, when });
+// opts.short：{ 值 → 窄屏短字面 }（库主 2026-09-08：「竖向河流」→「竖」）；
+// opts.labelHidden：组名只留给读屏（去「视图」二字）。两项缺省皆无，行为不变
+const seg = (key, label, options, when, opts = {}) =>
+  ({ type: 'seg', key, label, options, when, short: opts.short, labelHidden: opts.labelHidden });
 // 连续量用滑杆。时间缩放本来给的是三档预设，可「多宽算合适」取决于屏宽与
 // 你正在看哪一段，三档常常没有一档正好；滑杆让读者自己定，并且看得见量纲。
 const rng = (key, label, { min, max, step = 1, fmt }, when) =>
@@ -281,18 +299,37 @@ function buildControls(sec) {
         S[c.key] = /^-?\d+$/.test(raw) ? +raw : raw;
         render();
       });
-      wrap.appendChild(h('label', {}, [h('span', { text: c.label }), s]));
+      // 可选口径 tooltip（2026-09-08 拍板⑦）：从前口径句写在 .desc 正文里
+      // （「襁褓即位者会让低龄段风险集只剩一两人」这类），现在挂到它说明的那个
+      // 控件上。登记在章节表里比事后 querySelector 摸 DOM 诚实——render() 每次
+      // 重建控件行，摸 DOM 的补法要跟着重跑一遍。虚线把手由 .has-tip 给
+      const selLab = h('label', {}, [h('span', { text: c.label }), s]);
+      if (c.title) { selLab.title = c.title; selLab.classList.add('has-tip'); }
+      wrap.appendChild(selLab);
     } else if (c.type === 'seg') {
       const boxSeg = h('div', { class: 'segctl', role: 'radiogroup', 'aria-label': c.label });
       for (const [v, lab] of c.options) {
         const on = String(S[c.key]) === String(v);
-        boxSeg.appendChild(h('button', {
+        const b = h('button', {
           type: 'button', class: `seg${on ? ' on' : ''}`, role: 'radio', 'aria-checked': String(on),
           text: lab,
           onclick: () => { S[c.key] = /^-?\d+$/.test(String(v)) ? +v : v; render(); },
-        }));
+        });
+        // 窄屏短字面（库主 2026-09-08：「竖向河流」→「竖」，触摸区不缩）。
+        // 只写属性、显隐全交给 CSS 的 @media——JS 不该知道断点在哪儿，
+        // 也免得转屏时要重跑一遍。全名仍在 textContent 与 aria 里，读屏照旧
+        const short = c.short && c.short[String(v)];
+        if (short) b.setAttribute('data-short', short);
+        // 药丸自己的全名：radiogroup 的 aria-label 是组名（「视图」），
+        // 组名藏起来之后，各药丸得自报全名，否则读屏只剩一个「竖」字
+        if (short) b.setAttribute('aria-label', lab);
+        boxSeg.appendChild(b);
       }
-      wrap.appendChild(h('label', { class: 'seg-label' }, [h('span', { text: c.label }), boxSeg]));
+      // labelHidden：字面只留给读屏（库主 2026-09-08：去「视图」二字）。
+      // 不删 c.label——radiogroup 的 aria-label 还要用它报组名
+      const segLab = h('label', { class: `seg-label${c.labelHidden ? ' lab-hidden' : ''}` },
+        [h('span', { text: c.label }), boxSeg]);
+      wrap.appendChild(segLab);
     } else if (c.type === 'range') {
       const out = h('span', { class: 'rng-val', text: c.fmt(S[c.key]) });
       const r = h('input', {
@@ -346,17 +383,25 @@ function renderHero(host, list) {
   const oldest = list.filter((e) => e.lifespan !== null).sort((a, b) => b.lifespan - a.lifespan)[0];
   const stats = [
     { v: String(list.length), l: '收录君主', s: `其中 ${ages.length} 位生卒年可考` },
-    { v: st.n ? st.mean.toFixed(1) : '—', l: '平均享年（岁）', s: st.n ? `中位数 ${st.median.toFixed(0)}` : '' },
+    { v: st.n ? st.mean.toFixed(1) : '—', l: '平均享年（岁）', s: st.n ? `中位数 ${st.median.toFixed(0)}` : '',
+      t: '公历实足年龄，比中文史料常见的「虚岁」少约 1 岁；仅有年份而无月日者按年中估算，误差 ±1 岁' },
     { v: withCause.length ? `${((vio / withCause.length) * 100).toFixed(0)}%` : '—', l: '非正常死亡比例', s: `${vio} / ${withCause.length} 位死因可判` },
     { v: rst.n ? rst.median.toFixed(1) : '—', l: '中位在位年数', s: rst.n ? `均值 ${rst.mean.toFixed(1)}` : '' },
     { v: oldest ? String(Math.floor(oldest.lifespan)) : '—', l: '最长寿（岁）', s: oldest ? oldest.temple : '' },
   ];
   for (const s of stats) {
-    host.appendChild(h('div', { class: 'stat' }, [
+    const box = h('div', { class: 'stat' }, [
       h('div', { class: 'value', text: s.v }),
-      h('div', { class: 'label', text: s.l }),
+      // s.t：这一格的口径 tooltip，只画在标签那一行上（数字本身不该带虚线）。
+      // aria-label 与 title 同一份字（本次改造的通则，见 .has-tip 头注与
+      // docs/desk/declutter-shared-howto-20260908.md §5）——从前这里只写了 title，
+      // 于是「平均享年」那格的「实足岁比虚岁少约 1 岁」读屏用户读不到，
+      // 而那正是方案 B1 指定要挂在这一格上的口径。h() 跳过 undefined，无 tip 的四格不变
+      h('div', { class: `label${s.t ? ' has-tip' : ''}`, text: s.l, title: s.t || undefined,
+        'aria-label': s.t ? `${s.l}：${s.t}` : undefined }),
       h('div', { class: 'sub', text: s.s }),
-    ]));
+    ]);
+    host.appendChild(box);
   }
 }
 

@@ -6,11 +6,9 @@
 // （styles.css 里同一段），本件只出行内容——两个浮层长得一样是故意的：
 // 读者在顶栏按下的两颗钮属于同一类动作（挑一条线走），开出来的东西不该两个样。
 //
-// **行内容与 place.html 的索引页逐字同源**：城名、N 条、起讫年、前四类计数，
-// 算法就是 `app-place.js` 的 renderIndex 那一段（membersOf → countByKind →
-// kindsByCount 取前四）。不共用一个函数是因为那边吐的是 place.html 版式的 DOM
-// （.plc-index-* 一族），这边要的是目录行；**共用的是算法所依的那三个原语**，
-// 数字对不上的风险因此落在原语上，不落在两份抄写上。
+// **这是挑城的唯一入口**：place.html 不带城名时也弹它（app-place.js 的 renderFallback），
+// 单城页「换一座城」也开它；索引页 2026-09-08 撤了（库主：地方线同故事线，从页内进，
+// 不在页首互链里）。行内容的算法＝ membersOf → countByKind → kindsByCount 取前四。
 //
 // 为什么 geo-events.js 是**动态** import：地方线的成员数要靠坐标半径才算得准
 // （见 places.js 的归地注），而那份数据 457KB，全景页今天一个字节都没有加载过。
@@ -47,9 +45,11 @@ export function buildPlaceCatalog() {
   x.setAttribute('aria-label', '关闭');
   x.addEventListener('click', close);
   head.append(ttl, x);
+  // 压成一句（去 clutter 案 D-C4 定案）：「轴按政权换手分段」在 place.html 的 lede
+  // 与互链一行「地方线」那条 title 里各说过一遍，浮层这里第三遍念它是白念；
+  // 「条目按分量挂在两侧」下一屏的卡阵自证。门槛数仍由 PLACE_MIN 现填，不写死
   const intro = h('p', 'lc-intro',
-    '一条地方线是站在一座城里看四千年：轴按政权换手分段，条目按分量挂在两侧。'
-    + `本库条目够铺一条竖轴的地方（成员 ${PLACE_MIN} 条以上）列在下面，按条数排。`);
+    `站在一座城里看四千年。成员 ${PLACE_MIN} 条以上的城，按条数排。`);
   const body = h('div', 'pc-body');
   const wait = h('p', 'lc-intro', '正在按坐标归地…');
   body.appendChild(wait);
@@ -75,8 +75,7 @@ export function buildPlaceCatalog() {
     } catch (err) {
       console.error('[place-catalog] 归地算不出来：', err);
       body.replaceChildren(h('p', 'lc-intro',
-        '这份目录没能算出来（按坐标归地那一步出错了）。刷新页面再试一次；'
-        + '直接去 place.html 也能挑城。'));
+        '这份目录没能算出来（按坐标归地那一步出错了）。刷新页面再试一次。'));
     } finally {
       filling = false;
     }

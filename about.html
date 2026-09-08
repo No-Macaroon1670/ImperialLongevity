@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>读法与做法 · 中国帝王寿命数据库</title>
+<meta name="description" content="这些图怎么读、数据从哪儿来、能回答什么、不能回答什么——中国帝王寿命数据库的问答式说明页。">
+<link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/about.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="中国帝王寿命数据库 · 王朝之河">
+<meta property="og:title" content="读法与做法 · 中国帝王寿命数据库">
+<meta property="og:description" content="四张图怎么读、数据怎么来、口径怎么定、能回答什么——按问答排。">
+<meta property="og:url" content="https://no-macaroon1670.github.io/ImperialLongevity/about.html">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E📖%3C/text%3E%3C/svg%3E">
+</head>
+<body data-page="about">
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="kicker">How to Read · How It Was Made</div>
+    <!-- .mh-row 由 js/sib-nav.js 的 mountSib() 填 nav；这里先手写一份，
+         JS 到货前也不会跳版（无脚本时读者仍能看见 h1） -->
+    <div class="mh-row">
+      <h1>读法与做法</h1>
+    </div>
+    <!-- lede ＝ 立项缘由，原在 index.html 页首（去 clutter 案 §二.A A2、09-08 拍板②）。
+         index 页首现只留后半那一问，全句的家在这里；素材卷
+         docs/desk/about-src-index.md「这个库是做什么的？」一问故不另立，避免同页两抄 -->
+    <p class="lede">
+      对标欧洲研究 <em>Survival and longevity of European rulers</em> 的中国版本：收录自夏至清
+      （及五代十国、十六国、辽金夏元等并立政权）共六百八十余位君主的生卒、在位、死因与政治风险变量，
+      用生存分析回答一个问题——<strong>帝王的寿命，主要由医疗水平决定，还是由政治制度与权力风险决定？</strong>
+      这一页把五张页面上原先散在正文里的解释收成一处，按问答排。
+      <button id="theme-toggle" class="linkish theme-toggle">🌙 深色</button>
+    </p>
+  </header>
+</div>
+
+<div class="wrap">
+  <!--
+    问答页的编排规矩（去 clutter 案 §六.1、共用件卷 §6）：
+    ① 四组：怎么读 → 数据从哪来怎么算 → 为什么这样画 → 哪些不能回答。
+       组内按页排（王朝之河 → 时光舆图 → 地方线 → 帝王寿命），h3 是分组小标。
+    ② summary 是**一个真的问句**；答案按原句搬，不改写成摘要——这一页是四页正文里
+       「挪去文档」那一档的读者面去处，原文有多长就多长。素材卷四份：
+       docs/desk/about-src-index.md ／ -timeline.md ／ -map.md ／ -place.md。
+    ③ **锚点别名**：四页正文里既有的链接写的是 about.html#faq-index（index.html）与
+       #faq-timeline（js/views-river.js），而本页按主题分组、不按页分节，故在对应那一问
+       之前放一枚空的 <span id="faq-…">——旧链接照样落到该落的地方，且不必回头改四页。
+       新链接请直接指到某一问的 id（about.html#q-map-onepoint 这样）。
+    ④ **只链 GitHub 上有的文件**：docs/idea-*.md 与 docs/plan-*.md 被 .gitignore 挡在本机
+       （案头稿不入库），裸写路径读者点不开——那正是旧脚注判删的理由。故这一页只给
+       docs/METHODS.md、docs/geo-model.md、docs/geo-territories.md、tools/ 下的脚本挂直链。
+  -->
+  <main id="faq" class="faq">
+
+  <!-- ══ 一、这张图怎么读 ══════════════════════════════════════════════ -->
+  <section class="card faq-sec" id="faq-read">
+    <div class="head"><h2>这张图怎么读</h2></div>
+
+    <h3>王朝之河 · 竖向河流</h3>
+
+    <details class="faq-q" id="q-river-width">
+      <summary>河宽表示什么？为什么不表示疆域大小？</summary>
+      <p>河宽<strong>不编码疆域或人口</strong>——本库没有这两项数据，若让分叉的宽窄去表示「谁更大」，
+        那是在画我们并不掌握的东西。故河宽恒定、按政权数均分，唯一的视觉变量「分叉数」正好等于
+        那一刻并存的政权数。代价是三年的割据小国与盛唐同宽，真实规模见点按详情与数据表。</p>
+    </details>
+
+    <details class="faq-q" id="q-river-bed">
+      <summary>淡色的「河床」是什么？为什么浓淡不一样？</summary>
+      <p>各河道的淡色底＝河床：称帝前的预告、亡后的尾迹、在位空档，皆由它透出。<strong>河床的浓淡有向，
+        与连续性三级同构</strong>：无前身的政权，预告楔自无洇入——浓淡编码「离真实建号还有多远」，
+        排版预告不再与在位空档同浓；承统交替处，前朝的河床尾与新朝的河床头在共用的过渡窗里互补洇变
+        （前尾渐隐、新头渐显、两色互渗），细颈全程合成恒定的一层，秦→汉的悬丝不因洇散而断；
+        亡入者的尾迹保留六成浓度没入对岸（汇流不是蒸发）；<strong>洇出至无只留给无承继关系的真正终结</strong>。
+        君主色块分毫不动——洇与渗都只发生在河床层。</p>
+    </details>
+
+    <details class="faq-q" id="q-river-gap">
+      <summary>两位君主之间空着的那一段，是史料缺失还是真的没有皇帝？</summary>
+      <p>君主之间的空缺由淡色河床透出，那正是「该段年份没有在位君主的记录」——成因与逐条核对见
+        <a href="index.html#audit">空档审计</a>一节。政权起讫由「实际有君主在位」决定，不回退到朝代
+        元数据的年份；确无君主的年份由空档审计逐条列出，不靠底带掩盖。</p>
+    </details>
+
+    <details class="faq-q" id="q-river-merge">
+      <summary>亡国在图上画成什么样？</summary>
+      <p><strong>亡国是汇流，不是蒸发</strong>：政权终结时其疆土并入谁家、建立时从谁家裂出，都是已知的史实
+        （见 <code>dynasties.js</code> 的 MERGED_INTO / SPRANG_FROM 及逐条依据）。河道收束时弯向吞并者的
+        河岸并没入其下（陈并于隋、北齐亡于北周、南宋亡于元…），新河道的细流自母体的河岸涌出
+        （清起于叛明的后金、金起于叛辽的完颜部…）。吞并者与亡者之间隔着第三条河道时不弯——河道永不交叉
+        是硬约束，此时改画一条半透明的<strong>穿流带</strong>：压在途经河道的君主色块之下、只在底色间隐约可见，
+        点选该政权即点亮（sankey 图的半透明 ribbon 同理）。禅让式的法统相承另有画法（变色微腰），
+        两者都成立时微腰优先。</p>
+    </details>
+
+    <details class="faq-q" id="q-river-three">
+      <summary>禅让、隔着乱世的承统、真正的亡国，三者画法一样吗？</summary>
+      <p><strong>连续性三级</strong>：同切点的禅让画成 75% 宽河口（同一条河换了名字）；隔着空窗的承统
+        （秦亡至汉兴隔楚汉之争、平帝崩至王莽代汉隔居摄）画成 10px 细颈贯穿空窗——法统如一线悬丝穿过乱世，
+        空窗仍由四周的留白与细颈之窄读出；<strong>断流只留给无承继关系的真正终结</strong>。</p>
+    </details>
+
+    <h3>王朝之河 · 横向泳道</h3>
+
+    <details class="faq-q" id="q-lane-row1">
+      <summary>泳道的第一行为什么总是那一条主线？采的是谁的正统观？</summary>
+      <p>第一行为正统序列专用，不参与泳道回收，任何割据政权都不会挤进来，于是它自成一条贯通两千年的主线；
+        其余政权一律平等地排在下方，不含褒贬。斜纹段为正统交替期——陈与隋并立八年、南宋与元并立七十三年、
+        明与清并立二十八年，正统归属要到那一段结束才由后世定下来。采用《资治通鉴》以降的传统正统观
+        （三国承曹魏、南北朝承南朝、五代承中原五朝），<strong>这是史观选择而非史实</strong>：北魏、辽、金、
+        西夏在各自时代同样自居正统。</p>
+    </details>
+
+    <details class="faq-q" id="q-lane-row2">
+      <summary>第二行的「北方主线」是什么？</summary>
+      <p>第二行优先安排「北方政权主线」：386–581 年的北魏→西魏→北周，与 916–1234 年的辽→金。
+        中国史上这两段都是南北法统长期并行，而正统行都取南方为正朔，北方政权便会被挤到下方各行，
+        对峙关系反倒读不出来。两次都以「并入第一行」收束——581 年北周禅隋、元既已入正统行——
+        恰好呈现北方政权最终统合天下的节奏。线内交替（辽金并立十年）沿用与正统行相同的上下半轨画法。
+        该行并不独占：两段线合计约 500 年，其余时段照常参与回收。西夏与辽、金三方并立，不入此线，
+        平等排在下方。</p>
+    </details>
+
+    <details class="faq-q" id="q-lane-ten">
+      <summary>九十多个政权，为什么十条泳道就装得下？</summary>
+      <p>泳道不归属任何朝代：某朝终结后该行即被后来的政权接管，因此同一时刻占用的行数就是当时并存的
+        政权数（最挤的 937 年有十一个政权）。93 个政权因此装进十条上下的泳道。</p>
+    </details>
+
+    <details class="faq-q" id="q-lane-overlap">
+      <summary>同一朝前后两位皇帝，为什么会「重叠」？</summary>
+      <p>同朝代内前帝崩与后帝即位常落在同一个月，史料精确到月即产生名义上的重叠——这类不足半年的重叠
+        一律就地挤压（交界取中点、两段各退一半），仍并排在同一行；只有真正并立称帝者才分层错开。
+        分段的绘图宽度因此可能比真实在位期短几个月，<strong>悬停与数据表给出的始终是真实日期</strong>。</p>
+    </details>
+
+    <details class="faq-q" id="q-lane-color">
+      <summary>泳道的颜色按什么分？为什么有几条是灰的？</summary>
+      <p>配色按具体朝代，时间上重叠者必为异色，不重叠者复用槽位（唐与明同色不会造成混淆）；并存政权
+        最多达 11 个而分类色板仅 8 槽，故有若干边缘割据政权折入中性灰——每条带都直接标注朝代名，
+        颜色只是辅助。切成「分合」配色时则沿用全局语义：蓝＝大一统，橙＝分裂。</p>
+    </details>
+
+    <details class="faq-q" id="q-lane-hatch">
+      <summary>图上有两处斜纹，是同一个意思吗？</summary>
+      <p>不是，<strong>斜纹有两处语义，不可混读</strong>：<strong>底轨</strong>上的斜纹标「新旧并立」的交替期
+        （上半轨前朝、下半轨后朝，正统行与北方主线共用此画法）；<strong>君主格</strong>上的斜纹＋半透明标
+        「低置信年份」——推算所得（传统系年铺入，或诸家体系并存取其一），依据见各条悬停备注。
+        共和元年（前841）以前没有确切纪年，夏与商前期的君主格按传统系年推算铺入——<strong>那些是坐标，
+        不是记载</strong>。</p>
+    </details>
+
+    <details class="faq-q" id="q-lane-strand">
+      <summary>承继丝上的粗线、细线、虚线各是什么？</summary>
+      <p>点选朝代或皇帝会点亮承继丝：粗实线＝法统相承、细实线＝亡入、虚线＝裂自；「全部承继关系」开关
+        可整图齐显。丝锚在事件年份、贴车道边缘进出、从所经政权身下穿过；有名有姓的交替（陈桥兵变、
+        靖康之变）在交界处刻一道可点的短痕，点得开。画宽装不下自己名字的极短政权（桓楚、中华帝国）
+        只画色点，名字在悬停里。</p>
+    </details>
+
+    <h3>大事记（事件层）</h3>
+
+    <details class="faq-q" id="q-ev-shape">
+      <summary>大事记的标记形状有讲究吗？</summary>
+      <p>有。标记按类别取<strong>形状</strong>与颜色：尖头与十字、方块、菱形、圆点＝那一年发生的事；
+        扁条、屋形、六边＝起讫历时数百年者（图上只标起点）。宽屏时事件排在两岸：左岸政事（战事、民变、
+        灾疫、外交、立制），右岸文教（著述、科技、遗存）；窄屏让不出边栏，事件直接画进河道——
+        事件本就发生在这条河上。</p>
+    </details>
+
+    <details class="faq-q" id="q-ev-seam">
+      <summary>有些事件落在两条河之间的缝上，为什么？</summary>
+      <p>落在河道之间的缝上的，是改朝换代（本就发生在两条河之间）与并存年代里归属尚未判定的，
+        两者都不占任何一条河。这一类的归属本是个死结——淝水之战放进前秦的河道还是东晋的？
+        放哪边都是替读者判断；它们本来就不属于任何一边，属于「一边变成另一边」的那一刻，
+        落在过渡的正中即两不亏欠。</p>
+    </details>
+
+    <!-- 旧链接 about.html#faq-map 的落点（本页按主题分组，故用别名锚） -->
+    <h3><span id="faq-map"></span>时光舆图</h3>
+
+    <details class="faq-q" id="q-map-extent">
+      <summary>政权选中时那块毛边色块是疆域吗？</summary>
+      <p>是<strong>盛时疆域示意</strong>，不是边界。早先这里写的是「没有疆域」，理由是画出来的每一条边界线
+        都是我们不掌握的东西；这个理由今天仍然成立，所以图上仍然没有边界<strong>线</strong>：那块毛边低透明
+        色块，是从正史与维基的四至<strong>文字</strong>（「东至海暨朝鲜，西至临洮、羌中……」）推出的锚点粗描
+        ——每个顶点能指回一句引文，粗糙是构造出来的。古之疆域本非线状，盛时更只是一瞬，色块四缘的模糊
+        正是这两句话的画法。（正本见
+        <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/geo-territories.md"
+           target="_blank" rel="noopener">docs/geo-territories.md</a>。）</p>
+    </details>
+
+    <details class="faq-q" id="q-map-roles">
+      <summary>点名后面那个单字是什么意思？</summary>
+      <p>是此地与条目的关系：生＝出生地、显＝显赫成事之地、卒＝逝世地、葬＝埋葬原置之地、贬＝贬所、
+        行＝行迹中途、都＝都城、迁＝迁都之后的都城、陪＝与正都并存的陪都、说＝诸说之一、造＝制作地、
+        立＝建立树立之地、发＝出土发现地、现＝现藏现陈之地、址＝遗址本体、战＝交战地、起＝起事地、
+        灾＝受灾中心、颁＝颁行地、摹＝著名临摹本拓本所在、仿＝化石模型复制件所在。</p>
+      <p>读图时不必记：点开一条，读数坞里就地写着那几个字的意思。全表在
+        <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/geo-model.md"
+           target="_blank" rel="noopener">docs/geo-model.md</a> 角色表。</p>
+    </details>
+
+    <details class="faq-q" id="q-map-hollow">
+      <summary>空心圈是次要的点吗？</summary>
+      <p>不是，是<strong>诸说之一</strong>。赤壁在哪儿至今没定论，主说画实心，其余画空心圈，彼此<strong>不连线</strong>
+        ——连成线会把「并存的主张」画成「先后的行迹」，那是两回事。</p>
+    </details>
+
+    <details class="faq-q" id="q-map-low">
+      <summary>半透明的点是什么意思？</summary>
+      <p>低置信：今地属传统比定、推定，或只由国别推出。涿鹿、鸣条这些上古战场即是——形状说有这回事，
+        透明度说别拿它当准。与本库先秦年代用斜纹表低置信是同一个语汇。</p>
+    </details>
+
+    <!-- 旧链接 about.html#faq-place 的落点 -->
+    <h3><span id="faq-place"></span>地方线</h3>
+
+    <details class="faq-q" id="q-place-seg">
+      <summary>段头写着「天下易主，本地未另记换手」，是什么意思？</summary>
+      <p>换手表只记<strong>本地</strong>换手；天下易主（秦→汉、汉→魏→晋、北朝→隋→唐、明→清）不列。
+        政权带若在段内就亡了，轴色不能赖到下一次本地换手——沿 SUCCESSION 找法统承接者续色
+        （承接者多于一个时先取正统序列），无承接者退 MERGED_INTO 的吞并者；易代之际的空窗
+        （秦亡到汉兴）留灰。续出的子段没有段题，都城身份沿用（身份只在本地换手处变）。</p>
+    </details>
+
+    <h3>帝王寿命（统计页）</h3>
+
+    <details class="faq-q" id="q-civ-scatter">
+      <summary>类型学散点图（政体如何卸下君主）怎么读？</summary>
+      <p>横轴越靠右＝君主越少死于任上；纵轴越靠上＝越多死于非命。右下角意味着「换人频繁但换得体面」——
+        交班已被制度吸收；左上／右上则是篡弑仍是主要退场方式。点面积正比于君主数。</p>
+    </details>
+  </section>
+
+  <!-- ══ 二、数据从哪来、怎么算 ════════════════════════════════════════ -->
+  <section class="card faq-sec" id="faq-data">
+    <div class="head"><h2>数据从哪来、怎么算</h2></div>
+
+    <h3>君主库</h3>
+
+    <details class="faq-q" id="q-source">
+      <summary>数据从哪儿来？可靠到什么程度？</summary>
+      <p>本库由正史（《史记》《汉书》《后汉书》《三国志》《晋书》《宋书》《魏书》《隋书》两《唐书》
+        《宋史》《辽史》《金史》《元史》《明史》《清史稿》等）及通行工具书的常见记载整理而成，
+        <strong>属研究原型，未逐条附注出处，正式引用前请回溯核校</strong>。</p>
+      <p>年龄按公历实足年龄推算，与中文史料常见的「虚岁」相差约 1 岁；仅有年份而无月日者按年中估算，
+        误差 ±1 岁。</p>
+      <p>生活方式类变量（丹药、酗酒、肥胖、慢性病）取值 0 一律表示<strong>「无明确记载」</strong>而非
+        「确证不存在」，存在系统性的记录偏倚：暴卒的皇帝更容易被史官追记服丹之事。</p>
+      <p>帝王是极端选择性的人群，其寿命不代表同时代人口；跨时代比较混杂着史料详略的变化——
+        它不是随机样本。</p>
+    </details>
+
+    <!-- 旧链接 index.html 那行「做对了哪几件事…见 读法与做法」写的是 about.html#faq-index -->
+    <span id="faq-index"></span>
+    <details class="faq-q" id="q-stats-right">
+      <summary>统计上做对了哪几件事？</summary>
+      <p><strong>左截断（延迟进入）。</strong> 皇帝必须活到即位才会进入样本。年龄尺度上每人自登基年龄
+        进入风险集，避免把「幼年夭折者不会成为皇帝」误读成「皇帝早年死亡率低」。</p>
+      <p><strong>删失。</strong> 明惠帝朱允炆 1402 年失踪、卒年不可考，按删失处理而非剔除或臆测；
+        退位者在「在位尺度」下于退位时删失，以隔离「在皇位上」的风险。</p>
+      <p><strong>竞争风险。</strong> 被杀与病死互为竞争终点，用 Aalen–Johansen 累积发生率估计，
+        而非把一方当作删失。</p>
+      <p><strong>结法与假定检验。</strong> Cox 模型用 Efron 结法处理同年死亡的并列；以 (start, stop] 区间
+        实现左截断；Schoenfeld 残差检验比例风险假定。</p>
+      <p><strong>敏感性分析。</strong>「大一统」的严格／宽松定义（北宋是否计入）、入库标准（是否含仅称王者、
+        名义君主）均可一键切换，结论随之重算。</p>
+      <p>前四条各自在对应版块的折叠说明里还有一份就地版本：左截断见 Kaplan–Meier 一节，竞争风险见
+        累积发生率一节，Efron 与 Schoenfeld 见 Cox 一节的结果框与诊断表标题。</p>
+    </details>
+
+    <details class="faq-q" id="q-civ-roster">
+      <summary>跨文明比较的名册是怎么来的？</summary>
+      <p>同一套口径下比较四个政体、五份名册。以「登基后生存」与「非正常死亡比例」为主判据——在位起讫与
+        死亡方式各文明史料都记得牢，而生年普遍稀疏，本项目的主结论亦不依赖生年。域外骨架取自
+        Wikidata（CC0）并逐位锚定 QID，死亡方式的缺口人工补齐。</p>
+    </details>
+
+    <details class="faq-q" id="q-audit">
+      <summary>「空档审计」这张表是怎么来的？它抓到过什么？</summary>
+      <p>横向泳道视图顺带提供了一个好用的质检信号：朝代长带上任何悬空的头、尾或中段，都意味着那段年份
+        没有在位君主的记录。原因只有三种——该君主称帝前已掌权（本库记的是称帝日）、史上确实虚位、
+        或漏收君主与日期有误。审计表把三者逐条列清，使第三类不必靠肉眼在图上找。</p>
+      <p>本库正是靠这张表发现唐敬宗卒年（宝历二年十二月换算公历应入 827 年）、前燕慕容皝、北凉段业、
+        前凉张氏诸主的缺漏。</p>
+      <p>三种判定的定义：「已解释」指该君主称帝前已实际掌权（横向泳道中以半高浅色段画出）；
+        注明史实者为真实的虚位期；标为「待核查」的应回溯史料，可能是漏收君主或日期换算有误。</p>
+    </details>
+
+    <h3>大事记</h3>
+
+    <details class="faq-q" id="q-rank">
+      <summary>大事记的「一等／二等／三等」是谁定的？</summary>
+      <p>「一等是 r=1 或人写的精选，二三等照 r 分。」r 不由人拍脑袋定——一千七百条要排得前后一致，
+        人手做不到，也无从复核。取维基本身带着的三个各自独立、可机读的知名度信号的合成：
+        <strong>ll</strong> 语言链接数（多少种语言为它单独写了条目，国际知名度）、
+        <strong>lh</strong> 入链数（中文维基里多少条目指向它，在中文史叙述里的结构中心度）、
+        <strong>pv</strong> 年访问量（读者实际去查了多少次，当代关注度）。三者各有偏：pv 偏近现代与影视热点、
+        ll 偏国际上说得清的、lh 偏制度与长时段，故取三者 log 后的 z 分等权相加——一个信号的偏，
+        另两个多半不共享。另加<strong>类别保底</strong>：战事、立制、民变、外交、文化、灾疫等每类至少若干条
+        进一等，否则纯按分数排，一等会挤满战争与政变，文化与外交近乎绝迹——那不是「重要」，
+        那是维基的写作偏好。</p>
+      <p>精选另存一份人写的名单，只管往上提，不下压：这是「curation 与算法分开」——算法只认 r，
+        人只管往上提，两者不互相迁就。算法在
+        <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/tools/mining/rank.py"
+           target="_blank" rel="noopener">tools/mining/rank.py</a>。三档在王朝之河的「大事记」控件里各自
+        可勾选，全取掉即不画事件层。</p>
+    </details>
+
+    <h3>时光舆图</h3>
+
+    <details class="faq-q" id="q-map-coverage">
+      <summary>哪一类落得下，哪一类落不下？</summary>
+      <p>落得下与落不下，几乎完全由<strong>类别</strong>决定，而不是由重要程度决定。2026-09-08 实测：
+        文物 251/255（98%）、战事 169/174（97%）、外患·外交 115/121（95%）、灾疫 17/18（94%）、
+        遗址·建筑 215/234（92%）、人物·典故 166/182（91%）、民变·政变 105/117（90%）、
+        科技 90/109（83%）、文化 176/218（81%）、民生 27/34（79%）、制度 79/212（37%）、
+        治世·中兴（史书追认）1/26（4%）。</p>
+      <p>覆盖率是实测的，不是估的：见
+        <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/tools/mining/probe_geo_coverage.py"
+           target="_blank" rel="noopener">tools/mining/probe_geo_coverage.py</a> 与
+        <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/geo-events-probe.json"
+           target="_blank" rel="noopener">docs/geo-events-probe.json</a>。查不到坐标的条目一条也不硬填。</p>
+    </details>
+
+    <details class="faq-q" id="q-map-institution">
+      <summary>制度类为什么大多不落点？</summary>
+      <p>这是有意的：<strong>全境施行的诏令没有一个发生地</strong>。「书同文」「推恩令」颁行天下，落在都城
+        不是「它在那儿发生」，是「诏书从那儿发出去」——两回事，混起来会让读者以为制度史集中在几座城里。
+        只有记载明指一地的才落（盘庚迁殷、官办交子行于四川、昭勋阁二十四功臣就在昭勋阁）。同理，
+        「治世·中兴」是史书对一整段年份的追认，26 条里只有 1 条落得下。全段正本在
+        <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/geo-model.md"
+           target="_blank" rel="noopener">docs/geo-model.md</a>「制度类为什么大多不落点」。</p>
+    </details>
+
+    <details class="faq-q" id="q-map-coord">
+      <summary>落点坐标是谁定的？</summary>
+      <p><strong>地名是判断，坐标是事实</strong>：落在出土地还是现藏地由人挑，挑定之后坐标一律从维基抓、
+        不手打。这条分界与本库「选图是策展判断、许可与署名从 Commons 抓」是同一条。坞里标
+        「坐标自动取自维基页，未经人核」的那些，是从条目自己的维基页顺手拿的，没人逐条核过；
+        「设置 › 画自动取的坐标」关掉即只留人核过的。（方法学正本：
+        <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/METHODS.md"
+           target="_blank" rel="noopener">docs/METHODS.md</a>。）</p>
+    </details>
+
+    <h3>地方线</h3>
+
+    <details class="faq-q" id="q-place-src">
+      <summary>地方线上的条目是哪来的？会不会是先算好存在文件里的？</summary>
+      <p>条目全部运行时现抽，<code>events.js</code> 一改这条线就跟着变；人写的那一半（换手表、时代总结、
+        精选）另存一处，缺席时轴退回按时代分段，页面照常。条目、分段与分档全部在浏览器里现算，
+        页面不预存任何抽取结果。</p>
+    </details>
+
+    <details class="faq-q" id="q-place-museum">
+      <summary>为什么现藏地不算进地方线？</summary>
+      <p>凡本库条目的落点落在这座城——地名对得上，或坐标在城中心 N 公里内——即算这座城的一条。
+        但现藏地不算：藏在这里的东西未必是这里的事。造、发（出土）、址、战、行、都、迁、灾、显、说都算，
+        摹本与复制件同现藏一并不计。否则国博、故宫所在地会把全国的文物吞进来。</p>
+    </details>
+
+    <details class="faq-q" id="q-place-cite">
+      <summary>换手表与时代总结的出处在哪儿？为什么默认看不见？</summary>
+      <p>出处<strong>不删、默认收</strong>：换手表 30 条与总结卡 8 张的出处共 2700 余字，全显时把每个段头
+        撑成三行。页首一颗「出处」钮全开全关，段头留一个极小的「¶」示意这一段有出处可单独展开——
+        收起不是删，是先让轴看得见。开合记在 <code>il.src.place</code>。</p>
+    </details>
+
+    <details class="faq-q" id="q-place-docs">
+      <summary>归地判据（落点角色、主点取法）写在哪儿？</summary>
+      <p>归地判据（落点角色与主点取法）见
+        <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/geo-model.md"
+           target="_blank" rel="noopener">docs/geo-model.md</a>；地方线的设计裁语在
+        <code>docs/idea-placelines.md</code>，那是本机案头稿，未随库发布。</p>
+    </details>
+
+    <h3>这个站本身</h3>
+
+    <details class="faq-q" id="q-live">
+      <summary>页面上的数字是现算的还是预存的？</summary>
+      <p>全部统计（Kaplan–Meier、Log-rank、Cox PH、Aalen–Johansen、Mann–Whitney、Spearman、自助法）
+        均在浏览器内以 JavaScript 现算。没有构建步骤，也没有后端——页面上看到的每一个数字都是当场
+        按你的筛选条件算出来的。</p>
+      <p>本库现有 <span data-il-count="ev">1704</span> 条大事记、<span data-il-count="dyn">120</span> 个政权，
+        其中查得到地点的 <span data-il-count="geo">1413</span> 条画在时光舆图上——这三个数字也是页面
+        载入时现数的，不是写在文案里的。</p>
+    </details>
+
+    <details class="faq-q" id="q-knowledge">
+      <summary>两翼的知识卡是从哪儿来的？</summary>
+      <p>宽屏两翼另有知识卡——左翼是当前时段的主导朝代、右翼是视口内的名君，随滚动自动更替；
+        点选任一君主则两卡联动钉住（右卡其人、左卡其朝）。摘要实时取自中文维基百科，并附全文、
+        百度百科与相关视频的直达链接；页面不预存任何词条内容。文物与遗产条目另附持有机构的
+        馆藏页直达。</p>
+    </details>
+  </section>
+
+  <!-- ══ 三、为什么这样画 ══════════════════════════════════════════════ -->
+  <section class="card faq-sec" id="faq-why">
+    <div class="head"><h2>为什么这样画</h2></div>
+
+    <!-- 旧链接 about.html#faq-timeline（js/views-river.js 的「这条河为什么这样画 →」）落点 -->
+    <h3><span id="faq-timeline"></span>王朝之河：这条河为什么这样画</h3>
+
+    <details class="faq-q" id="q-river-order">
+      <summary>几条河道的左右次序是按什么排的？</summary>
+      <p><strong>左右次序按谱系归堆</strong>：正统序列与北方主线各按法统连线，其余政权沿
+        「排序改判 → 法统相承 → 裂土分出」上溯到谱系家长归堆——赵家（汉赵→后赵→冉魏→前秦→后秦→胡夏）、
+        燕家、凉家各自连成相邻块，家族内按起年排。个别政权疆土与血统不一致（西燕裂自前秦而血统属燕），
+        由 <code>dynasties.js</code> 的 ORDER_HINT 手工改判。称帝前掌权期不占槽位：孙权 200 年已掌江东，
+        但吴的河道自其首位皇帝在位起才张开。</p>
+    </details>
+
+    <details class="faq-q" id="q-river-nocross">
+      <summary>两条河道会不会交叉？</summary>
+      <p>河道之间<strong>永不交叉</strong>：新政权楔入其<strong>谱系母体</strong>的侧翼（西夏锚宋、桓楚锚晋、
+        十国锚五代中原线；母体已亡则顺「水的去向」——征服者承其水、继位者承其位——走链找到在场者；
+        辽、大理这类无从锚起的按全局总序落座），此后没有任何机制会让两条并存的河道互换左右——
+        继位原地改名、挤入只侧移不越位——共存者的次序一经落位终生不变，故不可能相交。政权消失时
+        右邻左移即为「合流」，新政权插入时右邻右让即为「分叉」。</p>
+    </details>
+
+    <details class="faq-q" id="q-river-side">
+      <summary>新政权楔进来时挤哪一边？</summary>
+      <p><strong>老河守岸</strong>：楔入母体侧翼时按<strong>代价</strong>择侧（贴着空道 ＜ 挤一条邻居 ＜
+        链式挪位牵动数条），且<strong>骨肉与客有别</strong>——直接裂自／承自母体者是骨肉，两翼皆可
+        （东西魏分北魏，本是同一片水）；借道走链找到锚的只是客，客不占岸侧。于是老河沉在岸边、
+        过客从内侧穿行：燕家水系 384–436 连续持有右岸（西燕先坐、亡入后燕、北燕承之），五代中原正统线
+        907–960 钉死左岸，吴闽南汉在内侧排队。前后短暂并存的交替（李存勖 923-4 称帝、923-11 灭梁）
+        原地转让走不了，改按征服承接——水归胜者，岸随水传。</p>
+    </details>
+
+    <details class="faq-q" id="q-river-inertia">
+      <summary>政权继位的时候，河道会搬家吗？</summary>
+      <p><strong>在场的河优先保住自己的车道（惯性）</strong>：继位是改名不是搬家——北燕原地接管后燕的河道、
+        北周接西魏、陈接梁，不按全局次序另寻插入口（否则北燕按「燕家排行」落到南燕右侧，后燕的河道
+        得弯过南燕头顶去接）。新政权入场也不触发整片重排：先吃身旁空位，两邻让无可让时向最近的松动处
+        <strong>链式挪位</strong>——途中河道只侧移一条车道、宽度次序不变（此前 555 年西梁一入场，
+        梁骤失两车道、西魏北齐全体平移）。</p>
+    </details>
+
+    <details class="faq-q" id="q-river-meander">
+      <summary>河宽什么时候会变？河道为什么会蜿蜒？</summary>
+      <p><strong>河宽切成固定条数的车道，宽度只在四种时刻变化</strong>：新政权挤入（不得不让）、
+        征服承接（灭国的水立刻归征服者——前秦并前燕当场涨，那是史实）、空置满 16 年后的缓回收、
+        以及天下一统。其余时候一律保持现状：政权死后其车道先空置成<strong>留白</strong>，邻居不立刻胀开——
+        快变期宁可留白，不要急弯。车道边界是全图固定的网格，未被转让的边界纹丝不动，
+        这是河流「更直」的来源。</p>
+      <p>位移大的改道（统一、大分裂）会把过渡窗自动拉长至多三倍，不出现近乎直角的急弯；河道另有确定性
+        蜿蜒，且<strong>按河相关系随河宽换步</strong>：真实河流的蜿蜒波长约为河宽的 10–14 倍
+        （Leopold &amp; Wolman），大河从不高频抖动——窄流用 320px 波长的小摆，河道占幅超过 55% 后渐入
+        2200px 波长的从容长摆，满宽大一统在两岸之间贴岸游动；蜿蜒相位取<strong>法统源头</strong>的散列——
+        继位是改名不是搬家，车道、河口之外，律动也不换笔。理想的调节量是真实疆域面积
+        （河宽即国力、自带总量上限），但本库没有逐年疆域数据，且元、清这类跨界政权难以归一——
+        整数车道是「不画我们不掌握的东西」前提下的诚实近似。</p>
+    </details>
+
+    <details class="faq-q" id="q-river-bend">
+      <summary>改朝换代那一段为什么是一段长弯，不是直角？</summary>
+      <p><strong>改道摊开成长弯，交替处不断流</strong>：每次政权更替的河宽重分摊在一段过渡区里
+        （不超过邻段一半，以免过渡区互相穿透），用 smoothstep 缓动。新河道自一线细流张开、亡者收束成
+        细流而<strong>不掐断成零宽的尖</strong>（d3-sankey 的 linkMinWidth 同理）；法统相承者
+        （汉→新、唐→后梁…）在交替处共用一段变色的窄颈，河面不断流。河面在政权建立前数年即开始让位——
+        <strong>细流是排版的预告，不是史实的提前</strong>：淡色河床可早于建国数年张开，但君主色块的起讫
+        始终是真实日期。所有河道在同一过渡窗内做同一插值，任一瞬间的布局仍是不重叠的分割，
+        这是长弯不打架的保证。</p>
+    </details>
+
+    <details class="faq-q" id="q-river-scroll">
+      <summary>这一节为什么不套一层自己的滚动条？</summary>
+      <p><strong>不套滚动容器</strong>：竖向内容再嵌一层竖向滚动是经典的滚动陷阱，手指落在容器上页面
+        就像卡住了。本图直接交给页面滚动，全页只有一个滚动器。代价是这一节很长（上万像素），
+        故顶／底两条固定条既是上下节跳转，也是保证能起滑的安全区。</p>
+    </details>
+
+    <details class="faq-q" id="q-river-nolegend">
+      <summary>河流图上不放朝代色图例，为什么？</summary>
+      <p>不放朝代图例：几十个色块的对照表没人查得动，何况每条河道都直接标着朝代名，颜色只是辅助通道。</p>
+    </details>
+
+    <h3>时光舆图</h3>
+
+    <details class="faq-q" id="q-map-onepoint">
+      <summary>为什么一个条目只画一个点？</summary>
+      <p>苏轼生于眉州、显于黄州、卒于常州；昭陵六骏凿在昭陵，如今四骏在西安碑林、两骏在费城；
+        苏武从长安出使，在北海牧了十九年羊，又回到长安。把这些压成一个点，丢掉的正是这条目最要紧的
+        那部分；全都画上去，图又会糊成一片。所以：库里记全，图上只出主点，点选才展开，松开就收回去。
+        主点取哪一个是判断——人取显赫之地（不是出生地也不是墓地），文物取现藏地，战事取主说，
+        政权取主都；逐条判据见
+        <a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/geo-model.md"
+           target="_blank" rel="noopener">docs/geo-model.md</a> 落点模型。</p>
+    </details>
+
+    <details class="faq-q" id="q-map-noborder">
+      <summary>为什么没有国界？</summary>
+      <p>底图只有海岸线与黄河、长江。国界的画法有争议，一张小图没必要卷进去；页名叫「王朝之河」，
+        两条河本来就是主角。</p>
+    </details>
+
+    <details class="faq-q" id="q-map-outframe">
+      <summary>现藏在国外的东西为什么不画？</summary>
+      <p>落在图框外的整条不收：《金刚经》现藏伦敦、宝船去过东非，硬贴到图边上会让读者以为它就在那儿。
+        但方向是真的：链走到图外时，线朝那个方向画到视口边缘为止，并在边上标出去处。苏武那趟北海之行，
+        图上看不见那个湖，看得见他往北去了。（世界版另有一套：只画有境外落点的合格条目，
+        图框够大时主点回归外主本尊。）</p>
+    </details>
+
+    <details class="faq-q" id="q-map-twolegs">
+      <summary>同一段路来回走，为什么画成两条线？</summary>
+      <p>一条线画两遍等于只画了一遍，读者看不出他回来过。故来回两程各自向外错开一点，各带一个箭头。</p>
+    </details>
+
+    <details class="faq-q" id="q-map-packing">
+      <summary>点为什么会挪位？</summary>
+      <p>挨得近的点散开画，并拉一根细线回真位置。这张图一千单位横跨六十二度经度，挪二十单位就是
+        一百多公里——散开是为了点得中、看得见，细线是为了别让读者忘了它本来在哪儿。一处超过八条
+        就不散了，收成一个带数字的点，半径随条数长（点大即那地方事多），点开才摊成一环。</p>
+    </details>
+
+    <h3>地方线</h3>
+
+    <details class="faq-q" id="q-place-axis">
+      <summary>这条轴为什么不按年等距？</summary>
+      <p>北京最早一条是周口店（前 70 万年），最晚是人间词话（1908），按年等距的话前 99.7% 的轴是一条
+        空线，全部一百条挤在末端一毫米里。故轴按<strong>段</strong>排：段界是换手（人写的换手表）或时代
+        （ERAS 兜底），段内按年先后铺卡，段与段之间不成比例——这张图问的是「换了几次旗、每旗之下留下
+        什么」，不是「过了多少年」。</p>
+    </details>
+
+    <details class="faq-q" id="q-place-nocard">
+      <summary>为什么有的段一张总结卡也没有？</summary>
+      <p><strong>总结卡不做半自动</strong>——「有真正过关的总结才是 value add」。故这里一个字也不生成：
+        名单里有这个转折题就画一张通栏卡，没有就什么都不画，不留占位、不写「暂无总结」——
+        空占位比空白更糟，它在替没做的事占地方。</p>
+    </details>
+
+    <details class="faq-q" id="q-place-30">
+      <summary>为什么有的城没有地方线？</summary>
+      <p>成员满 30 条的城才成线；不够的城，其条目在时光舆图上各有落点。一条只有七条大事的「地方线」
+        不是线，是一张单子，读者该回时光舆图去看点。</p>
+    </details>
+
+    <h3>帝王寿命（统计页）</h3>
+
+    <details class="faq-q" id="q-japan">
+      <summary>为什么日本要分天皇与幕府两份名册？</summary>
+      <p>日本单列天皇与幕府两份：天皇长期不掌实权，以其代表「日本君主的风险」有失真之虞，
+        而将军才是 1185–1868 年间的实际执政者——两者同国同代、只差权力有无，构成跨文明一节最干净的
+        一组对照。</p>
+    </details>
+  </section>
+
+  <!-- ══ 四、哪些不能回答 ══════════════════════════════════════════════ -->
+  <section class="card faq-sec" id="faq-cant">
+    <div class="head"><h2>哪些不能回答</h2></div>
+
+    <details class="faq-q" id="q-limits">
+      <summary>这个库不能回答什么？</summary>
+      <p><strong>不是随机样本。</strong> 帝王是极端选择性的人群，其寿命不代表同时代人口；
+        跨时代比较混杂着史料详略的变化。</p>
+      <p><strong>DSI 的内生性。</strong> 皇帝越短命 → 同期更替越快 → DSI 越低。DSI 与寿命的相关性
+        不能直接读作因果。</p>
+      <p><strong>丹药的反向因果。</strong> 服丹多见于长寿且长期在位者，且常因暴卒才被记录，
+        方向可能与直觉相反。</p>
+      <p><strong>「非正常死亡」不能作为解释寿命的自变量。</strong> 它是结局的一部分；可检验的形式是
+        分因累积发生率（见 H5）。</p>
+      <p><strong>分裂时期样本更杂。</strong> 十六国、十国等政权的生年缺失率显著更高，缺失并非完全随机
+        （短命、幼年即位者更易失载）。</p>
+    </details>
+
+    <details class="faq-q" id="q-civ-same">
+      <summary>为什么跨文明比较要看「同期对照」？</summary>
+      <p>中国横跨两千一百年，而其余文明各自集中在某几个世纪；中国自身的非正常死亡率也随时代显著下降。
+        凡标注「翻转」者，应以同期对照为准——全时段的差距很大程度上是「近世普遍比上古安全」，
+        而非政治结构之别。</p>
+    </details>
+
+    <details class="faq-q" id="q-map-blank">
+      <summary>为什么有的地区一片空白？</summary>
+      <p>这张图画的不是「中国历史发生在哪」，是<strong>本库哪些条目查得到地点</strong>。本库
+        <span data-il-count="ev">1704</span> 条大事记里，查得到地点的
+        <span data-il-count="geo">1413</span> 条画在这里；没画上的那些都是本身没有落点的事，
+        一半是制度条（井田、分封、变法、钱币），其余多是文献与成语——讲一座窟的维基页写的是地，
+        讲一场仗的写的是事。一片空白只说明那里的条目落不下点。</p>
+    </details>
+
+    <details class="faq-q" id="q-place-blank">
+      <summary>地方线的轴上空着的那一段是什么意思？</summary>
+      <p>空着的那一段，是史料里没记这座城，不是这座城没有事。把空段抽掉会让轴看上去连绵不绝，
+        而史料里没记这座城的那几百年，正是要让人看见的。空段只占一行。</p>
+      <p>连着好几段机器续色的空段并成一条细带：北京前 220–313 连着八段、535–619 连着五段，
+        段段没条目、段段只写「天下易主，本地未另记换手」。并成一带之后那几百年在轴上仍占一格，
+        政权名并列成丸子，只是不再一段一行地重复。人写过的段一律不并。</p>
+    </details>
+
+    <details class="faq-q" id="q-map-river">
+      <summary>图上的黄河是哪个朝代的黄河？</summary>
+      <p>哪个朝代的都不是。黄河历史上改道二十余次，1128 到 1855 的七百年间夺淮入海，河口在今道以南
+        数百公里。图上的河只是参照线；黄河边上的点，未必在当年的黄河边上。</p>
+    </details>
+  </section>
+  </main>
+
+  <footer class="foot">
+    <p>说明页 · 中国帝王寿命数据库。这一页只讲读法与做法，数字与图在别的四页上。</p>
+    <p class="foot-cta">
+      <a class="chip foot-btn" href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%E5%8B%98%E8%AF%AF&amp;title=%E5%8B%98%E8%AF%AF%EF%BC%9A"
+         target="_blank" rel="noopener">发现错漏？来提一条 ↗</a>
+      <a class="chip foot-btn foot-btn-2" href="https://github.com/No-Macaroon1670/ImperialLongevity" target="_blank" rel="noopener">源码与数据 ↗</a>
+      <span class="foot-note">指出哪一条不对，比笼统说「有错」有用。</span>
+    </p>
+  </footer>
+</div>
+
+<script type="module" src="js/app-about.js"></script>
+</body>
+</html>

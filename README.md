@@ -1,31 +1,20 @@
 # 中国帝王寿命数据库 · China Imperial Longevity Database
 
-**▶ 在线访问：<https://no-macaroon1670.github.io/ImperialLongevity/>**（统计核心）
-**▶ 王朝之河（全景时间轴）：<https://no-macaroon1670.github.io/ImperialLongevity/timeline.html>**
-
-**▶ 地上的库（地图）：<https://no-macaroon1670.github.io/ImperialLongevity/map.html>**
-
-两张页面共用同一份数据与同一套外壳（`js/shell.js`），但各有各的读者，连筛选器也各归各：统计页需要按死因、丹药组、入库范围切样本；全景页要的是「看全部」——筛掉一半政权就读不出分裂的形状，故不设全局筛选器，只保留视图／缩放／配色／承继／大事记这些真正相关的章节控件。
-统计页回答「帝王的寿命由什么决定」，全景页回答「谁在何时统治、天下有多分裂、谁承谁」。
-全景已长成一件独立的作品（河流／泳道／知识卡／承继细丝／改朝换代事件），
-留在统计页里既挤版面、也埋没了它自己的入口与标题。
-
 对标欧洲研究 *Survival and longevity of European rulers* 的中国版本。收录**自夏至清约四千年、
-93 个政权、689 位君主**（含三国、十六国、南北朝、五代十国、辽金夏与大理等并立政权，
-以及 2026-08 扩入的夏商周王室与春秋战国十一国），以生存分析回答：
+上百个政权、六百余位君主**（含三国、十六国、南北朝、五代十国、辽金夏与大理等并立政权，以及
+2026-08 扩入的夏商周王室与春秋战国十一国），以生存分析回答：**帝王的寿命，主要由医疗水平决定，
+还是由政治制度与权力风险决定？** 纯静态单页应用，无外部依赖、无构建步骤——Kaplan–Meier、
+Log-rank、Cox 比例风险、Aalen–Johansen 竞争风险、Mann–Whitney、Spearman、自助法全部在浏览器内
+以 JavaScript 现算。
 
-> **先秦纪年三层声明**：前 841（共和元年）之后为确切纪年；西周逐王与商后期五王取
-> 夏商周断代工程（教科书标准，学界有实质争议）；夏与商前期为今本竹书纪年**等比铺入**
-> 断代工程窗口的低置信坐标（图上斜纹半透明）——那些是坐标，不是记载。统计页的
-> 「仅帝制时代」一键滤除先秦；方法与逐段锚源见 `docs/plan-xianqin.md` 与
-> `tools/mining/sources.json`。
+**▶ 在线访问**（同一份数据的四种读法，站内页首一行互链）：
 
-以生存分析回答：
+- [**王朝之河**](https://no-macaroon1670.github.io/ImperialLongevity/timeline.html) — 按时间铺开，河宽＝当时并存的政权数（竖向河流／横向泳道两视图）
+- [**帝王寿命**](https://no-macaroon1670.github.io/ImperialLongevity/) — 统计核心：按人算命数，生卒、在位、死因与生存分析
+- [**时光舆图**](https://no-macaroon1670.github.io/ImperialLongevity/map.html) — 按地方铺开，查得到地点的大事记在图上各有落点
+- [**说明**](https://no-macaroon1670.github.io/ImperialLongevity/about.html) — 读法与做法：这些图怎么读、数据从哪儿来、能回答什么与不能回答什么（读者面的问答页；本文是维护者面的）
 
-> 帝王的寿命，主要由医疗水平决定，还是由政治制度与权力风险决定？
-
-纯静态单页应用，无外部依赖、无构建步骤。Kaplan–Meier、Log-rank、Cox 比例风险、
-Aalen–Johansen 竞争风险、Mann–Whitney、Spearman、自助法——全部在浏览器内以 JavaScript 现算。
+地方线（站在一座城里看四千年）与故事线不单开页面：从王朝之河、时光舆图页内的 📍／📖 钮进。
 
 ## 运行
 
@@ -44,8 +33,9 @@ no-cache 逼每次回源revalidate，未改文件仍走 304。生产的 GitHub P
 ```
 index.html                     统计核心页：页面骨架、数据来源声明、方法与局限
 timeline.html                  王朝全景页「王朝之河」：竖向河流 + 横向泳道
-map.html                       地图页「地上的库」：大事记里查得到地点的那八十二条
+map.html                       时光舆图：大事记里查得到地点的那一千四百余条（数字由 counts.js 现数，勿写死）
 place.html                     地方线：站在一座城里看四千年（?key=beijing|changan|luoyang|kaifeng|nanjing|hangzhou）
+about.html                     说明页「读法与做法」：四组问答（怎么读／数据怎么来／为什么这样画／不能回答什么）
 js/shell.js                    两页共用的外壳：状态、筛选、渲染循环、章节导航、后台自愈
 js/sections-stats.js           统计页的章节表
 js/sections-panorama.js        全景页的章节表
@@ -65,6 +55,10 @@ js/search.js                   文本搜索跳转与深链（#y=755 / #e=李世�
 js/knowledge.js                知识卡：朝代＋皇帝两张（河流两翼／泳道三栏），实时维基摘要
 js/app.js / js/app-timeline.js 两页的入口（各自装配 shell + 自己的章节表）
 js/app-map.js                  地图页的入口（不走 shell：没有筛选、章节、渲染循环要它管）
+js/app-place.js                地方线页的入口（同样不走 shell）：归地、分段、分档、角标
+js/app-about.js                说明页的入口：只挂页首互链、深色钮与 data-il-count 回填
+js/sib-nav.js                  五页共用的页首互链一行 nav.sib（零依赖叶子，shell.js re-export）
+js/counts.js                   data-il-count 回填的唯一实现（文案里的数字一律现数，勿写死）
 js/plate.js                    制图共享零件：糊开的海岸、halo 衬底、贪心标签排版器、经纬网、读数面板
 js/basemap.js                  底图（生成物）：Natural Earth 1:50m 海岸线 + 黄河长江，无国界
 js/geo.js                      各故事线的站点地理档（生成物）
@@ -136,6 +130,13 @@ tools/validate.html            在浏览器内跑该校验
 **大一统**取严格定义（秦、汉、西晋、隋、唐、元、明、清）；北宋另设宽松开关。
 元的前四位大汗（1206–1259）与清入关前的努尔哈赤、皇太极虽属元、清两朝，
 其在位时中国并未统一，以 `u:0` 逐帝覆盖。
+
+> **先秦纪年三层声明**（2026-09-08 从页首挪来：它是口径，不是引子）：前 841（共和元年）
+> 之后为确切纪年；西周逐王与商后期五王取夏商周断代工程（教科书标准，学界有实质争议）；
+> 夏与商前期为今本竹书纪年**等比铺入**断代工程窗口的低置信坐标（图上斜纹半透明）——
+> 那些是坐标，不是记载。统计页的「仅帝制时代」一键滤除先秦；方法与逐段锚源见
+> `docs/plan-xianqin.md`（案头稿，`.gitignore` 挡在本机）与 `tools/mining/sources.json`。
+> 读者面的同一句在 `index.html` 的数据来源块，与 `about.html#q-lane-hatch`「图上有两处斜纹」一问。
 
 ## 时间轴的三种读法
 

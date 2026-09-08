@@ -265,7 +265,13 @@ export function tableView(headers, rows, { caption = '数据表', max = 0 } = {}
   const tbl = h('table');
   tbl.appendChild(h('caption', { text: caption }));
   const thead = h('thead');
-  thead.appendChild(h('tr', {}, headers.map((x) => h('th', { text: String(x) }))));
+  // 列头可写成 { text, title }：把该列的口径挂成 tooltip（2026-09-08 去 clutter 案
+  // §一.3）。从前这类口径写在表下一行常显小字里（「✱＝p＜0.05」「0＝无记载」），
+  // 一张表配一两行，四五张表就是一堵墙；挂到它说明的那一列头上，问的人才看得见。
+  // 纯字符串照旧，别处几十个 tableView 调用一个都不用改
+  thead.appendChild(h('tr', {}, headers.map((x) => (x && typeof x === 'object'
+    ? h('th', { text: String(x.text), title: x.title, class: 'has-tip' })
+    : h('th', { text: String(x) })))));
   tbl.appendChild(thead);
   const tb = h('tbody');
   const shown = max ? rows.slice(0, max) : rows;

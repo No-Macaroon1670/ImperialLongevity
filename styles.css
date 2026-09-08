@@ -138,6 +138,30 @@ header.masthead { padding: 34px 0 18px; border-bottom: 1px solid var(--border); 
   .masthead p.lede { max-width: 60rem; }
 }
 
+/* ── 页首互链一行 nav.sib（2026-09-08 去 clutter 案 §一.1；件在 js/sib-nav.js） ──
+   从前四页各写一段 63–166 字散文替别的页做广告，措辞与数字还各不相同。
+   现在只剩五个名字：短称够 self-explanatory，全称与释义进 title。
+   .mh-row 必须是 header.masthead 的**直接子元素**——上面那条 60rem 居中列
+   认的是直接子；h1 裹进来之后由 .mh-row 代它领那条列宽，版心不变。 */
+.mh-row { display: flex; align-items: baseline; gap: 10px 16px; flex-wrap: wrap; }
+/* h1 自带 margin-bottom: .4em，同一条基线上会把 nav 一起垫下去；由 .mh-row 统一给间距 */
+.mh-row > h1 { margin-bottom: 0; }
+nav.sib {
+  margin-left: auto; font-size: .8rem; color: var(--text-2);
+  white-space: nowrap; line-height: 1.6;
+}
+nav.sib a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--border); }
+nav.sib a:hover { color: var(--text-1); border-bottom-color: currentColor; }
+/* 当前页不链：读者得知道自己站在哪一格 */
+nav.sib [aria-current="page"] { color: var(--text-1); font-weight: 600; }
+nav.sib .sib-sep { color: var(--muted); padding: 0 .15em; }
+/* ≤720px 折到标题下一行独占。white-space 放开是**兜底**：五项 22 字 .8rem
+   在 320px 上仍会溢出一点，宁可折成两行也不要横向滚条 */
+@media (max-width: 720px) {
+  .mh-row { gap: 6px 12px; }
+  nav.sib { margin-left: 0; flex-basis: 100%; white-space: normal; }
+}
+
 .hero-row { display: flex; flex-wrap: wrap; gap: 26px; margin: 20px 0 4px; }
 .stat { min-width: 110px; }
 .stat .value { font-size: 2rem; font-weight: 660; line-height: 1.1; }
@@ -168,6 +192,29 @@ header.masthead { padding: 34px 0 18px; border-bottom: 1px solid var(--border); 
 .chip[aria-pressed="true"] { background: var(--text-1); color: var(--page); border-color: var(--text-1); }
 .chip .il-dot { width: 9px; height: 9px; border-radius: 50%; }
 .chip .check { font-weight: 700; font-size: .9rem; }
+
+/* ── 带口径 tooltip 的元件：一律挂 .has-tip（2026-09-08 去 clutter 案 §一.3） ──
+   数字与口径从正文搬进 title 之后，问题变成「读者怎么知道这儿还有一句」。
+   统一给一道虚下划线当把手——凡 .has-tip 就是「悬停还有一句」，
+   四页（图例 chip 的计数、select 的口径、表头、统计行）同一副长相。
+   写法约定见 docs/desk/declutter-shared-howto-20260908.md：
+   title 与 aria-label 写**同一份字**，读屏与鼠标读到的是一句话。 */
+.has-tip { text-decoration: underline dotted var(--axis); text-underline-offset: 3px; }
+.has-tip:not(.chip):not(th):not(select) { cursor: help; }
+/* chip 本身是可点的（单击开关／双击独看），整颗划虚线会看成「链接」——
+   只给它最后那格字面划，色点与勾号不划 */
+.chip.has-tip { text-decoration: none; }
+.chip.has-tip > span:last-child {
+  text-decoration: underline dotted currentColor; text-underline-offset: 3px;
+}
+/* 表头上的虚线要看得出是把手而非表格线，压深一档 */
+th.has-tip { text-decoration-color: var(--muted); cursor: help; }
+/* 触屏没有 hover，title 根本出不来：把手撤掉，免得引着人去悬停一个悬停不了的东西。
+   触屏读者看数字走各页默认闭合的 details 兜底（舆图「哪一类落得下」即是）。 */
+@media (hover: none) {
+  .has-tip, .chip.has-tip > span:last-child { text-decoration: none; }
+  .has-tip:not(.chip):not(th):not(select), th.has-tip { cursor: auto; }
+}
 select, input[type="number"] {
   font: inherit; font-size: .84rem; padding: 4px 8px; border-radius: 7px;
   border: 1px solid var(--border); background: var(--surface-1); color: var(--text-1);
@@ -192,6 +239,26 @@ section.card {
 section.card.river-mode { background: transparent; border-color: transparent; }
 section.card > .head { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; margin-bottom: 2px; }
 section.card .desc { color: var(--text-2); font-size: .88rem; max-width: 76ch; margin-bottom: 12px; }
+
+/* ── 节题独占一行、工具簇另起一行（库主 2026-09-08 追加 §六.2） ────────────
+   从前节题与五颗工具钮（⚙ 导览 📖 📍 🎲 搜索）挤在同一条 flex 行上：宽屏
+   看着像标题后面拖了一串小尾巴，窄屏则是标题被挤成两行、钮再折成第三行，
+   宽窄两副样子。现在**恒定两行**：第一行只有题，第二行只有工具，宽窄同构。
+
+   两种用法都受支持，页员挑一种：
+   ① 零 DOM 改动——`.head` 上加 `sec-head` 类，题靠 flex-basis:100% 自己占满
+      一行，后面的钮自然被挤到第二行（现有的 search.js／tour.js／app-timeline.js
+      照旧往 `.head` 里 appendChild，一行都不用改）；
+   ② 显式容器——另建 `<div class="sec-tools">` 收拢那几颗钮，钉住态与图标化的
+      选择器两种写法都认（见下方 :is(...)）。 */
+section.card > .head.sec-head { row-gap: 8px; align-items: center; }
+.head.sec-head > h2 { flex: 0 0 100%; margin-bottom: 0; }
+.sec-tools {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  flex: 1 1 100%; min-width: 0;
+}
+/* 搜索框照旧顶到最右（它原本靠自己的 margin-left:auto，容器换了也还得管用） */
+.sec-tools .tl-search { margin-left: auto; }
 .chart-host { width: 100%; overflow-x: auto; }
 /* 画布尺寸由 Frame 按宿主实际宽度算好并写在 width/height 属性上，此处不得再拉伸：
    从前的 width:100% 会把 1080px 的画布等比压进 289px（0.27×，11px 刻度只剩 3px）。
@@ -248,6 +315,46 @@ text.direct.sub { fill: var(--text-2); font-weight: 400; }
 .notes summary { color: var(--muted); }
 .notes[open] summary { color: var(--text-2); margin-bottom: 4px; }
 .notes > p { margin: 0 0 .5em; max-width: 78ch; }
+/* 「summary 带一句」（2026-09-08 去 clutter 案 §一.2）：把手上写
+   **名词短语（strong）· 那一句不看会误读的口径**，正文进块内。
+   于是「留」级的句子有了固定的家，而不是散在正文里各说各的。
+   summary 整条本是 --muted（收起态要退到背景里去），可把手上那半句是要
+   读得见的——strong 提一档到 --text-2，与开态的整条同色。 */
+.notes summary strong { color: var(--text-2); font-weight: 640; }
+.notes[open] summary strong { color: var(--text-1); }
+/* 把手后那半句口径与前半个名词短语之间的分隔点 */
+.notes summary .sm-sep { color: var(--axis); padding: 0 .3em; }
+/* summary 里的字要能折行：口径句常有二三十字，窄屏上 nowrap 会顶出横滚条 */
+.notes summary { white-space: normal; line-height: 1.55; }
+
+/* ── 说明页（about.html）的问答块 ────────────────────────────────────────
+   与 .notes 分工：.notes 的把手是**名词短语**（页内那一句口径），
+   这里的把手是**问句**（读者会问的那句），故字号、颜色都往正文那一档靠，
+   不像 .notes 那样退到 --muted 的背景里去——这一页上问答就是正文。 */
+.faq-sec .head { margin-bottom: 10px; }
+.faq-q { border-top: 1px solid var(--border); padding: 10px 0 2px; }
+.faq-q:first-of-type { border-top: none; }
+.faq-q > summary {
+  cursor: pointer; color: var(--text-1); font-size: .95rem; font-weight: 600;
+  line-height: 1.5; white-space: normal; list-style: none;
+}
+.faq-q > summary::-webkit-details-marker { display: none; }
+/* 自画三角：原生 marker 在两个引擎上一大一小，且改不动颜色 */
+.faq-q > summary::before {
+  content: '▸'; color: var(--muted); font-weight: 400;
+  display: inline-block; width: 1.1em; transition: transform .12s;
+}
+.faq-q[open] > summary::before { transform: rotate(90deg); }
+.faq-q[open] > summary { margin-bottom: 6px; }
+.faq-q > :not(summary) { color: var(--text-2); font-size: .88rem; max-width: 78ch;
+  margin: 0 0 .7em; padding-left: 1.1em; }
+.faq-q > :not(summary):last-child { margin-bottom: .3em; }
+/* 分组小标（「王朝之河 · 竖向河流」「时光舆图」…）：四组问答里各按页分堆，
+   小标要读成**标签**而非又一道问句——故比 summary 更小、退到 --muted，
+   靠上方那一档空白把它与上一问的答案隔开（否则读者会把它当上一答的末行） */
+.faq-sec h3 { margin: 20px 0 0; color: var(--muted); font-size: .8rem;
+  font-weight: 650; letter-spacing: .05em; }
+.faq-sec h3:first-of-type { margin-top: 4px; }
 .table-scroll { overflow-x: auto; max-height: 420px; overflow-y: auto; margin-top: 8px;
   border: 1px solid var(--border); border-radius: 8px; }
 table { border-collapse: collapse; width: 100%; font-size: .8rem; }
@@ -489,7 +596,21 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
   /* 锁 .on:不锁的话这条特异度会把尚未打开的卡顶成可见 */
   .kp-embed.on.kp-haspic { display: grid; grid-template-columns: minmax(160px, 300px) 1fr;
     column-gap: 16px; align-items: start; }
-  .kp-embed.on.kp-haspic .kp-thumb { grid-row: 1 / span 4; width: 100%; max-height: 280px; margin: 0; }
+  /* 两张图叠在第 1 列的头两行：主图第 1 行、第二张第 2 行（库主 2026-09-08 令
+     「DOM 里紧跟主图、卡面上也紧跟主图」）。
+     从前主图写 `grid-row: 1 / span 4`、第二张写 `grid-row: 5`——列是对的，行不对：
+     第 5 行在右栏四行**之后**，于是第二张掉到整张卡的最底下，与主图之间空出
+     一百多像素（复核实测 157px）。「飘去卡底右下角」只是换成了飘去卡底左下角。
+     现在主图不再跨行，第 1 行的高度由它与右栏首件（角标行，几乎没高度）中的
+     高者定，第二张紧贴其下。右栏各件仍按 DOM 次序自动往下排，无需写行号。
+     grid-* 只在这条两栏规则里写——窄屏这张卡是块流，那儿写网格属性是空话 */
+  .kp-embed.on.kp-haspic .kp-thumb { grid-column: 1; grid-row: 1; width: 100%; max-height: 280px; margin: 0; }
+  .kp-embed.on.kp-haspic .kp-thumb2 {
+    grid-column: 1; grid-row: 2; width: 100%; max-height: 120px;
+    align-self: start; margin: 8px 0 0;
+  }
+  /* 角标行也显式归右栏：主图不再跨行之后，它若自动落进第 1 列就会把第二张挤下去 */
+  .kp-embed.on.kp-haspic .kp-lines,
   .kp-embed.on.kp-haspic .kp-ext, .kp-embed.on.kp-haspic .kp-links,
   .kp-embed.on.kp-haspic .kp-rel, .kp-embed.on.kp-haspic .kp-src { grid-column: 2; }
 }
@@ -569,6 +690,8 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
 
 /* 搜索框:钉在版块标题行右侧,结果浮在其下 */
 .tl-search { position: relative; margin-left: auto; }
+/* 导览钮那 8px 是它当年独自贴在 h2 右边时留的呼吸；进了工具簇之后间距归 gap 管 */
+.sec-tools .tour-launch-head { margin-left: 0; }
 /* 钉住那一排的**排版基准**：搜索框宽度。左边每一颗简钮的 right 偏移、以及黑条
    左钮能占多宽，全从它算起——原是十三处各写一遍那个 min() 表达式。
    2026-09-07 加第三颗简钮（📍）后 375px 上排不下了：搜索 172 ＋三钮 120 ＋边距，
@@ -582,34 +705,54 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
    判据取 .place-launch 在不在场：它正是挤出这一格的那颗钮。
    老浏览器不认 :has 时退回宽的 46vw——那是本轮之前的值，只会更松不会更挤 */
 @media (max-width: 430px) { body:has(.place-launch) { --pin-search: 40vw; } }
-/* 长卷里的搜索必须**够得着**:全景一节高一万五千像素,搜索框跟着标题栏
-   滚出视野后,想搜就得先滚回顶上——而「页太长滚不动」正是搜索要解决的事。
-   故本节占据视口时把它钉在右上角(与纪年滑杆同一套出没规则) */
-.tl-search.pinned {
-  position: fixed; top: 52px; right: 14px; z-index: 70; margin: 0;   /* 52px：给右上角深色药丸让层 */
-}
-/* 桌面钉住簇（2026-08-22 库主令）：河流一节滚很久，浮动搜索左侧补 🎲 与 📖 简钮，
-   最左再给一颗回顶 ⬆——窄屏另有黑条「回到页首」，故 ⬆ 只在宽屏出没 */
-@media (min-width: 720px) {
-  .tl-dice.pinned, .line-launch.pinned, .place-launch.pinned, .tl-totop.pinned, .tl-gear.pinned {
-    position: fixed; z-index: 70; margin: 0; padding: 0;
-    width: 34px; height: 34px; min-height: 0; box-sizing: border-box;
-    display: inline-flex; align-items: center; justify-content: center;
-    line-height: 1; overflow: hidden; top: 52px;
-    background: var(--surface-1); box-shadow: 0 4px 16px rgba(0, 0, 0, .16);
-  }
-  .tl-gear.pinned { right: calc(14px + var(--pin-search) + 30px); }
-  .tl-dice.pinned { right: calc(14px + var(--pin-search) + 30px + 40px); }
-  .line-launch.pinned { right: calc(14px + var(--pin-search) + 30px + 120px); }   /* 📖 在 📍 左：与标题栏同序（复核员 09-07 第八条，09-08 改） */
-  /* 地方线（2026-09-07 新钮）插在故事线左边，回顶随之再让一格 40px——
-     这一排的次序是「设置·随手·读法·城·回顶」，越往左越是「换个地方看」 */
-  .place-launch.pinned { right: calc(14px + var(--pin-search) + 30px + 80px); }
-  .tl-totop.pinned { right: calc(14px + var(--pin-search) + 30px + 160px); }
-  .tl-dice.pinned span:not(.tl-dice-face) { display: none; }
-  .line-launch.pinned span:not(.line-face) { display: none; }
-  .place-launch.pinned span:not(.place-face) { display: none; }
-}
+/* ── 钉住簇（2026-09-08 去 clutter 案：整簇一个 fixed，簇内各钮回到流内排布） ──
+   长卷里的搜索必须**够得着**：全景一节高一万五千像素，搜索框跟着标题栏滚出
+   视野后，想搜就得先滚回顶上——而「页太长滚不动」正是搜索要解决的事。故本节
+   占据视口时把整条工具簇钉在右上角（与纪年滑杆同一套出没规则）。
+
+   **钉的是容器，不是钮**。从前六颗钮各自 position:fixed，各写一条
+   `right: calc(14px + var(--pin-search) + 30px + 40px…)` 的手算偏移，十三处；
+   加一颗钮就得把后面几条常数全改一遍，且实测已经撞过——窄屏黑条左钮右沿与
+   📍 左沿差 2px 压在一起（CSS 里为此留过「退 186 不是 176」那笔账）。
+   现在 `.sec-tools` 一个人 fixed，簇内 ⬆ ⚙ 🧭 📖 📍 🎲 与搜索框在 flex 流内
+   自己排队，间距归 gap 管，再添钮不必算数。 */
 .tl-totop, .tl-gear { display: none; }   /* 只在钉住态现身；窄屏交给黑条与折叠条 */
+.sec-tools.pinned {
+  position: fixed; z-index: 70; top: 52px; right: 14px; left: auto;   /* 52px：给右上角深色药丸让层 */
+  width: auto; flex: none; margin: 0; padding: 0;
+  justify-content: flex-end; gap: 6px;
+}
+/* 钉住时簇内的简钮一律缩成 34px 的圆、只留图标：那一排是「入口」不是「说明」，
+   字面在 title 与 aria-label 里（🎲 随便看看／📖 故事线目录／📍 地方线目录／
+   🧭 导览／⚙ 视图与显示设置／⬆ 回到页首） */
+.sec-tools.pinned > .chip {
+  margin: 0; padding: 0;
+  width: 34px; height: 34px; min-height: 0; box-sizing: border-box;
+  display: inline-flex; align-items: center; justify-content: center;
+  line-height: 1; overflow: hidden;
+  background: var(--surface-1); box-shadow: 0 4px 16px rgba(0, 0, 0, .16);
+}
+.sec-tools.pinned .tl-dice span:not(.tl-dice-face),
+.sec-tools.pinned .line-launch span:not(.line-face),
+.sec-tools.pinned .place-launch span:not(.place-face),
+.sec-tools.pinned .tour-launch-head span:not(.tour-face) { display: none; }
+.sec-tools.pinned .tl-search { margin-left: 0; }
+.sec-tools.pinned .tl-search input {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .16); background: var(--surface-1);
+}
+/* ⬆ 与 ⚙ 只在钉住态现身；未钉时标题栏就在眼前，回顶与设置都够得着 */
+.sec-tools.pinned .tl-totop, .sec-tools.pinned .tl-gear { display: inline-flex; }
+/* 窄屏钉进顶部黑条（.sec-nav.up）那一行，与「回到页首」同排——搜索框浮在过滤条上
+   时与黑条错着半层，看着像两套东西（用户实测）。那条上只放得下四格，故
+   ⬆（黑条自带「回到页首」）、⚙（黑条自带 .sn-gear）、🧭（此前本就不钉）让位 */
+@media (max-width: 719px) {
+  .sec-tools.pinned { top: calc(var(--filters-h, 45px) + 7px); right: 8px; }
+  /* 只收「导览」那一颗：.line-launch／.place-launch 身上也带着 .tour-launch
+     （三颗共用同一副药丸身量），写 .tour-launch 会把 📖 📍 一起收掉 */
+  .sec-tools.pinned .tl-totop,
+  .sec-tools.pinned .tl-gear,
+  .sec-tools.pinned .tour-launch-head { display: none; }
+}
 /* 齿轮弹层：把 section 里原装的 .local-controls 浮到簇下方——不复制状态，
    控件还是那一套，只是换个地方现身；行宽自回折，超高自滚 */
 @media (min-width: 720px) {
@@ -624,42 +767,9 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
     padding: 10px 14px;
   }
 }
-@media (max-width: 719px) { .tl-totop.pinned, .tl-gear.pinned { display: none; } }
-.tl-search.pinned input {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, .16); background: var(--surface-1);
-}
-/* 窄屏：钉进顶部黑条（sec-nav.up）那一行，与「回到页首」同排——
-   搜索框浮在过滤条上时与黑条错着半层，看着像两套东西（用户实测）。
-   骰子跟着钉在搜索框左侧，只留 🎲 图标。 */
+/* 窄屏黑条上的让位账：钉住簇（搜索＋📖📍🎲）占住右侧，黑条左钮与 ⚙ 挤在左侧。
+   簇的宽度现在由 flex 自己算（不再逐钮手写偏移），但左钮仍得知道要让多少 */
 @media (max-width: 719px) {
-  .tl-search.pinned { top: calc(var(--filters-h, 45px) + 7px); right: 8px; }
-  .tl-dice.pinned {
-    position: fixed; z-index: 70; margin: 0; padding: 0;
-    width: 34px; height: 34px; min-height: 0; box-sizing: border-box;
-    align-items: center; justify-content: center;
-    line-height: 1; overflow: hidden;
-    top: calc(var(--filters-h, 45px) + 7px);
-    right: calc(8px + var(--pin-search) + 6px);
-  }
-  .tl-dice.pinned span:not(.tl-dice-face) { display: none; }
-  /* 故事线：钉在骰子左边那一格（顶栏原本空着，用户实测指出） */
-  .line-launch.pinned {
-    position: fixed; z-index: 70; margin: 0; padding: 0;
-    width: 34px; height: 34px; min-height: 0; box-sizing: border-box;
-    align-items: center; justify-content: center; line-height: 1; overflow: hidden;
-    top: calc(var(--filters-h, 45px) + 7px);
-    right: calc(8px + var(--pin-search) + 6px + (34px + 6px) * 2);   /* 📖 在 📍 左，与标题栏同序 */
-  }
-  .line-launch.pinned span:not(.line-face) { display: none; }
-  /* 地方线：再往左一格（2026-09-07）。窄屏这一排从右往左是「搜索·🎲·📍·📖」 */
-  .place-launch.pinned {
-    position: fixed; z-index: 70; margin: 0; padding: 0;
-    width: 34px; height: 34px; min-height: 0; box-sizing: border-box;
-    align-items: center; justify-content: center; line-height: 1; overflow: hidden;
-    top: calc(var(--filters-h, 45px) + 7px);
-    right: calc(8px + var(--pin-search) + 6px + 34px + 6px);
-  }
-  .place-launch.pinned span:not(.place-face) { display: none; }
   /* 黑条左侧按钮再让出一格 */
   .sec-nav.up .sn-btn { max-width: calc(100vw - var(--pin-search) - 140px); }
   /* 黑条左侧按钮给右边的骰子＋搜索留位 */
@@ -739,6 +849,9 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
   /* relative 非 static：kp-close 是 absolute，爹不站位叉就漂去外层容器角上
      （2026-08-22 库主截图实案「close button 又 drift 了」）。流内行为与 static 相同 */
   position: relative; transform: none;
+  /* top 也要归零：.kp 的 top:50% 是给浮层态写的，relative 之下若容器有定高就会把卡
+     往下顶半个容器；眼下容器高 auto 才没发作，别赌 */
+  top: auto;
   /* 放开生长：两张卡平分整行、独卡也能舒展到 580px——定宽 430 会在宽屏
      留出大片死白（用户实测「poor use of space」）。摘要列随宽多露字 */
   flex: 1 1 430px; width: auto; max-width: 580px; max-height: 196px;
@@ -759,8 +872,15 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
 /* 控制列 | 卡区 并排；窄了卡区整体换行到控制列之下，谁也不盖谁 */
 .ctrl-row { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
 .ctrl-row .sec-ctrls { flex: 0 1 auto; }
-.kp-zone { flex: 1 1 320px; display: flex; gap: 14px; justify-content: center;
+/* 卡区上不上控件那一行，看装不装得下两张并排卡（430+14+430）。从前最小 320 就上行：
+   窗口 1100–1650 宽时卡区挤在控件右边却装不下一张卡，两张竖叠成四百像素、左边留一大片白
+   （库主 2026-09-08 截图「recurring card placement error」；1280 宽实测卡叠 406px、图顶 685，
+   预览窄一点就绕过，所以时好时坏）。现在：两卡在 → 须 874 才上行，否则整体换到下一行满宽并排；
+   单卡 → 430；无卡 → 整块隐去，免得空卡区独占一行还吃 18px 行距 */
+.kp-zone { flex: 1 1 874px; display: flex; gap: 14px; justify-content: center;
   align-items: flex-start; flex-wrap: wrap; margin-left: auto; }
+.kp-zone:not(:has(.kp-corner.on ~ .kp-corner.on)) { flex-basis: 430px; }
+.kp-zone:not(:has(.kp-corner.on)) { display: none; }
 /* display 必须在 .on 态重申：.kp.on{display:block} 是双类，会压掉上面的
    单类 grid——塌成竖排后内容超高冒出纵滚条，恰好骑在 ✕ 上，「关闭失灵」
    与「版式时好时坏」同根（用户两报实为一案）。overflow 锁死：角卡定高
@@ -872,9 +992,24 @@ section.card.has-kp:not(.desc-full) > .desc::after {
 /* 本地手选图(自摄/馆方开放图)可点开放大(js/pic-zoom.js);预览是 cover 裁过的,
    灯箱里才见全幅——维基缩略图不挂,光标不撒谎 */
 .kp-thumb.kp-zoomable { cursor: zoom-in; }
-/* 第二张（语境／细节，2026-09-03 一条两张 schema）：小图靠右压在出处行下，不抢主图 */
-.kp-thumb2 { display: block; max-width: 46%; max-height: 110px; object-fit: cover; border-radius: 6px; margin: 8px 0 0 auto; cursor: zoom-in; }
-.kp-embed.on.kp-haspic .kp-thumb2 { grid-column: 2; }
+/* 第二张（语境／细节，2026-09-03 一条两张 schema）。
+   2026-09-08 库主令改落位：**紧跟主图**，不再飘到卡底右下角。
+   从前它排在出处行之后、靠 margin-left:auto 贴右，读者一路读完摘要、链接、
+   出处，末了在角上撞见一张跟正文隔了三栏的小图——它是主图的语境，
+   离主图越远越读不出「这是同一件东西的另一面」。
+   DOM 里也一并挪到 img 之后（js/knowledge.js mkCard），两处必须同改：
+   只改 CSS 的话块流变体（侧卡／贴底卡）仍按文档次序排在最后。
+
+   块流变体：主图之下**等宽**小图——等宽才读作「同一栏的下一张」，
+   46% 靠右那副样子读作「另起一块」。 */
+.kp-thumb2 {
+  display: block; width: 100%; max-width: 100%; max-height: 96px;
+  object-fit: cover; object-position: center; border-radius: 6px;
+  margin: 6px 0 0; cursor: zoom-in;
+}
+/* 嵌入卡的两张都描一道边：坞底色与图底色常常撞在一起，没边就分不出图的边界
+   （主图那条在 .kp-embed .kp-thumb 里，这是第二张的） */
+.kp-embed .kp-thumb2 { border: 1px solid var(--border); }
 .kp-sub { font-size: .74rem; color: var(--text-1); opacity: .62; margin-top: 8px; }
 .kp-title { font-weight: 720; font-size: 1.04rem; margin: 1px 0 6px; }
 .kp-ext { font-size: .82rem; line-height: 1.6; margin: 0;
@@ -1219,6 +1354,21 @@ body.tour-on .kp-solo.kp-yc-full .kp-ext {
 .segctl .seg:hover:not(.on) { background: var(--surface-2); color: var(--text-1); }
 .segctl .seg.on { background: var(--text-1); color: var(--page); font-weight: 600; }
 .seg-label { display: inline-flex; align-items: center; gap: 6px; }
+/* 标签字面藏起来、只留给读屏（库主 2026-09-08：河流／泳道那颗前面的「视图」二字去掉）。
+   不用 display:none——那会连读屏一起吞掉；radiogroup 自己也有 aria-label，
+   两处留一处即可，但把这条写成通用工具，别处要藏标签也用它 */
+.lab-hidden > span:first-child {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+/* ≤720px 药丸缩字面（「竖向河流」→「竖」）：字面由 data-short 顶替，
+   **触摸区不缩**——padding 反而加大一点，指头点的是那块地方不是那个字。
+   font-size:0 是为了让原字面彻底不占宽，::after 再把短字面放回来；
+   aria-checked 与 radiogroup 的 aria-label 都没动，读屏念到的仍是全名 */
+@media (max-width: 720px) {
+  .segctl .seg[data-short] { font-size: 0; padding: 7px 14px; }
+  .segctl .seg[data-short]::after { content: attr(data-short); font-size: .82rem; }
+}
 
 /* 缩放滑杆。读数用等宽数字，拖动时数字不会左右跳。 */
 .rng-label { display: inline-flex; align-items: center; gap: 8px; }
@@ -1241,6 +1391,36 @@ body.tour-on .kp-solo.kp-yc-full .kp-ext {
 @media (prefers-reduced-motion: reduce) { .tl-dice.rolling .tl-dice-face { animation: none; } }
 
 .tour-launch-head { margin-left: 8px; }
+/* 导览的 🧭：与 📖 📍 🎲 同一副身量（库主 2026-09-08：四颗图标并排一行）。
+   页员把 `.tour-launch-head` 的裸 textContent 改成两段
+   `<span class="tour-face">🧭</span><span>导览</span>` 之后这条才生效 */
+.tour-face { display: inline-block; font-size: .95rem; line-height: 1; }
+
+/* ── ≤720px 工具簇只留图标（库主 2026-09-08 追加 §六.3） ────────────────────
+   手机上「⚙ 🧭导览 📖故事线 📍地方线 🎲随便看看 ＋搜索框」一排要折三行，
+   而这四颗问的都是同一件事：「从哪儿进去」。留图标、去字面，一行摆得下。
+   aria-label 各钮自己都有全名（导览／故事线目录／地方线目录／随机跳转），
+   **读屏不受影响**；title 也照旧，长按能出。
+
+   两种容器都认：`.sec-tools` 显式簇，或 `.head.sec-head` 里直接躺着的那几颗。
+   选择器沿用本库钉住态的既有写法 `span:not(.X-face)`——同一套约定，
+   改钮的结构时只有一处要记（face 那一段必须带类名）。 */
+@media (max-width: 720px) {
+  :is(.sec-tools, .head.sec-head) .tl-dice span:not(.tl-dice-face),
+  :is(.sec-tools, .head.sec-head) .line-launch span:not(.line-face),
+  :is(.sec-tools, .head.sec-head) .place-launch span:not(.place-face),
+  :is(.sec-tools, .head.sec-head) .tour-launch-head span:not(.tour-face) { display: none; }
+  /* 触摸区不缩：字没了、地方还在（44px 见方那条老规矩，圆药丸取其内接） */
+  :is(.sec-tools, .head.sec-head) > .chip { padding: 8px 12px; margin-left: 0; }
+  /* fresh 态（「第一次来？跟着走一遍」／「接着走 · 第 N 站」）**一并图标化**
+     （2026-09-08 复核指出）：从前这里给 fresh 开了一道豁免，可第一次进来的读者
+     恰恰全是 fresh 态——那道豁免等于让库主「四颗图标并排一行」这条拍板对首访者
+     一次都不生效（375px 实测：邀请句独占 187px，🎲 与搜索框被挤到第二行）。
+     邀请句没有被丢掉，它的三个去处都还在：① 整句仍在 aria-label 与 title 里
+     （tour.js syncLaunch 两处同写），读屏念得到、长按看得见；② fresh 态自带蓝底
+     白字＋三次脉冲（.tour-launch.fresh），一行图标里它是唯一亮着的那颗，
+     「先点我」这件事由颜色说，比字说得更快；③ 宽屏照旧带字。 */
+}
 /* 目录行里的那个要跟目录链接一样高，否则它把整行撑开半格 */
 .tour-launch-toc { font-size: .8rem; padding: 3px 10px; }
 /* 没走过导览的人看到的是一句邀请，走过的人看到的是一个不碍事的小按钮 */
@@ -1257,7 +1437,7 @@ body.tour-on .sec-nav { display: none !important; }
 
 @media (max-width: 719px) {
   /* 手机：讲解在上、知识卡在下，两者各占一头不打架；
-     顶部让开吸顶的搜索框（.tl-search.pinned 在 top:6px）。
+     顶部让开吸顶的工具簇（.sec-tools.pinned，窄屏钉在黑条那一行）。
      坞改为正序：讲解在前、类别开关跟在它下面 */
   .tour-dock {
     left: 8px; right: 8px; width: auto; top: 50px; bottom: auto;
@@ -2106,19 +2286,6 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .plc-dock-x:hover { color: var(--text-1); }
 /* 坞里的嵌入卡自带一条虚线分隔，图与文的两栏排布也照旧（见 .kp-embed 段） */
 
-/* 索引页：够格开线的地方，按条数排 */
-.plc-index { display: grid; gap: 10px; margin-top: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
-.plc-index-i {
-  display: flex; flex-direction: column; gap: 3px; text-decoration: none;
-  background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px;
-}
-.plc-index-i:hover { background: var(--surface-2); }
-.plc-index-n { font-size: 1.1rem; font-weight: 700; color: var(--text-1); }
-.plc-index-c { font-size: .82rem; color: var(--text-2); }
-.plc-index-y { color: var(--muted); font-variant-numeric: tabular-nums; }
-.plc-index-k { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; color: var(--text-2); }
-.plc-index-kk { display: inline-flex; align-items: center; gap: 3px; }
-.plc-index-kk .ev-glyph { overflow: visible; flex: none; }
 
 /* 宽屏：轴回到中缝，一等卡左右交错、二等卡贴右列（库主批：手机一条轴在左、
    单列即可；桌面会空，两边都挂卡）。720px 是本库既有的窄宽分界 */

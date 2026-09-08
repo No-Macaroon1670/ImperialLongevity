@@ -131,14 +131,28 @@ export function mountSearch(sectionEl, hostOf) {
   // 本模块此前自带一条 document click 与一条 Esc，与 shell 的同名监听在全景页撞车——
   // 两颗齿轮同页同节，先注册的 shell 那条把这颗刚开的弹层当场关掉，读者看到的是「白点」
   registerLcGear(gear, sectionEl);
-  (sectionEl.querySelector('.head') || sectionEl).appendChild(gear);
+  // 工具簇：节题独占一行、这几颗另起一行（库主 2026-09-08 追加 §六.2）。
+  // 容器一般由调用方先建好（眼下只有 app-timeline.js 调本函数，它必建）；没有的页
+  // **当场补一个**，不再退回 .head：下面 ⬆ 是 prepend 进簇的（簇内次序＝钉住态
+  // 从左到右的次序），prepend 到 .head 会把它插到 h2 前面，节题就成了第二件东西。
+  // 补一个空簇则宽窄两屏都还是「题一行、工具一行」，与全景页同构
+  let tools = sectionEl.querySelector('.sec-tools');
+  if (!tools) {
+    tools = h('div', { class: 'sec-tools' });
+    (sectionEl.querySelector('.head') || sectionEl).appendChild(tools);
+  }
   const totop = h('button', {
     class: 'chip tl-totop', type: 'button', title: '回到页首',
     onclick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
   }, [h('span', { text: '⬆' })]);
-  (sectionEl.querySelector('.head') || sectionEl).appendChild(totop);
-  (sectionEl.querySelector('.head') || sectionEl).appendChild(dice);
-  (sectionEl.querySelector('.head') || sectionEl).appendChild(box);
+  // 簇内次序＝钉住态从左到右的次序，沿用 2026-08-22 定下的那一排：
+  // ⬆ 回顶｜🧭 导览 📖 故事线 📍 地方线（三个「从哪儿进去」，导览与故事线由
+  // 别处先 append 进来）｜🎲 随手一条｜⚙ 本节设置｜搜索框顶最右。
+  // 故回顶插到队首、骰子与齿轮排在三颗入口之后
+  tools.prepend(totop);
+  tools.appendChild(dice);
+  tools.appendChild(gear);
+  tools.appendChild(box);
   // 本节在视口里就把搜索框钉住。用 IntersectionObserver 而非 scroll 事件:
   // 后者在页面隐藏/后台标签页里不一定按时来(本项目已为此栽过一次),
   // 而「够不够得着搜索框」这件事不该受那些影响。
@@ -152,15 +166,14 @@ export function mountSearch(sectionEl, hostOf) {
     // 「一直想跳到那个标位、不停闪烁」（2026-09-03）。未钉时量一次自然高，钉住时占住这个高。
     if (!on) headH = headEl.offsetHeight;
     else if (headH) headEl.style.minHeight = `${headH}px`;
-    box.classList.toggle('pinned', on);
-    dice.classList.toggle('pinned', on);    // 钉住态：窄屏进顶部黑条，宽屏浮在搜索左侧（2026-08-22 扩桌面）
-    totop.classList.toggle('pinned', on);
-    gear.classList.toggle('pinned', on);
+    // **整簇一起钉，钉的是容器不是钮**（2026-09-08 去 clutter 案改）：从前六颗钮
+    // 各自 position:fixed，各写一条 `right: calc(14px + var(--pin-search) + 30px + 40px…)`
+    // 的手算偏移——加一颗钮就得把后面几条常数全改一遍，且实测已经撞过（窄屏黑条
+    // 左钮右沿与 📍 左沿差 2px 压在一起，CSS 里为此留着「退 186 不是 176」那段账）。
+    // 现在只有容器一个人 fixed，簇内 ⬆ ⚙ 🧭 📖 📍 🎲 与搜索框回到 flex 流内
+    // 自己排队，间距归 gap 管，再添钮不必算数。
+    tools.classList.toggle('pinned', on);
     if (!on) sectionEl.classList.remove('lc-open');   // 解钉即收弹层
-    // 故事线入口同理：顶栏左边还空着一格，正好放它（用户实测指出）。
-    // 地方线钮（2026-09-07）跟着同一个开关走——同一簇的钮，出没必须同步，
-    // 一颗钉住一颗留在标题栏会看成两套东西
-    for (const b of document.querySelectorAll('.line-launch, .place-launch')) b.classList.toggle('pinned', on);
   };
   new IntersectionObserver(([e]) => {
     headGone = !e.isIntersecting && e.boundingClientRect.top < 0;   // 标题栏滚到上方去了

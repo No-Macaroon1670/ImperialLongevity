@@ -956,11 +956,26 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     const seen = memo.get(SEEN_KEY, null);
     const at = Number(memo.get(AT_KEY, 0)) || 0;
     launch.classList.toggle('fresh', !seen || at > 0);
-    launch.textContent = !seen ? '第一次来？跟着走一遍'
+    const txt = !seen ? '第一次来？跟着走一遍'
       : at > 0 ? `接着走 · 第 ${at + 1} 站` : '导览';
+    // 两段结构（🧭 ＋ 字），与 📖 📍 🎲 三颗同规格（库主 2026-09-08 追加 §六.3）：
+    // ≤720px 与钉住态下 CSS 按 `span:not(.tour-face)` 收掉字面、只留图标，
+    // 四颗图标才排得进一行。**全名不能只活在字面里**，故同时写进 aria-label 与
+    // title——读屏念的、长按看的都还是那三种面孔的整句
+    launch.replaceChildren(
+      h('span', { class: 'tour-face', text: '🧭' }),
+      h('span', { text: txt }),
+    );
+    launch.setAttribute('aria-label', txt);
+    launch.title = txt;
   }
   syncLaunch();
-  if (opts.launch !== false) (sectionEl.querySelector('.head') || sectionEl).appendChild(launch);
+  // 优先落进本节的工具簇（.sec-tools，全景页在 app-timeline.js 里建）；
+  // 没有簇的页照旧直接进 .head，行为一字不变
+  if (opts.launch !== false) {
+    (sectionEl.querySelector('.sec-tools') || sectionEl.querySelector('.head') || sectionEl)
+      .appendChild(launch);
+  }
   /** 整套拆掉：坞、幕、放大框、进度条、小地图，以及三处挂在 window 上的监听。
    *
    * 有这个是因为**换线会漏**：故事线目录里从石窟线点到勘合线，openLine 只调
