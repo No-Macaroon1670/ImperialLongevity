@@ -38,6 +38,7 @@ import { DYNASTIES, DYN_MAP, ERAS, SUCCESSION, MERGED_INTO, ORTHODOX } from './d
 import { LINE_STOPS } from './line-stops.js';
 import { cardPics } from './pics-own-cards.js';
 import { PLACES, membersOf, PLACE_END, PLACE_MIN } from './places.js';
+import { mountThemeToggle } from './theme.js';
 import { lineBadgeSpec } from './line-badge.js';
 import { GEO_STATS } from './geo-stats.js';
 import { syncCounts } from './counts.js';
@@ -457,15 +458,10 @@ else renderIndex(KEY);
 // 页首那几个数字由数据现算（counts.js 的唯一实现）：写死的数字每次增补都会再错一次
 syncCounts({ ev: EVENTS.length, dyn: DYNASTIES.length, geo: GEO_STATS.ev });
 
-// 主题按钮：与地图页同一段（本页不走 shell.js 的渲染循环，只借这八行）
+// 主题按钮：本页不走 shell.js 的渲染循环，走 theme.js 那一份（读存值、搬出 lede、持久化）。
+// 家安在标题行末：本页没有「设置」块，留在 lede 里会被那条 display:none 藏一辈子（2026-09-07 库主实测缺开关）
 {
-  const tt = $('theme-toggle');
-  if (tt) tt.addEventListener('click', () => {
-    const root = document.documentElement;
-    const cur = root.getAttribute('data-theme');
-    const next = cur === 'dark' ? 'light' : cur === 'light' ? 'dark'
-      : (matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark');
-    root.setAttribute('data-theme', next);
-    tt.textContent = next === 'dark' ? '☀ 浅色' : '🌙 深色';
-  });
+  const h1 = document.getElementById('plc-h1');
+  const home = h1 ? h1.parentNode : null;
+  mountThemeToggle(home);
 }
