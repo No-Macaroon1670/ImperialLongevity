@@ -372,7 +372,7 @@ async function renderPlace(place) {
       h('p', { style: 'margin:6px 0 0' }, [
         h('strong', { text: '轴不按年等距。' }),
         '段界是政权换手（人核过的换手表）或时代（换手表未到时的兜底），段与段之间不成比例；'
-        + '空段照画——那段空白说的是记录的形状，不是历史的形状。',
+        + '空段照画——空着的那一段，是史料里没记这座城，不是这座城没有事。',
       ]),
     ]),
   );
@@ -410,11 +410,10 @@ function segNode(seg, ctx) {
     h('div', { class: 'plc-rows' }, three.map((ev) => foldRow(ev, dock))),
   ]) : null;
 
-  // 空段的注分两种说法：上面若已有一张过关的总结，「留白说的是记录的形状」
-  // 就说重了——那一段并非无话可说，只是库内还没有可点开的单条
+  // 空段不再配注（库主 2026-09-08：「本段本地无条目——留白说的是记录的形状」连着七段重复七遍，
+  // 说的是设计理由不是信息）。段题里的「天下易主，本地未另记换手」已把空说清；空段只占一行。
   const sum = sumCard(seg, CARDS);
-  const empty = seg.items.length ? null : h('p', { class: 'plc-empty small muted',
-    text: sum ? '本段库内暂无可点开的单条，只有上面这张总结。' : '本段本地无条目——留白说的是记录的形状。' });
+  const empty = null;
 
   return h('section', {
     class: 'plc-seg' + (cap ? ' plc-cap' : '') + (seg.items.length ? '' : ' plc-seg-void'),
