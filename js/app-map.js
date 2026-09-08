@@ -40,6 +40,8 @@ import { GEO_DYN } from './geo-dynasties.js';
 import { EVENT_KINDS, EVENTS, kindLabel as evKindLabel, countByKind, kindsByCount } from './events.js';
 import { evSpec, mountEmbedCard, mdBold } from './knowledge.js';
 import { buildLineCatalog, lineFromHash, lineHash } from './line-catalog.js';
+import { buildPlaceCatalog } from './place-catalog.js';
+import { PLACES, placeOfLoc, membersOf } from './places.js';
 import { TERR } from './territories.js';
 import { syncCounts } from './counts.js';
 import { LINES } from './lines.js';
@@ -500,6 +502,107 @@ const goTo = (r) => {
   go.hidden = false;
 };
 const goOff = () => { go.hidden = true; };
+
+/* ── 地方线的两处入口（2026-09-07 库主令） ─────────────────────────────
+   舆图上一座城摊开时是**一环点**，地方线上同一座城是**一条竖轴**：同一批条目
+   的两种排法。散开簇的圈沿因此长一枚药丸，坞里再补一行——药丸在图上、手指够不着
+   （窄屏那枚只有十来像素），坞行是它的兜底。两处共用下面这两个小件。 */
+
+// key → 成员数。**与 place.html 索引页同一个算法**（membersOf），故数字必然对得上；
+// 记账是因为 membersOf 要过全库一千五百条，而 draw() 每次平移缩放都跑一遍
+const PLACE_N = new Map();
+const placeCount = (key) => {
+  if (!PLACE_N.has(key)) PLACE_N.set(key, membersOf(PLACES[key], EVENTS, GEO_EVENTS).length);
+  return PLACE_N.get(key);
+};
+
+/** 这一簇是哪座城的？取簇内各点**主落点地名**里命中地方线的众数，没有则 null。
+ *  只认全名相等（placeOfLoc 的规矩）：子串匹配会把大都会艺术博物馆当元大都，
+ *  在一枚点得下去的药丸上认错城，比不给这枚药丸更坏。 */
+function placeOfCluster(g) {
+  const cnt = new Map();
+  for (const m of g.rows) {
+    const nd = m.r['链'][m.r._pi !== undefined ? m.r._pi : mainIdx(m.r)];
+    const k = nd && placeOfLoc(nd['名']);
+    if (k) cnt.set(k, (cnt.get(k) || 0) + 1);
+  }
+  let best = null, bn = 0;
+  for (const [k, n] of cnt) if (n > bn) { best = k; bn = n; }
+  return best;
+}
+
+// 坞首那一行。**插在坞的最前面**（首行），与下面三行的「这是哪一条」并列而先出：
+// 读者点开一簇时想知道的第一件事是「这是哪儿」，「这座城另有一条线」正是那句的下半句
+const rdPlace = document.createElement('div');
+rdPlace.className = 'pl-read-place';
+rdPlace.hidden = true;
+{
+  const a = document.createElement('a');
+  rdPlace.appendChild(a);
+  const box = $('plate-read');
+  box.insertBefore(rdPlace, box.firstChild);
+}
+/**
+ * 圈沿那枚药丸：`(cx, cy)` 是圈心、`pr` 是圈的半径，药丸默认挂在十二点钟方向圈沿外。
+ * 整件走 SVG 而不是 HTML 浮层——它要跟着圈走，圈的坐标在视图单位里，
+ * 每次平移缩放 draw() 重画一遍，SVG 是零换算的那条路。
+ * 宽度按字数估：中日文全宽，`→` 与空格算半个，误差落在两侧内边距里。
+ */
+function ringTab(key, cx, cy, pr, plate) {
+  // 一个视图单位在屏上是多少像素，反算回去——**不是** 1/VIEW.z（复核员 2026-09-07
+  // 实测：那条只在「svg 的 CSS 宽度恰等于底图 viewBox 宽 1000」时才成立，而这张图
+  // 是横向可滚的定宽件，1440 屏上 svg 只有 746px 宽，于是 9 落到屏上是 6.7px——
+  // 比它旁边所有地名（10.5/z ≈ 7.9px）还小一档，偏偏它是全图唯一一枚钮）。
+  // clientWidth 取不到（0：图还没上屏）时退回旧算法，宁可小一点也不要 NaN
+  const s = VB[2] / (svg.clientWidth || W);
+  const fs = 9 * s, padX = 6 * s, hh = 15 * s, gap = 5 * s;
+  const txt = `${PLACES[key].name}地方线 →`;
+  // 全宽判据写成码点区间而不是字面量字符类：本行若哪天被非 UTF-8 的工具过一手，
+  // 字面量范围会静默变成别的区间，而 \u 转义过不了手也坏不了
+  const full = (ch) => { const c = ch.codePointAt(0); return (c >= 0x2e80 && c <= 0x9fff) || (c >= 0xff00 && c <= 0xffef); };
+  const wide = [...txt].reduce((n, ch) => n + (full(ch) ? 1 : 0.55), 0);
+  const w = wide * fs + padX * 2;
+  // 簇顶着图的上沿时，十二点钟那一枚整个落在 viewBox 之外被裁掉（svg overflow:hidden），
+  // 于是「圈还在、钮没了」（复核员 2026-09-07 实测：药丸 bbox y=0 而 svg y=167）。
+  // 装不下就翻到六点钟方向去——圈下总还有图。左右不翻：横向本就可滚，读者拖得回来
+  let y = cy - pr - gap - hh;
+  if (y < VB[1]) y = cy + pr + gap;
+  const g = el('g', { class: 'pl-ring-tab', tabindex: '0', role: 'link',
+    'aria-label': `${PLACES[key].name}地方线，${placeCount(key)} 条` });
+  g.appendChild(el('rect', { class: 'pl-ring-tab-b', x: cx - w / 2, y, width: w, height: hh, rx: hh / 2 }));
+  const t = el('text', { class: 'pl-ring-tab-t', x: cx, y: y + hh * 0.71,
+    'text-anchor': 'middle', 'font-size': fs });
+  t.textContent = txt;
+  g.appendChild(t);
+  const jump = () => { location.href = `place.html?key=${encodeURIComponent(key)}`; };
+  // pointerdown 也要截：放大态里 svg 的 pointerdown 一落就起平移并 setPointerCapture，
+  // 随后的 click 会发到被捕获的 svg 上（触发 collapse）而不是这枚钮——库主 2026-09-08 实测「点了完全没反应」即此；
+  // 点（.pl-hit）靠那边的豁免逃过，这枚钮不在豁免名单，故在自己身上把 pointerdown 截住
+  g.addEventListener('pointerdown', (e) => e.stopPropagation());
+  g.addEventListener('click', (e) => { e.stopPropagation(); jump(); });
+  g.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); jump(); }
+  });
+  // 悬停时圈沿加亮一档：先让读者看明白这枚钮说的是**这一圈**，再点
+  const hot = (on) => plate.classList.toggle('pl-plate-hot', on);
+  g.addEventListener('mouseenter', () => hot(true));
+  g.addEventListener('mouseleave', () => hot(false));
+  g.addEventListener('focus', () => hot(true));
+  g.addEventListener('blur', () => hot(false));
+  return g;
+}
+
+let rdPlaceKey = null;
+function setReadPlace(key) {
+  if (key === rdPlaceKey) return;      // draw() 每帧都调；不比一下会每帧重写一次 DOM
+  rdPlaceKey = key;
+  rdPlace.hidden = !key;
+  if (!key) return;
+  const a = rdPlace.firstChild;
+  a.href = `place.html?key=${encodeURIComponent(key)}`;
+  a.textContent = `${PLACES[key].name} · ${placeCount(key)} 条 · 地方线 →`;
+  a.title = '站在这座城里看四千年：轴按政权换手分段';
+}
 
 /* ── 散开与聚合 ────────────────────────────────────────────────────────
    按**视口上的距离**分组，不按经纬度：北京与十三陵不是同一处，但在全国
@@ -1040,6 +1143,9 @@ function draw() {
                           // 看得见却点不中，比看不见更糟。视觉与命中必须同序
   const openVis = [];     // 展开簇的成员点面，最后压顶（层序见 draw 尾）
   const openVisBase = []; // 展开簇的托盘与引线，压在成员点面之下、其余一切之上
+  const ringTabs = [];    // 圈沿的地方线药丸：入命中层的最末，画与点都在最上——
+                          // 它是**唯一**能点的圈沿件（圈内空白仍是「收起」，不改）
+  let openPlace = null;   // 这一帧摊开的那个簇属于哪座城（给坞首行）
 
   for (const g of gs2) {
     const gid = gidOf(g);
@@ -1139,9 +1245,17 @@ function draw() {
     // 盘同时按「所见即所点」吃掉盘下杂点的点击——看不见的东西不该能点中
     if (g.rows.length > foldCap) {
       const pr = Math.max(...g.rows.map((m2) => Math.hypot(m2.px - g.cx, m2.py - g.cy))) + 11 / VIEW.z;
-      const plate = el('circle', { class: 'pl-plate', cx: g.cx, cy: g.cy, r: pr });
+      // 有地方线的城：虚线圈换成实线、描强调色，圈沿十二点钟方向外挂一枚药丸。
+      // 虚线说的是「这是个临时态、收起即散」，实线说的是「这一圈还有个正经去处」——
+      // 没有线的城照旧虚线，不给一枚点了会失望的钮（库主 2026-09-07 定）
+      const pkey = placeOfCluster(g);
+      const plate = el('circle', { class: `pl-plate${pkey ? ' pl-plate-line' : ''}`, cx: g.cx, cy: g.cy, r: pr });
       gDot.appendChild(plate);
       openVisBase.push(plate);
+      if (pkey) {
+        openPlace = pkey;
+        ringTabs.push(ringTab(pkey, g.cx, g.cy, pr, plate));
+      }
       const blocker = el('circle', { class: 'pl-hit pl-plate-hit', cx: g.cx, cy: g.cy, r: pr, 'aria-hidden': 'true' });
       blocker.addEventListener('click', (e) => e.stopPropagation());
       gHit.appendChild(blocker);
@@ -1239,6 +1353,10 @@ function draw() {
   for (const h of dynHits) gHit.appendChild(h);
   for (const h of clusterHits) gHit.appendChild(h);
   for (const h of openHits) gHit.appendChild(h);
+  // 药丸最后进命中层：它既是画件又是钮，画在最上、点也在最上——半枚被邻簇的
+  // 命中圈吃掉的钮，比没有这枚钮更难交代
+  for (const t of ringTabs) gHit.appendChild(t);
+  setReadPlace(openPlace);
   for (const v of clusterVis) gDot.appendChild(v);
   for (const v of openVisBase) gDot.appendChild(v);
   for (const v of openVis) gDot.appendChild(v);
@@ -1678,6 +1796,17 @@ function mountLineChips() {
   btn.setAttribute('aria-label', '故事线目录');
   btn.addEventListener('click', cat.open);
 
+  // 地方线钮（库主 2026-09-07 令）：与骰子、书钮同排同视觉档，只留 📍 图标，
+  // 名字进 title/aria。开的是目录浮层（place-catalog.js），与全景页顶栏那颗同一件
+  const pcat = buildPlaceCatalog();
+  const pbtn = document.createElement('button');
+  pbtn.type = 'button';
+  pbtn.className = 'pl-dice pl-place';
+  pbtn.textContent = '📍';
+  pbtn.title = '地方线目录：站在一座城里看四千年';
+  pbtn.setAttribute('aria-label', '地方线目录');
+  pbtn.addEventListener('click', pcat.open);
+
   // 窄屏切版门（库主裁 2026-08-31：缩放柱窄屏隐藏＋chip与小版钮俱裁后触屏无世界入口——
   // 「加一个小按钮，就在故事线旁边」「可以加一个小地球」「之后换成一个小中国」）。
   // 桌面藏：柱钮独门，免再生同日方裁的冗余；≤720px 现身即触屏唯一门。
@@ -1728,7 +1857,7 @@ function mountLineChips() {
     restartRoll(dice);
     locate(pick);
   });
-  sbox.append(sin, dice, btn, globe, slist);   // 骰子居右（用户指定：不另起一行）；书钮再靠右（2026-08-26 库主令）；地球钮贴书钮（2026-08-31 库主令「就在故事线旁边」，窄屏专有）
+  sbox.append(sin, dice, btn, pbtn, globe, slist);   // 骰子居右（用户指定：不另起一行）；书钮再靠右（2026-08-26 库主令）；📍 贴书钮（2026-09-07 库主令，同一簇）；地球钮再右（2026-08-31 库主令「就在故事线旁边」，窄屏专有）
   bar.after(sbox);
   const locate = (r) => {
     slist.innerHTML = ''; sin.value = r.n;

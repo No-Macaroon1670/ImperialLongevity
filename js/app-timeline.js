@@ -6,6 +6,7 @@ import { mountApp } from './shell.js';
 import { SECTIONS } from './sections-panorama.js';
 import { mountSearch } from './search.js';
 import { buildLineCatalog, lineFromHash, lineHash } from './line-catalog.js';
+import { buildPlaceCatalog } from './place-catalog.js';
 import { mountTour } from './tour.js';
 import { lineOf, LINES } from './lines.js';
 import { EMPERORS, DYNASTIES } from './data.js';
@@ -88,6 +89,24 @@ const { el: catalog, open: openCatalog } = buildLineCatalog({
   btn.setAttribute('aria-label', '故事线目录');
   btn.addEventListener('click', openCatalog);
   head.appendChild(btn);
+
+  // 地方线目录（库主 2026-09-07 令）：与骰子、故事线同一簇、同一元件规格——
+  // 三颗钮问的是三个不同的「从哪儿进去」：🎲 随手一条、📖 挑一条读法、📍 挑一座城。
+  // 钉住态同样只留图标，右偏移在 styles.css 里再让一格（见 .place-launch.pinned）
+  const { open: openPlaces } = buildPlaceCatalog();
+  const pbtn = document.createElement('button');
+  pbtn.type = 'button';
+  pbtn.className = 'chip tour-launch place-launch';
+  const pface = document.createElement('span');
+  pface.className = 'place-face';
+  pface.textContent = '📍';
+  const plabel = document.createElement('span');
+  plabel.textContent = '地方线';
+  pbtn.append(pface, plabel);
+  pbtn.title = '地方线目录：站在一座城里看四千年';
+  pbtn.setAttribute('aria-label', '地方线目录');
+  pbtn.addEventListener('click', openPlaces);
+  head.appendChild(pbtn);
 }
 
 addEventListener('hashchange', () => { const k = lineFromHash(); if (k) openLine(k.key, k.at); });

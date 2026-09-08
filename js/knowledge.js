@@ -19,6 +19,9 @@ import { lineBadgeSpec, storyBase } from './line-badge.js';
 // 边表只在这里进场，而且是**懒的**：links-index.js 自己只有几 KB，两张边表
 // （合 57 万字节）到第一次开卡才 import()——见该文件头注。
 import { relOf, citeMeta } from './links-index.js';
+// 只取一个反查表（地名 → 地方线 key）。places.js 是叶子（除一个角色 Set 外无依赖），
+// 不把地方线那一套连带拖进每一张知识卡
+import { placeOfLoc } from './places.js';
 
 /**
  * 值得自动弹卡的名君(姓名 → 权重 1–3):滚动经过时自动打开,权重高者优先。
@@ -485,6 +488,22 @@ function navCard(card, spec, prev) {
   return fillCard(card, spec);
 }
 
+/** 前缀：知识卡也长在 story/*.html 里，那儿的同级是长文页不是站根。
+ *  同一句判断的另一份在 line-badge.js 的 storyBase()——那份加 `story/`，
+ *  这份退 `../`，两份说的是同一件事的两头，故不合并。 */
+const rootBase = () => (/\/story\//.test(location.pathname) ? '../' : '');
+
+/** 本页自己就是某座城的地方线时，那座城的 key（否则 null）。
+ *  用处：关系栏上的地名胶囊不给一枚「点了回到本页」的链——place.html?key=beijing 的
+ *  〈迁都北京〉卡上「迁地 北京市 →」正是这一枚（复核员 2026-09-07 实测）。
+ *  取一次即可：换城是换页，本模块不会活着看到 key 变。 */
+const THIS_PLACE = (() => {
+  try {
+    if (!/\/place\.html$/.test(location.pathname)) return null;
+    return new URLSearchParams(location.search).get('key') || null;
+  } catch { return null; }        // file:// 之类取不到 search 的场合：当作不在地方线上
+})();
+
 /** 一枚胶囊：年份小字（事）＋名字＋所属政权小标签（事）＋ⓦ（机读边） */
 function nodeChip(card, it) {
   const kids = [];
@@ -493,8 +512,37 @@ function nodeChip(card, it) {
   if (it.dyn) kids.push(h('span', { class: 'dyn', text: it.dyn }));
   if (it.wd) kids.push(h('span', { class: 'wd', text: 'ⓦ', title: '机读自 Wikidata' }));
   if (!it.ok) {
-    return h('span', { class: 'kp-node kp-node-off',
-      title: it.kind === 'loc' ? '库内没有地点卡' : '库内暂无此条的卡' }, kids);
+    // 地名胶囊一向是灰的——库内没有「地点卡」这种东西。但**有些地名有一条线**
+    // （2026-09-07 库主令）：命中地方线的城改成活链，去 place.html 站在这座城里看。
+    // 没命中的照旧灰着：这一栏的灰意思是「点不开」，不能有一半灰得没道理
+    //
+    // 两种地名**不给**这条链（复核员 2026-09-07 指出，均实测）：
+    //   ① 收藏族（现藏地／摹本地／仿品地，it.hold 由 links-index 盖记号）：
+    //      本库归地的定盘规则是「文物按『造』与『发』归地，不按『现』」
+    //      （docs/idea-placelines.md，库主 2026-09-02），places.js 的 hitsOf 照此
+    //      把收藏族挡在线外——〈清明上河图〉的「现藏地 故宫博物院」链去北京线，
+    //      而北京线那 132 条里恰恰没有这幅画：读者进的是一张找不到自己的页。
+    //      馆确实坐落在那座城里（placeOfLoc 因此认得它），但「馆在城里」与
+    //      「馆里的东西算这座城的事」是两句话，胶囊上的「→」说的是后一句。
+    //   ② 本页这座城自己：点一下只是整页重载回原地。
+    const pk0 = (it.kind === 'loc' && !it.hold) ? placeOfLoc(it.name) : null;
+    const pk = pk0 && pk0 !== THIS_PLACE ? pk0 : null;
+    if (pk) {
+      return h('a', {
+        class: 'kp-node kp-node-place', title: '在地方线上看这座城',
+        href: `${rootBase()}place.html?key=${encodeURIComponent(pk)}`,
+        onclick: (e) => e.stopPropagation(),   // 胶囊是去别处的门，别把它读成「点开这张卡」
+      }, kids.concat([h('span', { class: 'kp-node-go', text: '→' })]));
+    }
+    // 灰胶囊的悬停话：地名这一栏如今有三种灰法，一句「库内没有地点卡」盖不住——
+    // 读者见隔壁地名带「→」而这枚不带，该知道差在哪儿
+    let offTitle = '库内暂无此条的卡';
+    if (it.kind === 'loc') {
+      if (it.hold) offTitle = '现藏之地：地方线按「造」与「发」归地，不按「现」';
+      else if (pk0) offTitle = '正站在这座城的地方线上';
+      else offTitle = '库内没有地点卡';
+    }
+    return h('span', { class: 'kp-node kp-node-off', title: offTitle }, kids);
   }
   return h('a', {
     class: 'kp-node', href: '#',

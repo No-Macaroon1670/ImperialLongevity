@@ -45,6 +45,7 @@ no-cache 逼每次回源revalidate，未改文件仍走 304。生产的 GitHub P
 index.html                     统计核心页：页面骨架、数据来源声明、方法与局限
 timeline.html                  王朝全景页「王朝之河」：竖向河流 + 横向泳道
 map.html                       地图页「地上的库」：大事记里查得到地点的那八十二条
+place.html                     地方线：站在一座城里看四千年（?key=beijing|changan|luoyang|kaifeng|nanjing|hangzhou）
 js/shell.js                    两页共用的外壳：状态、筛选、渲染循环、章节导航、后台自愈
 js/sections-stats.js           统计页的章节表
 js/sections-panorama.js        全景页的章节表

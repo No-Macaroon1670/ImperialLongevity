@@ -157,8 +157,10 @@ export function mountSearch(sectionEl, hostOf) {
     totop.classList.toggle('pinned', on);
     gear.classList.toggle('pinned', on);
     if (!on) sectionEl.classList.remove('lc-open');   // 解钉即收弹层
-    // 故事线入口同理：顶栏左边还空着一格，正好放它（用户实测指出）
-    for (const b of document.querySelectorAll('.line-launch')) b.classList.toggle('pinned', on);
+    // 故事线入口同理：顶栏左边还空着一格，正好放它（用户实测指出）。
+    // 地方线钮（2026-09-07）跟着同一个开关走——同一簇的钮，出没必须同步，
+    // 一颗钉住一颗留在标题栏会看成两套东西
+    for (const b of document.querySelectorAll('.line-launch, .place-launch')) b.classList.toggle('pinned', on);
   };
   new IntersectionObserver(([e]) => {
     headGone = !e.isIntersecting && e.boundingClientRect.top < 0;   // 标题栏滚到上方去了

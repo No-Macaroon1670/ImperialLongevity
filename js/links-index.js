@@ -18,6 +18,7 @@
 // 下一个人以为它正在被谁用（复核员 2026-09-07 指出：无声的死 API 比缺 API 更费事）。
 
 import { fmtSpan } from './year.js';
+import { HOLD_ROLES } from './geo-roles.js';
 
 // ── 标签规则（库主 2026-09-04 定案，与 docs/desk/mock-links-card.html 同步）──
 //
@@ -40,6 +41,16 @@ const ROLE_IS_TARGET = new Set(['时段']);    // outgoing 用 role、incoming �
 // 「动词表的登记次序即角色轻重次序」——VERBS 里 发动／主谋／统帅／参战／对阵…／遇害／当事
 // 本就是按分量排的，卡上照抄即可，不必再立一张优先级表。
 const FAM_RANK = { 血亲: 0, 承继: 1, 人事: 2, 创制: 3, 事事: 4, 作品: 5, 时段: 6, 地: 7 };
+
+// 收藏族的三个地族动词：**东西藏在此处，不是事发生在此处**。
+// 族的正本在 geo-roles.js 的 HOLD_ROLES（现／摹／仿），字→动词那张表在写侧
+// （tools/mining/links_gen.py 的 ROLE_VERB），JS 这边没有第二份，故只能照抄这三行；
+// 真开出第四个收藏族角色（geo-roles.js 注里备着的「残」）时，这里要跟着加一行。
+// 用处只有一个：给消费端在这一头上盖个记号，好让卡上「现藏地 故宫博物院」那枚胶囊
+// **不给地方线的链**——places.js 的 hitsOf 恰恰把收藏族挡在线外，链过去是一张
+// 找不到自己的页（复核员 2026-09-07 实测〈清明上河图〉→ 北京线 132 条里没有它）。
+const HOLD_VERB = { 现: '现藏于', 摹: '摹于', 仿: '仿于' };
+const HOLD_VERBS = new Set([...HOLD_ROLES].map((r) => HOLD_VERB[r]).filter(Boolean));
 
 // 层级（lv）小字：1 库内长文或一手逐字／2 维基条目／3 推断（links.js 的 l() 注）
 const LV_LABEL = { 1: '库内', 2: '维基', 3: '推断' };
@@ -125,7 +136,9 @@ export function nodeLabel(id) {
 /** 一头的载荷：卡片按 kind 决定造哪种 spec；loc 无卡，ok 为假即画成不可点的灰胶囊 */
 function nodeItem(id) {
   const { kind, rest } = splitId(id);
-  const it = { id, kind, name: nodeLabel(id), yr: '', dyn: '', ok: false, ref: null, sortY: Infinity };
+  // hold：这一头是**收藏落点**（现藏／摹本／仿品），由 relOf 按边的动词盖上，
+  // 见 HOLD_VERBS 那条注。在这里先立成 false，是免得消费端撞上 undefined
+  const it = { id, kind, name: nodeLabel(id), yr: '', dyn: '', ok: false, hold: false, ref: null, sortY: Infinity };
   if (kind === 'ev') {
     const ev = IDX.evByName.get(rest);
     if (ev) {
@@ -201,6 +214,9 @@ export async function relOf(nodeId) {
     // 摆一枚写着自己名字的灰胶囊，对读者是零信息（复核员 2026-09-07 实测 13 张卡中招）
     if (splitId(otherId).rest === selfRest) continue;
     const item = nodeItem(otherId);
+    // 收藏族只在 outgoing 这一支成立：「事 现藏于 地」。反过来那一支（一件遗址类
+    // ev: 被当地点用）对面挂的是事，不是地，本记号在那边无意义
+    if (out && HOLD_VERBS.has(row.verb)) item.hold = true;
     const label = labelOf(VERBS, row.verb, out);
     const sec = secOf(V.fam || '', item.kind, out);
     shown++;

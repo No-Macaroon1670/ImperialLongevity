@@ -469,6 +469,7 @@ body.kp-stk-r .kp-right-ev.on { animation: kp-in-flat .22s ease; }
    两处坞各收各的：舆图是 .pl-read（map.html），地方线是 .plc-dock（app-place.js）。
    用 :has() 是因为这两处坞的 DOM 归 app-map／app-place 管，不该为一个显隐去动它们；
    老浏览器不认 :has 时整条规则作废，退回本条修补前的样子，不会更糟 */
+.pl-read:has(.kp-embed.kp-navd) > .pl-read-place,
 .pl-read:has(.kp-embed.kp-navd) > .pl-read-k,
 .pl-read:has(.kp-embed.kp-navd) > .pl-read-t,
 .pl-read:has(.kp-embed.kp-navd) > .pl-read-n,
@@ -568,6 +569,19 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
 
 /* 搜索框:钉在版块标题行右侧,结果浮在其下 */
 .tl-search { position: relative; margin-left: auto; }
+/* 钉住那一排的**排版基准**：搜索框宽度。左边每一颗简钮的 right 偏移、以及黑条
+   左钮能占多宽，全从它算起——原是十三处各写一遍那个 min() 表达式。
+   2026-09-07 加第三颗简钮（📍）后 375px 上排不下了：搜索 172 ＋三钮 120 ＋边距，
+   左边只剩 69px，而黑条的「↑ 回到页首」＋⚙ 要 77px，两边差 2.5px 压在一起。
+   故极窄屏把这个基准收到 40vw——**收搜索框而不是收钮**：钮少一颗就少一个入口，
+   搜索框窄二十来像素只是占位符少显两个字 */
+:root { --pin-search: min(260px, 46vw); }
+/* 40vw 只收给**真有那三颗简钮的页**（复核员 2026-09-07 指出）：📍📖🎲 与搜索框
+   一概只在 timeline.html 造得出来（app-timeline.js 的 mountSearch 那一段），
+   统计页 index.html 一件都没有，却照着「三钮排不下」的账收窄，黑条左钮被压到 39px。
+   判据取 .place-launch 在不在场：它正是挤出这一格的那颗钮。
+   老浏览器不认 :has 时退回宽的 46vw——那是本轮之前的值，只会更松不会更挤 */
+@media (max-width: 430px) { body:has(.place-launch) { --pin-search: 40vw; } }
 /* 长卷里的搜索必须**够得着**:全景一节高一万五千像素,搜索框跟着标题栏
    滚出视野后,想搜就得先滚回顶上——而「页太长滚不动」正是搜索要解决的事。
    故本节占据视口时把它钉在右上角(与纪年滑杆同一套出没规则) */
@@ -577,19 +591,23 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
 /* 桌面钉住簇（2026-08-22 库主令）：河流一节滚很久，浮动搜索左侧补 🎲 与 📖 简钮，
    最左再给一颗回顶 ⬆——窄屏另有黑条「回到页首」，故 ⬆ 只在宽屏出没 */
 @media (min-width: 720px) {
-  .tl-dice.pinned, .line-launch.pinned, .tl-totop.pinned, .tl-gear.pinned {
+  .tl-dice.pinned, .line-launch.pinned, .place-launch.pinned, .tl-totop.pinned, .tl-gear.pinned {
     position: fixed; z-index: 70; margin: 0; padding: 0;
     width: 34px; height: 34px; min-height: 0; box-sizing: border-box;
     display: inline-flex; align-items: center; justify-content: center;
     line-height: 1; overflow: hidden; top: 52px;
     background: var(--surface-1); box-shadow: 0 4px 16px rgba(0, 0, 0, .16);
   }
-  .tl-gear.pinned { right: calc(14px + min(260px, 46vw) + 30px); }
-  .tl-dice.pinned { right: calc(14px + min(260px, 46vw) + 30px + 40px); }
-  .line-launch.pinned { right: calc(14px + min(260px, 46vw) + 30px + 80px); }
-  .tl-totop.pinned { right: calc(14px + min(260px, 46vw) + 30px + 120px); }
+  .tl-gear.pinned { right: calc(14px + var(--pin-search) + 30px); }
+  .tl-dice.pinned { right: calc(14px + var(--pin-search) + 30px + 40px); }
+  .line-launch.pinned { right: calc(14px + var(--pin-search) + 30px + 120px); }   /* 📖 在 📍 左：与标题栏同序（复核员 09-07 第八条，09-08 改） */
+  /* 地方线（2026-09-07 新钮）插在故事线左边，回顶随之再让一格 40px——
+     这一排的次序是「设置·随手·读法·城·回顶」，越往左越是「换个地方看」 */
+  .place-launch.pinned { right: calc(14px + var(--pin-search) + 30px + 80px); }
+  .tl-totop.pinned { right: calc(14px + var(--pin-search) + 30px + 160px); }
   .tl-dice.pinned span:not(.tl-dice-face) { display: none; }
   .line-launch.pinned span:not(.line-face) { display: none; }
+  .place-launch.pinned span:not(.place-face) { display: none; }
 }
 .tl-totop, .tl-gear { display: none; }   /* 只在钉住态现身；窄屏交给黑条与折叠条 */
 /* 齿轮弹层：把 section 里原装的 .local-controls 浮到簇下方——不复制状态，
@@ -621,7 +639,7 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
     align-items: center; justify-content: center;
     line-height: 1; overflow: hidden;
     top: calc(var(--filters-h, 45px) + 7px);
-    right: calc(8px + min(260px, 46vw) + 6px);
+    right: calc(8px + var(--pin-search) + 6px);
   }
   .tl-dice.pinned span:not(.tl-dice-face) { display: none; }
   /* 故事线：钉在骰子左边那一格（顶栏原本空着，用户实测指出） */
@@ -630,13 +648,22 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
     width: 34px; height: 34px; min-height: 0; box-sizing: border-box;
     align-items: center; justify-content: center; line-height: 1; overflow: hidden;
     top: calc(var(--filters-h, 45px) + 7px);
-    right: calc(8px + min(260px, 46vw) + 6px + 34px + 6px);
+    right: calc(8px + var(--pin-search) + 6px + (34px + 6px) * 2);   /* 📖 在 📍 左，与标题栏同序 */
   }
   .line-launch.pinned span:not(.line-face) { display: none; }
+  /* 地方线：再往左一格（2026-09-07）。窄屏这一排从右往左是「搜索·🎲·📍·📖」 */
+  .place-launch.pinned {
+    position: fixed; z-index: 70; margin: 0; padding: 0;
+    width: 34px; height: 34px; min-height: 0; box-sizing: border-box;
+    align-items: center; justify-content: center; line-height: 1; overflow: hidden;
+    top: calc(var(--filters-h, 45px) + 7px);
+    right: calc(8px + var(--pin-search) + 6px + 34px + 6px);
+  }
+  .place-launch.pinned span:not(.place-face) { display: none; }
   /* 黑条左侧按钮再让出一格 */
-  .sec-nav.up .sn-btn { max-width: calc(100vw - min(260px, 46vw) - 140px); }
+  .sec-nav.up .sn-btn { max-width: calc(100vw - var(--pin-search) - 140px); }
   /* 黑条左侧按钮给右边的骰子＋搜索留位 */
-  .sec-nav.up .sn-btn { max-width: calc(100vw - min(260px, 46vw) - 96px); }
+  .sec-nav.up .sn-btn { max-width: calc(100vw - var(--pin-search) - 96px); }
   /* 齿轮（本节设置）钉在「回到页首」右侧（库主 2026-09-03：设置放在这条上，河中间也够得到）；
      左钮再让出一格 */
   .sec-nav.up .sn-gear {
@@ -644,7 +671,17 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
     border: 1px solid var(--border); border-radius: 999px;
     background: var(--surface-1); color: var(--text-1); font-size: 1rem; line-height: 1; cursor: pointer;
   }
-  .sec-nav.up .sn-btn { max-width: calc(100vw - min(260px, 46vw) - 136px); }
+  .sec-nav.up .sn-btn { max-width: calc(100vw - var(--pin-search) - 136px); }
+  /* 又添一颗 📍（2026-09-07）：黑条左钮再退一格。**退 186 不是 176**——
+     176 那个数是照「一钮 40px」顺手加的，实测左钮右沿与 📍 左沿差 2px 压在一起
+     （两者各自算式里的常数原本就差 2）；186 留出 8px 的缝。左钮本来就带 ellipsis，
+     窄到只剩「↑ …」也仍是那颗回顶钮，比两个圆压在一起好。
+     **挂在 :has(.place-launch) 上**（复核员 2026-09-07）：这 50px 是给 📍 让的，
+     而 📍 只在 timeline.html 上造得出来；写进全站基线的话，一颗钉住钮都没有的
+     index.html 也照付，左钮从 67px 掉到 39px——那儿的黑条左钮写的是
+     「↑ 上一节 · 某某」（shell.js:478），压到 39px 就只剩「↑ …」，认不出去哪儿。
+     老浏览器不认 :has 时退回上面那条 136px，钮宽一点，不会更糟 */
+  body:has(.place-launch) .sec-nav.up .sn-btn { max-width: calc(100vw - var(--pin-search) - 186px); }
   /* 窄屏齿轮弹层：当前节的控件簇整块浮到黑条下方（宽屏版见 720px 以上那条同名规则）；
      簇内「设置」折叠组走 section.lc-open 的 static 内层体，不再被视口边裁 */
   section.lc-open .local-controls:not(.lc-set-body) {
@@ -655,7 +692,7 @@ section.lc-open .lc-set[open] summary { margin-bottom: 4px; }
   }
 }
 .tl-search input {
-  font: inherit; font-size: .84rem; padding: 5px 11px; width: min(260px, 46vw);
+  font: inherit; font-size: .84rem; padding: 5px 11px; width: var(--pin-search);
   border: 1px solid var(--border); border-radius: 999px;
   background: var(--surface-1); color: var(--text-1);
 }
@@ -910,6 +947,11 @@ body.tour-on .kp-solo.kp-yc-full .kp-ext {
 .kp-rel a.kp-node:hover { background: color-mix(in srgb, var(--text-1) 6%, transparent); }
 /* 灰胶囊：库内没有这一头的卡（地点全体，以及个别未入表的人）——不假装点得开 */
 .kp-rel .kp-node-off { opacity: .5; cursor: default; }
+/* 例外（2026-09-07）：有地方线的城不灰，描强调色去 place.html。
+   尾巴那枚「→」说的是「这一枚会离开本卡」，与坞行、圈沿药丸同一个记号 */
+.kp-rel .kp-node-place { border-color: color-mix(in srgb, var(--seq-500) 55%, transparent); color: var(--seq-500); }
+.kp-rel .kp-node-place:hover { background: color-mix(in srgb, var(--seq-500) 12%, transparent); }
+.kp-rel .kp-node-go { margin-left: 4px; opacity: .8; }
 .kp-rel .yr { opacity: .55; font-size: .7rem; margin-right: 4px; }
 .kp-rel .dyn { font-size: .68rem; padding: 0 5px; border-radius: 4px;
   background: color-mix(in srgb, var(--ev-gov) 16%, transparent); margin-left: 4px; opacity: .85; }
@@ -1318,6 +1360,9 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 /* 故事线入口：与导览按钮同族，但不抢它的「第一次来？」那一档注意力 */
 .line-launch { margin-left: 6px; gap: 5px; }
 .line-face { display: inline-block; font-size: .95rem; line-height: 1; }
+/* 地方线入口：与上面那颗同规格（2026-09-07 库主令「同一簇、同一元件」） */
+.place-launch { margin-left: 6px; gap: 5px; }
+.place-face { display: inline-block; font-size: .95rem; line-height: 1; }
 
 /* 故事目录：书的按钮开这个，不直接开线——线会越来越多，「有哪些线可走」
    本身就是读者该先看见的东西。一层薄幕＋一张卡，点外面或 Esc 即关。 */
@@ -1330,6 +1375,10 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 }
 .line-catalog.on { display: flex; animation: kp-in-flat .18s ease; }
 .lc-sheet {
+  /* relative 非 static：.kp-close 是 absolute，爹不站位叉就漂去初始包含块的右上角
+     （与 .kp-corner 那条注同一个病，复核员 2026-09-07 两处目录实测：叉在 (1389,6)、
+     卡在 (503,170)，隔着五百像素）。故事线目录一直如此，本行两处同治 */
+  position: relative;
   width: min(420px, 100%); max-height: min(76vh, 560px); overflow-y: auto;
   background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px;
   box-shadow: 0 10px 34px rgba(0, 0, 0, .18); padding: 14px 16px 12px;
@@ -1347,6 +1396,14 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .lc-name { display: flex; align-items: baseline; gap: 8px; font-size: .92rem; font-weight: 600; }
 .lc-count { font-size: .74rem; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
 .lc-sub { margin-top: 3px; font-size: .78rem; line-height: 1.5; color: var(--text-2); }
+
+/* 地方线目录（place-catalog.js）：壳与行一概沿用上面那一族，只补三件——
+   行是链接故须自摘下划线；副行要横着排年段与四个类别芯片，故改 flex 可折行 */
+.pc-row { text-decoration: none; }
+.pc-row .lc-sub { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.pc-span { font-variant-numeric: tabular-nums; }
+.pc-kk { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); }
+.pc-kk > span { color: var(--text-2); }   /* 色只给圆点，字仍走正文色——四个芯片一起上色会花 */
 
 /* 宽屏：讲解坞挪到卡那一侧，免得话在左、东西在右，眼睛横跨整屏（见 tour.js paint 注） */
 @media (min-width: 721px) { .tour-dock.dock-right { left: auto; right: 16px; } }
@@ -1609,18 +1666,18 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 .pl-chip { display: inline-flex; align-items: center; gap: 6px; opacity: .42; }
 .pl-chip.on { opacity: 1; }
 .pl-swatch { width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
-.pl-chip.k-her { color: var(--ev-her); }
-.pl-chip.k-art { color: var(--ev-art); }
-.pl-chip.k-cul { color: var(--ev-cul); }
-.pl-chip.k-gov { color: var(--ev-gov); }
-.pl-chip.k-out { color: var(--ev-out); }
-.pl-chip.k-fig { color: var(--ev-fig); }
-.pl-chip.k-dis { color: var(--ev-dis); }
-.pl-chip.k-war { color: var(--ev-war); }
-.pl-chip.k-rev { color: var(--ev-rev); }
-.pl-chip.k-era { color: var(--ev-era); }
-.pl-chip.k-sci { color: var(--ev-sci); }
-.pl-chip.k-liv { color: var(--ev-liv); }
+.pl-chip.k-her, .pc-kk.k-her { color: var(--ev-her); }
+.pl-chip.k-art, .pc-kk.k-art { color: var(--ev-art); }
+.pl-chip.k-cul, .pc-kk.k-cul { color: var(--ev-cul); }
+.pl-chip.k-gov, .pc-kk.k-gov { color: var(--ev-gov); }
+.pl-chip.k-out, .pc-kk.k-out { color: var(--ev-out); }
+.pl-chip.k-fig, .pc-kk.k-fig { color: var(--ev-fig); }
+.pl-chip.k-dis, .pc-kk.k-dis { color: var(--ev-dis); }
+.pl-chip.k-war, .pc-kk.k-war { color: var(--ev-war); }
+.pl-chip.k-rev, .pc-kk.k-rev { color: var(--ev-rev); }
+.pl-chip.k-era, .pc-kk.k-era { color: var(--ev-era); }
+.pl-chip.k-sci, .pc-kk.k-sci { color: var(--ev-sci); }
+.pl-chip.k-liv, .pc-kk.k-liv { color: var(--ev-liv); }
 
 .pl-year { display: flex; align-items: center; gap: 8px; margin-left: auto; }
 .pl-year-lab { font-size: .78rem; color: var(--text-2); }
@@ -1636,6 +1693,16 @@ section.card.river-mode .chart-host.full-bleed > .notes {
   background: var(--surface-2); border-radius: 0 var(--radius) var(--radius) 0;
   min-height: 68px;
 }
+/* 坞首那一行「北京 · 132 条 · 地方线 →」（2026-09-07）：圈沿药丸的兜底——
+   手机上那枚药丸只有十来像素，手指点不中；这一行在坞里，怎么都够得着。
+   [hidden] 靠属性收，不靠 class：本行是 app-map 每帧现设的 */
+.pl-read-place { margin-bottom: 4px; }
+.pl-read-place[hidden] { display: none; }
+.pl-read-place a {
+  display: inline-block; font-size: .78rem; color: var(--seq-500);
+  text-decoration: none; border-bottom: 1px solid transparent;
+}
+.pl-read-place a:hover { border-bottom-color: currentColor; }
 .pl-read-k { font-size: .72rem; letter-spacing: .06em; color: var(--text-2); }
 .pl-read-t { font-size: 1.02rem; font-weight: 600; margin: 2px 0 3px; }
 .pl-read-n { font-size: .82rem; color: var(--text-2); line-height: 1.55; }
@@ -1686,6 +1753,21 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 /* 摊开簇的托盘：折叠圆充气成盘，把盘下杂点视觉盖住、点击吃掉（所见即所点）。
    虚线边示意临时态——收起即散 */
 .pl-plate { fill: var(--surface-1); opacity: .93; stroke: var(--muted); stroke-width: 1.1; stroke-dasharray: 5 4; }
+/* 有地方线的城：虚线换实线、描强调色（2026-09-07）。虚线说的是「临时态、收起即散」，
+   实线说的是「这一圈另有个正经去处」——圈沿那枚药丸就挂在它的十二点钟方向。
+   不新造色：--seq-500 是全站的强调槽，浅深两套主题各自定义过 */
+.pl-plate-line { stroke: var(--seq-500); stroke-dasharray: none; stroke-width: 1.5; }
+.pl-plate-hot { stroke-width: 2.4; }   /* 悬停药丸时加亮一档：先说清这枚钮指的是哪一圈 */
+/* 圈沿药丸：**圈上唯一能点的东西**（圈内空白照旧是「收起」）。
+   药丸不随缩放变大——图上的钮该是恒定大小，字号与半径都在 ringTab 里按 1/z 算 */
+.pl-ring-tab { cursor: pointer; }
+.pl-ring-tab-b { fill: var(--surface-1); stroke: var(--seq-500); stroke-width: 1.2; }
+.pl-ring-tab-t { fill: var(--seq-500); font-weight: 600; pointer-events: none; }
+.pl-ring-tab:hover .pl-ring-tab-b, .pl-ring-tab:focus-visible .pl-ring-tab-b {
+  fill: var(--seq-500); stroke: var(--seq-500);
+}
+.pl-ring-tab:hover .pl-ring-tab-t, .pl-ring-tab:focus-visible .pl-ring-tab-t { fill: var(--surface-1); }
+.pl-ring-tab:focus { outline: none; }
 .pl-lead2 { stroke: var(--muted); stroke-width: .7; opacity: .38; }
 .pl-plate-hit { cursor: default; }
 .pl-hit:focus { outline: none; }
@@ -1766,6 +1848,8 @@ section.card.river-mode .chart-host.full-bleed > .notes {
 /* 图页故事线书钮（2026-08-26 库主令两轮：居搜索框右侧；与骰子统一视觉档取双简，
    借 .pl-dice 底样成对方钮，📖 进图标、名字进 title/aria */
 .pl-search .pl-book { font-size: 1rem; }
+/* 图页地方线钮（2026-09-07 库主令）：与书钮同档同底样，只换图标 */
+.pl-search .pl-place { font-size: 1rem; }
 .pl-lines-menu summary { cursor: pointer; user-select: none; display: inline; }
 .pl-lines-menu a { display: block; padding: 2px 0 2px 14px; }
 
