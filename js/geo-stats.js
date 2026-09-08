@@ -1,2 +1,2 @@
 // geo-stats.js — 生成物,勿手改;跑 tools/mining/build_geo_events.py。
-export const GEO_STATS = { ev: 1411, dyn: 120 };
+export const GEO_STATS = { ev: 1412, dyn: 120 };
