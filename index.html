@@ -25,26 +25,26 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E⏳%3C/text%3E%3C/svg%3E">
 </head>
-<body>
+<body data-page="index">
 
 <div class="wrap">
   <header class="masthead">
     <div class="kicker">Historical Demography · Survival Analysis · Interactive Visualization</div>
-    <h1>中国帝王寿命数据库</h1>
+    <!-- .mh-row 由 js/sib-nav.js 的 mountSib() 填 nav.sib；这里先手写一层，
+         JS 到货前也不跳版。从前这儿还有一段 124 字散文替另外三页写 lede，
+         整段撤了——那三句释义已进 SIB_PAGES 的 title（去 clutter 案 §一.1） -->
+    <div class="mh-row">
+      <h1>中国帝王寿命数据库</h1>
+    </div>
+    <!-- lede 只留「不看就会误读的那一句」（§一.5）：这一页按人算命数，问的是
+         寿命由什么决定。人数不写死——底下 hero 第一格就是活数字；
+         「对标欧洲研究 Survival and longevity of European rulers」已挪进 about.html -->
     <p class="lede">
-      对标欧洲研究 <em>Survival and longevity of European rulers</em> 的中国版本：收录自夏至清（及五代十国、十六国、辽金夏元等并立政权）
-      共六百八十余位君主的生卒、在位、死因与政治风险变量，用生存分析回答一个问题——
-      <strong>帝王的寿命，主要由医疗水平决定，还是由政治制度与权力风险决定？</strong>
+      自夏至清六百八十余位君主的生卒、在位与死因——
+      <strong>帝王的寿命，由医疗水平决定，还是由政治制度与权力风险决定？</strong>
       <button id="theme-toggle" class="linkish theme-toggle">🌙 深色</button>
     </p>
     <div class="hero-row" id="hero"></div>
-    <p class="small" style="color:var(--text-2);margin-top:10px">
-      想先看「谁在何时统治、天下有多分裂」？同一份数据的全景读法在
-      <a href="timeline.html"><strong>王朝之河</strong></a>：河宽即并存政权数，泳道显示承继与亡入，点选即读那一场改朝换代。
-      另有一张<a href="map.html"><strong>时光舆图</strong></a>：把大事记里查得到地点的 <span data-il-count="geo">732</span> 条画在图上——
-      图上空着的地方不是没发生过事，是那些条目查不到地点。
-      再有<a href="place.html"><strong>地方线</strong></a>站在一座城里看四千年：轴按政权换手分段，条目按分量挂在两侧。
-    </p>
   </header>
 </div>
 
@@ -53,56 +53,44 @@
 <div class="wrap">
   <nav class="toc" id="toc"></nav>
 
-  <div class="notice" style="margin-top:14px">
-    <strong>数据来源与可靠性。</strong>
-    本库由正史（《史记》《汉书》《后汉书》《三国志》《晋书》《宋书》《魏书》《隋书》两《唐书》《宋史》《辽史》《金史》《元史》《明史》《清史稿》等）
-    及通行工具书的常见记载整理而成，<strong>属研究原型，未逐条附注出处，正式引用前请回溯核校</strong>。
-    年龄按公历实足年龄推算，与中文史料常见的「虚岁」相差约 1 岁；仅有年份而无月日者按年中估算，误差 ±1 岁。
-    生活方式类变量（丹药、酗酒、肥胖、慢性病）取值 0 一律表示<strong>「无明确记载」</strong>而非「确证不存在」，
-    存在系统性的记录偏倚：暴卒的皇帝更容易被史官追记服丹之事。
-  </div>
+  <!-- 数据来源与口径（§一.2）：从前是一块 258 字常显 .notice，把第一张图压到
+       手机 y≈1,300。改折叠块，「不看会误读」的那半句写进 summary 的把手上；
+       块内四行里「实足岁 −1」与「0＝无记载」两条另有 tooltip 落点
+       （hero「平均享年」格、「丹药组」chip、数据库表两列头），此处是它们的正本 -->
+  <details class="notes" id="sources" style="margin-top:14px">
+    <summary><strong>数据来源与口径</strong><span class="sm-sep">·</span>研究原型，出处未逐条附注，正式引用前请回溯核校</summary>
+    <p class="muted small">取正史与通行工具书的常见记载：《史记》《汉书》《后汉书》《三国志》《晋书》《宋书》《魏书》《隋书》两《唐书》《宋史》《辽史》《金史》《元史》《明史》《清史稿》等。</p>
+    <p class="muted small">年龄按公历实足年龄推算，比中文史料常见的「虚岁」少约 1 岁；仅有年份而无月日者按年中估算，误差 ±1 岁。</p>
+    <p class="muted small">生活方式类变量（丹药、酗酒、肥胖、慢性病）取值 0 一律表示「无明确记载」而非「确证不存在」——记录偏倚是系统性的：暴卒的皇帝更容易被史官追记服丹之事。</p>
+    <p class="muted small">帝王不是随机样本：这是一群极端选择性的人，其寿命不代表同时代人口，跨时代比较里还混杂着史料详略的变化。</p>
+  </details>
 
   <main id="sections"></main>
 
-  <section class="card" id="method">
-    <div class="head"><h2>统计方法与已知局限</h2></div>
-    <div class="grid2">
-      <div>
-        <h3>做对了什么</h3>
-        <ul class="small" style="color:var(--text-2)">
-          <li><strong>左截断（延迟进入）。</strong>皇帝必须活到即位才会进入样本。年龄尺度上每人自登基年龄进入风险集，避免把「幼年夭折者不会成为皇帝」误读成「皇帝早年死亡率低」。</li>
-          <li><strong>删失。</strong>明惠帝朱允炆 1402 年失踪、卒年不可考，按删失处理而非剔除或臆测；退位者在「在位尺度」下于退位时删失，以隔离「在皇位上」的风险。</li>
-          <li><strong>竞争风险。</strong>被杀与病死互为竞争终点，用 Aalen–Johansen 累积发生率估计，而非把一方当作删失。</li>
-          <li><strong>结法与假定检验。</strong>Cox 模型用 Efron 结法处理同年死亡的并列；Schoenfeld 残差检验比例风险假定。</li>
-          <li><strong>敏感性分析。</strong>「大一统」的严格／宽松定义（北宋是否计入）、入库标准（是否含仅称王者、名义君主）均可一键切换，结论随之重算。</li>
-        </ul>
-      </div>
-      <div>
-        <h3>不能回答什么</h3>
-        <ul class="small" style="color:var(--text-2)">
-          <li><strong>不是随机样本。</strong>帝王是极端选择性的人群，其寿命不代表同时代人口；跨时代比较混杂着史料详略的变化。</li>
-          <li><strong>DSI 的内生性。</strong>皇帝越短命 → 同期更替越快 → DSI 越低。DSI 与寿命的相关性不能直接读作因果。</li>
-          <li><strong>丹药的反向因果。</strong>服丹多见于长寿且长期在位者，且常因暴卒才被记录，方向可能与直觉相反。</li>
-          <li><strong>「非正常死亡」不能作为解释寿命的自变量。</strong>它是结局的一部分；可检验的形式是分因累积发生率（见 H5）。</li>
-          <li><strong>分裂时期样本更杂。</strong>十六国、十国等政权的生年缺失率显著更高，缺失并非完全随机（短命、幼年即位者更易失载）。</li>
-        </ul>
-      </div>
-    </div>
-    <div class="notice" style="margin-top:12px">
-      <strong>下一步（跨文明比较）。</strong>本库的字段设计已对齐欧洲君主研究的通用变量（accession age、reign length、violent death、political fragmentation），
-      可直接扩展至欧洲国王、日本天皇、奥斯曼苏丹、俄罗斯沙皇，构成统一的 Imperial Longevity Database，
-      检验「政治结构 → 统治风险 → 寿命」这一链条在不同文明中的普适性。
-    </div>
-  </section>
+  <!-- 从前是一整节 card（两栏十条 li，全展开）。「做对了什么」五条是设计辩护，
+       且五条各自在对应版块的 notes 里都已说过一遍（左截断→KM、竞争风险→CIF、
+       Efron/Schoenfeld→Cox 结果框与诊断表标题），故整组挪去 about.html；
+       「不是随机样本」一条提上了 #sources 的块内。留下来的四条收进折叠块。
+       「下一步（跨文明比较）」写于跨文明一节上线之前，日本／奥斯曼／拜占庭
+       如今都在图上，是路线图化石，撤（原文存 docs/desk/about-src-index.md） -->
+  <details class="notes" id="method">
+    <summary><strong>统计方法与已知局限</strong><span class="sm-sep">·</span>这几件事本库答不了</summary>
+    <ul class="small" style="color:var(--text-2)">
+      <li><strong>DSI 的内生性。</strong>皇帝越短命 → 同期更替越快 → DSI 越低。DSI 与寿命的相关性不能直接读作因果。</li>
+      <li><strong>丹药的反向因果。</strong>服丹多见于长寿且长期在位者，且常因暴卒才被记录，方向可能与直觉相反。</li>
+      <li><strong>「非正常死亡」不能作为解释寿命的自变量。</strong>它是结局的一部分；可检验的形式是分因累积发生率（见 H5）。</li>
+      <li><strong>分裂时期样本更杂。</strong>十六国、十国等政权的生年缺失率显著更高，缺失并非完全随机（短命、幼年即位者更易失载）。</li>
+    </ul>
+    <p class="muted small">做对了哪几件事（左截断、删失、竞争风险、结法与假定检验、敏感性分析）见 <a href="about.html#faq-index">读法与做法</a>。</p>
+  </details>
 
   <footer class="foot">
-    <p>中国帝王寿命数据库 · 纯静态单页应用，无外部依赖，全部统计（Kaplan–Meier、Log-rank、Cox PH、Aalen–Johansen、Mann–Whitney、Spearman、自助法）均在浏览器内以 JavaScript 现算。</p>
-    <p>配色遵循已验证的分类色板：语义槽位固定（蓝＝大一统，橙＝分裂），顺序编码用单色相色阶，深浅两套主题各自选定步进。</p>
+    <p>中国帝王寿命数据库 · 全部统计在浏览器内现算。</p>
     <p class="foot-cta">
       <a class="chip foot-btn" href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%E5%8B%98%E8%AF%AF&amp;title=%E5%8B%98%E8%AF%AF%EF%BC%9A"
          target="_blank" rel="noopener">发现错漏？来提一条 ↗</a>
       <a class="chip foot-btn foot-btn-2" href="https://github.com/No-Macaroon1670/ImperialLongevity" target="_blank" rel="noopener">源码与数据 ↗</a>
-      <span class="foot-note">数据与文案都在版本库里，逐条注了出处；指出哪一条不对，比笼统说「有错」有用得多。</span>
+      <span class="foot-note">指出哪一条不对，比笼统说「有错」有用。</span>
     </p>
   </footer>
 </div>

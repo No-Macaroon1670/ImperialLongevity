@@ -317,8 +317,13 @@ export function renderCox(host, list, opts) {
     document.createTextNode(` 整体似然比检验 χ² = ${fmt2(fit.lrt.chi2)}，df = ${fit.lrt.df}，${fmtP(fit.lrt.p)}。`),
     fit.converged ? document.createTextNode('') : h('span', { text: '（迭代未完全收敛，结果慎用）', class: 'muted' }),
   ]));
+  // HR 这一列的读法从前写在表下一行常显小字里（「HR＞1 表示提高死亡风险…✱ 标记
+  // p＜0.05；连续变量已按注明的单位缩放」）；口径挂到它说明的那一列头上
+  // （2026-09-08 去 clutter 案 C11），表下那行随之撤
   note.appendChild(tableView(
-    ['协变量', 'β', '标准误', 'HR', '95% CI 下限', '95% CI 上限', 'z', 'p 值'],
+    ['协变量', 'β', '标准误',
+      { text: 'HR', title: 'HR＞1 表示该因素提高死亡风险，＜1 表示具有保护作用；✱ 标记 p＜0.05。连续变量已按注明的单位缩放' },
+      '95% CI 下限', '95% CI 上限', 'z', 'p 值'],
     fit.terms.map((t) => [t.name, fmt2(t.beta), fmt2(t.se), fmt2(t.hr), fmt2(t.lo), fmt2(t.hi), fmt2(t.z), fmtP(t.p).replace(/^p [=<] /, '')]),
     { caption: 'Cox 回归系数表' },
   ));
@@ -328,7 +333,6 @@ export function renderCox(host, list, opts) {
       r.p !== null && r.p < 0.05 ? '⚠ 可能违反' : '未见违反']),
     { caption: '比例风险假定诊断（Schoenfeld 残差近似检验）' },
   ));
-  note.appendChild(h('p', { class: 'muted small', text: 'HR＞1 表示该因素提高死亡风险，＜1 表示具有保护作用；✱ 标记 p＜0.05。连续变量已按注明的单位缩放。' }));
   note.appendChild(notes([
     excluded && `因协变量缺失被排除：${excluded} 位。缺失以「整行剔除」处理，未作插补。`,
     '不朽时间偏倚：「亲历战争」「遭遇政变」「首都陷落」都发生在在位途中，本库按「一生中是否发生过」编码为时间固定变量，而必须先活得够久才有机会经历它们，因此这类变量的 HR 会被系统性拉低，甚至出现 HR＜1 的「保护作用」假象。严格做法是改写为时变协变量，需要逐位皇帝的事件发生时点，本库尚未采集。',

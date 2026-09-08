@@ -297,7 +297,9 @@ export function renderHeatmap(host, list, opts) {
     scaleRow.appendChild(item);
   }
   host.appendChild(scaleRow);
-  host.appendChild(h('p', { class: 'muted small', text: `颜色＝人数密度（单一色相，由浅至深五级），两个分面共用同一比例尺；格内数字即为人数，灰底空格表示该年代该寿命区间无人。` }));
+  // 从前这里还有一行图注（「颜色＝人数密度…灰底空格表示无人」），与本节 desc
+  // 逐项同义，且色阶条自己每一格都带 title 报人数区间——图注是第三遍。撤
+  // （2026-09-08 去 clutter 案 C9：并入 desc）
   const rows = [];
   groups.forEach((g, gi) => cols.forEach((c, ci) => bins.forEach((b, bi) => {
     if (counts[gi][ci][bi]) rows.push([g.name, `${fmtYearAxis(c)}–${fmtYearAxis(c + binYears - 1)}`, binLabel(b, bi), counts[gi][ci][bi]]);

@@ -247,15 +247,21 @@ export function renderHypotheses(host, list, opts) {
         h('p', {}, [document.createTextNode(`平均享年：大一统 ${fmt1(w.A.mean)} 岁（n=${w.A.n}） vs 分裂 ${fmt1(w.B.mean)} 岁（n=${w.B.n}），差值 `),
           h('strong', { text: `${fmt1(w.diff)} 岁` }),
           document.createTextNode(`（95% CI ${fmt1(w.ci[0])}–${fmt1(w.ci[1])}，Welch ${fmtP(w.p)}；Mann–Whitney ${fmtP(mw.p)}）。`)]),
-        h('p', { text: lrR ? `登基后生存（自即位起随访至死亡，不存在左截断问题）：即位后中位存活 大一统 ${kmRU.median === null ? '未达到' : fmt1(kmRU.median) + ' 年'}、分裂 ${kmRS.median === null ? '未达到' : fmt1(kmRS.median) + ' 年'}；Log-rank χ² = ${fmt2(lrR.chi2)}，${fmtP(lrR.p)}。` : '' }),
+        h('p', { text: lrR ? `登基后生存：即位后中位存活 大一统 ${kmRU.median === null ? '未达到' : fmt1(kmRU.median) + ' 年'}、分裂 ${kmRS.median === null ? '未达到' : fmt1(kmRS.median) + ' 年'}；Log-rank χ² = ${fmt2(lrR.chi2)}，${fmtP(lrR.p)}。` : '' }),
         adjTerm ? h('p', {}, [
           document.createTextNode('主模型（登基后生存，控制登基年龄）：身处大一统王朝的死亡风险 HR = '),
           h('strong', { text: `${fmt2(adjTerm.hr)}（95% CI ${fmt2(adjTerm.lo)}–${fmt2(adjTerm.hi)}，${fmtP(adjTerm.p)}）` }),
           document.createTextNode(`。控制登基年龄是必要的：大一统皇帝平均 ${fmt1(accU.mean)} 岁即位，分裂时期为 ${fmt1(accS.mean)} 岁。`),
         ]) : null,
-        h('p', { text: lr ? `年龄尺度（登基年龄处左截断，满 15 岁为条件起点）作为参照：Log-rank χ² = ${fmt2(lr.chi2)}，${fmtP(lr.p)}。该尺度的绝对水平受进入结构影响（见生存曲线一节的说明），只宜作组间比较。` : '' }),
-        (!sig && adjTerm && adjTerm.p < 0.05) ? notes([
-          '两种口径给出不同答案，这本身是结果的一部分：平均享年几乎没有差别，登基后的死亡风险却相差显著。原因在于「平均享年」把两件事混在一起——何时登上皇位，和登上之后面对多大风险。大一统皇帝即位更早（多为太子顺位继承），观察起点更靠前；分裂时期不少割据之主是中年武将出身，即位时已过半生，慕容垂、钱镠、马殷等更把均值拉高。剔除起点差异后，分裂时期的风险劣势才显露出来。此外，分裂时期生年失载的比例更高，而失载者多为短命幼主，均值因此被系统性抬高。'], { label: '为何两种口径不一致' }) : null,
+        // 年龄尺度那一行是**参照口径**，不是本卡的答案；从前它常显在第四段，
+        // 与紧随其后的折叠块讲的是同一件事。两条并进一个折叠块
+        // （2026-09-08 去 clutter 案 D1）
+        notes([
+          lr ? `年龄尺度（登基年龄处左截断，满 15 岁为条件起点）作为参照：Log-rank χ² = ${fmt2(lr.chi2)}，${fmtP(lr.p)}。该尺度的绝对水平受进入结构影响（见生存曲线一节的说明），只宜作组间比较。` : null,
+          (!sig && adjTerm && adjTerm.p < 0.05)
+            ? '两种口径给出不同答案，这本身是结果的一部分：平均享年几乎没有差别，登基后的死亡风险却相差显著。原因在于「平均享年」把两件事混在一起——何时登上皇位，和登上之后面对多大风险。大一统皇帝即位更早（多为太子顺位继承），观察起点更靠前；分裂时期不少割据之主是中年武将出身，即位时已过半生，慕容垂、钱镠、马殷等更把均值拉高。剔除起点差异后，分裂时期的风险劣势才显露出来。此外，分裂时期生年失载的比例更高，而失载者多为短命幼主，均值因此被系统性抬高。'
+            : null,
+        ], { label: (!sig && adjTerm && adjTerm.p < 0.05) ? '为何两种口径不一致' : '参照口径' }),
       ].filter(Boolean),
       (() => {
         const primary = adjTerm && adjTerm.p < 0.05 ? (adjTerm.hr < 1 ? 'support' : 'reject') : null;
@@ -387,10 +393,11 @@ export function renderHypotheses(host, list, opts) {
           document.createTextNode('。'),
         ]),
         h('p', { text: (hv && hn)
-          ? `分因风险模型（登基后尺度，控制登基年龄，竞争事件按删失处理）：大一统皇帝的「非正常死亡」风险 HR = ${fmt2(hv.hr)}（${fmt2(hv.lo)}–${fmt2(hv.hi)}，${fmtP(hv.p)}）；「正常死亡」风险 HR = ${fmt2(hn.hr)}（${fmt2(hn.lo)}–${fmt2(hn.hi)}，${fmtP(hn.p)}）。`
+          ? `分因风险模型：大一统皇帝的「非正常死亡」风险 HR = ${fmt2(hv.hr)}（${fmt2(hv.lo)}–${fmt2(hv.hi)}，${fmtP(hv.p)}）；「正常死亡」风险 HR = ${fmt2(hn.hr)}（${fmt2(hn.lo)}–${fmt2(hn.hi)}，${fmtP(hn.p)}）。`
           : '分因模型样本不足。' }),
         h('p', { text: nat ? `另以描述统计佐证：仅比较正常死亡者的享年，大一统 ${fmt1(nat.A.mean)} 岁 vs 分裂 ${fmt1(nat.B.mean)} 岁，差 ${fmt1(nat.diff)} 岁（${fmtP(nat.p)}）。` : '' }),
-        notes(['判读逻辑：若统一的生存优势来自「更少被杀」，则非正常死亡的 HR 应显著小于 1，而正常死亡（病死）的 HR 应接近 1——因为统一并不会让人更不容易生病。反之，若病死风险也显著降低，才提示医疗、营养、居住条件等非暴力机制在起作用。原因别风险模型假定两类死亡在给定协变量下相互独立，这一假定不可检验，结论应与竞争风险累积发生率图相互参照。']),
+        notes(['模型设定：登基后尺度，控制登基年龄，竞争事件按删失处理。',
+          '判读逻辑：若统一的生存优势来自「更少被杀」，则非正常死亡的 HR 应显著小于 1，而正常死亡（病死）的 HR 应接近 1——因为统一并不会让人更不容易生病。反之，若病死风险也显著降低，才提示医疗、营养、居住条件等非暴力机制在起作用。原因别风险模型假定两类死亡在给定协变量下相互独立，这一假定不可检验，结论应与竞争风险累积发生率图相互参照。']),
       ],
       verdict(kind,
         kind === 'support' ? '支持：优势集中在暴力死亡一侧'
@@ -466,14 +473,16 @@ export function renderAudit(host) {
     if (trail >= GAP_MIN) push('带尾空悬', trail, last.e.temple, d.gapNote || '待核查');
   }
   const total = rows.length;
-  host.appendChild(h('div', { class: `notice ${unresolved ? '' : ''}` }, [
-    h('strong', { text: `${total} 处缺口，其中 ${unresolved} 处「待核查」。` }),
-    document.createTextNode(' 缺口按年数降序排列。「已解释」指该君主称帝前已实际掌权（横向泳道中以半高浅色段画出）；'
-      + '注明史实者为真实的虚位期；标为「待核查」的应回溯史料，可能是漏收君主或日期换算有误——'
-      + '本库正是靠这张表发现唐敬宗卒年（宝历二年十二月换算公历应入 827 年）、前燕慕容皝、北凉段业、前凉张氏诸主的缺漏。'),
+  // 常显只留那两个数（读者要的是「还有多少没查」）；三种判定的定义挂到「判定」
+  // 列头上——它只在读表时才有用；靠这张表抓到过哪几条（唐敬宗卒年换算等）是战绩，
+  // 不是读图必需，挪去 about.html（2026-09-08 去 clutter 案 C17）
+  host.appendChild(h('div', { class: 'notice' }, [
+    h('strong', { text: `${total} 处缺口，其中 ${unresolved} 处待核查。` }),
+    document.createTextNode(' 按年数降序排列。'),
   ]));
   rows.sort((a, b) => (b[3] === '—' ? 0 : b[3]) - (a[3] === '—' ? 0 : a[3]));
-  host.appendChild(tableView(['朝代', '国祚', '缺口类型', '年数', '相关君主', '判定'], rows,
+  host.appendChild(tableView(['朝代', '国祚', '缺口类型', '年数', '相关君主',
+    { text: '判定', title: '「已解释」＝该君主称帝前已实际掌权（横向泳道中以半高浅色段画出）；注明史实者为真实的虚位期；「待核查」应回溯史料，可能是漏收君主或日期换算有误' }], rows,
     { caption: '朝代长带上的空档逐条核查（针对完整数据集，不受过滤器影响）' }));
   host.lastChild.setAttribute('open', '');
 }
@@ -496,14 +505,28 @@ export function renderDatabase(host, list, opts) {
   });
   const allNb = list.filter((e) => !e.birth).length, allNc = list.filter((e) => e.violent === null).length;
   missRows.push(['合计', list.length, allNb, `${((allNb / list.length) * 100).toFixed(0)}%`, allNc, `${((allNc / list.length) * 100).toFixed(0)}%`]);
+  // 数字是「留」级（缺失并非随机，是解读一切结果的前提）；理由压成半句
   host.appendChild(h('div', { class: 'notice' }, [
     h('strong', { text: '数据完整性（缺失并非随机）。' }),
-    document.createTextNode(` 生年失载 ${allNb} 位（${((allNb / list.length) * 100).toFixed(0)}%），死因不明 ${allNc} 位。失载者以十六国、闽、南汉等割据政权的短祚之君居多，而这些人恰恰更可能早夭——因此凡以「平均享年」为指标的结论都会被系统性抬高。`),
+    document.createTextNode(` 生年失载 ${allNb} 位（${((allNb / list.length) * 100).toFixed(0)}%）、死因不明 ${allNc} 位——失载偏向短祚割据之君，均值因此被系统性抬高。`),
   ]));
   host.appendChild(tableView(['时代', '君主数', '生年失载', '占比', '死因不明', '占比'], missRows,
     { caption: '按时代的缺失率' }));
+  // 「先秦年代怎么算」从前写在本节 desc 里（三层、108 字），读者第一眼要的只是
+  // 「表在这儿、可查可复制」；分层口径随时想查，收进折叠块。「享年」与「标志」
+  // 两列的口径（实足岁、0＝无记载）挂到列头上（2026-09-08 去 clutter 案 C18）
+  host.appendChild(notes([
+    '前841（共和）之后为确切纪年。',
+    '西周逐王与商后期五王取夏商周断代工程（教科书标准，学界有实质争议）。',
+    '夏与商前期为传统系年等比铺入的低置信坐标，图上画作斜纹。',
+    '要整体摘出先秦，用上方时代筛选的「仅帝制时代」。',
+  ], { label: '先秦年代怎么算' }));
   host.appendChild(tableView(
-    ['庙号/通称', '姓名', '朝代', '民族', '称号', '生', '卒', '享年', '登基', '登基年龄', '在位(年)', '死因', '非正常', '开国', '亡国', '大一统', '秩序', 'DSI', '标志', '备注'],
+    ['庙号/通称', '姓名', '朝代', '民族', '称号', '生', '卒',
+      { text: '享年', title: '公历实足年龄，比中文史料常见的「虚岁」少约 1 岁；仅有年份而无月日者按年中估算，误差 ±1 岁' },
+      '登基', '登基年龄', '在位(年)', '死因', '非正常', '开国', '亡国', '大一统', '秩序', 'DSI',
+      { text: '标志', title: '丹药、酗酒、肥胖、慢性病等生活方式变量：留空一律读作「无明确记载」，而非「确证不存在」' },
+      '备注'],
     rows.map((e) => [
       e.temple, e.name, e.dynasty, e.ethnicity, e.titleClass,
       fmtDate(e.birth), e.death ? fmtDate(e.death) : (e.censor ? `${fmtDate(e.censor)}（失踪）` : '不详'),
