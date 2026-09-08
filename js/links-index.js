@@ -228,6 +228,9 @@ export async function relOf(nodeId) {
     for (const g of gs) {
       // 组内：事按年（一条人物线读下来就是编年），人与地按边序（表里的次序即写手的次序）
       if (g.items.every((x) => x.kind === 'ev')) g.items.sort((a, b) => a.sortY - b.sortY);
+      // 一组多人而每条边都带存疑（Wikidata 并列几说、本库未择一）：标签说明这是几种说法，
+      // 不是四位父亲（子婴卡「父 扶苏／秦莊襄王／嬴政／成蟜」，库主 2026-09-08 问）
+      if (g.items.length > 1 && g.cites.length && g.cites.every((c) => c.q)) g.label += '（诸说）';
       delete g.seen;
     }
     secs.push({ key, title, groups: gs });

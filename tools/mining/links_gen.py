@@ -97,16 +97,24 @@ def main():
     for q, (n, d) in q2r.items():
         e = cache.get(q) or {}
         me = "r:%s@%s" % (n, d)
-        for f in ids(e.get("P22", [])):
+        # Wikidata 给同一人并列多个父（子婴四说、曹芳生父养父、元顺帝明宗／宋恭帝传说）或多个母
+        # （生母与嫡母并录）时，这不是四位父亲，是四种说法：每条边带 q（存疑）说明并列几说、本库未择一，
+        # 卡上由 links-index 标「父（诸说）」；并列的父不据以推「同父兄弟」（库主 2026-09-08 问「父里为什么这么多人」）
+        fs = ids(e.get("P22", []))
+        qf = ("Wikidata 并列 %d 说，本库未择一" % len(fs)) if len(fs) > 1 else ""
+        for f in fs:
             t = node_of(f)
             if t:
-                l(t, "父", me, "Wikidata %s P22 → %s" % (q, f), 2, "P22 带养／继限定" if adopt(e.get("P22", [])) else "")
+                l(t, "父", me, "Wikidata %s P22 → %s" % (q, f), 2, "P22 带养／继限定" if adopt(e.get("P22", [])) else "", qf)
                 nf += 1
-            fathers[f].append(q)
-        for m in ids(e.get("P25", [])):
+            if not qf:
+                fathers[f].append(q)
+        ms = ids(e.get("P25", []))
+        qm = ("Wikidata 并列 %d 说（或生母与嫡母并录），本库未择一" % len(ms)) if len(ms) > 1 else ""
+        for m in ms:
             t = node_of(m)
             if t:
-                l(t, "母", me, "Wikidata %s P25 → %s" % (q, m), 2, "")
+                l(t, "母", me, "Wikidata %s P25 → %s" % (q, m), 2, "", qm)
                 nm += 1
     for f, sibs in fathers.items():
         sibs = sorted(set(s for s in sibs if s in q2r), key=lambda s: acc.get(q2r[s], 0))

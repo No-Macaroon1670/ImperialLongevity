@@ -379,6 +379,12 @@ def main():
 
     for row in pairs:
         split_nokin(row)
+        # 任一方在 Wikidata 有并列多个父：判出来的关系只是其中一说（秦二世→子婴「兄弟」系从嬴政一说推得）
+        for side in ("pred_qid", "succ_qid"):
+            e = ent.get(row.get(side)) or {}
+            if len(e.get("P22", [])) > 1 and row.get("rel") not in ("未定",):
+                row["why"] = (row.get("why") or "") + "；%s 在 Wikidata 并列 %d 父，本判取其一说" % (row["succ" if side == "succ_qid" else "pred"], len(e["P22"]))
+                row["cf"] = 2; row["disputed"] = True
     json.dump({"generated": time.strftime("%Y-%m-%d"), "depth": DEPTH, "pairs": pairs},
               io.open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 

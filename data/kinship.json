@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-07",
+ "generated": "2026-09-08",
  "depth": 3,
  "pairs": [
   {
@@ -28,13 +28,15 @@
    "pred_qid": "Q7196",
    "succ_qid": "Q7203",
    "rel": "兄弟",
-   "why": "最近公共祖先 Q7192（秦始皇）",
+   "why": "最近公共祖先 Q7192（秦始皇）；秦王子婴 在 Wikidata 并列 4 父，本判取其一说",
    "src": "wikidata",
    "gen": [
     1,
     1
    ],
-   "adopt": false
+   "adopt": false,
+   "cf": 2,
+   "disputed": true
   },
   {
    "d": "xhan",
@@ -574,13 +576,15 @@
    "pred_qid": "Q378470",
    "succ_qid": "Q77822",
    "rel": "父子",
-   "why": "最近公共祖先 Q378470（曹叡）",
+   "why": "最近公共祖先 Q378470（曹叡）；齐王 在 Wikidata 并列 2 父，本判取其一说",
    "src": "wikidata",
    "gen": [
     0,
     1
    ],
-   "adopt": true
+   "adopt": true,
+   "cf": 2,
+   "disputed": true
   },
   {
    "d": "wei",
@@ -591,13 +595,15 @@
    "pred_qid": "Q77822",
    "succ_qid": "Q550290",
    "rel": "从兄弟",
-   "why": "最近公共祖先 Q313333（曹丕）",
+   "why": "最近公共祖先 Q313333（曹丕）；齐王 在 Wikidata 并列 2 父，本判取其一说",
    "src": "wikidata",
    "gen": [
     2,
     2
    ],
-   "adopt": false
+   "adopt": false,
+   "cf": 2,
+   "disputed": true
   },
   {
    "d": "wei",
@@ -1798,13 +1804,15 @@
    "pred_qid": "Q717946",
    "succ_qid": "Q718210",
    "rel": "兄弟",
-   "why": "最近公共祖先 Q718195（劉彧）",
+   "why": "最近公共祖先 Q718195（劉彧）；宋顺帝 在 Wikidata 并列 2 父，本判取其一说",
    "src": "wikidata",
    "gen": [
     1,
     1
    ],
-   "adopt": false
+   "adopt": false,
+   "cf": 2,
+   "disputed": true
   },
   {
    "d": "nanqi",
@@ -4824,13 +4832,15 @@
    "pred_qid": "Q8664",
    "succ_qid": "Q8666",
    "rel": "兄弟",
-   "why": "最近公共祖先 Q8659（元明宗）",
+   "why": "最近公共祖先 Q8659（元明宗）；元惠宗（顺帝） 在 Wikidata 并列 2 父，本判取其一说",
    "src": "wikidata",
    "gen": [
     1,
     1
    ],
-   "adopt": false
+   "adopt": false,
+   "cf": 2,
+   "disputed": true
   },
   {
    "d": "byuan",
