@@ -431,13 +431,14 @@ function renderIndex(badKey) {
     return { p, ms, kinds };
   }).filter((r) => r.ms.length >= PLACE_MIN).sort((a, b) => b.ms.length - a.ms.length);
 
-  host.replaceChildren(
-    h('div', { class: 'head' }, [h('h2', { text: '有线可走的地方' })]),
+  // replaceChildren 把 null 当字符串「null」写进页面（库主 2026-09-08 截图实见），故先把空项滤掉
+  host.replaceChildren(...[
+    h('div', { class: 'head' }, [h('h2', { text: '选一座城' })]),
     // key 写错与不带 key 是两回事：写错要说出来，否则读者会以为这个地方一条都没有
-    badKey ? h('p', { class: 'notice warn', text: `没有「${badKey}」这个地方线——下面是眼下有线可走的地方。` }) : null,
-    h('p', { class: 'small', style: 'color:var(--text-2)', text:
-      `本库条目够铺一条竖轴的地方（成员 ${PLACE_MIN} 条以上）列在下面，按条数排。`
-      + '不够的地方不列——那些条目在时光舆图上各有落点，只是还不足以成线。' }),
+    badKey ? h('p', { class: 'notice warn', text: `没有「${badKey}」这条地方线，眼下有线的城列在下面。` }) : null,
+    // 门槛与「为什么不够的城不列」是口径，不是读者要读的话（去 clutter 规矩）：只留在 title 里
+    h('p', { class: 'small', style: 'color:var(--text-2)', text: '按条数排。',
+      title: `成员满 ${PLACE_MIN} 条的城才成线；不够的城，其条目在时光舆图上各有落点。` }),
     rows.length ? h('div', { class: 'plc-index' }, rows.map(({ p, ms, kinds }) => h('a', {
       class: 'plc-index-i', href: `place.html?key=${encodeURIComponent(p.key)}`,
     }, [
@@ -447,7 +448,7 @@ function renderIndex(badKey) {
       h('span', { class: 'plc-index-k small' }, kindsByCount(kinds).slice(0, 4)
         .map((k) => h('span', { class: 'plc-index-kk' }, [kindGlyph(k), h('span', { text: `${kindLabel(k)} ${kinds[k]}` })]))),
     ]))) : h('p', { class: 'muted small', text: '暂无够格开线的地方。' }),
-  );
+  ].filter(Boolean));
 }
 
 /* ── 起 ───────────────────────────────────────────────────────────────── */
