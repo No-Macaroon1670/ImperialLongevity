@@ -102,16 +102,26 @@ export function shortName(e) {
  *
  * opts.showMinor === false 时把第三层（小政权）整体挡在门外——这是「小政权」开关
  * 在本页唯一的入口，河宽（并存政权数）、泳道行数、最挤处那一句、色槽分配全都在这道门
- * 之后算，故一处滤干净即可。今日这道门是空门：第三层的判据本就是「君主记录不入表」，
- * 无君主即下一行的 emps.length 为 0，本来就进不来（2026-09-09 实测 36 个第三层政权
- * 在库内一位君主都没有）。写在这里是把口径**说明白**，也留着将来补录时的正确行为。
+ * 之后算，故一处滤干净即可。
+ *
+ * **meta 带**（2026-09-09 库主裁「可以画」）：第三层的判据就是「君主记录不入表」，
+ * 于是它们一位君主也没有、长不出常规的带。改由元数据起讫（d.s–d.e）出一条无君主段的
+ * meta 带——竖河把它画成半透明淡带（与「政权缺皇帝的空白期」同一档，见 views-river 的
+ * BED_OP），并把它算进河宽（当时并存的政权数）；承继丝（SUCCESSION／MERGED_INTO／
+ * SPRANG_FROM）指向第三层的那些键因此有带可挂。泳道端一概滤掉（见 renderLaneTimeline
+ * 的 filter）：三十六条带不进行分配，春秋十五列国与水西那一千三百年会把行数撑爆——
+ * 这就是库主同日说的「泳道河道区别」。showMinor === false 时上面那道门仍先挡掉。
  */
 export function buildBands(list, opts = {}) {
   const bands = [];
   for (const d of DYNASTIES) {
     if (opts.showMinor === false && d.tier === 3) continue;
     const emps = list.filter((e) => e.dynKey === d.key);
-    if (!emps.length) continue;
+    if (!emps.length) {
+      // 讫年退让半年：李蜀、中天八国这类起讫同年的带，零长度画不出也排不进车道
+      if (d.tier === 3) bands.push({ d, s: d.s, e: Math.max(d.e, d.s + 0.5), segs: [], preRule: [], n: 0, meta: true });
+      continue;
+    }
     const segs = [];
     const preRule = [];
     for (const e of emps) {
@@ -264,8 +274,10 @@ export function renderLaneTimeline(host, list, opts) {
   const HEAD_H = 24 + EV_UP + EV_DN + (showEvents ? 6 : 25);
   const LABEL_FS = 12.5, SEG_FS = 10;
 
-  // 1) 组装朝代带
-  const bands = buildBands(list, opts);
+  // 1) 组装朝代带。meta 带（第三层小政权的无君主淡带）不进泳道：它们没有君主段，
+  //    在行分配里只会白占一整行，而春秋十五列国与水西（300–1698）会把行数撑爆——
+  //    库主 2026-09-09「可以考虑泳道河道区别」，区别就落在这一行 filter 上
+  const bands = buildBands(list, opts).filter((b) => !b.meta);
   if (!bands.length) { host.appendChild(h('p', { class: 'muted', text: '当前筛选无数据。' })); return; }
   // 轴跨钳制：泳道画到夏初时 30px/年 × 约四千年 ≈ 12万px，逼近部分渲染引擎
   // 2^17=131072px 的图层上限（表头 SVG 同宽、绘制面积翻倍）。滑杆照旧，

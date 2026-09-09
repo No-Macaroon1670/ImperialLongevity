@@ -53,6 +53,10 @@ const WAVE_WIDE_AMP = 3.8;  // 宽河振幅:只在河道占幅超过 55% 后随�
 const STEM = 1.6;           // 细流的半宽：河道张开／收束的末端不归零（d3-sankey 的
                             // linkMinWidth 同理），交替期的空档里始终有一线水流
 const EPS = 1e-6;
+/** 河床（＝称帝前、亡后与无君主在位的年份）的淡色档。第三层小政权的淡带整条即此档——
+ *  库主 2026-09-09：「半透明符合现在规则。现在政权缺乏皇帝的空白期就是半透明」，
+ *  故复用同一个值，不另造一套 */
+const BED_OP = 0.16;
 /** 河道间的底色缝：随河宽自适应。窄屏 5px 已够分隔，宽屏同样的 5px 显得挤 */
 const gapFor = (w) => Math.max(5, Math.min(9, w * 0.008));
 
@@ -89,15 +93,18 @@ function familyHead(key, orth, sec) {
  * 承统原地改名、挤入只侧移不越位），共存二者一经落位便不再互换左右——
  * 这正是「河道不交叉」的保证。
  * 正统与北方主线沿用法统链；其余政权按谱系家长归堆（见 familyHead）。
+ * 第三层的淡带（meta）再往外一级排到最后：出生排位只是「无锚可依时落在哪」的备用，
+ * 有谱系锚的（西夏承定难军、古蜀亡入秦国）照旧楔在母体侧翼，不因排位末位而流放到岸外。
  */
 function orderKeys(bands) {
   const orth = new Set(ORTHODOX), sec = new Set(SECONDARY);
   const bandOf = new Map(bands.map((b) => [b.d.key, b]));
   const groupKey = new Map();
   const groupStart = new Map();
+  const tierOf = (b) => (b.meta ? 3 : orth.has(b.d.key) ? 0 : sec.has(b.d.key) ? 1 : 2);
   for (const b of bands) {
-    const t = orth.has(b.d.key) ? 0 : sec.has(b.d.key) ? 1 : 2;
-    const g = t === 2 ? familyHead(b.d.key, orth, sec) : lineageRoot(b.d.key);
+    const t = tierOf(b);
+    const g = t >= 2 ? familyHead(b.d.key, orth, sec) : lineageRoot(b.d.key);
     groupKey.set(b.d.key, g);
     const gb = bandOf.get(g);
     // 数值改判＝直接指定排序年（外置孤立政权，见 dynasties.js 注释）
@@ -105,9 +112,8 @@ function orderKeys(bands) {
     groupStart.set(b.d.key, typeof hint === 'number' ? hint
       : gb ? gb.s : (DYN_MAP.get(g) ? DYN_MAP.get(g).s : b.s));
   }
-  const tier = (b) => (orth.has(b.d.key) ? 0 : sec.has(b.d.key) ? 1 : 2);
   return bands.slice().sort((a, b) =>
-    tier(a) - tier(b)
+    tierOf(a) - tierOf(b)
     || groupStart.get(a.d.key) - groupStart.get(b.d.key)
     || groupKey.get(a.d.key).localeCompare(groupKey.get(b.d.key))
     || a.s - b.s
@@ -154,6 +160,27 @@ function layoutChannels(bands, x0, x1) {
   const laneW = (x1 - x0) / C;
   const g0 = gapFor(x1 - x0);
   const HOLD = 16;                       // 空车道的回收等待期（年）
+  // 淡带（第三层小政权，无君主段）恒占**最细一档**——一条车道，不多不少。
+  // 它们照样计进 C（河宽＝当时并存的政权数，库主 2026-09-09 要它们算在内），
+  // 但不参与均分：三十六条淡带若与有君主的政权平分河面，春秋一段就把东周晋楚
+  // 挤成与卫、邾同宽，河宽这个唯一的视觉变量就说不出「谁在场」之外的话了。
+  // 于是公平份额改成两步：淡带各取一条，余下的车道在有君主的政权间均分。
+  const metaKeys = new Set(bands.filter((b) => b.meta).map((b) => b.d.key));
+  const isMeta = (k) => metaKeys.has(k);
+  const shares = (live) => {
+    const m = new Map(live.map((b) => [b.d.key, 1]));
+    const solid = live.filter((b) => !isMeta(b.d.key));
+    if (!solid.length) {                 // 满屏皆淡带（库内不存在，留作正确性保险）
+      const base = Math.floor(C / live.length), rem = C % live.length;
+      live.forEach((b, i) => m.set(b.d.key, base + (i < rem ? 1 : 0)));
+      return m;
+    }
+    const rest = C - (live.length - solid.length);   // ≥ solid.length，因 C ≥ n
+    const base = Math.max(1, Math.floor(rest / solid.length));
+    const rem = Math.max(0, rest - base * solid.length);
+    solid.forEach((b, i) => m.set(b.d.key, base + (i < rem ? 1 : 0)));
+    return m;
+  };
 
   // 有状态车道扫掠：宽度只在四种时刻变化——新政权挤入（不得不让）、
   // 征服承接（灭国的水立刻归征服者：前秦并前燕当场涨，那是史实）、
@@ -182,12 +209,12 @@ function layoutChannels(bands, x0, x1) {
       continue;
     }
     const liveSet = new Set(r.live.map((b) => b.d.key));
+    const sh = shares(r.live);           // 本段公平份额（淡带恒 1，见 shares 的注）
     if (fresh) {
-      const base = Math.floor(C / r.n), rem = C % r.n;
       owner.fill(null);
       let lane = 0;
-      r.live.forEach((b, i) => {
-        const size = base + (i < rem ? 1 : 0);
+      r.live.forEach((b) => {
+        const size = sh.get(b.d.key);
         for (let l = lane; l < lane + size; l++) owner[l] = b.d.key;
         lane += size;
       });
@@ -274,8 +301,10 @@ function layoutChannels(bands, x0, x1) {
         // 车道，而不是按新丁只挤 1 条——此前南宋被挤成单车道，与辽金大理
         // 等宽，正统主线看着突兀）。接手范围＝插入口两侧的连续空段，
         // 那正是前身的旧河道
-        const inherit = SUCCESSION[k] && !liveSet.has(SUCCESSION[k]);
-        const target = inherit ? C : Math.max(1, Math.floor(C / r.n));
+        // 淡带不认领整段遗产：西夏承定难军是「窄颈接一条淡带」，反过来
+        // 若哪条淡带的前身亡了，它照旧只取一条车道，不该顺势胀满河面
+        const inherit = !isMeta(k) && SUCCESSION[k] && !liveSet.has(SUCCESSION[k]);
+        const target = inherit ? C : sh.get(k);
         const rk = rank.get(k);
         let posRank = 0;
         for (let l = 0; l < C; l++) {
@@ -326,7 +355,7 @@ function layoutChannels(bands, x0, x1) {
         }
         if (!owner.includes(k) && inherit) {
           // 前身未留空位（罕见：被征服承接走了）：按普通新丁再走一遍挤入
-          const t2 = Math.max(1, Math.floor(C / r.n));
+          const t2 = sh.get(k);
           let got2 = 0;
           for (let l = pos; l < C && got2 < t2 && owner[l] === null; l++) { owner[l] = k; got2++; }
           while (got2 < t2) {
@@ -369,11 +398,10 @@ function layoutChannels(bands, x0, x1) {
         }
         if (!owner.includes(k)) {
           // 理论上不可达（n ≤ C 时松动处必然存在），留作最后的正确性保险
-          const base = Math.floor(C / r.n), rem = C % r.n;
           owner.fill(null);
           let lane = 0;
-          r.live.forEach((b3, i3) => {
-            const size = base + (i3 < rem ? 1 : 0);
+          r.live.forEach((b3) => {
+            const size = sh.get(b3.d.key);
             for (let l = lane; l < lane + size; l++) owner[l] = b3.d.key;
             lane += size;
           });
@@ -381,11 +409,7 @@ function layoutChannels(bands, x0, x1) {
         }
       }
       // 3) 缓回收：空置满 HOLD 年的车道并入相邻 run——优先给低于公平份额的一侧
-      const fairOf = new Map();
-      {
-        const base = Math.floor(C / r.n), rem = C % r.n;
-        r.live.forEach((b2, i2) => fairOf.set(b2.d.key, base + (i2 < rem ? 1 : 0)));
-      }
+      const fairOf = sh;
       const deficit = (k2) => {
         if (!k2) return -99;
         const rr = runOf(k2);
@@ -393,8 +417,9 @@ function layoutChannels(bands, x0, x1) {
       };
       for (let l = 0; l < C; l++) {
         if (owner[l] !== null || r.a - freedAt[l] < HOLD) continue;
-        const lK = l > 0 ? owner[l - 1] : null;
-        const rK = l < C - 1 ? owner[l + 1] : null;
+        // 淡带不参与兼并（恒占最细一档）：两邻都是淡带时这条车道就留白
+        const lK = l > 0 && !isMeta(owner[l - 1]) ? owner[l - 1] : null;
+        const rK = l < C - 1 && !isMeta(owner[l + 1]) ? owner[l + 1] : null;
         if (lK === null && rK === null) continue;
         owner[l] = deficit(lK) >= deficit(rK) ? (lK || rK) : (rK || lK);
       }
@@ -440,8 +465,9 @@ function layoutChannels(bands, x0, x1) {
         }
       }
       prevSig = sig;
-      // 4) 一统：满河语法不可让
-      if (r.n === 1) owner.fill(r.live[0].d.key);
+      // 4) 一统：满河语法不可让。孤零零一条淡带不算一统（库内不存在这种时刻，
+      //    但真出现时它也只该占最细一档，余下的河面留白）
+      if (r.n === 1 && !isMeta(r.live[0].d.key)) owner.fill(r.live[0].d.key);
     }
     // 盒子：连续 run；与邻接河道之间各让 g0/2，邻接留白侧不内缩
     const at = new Map();
@@ -712,8 +738,10 @@ export function renderRiver(host, list, opts) {
   // 半高段需要它），照搬到河流会让孙权自 200 年就占满一个槽——东汉最后二十年被
   // 挤出满宽、曹魏蜀汉的分叉凭空悬置。掌权期本就不计入任何统计，也不该占河面。
   // opts 一并交给 buildBands：小政权开关（第三层）在那道门上生效，河宽、分股与
-  // 最挤处那一句都是这份 bands 现算出来的，故此处滤干净即全图一致（见 buildBands 头注）
+  // 最挤处那一句都是这份 bands 现算出来的，故此处滤干净即全图一致（见 buildBands 头注）。
+  // meta 带（第三层的无君主淡带）没有君主段可对齐，起讫就是元数据本身，跳过这道重算
   const bands = buildBands(list, opts).map((b) => {
+    if (b.meta) return b;
     const s2 = Math.min(...b.segs.map((g) => g.s));
     return s2 > b.s ? { ...b, s: s2 } : b;
   });
@@ -950,15 +978,25 @@ export function renderRiver(host, list, opts) {
       }));
     }
     defs.appendChild(grad);
-    const bed = el('path', { d: bedPath, fill: `url(#${gid})`, opacity: .16, class: 'mark', 'data-dyn': b.d.key });
-    hoverable(bed, () => [
+    const bed = el('path', { d: bedPath, fill: `url(#${gid})`, opacity: BED_OP, class: 'mark', 'data-dyn': b.d.key });
+    // 淡带的政权卡走的就是这一张（河床本来就挂着 hoverable：鼠标悬停出卡、
+    // 触屏轻点出卡，见 charts.hoverable 的两条路径），只是把「皇帝／DSI」两行
+    // 换成说清它为什么没有色块的一行——那两行对第三层恒为 0 与「—」
+    hoverable(bed, () => (b.meta ? [
+      { color: col, value: `${fmtYearAxis(b.d.s)}–${fmtYearAxis(b.d.e)}`, label: '国祚' },
+      { label: '历时', value: `${st.span} 年` },
+      { label: '小政权', value: '君主记录不入表' },
+      ...(b.d.bio ? [b.d.bio] : []),
+      ...(b.d.note ? [b.d.note] : []),
+      '第三层政权：河上只有这条淡带（取河道最细一档），没有君主色块；可在「设置 › 小政权」里关掉。',
+    ] : [
       { color: col, value: `${fmtYearAxis(b.d.s)}–${fmtYearAxis(b.d.e)}`, label: '国祚' },
       { label: '历时', value: `${st.span} 年` },
       { label: '皇帝', value: `${st.n} 位（当前筛选 ${b.n} 位）` },
       { label: 'DSI', value: st.dsi === null ? '—' : `${fmt1(st.dsi)} 年/帝` },
       ...(b.d.bio ? [b.d.bio] : []),
       ...(b.d.note ? [b.d.note] : []),
-    ], () => b.d.name);
+    ]), () => b.d.name);
     gBeds.appendChild(bed);
 
     // 穿流带：亡入（或分出）对象不相邻时的半透明细带。画在河床层，
@@ -1099,9 +1137,11 @@ export function renderRiver(host, list, opts) {
     // 也是「西汉」两个字与「齐王墓方镜」撞在一起的地方
     inkTaken.push([lx - 3, lx + lw + 3, y(b.s) - 2, y(b.s) + 13]);
     inkTaken.push([box0[0], box0[0] + 10, y(b.s) + 1, y(b.s) + 11]);
+    // 淡带的名字也淡：河面上有君主色块的才是主角，第三层是背景里的一笔
     const label = el('text', {
       x: lx, y: y(b.s) + 10,
-      'font-size': 11.5, 'font-weight': 640, fill: 'var(--text-1)', 'pointer-events': 'none',
+      'font-size': 11.5, 'font-weight': b.meta ? 500 : 640,
+      fill: b.meta ? 'var(--muted)' : 'var(--text-1)', 'pointer-events': 'none',
       stroke: 'var(--page)', 'stroke-width': 3, 'paint-order': 'stroke',
     }, b.d.name);
     gLabels.appendChild(dot); gLabels.appendChild(label);
@@ -1707,7 +1747,9 @@ export function renderRiver(host, list, opts) {
   const key = ['河宽＝当时并存的政权数，不表示疆域'];
   key.push(`最挤处 ${fmtYearAxis(peakSlice.a)} 年 ${peak} 股`);
   if (markViolent) key.push('右缘红痕＝非正常死亡');
-  key.push('淡色河床＝称帝前、亡后与无君主在位的年份');
+  key.push(bands.some((b) => b.meta)
+    ? '淡色河床＝称帝前、亡后与无君主在位的年份；整条淡带＝小政权（君主记录不入表）'
+    : '淡色河床＝称帝前、亡后与无君主在位的年份');
   if (hasVY) key.push('斜纹半透明＝低置信年份（前841 以前按传统系年推算的坐标）');
   key.push('河道弯入谁家＝并入谁家');
   key.push('点按锁定君主并点亮承继两跳');
