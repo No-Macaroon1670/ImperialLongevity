@@ -99,10 +99,17 @@ export function shortName(e) {
  * 元数据只精确到年，曹魏记作「220」即 220 年 1 月，而汉献帝实际禅位在 220 年 11 月；
  * 若以元数据取值，两朝会凭空重叠十一个月，接续关系便无法落在同一条泳道／河道上。
  * 头尾若真有一年以上无主，由「空档审计」一节单独列出，不靠底带掩盖。
+ *
+ * opts.showMinor === false 时把第三层（小政权）整体挡在门外——这是「小政权」开关
+ * 在本页唯一的入口，河宽（并存政权数）、泳道行数、最挤处那一句、色槽分配全都在这道门
+ * 之后算，故一处滤干净即可。今日这道门是空门：第三层的判据本就是「君主记录不入表」，
+ * 无君主即下一行的 emps.length 为 0，本来就进不来（2026-09-09 实测 36 个第三层政权
+ * 在库内一位君主都没有）。写在这里是把口径**说明白**，也留着将来补录时的正确行为。
  */
-export function buildBands(list) {
+export function buildBands(list, opts = {}) {
   const bands = [];
   for (const d of DYNASTIES) {
+    if (opts.showMinor === false && d.tier === 3) continue;
     const emps = list.filter((e) => e.dynKey === d.key);
     if (!emps.length) continue;
     const segs = [];
@@ -258,7 +265,7 @@ export function renderLaneTimeline(host, list, opts) {
   const LABEL_FS = 12.5, SEG_FS = 10;
 
   // 1) 组装朝代带
-  const bands = buildBands(list);
+  const bands = buildBands(list, opts);
   if (!bands.length) { host.appendChild(h('p', { class: 'muted', text: '当前筛选无数据。' })); return; }
   // 轴跨钳制：泳道画到夏初时 30px/年 × 约四千年 ≈ 12万px，逼近部分渲染引擎
   // 2^17=131072px 的图层上限（表头 SVG 同宽、绘制面积翻倍）。滑杆照旧，

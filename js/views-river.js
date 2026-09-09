@@ -711,7 +711,9 @@ export function renderRiver(host, list, opts) {
   // 槽位只从首位君主**实际在位**起算。buildBands 的带首含称帝前掌权期（泳道的
   // 半高段需要它），照搬到河流会让孙权自 200 年就占满一个槽——东汉最后二十年被
   // 挤出满宽、曹魏蜀汉的分叉凭空悬置。掌权期本就不计入任何统计，也不该占河面。
-  const bands = buildBands(list).map((b) => {
+  // opts 一并交给 buildBands：小政权开关（第三层）在那道门上生效，河宽、分股与
+  // 最挤处那一句都是这份 bands 现算出来的，故此处滤干净即全图一致（见 buildBands 头注）
+  const bands = buildBands(list, opts).map((b) => {
     const s2 = Math.min(...b.segs.map((g) => g.s));
     return s2 > b.s ? { ...b, s: s2 } : b;
   });

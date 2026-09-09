@@ -1,7 +1,17 @@
 // 王朝全景页(timeline.html)的章节表：竖向河流与横向泳道。
 import { sel, seg, rng, tog, grp } from './shell.js';
+import { EMPERORS } from './data.js';
+import { MINOR_KEYS, MINOR_TIP, writeMinor } from './pref-minor.js';
 import { renderLaneTimeline } from './views-lanes.js';
 import { renderRiver } from './views-river.js';
+
+// 本页此刻画不画得出小政权：第三层的判据就是「君主记录不入表」（dynasties.js 头注），
+// 而河与泳道的带只从**实际有君主在位**长出来（views-lanes.buildBands 的头注），
+// 于是今日 36 个第三层政权在本页一条都没出现过——它们只在时光舆图上有都城点。
+// 故这颗开关只在它能咬得动时才现身：摆一颗点了没反应的开关，正是这一轮去 clutter
+// 要拆的东西。滤法已在两个视图取 DYNASTIES 的入口就位（buildBands 的 showMinor），
+// 将来任一小政权补进君主记录，这颗开关自动现身、当场生效。
+const MINOR_DRAWN = EMPERORS.some((e) => MINOR_KEYS.has(e.dynKey));
 
 export const SECTIONS = [
   {
@@ -45,6 +55,10 @@ export const SECTIONS = [
         options: [[1, '一等'], [2, '二等'], [3, '三等']], min0: true },
       grp('设置', [
         tog('laneViolent', '标记非正常死亡'),
+        // 小政权（第三层）显隐，库主 2026-09-09 令；与时光舆图「设置」里那颗共用
+        // localStorage 'il.minor'（js/pref-minor.js），一处关掉另一处下次打开即生效。
+        // 现身条件见本文件头的 MINOR_DRAWN
+        tog('showMinor', '小政权', () => MINOR_DRAWN, { title: MINOR_TIP, onSet: writeMinor }),
         tog('laneStrands', '全部承继关系', (st) => st.panoramaMode !== 'river'),
         // 配色档降级入设置、且只给泳道（库主 2026-08-28 裁）：河流里分合是几何
         // （一股满宽＝一统、数股＝割据），双色档在那儿是用颜色复述形状已说的话；

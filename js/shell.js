@@ -2,6 +2,7 @@
 import { h } from './charts.js';
 import { EMPERORS, DYNASTIES, DYN_STATS, GROUPINGS, COVARIATES, unifiedOf } from './data.js';
 import { ERAS } from './dynasties.js';
+import { readMinor } from './pref-minor.js';
 import { describe, fmtP } from './stats.js';
 
 // 页首互链一行（2026-09-08 去 clutter 案 §一.1）。件在零依赖叶子 js/sib-nav.js——
@@ -32,6 +33,9 @@ const S = {
   panoramaMode: matchMedia('(max-width: 720px)').matches ? 'river' : 'lanes',
   riverPx: 7,
   lanePx: 14, laneColor: 'dynasty', laneViolent: true, laneStrands: false, evOff: [],
+  // 小政权（第三层）显隐：默认显示，且**跨页记着**——同一颗开关也长在时光舆图上，
+  // 两页共用 localStorage 'il.minor'（js/pref-minor.js）。初值从存值来，不是写死的 true
+  showMinor: readMinor(),
   // 年号纪年线三档（2026-08-28 库主定）：全＝各带常显、选＝点选朝代才显、无＝关。
   // 默认「选」——点带即出，与承继丝同一手势；常显交给「全」档
   laneNianhao: 'sel',
@@ -218,7 +222,11 @@ function buildFilters(host) {
 // opts.title：挂在这颗控件上的口径 tooltip（2026-09-08 拍板⑦）。缺省无，行为不变
 const sel = (key, label, options, when, opts = {}) =>
   ({ type: 'select', key, label, options, when, title: opts.title });
-const tog = (key, label, when) => ({ type: 'toggle', key, label, when });
+// opts.title：口径 tooltip（同 sel）；opts.onSet：勾选后除改 S 外还要做的事——
+// 眼下只有「小政权」用它把偏好写进 localStorage（两页共用一个存值，见 js/pref-minor.js）。
+// 持久化不写死在这台机器里：S 里几十个开关只有它跨页，通用件不该替特例记账
+const tog = (key, label, when, opts = {}) =>
+  ({ type: 'toggle', key, label, when, title: opts.title, onSet: opts.onSet });
 // 只有两三个选项时用分段器而非下拉：下拉把另一个选项藏起来，读者得先点开
 // 才知道有得选，换一次要两下；分段器两个都摆在明面上，换一次一下。
 let themeBtnRef = null;   // 深色开关的活节点：谁建「设置」块谁把它接走（2026-08-22 统一令）
@@ -347,8 +355,15 @@ function buildControls(sec) {
     } else if (c.type === 'toggle') {
       const cb = h('input', { type: 'checkbox' });
       cb.checked = !!S[c.key];
-      cb.addEventListener('change', () => { S[c.key] = cb.checked; render(); });
-      wrap.appendChild(h('label', {}, [cb, h('span', { text: c.label })]));
+      cb.addEventListener('change', () => { S[c.key] = cb.checked; if (c.onSet) c.onSet(cb.checked); render(); });
+      // 口径 tooltip 与 sel／chip 同式：title 与 aria-label 同一份字，虚线把手由 .has-tip 给
+      const togLab = h('label', {}, [cb, h('span', { text: c.label })]);
+      if (c.title) {
+        togLab.title = c.title;
+        cb.setAttribute('aria-label', `${c.label}：${c.title}`);
+        togLab.classList.add('has-tip');
+      }
+      wrap.appendChild(togLab);
     } else if (c.type === 'multi') {
       const box = h('div', { class: 'fgroup' }, [h('span', { class: 'flabel', text: c.label })]);
       for (const [v, lab] of c.options) {

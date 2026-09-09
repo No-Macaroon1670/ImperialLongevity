@@ -47,6 +47,8 @@ import { TERR } from './territories.js';
 import { syncCounts } from './counts.js';
 import { LINES } from './lines.js';
 import { DYNASTIES } from './dynasties.js';
+// 小政权（第三层）开关的共用件：判据、字面与存值只有一份，王朝之河那颗开关吃的是同一个
+import { MINOR_KEYS, MINOR_TIP, readMinor, writeMinor } from './pref-minor.js';
 import { WORLDMAP, projectWorld } from './basemap-world.js';
 import { fmtYearAxis } from './year.js';
 import { mountSib } from './sib-nav.js';
@@ -73,6 +75,9 @@ const DYN_ROWS = Object.entries(GEO_DYN).map(([k, v]) => ({
   层: 'dyn', n: v['名'], key: k, y: v.s, k: 'dyn', r: 2, ...v,
 }));
 const HAS_DYN = DYN_ROWS.length > 0;
+// 图例那颗「政权都城 N」的 N：小政权关掉时它要变（见 mountKinds 里的 syncs）
+const dynShownCount = () => (state.showMinor ? DYN_ROWS.length
+  : DYN_ROWS.filter((r) => !MINOR_KEYS.has(r.key)).length);
 const ALL = EV_ROWS.concat(DYN_ROWS);
 
 // **数据驱动**的宇宙（与图例那边的注册表驱动相对）：图上出现过的类，按条数降序。
@@ -110,6 +115,9 @@ const state = {
   showExtent: true,        // 政权选中时画盛时疆域示意（毛边色块，四至锚点法）
   showLow: true,           // 画低置信的点
   showAuto: true,          // 画自动取的坐标（据 'w'，没人逐条核过）
+  // 小政权（第三层：君主记录不入表的那 36 个）显隐。默认显示，但**跨页记着**——
+  // 同一颗开关也长在王朝之河的「设置」里，两页共用 localStorage 'il.minor'
+  showMinor: readMinor(),
   world: false,            // 世界版：只画有境外落点的条目，全落点组齐画
 };
 
@@ -133,6 +141,9 @@ const shown = () => ALL.filter((r) => state.layers.has(r['层'])
   // 事件只收合格条目
   && (!state.world || (r['层'] === 'ev' && worldFit(r)))
   && (r['层'] !== 'ev' || !state.off.has(r.k))
+  // 小政权开关：关掉即第三层的都城点一律不画（判据「君主记录不入表」，见 pref-minor.js）。
+  // 滤在 shown() 而不是 DYN_ROWS 建表时——开关要能当场翻回来，行表得留着全量
+  && (r['层'] !== 'dyn' || state.showMinor || !MINOR_KEYS.has(r.key))
   && (r['层'] === 'dyn' && state.aliveOnly && Number.isFinite(state.upto)
     ? (r.y <= state.upto && r.e >= state.upto)
     : r.y <= state.upto)
@@ -1475,6 +1486,7 @@ function mountKinds() {
     b.addEventListener('click', () => { toggle(); refresh(); });
     b.addEventListener('dblclick', () => { solo(); refresh(); });
     bar.appendChild(b);
+    return b;   // 政权都城那颗要在小政权开关翻动后改数（见下），故把节点交回去
   };
   for (const k of KINDS) {
     const n = EV_COUNTS[k];
@@ -1490,11 +1502,21 @@ function mountKinds() {
       `${evKindLabel(k)}：${coverBits(k)}`);
   }
   if (HAS_DYN) {
-    chip('k-dyn', `<span class="pl-swatch"></span><span>政权都城 ${DYN_ROWS.length}</span>`,
+    const bDyn = chip('k-dyn', `<span class="pl-swatch"></span><span>政权都城 ${DYN_ROWS.length}</span>`,
       () => state.layers.has('dyn'),
       () => { if (state.layers.has('dyn')) state.layers.delete('dyn'); else state.layers.add('dyn'); },
       () => { state.layers = new Set(['dyn']); },
       `${DYN_ROWS.length} 个政权有都城坐标`);
+    // 关掉小政权后这颗 chip 上的数要跟着变：图上明明少了三十几个点，图例仍写 131，
+    // 读者只会以为点没画出来。字与 tooltip 一起改（两处向来同一份字）
+    syncs.push(() => {
+      const n = dynShownCount();
+      bDyn.lastElementChild.textContent = `政权都城 ${n}`;
+      const txt = `${n === DYN_ROWS.length ? `${n} 个政权有都城坐标`
+        : `${n} / ${DYN_ROWS.length} 个政权有都城坐标（小政权已在「设置」里关掉）`}。单击开关；双击只看这一类`;
+      bDyn.title = txt;
+      bDyn.setAttribute('aria-label', txt);
+    });
   }
   // 全开：一键回到什么都画的状态。类别一多，逐个点开比逐个点关还费手。
   // 双态（2026-08-28 库主点子，与泳道图例同款）：全亮时这颗钮变「全关」——
@@ -1906,6 +1928,16 @@ function mountLineChips() {
   const locate = (r) => {
     slist.innerHTML = ''; sin.value = r.n;
     if (r['层'] !== 'dyn' && state.off.has(r.k)) state.off.delete(r.k);   // 关着的类先点亮
+    // 小政权关着时搜到一个小政权，同样先点亮——否则镜头飞过去、卡片弹出来，
+    // 图上却没有那个点（与上一行「关着的类先点亮」同一个道理）。
+    // 顺手把开关与存值一并扳回来，免得复选框写着关、图上却画着
+    if (r['层'] === 'dyn' && !state.showMinor && MINOR_KEYS.has(r.key)) {
+      state.showMinor = true;
+      writeMinor(true);
+      const cbm = $('pl-set-minor');
+      if (cbm) cbm.checked = true;
+      syncAll();
+    }
     state.layers.add(r['层'] === 'dyn' ? 'dyn' : 'ev');
     const [x, y2] = trueXY(r);
     VIEW.cx = x; VIEW.cy = y2;
@@ -1959,6 +1991,33 @@ function mountSettings() {
     box.addEventListener('change', () => { state[key] = box.checked; draw(); });
   };
   wire('pl-set-alive', 'aliveOnly');
+  // 小政权开关（库主 2026-09-09 令），紧挨着政权层那一行。这一颗与其余五颗不同，
+  // **在 JS 里长出来**：初态来自 localStorage（与王朝之河共用 'il.minor'），
+  // HTML 里写死 checked 会在存值是 hide 时先勾着再被脚本改掉、闪一下；
+  // 也免得为一个偏好去动 map.html。翻动后 syncAll() 一并更新图例上的数字与图面
+  const alive = $('pl-set-alive');
+  if (alive) {
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.id = 'pl-set-minor';
+    cb.checked = state.showMinor;
+    cb.setAttribute('aria-label', `小政权：${MINOR_TIP}`);
+    const txt = document.createElement('span');
+    txt.className = 'has-tip';
+    txt.title = MINOR_TIP;
+    txt.textContent = '画小政权的都城';
+    const why = document.createElement('span');
+    why.className = 'pl-set-why';
+    why.textContent = `——第三层，君主记录不入表的那 ${MINOR_KEYS.size} 个`;
+    const lab = document.createElement('label');
+    lab.append(cb, txt, why);
+    alive.closest('label').after(lab);
+    cb.addEventListener('change', () => {
+      state.showMinor = cb.checked;
+      writeMinor(cb.checked);
+      syncAll();
+    });
+  }
   wire('pl-set-low', 'showLow');
   wire('pl-set-auto', 'showAuto');
   wire('pl-set-terr', 'showTerr');
