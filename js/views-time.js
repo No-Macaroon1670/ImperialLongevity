@@ -1,6 +1,12 @@
 // views-time.js — 时间轴类视图：双层寿命/统治时间轴、历史总散点、寿命热力图
 import { el, h, linear, ticks, Frame, hoverable, legend, tableView, notes, fmt1, fmtYearAxis, scrollHint } from './charts.js';
 import { ERAS } from './dynasties.js';
+// 「大一统」口径的唯一读点（2026-09-09 D56 案甲）：本文件从前直接读 e.unified，
+// 于是首页按下「宽松（北宋计入）」后，同一屏里 DSI 散点与 KM 已把北宋九帝算作
+// 大一统，双层时间轴却仍画分裂色、tooltip 仍写「分裂时期」。改走 unifiedOf 后，
+// 一按开关全屏同口径；全景页（timeline.html）按不到这颗开关，opts 无 looseUnified，
+// unifiedOf 缺省即严格口径，故那边零变化。
+import { unifiedOf, unifiedScaleNote } from './data.js';
 import { fmtDate } from './schema.js';
 import { renderLaneTimeline } from './views-lanes.js';
 
@@ -10,7 +16,7 @@ const UNI = C('--c-unified'), SPL = C('--c-split');
 const yearOf = (dt) => (dt ? dt.t : null);
 const label = (e) => `${e.temple}（${e.name}）`;
 
-function emperorTip(e) {
+function emperorTip(e, opts) {
   const rows = [
     { label: '朝代', value: e.dynasty },
     { label: '生卒', value: `${fmtDate(e.birth, { yearOnly: true })} – ${e.death ? fmtDate(e.death, { yearOnly: true }) : '失踪/不详'}` },
@@ -18,7 +24,7 @@ function emperorTip(e) {
     { label: '登基年龄', value: e.accAge === null ? '不详' : `${Math.floor(e.accAge)} 岁` },
     { label: '在位', value: e.reignYears === null ? '不详' : `${e.reignYears.toFixed(1)} 年` },
     { label: '死因', value: e.causeLabel },
-    { label: '时期', value: e.unified ? '大一统王朝' : '分裂时期' },
+    { label: '时期', value: unifiedOf(e, opts) ? '大一统王朝' : '分裂时期' },
   ].map((r) => ({ label: r.label, value: r.value }));
   if (e.note) rows.push(e.note);
   return rows;
@@ -67,7 +73,7 @@ export function renderTimeline(host, list, opts) {
 
   sorted.forEach((e, i) => {
     const y = i * rowH + 6;
-    const col = e.unified ? UNI : SPL;
+    const col = unifiedOf(e, opts) ? UNI : SPL;
     const g = el('g', { class: 'mark' });
 
     if (mode !== 'reign' && e.birth && (e.death || e.censor)) {
@@ -92,7 +98,7 @@ export function renderTimeline(host, list, opts) {
     // 行首直接标注庙号：行高 13px 足以容纳 9.5px 字，不会相互压叠
     const nm = e.temple.length > 11 ? `${e.temple.slice(0, 10)}…` : e.temple;
     g.appendChild(el('text', { x: ML - 8, y: y + 3.5, class: 'tick', 'text-anchor': 'end', 'font-size': 9.5 }, nm));
-    hoverable(g, () => emperorTip(e), () => label(e));
+    hoverable(g, () => emperorTip(e, opts), () => label(e));
     body.appendChild(g);
   });
 
@@ -104,17 +110,19 @@ export function renderTimeline(host, list, opts) {
   host.appendChild(scroller);
   scrollHint(scroller, '左右滑动查看完整时间轴');
 
+  // 图例点明当前按的是哪一套口径：色点会随开关整体换色，不说读者会以为图错了
   host.appendChild(legend([
-    { color: UNI, label: '大一统王朝' },
+    { color: UNI, label: opts.looseUnified ? '大一统王朝（宽松口径·含北宋）' : '大一统王朝' },
     { color: SPL, label: '分裂时期' },
     ...(mode === 'dual' ? [{ color: 'var(--muted)', label: '细线＝在世（寿命） · 粗块＝在位' }] : []),
   ]));
   host.appendChild(tableView(
-    ['庙号', '姓名', '朝代', '生年', '卒年', '享年', '登基年龄', '在位(年)', '死因', '时期'],
+    ['庙号', '姓名', '朝代', '生年', '卒年', '享年', '登基年龄', '在位(年)', '死因',
+      { text: '时期（当前口径）', title: unifiedScaleNote(opts) }],
     sorted.map((e) => [e.temple, e.name, e.dynasty, fmtDate(e.birth, { yearOnly: true }),
       e.death ? fmtDate(e.death, { yearOnly: true }) : '失踪', e.lifespan === null ? null : Math.floor(e.lifespan),
       e.accAge === null ? null : Math.floor(e.accAge), e.reignYears === null ? null : e.reignYears.toFixed(1),
-      e.causeLabel, e.unified ? '大一统' : '分裂']),
+      e.causeLabel, unifiedOf(e, opts) ? '大一统' : '分裂']),
     { caption: '时间轴数据表', max: 400 },
   ));
 }
@@ -154,7 +162,7 @@ export function renderHistoryScatter(host, list, opts) {
     });
     // 命中区大于标记本身
     const hit = el('circle', { cx, cy, r: 11, fill: 'transparent', class: 'mark' });
-    hoverable(hit, () => emperorTip(e), () => label(e));
+    hoverable(hit, () => emperorTip(e, opts), () => label(e));
     f.add(node); f.add(hit);
   }
 
@@ -164,7 +172,7 @@ export function renderHistoryScatter(host, list, opts) {
     { key: 0, color: SPL, label: '分裂时期（±50年移动平均）' },
   ];
   for (const s of series) {
-    const sub = pts.filter((e) => (opts.looseUnified ? e.unifiedLoose : e.unified) === s.key)
+    const sub = pts.filter((e) => unifiedOf(e, opts) === s.key)
       .map((e) => ({ t: xKey === 'birth' ? e.birth.t : e.reigns[0].s.t, v: e.lifespan }))
       .sort((a, b) => a.t - b.t);
     if (sub.length < 6) continue;
@@ -224,7 +232,7 @@ export function renderHeatmap(host, list, opts) {
 
   const counts = groups.map((g) => cols.map((c) => bins.map(() => 0)));
   for (const e of pts) {
-    const gi = facet ? groups.findIndex((g) => g.key === (opts.looseUnified ? e.unifiedLoose : e.unified)) : 0;
+    const gi = facet ? groups.findIndex((g) => g.key === unifiedOf(e, opts)) : 0;
     if (gi < 0) continue;
     const ci = Math.floor((e.birth.t - cLo) / binYears);
     const bi = bins.findIndex(([a, b]) => e.lifespan >= a && e.lifespan < b);

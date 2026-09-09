@@ -42,7 +42,9 @@ import { buildPlaceCatalog } from './place-catalog.js';
 import { evSpec, mountEmbedCard, mdBold } from './knowledge.js';
 // 形状与配色一律复用泳道图那一套：同一个库，事件的红三角在哪一页都得是红三角，
 // 政权的色槽在哪一页都得是同一槽（slotVar 与 dynastyColorSlots 即那张色表）
-import { evMark, dynastyColorSlots, slotVar } from './views-lanes.js';
+import { evMark, dynastyColorSlots } from './views-lanes.js';
+// 色槽本身不属于泳道视图，取自共用的 palette.js：页面不必为一个色名去 import 另一张图
+import { slotVar } from './palette.js';
 import { eventLegend as chipRow } from './events-ui.js';
 import { DYNASTIES, DYN_MAP, ERAS, SUCCESSION, MERGED_INTO, ORTHODOX } from './dynasties.js';
 import { LINE_STOPS } from './line-stops.js';

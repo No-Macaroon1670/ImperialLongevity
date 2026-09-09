@@ -22,8 +22,11 @@ import { nianhaoSegs, nianhaoTip, nianhaoTitle } from './nianhao.js';
 import { fmtDate } from './schema.js';
 import { eventLegend as chipRow } from './events-ui.js';
 
-const SLOT_VARS = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6', '--s7', '--s8'];
-const OTHER_VAR = '--lane-other';
+// 色槽表原本写在这里，2026-09-09 迁进 palette.js：KM 与箱线也要这八槽，
+// 而那两张图不该为取个颜色去 import 泳道视图（视图之间不互相倒挂）。
+import { SLOT_VARS, OTHER_VAR, slotVar } from './palette.js';
+// 河流图与地方线页早已从本模块取 slotVar，原样转手，不为迁址改它们的引线
+export { slotVar };
 
 // ── 朝代取色：区间图着色 ──────────────────────────────────────────────────
 // 时间上重叠的两个政权必须异色；不重叠的可以安全复用同一槽位（唐与明同为槽 1 无妨）。
@@ -53,7 +56,6 @@ export function dynastyColorSlots() {
   COLOR_CACHE = slot;
   return slot;
 }
-export const slotVar = (s) => (s < 0 ? OTHER_VAR : SLOT_VARS[s]);
 
 // 读出当前主题下解析后的真实色值，用于判断段内文字该用白还是墨色
 export function resolveInk(host) {

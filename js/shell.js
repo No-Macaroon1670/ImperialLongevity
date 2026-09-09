@@ -1,6 +1,6 @@
 // app.js — 状态、一级过滤器、版块编排
 import { h } from './charts.js';
-import { EMPERORS, DYNASTIES, DYN_STATS, GROUPINGS, COVARIATES } from './data.js';
+import { EMPERORS, DYNASTIES, DYN_STATS, GROUPINGS, COVARIATES, unifiedOf } from './data.js';
 import { ERAS } from './dynasties.js';
 import { describe, fmtP } from './stats.js';
 
@@ -60,7 +60,8 @@ function filtered() {
   return EMPERORS.filter((e) => {
     if (!S.includeNominal && e.nominal) return false;
     if (!S.titles.has(e.titleClass)) return false;
-    if (!S.unified.has(S.looseUnified ? e.unifiedLoose : e.unified)) return false;
+    // 口径判断一律走 data.js 的 unifiedOf（D56 案甲）：从前这里与另外七处各写一遍
+    if (!S.unified.has(unifiedOf(e, S))) return false;
     const dk = e.violent === null ? 'unknown' : e.violent ? 'violent' : 'normal';
     if (!S.death.has(dk)) return false;
     if (S.onlyFounder && !e.founder) return false;

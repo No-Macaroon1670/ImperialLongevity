@@ -1,11 +1,12 @@
 // views-compare.js — 箱线图、DSI 散点、假说检验面板、数据库表
 import { el, h, linear, band, ticks, Frame, hoverable, legend, tableView, notes, fmt1, fmt2 } from './charts.js';
-import { GROUPINGS, DYN_STATS, survivalInput, EMPERORS, DYNASTIES } from './data.js';
+import { GROUPINGS, DYN_STATS, survivalInput, EMPERORS, DYNASTIES, unifiedOf, unifiedScaleNote } from './data.js';
 import { describe, welch, mannWhitney, spearman, linreg, bootstrapMeanCI, kaplanMeier, logRank, coxPH, fmtP } from './stats.js';
 import { fmtDate, FLAG_LABEL } from './schema.js';
 import { fmtYearAxis } from './year.js';
-
-const SLOTS = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)', 'var(--s5)', 'var(--s6)'];
+// 色槽走全库同一张表。此前本文件自备六槽，八级的「时代」分组下有两对箱子同色
+// （宋辽金夏≡夏商西周、元明清≡春秋战国）——2026-09-09 D57
+import { SLOTS } from './palette.js';
 
 // ── 7. 箱线图 ────────────────────────────────────────────────────────────
 export function renderBox(host, list, opts) {
@@ -114,13 +115,14 @@ export function renderDSI(host, list, opts) {
       const sub = list.filter((e) => e.dynKey === k && e.lifespan !== null);
       if (!sub.length || st.dsi === null) return null;
       const d = describe(sub.map((e) => e.lifespan));
-      return { key: k, name: st.name, dsi: st.dsi, mean: d.mean, n: d.n, unified: st.u, uL: st.uL, span: st.span, nAll: st.n };
+      // 点上两个口径都带着（字段名与君主记录对齐，好直接喂 unifiedOf）——D56 案甲
+      return { key: k, name: st.name, dsi: st.dsi, mean: d.mean, n: d.n, unified: st.u, unifiedLoose: st.uL, span: st.span, nAll: st.n };
     }).filter(Boolean).filter((p) => p.n >= (opts.dsiMinN || 2));
     xVals = pts.map((p) => p.dsi); yVals = pts.map((p) => p.mean);
     note = `每点为一个王朝（n ≥ ${opts.dsiMinN || 2} 位有生卒记录的皇帝），纵轴为该朝皇帝平均享年，点面积正比于皇帝人数。`;
   } else {
     pts = list.filter((e) => e.lifespan !== null && e.dsi !== null)
-      .map((e) => ({ key: e.id, name: e.temple, dsi: e.dsi, mean: e.lifespan, n: 1, unified: e.unified, uL: e.unifiedLoose, e }));
+      .map((e) => ({ key: e.id, name: e.temple, dsi: e.dsi, mean: e.lifespan, n: 1, unified: e.unified, unifiedLoose: e.unifiedLoose, e }));
     xVals = pts.map((p) => p.dsi); yVals = pts.map((p) => p.mean);
     note = '每点为一位皇帝。同一王朝的皇帝共享同一个 DSI 值，因此个体层面的相关性存在「伪重复」，会人为夸大显著性——正式结论应以王朝层面为准。';
   }
@@ -140,7 +142,7 @@ export function renderDSI(host, list, opts) {
   }
   const labelled = pts.slice().sort((a, b) => b.n - a.n).slice(0, narrow ? 0 : (level === 'dynasty' ? 10 : 0));
   for (const p of pts) {
-    const col = (opts.looseUnified ? p.uL : p.unified) ? 'var(--c-unified)' : 'var(--c-split)';
+    const col = unifiedOf(p, opts) ? 'var(--c-unified)' : 'var(--c-split)';
     const r = level === 'dynasty' ? Math.max(4, Math.min(16, Math.sqrt(p.n) * 2.6)) : 4;
     const node = el('circle', { cx: x(p.dsi), cy: y(p.mean), r, fill: col, opacity: .82, stroke: 'var(--surface-1)', 'stroke-width': 2 });
     const hit = el('circle', { cx: x(p.dsi), cy: y(p.mean), r: Math.max(12, r + 6), fill: 'transparent', class: 'mark' });
@@ -202,7 +204,7 @@ function hypCard(id, claim, bodyNodes, v) {
 
 export function renderHypotheses(host, list, opts) {
   host.innerHTML = '';
-  const uni = (e) => (opts.looseUnified ? e.unifiedLoose : e.unified);
+  const uni = (e) => unifiedOf(e, opts);
   const U = list.filter((e) => uni(e) === 1), S = list.filter((e) => uni(e) === 0);
 
   // 过滤器可以把某一组清空（例如只看分裂时期，或只看丹药组）。
@@ -524,7 +526,9 @@ export function renderDatabase(host, list, opts) {
   host.appendChild(tableView(
     ['庙号/通称', '姓名', '朝代', '民族', '称号', '生', '卒',
       { text: '享年', title: '公历实足年龄，比中文史料常见的「虚岁」少约 1 岁；仅有年份而无月日者按年中估算，误差 ±1 岁' },
-      '登基', '登基年龄', '在位(年)', '死因', '非正常', '开国', '亡国', '大一统', '秩序', 'DSI',
+      '登基', '登基年龄', '在位(年)', '死因', '非正常', '开国', '亡国',
+      // 这一列跟上方「大一统定义」开关走（D56 案甲）：同一屏里表与图不能各算各的
+      { text: '大一统（当前口径）', title: unifiedScaleNote(opts) }, '秩序', 'DSI',
       { text: '标志', title: '丹药、酗酒、肥胖、慢性病等生活方式变量：留空一律读作「无明确记载」，而非「确证不存在」' },
       '备注'],
     rows.map((e) => [
@@ -535,7 +539,7 @@ export function renderDatabase(host, list, opts) {
       e.reignYears === null ? null : e.reignYears.toFixed(1),
       e.causeLabel, e.violent === null ? '不明' : e.violent ? '是' : '否',
       e.founder ? '是' : '', e.lastRuler ? '是' : '',
-      e.unified ? '是' : '否', ['分裂时代', '统一稳定期', '统一末期'][e.order],
+      unifiedOf(e, opts) ? '是' : '否', ['分裂时代', '统一稳定期', '统一末期'][e.order],
       e.dsi === null ? null : e.dsi.toFixed(1), flagsOf(e), e.note,
     ]),
     { caption: `帝王记录（${rows.length} 条）`, max: 0 },

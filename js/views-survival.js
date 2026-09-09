@@ -1,7 +1,10 @@
 // views-survival.js — 生存分析视图：Kaplan–Meier、竞争风险累积发生率、Cox 森林图
 import { el, h, linear, ticks, Frame, hoverable, legend, tableView, notes, fmt1, fmt2, showTip, hideTip } from './charts.js';
-import { survivalInput, GROUPINGS, COVARIATES } from './data.js';
+import { survivalInput, GROUPINGS, COVARIATES, unifiedOf } from './data.js';
 import { kaplanMeier, logRank, coxPH, cumulativeIncidence, fmtP, rmst, riskSetDiagnostics } from './stats.js';
+// 色槽走全库同一张表。此前本文件自备四槽，而分组变量「时代」有八级：
+// 四对曲线同色，只靠图例分不开（2026-09-09 D57）
+import { SLOTS } from './palette.js';
 
 /**
  * 风险集塌陷时的警示条。左截断下低龄段可能只剩一两人在风险集里，
@@ -29,7 +32,6 @@ function degeneracyBanner(diag, opts, scaleName) {
   return box;
 }
 
-const SLOTS = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)'];
 const scaleLabel = (s) => (s === 'age' ? '年龄（岁）' : '登基后年数');
 
 /** 把 KM 折线转成阶梯路径 */
@@ -181,9 +183,10 @@ export function renderCIF(host, list, opts) {
   host.innerHTML = '';
   const scale = opts.cifScale || 'age';
   const fromAge = scale === 'age' ? (opts.kmFromAge ?? 15) : 0;
+  // 口径走 data.js 的 unifiedOf（D56 案甲），与筛选、KM、时间轴同一处判断
   const facets = [
-    { key: 1, name: '大一统王朝', test: (e) => (opts.looseUnified ? e.unifiedLoose : e.unified) === 1 },
-    { key: 0, name: '分裂时期', test: (e) => (opts.looseUnified ? e.unifiedLoose : e.unified) === 0 },
+    { key: 1, name: '大一统王朝', test: (e) => unifiedOf(e, opts) === 1 },
+    { key: 0, name: '分裂时期', test: (e) => unifiedOf(e, opts) === 0 },
   ];
   const causeDefs = [
     { key: 'violent', label: '非正常死亡（被杀/战死/自杀）', color: 'var(--s2)' },

@@ -129,13 +129,32 @@ for (const e of EMPERORS) {
   e.dynN = st.n;
 }
 
+/**
+ * 「大一统」口径的唯一读点（2026-09-09 D56 案甲）。
+ *
+ * 首页「大一统定义：宽松（北宋计入）／严格」是一次敏感性分析：按下之后**全屏**
+ * 都该换成同一口径。从前这句三元式在筛选、分组、协变量、KM、DSI 散点、假设检验、
+ * 移动平均、热力图各写了一遍，而双层时间轴那处漏写——开宽松后同一屏里 DSI 散点
+ * 把北宋九帝画成统一色、KM 也把他们算进大一统，时间轴却仍是分裂色、tooltip 还写
+ * 「分裂时期」。散在八处的口径判断迟早会漏第九处，故收成一个函数：此后凡问
+ * 「这位算不算大一统」，一律走这里，别再就地写三元式。
+ *
+ * 参数 o 可缺（全景页 timeline.html 按不到这颗开关，缺省即严格口径）。
+ */
+export const unifiedOf = (e, o) => (o?.looseUnified ? e.unifiedLoose : e.unified);
+
+/** 当前口径的自陈，挂在表头/图例上，让读者知道眼前这张图按的是哪一套 */
+export const unifiedScaleNote = (o) => (o?.looseUnified
+  ? '当前口径：宽松——北宋计入大一统'
+  : '当前口径：严格——秦汉晋隋唐元明清计入大一统，北宋不计');
+
 // ── 分组变量定义（供图表选择） ────────────────────────────────────────────
 export const GROUPINGS = {
   unified: {
     label: '大一统 vs 分裂',
     levels: [
-      { key: 1, label: '大一统王朝', test: (e, o) => (o.looseUnified ? e.unifiedLoose : e.unified) === 1 },
-      { key: 0, label: '分裂时期',   test: (e, o) => (o.looseUnified ? e.unifiedLoose : e.unified) === 0 },
+      { key: 1, label: '大一统王朝', test: (e, o) => unifiedOf(e, o) === 1 },
+      { key: 0, label: '分裂时期',   test: (e, o) => unifiedOf(e, o) === 0 },
     ],
   },
   violent: {
@@ -218,7 +237,7 @@ export function survivalInput(list, { scale = 'age', censorAtAbd = true, fromAge
 
 export const COVARIATES = [
   { key: 'accAgeZ',   label: '登基年龄（每+10岁）', get: (e) => (e.accAge === null ? null : e.accAge / 10), needsBirth: true },
-  { key: 'unified',   label: '大一统王朝',          get: (e, o) => (o?.looseUnified ? e.unifiedLoose : e.unified) },
+  { key: 'unified',   label: '大一统王朝',          get: (e, o) => unifiedOf(e, o) },
   { key: 'dsi',       label: '王朝稳定度 DSI（每+10年/帝）', get: (e) => (e.dsi === null ? null : e.dsi / 10) },
   { key: 'warfare',   label: '亲历大规模战争',      get: (e) => e.warfare },
   { key: 'civilWar',  label: '经历内战',            get: (e) => e.civilWar },
