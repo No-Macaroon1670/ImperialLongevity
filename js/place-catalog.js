@@ -93,6 +93,7 @@ export function buildPlaceCatalog() {
       a.href = `place.html?key=${encodeURIComponent(p.key)}`;
       const nm = h('div', 'lc-name', p.name);
       nm.appendChild(h('span', 'lc-count', `${ms.length} 条`));
+      if (p.sub) nm.appendChild(h('span', 'pc-sub', p.sub));   // 区域线的副题（边界话）
       const sub = h('div', 'lc-sub');
       sub.appendChild(h('span', 'pc-span', `${fmtYearAxis(ms[0].y)} – ${fmtYearAxis(ms[ms.length - 1].y)}`));
       for (const k of kindsByCount(kinds).slice(0, 4)) {

@@ -47,7 +47,7 @@ import { eventLegend as chipRow } from './events-ui.js';
 import { DYNASTIES, DYN_MAP, ERAS, SUCCESSION, MERGED_INTO, ORTHODOX } from './dynasties.js';
 import { LINE_STOPS } from './line-stops.js';
 import { cardPics } from './pics-own-cards.js';
-import { PLACES, membersOf, PLACE_END, PLACE_MIN } from './places.js';
+import { PLACES, membersOf, PLACE_END, PLACE_MIN, radiusText } from './places.js';
 import { mountThemeToggle } from './theme.js';
 import { lineBadgeSpec } from './line-badge.js';
 import { mountSib } from './sib-nav.js';
@@ -395,7 +395,7 @@ async function renderPlace(place) {
   const first = members[0], last = members[members.length - 1];
   const brief = `本地共 ${members.length} 条`;
   const tip = `一等 ${tiers[1]}、二等 ${tiers[2]}、三等 ${tiers[3]}：一等是 r=1 或人写的精选，二三等照 r 分。`
-    + `凡本库条目的落点地名对得上${place.name}，或坐标在城中心 ${place.radiusKm} 公里内，即算这座城的一条。`
+    + `凡本库条目的落点地名对得上${place.name}，或坐标在${radiusText(place)}，即算这座城的一条。`
     + (members.length ? `最早的是${first.n}，最晚的是${last.n}。` : '');
   const tally = h('p', { class: 'small plc-tally' }, [
     h('strong', { class: 'has-tip', title: tip, 'aria-label': `${brief}。${tip}`, text: brief }),
@@ -429,7 +429,7 @@ async function renderPlace(place) {
       '现藏地不算',
     ]),
     h('p', {}, [
-      `凡本库条目的落点落在${place.name}——地名对得上，或坐标在城中心 ${place.radiusKm} 公里内——即算这座城的一条。`,
+      `凡本库条目的落点落在${place.name}——地名对得上，或坐标在${radiusText(place)}——即算这座城的一条。`,
       h('strong', { text: '但现藏地不算：' }),
       '藏在这里的东西未必是这里的事。'
       + '造、发（出土）、址、战、行、都、迁、灾、显、说都算，摹本与复制件同现藏一并不计。',
@@ -463,13 +463,17 @@ async function renderPlace(place) {
   // 「← 换一座城」一行、「出处」被 .desc-toggle 的 margin-left:auto 顶到第三行
   // 右缘孤零零挂着。宽窄两副样子正是这条拍板要消灭的那种。收进显式的
   // `.sec-tools`（flex-basis:100%）之后恒定两行，两屏同构
-  host.replaceChildren(
+  host.replaceChildren(...[
     h('div', { class: 'head sec-head' }, [
-      h('h2', { text: `${place.name} · 一条竖轴上的大事记` }),
+      // 副题：登记条的 sub（区域线的边界话，如江南「太湖两岸，江海之间」，库主 2026-09-09 定）；
+      // 没有 sub 的城照旧
+      h('h2', { text: `${place.name} · ${place.sub || '一条竖轴上的大事记'}` }),
       h('div', { class: 'sec-tools' }, [back, srcBtn]),
     ]),
+    // lede：登记条里的一句边界话（区域线用：说清哪两座都城各自成线、这里是它们之间的什么）
+    place.lede ? h('p', { class: 'small plc-lede', text: place.lede }) : null,
     tally, how, legendWrap, lineBox,
-  );
+  ].filter(Boolean));
 }
 
 /** 段的年份字面。只管一年的段（同年再易手）报一个年份，不写「1644 – 1644」。 */

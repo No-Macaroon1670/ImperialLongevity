@@ -278,6 +278,26 @@ for (const p of Object.values(PLACES)) {
  */
 export const placeOfLoc = (name) => (name ? LOC2KEY.get(String(name).trim()) || null : null);
 
+/**
+ * 这个地方的圆心表：`[[lon, lat, km], …]`。一城一圆的老写法（center＋radiusKm）与
+ * 区域线的多圆写法（centers）在这里归一，下游只认这一张表。
+ *
+ * 区域线（库主 2026-09-09 起：江南「太湖两岸，江海之间」、成都平原）不是一座城，
+ * 是十来个县市的并集——一个大圆罩不住（江南东西三百公里，罩到了就把南京杭州也吞进来），
+ * 故改成若干小圆的并集：任一落点进任一圆即算。已有六城一字不改，仍走 center＋radiusKm。
+ */
+export const centersOf = (place) => (Array.isArray(place.centers) && place.centers.length
+  ? place.centers
+  : [[place.center[0], place.center[1], place.radiusKm]]);
+
+/** 页面上说口径用的一句：单圆「城中心 N 公里内」，多圆「N 个圆心各 M 公里内」。 */
+export const radiusText = (place) => {
+  const cs = centersOf(place);
+  if (cs.length === 1) return `城中心 ${cs[0][2]} 公里内`;
+  const kms = [...new Set(cs.map((c) => c[2]))].sort((a, b) => a - b);
+  return `${cs.length} 个圆心各 ${kms.length === 1 ? kms[0] : kms[0] + '–' + kms[kms.length - 1]} 公里内`;
+};
+
 // `地名:角色` 拆件。切在**最后一个冒号**上，与 build_geo_events.py 的
 // TOKEN = ^(.+?):([^:]+)$ 同法：角色里不会有冒号，地名里将来可能有
 const splitP = (s) => {
@@ -315,12 +335,17 @@ export function hitsOf(ev, place, geoEvents) {
   }
   const g = geoEvents && geoEvents[ev.n];
   if (g && Array.isArray(g['链'])) {
-    // center 是 [lon, lat]，geo 的点是 [lat, lon]——就在这里拧一次，别处不再拧
-    const c = [place.center[1], place.center[0]];
+    // 圆心是 [lon, lat]，geo 的点是 [lat, lon]——就在这里拧一次，别处不再拧。
+    // 多圆取最近的那个圆记 km（区域线一处落点可能同时在两个圆里，只记一次）
+    const cs = centersOf(place).map(([lon, lat, km]) => [[lat, lon], km]);
     for (const nd of g['链']) {
       if (!nd['点'] || HOLD_ROLES.has(nd['角'])) continue;
-      const d = distKm(c, nd['点']);
-      if (d <= place.radiusKm) hits.push({ 名: nd['名'], 角: nd['角'], 由: '半径', km: Math.round(d) });
+      let best = null;
+      for (const [c, km] of cs) {
+        const d = distKm(c, nd['点']);
+        if (d <= km && (best === null || d < best)) best = d;
+      }
+      if (best !== null) hits.push({ 名: nd['名'], 角: nd['角'], 由: '半径', km: Math.round(best) });
     }
   }
   if (!hits.length) return null;

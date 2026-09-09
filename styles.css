@@ -1581,6 +1581,8 @@ section.card.river-mode .chart-host.full-bleed > .notes {
    行是链接故须自摘下划线；副行要横着排年段与四个类别芯片，故改 flex 可折行 */
 .pc-row { text-decoration: none; }
 .pc-row .lc-sub { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.pc-sub { margin-left: 8px; font-weight: 400; font-size: .8rem; color: var(--text-2); }
+.plc-lede { margin: 2px 0 10px; color: var(--text-2); }
 .pc-span { font-variant-numeric: tabular-nums; }
 .pc-kk { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); }
 .pc-kk > span { color: var(--text-2); }   /* 色只给圆点，字仍走正文色——四个芯片一起上色会花 */
