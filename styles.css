@@ -2151,6 +2151,12 @@ section.card.river-mode .chart-host.full-bleed > .notes {
   background: color-mix(in srgb, var(--seg) 4%, transparent);
 }
 .plc-seg + .plc-seg { margin-top: 10px; }
+/* 混旗段（who2）：一片地同时归两家，不选边——轴线与段身都画成两色条纹（库主 2026-09-09） */
+.plc-seg-mixed { background: repeating-linear-gradient(135deg,
+  color-mix(in srgb, var(--seg) 5%, transparent) 0 16px,
+  color-mix(in srgb, var(--seg2) 7%, transparent) 16px 32px); }
+.plc-seg-mixed::before { background: repeating-linear-gradient(180deg, var(--seg) 0 10px, var(--seg2) 10px 20px); opacity: .8; }
+.plc-seg-d2 { margin-left: 2px; }
 /* 轴本身。窄屏靠左，宽屏走中缝（见下面的 min-width:720px 段） */
 .plc-seg::before {
   content: ""; position: absolute; top: 0; bottom: 0; left: 16px;

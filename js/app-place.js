@@ -163,6 +163,10 @@ function buildSegs(turns, members) {
         y: tn.y, y2: end,
         t: tn.t, who: tn.who, status: tn.status, note: tn.note, src: tn.src,
         color: tn.who ? colorOfDyn(tn.who) : '--lane-other',
+        // 第二面旗（库主 2026-09-09「那两段能不能混旗」）：一片地同时归两家时不选边，
+        // who 记大半所属（续色仍跟它走），who2 记另一家，段身与轴线画成两色条纹
+        who2: tn.who2 && DYN_MAP.has(tn.who2) ? tn.who2 : null,
+        color2: tn.who2 && DYN_MAP.has(tn.who2) ? colorOfDyn(tn.who2) : null,
       };
       segs.push(first);
       // 换手表只记**本地**换手；天下易主（秦→汉、汉→魏→晋、北朝→隋→唐、明→清）不列
@@ -536,6 +540,8 @@ function segNode(seg, ctx) {
     }),
     h('span', { class: 'plc-seg-t', text: seg.t }),
     dyn ? h('span', { class: 'plc-seg-d', text: dyn.name }) : null,
+    // 混旗段：第二颗丸子着第二面旗的色，两颗并排就是「这一段两家同时在」
+    seg.who2 ? h('span', { class: 'plc-seg-d plc-seg-d2', style: `--seg: var(${seg.color2})`, text: DYN_MAP.get(seg.who2).name }) : null,
     // 都城期加亮：这座城当没当过首都，是地方线上最要紧的一条身份线索
     seg.status && seg.status !== '非都' ? h('span', { class: 'plc-seg-cap', text: seg.status }) : null,
     seg.note && !seg.auto ? h('span', { class: 'plc-seg-n small', text: seg.note }) : null,
@@ -571,8 +577,8 @@ function segNode(seg, ctx) {
   const empty = null;
 
   return h('section', {
-    class: 'plc-seg' + (cap ? ' plc-cap' : '') + (seg.items.length ? '' : ' plc-seg-void'),
-    style: `--seg: var(${seg.color})`,
+    class: 'plc-seg' + (cap ? ' plc-cap' : '') + (seg.items.length ? '' : ' plc-seg-void') + (seg.who2 ? ' plc-seg-mixed' : ''),
+    style: `--seg: var(${seg.color})` + (seg.who2 ? `; --seg2: var(${seg.color2})` : ''),
   }, [head, sum, empty, cards, fold]);
 }
 
