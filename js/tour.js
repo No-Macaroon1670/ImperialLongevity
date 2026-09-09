@@ -956,15 +956,27 @@ export function mountTour(sectionEl, hostOf, opts = {}) {
     const seen = memo.get(SEEN_KEY, null);
     const at = Number(memo.get(AT_KEY, 0)) || 0;
     launch.classList.toggle('fresh', !seen || at > 0);
+    // 首访与「走到一半」两态分家挂类（库主 2026-09-09 裁 D59·C）：两态从前共用
+    // 一个 .fresh，窄屏图标化后双双只剩 🧭，读者不知自己停在第几站。
+    // **第几站是功能信息，不是解释字**——09-08「只留图标」那条拍板针对的是解释，
+    // 故 CSS 只让 resume 态在窄屏留下「第 N 站」三四个字，fresh 态照旧纯图标
+    launch.classList.toggle('tour-fresh', !seen);
+    launch.classList.toggle('tour-resume', !!seen && at > 0);
+    const step = `第 ${at + 1} 站`;
     const txt = !seen ? '第一次来？跟着走一遍'
-      : at > 0 ? `接着走 · 第 ${at + 1} 站` : '导览';
+      : at > 0 ? `接着走 · ${step}` : '导览';
     // 两段结构（🧭 ＋ 字），与 📖 📍 🎲 三颗同规格（库主 2026-09-08 追加 §六.3）：
     // ≤720px 与钉住态下 CSS 按 `span:not(.tour-face)` 收掉字面、只留图标，
     // 四颗图标才排得进一行。**全名不能只活在字面里**，故同时写进 aria-label 与
-    // title——读屏念的、长按看的都还是那三种面孔的整句
+    // title——读屏念的、长按看的都还是那三种面孔的整句。
+    // resume 态多切一段 .tour-step：宽屏两段连读即原样「接着走 · 第 3 站」，
+    // 窄屏前一段随大流收掉、只剩这一段
     launch.replaceChildren(
       h('span', { class: 'tour-face', text: '🧭' }),
-      h('span', { text: txt }),
+      ...(seen && at > 0
+        ? [h('span', { class: 'tour-lead', text: '接着走 · ' }),
+          h('span', { class: 'tour-step', text: step })]
+        : [h('span', { text: txt })]),
     );
     launch.setAttribute('aria-label', txt);
     launch.title = txt;

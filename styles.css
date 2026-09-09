@@ -1419,7 +1419,17 @@ body.tour-on .kp-solo.kp-yc-full .kp-ext {
      邀请句没有被丢掉，它的三个去处都还在：① 整句仍在 aria-label 与 title 里
      （tour.js syncLaunch 两处同写），读屏念得到、长按看得见；② fresh 态自带蓝底
      白字＋三次脉冲（.tour-launch.fresh），一行图标里它是唯一亮着的那颗，
-     「先点我」这件事由颜色说，比字说得更快；③ 宽屏照旧带字。 */
+     「先点我」这件事由颜色说，比字说得更快；③ 宽屏照旧带字。
+
+     **但 resume 态（走到一半退出再回来）留四个字**（库主 2026-09-09 裁 D59·C）：
+     「第 N 站」是功能信息不是解释字——纯图标时读者无从知道自己停在第几站，
+     而 09-08「只留图标」那条拍板针对的是解释。故只放行 `.tour-resume .tour-step`
+     一段，「接着走 · 」（.tour-lead）仍随大流收掉，📍🎲📖 三颗照旧纯图标。
+     375 宽实测：四颗仍同一行（🧭 26–116、📖 124–171、📍 179–217、🎲 225–270），
+     搜索框照旧另起一行（与首访态一样，本就如此），无横滚。 */
+  :is(.sec-tools, .head.sec-head) .tour-launch-head.tour-resume .tour-step {
+    display: inline;
+  }
 }
 /* 目录行里的那个要跟目录链接一样高，否则它把整行撑开半格 */
 .tour-launch-toc { font-size: .8rem; padding: 3px 10px; }
