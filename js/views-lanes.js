@@ -1097,9 +1097,11 @@ export function renderLaneTimeline(host, list, opts) {
     if (evKey && kp && kp.showEvent) {
       // 带 tr 的事件在时间轴让位给箭头（视图分工），它的考据由箭头卡代言：
       // 点箭头先找认领此键的事件条目（如 天京陷落 tr:'taiping>qing'），有则出它的卡
-      const te = EVENTS.find((e) => e.tr === evKey);
-      if (te && kp.showEvent(evSpec(te))) return;
+      // 同一把钥匙可被两条认领（2026-09-09 卫满：存续条〈卫满朝鲜〉与〈汉灭卫氏朝鲜〉同挂 'weiman>xhan'，
+      // 库主裁存续条也走箭头不再画点）：卡先给与 TRANSITIONS 登记名同名的那条，没有再取先到的
       const tr = TRANSITIONS[evKey];
+      const te = EVENTS.find((e) => e.tr === evKey && tr && e.n === tr.n) || EVENTS.find((e) => e.tr === evKey);
+      if (te && kp.showEvent(evSpec(te))) return;
       const [f, t] = evKey.split('>');
       const nm = (k) => (geo.get(k) ? geo.get(k).b.d.name : k);
       if (tr && kp.showEvent(eventSpec(tr, nm(f), nm(t)))) return;
