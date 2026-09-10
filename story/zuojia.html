@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>作假线 · 一块新刻的石头埋进地里等新君来找，一百枚样钱挂在关口等假钱来比，一百卷古书送到官府去领赏，一张新纸泡三个月泡成元人的画。十四站，看假货照着谁做；顺路看谁来拆、拆动没有。</title>
+<meta name="description" content="每一件假货都指着一个买主。共 14 站。">
+<link rel="canonical" href="https://no-macaroon1670.github.io/ImperialLongevity/story/zuojia.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="作假线">
+<meta property="og:description" content="一块新刻的石头埋进地里等新君来找，一百枚样钱挂在关口等假钱来比，一百卷古书送到官府去领赏，一张新纸泡三个月泡成元人的画。十四站，看假货照着谁做；顺路看谁来拆、拆动没有。">
+<meta property="og:url" content="https://no-macaroon1670.github.io/ImperialLongevity/story/zuojia.html">
+<style>
+:root{
+  --bg:#0e0d0c; --bg2:#161311; --ink:#e9e3d7; --dim:#9a9187; --faint:#5d564e;
+  --rule:#2a2622; --accent:#c0603f; --gold:#c9a959;
+  --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",Georgia,serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+/* 白天模式（库主 2026-09-04 令，且须由生成器带出、不许逐页手改）：深色是这套页的本色，
+   浅色只在读者按下切换时启用；偏好存 localStorage 'il-theme'，与主站共用一把钥匙。
+   凡写死的色值都要在这里给一个浅色对应，页里其它颜色一律走 token。 */
+:root[data-theme=light]{
+  --bg:#f7f3ec; --bg2:#efe9de; --ink:#1e1a15; --dim:#5c554c; --faint:#a39a8e;
+  --rule:#dcd4c6; --accent:#b04f2e; --gold:#8b6f2e;
+}
+[data-theme=light] .t-ok{color:#4f7a3f} [data-theme=light] .t-new{color:#3f6a80} [data-theme=light] .t-infer{color:#7a6a3f}
+[data-theme=light] .m-dust{fill:#8a8074}
+[data-theme=light] dialog#lb::backdrop{background:rgba(247,243,236,.94)}
+[data-theme=light] #lbx{background:rgba(0,0,0,.08)} [data-theme=light] #lbx:hover{background:rgba(0,0,0,.16)}
+#theme-toggle{position:fixed;top:10px;right:12px;z-index:60;font-family:var(--sans);font-size:11px;letter-spacing:.08em;
+  color:var(--dim);background:var(--bg2);border:1px solid var(--rule);border-radius:999px;padding:4px 10px;cursor:pointer;opacity:.85}
+#theme-toggle:hover{color:var(--ink);opacity:1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+  font-size:18px;line-height:2.05;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+.epi-verse{padding:3rem 1.2rem 0;text-align:center}
+.epi-verse .vl{font-size:21px;letter-spacing:.38em;line-height:2.35;text-indent:.38em}
+.epi-verse .vby{margin-top:1rem;font-family:var(--sans);font-size:11px;color:var(--faint);letter-spacing:.24em}
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50}
+/* 导轨：宽屏才有。窄屏那点横向空间要留给正文 */
+/* 左栏：导轨在上，小地图在下。两者同住一个固定列——读者眼睛一抬，
+   既知道读到第几节，也知道那一节在地上哪儿 */
+#side{position:fixed;left:max(1.2rem,calc(50vw - 30rem));top:50%;transform:translateY(-50%);
+  z-index:40;width:11rem}
+#rail{display:flex;flex-direction:column;gap:.55rem;font-family:var(--sans);font-size:11px}
+/* rdot/rlbl 带前缀与外界脱钩（照 charts.js sw- 家法；库主实测 Rakuten 扩展注入
+   .dot{position:absolute} 把点拽出流压上标签首字，position:static 双保险）。
+   点与标签的间距落在 .rdot 的 margin 上而不靠 flex gap：读者侧环境（插件/旧内核）重写 <a>
+   的 display 时会退成 inline 排布，margin+vertical-align 在两种排布下同样成立，标签永不吃点
+   （2026-08-26 库主线上截图实案，本地净环境不复现；flex 健康时此写法与 gap 像素等价） */
+#rail a{display:flex;align-items:center;color:var(--faint);text-decoration:none;
+  letter-spacing:.04em;transition:color .25s}
+#rail .rdot{position:static;display:inline-block;vertical-align:middle;width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;margin-right:.5rem;transition:transform .25s}
+/* max-width+ellipsis 是超长站题的兜底（判官二席 2026-08-31，配 [:6] 撤硬切）：
+   用省略号，不用无声截断；现库最长站题十字（约114px）不触此限 */
+#rail a .rlbl{display:inline-block;vertical-align:middle;opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .25s;white-space:nowrap;max-width:9.5rem;overflow:hidden;text-overflow:ellipsis}
+#rail a:hover{color:var(--dim)} #rail a:hover .rlbl{opacity:1;transform:none}
+#rail a.on{color:var(--accent)} #rail a.on .rdot{transform:scale(1.5)}
+#rail a.on .rlbl{opacity:1;transform:none}
+@media(max-width:1180px){#side{display:none}}
+.wrap{max-width:40rem;margin:0 auto;padding:0 1.5rem}
+header.cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
+  padding:6rem 0 4rem;border-bottom:1px solid var(--rule)}
+.kicker{font-family:var(--sans);font-size:12px;letter-spacing:.34em;color:var(--faint);margin-bottom:2.4rem}
+h1{font-size:clamp(2.4rem,8vw,4rem);line-height:1.14;margin:0 0 1.6rem;font-weight:500;letter-spacing:.06em}
+.lede{font-size:1.06rem;color:var(--dim);line-height:2;max-width:30rem;margin:0}
+.meta{margin-top:3.4rem;font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.08em}
+.meta a{color:var(--gold);text-decoration:none;border-bottom:1px solid transparent}
+.meta a:hover{border-bottom-color:var(--gold)}
+section{padding:5.5rem 0;border-bottom:1px solid var(--rule)}
+section.tone{background:var(--bg2)}
+.num{font-family:var(--sans);font-size:11px;letter-spacing:.3em;color:var(--faint)}
+.yr{font-family:var(--sans);font-size:2.6rem;line-height:1;color:var(--rule);margin:.4rem 0 .8rem;
+  font-variant-numeric:tabular-nums;font-weight:700}
+h2{font-size:1.75rem;line-height:1.35;margin:0 0 .5rem;font-weight:500;letter-spacing:.04em}
+.h2-ev{font-size:.95rem;font-weight:400;color:var(--faint);letter-spacing:.02em;white-space:nowrap;margin-left:.35em}
+.sub{font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:.1em;margin:0 0 2rem}
+section p{margin:0 0 1.35rem}
+p.beat{color:var(--gold)}
+blockquote{margin:2rem 0;padding-left:1.2rem;border-left:2px solid var(--accent);color:var(--ink)}
+blockquote small{display:block;margin-top:.5rem;font-family:var(--sans);font-size:11px;
+  letter-spacing:.08em;color:var(--faint)}
+.go{display:inline-block;margin:.4rem 0 1.6rem;font-family:var(--sans);font-size:12px;
+  letter-spacing:.08em;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:2px}
+.go:hover{border-bottom-color:var(--gold)}
+details.app{margin-top:2rem;font-family:var(--sans);font-size:13px;line-height:1.85;color:var(--dim)}
+details.app summary{cursor:pointer;color:var(--faint);letter-spacing:.14em;font-size:11px;
+  padding:.5rem 0;border-top:1px solid var(--rule)}
+details.app ul{margin:.8rem 0;padding-left:1.1rem}
+details.app li{margin-bottom:.7rem}
+details.app p{margin:.9rem 0 0}
+.tag{display:inline-block;font-size:10px;letter-spacing:.08em;padding:1px 6px;margin-right:.5rem;
+  border-radius:3px;border:1px solid currentColor;vertical-align:.08em}
+.t-ok{color:#7d9b6e} .t-trad{color:var(--gold)} .t-new{color:#6e8a9b}
+.t-infer{color:#9b8a6e} .t-doubt{color:var(--accent)}
+.src{margin-top:.9rem;display:flex;flex-wrap:wrap;gap:.9rem}
+.src a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule);font-size:12px}
+.src a:hover{color:var(--dim);border-bottom-color:var(--dim)}
+.note{color:var(--faint);font-size:12px;font-family:var(--sans);line-height:1.9;margin-top:1rem}
+/* 配图。图注里那半行是**署名**，CC-BY／CC-BY-SA 要求给出作者与许可 */
+/* 文绕图。竖幅整幅摆着时两侧全空，绕排把那块空白还给文字；
+   窄屏不绕——一栏劈两半两边都读不成 */
+figure.pic{margin:0 0 2rem}
+figure.pic img{display:block;width:100%;height:auto;border-radius:3px}
+@media(min-width:820px){
+  figure.pic{float:left;width:44%;margin:.4rem 1.6rem .8rem 0}
+  figure.pic.pic-wide{float:none;width:100%;margin:.6rem 0 1.2rem}
+  section p,section h2,details.app{clear:none}
+  details.app,.go{clear:both}
+}
+figure.pic figcaption{margin-top:.6rem;font-family:var(--sans);font-size:11.5px;
+  line-height:1.8;color:var(--faint)}
+figure.pic figcaption a{color:var(--faint);text-decoration:none;border-bottom:1px solid var(--rule)}
+figure.pic figcaption a:hover{color:var(--dim)}
+/* 一站多图（如落点三张）：不绕排，并排摆成一排——「能看见三样东西」，
+   图就该一次看见三样，不该被文字拆成三处零散的浮块 */
+.pic-trio{display:flex;flex-direction:column;gap:1.4rem;margin:0 0 2rem}
+.pic-trio figure.pic{margin:0}
+@media(min-width:820px){
+  .pic-trio{flex-direction:row}
+  .pic-trio figure.pic{float:none;width:calc(33.333% - .94rem)}
+}
+
+/* ── 地图 ────────────────────────────────────────────────────────
+   开篇一张大的摆出全程，左栏一张小的跟着读到哪儿走。
+   底图只有海岸线、四个大湖与黄河长江淮河，没有国界（理由见 tools/mining/build_basemap.py）。
+   全程的点一律画出、只是淡；当前那一站才亮——读者要能看见自己走到哪儿，
+   也要能看见还剩多少。 */
+#smap{padding:4rem 0 3.5rem}
+svg.hmap{display:block;width:100%;height:auto}
+svg.rstrip{display:block;width:100%;max-width:640px;height:auto;margin:.4rem 0 .1rem;overflow:visible}
+.rs-base{stroke:var(--rule);stroke-width:1.4}
+.rs-hop{stroke:var(--accent);stroke-width:2.2}
+.rs-done{fill:var(--dim)}
+.rs-todo{fill:none;stroke:var(--faint);stroke-width:1.2}
+.rs-cur{fill:var(--accent)}
+.rs-name{fill:var(--ink);font-family:var(--sans);font-size:11.5px;letter-spacing:.08em}
+.rs-end{fill:var(--faint);font-family:var(--sans);font-size:9.5px;letter-spacing:.04em}
+svg.hmap{margin:1.6rem 0 1rem}
+svg *{vector-effect:non-scaling-stroke}
+.m-dust{fill:#6a6259;opacity:.32}
+.m-idx{fill:var(--dim);font-family:var(--sans);letter-spacing:0}
+.m-coast{fill:none;stroke:var(--rule);stroke-width:1.1}
+.m-river{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.42}
+/* 大湖：一片淡水色，压在海岸之上、河之下（层序归 render_line_map.mjs 的 append 次序）。
+   用河的色相而不是另起一色——湖跟河是一族，换个颜色就成了另一种东西。这一页是
+   深底，故比浅色两端（.mm-lake/.pl-lake）再压一档：填充只到河那道线有效浓度的
+   三成上下，读者一眼知道这是一块水面，但抢不过河、更抢不过站点。
+   填充比描边实：水面不是圈出来的区域。
+   要试「少画一个湖」，不必重跑构建：.m-lake[data-lake="太湖"]{display:none} */
+.m-lake{fill:var(--accent);fill-opacity:.13;stroke:var(--accent);stroke-opacity:.34;stroke-width:.8}
+.m-city{fill:var(--faint);opacity:.75}
+.m-city-t{fill:var(--faint);opacity:.85;font-family:var(--sans)}
+.m-river-t{fill:var(--accent);opacity:.65;font-family:var(--sans)}
+/* 湖名：与河名同色、小一号、更轻——湖是结不是干线（2026-08-26 story 静态图补湖案） */
+.m-lake-t{fill:var(--accent);opacity:.5;font-family:var(--sans)}
+.m-dot{fill:var(--dim);opacity:.5}
+.m-maybe{fill:none;stroke:var(--dim);stroke-width:1.2;opacity:.55;stroke-dasharray:3 2.5}
+.m-held{fill:none;stroke:var(--gold);stroke-width:1.2;opacity:.5}
+/* 贴在框边的方块：东西已经出了这张图的范围（伦敦） */
+.m-off{stroke-dasharray:3 2.5}
+.m-flow{stroke:var(--gold);stroke-width:1;opacity:.35;stroke-dasharray:4 3}
+.m-stop-t{fill:var(--dim);opacity:.8;font-family:var(--sans)}
+/* 现藏之处的馆名。金色，与那个空心方块、那条虚线同一族 */
+.m-held-t{fill:var(--gold);opacity:.75;font-family:var(--sans)}
+/* 当前这一节：亮起来 */
+.m-stop.on .m-dot{fill:var(--accent);opacity:1}
+.m-stop.on .m-maybe{stroke:var(--accent);opacity:1}
+.m-stop.on .m-held,.m-stop.on .m-flow{stroke:var(--gold);opacity:1}
+.m-stop.on .m-stop-t{fill:var(--ink);opacity:1}
+#gname{margin-top:.5rem;font-family:var(--sans);font-size:10.5px;color:var(--faint);
+  line-height:1.6;min-height:2.6em}
+
+/* 点开放大。用 <dialog>：Esc 与背景遮罩都是它自带的，不必自己写一套 */
+button.zoom{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in}
+button.zoom img{transition:opacity .18s}
+button.zoom:hover img{opacity:.86}
+dialog#lb{border:0;padding:0;background:none;max-width:96vw;max-height:96vh;color:var(--ink)}
+dialog#lb::backdrop{background:rgba(8,7,6,.92)}
+#lbi{display:block;max-width:min(96vw,900px);max-height:82vh;width:auto;height:auto;
+  margin:0 auto;border-radius:3px}
+#lbc{max-width:min(96vw,900px);margin:.8rem auto 0;font-family:var(--sans);font-size:12px;
+  line-height:1.8;color:var(--dim)}
+#lbc a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--rule)}
+#lbx{position:fixed;top:1.1rem;right:1.4rem;width:2.2rem;height:2.2rem;border:0;border-radius:50%;
+  background:rgba(255,255,255,.1);color:var(--ink);font-size:1rem;cursor:pointer}
+#lbx:hover{background:rgba(255,255,255,.2)}
+footer{padding:5rem 0 7rem;font-family:var(--sans);font-size:12.5px;color:var(--faint);line-height:2}
+footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--rule)}
+footer a:hover{color:var(--ink)}
+footer .row{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1.4rem}
+@media(max-width:640px){
+  body{font-size:17px;line-height:1.98}
+  section{padding:4rem 0}
+  .yr{font-size:2rem}
+  h1{letter-spacing:.03em}
+}
+</style>
+</head>
+<body>
+<script>(function(){try{var t=localStorage.getItem("il-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<button id="theme-toggle" type="button" aria-label="切换深浅色"></button>
+<div id="bar"></div>
+<div id="side">
+<nav id="rail" aria-label="节次">
+<a href="#s0"><span class="rdot"></span><span class="rlbl">同一块石头</span></a>
+<a href="#s1"><span class="rdot"></span><span class="rlbl">白选直三千</span></a>
+<a href="#s2"><span class="rdot"></span><span class="rlbl">北阙黄车</span></a>
+<a href="#s3"><span class="rdot"></span><span class="rlbl">百钱为样</span></a>
+<a href="#s4"><span class="rdot"></span><span class="rlbl">八宝为首</span></a>
+<a href="#s5"><span class="rdot"></span><span class="rlbl">沉钱江湖</span></a>
+<a href="#s6"><span class="rdot"></span><span class="rlbl">伪见三百本</span></a>
+<a href="#s7"><span class="rdot"></span><span class="rlbl">梨木一片</span></a>
+<a href="#s8"><span class="rdot"></span><span class="rlbl">雪罨烘琴</span></a>
+<a href="#s9"><span class="rdot"></span><span class="rlbl">伪造者斩</span></a>
+<a href="#s10"><span class="rdot"></span><span class="rlbl">凡三月而止</span></a>
+<a href="#s11"><span class="rdot"></span><span class="rlbl">圣谕六言</span></a>
+<a href="#s12"><span class="rdot"></span><span class="rlbl">一年两判</span></a>
+<a href="#s13"><span class="rdot"></span><span class="rlbl">胡杨染纸</span></a>
+<a href="#s14"><span class="rdot"></span><span class="rlbl">一面疑古</span></a>
+<a href="#s15"><span class="rdot"></span><span class="rlbl">为一张画开会</span></a>
+</nav>
+</div>
+<header class="cover"><div class="wrap">
+<div class="kicker">每一件假货都指着一个买主</div>
+<h1>作假线</h1>
+<p class="lede">一块新刻的石头埋进地里等新君来找，一百枚样钱挂在关口等假钱来比，一百卷古书送到官府去领赏，一张新纸泡三个月泡成元人的画。十四站，看假货照着谁做；顺路看谁来拆、拆动没有。</p>
+<div class="meta">共 14 站　·　<a href="../timeline.html#line=zuojia">在图上走一遍 →</a>　·　<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-zuojia.md">资料与出处 ↗</a></div>
+</div></header>
+<section id="s0" class="tone"><div class="wrap">
+<div class="num">序</div>
+<h2>同一块石头</h2>
+<p>一枚玉印的本职，明朝一个礼部尚书说得最清楚：「以識文書，防詐偽」。两千年里被伪造得最多的，也正是这枚印。</p>
+<p><strong>它叫传国玺，什么时候没的有四种说法，本库那一条已经写过；没了以后，它一次一次被人找到。</strong>1096年，咸阳县民段义修房子，「掘地得之，有光照室」。1294年，一个破了产的功臣之孙家里，寡妇「托以玉見貿，供朝夕之給」，拿出来卖的玉是一枚印。1500年，鄠县民毛志学在泥河边捡到玉玺，陕西巡抚熊翀「以為秦璽復出，遣人獻之」。三次现身隔着四百年，出的是同一样东西。</p>
+<p><strong>每一次都有人验，验的办法一样，结论相反。</strong>1098年翰林学士承旨蔡京带十三个讲议官联名奏报，先看玉「色綠如藍，溫潤而澤」，再拿历代正史排除：「皇帝壽昌」是晋玺，「受命於天」是后魏玺，「有德者昌」是唐玺，「惟德允昌」是石晋玺，「則『既壽永昌』者，秦璽可知」，结论「非漢以後所作明矣」，哲宗五月初一御殿受宝。1500年礼部尚书傅瀚也先看篆文，与《辍耕录》所摹不同，再看螭钮，与史传所记不类，「今所進與宋、元所得，疑皆後世摹秦璽而刻之者」。一句话，把前两次一起判了。</p>
+<p><strong>傅瀚接着讲的，是这条线的读法。</strong>「竊惟璽之用，以識文書，防詐偽，非以為寶玩也」；「故求之不得，則偽造以欺人；得之則君臣色喜，以誇示於天下。是皆貽笑千載」。孝宗听了，「卻而不用」。造假的人不必先想通这层道理，他只要知道朝廷在等。等的人肯出钱，埋的人就有。宋、元、明、清四朝要的是同一块石头，说明这一样东西从来没有被给足。</p>
+<p><strong>假货照着买主做。</strong>官家要天命。市面上要的是面值，比铜贵出来的那一截。藏家要的是来历，纸上的年头。读书人要的最难给，要真相。这条线走十四站，每一站上半句讲谁造，下半句讲谁来拆、拆动没有。拆的人一路都在：十三个讲议官，一个礼部尚书，一个理学家，一个皇帝，一个英国探险家。拆动的少；有人拆反了，有人拆着拆着自己造了假。</p>
+<p><strong>王莽逼玺那一回，太后骂过一句。</strong>「亦當自更作璽，傳之萬世，何用此亡國不詳璽為」。一语成谶线讲了他的铜匮，这里只借这一句：一个自己造了全套天命的人，仍然要来讨这块旧石头。序问两句，落点各答一遍：这件东西是照着谁做出来的？又怎么知道它是真的？</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-ok">信史</span>段义得玺（「掘地得之，有光照室」）、蔡京十三员参验（「色綠如藍，溫潤而澤」、四朝玺文排除、「則「既壽永昌」者，秦璽可知」「非漢以後所作明矣」）、五月朔受宝皆《宋史》卷一百五十四〈舆服六〉逐字（action=raw 亲抓，2026-09-10）；得玺绍圣三年（1096）、上献四年（1097）、奏报受宝元符元年（1098），正文分写。</li>
+<li><span class="tag t-ok">信史</span>崔彧进玺一案（「家計窘極」「托以玉見貿，供朝夕之給」）出陶宗仪《辍耕录》卷二十六逐字（亲抓），至元三十一年（1294）正月；毛志学得玺、熊翀献玺、傅瀚驳文（「今所進與宋、元所得，疑皆後世摹秦璽而刻之者」「竊惟璽之用，以識文書，防詐偽，非以為寶玩也」「故求之不得……是皆貽笑千載」「卻而不用」）出《明史》卷六十八〈舆服四〉逐字（亲抓），弘治十三年（1500）。「三次出土隔着四百年」＝1096→1500 直算（404）。</li>
+<li><span class="tag t-ok">信史</span>王政君「亦當自更作璽，傳之萬世，何用此亡國不詳璽為」出《汉书》卷九十八〈元后传〉逐字（亲抓）；库内〈传国玺〉yl 现作「《文献通考》转引」，A 卷已报可作一手升级，本线不改库。</li>
+<li><span class="tag t-new">库条</span>「什么时候没的，四说并存」系库内〈传国玺〉yc「实物何时消失有后唐自焚等四说并存」；乾隆 1746 判玺在第十二站，序只写「宋、元、明、清四朝」。锚〈传国玺〉y:-220（二级·真物，宝藏条写法：假案作它的发现故事）。</li>
+<li><span class="tag t-new">分工</span>序为全线最重一站（派工书）；p[0] 兼作序卡 b。段名「命／钱／名／拆」只在 craft 与站文里出现，序里用「官家／市面／藏家／读书人」说，不做分幕标题。</li>
+<li><span class="tag t-new">校订</span>校对员 2026-09-10 改两处：①1294 崔彧一案《辍耕录》原文是「太師國王之孫曰拾得者」既殁、其妻「托以玉見貿，供朝夕之給」，系变卖非出土，故正文「三次出土」改「三次现身」；②该家所在《辍耕录》未言，正文原写「大都」无一手，删。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikisource.org/wiki/%E6%98%8E%E5%8F%B2/%E5%8D%B768?action=raw" target="_blank" rel="noopener">《明史》卷六十八〈舆服四〉，维基文库 action=raw 直取，2026-09-10：</a>
+<a href="https://zh.wikisource.org/wiki/%E5%AE%8B%E5%8F%B2/%E5%8D%B7154?action=raw" target="_blank" rel="noopener">《宋史》卷一百五十四〈舆服六〉，维基文库 action=raw 直取，2026-09-10：</a>
+<a href="https://zh.wikisource.org/wiki/%E8%BC%9F%E8%80%95%E9%8C%84/%E5%8D%B726?action=raw" target="_blank" rel="noopener">陶宗仪《辍耕录》卷二十六〈传国玺〉，维基文库 action=raw 直取，2026-09-10：</a>
+<a href="https://zh.wikisource.org/wiki/%E6%BC%A2%E6%9B%B8/%E5%8D%B7098?action=raw" target="_blank" rel="noopener">《汉书》卷九十八〈元后传〉，维基文库 action=raw 直取，2026-09-10：</a>
+</div>
+</details>
+</div></section>
+<section id="s1" data-year="-118" data-name="白鹿皮币"><div class="wrap">
+<div class="num">一 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><circle class="rs-cur" cx="26.0" cy="16" r="5.2"/><circle class="rs-todo" cx="71.2" cy="16" r="3"/><circle class="rs-todo" cx="116.5" cy="16" r="3"/><circle class="rs-todo" cx="161.7" cy="16" r="3"/><circle class="rs-todo" cx="206.9" cy="16" r="3"/><circle class="rs-todo" cx="252.2" cy="16" r="3"/><circle class="rs-todo" cx="297.4" cy="16" r="3"/><circle class="rs-todo" cx="342.6" cy="16" r="3"/><circle class="rs-todo" cx="387.8" cy="16" r="3"/><circle class="rs-todo" cx="433.1" cy="16" r="3"/><circle class="rs-todo" cx="478.3" cy="16" r="3"/><circle class="rs-todo" cx="523.5" cy="16" r="3"/><circle class="rs-todo" cx="568.8" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="614.0" y="35" text-anchor="end">新学伪经考</text><text class="rs-name" x="26.0" y="35" text-anchor="start">白鹿皮币</text></svg>
+<div class="yr">前119</div>
+<h2>白选直三千 <span class="h2-ev">白鹿皮币</span></h2>
+<p class="sub">前119　·　西汉　·　制度</p>
+<p><strong>白金与皮币同出一道诏，都在前119年，站年与本库那一条同一年。</strong>这一站落在〈白鹿皮币〉上，同一次财政操作出了两种东西：一张鹿皮值四十万，一枚银饼值三千。皮币本库那一条写过一句：律文里没有伪造皮币的罪名，「没人假造的东西，多半没在流通」。白金正相反。</p>
+<p><strong>一枚银饼，官定三千钱。</strong>《史记·平准书》：「又造銀錫為白金」，分三品，「其一曰重八兩，圜之，其文龍，名曰『白選』，直三千」。银掺锡，八两重，作价三千。铜钱的分量与面值差得不远，白金的分量与面值之间空出一道缝。造假的人照的就是这道缝。</p>
+<p><strong>同一句话的后半句，已经写下结果。</strong>「盜鑄諸金錢罪皆死，而吏民之盜鑄白金者不可勝數。」死罪在前，不可胜数在后，中间没有停顿。</p>
+<p><strong>五年后，只好把死刑收回来。</strong>「自造白金五銖錢後五歲，赦吏民之坐盜鑄金錢死者數十萬人。其不發覺相殺者，不可勝計。赦自出者百餘萬人。」自首的一百多万，还不到一半，所以司马迁写：「天下大抵無慮皆鑄金錢矣」。一个国家把死罪发给几十万人，最后退一步的是国家。</p>
+<p><strong>这一站的拆假，铸在钱身上。</strong>次年有司奏三铢钱「輕錢易作姦詐」，改铸五铢，「周郭其質」，钱边铸出一圈凸郭，防的是《史记》记下的那种手法：「姦或盜摩錢裏取鋊」，从钱背刮下铜屑另铸新钱。文帝五年，前175年，贾谊已经算过这笔账：「曩禁鑄錢，死罪積下；今公鑄錢，黥罪積下」，禁与放，两头都是牢。天下大势线讲的是他另一篇疏，这一句只出在《汉书·食货志》。</p>
+<p>假钱从第一天起谁都知道是假的，没有人来拆。下一站的假，满朝没有一个人敢说破。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=1">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>这张鹿皮是被一次赈灾逼出来的。</strong>年份并不出在《史记》：平准书通篇不系年，只有「自孝文更造四銖錢，至是歲四十餘年」这样的相对纪时。给出年份的是《汉书·卷六·武帝纪》元狩四年冬——「四年冬，有司言關東貧民徙隴西、北地、西河、上郡、會稽凡七十二萬五千口，縣官衣食振業，用度不足，請收銀錫造白金及皮幣以足用。初算緡錢。」关东贫民七十二万五千口的迁徙安置把国库掏空，于是有了这张值四十万钱的鹿皮；同段紧接「初算緡錢」，与告缗算缗本是同一年的同一套财政动作。</p>
+<p><strong>内容出《史记》、年份出《汉书》，两书各管一头。</strong>皮币的正文在平准书：「乃以白鹿皮方尺，緣以藻繢，為皮幣，直四十萬。王侯宗室朝覲聘享，必以皮幣薦璧，然後得行。」</p>
+<p><strong>它究竟算不算货币，是本条的正文。</strong>正方：1979年版《辞海》称其为一种信用货币，1999年版改称有价凭证；萧清《中国古代货币史》径称之为古代纸币的前驱。反方即维基条目正文所持，理由极硬——黄金、铜钱、白金三品的价格在《史记》《汉书》《九章算术》《居延汉简》里屡见，皮币却只有「值四十万」这一条孤立记载；且汉律明订伪造黄金弃市、盗铸白金铜钱死罪，独独不见仿造白鹿皮币的律条。</p>
+<p><strong>没人假造的东西，多半没在流通。</strong>两说本条并存不裁。</p>
+<p>用皮荐璧并非武帝新创。「皮币」本指皮与帛两物，先秦聘享旧礼即以皮荐璧，条目引《左传》《孟子》《礼记》《仪礼》四书为证。武帝此举打的是崇古礼、应祥瑞的名义，办的是削藩敛财的事——二十余年后的马蹄金（库内另条）同样借祥瑞之名动黄金，一次向诸侯王收钱、一次向诸侯王赐金，方向相反而手法同源。</p>
+<p><strong>一处异说不得误记</strong>：条目脚注载王泰初《论白金及皮币的始铸年代》主张始铸在元光三年至元朔四年之间，惟该注原话所驳的是「元朔四年」，正文锚的却是元狩四年，维基自身前后不搭。故此说只能写作「另有学者主张始铸年在元光三年至元朔四年之间」，不得写成对元狩四年的异说。</p>
+<p><strong>白金三品的价目与刑名写在同一句里。</strong>《史记·卷三十·平准书》紧接皮币那一段：「又造銀錫為白金。以為天用莫如龍，地用莫如馬，人用莫如龜，故白金三品：其一曰重八兩，圜之，其文龍，名曰『白選』，直三千；二曰以重差小，方之，其文馬，直五百；三曰復小，撱之，其文龜，直三百。令縣官銷半兩錢，更鑄三銖錢，文如其重。盜鑄諸金錢罪皆死，而吏民之盜鑄白金者不可勝數。」一枚重八两的银锡饼作价三千钱，成本与面值之间那道缝有多宽，末一句就有多长。</p>
+<p><strong>两书此处有异文，须并记</strong>：《汉书·卷二十四·食货志下》同段作「名『白撰』」「盜鑄諸金錢罪皆死，而吏民之犯者不可勝數」，未点明所犯何事；「盜鑄白金」四字只《史记》有，本条从《史记》。</p>
+<p><strong>死刑发出去几十万份，几年后只好收回来。</strong>《史记·平准书》：「自造白金五銖錢後五歲，赦吏民之坐盜鑄金錢死者數十萬人。其不發覺相殺者，不可勝計。赦自出者百餘萬人。然不能半自出，天下大抵無慮皆鑄金錢矣。」《汉书·食货志下》同文，只「大氐」「而赦」数字之别。</p>
+<p><strong>这个年份是推的，本条不给确年</strong>：《史记》只写「後五歲」而不系年号，自造白金（元狩四年，前119）与始铸五铢（元狩五年，前118）各算一头，落在前115至前113之间，故此段系于本条之下而不另立年。</p>
+<p><strong>白金的下场与铸钱权的下场，同在这一卷里。</strong>《史记·平准书》：「白金稍賤，民不寶用，縣官以令禁之，無益。歲餘，白金終廢不行。」（《汉书》作「白金稍賤，民弗寶用，縣官以令禁之，無益，歲餘終廢不行」。）赤侧钱又两年而废，于是「悉禁郡國無鑄錢，專令上林三官鑄……而民之鑄錢益少，計其費不能相當，唯真工大姦乃盜為之」——三官专铸那一段的正账（《汉书》一路）已逐字引在库内〈五铢钱〉条，此处不重录，只补它的末一句：<strong>盗铸不是被杀绝的，是被算术劝退的</strong>，官钱的成本一旦压得住面值，剩下的就只有「真工大姦」。</p>
+<p>皮币与白金同出元狩四年那一道诏，一样没人假造、一样「天下大抵無慮皆鑄」——<strong>同一道诏书里的两件东西，正好量出了「作价多少」与「值不值得造假」之间的距离</strong>，本条上文那句「没人假造的东西，多半没在流通」，反过来读就是这一段。</p>
+</details>
+</div></section>
+<section id="s2" data-year="" data-name="巫蛊之祸"><div class="wrap">
+<div class="num">二 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="26.0" y1="16" x2="71.2" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-cur" cx="71.2" cy="16" r="5.2"/><circle class="rs-todo" cx="116.5" cy="16" r="3"/><circle class="rs-todo" cx="161.7" cy="16" r="3"/><circle class="rs-todo" cx="206.9" cy="16" r="3"/><circle class="rs-todo" cx="252.2" cy="16" r="3"/><circle class="rs-todo" cx="297.4" cy="16" r="3"/><circle class="rs-todo" cx="342.6" cy="16" r="3"/><circle class="rs-todo" cx="387.8" cy="16" r="3"/><circle class="rs-todo" cx="433.1" cy="16" r="3"/><circle class="rs-todo" cx="478.3" cy="16" r="3"/><circle class="rs-todo" cx="523.5" cy="16" r="3"/><circle class="rs-todo" cx="568.8" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="614.0" y="35" text-anchor="end">新学伪经考</text><text class="rs-name" x="71.2" y="35" text-anchor="middle">巫蛊之祸</text></svg>
+<h2>北阙黄车 <span class="h2-ev">巫蛊之祸</span></h2>
+<p><strong>始元五年是前82年；卫太子死在征和二年，前91年，隔九年。</strong>巫蛊那一场，太子起兵、兵败、自缢，本库那一条讲。九年后，一个人替他回到长安。</p>
+<p><strong>他停在北阙下。</strong>《汉书·隽不疑传》：「有一男子乘黃犢車，建黃旐，衣黃襜褕，著黃冒，詣北闕，自謂衛太子。」黄车、黄旗、黄衣、黄帽。诏令公卿、将军、中二千石一起去认，「長安中吏民聚觀者數萬人」，右将军在阙下列兵。丞相、御史、中二千石到了，「並莫敢發言」。没有人说他是假的，也没有人说他是真的。</p>
+<p><strong>绑他的人没有辨真伪。</strong>京兆尹隽不疑后到，「叱從吏收縛」。有人劝「是非未可知，且安之」，他答：「昔蒯聵違命出奔，輒距而不納，《春秋》是之。衛太子得罪先帝，亡不即死，今來自詣，此罪人也。」真的也是罪人，假的更是。这条线上第一次拆假得手，靠的是一部《春秋》。</p>
+<p><strong>审出来是个算命的。</strong>廷尉查得：「本夏陽人，姓成名方遂，居湖，以卜筮為事。」一个当过太子舍人的人找他算过卦，随口一句「子狀貌甚似衛太子」，「方遂心利其言，幾得以富貴」。腰斩东市。班固写完，补了七个字：「一雲姓張名延年」；同书〈昭帝纪〉径作「夏陽男子張延年詣北闕，自稱衛太子，誣罔，要斬」。假人的真名，同一部书给了两个。还有一处巧合：〈武帝纪〉记真太子「八月辛亥，太子自殺于湖」，假太子「居湖」，同一个县。</p>
+<p><strong>一千七百年后有人翻出这一案。</strong>1645年南京会审一个自称太子的少年，判词写「即『漢史』所云夏陽男子假冒衛太子之故智也」，第十一站再讲。这一站只记买主是谁：太子死了九年，长安还有几万人想看看他是不是回来了。</p>
+<p>自称太子的假，一句《春秋》就拆了。下一站的假由国家自己验，办法是在关口挂一百枚钱。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=2">在图上看这一站 →</a>
+</div></section>
+<section id="s3" data-year="581" data-name="开皇之治"><div class="wrap">
+<div class="num">三 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="71.2" y1="16" x2="116.5" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="71.2" cy="16" r="3"/><circle class="rs-cur" cx="116.5" cy="16" r="5.2"/><circle class="rs-todo" cx="161.7" cy="16" r="3"/><circle class="rs-todo" cx="206.9" cy="16" r="3"/><circle class="rs-todo" cx="252.2" cy="16" r="3"/><circle class="rs-todo" cx="297.4" cy="16" r="3"/><circle class="rs-todo" cx="342.6" cy="16" r="3"/><circle class="rs-todo" cx="387.8" cy="16" r="3"/><circle class="rs-todo" cx="433.1" cy="16" r="3"/><circle class="rs-todo" cx="478.3" cy="16" r="3"/><circle class="rs-todo" cx="523.5" cy="16" r="3"/><circle class="rs-todo" cx="568.8" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">白鹿皮币</text><text class="rs-end" x="614.0" y="35" text-anchor="end">新学伪经考</text><text class="rs-name" x="116.5" y="35" text-anchor="middle">开皇之治</text></svg>
+<div class="yr">581</div>
+<h2>百钱为样 <span class="h2-ev">开皇之治</span></h2>
+<p class="sub">581–600　·　隋　·　治世·中兴（史书追认）</p>
+<p><strong>开皇三年是583年；开皇之治从581年起算，这是第三年。</strong>新朝的新钱刚出，两桩假案同一年。</p>
+<p><strong>关口挂一百枚钱当尺子。</strong>《隋书·食货志》：新五铢出，「是時錢既新出，百姓或私有鎔鑄」，三年四月诏「四面諸關，各付百錢為樣。從關外來，勘樣相似，然後得過。樣不同者，即壞以為銅，入官」。后来推到市上：「皆令立榜，置樣為准。不中樣者，不入於市」。勘合线拿东西去对记录，这里是拿钱去对钱。</p>
+<p><strong>样钱防的是前面一百年。</strong>刘宋景和年间开放私铸，鹅眼钱、綖环钱「貫之以縷，入水不沈，隨手破碎，市井不復料數，十萬錢不盈一掬」，《南史》记那时「官錢每出，人間即模效之」。一串钱浮在水面上。隋朝立样，是把像不像官钱这件事，变成关吏手上能操作的一道工序。</p>
+<p><strong>同一年，朝廷出钱买书。</strong>《隋书·刘炫传》：「時牛弘奏請購求天下遺逸之書，炫遂偽造書百餘卷，題為《連山易》、《魯史記》等，錄上送官，取賞而去。」朝廷悬赏要古书，就有人造一百多卷古书来领赏。收梢在同一句：「後有人訟之，經赦免死，坐除名，歸於家，以教授為務」。他回家教书去了。一千年后胡应麟把这一案写进伪书清单，「當時知其偽而後世弗傳者」。</p>
+<p><strong>样钱管了三十年。</strong>大业以后「巨姦大猾，遂多私鑄」，一千钱从二斤减到一斤，「或翦鐵鍱，裁皮糊紙以為錢，相雜用之。貨賤物貴，以至於亡」。铁片、皮子、糊纸，掺在钱中用。史书把亡国接在假钱后面，全线只此一处。</p>
+<p>假钱与假书各找到了买主。下一站，国家把自己最怕丢的东西排了一个次序。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=3">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>史书追认的那二十年，评语出在《隋书》纪末。</strong>《隋书·卷二·高祖纪下》史臣曰：「於是躬節儉，平徭賦，倉廩實，法令行，君子咸樂其生，小人各安其業，強無陵弱，眾不暴寡，人物殷阜，朝野歡娛。二十年間，天下無事，區宇之內晏如也。考之前王，足以參蹤盛烈。」本条起讫（581–600）取的正是开皇这一个年号的二十年。同一段史臣紧接着把话掉了个头：文帝「素無術學，不能盡下，無寬仁之度，有刻薄之資」，又「雅好符瑞，暗於大道」，末了断语「起自高祖，成於煬帝」——<strong>追认治世的和追认亡国的，是同一支笔、同一段话</strong>，本类「史书追认」四字的分量正在这里。</p>
+<p><strong>「倉廩實」三字有账可查。</strong>《隋书·卷二十四·食货志》记开皇十二年一次君臣对答：「有司上言，庫藏皆滿。帝曰：『朕既薄賦於人，又大經賜用，何得爾也？』對曰：『用處常出，納處常入。略計每年賜用，至數百萬段，曾無減損。』於是乃更闢左藏之院，構屋以受之」，随即下诏「既富而教，方知廉恥，寧積於人，無藏府庫」；至开皇十七年「戶口滋盛，中外倉庫，無不盈積」，文帝索性停了那一年的正赋。</p>
+<p>数字的来路也在同卷：朝廷「令州縣大索貌閱，戶口不實者，正長遠配」，一次查出「計帳進四十四萬三千丁，新附一百六十四萬一千五百口」；高熲又立输籍定样，「每年正月五日，縣令巡人……依樣定戶上下」，史家评作「自是姦無所容矣」。</p>
+<p><strong>大索貌阅系于食货志开皇三年一段之下而无独立年月，通说另系开皇五年，本条不裁。</strong> <strong>开皇三年（583）四月，进关的钱要跟关口挂着的一百枚样钱比对。</strong>《隋书·食货志》：「高祖既受周禪，以天下錢貨輕重不等，乃更鑄新錢。背面肉好，皆有周郭，文曰『五銖』，而重如其文……是時錢既新出，百姓或私有鎔鑄。三年四月，詔四面諸關，各付百錢為樣。從關外來，勘樣相似，然後得過。</p>
+<p>樣不同者，即壞以為銅，入官。」后来这套办法从关口推到市面：「京師及諸州邸肆之上，皆令立榜，置樣為准。不中樣者，不入於市。」——<strong>次序不能颠倒：先有「百姓或私有鎔鑄」，才有那一百枚挂在关口的标准件；验真的办法是造假逼出来的。</strong>同卷末句记它最后怎么塌：大业以后私铸转盛，「或翦鐵鍱，裁皮糊紙以為錢，相雜用之。貨賤物貴，以至於亡」。</p>
+<p><strong>同一年，朝廷开价买古书，于是有人造古书来卖。</strong>《隋书·卷三十二·经籍志一》：「隋開皇三年，秘書監牛弘表請分遣使人，搜訪異本。每書一卷，賞絹一匹，校寫既定，本即歸主。於是民間異書，往往間出。」这条购书线的下半也在同卷：「及平陳已後，經籍漸備」——开皇九年（589）灭陈（库内〈隋灭陈〉）之后，南朝旧籍才补进秘府，而伪书恰恰赶在这之前的缺口上。</p>
+<p>牛弘上表的原话在《隋书·卷四十九》本传：「然士民殷雜，求訪難知，縱有知者，多懷吝惜，必須勒之以天威，引之以微利。若猥發明詔，兼開購賞，則異典必臻」，朝廷照办——「上納之，於是下詔，獻書一卷，賚縑一匹。」价目一挂出来，后果就记在《隋书·卷七十五·刘炫传》：「時牛弘奏請購求天下遺逸之書，炫遂偽造書百餘卷，題為《連山易》、《魯史記》等，錄上送官，取賞而去。</p>
+<p>後有人訟之，經赦免死，坐除名，歸於家，以教授為務。」——一卷绢一匹，百余卷就是百余匹绢。刘炫是当时最能背书的人之一，本传夸他「強記默識，莫與為儔」「左畫方，右畫圓，口誦，目數，耳聽，五事同舉，無有遺失」，这份本事先拿去领了赏。</p>
+<p><strong>本传不系伪造之年，本条系于牛弘表请之年（经籍志明书开皇三年）之下</strong>；后世所传《连山》与刘炫此次所造是否一物，一手未及，不裁。</p>
+<p><strong>开皇三年这一年，「样」字用了两回。</strong>关口挂样钱验钱，秘书省开购赏买书：一头防的是照着面值造出来的假钱，一头催出的是照着赏格造出来的假书。</p>
+<p><strong>朝廷标出价钱的东西，市面上就会长出它的赝品</strong>——文帝一朝的富庶与这两桩假案，用的是同一套办法。钱这一路的下文见库内〈五铢钱〉（隋五铢仍是五铢钱文的末段）与〈开元通宝〉（唐禁恶钱仍在「懸設諸樣」）。</p>
+</details>
+</div></section>
+<section id="s4" data-year="653" data-name="唐律疏议"><div class="wrap">
+<div class="num">四 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="116.5" y1="16" x2="161.7" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="71.2" cy="16" r="3"/><circle class="rs-done" cx="116.5" cy="16" r="3"/><circle class="rs-cur" cx="161.7" cy="16" r="5.2"/><circle class="rs-todo" cx="206.9" cy="16" r="3"/><circle class="rs-todo" cx="252.2" cy="16" r="3"/><circle class="rs-todo" cx="297.4" cy="16" r="3"/><circle class="rs-todo" cx="342.6" cy="16" r="3"/><circle class="rs-todo" cx="387.8" cy="16" r="3"/><circle class="rs-todo" cx="433.1" cy="16" r="3"/><circle class="rs-todo" cx="478.3" cy="16" r="3"/><circle class="rs-todo" cx="523.5" cy="16" r="3"/><circle class="rs-todo" cx="568.8" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">白鹿皮币</text><text class="rs-end" x="614.0" y="35" text-anchor="end">新学伪经考</text><text class="rs-name" x="161.7" y="35" text-anchor="middle">唐律疏议</text></svg>
+<div class="yr">653</div>
+<h2>八宝为首 <span class="h2-ev">唐律疏议</span></h2>
+<p class="sub">653　·　唐　·　制度</p>
+<p><strong>永徽三年疏成，四年颁行，653年，站年与本库那一条同一年。</strong>往后一千零八十七年，乾隆五年的《大清律例》还按这个次序排。</p>
+<p><strong>律自己说了为什么第一条是玉玺。</strong>疏议：「詐僞律者，魏分賊律爲之」，「既名詐僞，應以詐事在先；以御寶事重，遂以『僞造八寶』爲首」。序里那块石头，在律中排第一。名单往下数：「諸僞造皇帝八寶者，斬」；「諸僞寫官文書印者，流二千里。餘印，徒一年」。余印是什么，疏议答：「餘印謂諸州等封函印及畜產之印」。皇帝的玉玺与给牲口烙的印，同一部律，只差刑等。一部律把伪造之物从贵到贱排一遍，等于把王朝最怕丢的东西数了一遍。</p>
+<p><strong>造出来就算。</strong>小注：「僞造不錄所用，但造即坐。」用没用不问。另有一条管前朝的印：「即僞寫前代官文書印，有所規求，封用者，徒二年」。唐朝要防的假货里，有隋朝的印。</p>
+<p><strong>一千年后，律给假印分了三级。</strong>《大清律例》伪造印信条夹注：「形質相肖而篆文俱全者謂之偽造惟有其質而文不全者方謂之造而未成至於全無形質而惟描之於紙者乃謂之描摸也」。质地像、篆文全，斩；有质无文，减一等；纸上描的，另算。冒充的人也分了类，条题下各四字夹注：「官與事俱詐」，「官實而事詐」。这套鉴定标准写给刽子手看，藏家用不上。</p>
+<p><strong>同一篇中有一条，这里只碰一下。</strong>「諸詐爲瑞應者，徒二年」，造祥瑞在唐律中判两年，比伪造官印轻得多。一语成谶线讲那些话怎么造出来，这里只留一根界桩。</p>
+<p>律排的是次序。下一站，一个宰相照律去禁假钱，禁掉了自己。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=4">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>这部律自己交代了它为什么从伪造玉玺讲起。</strong>永徽四年（653）颁行的这部律，第二十五卷是「詐偽」，凡二十七条；开篇疏议逐字（维基文库《唐律疏議》卷第二十五）：「詐僞律者，魏分賊律爲之。歷代相因，迄今不改。既名詐僞，應以詐事在先；以御寶事重，遂以『僞造八寶』爲首。」——<strong>一部律把可伪造之物从贵到贱排一遍，就是把一个王朝最怕丢的东西从头数了一遍。</strong> <strong>名单从皇帝的玉玺一直排到给牲口烙的印。</strong>第三六二条「諸僞造皇帝八寶者，斬。</p>
+<p>太皇太后、皇太后、皇后、皇太子寶者，絞。皇太子妃寶，流三千里」；紧接的第三六三条「諸僞寫官文書印者，流二千里。餘印，徒一年」，疏议解「餘印」是「諸州等封函印及畜產之印」。同一部律里，御宝与畜产之印只差刑等。连动词都分得清楚：疏议自注「寶以玉爲之，故稱『造』……印以銅爲之，故稱『寫』」。</p>
+<p><strong>最狠的是一条小注：不问你用没用。</strong>「僞造八寶」条下小注「僞造不錄所用，但造即坐」，疏议展开为「謂寶既金、玉爲之，僞造者不必皆須金、玉爲之，亦不問用與不用，造者即坐」——<strong>造出来就是死罪，不必等它去骗人。</strong>反过来也有分寸：伪写的官印若「不成印文及大小懸別」，依下条「造未成者，減三等」。</p>
+<p><strong>顶着官身出现的人，另有一条。</strong>第三七〇条「諸詐假官，假與人官及受假者，流二千里」，注「謂僞奏擬及詐爲省司判補、或得他人告身施用之類」；第三六三条后半还专门管伪造前朝的印——「即僞寫前代官文書印，有所規求，封用者，徒二年」，可见唐朝要防的假货里有人在伪造隋朝的印。至于造祥瑞，第三七七条只判「諸詐爲瑞應者，徒二年」，比伪造官印轻得多；后半句更值得看一眼：「若災祥之類，而史官不以實對者，加二等」——<strong>史官把灾异说成吉兆，判得比造假祥瑞的人还重两等。</strong> <strong>它是后世律典的母本，而母本与子本的差别正好是一部王朝史。</strong>《大明律》诈伪篇照这套骨架排，唐律那二十七条到这里剩十二条，<strong>而唐律列在篇首的「僞造八寶」没了对应——明律诈伪篇里没有一条管御宝</strong>；赏格最高、株连最广的一条换成了纸币：「凡偽造寶鈔不分首從及窩主若知情行使者皆斬財產並入官告捕者官給賞銀二百五十兩仍給犯人財產」——而同卷伪造官印只写「有能告捕者官給賞銀五十兩」，<strong>一张纸的赏格是一枚官印的五倍</strong>；万历十六年新颁条例再收紧一道「偽造印信只照律文擬斷不問木石泥蠟但偽者斬」。</p>
+<p>到《大清律例》卷三十二，诈伪目录只剩十一条，「偽造印信歷日等」改称「偽造印信時憲書等」，<strong>明律那条「偽造寶鈔」整个不见了</strong>；同一条却添出一段按笔画完整度分级的鉴定学：「形質相肖而篆文俱全者謂之偽造惟有其質而文不全者方謂之造而未成至於全無形質而惟描之於紙者乃謂之描摸也」。而「詐爲瑞應」一条从唐律的徒二年降到明清两律逐字相同的「杖六十徒一年」。</p>
+<p>七百年下来，唐律排在最前的御宝在明律诈伪篇里没了位置，明律赏格最高的那张纸到清律连条目也没有了——<strong>一部律把什么排在最前、罚得最狠，就是这个朝代最怕丢的那样东西</strong>。（明清两律引文据维基文库《大明律》卷二十四、《大清律例》四库全书本卷三十二，两本皆无句读，此处照录不加标点；唐律引文出维基文库校点本，标点从原页。）</p>
+<p><strong>互见。</strong>库内〈大明律〉〈大清律例〉即上段那两部子本；本篇第一条要防的那样东西，正是库内〈传国玺〉——四次「重现」、四回当朝定谳的账记在那一条。想看这套刑名对着实物是什么样子，可比读库内〈皇后之玺〉与〈滇王之印〉两件出土真印的「形質」与「篆文」。</p>
+</details>
+</div></section>
+<section id="s5" data-year="621" data-name="开元通宝"><div class="wrap">
+<div class="num">五 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="161.7" y1="16" x2="206.9" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="71.2" cy="16" r="3"/><circle class="rs-done" cx="116.5" cy="16" r="3"/><circle class="rs-done" cx="161.7" cy="16" r="3"/><circle class="rs-cur" cx="206.9" cy="16" r="5.2"/><circle class="rs-todo" cx="252.2" cy="16" r="3"/><circle class="rs-todo" cx="297.4" cy="16" r="3"/><circle class="rs-todo" cx="342.6" cy="16" r="3"/><circle class="rs-todo" cx="387.8" cy="16" r="3"/><circle class="rs-todo" cx="433.1" cy="16" r="3"/><circle class="rs-todo" cx="478.3" cy="16" r="3"/><circle class="rs-todo" cx="523.5" cy="16" r="3"/><circle class="rs-todo" cx="568.8" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">白鹿皮币</text><text class="rs-end" x="614.0" y="35" text-anchor="end">新学伪经考</text><text class="rs-name" x="206.9" y="35" text-anchor="middle">开元通宝</text></svg>
+<div class="yr">621</div>
+<h2>沉钱江湖 <span class="h2-ev">开元通宝</span></h2>
+<p class="sub">621　·　唐　·　制度</p>
+<p><strong>开元五年是717年；开元通宝铸于武德四年，621年，隔九十六年。</strong>恶钱仿的正是这枚钱，这一站落在被仿的真物上。</p>
+<p><strong>假钱照样做，官府先挂样。</strong>《旧唐书·食货志》：武后长安年间「又令懸樣於市，令百姓依樣用錢」，隋朝的办法。造假的人也有自己的办法：「乃有買錫熔銷，以錢模夾之，斯須則盈千百」。作坊开在「陂湖、巨海、深山之中，波濤險峻，人跡罕到，州縣莫能禁約」。</p>
+<p><strong>宰相下了一道全禁的令。</strong>开元五年，「宋璟知政事，奏請一切禁斷惡錢」。次年敕文说理：「若真偽相雜，則官失其守」，办法仍是「懸設諸樣」。</p>
+<p><strong>江淮的钱沉进了水里。</strong>宋璟派监察御史萧隐之去江淮，「隱之乃令率戶出錢，務加督責」。百姓拿好钱顶恶钱交上去，坏得厉害的「或沉之於江湖，以免罪戾」。「於是市井不通，物價騰起，流聞京師。隱之貶官，璟因之罷相」。张嘉贞接任，「嘉貞乃弛其禁，人乃安之」。禁假钱的账，这一回是一个宰相付的。</p>
+<p><strong>拆假拆到了拆的人。</strong>样钱是隋唐两朝共用的尺子，隋朝用了三十年；《旧唐书》从宋璟奏请写到罢相，只用了一段。真伪相杂官失其守，一刀切下去，先失守的是市井。宋璟哪一年罢相，《旧唐书》这一卷只写「因之罷相」四字，不系年。</p>
+<p>钱的假拆不动，只能放。下一站换一样东西，画；拆假的人先自报了赝品的比例。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=5">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>《旧唐书·食货志》：「高祖即位，仍用隋之五銖錢。武德四年七月，廢五銖錢，行開元通寶錢，徑八分，重二銖四絫，積十文重一兩」——武德四年即621年，自汉武帝以来行用七百余年的五铢钱（库内另条）至此收束。</p>
+<p><strong>开元不是年号</strong>：此钱铸行时唐玄宗李隆基尚未出生（生于685年），开元年号要到713年才启用，二者毫无关系；开元在这里只是开创新纪元的吉语，钱文四字上下右左直读，常见的误会恰恰把因果颠倒了。真正的分水岭在别处：此钱开创通宝、元宝的钱文体系，此后中国铸币不再以两、铢等重量单位命名，一路沿用到清末。这套设计连带影响域外，日本和铜元年（708）铸和同开珎，形制与钱文书体皆仿开元通宝。</p>
+<p><strong>这枚钱行用不到一百年，市面上就全是照着它造的假钱。</strong>同卷（《旧唐书·卷四十八·食货志上》）往下写的是恶钱：高宗显庆五年「敕以惡錢轉多，令所在官私為市取，以五惡錢酬一好錢」，而「百姓以惡錢價賤，私自藏之，以候官禁之弛」；则天长安中「又令懸樣於市，令百姓依樣用錢」——<strong>隋开皇三年挂在关口的那一百枚样钱（库内〈开皇之治〉），一百二十年后挂在了唐朝的市上</strong>。</p>
+<p>同段还记下当时最省事的一手：「乃有買錫熔銷，以錢模夾之，斯須則盈千百，便齎用之」，以及造假的地理：「江淮之南，盜鑄者或就陂湖、巨海、深山之中，波濤險峻，人跡罕到，州縣莫能禁約。」</p>
+<p><strong>开元五年（717）的一场禁假运动，最后把发起人自己禁掉了。</strong>同卷：「開元五年，車駕往東都，宋璟知政事，奏請一切禁斷惡錢。六年正月，又切斷天下惡錢，行二銖四絫錢。不堪行用者，並銷破復鑄。」次月敕文说明为什么非禁不可：「若輕重得中，則利可知矣；若真偽相雜，則官失其守。頃者用錢，不論此道。深恐貧窶日困，奸豪歲滋。所以申明舊章，懸設諸樣，欲其人安俗阜，禁止令行。」——办法还是那一套「懸設諸樣」，而理由说得最直白：真假一旦混在一起，官府就守不住自己那一份。</p>
+<p><strong>代价记在同一段里。</strong>宋璟遣监察御史萧隐之往江淮督办：「隱之乃令率戶出錢，務加督責。百姓乃以上青錢充惡錢納之，其小惡者或沉之於江湖，以免罪戾。於是市井不通，物價騰起，流聞京師。隱之貶官，璟因之罷相，乃以張嘉貞知政事。嘉貞乃弛其禁，人乃安之。」百姓拿好钱顶恶钱交差，稍差的干脆扔进江里免罪，市面立刻不通。</p>
+<p><strong>罢相在哪一年，《旧唐书》此段不系年，本条不写。</strong>开元二十二年张九龄奏请不禁私铸，百官详议，刘秩驳议里有一句可作这一整段的注：「夫鑄錢不雜以鉛鐵則無利，雜以鉛鐵則惡……且方今塞其私鑄之路，人猶冒死以犯之，況啟其源而欲人之從令乎？是設陷阱而誘之入。」事竟不行，「但敕郡縣嚴斷惡錢而已」。</p>
+</details>
+</div></section>
+<section id="s6" data-year="1088" data-name="蜀素帖"><div class="wrap">
+<div class="num">六 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="206.9" y1="16" x2="252.2" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="71.2" cy="16" r="3"/><circle class="rs-done" cx="116.5" cy="16" r="3"/><circle class="rs-done" cx="161.7" cy="16" r="3"/><circle class="rs-done" cx="206.9" cy="16" r="3"/><circle class="rs-cur" cx="252.2" cy="16" r="5.2"/><circle class="rs-todo" cx="297.4" cy="16" r="3"/><circle class="rs-todo" cx="342.6" cy="16" r="3"/><circle class="rs-todo" cx="387.8" cy="16" r="3"/><circle class="rs-todo" cx="433.1" cy="16" r="3"/><circle class="rs-todo" cx="478.3" cy="16" r="3"/><circle class="rs-todo" cx="523.5" cy="16" r="3"/><circle class="rs-todo" cx="568.8" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">白鹿皮币</text><text class="rs-end" x="614.0" y="35" text-anchor="end">新学伪经考</text><text class="rs-name" x="252.2" y="35" text-anchor="middle">蜀素帖</text></svg>
+<div class="yr">1088</div>
+<h2>伪见三百本 <span class="h2-ev">蜀素帖</span></h2>
+<p class="sub">1088　·　北宋　·　文物</p>
+<p><strong>《画史》通行系于1103年；蜀素帖写于1088年，隔十五年。</strong>这一站落在他自己的真迹上：写蜀素帖的那只手，也是《画史》里报数的那只手。</p>
+<p><strong>一比一百五十。</strong>「餘董源見五本，李成真見兩本，偽見三百本。」再一句：「偽吳生見三百本。」一个鉴定家把自己见过的赝品数报了出来，李成两真，三百伪。</p>
+<p><strong>一桩改款案，他记得很细。</strong>他用蜀人李昇一幅山水去换刘泾的古帖，画上「小字題松身曰：『蜀人李昇。』」，刘泾刮掉这几个字，「題曰：『李思訓。』易與趙叔盎」。真款刮掉，题个大名，再转一手。批语：「今人好偽不好真，使人嘆息。」</p>
+<p><strong>下一代人笔下，做这事的是他。</strong>赵希鹄《洞天清录》：「米元章就人借名畫輒模本，以還而取其元本，人莫能辨」。借名画，摹一本，摹本还回去，真本留下。唐摹兰亭是为了留住，这一本是为了骗。到明代这一手有了专名，王世贞跋《海天落照图》记湯家被迫交画，「乃延仇實父別室摹一本，將為米顛狡獪」。一个人的名字，成了一种作伪手法的名字。</p>
+<p><strong>二十年后，买主换成了皇帝。</strong>明人郑瑗一句话：「宣和博古圖天子好之童蔡逢迎之幾何不偽古器」。徽宗好古，作坊开工。本库〈宣和博古图录〉记的是那部谱；谱的另一面在这里：它是验真的样本，也是造假的样本。</p>
+<p>鉴定家自己造假，谁来拆？下一站拆假的人是理学家，拆的是一个知州家里的雕板匠。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=6">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>这卷子的年份是他自己签在卷尾的。</strong>维基文库《蜀素帖》（action=raw 本轮亲抓，页内录卷本文与历代题跋）末行逐字：「元祐戊辰九月廿三日，溪堂米黻記」——元祐三年戊辰即1088年，本条 y 即取此，cf 可记1。</p>
+<p><strong>署名作「米黻」，不是今日通行的「芾」</strong>（改名之年本轮未核，记其字不代断）。所书是他自作诗，据同页所录数得六题八首：〈擬古〉二首、〈吴江垂虹亭作〉二首、〈入境寄集賢林舍人〉、〈重九會郡樓〉、〈和林公峴山之作〉、〈送王涣之彦舟〉；明人顾从义跋亲自数过字数——「此卷五百五十六字，詩體具備，墨妙入神」。</p>
+<p><strong>绢比字早四十四年，这卷子的来历是写在它自己身上的。</strong>卷上林希跋逐字：「慶曆甲申歲，東川造蜀素一卷，藏余家者二十餘年。今既裝褫，將屬諸善書者題其首。熙寧元年，戊申三月丙子，吴郡記，希子中。」——庆历甲申1044年东川织素，熙宁元年1068年装裱成卷，留着卷首等一个会写字的人；熙宁八年（1075）胡完夫观款「同赴子中邵氏東園之招，觀此數遍」；到元祐三年1088年，米芾把它写满。</p>
+<p>顾从义跋把这四个年头排成一张表（跋末自署「嘉靖三十年辛酉閏五月」，然嘉靖三十年是辛亥、辛酉当四十年，同跋又自陈「且自慶暦至今，五百二十餘年矣」——1044加五百二十余正落1561，故本条取辛酉即嘉靖四十年1561，干支与年号不合处照录并记）：「蜀素一卷，乃慶暦四年甲申東川所造……至元祐三年戊辰，始為米溪堂書。熙寧至元祐又幾二十餘年矣」。</p>
+<p><strong>藏素二十余年的是谁，同一卷上两说</strong>：林希跋自署「希子中」（林希字子中），而胡完夫作「子中邵氏」、顾从义遂读成「東園邵子中藏於家廿餘年」；中文维基〈蜀素帖〉则作「湖州郡守林希保存家中二十餘年」。两说并记不裁。</p>
+<p><strong>这条线要的那一句，就写在他这卷真迹的拖尾上。</strong>沈周正德改元（1506）跋逐字：「襄陽公在當代，愛積晋唐法書，種種必自臨搨，務求逼真。時以真跡溷出，眩惑人目，或被人指擿，相與發笑。然亦自試其藝之精，抑試人之知如此。」——<strong>临晋唐法书务求逼真，然后把摹本混在真迹里放出去晃人眼睛，被人当场指出来，大家一笑了之。</strong>写下这段的人不是在骂他：沈周接着说这正是「自試其藝之精，抑試人之知」，所以他名列宋四家，「後之人惡敢議其劣」。</p>
+<p>一个人作伪的账，被明朝人恭恭敬敬题在他真迹的后面。</p>
+<p><strong>南宋人把同一件事写得更直白，还写成了一条手法。</strong>赵希鹄《洞天清錄·摹臨》逐字（维基文库《洞天清祿集》action=raw 本轮亲抓）：「若以名畫借摹臨，是自棄也。就人借而不從，尤非明鍳者也。米元章就人借名畫輒模本，以還而取其元本，人莫能辨此。人定非鑒賞之精也」——<strong>此本断句作「人莫能辨此。人定非鑒賞之精也」，通行断句作「人莫能辨。此人定非鑒賞之精也」，一字不差而两断，并记。</strong>借来的名画临一本，还回去的是摹本，留下的是原本，人辨不出来。</p>
+<p>到明代这一手有了名字：王世贞跋李昭道〈海天落照图〉记嘉靖间吴城汤氏被迫交画，「乃延仇實父別室摹一本，將為米顛狡獪，而為怨家所發」（梁章钜《浪跡叢談》卷九〈海天落照卷〉引，本轮亲抓）——<strong>「米颠狡狯」四个字，是一个人的名字变成了一种作伪手法的名字。</strong> <strong>而当时报出赝品比例的，正是他本人。</strong>米芾《畫史》逐字（维基文库 action=raw 本轮亲抓，页首自注原文参照文渊阁四库全书本）：「關仝真跡見二十本，范寬見三十本。</p>
+<p>其徒甚多，滕昌祐、邊鸞各見十本……餘董源見五本，李成真見兩本，偽見三百本。……偽吳生見三百本。」——<strong>李成的真迹他一生见两本，假的见三百本，一比一百五十；吴道子的假货也是三百本。</strong>（后人由此生出「世无李画」之说，梁章钜已辨「米論但就一時言之也」，《浪跡叢談》卷九〈無李論〉。）同书还记着一桩完整的改款案：「余昔購丁氏蜀人李昇【山水】一幀，細秀而潤……小字題松身曰：『蜀人李昇。』以易劉涇古帖。</p>
+<p>劉刮去字，題曰：『李思訓。』易與趙叔盎。今人好偽不好真，使人嘆息。」——<strong>刮掉小名的款，题上大名的款，再转手一次；批语是他自己写的。</strong> <strong>递藏：这卷子经手的人里，有两个后来被皇帝点名说看走了眼。</strong>中文维基〈蜀素帖〉逐字（action=query&amp;explaintext 本轮实测）：「《蜀素帖》真迹在明代时归项元汴、董其昌、吴廷等人收藏，清代曾落入高士奇、王鸿绪、傅恒之手，后入清内府。」而乾隆为库内〈富春山居图〉那一卷所作的御制诗，点的正是这两位（《御製詩》四庫全書本初集卷三七，本轮亲抓；库内〈富春山居图〉条只记画本身，未记这桩真伪公案）：「余既辨眀黄子久山居圖即富春山居圖乃叠舊韵更為長歌以書其後」，诗中「富春疑案叅来乆　今喜辨眀楊即栁　髙（士竒）王（鴻緒）目迷何足云」——<strong>这一判后世公认判反了</strong>（此说为通行叙述，本轮未取一手，记其层级）；<strong>而被他顺手写进误判名单的这两个鉴藏家，手里恰恰过过蜀素帖真本。</strong>它入宫的经过卷上董诰跋记着：「此米芾蜀素真蹟卷，為大學士傅恒舊藏。</p>
+<p>壬寅冬，其子額駙福隆安家，不戒於火，而是卷適以付裝獲全，因進入内府」——一场火之后进的内府。</p>
+<p><strong>最后一层在卷首和本幅上：摹与真的每一种关系，这张绢都出现过。</strong>董其昌引首题跋：「增城嗜書，又好米南宫書。余在長安得蜀素摹本，嘗與增城言：『米書無第二，但恨真跡不可得。』」；本幅题跋：「米元章此卷，如獅子捉象，以全力赴之，當爲生平合作。余先得摹本，刻之鴻堂帖。甲辰五月，新都吴太学携真蹟至西湖，遂以諸名跡易之。」——<strong>他先得摹本，把摹本刻进《戏鸿堂帖》流布天下，到甲辰（1604）五月才拿一批名迹换来真本。</strong>（引首所记「于凡二十餘年，竟為增城有」说的是那本摹本后来的去处，不是他等真本的年数，不相混。）中文维基另记此卷「曾摹刻入《戏鸿堂帖》及《三希堂帖》等」（该页此句作简体，照录）。</p>
+<p>乾隆癸卯（1783）引首御题末句「磬折香光非謬譽，謂獅捉象是精评」，是替董其昌那句评语背书。</p>
+<p><strong>于是一卷之上齐了三样：米芾用摹本换走别人的真迹（《洞天清录》），米芾把自己的摹本混作真迹放出去（沈周跋），董其昌拿摹本刻帖、再拿别的真迹把真本换回来（自跋）——都不是伪造，都靠摹本，而每一次真伪的分界都落在「谁手里那一本」上。</strong>今藏台北故宫博物院，纵27.8、横270.8公分（中文维基）；卷名亦称《擬古詩帖》《諸體詩》，「清乾隆末年编簒《石渠宝笈续编》时取今名」（同条）。</p>
+</details>
+</div></section>
+<section id="s7" data-year="1160" data-name="会子"><div class="wrap">
+<div class="num">七 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="252.2" y1="16" x2="297.4" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="71.2" cy="16" r="3"/><circle class="rs-done" cx="116.5" cy="16" r="3"/><circle class="rs-done" cx="161.7" cy="16" r="3"/><circle class="rs-done" cx="206.9" cy="16" r="3"/><circle class="rs-done" cx="252.2" cy="16" r="3"/><circle class="rs-cur" cx="297.4" cy="16" r="5.2"/><circle class="rs-todo" cx="342.6" cy="16" r="3"/><circle class="rs-todo" cx="387.8" cy="16" r="3"/><circle class="rs-todo" cx="433.1" cy="16" r="3"/><circle class="rs-todo" cx="478.3" cy="16" r="3"/><circle class="rs-todo" cx="523.5" cy="16" r="3"/><circle class="rs-todo" cx="568.8" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">白鹿皮币</text><text class="rs-end" x="614.0" y="35" text-anchor="end">新学伪经考</text><text class="rs-name" x="297.4" y="35" text-anchor="middle">会子</text></svg>
+<div class="yr">1160</div>
+<h2>梨木一片 <span class="h2-ev">会子</span></h2>
+<p class="sub">1160　·　南宋　·　制度</p>
+<p><strong>蒋辉刻板那年是1182年，会子行世已二十二年。</strong>1160年临安太守把民间会子收归官办，本库那一条讲它怎么崩；这一站讲它怎么被仿。</p>
+<p><strong>纸币一出生就带着刑法。</strong>《宋史·食货志》：交子官办之初「私造者禁之」；「神宗熙寧初，立偽造罪賞如官印文書法」；崇宁三年「私造交子紙者，罪以徒配」，造钞纸也算。绍兴三十二年「定偽造會子法」，夹注：「犯人處斬。賞錢十貫，不願受者，補進義校尉。」举报一次假钞，可以换一个官。乾道四年收换旧会，「每驗出一貫偽會追究元收兌會子人錢三貫與辯驗人」，验钞的人赏三倍。</p>
+<p><strong>一份供词，把工序写全了。</strong>朱熹〈按唐仲友第四状〉录刺配雕板匠蒋辉的话：「當時將梨木板一片與輝十日雕造了」；材料是「土朱靛青㯶墨」；「今年正月内至六月末間約二十次共印二千六百餘道」。人藏在知州宅中，唐仲友「本貫婺州」，蒋辉被许诺「仲友任滿帯你歸婺州」。中国史上最详细的一份伪钞供词，记录的人是理学家，被告是知州家。</p>
+<p><strong>敌国的钞面，一个使臣抄了回来。</strong>乾道年间范成大使金，路过汴京抄下金国交钞：「偽造者斬賞錢三百千」，「四圍畫龍鶴有飾」。刑名、赏格、龙鹤花纹，一张钞票的全套防伪。</p>
+<p><strong>六十一年后，朝廷自己说了原因。</strong>淳祐三年臣僚奏：前两界会子「盡用川紙」，民欲为伪「尚或難之」；「至十八界則全用杜紙矣。紙既可以自造，價且五倍於前，故昔之為偽者難，今之為偽者易。人心循利，甚於畏法」。国家在杀造假的人，造假的条件也是国家给的。朱熹拆动了一个知州，拆不动纸。</p>
+<p>拆纸币的假，靠的是纸。下一站的辨伪手册，先把作伪的配方写清楚。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=7">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>会子并非交子的延续，是另起的一套。</strong>不同朝代、不同发行主体、不同制度：条目逐字记「紹興三十年（1160年）二月，錢端禮為臨安太守，仿照四川发行的交子，將會子官辦……南宋正式成立行在會子務」，分一贯、二贯、三贯，行于东南各路，另赐左帑钱十万缗为本。撑住它信用的是<strong>钱会中半制</strong>——官府自己的收付一半用铜钱、一半用会子，以此向市面示信。</p>
+<p><strong>崩溃的过程有账可算。</strong>乾道二年（1166）累计发行一千五百六十余万贯；嘉定二年（1209）流通额已达一亿一千五六百万贯；绍定三年（1230）以后因李全之乱与蒙古侵扰川陕，五年之内发行额暴增三十三倍。条目末了留下一句最狠的：「十八界會子二百貫甚至買不到一雙草鞋」（条目所注转引出处为范文澜《中国通史》第五卷）。景定五年（1264）贾似道当国，另发见钱关子取代会子；元兵南下之后，关子会子皆让位于钞，这个故事才算闭合。</p>
+<p>会子体系分支极多——都督府会子（又称淮南交子）、湖北会子、铅锡会子、寄附钱物会子等等，<strong>本条只写临安与东南这条主线</strong>，分支一句带过即可。库内钱引条所记1256年那个「四川会子」正是其中一支地方分支，与本条共名而非同一发行系统，两条各自点明一句，勿混为一谈。</p>
+<p><strong>纸币一出生就带着刑法，会子的那一条写在《宋史》正文的夹注里。</strong>《宋史·卷一八一·食货下三》记绍兴三十二年（1162）「定偽造會子法」，夹注即条文：「犯人處斬。賞錢十貫，不願受者，補進義校尉。若徒中及庇匿者能告首，免罪受賞，願補官者聽。」——处斩之外另开一条出路：同伙告发者免罪领赏，不要钱的给个进义校尉。乾道九年（1173）又「定捕造偽會之賞」。</p>
+<p>更上面的台阶也在这一卷：交子官办之初即「私造者禁之」，神宗「熙寧初，立偽造罪賞如官印文書法」，崇宁三年京西北路「仿川峽路立偽造法。通情轉用並鄰人不告者，皆罪之；私造交子紙者，罪以徒配」——<strong>从「比照伪造官印」到「处斩加封官」用了九十四年</strong>；库内〈官办交子〉〈钱引〉两条的一手正在此卷。</p>
+<p><strong>中国史上最详细的一份伪钞制造供词，审出来的是朱熹，被告是一位知州。</strong>淳熙九年（1182）朱熹提举浙东，连上数状弹劾知台州唐仲友，《晦菴集·卷十九·按唐仲友第四状》录了刺配雕板匠蒋辉的供词（四库本原无标点，以下引文照录原字、依文意断句）：唐仲友说「我要做些會子」，蒋辉推辞，答话是「你莫管我，你若不依我說，便送你入獄囚殺你，是配軍不妨」；纸的来路是「仲友自交我兒金大去婺州鄉下撩使菴頭封來」——<strong>婺州正是唐仲友的本贯</strong>，朱熹在同状开头写着「臣竊見仲友本貫婺州」；样子由大营前住人贺选描出，「描模一貫文省會子様入來，人物是接履先生模様」；板是「當時將梨木板一片與輝，十日雕造了」；颜料是「土朱靛青㯶墨」；先印二百道不使朱印，等金婆婆把篆写的「一貫文省」并专典官押三字送进来，「方使朱印三顆」。</p>
+<p>产量写得清清楚楚：「今年正月内至六月末間約二十次，共印二千六百餘道，每次或印一百道及一百五十道并二百道。」朱熹在贴黄里给此案定性：「蓄養亡命、偽造官會之屬，又二人所無有。」——<strong>印伪会子的不是走投无路的穷人，是知州家里养着的手艺人，纸从知州老家运来。</strong> <strong>六十一年后，朝廷自己承认治假靠的不是刑，是纸。</strong>《宋史》同卷淳祐三年（1243）臣僚奏议：「今官印之數雖損，而偽造之券愈增……大抵前之二界，盡用川紙，物料既精，工製不苟，民欲為偽，尚或難之。</p>
+<p>迨十七界之更印，已雜用川、杜之紙，至十八界則全用杜紙矣。紙既可以自造，價且五倍於前，故昔之為偽者難，今之為偽者易。人心循利，甚於畏法，況利可立致，而刑未即加者乎？」他开的方子连次序都照录：「臣愚以為抄撩之際，增添紙料，寬假工程，務極精致，使人不能為偽者，上也；禁捕之法，厚為之勸，厲為之防，使人不敢為偽者，次也。」——<strong>让人造不了是上策，让人不敢造是下策</strong>；而十八界会子改用民间自己就能抄的杜纸，是官方自己的决定。</p>
+<p>本条上文那句「十八界會子二百貫甚至買不到一雙草鞋」，与这一段是同一件事的两头：<strong>朝廷一面在杀造假的人，一面在替他们把门槛降下来。</strong></p>
+</details>
+</div></section>
+<section id="s8" data-year="" data-name="洞天清录"><div class="wrap">
+<div class="num">八 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="297.4" y1="16" x2="342.6" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="71.2" cy="16" r="3"/><circle class="rs-done" cx="116.5" cy="16" r="3"/><circle class="rs-done" cx="161.7" cy="16" r="3"/><circle class="rs-done" cx="206.9" cy="16" r="3"/><circle class="rs-done" cx="252.2" cy="16" r="3"/><circle class="rs-done" cx="297.4" cy="16" r="3"/><circle class="rs-cur" cx="342.6" cy="16" r="5.2"/><circle class="rs-todo" cx="387.8" cy="16" r="3"/><circle class="rs-todo" cx="433.1" cy="16" r="3"/><circle class="rs-todo" cx="478.3" cy="16" r="3"/><circle class="rs-todo" cx="523.5" cy="16" r="3"/><circle class="rs-todo" cx="568.8" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">白鹿皮币</text><text class="rs-end" x="614.0" y="35" text-anchor="end">新学伪经考</text><text class="rs-name" x="342.6" y="35" text-anchor="middle">洞天清录</text></svg>
+<h2>雪罨烘琴 <span class="h2-ev">洞天清录</span></h2>
+<p><strong>书中最晚一条能系年的话是「壬寅於臨安客舍」，淳祐壬寅，1242年，本库那一条把年份钉在这里；四库馆臣判它的赝本在1781年，隔五百三十九年。</strong>通行说这书成于1240，提要「據書中有嘉熙庚子自嶺右回至宜春語」，那是他回宜春的年份。这一站落在书自己身上。</p>
+<p><strong>铜器怎么做旧，他先写。</strong>〈伪古铜器〉：「其法以水銀雜錫汞，即今磨境藥是也。先上在新銅器上令勻，然後以釅醋調細碙砂末，筆蘸勻上，候如蠟茶之色，急入新汲水浸之，即成蠟茶色。」「若不入水則成純翠色」。三档锈色一页写完。收句：「然古銅聲徹而清，新銅聲洪而濁，不能逃識者之鑒。」敲一下就知道。</p>
+<p><strong>琴上的断纹怎么假，也写。</strong>〈伪断纹〉：「偽作者，用信州薄連紙光漆一層於上，加灰。紙斷則有紋。或於冬日以猛火烘琴極熱，用雪罨激烈之。」冬天把琴烤热，拿雪一激。「雖可眩俗眼，然決無劍鋒，亦易辨。」真断纹如剑锋。</p>
+<p><strong>辨伪的书，得先把造伪写清楚。</strong>配方写在辨伪书中，用意在让人认得出来。上一站米芾借画那一条，也记在这本书中。</p>
+<p><strong>这本书自己也被人假了一回。</strong>四库提要：明钱塘钟人杰辑《唐宋丛书》另载一本，「考其中有楊慎之說，寧庶人宸濠之名，及永樂、宣德、成化年號，希鵠何自知之？其為未見此本而刺取他書以贗其名，固不待辨矣」。一个南宋人的书中出现了明朝的年号。拆它用的是柳宗元那一套：对年月。本库那一条还记了第三件事：后人往它里面塞进一条它没写过的话，中国最早的眼镜记载，至今挂在它名下。</p>
+<p>辨伪的书被人赝了它的名。下一站的钱，把刑名印在自己脸上。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=8">在图上看这一站 →</a>
+</div></section>
+<section id="s9" data-year="1375" data-name="大明宝钞"><div class="wrap">
+<div class="num">九 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="342.6" y1="16" x2="387.8" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="71.2" cy="16" r="3"/><circle class="rs-done" cx="116.5" cy="16" r="3"/><circle class="rs-done" cx="161.7" cy="16" r="3"/><circle class="rs-done" cx="206.9" cy="16" r="3"/><circle class="rs-done" cx="252.2" cy="16" r="3"/><circle class="rs-done" cx="297.4" cy="16" r="3"/><circle class="rs-done" cx="342.6" cy="16" r="3"/><circle class="rs-cur" cx="387.8" cy="16" r="5.2"/><circle class="rs-todo" cx="433.1" cy="16" r="3"/><circle class="rs-todo" cx="478.3" cy="16" r="3"/><circle class="rs-todo" cx="523.5" cy="16" r="3"/><circle class="rs-todo" cx="568.8" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">白鹿皮币</text><text class="rs-end" x="614.0" y="35" text-anchor="end">新学伪经考</text><text class="rs-name" x="387.8" y="35" text-anchor="middle">大明宝钞</text></svg>
+<div class="yr">1375</div>
+<h2>伪造者斩 <span class="h2-ev">大明宝钞</span></h2>
+<p class="sub">1375　·　明　·　制度</p>
+<p><strong>钞面印于洪武八年，1375年；律文定于洪武三十年，1397年，隔二十二年。</strong>一张纸与一部律，各报一个赏格。</p>
+<p><strong>一张纸自报刑名。</strong>《明史·食货志》录钞面下方：「中書省奏準印造大明寶鈔與銅錢通行使用，偽造者斬，告捕者賞銀二十五兩，仍給犯人財產。」本库那一条引了同一段，独缺这一句。值不值钱，靠杀人来撑。</p>
+<p><strong>赏银两个数。</strong>《大明律·伪造宝钞》：「凡偽造寶鈔不分首從及窩主若知情行使者皆斬財產並入官告捕者官給賞銀二百五十兩仍給犯人財產」；同卷伪造官印，「有能告捕者官給賞銀五十兩」。《钦定续文献通考》抄钞面作二十五两，自注「洪武實録作二百五十兩與食貨志異」。二十五两与二百五十两，都摆在这里。改真钞的另算一档：「若將寶鈔挑剜補輳描改以真作偽者杖一百流三千里」。</p>
+<p><strong>钞面的衙门跟着一次政变改了名。</strong>洪武十三年「會中書省廢，乃以造鈔屬戶部」，「改寶鈔文『中書省』為『戶部』，與舊鈔兼行」。</p>
+<p><strong>上游是元，下游是白银。</strong>至元十四年忽必烈定令：「凡偽造寶鈔、同情者並處死，分用者減死杖之，具為令」；《元史·刑法志》中「諸捕獲偽鈔，賞銀五錠，給銀不給鈔」，赏抓假钞的人，官府拿银子付；又「諸夫偽造寶鈔者，妻不坐」。金亡前夕蔡州围城中印的天兴宝会，「以楮為之偽造者斬」，「然支多收少不踰月法壊」。到明中叶，白银顶替了宝钞，本库〈明代白银货币化〉写它没有一纸诏书承认。最后赢的那种钱，脸上什么都没写。嘉靖恶钱「翦楮夾其中，不可辨」；勘合线〈湖州镜〉背面那个「真」字，同一个道理。</p>
+<p>印着斩字的钱，没有人拆，只有放弃。下一站的假，先出书目，再出货。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=9">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p>《明史·食货志五》：洪武七年设宝钞提举司，「明年始詔中書省造大明寶鈔，命民間通行」——即洪武八年（1375），此后是明朝二百七十余年唯一的法定纸币。钞以桑穰为料，横题额曰「大明通行寶鈔」，内两旁篆文八字「大明寶鈔，天下通行」；「其等凡六：曰一貫，曰五百文、四百文、三百文、二百文、一百文。每鈔一貫，準錢千文，銀一兩；四貫準黃金一兩」。同段紧接一句：「禁民間不得以金銀物貨交易，違者罪之」，其后铜钱亦一度并禁——<strong>纸币的信用建立在强制排除一切竞争性通货之上，而不是它自己的稳定</strong>。</p>
+<p>结果只发不收：永乐年间米一石已需钞数十贯，宣德七年（1432）宝钞一贯只值铜钱五文，正统以后堆在市面上都没人捡。明中叶以后名存实亡，赋税与财政实际改用白银结算（另条明代白银货币化）——一纸法定货币，最终让位给一种从未有诏书正式承认过的通货。</p>
+<p><strong>钞面下方那一行字，本条上文引《明史》同段而独缺它。</strong>《明史·卷八十一·食货五》录钞面全文，末云：「其下云『中書省奏準印造大明寶鈔與銅錢通行使用，偽造者斬，告捕者賞銀二十五兩，仍給犯人財產。』」——<strong>一张纸自报刑名与赏格：值不值钱，要靠杀人来撑。</strong> <strong>赏银两说并记，不裁。</strong>钞面录文一路作二十五两：《明史》食货五如上，《钦定续文献通考》卷十正文同，而其自注称「洪武實録作二百五十兩，與食貨志異」。</p>
+<p>律文一路作二百五十两：《大明律·刑律·诈伪·伪造宝钞》「凡偽造寶鈔，不分首從及窩主，若知情行使者皆斬，財產並入官，告捕者官給賞銀二百五十兩，仍給犯人財產。里長知而不首者杖一百，不知者不坐」，其纂注复述一遍「官給賞銀二百五十兩」，《明会典》卷一三〇所录同一律条亦作「告捕者官給賞銀二百五十兩」（本轮亲抓四库本；候选榜另举《明会典》卷三四户部钞法一处，本轮未取到）。</p>
+<p><strong>钞面上的赏格与律条里的赏格，本来就可以不是同一个数</strong>，本条并存不裁。同律紧邻的前后两条正可作尺子：前一条〈偽造印信歷日等〉律文「凡偽造諸衙門印信及歷日符驗夜巡銅牌茶鹽引者斬，有能告捕者官給賞銀五十兩」，后一条〈私鑄銅錢〉律文「凡私鑄銅錢者絞……告捕者官給賞銀五十兩」——<strong>告发伪造纸钞的赏格是告发伪造官印的五倍，而伪钞是斩、私铸铜钱只是绞。</strong>在洪武年间的刑律里，这张纸排在官印之上。</p>
+<p>同条还给「以真作偽」单列一档：「若將寶鈔挑剜補輳描改以真作偽者，杖一百流三千里」，即拿真钞挖补拼凑改成大面额，与整张伪造分开定刑（库内〈大明律〉另条）。</p>
+<p><strong>钞面上的衙门名，跟着一次政变改了。</strong>同段：洪武十三年（1380）「會中書省廢，乃以造鈔屬戶部，鑄錢屬工部，而改寶鈔文『中書省』為『戶部』，與舊鈔兼行」——中书省撤销之后，钞版上的发行机关随之换名，两种钞并行于市。《钦定续文献通考》卷十把这道令记得更细：「五月准户部奏改鈔文中書省為户部，令民間無分中書户部一體行使」——<strong>朝廷得专门下一道命令，叫百姓别去分辨钞上印的是哪个衙门。一张纸上印着的最高衙门，可以在它自己的流通期内消失。</strong> <strong>这一行字与本条末句是同一件事的两头。</strong>上文已写宝钞如何让位给白银（另条明代白银货币化）；值得再记一笔的只是两者脸面之别——宝钞的脸上印着刑名与赏格，白银的脸上什么都没有。</p>
+<p><strong>要在脸上写「斩」的，往往正是信用最薄的那一种。</strong></p>
+</details>
+</div></section>
+<section id="s10" data-year="" data-name="长物志"><div class="wrap">
+<div class="num">十 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="387.8" y1="16" x2="433.1" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="71.2" cy="16" r="3"/><circle class="rs-done" cx="116.5" cy="16" r="3"/><circle class="rs-done" cx="161.7" cy="16" r="3"/><circle class="rs-done" cx="206.9" cy="16" r="3"/><circle class="rs-done" cx="252.2" cy="16" r="3"/><circle class="rs-done" cx="297.4" cy="16" r="3"/><circle class="rs-done" cx="342.6" cy="16" r="3"/><circle class="rs-done" cx="387.8" cy="16" r="3"/><circle class="rs-cur" cx="433.1" cy="16" r="5.2"/><circle class="rs-todo" cx="478.3" cy="16" r="3"/><circle class="rs-todo" cx="523.5" cy="16" r="3"/><circle class="rs-todo" cx="568.8" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">白鹿皮币</text><text class="rs-end" x="614.0" y="35" text-anchor="end">新学伪经考</text><text class="rs-name" x="433.1" y="35" text-anchor="middle">长物志</text></svg>
+<h2>凡三月而止 <span class="h2-ev">长物志</span></h2>
+<p><strong>《宝绘录》刻于1633年；《长物志》成书通行作1621年，隔十二年。</strong>一本教人什么东西雅，一本照着雅的口味出货。</p>
+<p><strong>他造的是一部目录。</strong>《浪迹丛谈》：「前明崇禎間，有雲間張泰階者」，「集所選晉、唐以來偽畫二百件，刻為《寶繪錄》，凡二十卷」；宋以前的画上题跋来去十几个人，「終以文衡山」。「覽之足以發笑，豈先流布其書，後乃以偽畫出售，希得厚值耶？」先出书，再出货。</p>
+<p><strong>四库馆臣拆的是同一处。</strong>曹不兴的画，谢赫当年只见过一个龙头，「不知泰階何緣得其《海戍圖》」；收句「且所列歷代諸家跋語，如出一手，亦復可疑也」。拆动了目录，市场照旧。</p>
+<p><strong>一份账，成本二十五两。</strong>同书〈高房山〉：「有裱工張姓者，以白金五兩買側理紙半張，裁而為二，以十金屬翟雲屏臨成二幅，又以十金屬鄭雪橋摹其款印」，清水浸透贴在漆几上，干了再浸，「日二三十次，凡三月而止」。第一幅，毕澗飞病中一见，「以八百金購之」；第二幅带去江西，「陳中丞以五百金購之，今其真本仍在吳門，乃無過而問之者」。三个月，两幅，一千三百金；真本没人问。</p>
+<p><strong>落款人的卒年也能拆。</strong>《宣德鼎彝谱》署名吕震，本库〈哥窑〉核过，吕震死在落款前两年。不看器，不看文，对生卒。</p>
+<p>假画找的买主要来历。下一站的假碑，要的是一个仇人的名字。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=10">在图上看这一站 →</a>
+</div></section>
+<section id="s11" data-year="1645" data-name="七杀碑"><div class="wrap">
+<div class="num">十一 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="433.1" y1="16" x2="478.3" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="71.2" cy="16" r="3"/><circle class="rs-done" cx="116.5" cy="16" r="3"/><circle class="rs-done" cx="161.7" cy="16" r="3"/><circle class="rs-done" cx="206.9" cy="16" r="3"/><circle class="rs-done" cx="252.2" cy="16" r="3"/><circle class="rs-done" cx="297.4" cy="16" r="3"/><circle class="rs-done" cx="342.6" cy="16" r="3"/><circle class="rs-done" cx="387.8" cy="16" r="3"/><circle class="rs-done" cx="433.1" cy="16" r="3"/><circle class="rs-cur" cx="478.3" cy="16" r="5.2"/><circle class="rs-todo" cx="523.5" cy="16" r="3"/><circle class="rs-todo" cx="568.8" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">白鹿皮币</text><text class="rs-end" x="614.0" y="35" text-anchor="end">新学伪经考</text><text class="rs-name" x="478.3" y="35" text-anchor="middle">七杀碑</text></svg>
+<div class="yr">1645</div>
+<h2>圣谕六言 <span class="h2-ev">七杀碑</span></h2>
+<p class="sub">1645　·　人物·典故</p>
+<p><strong>刻石在1645年，站年与本库那一条同一年；连书七杀的版本，目前所知最早在晚清笔记，隔两百多年。</strong>本库那一条已把碑的来路一层一层拆清，这里只写它属哪一型。</p>
+<p><strong>一手记的是十六个字。</strong>彭遵泗《蜀碧》：「初，賊自為聖諭六言云：『天以萬物與人，人無一物與天。鬼神明明，自思自量。』命右相嚴錫命作注解發明之，刻諸石。」没有杀字。四川广汉今天还立着一块圣谕碑，与此同型。</p>
+<p><strong>杀字是后人替他刻的。</strong>七个杀字连书的版本，本库那一条查到最早只在晚清；成都县署那块碑，1924年拿一通旧德政碑冒名顶替送去陈列。造敌人的假，是前十站没有的一型：造假的人不要钱，也不要天命，要的是一个名字变得可恨。</p>
+<p><strong>同一年，南京在审一个真假太子。</strong>黄宗羲《弘光实录钞》：三月「會審太子真偽」，太子伴读太监「痛哭而証其非是」，爰书写出王之明「年十八歲」「保定高陽縣人」，有人给他一张单子「細注歷代祖宗各省藩府，令之明牢記」。判词引前82年的判例：「臣等會看得王之明即『漢史』所云夏陽男子假冒衛太子之故智也」。</p>
+<p><strong>审词公开了，没有人信。</strong>「即以審詞刊刻頒行天下。然天下之人無不愈疑，即閭巷小民亦至泣下。欲生食王鐸、方拱乾之肉」。黄得功奏说破了为什么：「萬一稍有瞻顧之心，卒逢霧露病死，即真奸偽，天下亦疑為真東宮矣」。一个没有信用的政权，说真话也被当成造假。六十三年后清廷把同一件事反着办：康熙四十七年九卿会审，「查崇禎第四子、已於崇禎十七年前身故」，老太监「俱不認識。朱三明系假冒」，判决却是「朱三即王士元、著淩遲處死」。假冒判凌迟，杀的是一个名字。</p>
+<p>假碑拆穿要等三百年。下一站一个皇帝一年里拆了两回，一回对，一回反。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=11">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>连书七个杀字的那块碑，一手史料里没有；有的是一块六言四句、一个杀字都没有的碑，今天还立在四川广汉。</strong>传说里的「七杀碑」两侧作「天生萬物與人，人無一物與天」，中间连书七字「殺殺殺殺殺殺殺」，称张献忠立碑是为把百姓拉到碑前杀戮（中文维基「七殺碑」条即如此叙述这个传说）。</p>
+<p><strong>清初的一手记的是另一回事</strong>——彭遵泗《蜀碧》卷三「乙酉（順治二年）」秋七月条，本库据维基文库逐字核得：「初，賊自為聖諭六言云：『天以萬物與人，人無一物與天。鬼神明明，自思自量。』命右相嚴錫命作注解發明之，刻諸石。」十六字，无一杀字，且明记刻石——本条的锚就取这一刻石之年（乙酉即顺治二年，1645；碑上落款作大顺二年二月十三日，大西年号，同指此年）。</p>
+<p><strong>实物也在</strong>：四川广汉房湖公园存「圣谕碑」一通，正面「圣谕」二字下阴刻这六言，与《蜀碧》所记同型（据蒋蓝《张献忠与「圣谕碑」谱系学》，华西都市报2021-05-12；碑拓与馆方著录本库未获，碑身尺寸诸说不一，皆不取）。</p>
+<p><strong>一字之差必须记明</strong>：文库《蜀碧》原文作「天<strong>以</strong>萬物與人」，而通行转述——连中文维基该条自己所引的《蜀碧》文句、以及蒋蓝文所记现存碑文——都作「天<strong>生</strong>万物与人」；两说并存不裁。</p>
+<p><strong>杀字版能追到多晚</strong>：目前所知最早明确写出连书七杀的，是晚清薛福成《庸盦笔记》「四川成都府署中有杀字碑，连书七个『杀』字，别无他字，相传张献忠手笔」，与1910年傅崇矩《成都通览》「张献忠七杀碑，在成都县署内，石碑上有『杀杀杀杀杀杀杀』七字，张献忠书」——两条皆转引自蒋蓝文，原书本库未获，故只说「目前所知最早」，不说「始见」。</p>
+<p><strong>而成都那块碑，1924年就已经找不着了</strong>：杨森督川时命成都县知事林宝慈把「七杀碑」送去陈列，「实际上该衙署内哪有那通碑……林宝慈左思右想之后，便把衙门内一通早已风化剥蚀、看不清楚字的旧『德政碑』送去冒牌顶替」（同上）——今人在成都见到的所谓七杀碑实物，本身是二级伪造。</p>
+<p><strong>广汉这块碑怎么现身，两说并存</strong>：一说加拿大传教士董笃宜「偶于附郭一茅屋墙壁中，发现了一碑……石工正拟毁以筑路，乃亟告县府设法运至公园保存」，一说原立于城外万人坟前、后移入房湖公园——抢救与迁移性质不同，本条不弥合；发现者国籍另有英国人一说，迁碑年一般记作1934年，本库未核到一手档案，且该年出本库量程，只作卡面不作锚。碑阴一说仅刻「万人坟」三字，一说原是严锡命的六言注解、隆武二年（1646）被南明将领杨展改刻成诬指张献忠戮数十万的「万人坟碑记」——同一个杨展、同一年，正是库内江口沉银那一战。</p>
+<p>网传辞藻华丽的长篇「七杀诗」是更晚的一层，中文维基该条径称系网络作家燕垒生所作（原始考证本库未核，故不给书目）。「圣谕碑」在中文维基无独立条目（简繁皆实测 missing），内容并入「七殺碑」条，故本库亦不另立，一并记于此。互见库内江口沉银（1646）、蜀语（1659）、湖广填四川（1671）与明末民变。</p>
+<p><strong>这一型可以叫「造敌人的假」，而它偏偏成功了。</strong>上面几层——晚清笔记里连书七杀的碑文、1924 年那通顶替上去的旧德政碑——共同点是：栽的不是自己的名头，是敌人的名头。</p>
+<p><strong>同一年的南京正在办一桩反过来的案子。</strong>弘光元年（1645）三月「會審太子真偽」，国公、侯伯、驸马、阁臣、翰林到齐，三个当过东宫讲官的人当场对质，太子伴读太监邱志忠「痛哭而証其非是」；刑部与锦衣卫的爰书连供词都记全了——王之明，十八岁，保定高阳县人，穆虎、张应达「脅之明冒稱皇太子」，还有人给他一张单子「細注歷代祖宗各省藩府，令之明牢記」，判词自援前例「臣等會看得王之明即『漢史』所云夏陽男子假冒衛太子之故智也」。</p>
+<p>审词刊刻颁行天下之后呢？「然天下之人無不愈疑，即閭巷小民亦至泣下。欲生食王鐸、方拱乾之肉」（黄宗羲《弘光实录钞》卷四，维基文库逐字，2026-09-10 实测；黄宗羲在案后自列「可疑者」三条，也是不信的）。</p>
+<p><strong>一桩办了全套官方证据的案子没有人肯信，一块拿不出任何一手的碑却人人都信</strong>——两件事同在 1645 年，问的是同一句：这个说法是谁在替它背书。</p>
+</details>
+</div></section>
+<section id="s12" data-year="" data-name="石渠宝笈初编"><div class="wrap">
+<div class="num">十二 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="478.3" y1="16" x2="523.5" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="71.2" cy="16" r="3"/><circle class="rs-done" cx="116.5" cy="16" r="3"/><circle class="rs-done" cx="161.7" cy="16" r="3"/><circle class="rs-done" cx="206.9" cy="16" r="3"/><circle class="rs-done" cx="252.2" cy="16" r="3"/><circle class="rs-done" cx="297.4" cy="16" r="3"/><circle class="rs-done" cx="342.6" cy="16" r="3"/><circle class="rs-done" cx="387.8" cy="16" r="3"/><circle class="rs-done" cx="433.1" cy="16" r="3"/><circle class="rs-done" cx="478.3" cy="16" r="3"/><circle class="rs-cur" cx="523.5" cy="16" r="5.2"/><circle class="rs-todo" cx="568.8" cy="16" r="3"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">白鹿皮币</text><text class="rs-end" x="614.0" y="35" text-anchor="end">新学伪经考</text><text class="rs-name" x="523.5" y="35" text-anchor="middle">石渠宝笈初编</text></svg>
+<h2>一年两判 <span class="h2-ev">石渠宝笈初编</span></h2>
+<p><strong>两判都在乾隆十一年，1746年；《石渠宝笈》成书于乾隆十年，1745年，隔一年。</strong>规矩是他定的，栽的也是他。</p>
+<p><strong>判玺，判对了。</strong>《国朝传宝记》先骂《大清会典》「數與地皆失實」，修书的人「僅沿明時內監所書冊檔，承譌襲謬」；再判宫中那方秦玺：「篆文拙俗，非李斯蟲鳥之舊明甚」；再判乾隆三年高斌献的那方：「朕謂此好事者仿刻所為，貯之別殿，視為玩好舊器而已」。收句「君人者在德不在寶」，「故寶器非寶，寶於有德」。从1098年「非漢以後所作明矣」到1746年「好事者仿刻」，同一块石头的评级走了六百四十八年，每一次都是新朝拿旧记录打上一朝。</p>
+<p><strong>判画，判反了。</strong>乾隆十年冬先得一卷山居图，「筆墨蒼古的係真蹟」；次年冬安岐家败，真的《富春山居图》送来求售，傅恒看了说「是物也飢不可食寒不可衣將安用之」。乾隆「翦燭粗觀則居然黄子乆富春山居圖也」，「次日命梁詩正等辨其真偽乃咸以舊為真而新為偽」。旧的那卷判真，新来的判伪。</p>
+<p><strong>误判刻进了御制文集。</strong>《黄子久富春山居图真伪辨》替自己找台阶：「匪惟予誤沈徳潛之嗟咨嘆賞勒文以記者亦誤也奚啻徳潛髙士竒王鴻緒輩之侈賞鑒之精賈直之重以為豪舉者均誤也」。再替赝品说一句公道话：「摹董而即董肖黄而即黄盖非近日俗工所能為」。安岐家那一批别的旧迹，他「槩以二千金留之」，判伪的那一卷也留在了宫里。御制诗中更直：「富春疑案叅来乆今喜辨眀楊即栁」，「目迷何足云」，说的是高士奇、王鸿绪看走了眼。本库〈富春山居图〉记的是那幅真迹今天分藏两处。</p>
+<p><strong>规矩是他定的。</strong>《石渠宝笈》凡例：「雖或臨本逼真亦暨置之次等題疑俱仍其舊而真贋自別」，纂官里有梁诗正。判画那一天，这条凡例没有用上。隔壁1745年阎若璩《尚书古文疏证》刻成，史笔线讲过：学者拆经书，皇帝拆自家玉玺，同年。</p>
+<p>皇帝拆假，靠的是记录。下一站拆假的人靠审问，审出一座写本工厂。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=12">在图上看这一站 →</a>
+</div></section>
+<section id="s13" data-year="" data-name="斯坦因取走藏经洞文书"><div class="wrap">
+<div class="num">十三 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="523.5" y1="16" x2="568.8" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="71.2" cy="16" r="3"/><circle class="rs-done" cx="116.5" cy="16" r="3"/><circle class="rs-done" cx="161.7" cy="16" r="3"/><circle class="rs-done" cx="206.9" cy="16" r="3"/><circle class="rs-done" cx="252.2" cy="16" r="3"/><circle class="rs-done" cx="297.4" cy="16" r="3"/><circle class="rs-done" cx="342.6" cy="16" r="3"/><circle class="rs-done" cx="387.8" cy="16" r="3"/><circle class="rs-done" cx="433.1" cy="16" r="3"/><circle class="rs-done" cx="478.3" cy="16" r="3"/><circle class="rs-done" cx="523.5" cy="16" r="3"/><circle class="rs-cur" cx="568.8" cy="16" r="5.2"/><circle class="rs-todo" cx="614.0" cy="16" r="3"/><text class="rs-end" x="26.0" y="35" text-anchor="start">白鹿皮币</text><text class="rs-name" x="568.8" y="35" text-anchor="middle">斯坦因取走藏经洞文书</text></svg>
+<h2>胡杨染纸 <span class="h2-ev">斯坦因取走藏经洞文书</span></h2>
+<p><strong>审出工厂是1901年；斯坦因买走藏经洞文书是1907年，隔六年。</strong>这一站落在拆假的人自己身上。</p>
+<p><strong>买主是两个领事。</strong>当时英、法、德、俄、日五国都在中亚出钱找古物。英文维基〈Islam Akhun〉：「In 1895 he approached the British」，把纸写本卖给喀什领事马继业；同伙易卜拉欣·毛拉把同类东西卖给俄国领事。加尔各答的霍恩雷拿到手，报告中承认那些字「either quite unknown to me, or with which I am too imperfectly acquainted」，仍判为真。需求大了，「they had started to produce woodblock prints as it increased production」，手抄改雕版。</p>
+<p><strong>审问在和田。</strong>1900年斯坦因在和田挖了一季，挖到的没有一件像阿洪卖的。1901年他拿阿洪早年口述、已经印进霍恩雷报告的出土经过对质，阿洪招了：「staining the manuscripts with dye from the poplar or Toghrug, and smoking them to create an aged effect」，胡杨染色，烟熏做旧。库内〈尼雅遗址〉那一季挖到的是真的，回和田审出的是假的，同一趟。</p>
+<p><strong>拆假的人原谅了造假的人。</strong>斯坦因给霍恩雷写信：「Islam Akhun is a very clever rascal, with a good deal of humour and brains quite above the level of his compatriots」；「I appreciate brains even in a scoundrel」。没有起诉，拍了一张照片印进《古代和田》，图注「photographed by Stein 1901」。</p>
+<p><strong>被骗的人更难收场。</strong>「Hoernle hoped that his own report could be destroyed, but this was not possible as it had already been published」。六年后，斯坦因在敦煌用四十个马蹄银锭换走七千余卷，本库那一条记的是这笔交易。他拆穿过一座写本工厂，然后成了写本最大的买主。同一批中亚考察者里，格伦威德尔晚年伪造过藏文的香巴拉地图，本库那一条写过。</p>
+<p>拆假拆到了拆的人自己头上。最后一站，拆假的人排成一条线，自己说拆过了头。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=13">在图上看这一站 →</a>
+</div></section>
+<section id="s14" data-year="1891" data-name="新学伪经考"><div class="wrap">
+<div class="num">十四 / 十四</div>
+<svg class="rstrip" viewBox="0 0 640 50" aria-hidden="true"><line class="rs-base" x1="26.0" y1="16" x2="614.0" y2="16"/><line class="rs-hop" x1="568.8" y1="16" x2="614.0" y2="16"/><circle class="rs-done" cx="26.0" cy="16" r="3"/><circle class="rs-done" cx="71.2" cy="16" r="3"/><circle class="rs-done" cx="116.5" cy="16" r="3"/><circle class="rs-done" cx="161.7" cy="16" r="3"/><circle class="rs-done" cx="206.9" cy="16" r="3"/><circle class="rs-done" cx="252.2" cy="16" r="3"/><circle class="rs-done" cx="297.4" cy="16" r="3"/><circle class="rs-done" cx="342.6" cy="16" r="3"/><circle class="rs-done" cx="387.8" cy="16" r="3"/><circle class="rs-done" cx="433.1" cy="16" r="3"/><circle class="rs-done" cx="478.3" cy="16" r="3"/><circle class="rs-done" cx="523.5" cy="16" r="3"/><circle class="rs-done" cx="568.8" cy="16" r="3"/><circle class="rs-cur" cx="614.0" cy="16" r="5.2"/><text class="rs-end" x="26.0" y="35" text-anchor="start">白鹿皮币</text><text class="rs-name" x="614.0" y="35" text-anchor="end">新学伪经考</text></svg>
+<div class="yr">1891</div>
+<h2>一面疑古 <span class="h2-ev">新学伪经考</span></h2>
+<p class="sub">1891　·　清　·　文化</p>
+<p><strong>《新学伪经考》刊于1891年；梁启超的讲义刊于1927年，隔三十六年；胡应麟的八法在万历间，早三百年。</strong>拆假在这一站从一件件辨，变成一套方法，再变成一条线。</p>
+<p><strong>先分类。</strong>《四部正讹》开篇：「凡贋書之作情狀至繁約而言之殆十數」，有「憚於自名而偽者」，有「恥於自名而偽者」，有「惡其人偽以禍之者」。作伪不总为钱，也可以为了不署名、为了害人。刘炫那一案他记为「當時知其偽而後世弗傳者」。</p>
+<p><strong>再给方法。</strong>「凡覈偽書之道覈之七略以觀其源覈之羣志以觀其緒覈之竝世之言以觀其稱覈之異世之言以觀其述覈之文以觀其體覈之事以觀其時覈之撰者以觀其託覈之傳者以觀其人覈茲八者而古今贗籍亡隱情矣」。八条，先查从谁手里冒出来：「覈偽書者覈所出之人思過半矣」。祖本是柳宗元《辩列子》对年月：「穆公在孔子前幾百歲，《列子》書言鄭國」，却留一手，「然其書亦多遭增竄，非其實」，假书也可以是好书；本库〈愚公移山〉那一条列过这个谱系。胡应麟自知：「余讀秦漢諸古書覈其偽幾十七焉」，「余為此辯後世得無以罪長睿者罪予也」。他知道自己会被当成拆过头的那个人。</p>
+<p><strong>拆过头。</strong>康有为把刀伸到刘歆：「不知此劉歆之偽說也」，「故其偽經得乘虛而入，蔽掩天下，皆假校書之權為之也」，古文诸经大半判伪。这一刀怎么砍的，连同阎若璩拆伪古文尚书那一刀，史笔线都讲过。</p>
+<p><strong>拆的人自己排成了一条线。</strong>梁启超《古书真伪及其年代》：柳宗元辨子书，「劉知幾總是頭一個」，「專著一書以博辨羣書的，宋濂是第一個」，「胡應麟著《四部正僞》是第一次」，「辨僞學到了此時才成爲一种學問」，往下阎若璩、崔述「一件一件的審查」、康有为、胡适、钱玄同。他末了自评：「雖然勇於疑古，比起他們，也已瞠乎其後」，「我生性便如此，一面儘管疑古，一面仍帶保守性」。1923年顾颉刚提出「層累地造成的中國古史」，「時代愈後，傳說的古史期愈長」；1926年自序认第一个来源是自刘知几至崔述的辨伪传统。本库描述传说增长时惯用「层累」二字，却没有他自己的一条。</p>
+<p>拆到根上的人，自知拆过了头。落点回到一张画：一群拆假的人开了一场会，谁也拆不动。</p>
+<a class="go" href="../timeline.html#line=zuojia&amp;at=14">在图上看这一站 →</a>
+<details class="app"><summary>本库简注</summary>
+<p><strong>康有为拆的是整个古文经学，一刀砍下去，连真经也去了半部——本条锚的是拆假的人自己。</strong>《新学伪经考》光绪十七年（1891）初刊于广州万木草堂。全书要断的是一件事：西汉末年新出的古文诸经——《古文尚书》《左传》《毛诗》《周礼》——都是刘歆伪造的。开卷第一篇逐字：「按後世六經亡缺歸罪秦焚，秦始皇遂嬰彌天大罪，不知此劉歆之偽說也。歆欲偽作諸經，不謂諸經殘缺則無以為作為竄入之地……故其偽經得乘虛而入，蔽掩天下，皆假校書之權為之也。」（维基文库《新學僞經考／第一》action=raw，2026-09-10 实测；该书维基文库只上了第一篇，第二、第三两篇实测 404，故本条一手仅及此篇。）</p>
+<p><strong>他先把秦火说成是刘歆造的谎</strong>：六经从来没被烧缺，说烧缺了，才好把伪经填进那个缺口——伪造的第一步，是先造出一个空位来。</p>
+<p><strong>刘歆造这些经是为了谁：王莽。</strong>中文维基〈新学伪经考〉引其书「王莽以伪行篡汉国，刘歆以伪经篡孔学，二者同伪，二者同篡」，又引「始作伪，乱圣制者，自刘歆；布行伪经、篡孔统者，成于郑玄」——这两句维基未附页码出处，本库未获原书对应处，记转述层。同条又述其立论所据：康有为读《史记》的《河间献王传》《鲁共王传》，见其中并未载发现古文经一事，遂断古文之伪（中文维基〈新學偽經考〉action=raw，2026-09-10 实测）。</p>
+<p><strong>书出得罪了朝廷，板毁的次数两说并存。</strong>中文维基该条逐字：「《新学伪经考》一經出版即造成轟動。光绪二十年（1894年）遭朝廷降旨以『惑世誣民』為由加以毁版。1898年戊戌变法中再刻，戊戌变法失败又遭朝廷降旨毁版。1900年朝廷再次降旨毁版。」——<strong>毁版的上谕原文本库未取到</strong>（维基文库以「新學僞經考」加「毀版」检索零命中），故此三次之数属转述层；坊间另有「两毁其板」（1894、1900）一说，两说并记，本库不裁。</p>
+<p><strong>「惑世诬民」四字倒是有一手</strong>：《清史稿·康有为传》记「入都上萬言書，議變法，給事中餘聯沅劾以惑世誣民，非聖無法，請焚所著書」（维基文库《清史稿／卷473》action=raw，2026-09-10 实测）——弹劾者的名姓与「請焚所著書」五个字写在正史里。</p>
+<p><strong>惟正史此处只作「所著書」，并未点出书名，要焚的是哪一部，本库不代坐实</strong>；且该传把这一节系在「入都上万言书」之后而未系年，它与 1894 年毁版是否同一件事，本库未获系年一手，不弥合。同传亦记康有为「原名祖詒」，与库内〈公车上书〉那份呈文署名「具呈舉人康祖詒等」是同一个名字。</p>
+<p><strong>替这条辨伪线排站牌的，是他自己的学生；而那个学生说他武断。</strong>梁启超《古书真伪及其年代》卷一（维基文库本题「梁任公教授演講」、出《飲冰室專集》，讲演年份该本未题；通说作 1926—1927 年间讲义，本库未获一手，不作定谳）：「有清之末，吾師康南海先生專著一部《新學僞經考》，把西漢迄清今古文之爭算一個總帳，認西漢新出的古文書全是假的。</p>
+<p>承劉、魏之後而集大成，使古書的大部分如《周禮》《左傳》《毛詩》《毛詩傳》和劉歆所改竄的書根本搖動……所以當時的人沒有不看他是怪物的。」同卷末梁氏自陈：「當我少年幫助康先生做《新學僞經考》的時候，雖得他的啟發思想的補助不少，一面也疑心他不免有些武斷的地方，想修正其一部分」，又自道「我生性便如此，一面儘管疑古，一面仍帶保守性」（维基文库《古書真偽及其年代／卷一》action=raw，2026-09-10 实测）。</p>
+<p><strong>一处更正照记</strong>：这句「武断」常被系在梁启超《清代学术概论》（1920）名下，而维基文库并无《清代学术概论》全文（实测 404，站内检索亦零命中），本库未核到该书原文，故「武断」二字只据《古书真伪及其年代》卷一逐字引证；中文维基该条另转引《清代学术概论》之评「使清学正统派之立脚点，根本摇动，一切古书，皆须重新检查估价，此实思想界一大飓风也」，属转述层。</p>
+<p><strong>这条拆假的线不是后人串起来的，是梁启超在讲台上自己排的。</strong>同卷第三章按朝代逐个点名：刘知几（在辨伪学衰微已久的空气中「首先引導學者做自由的研究」）→柳宗元（断《鹖冠子》《亢仓子》《鬼谷子》《文子》《列子》为伪书）→欧阳修、朱熹一辈宋人→宋濂《诸子辨》（「專著一書以博辨羣書的，宋濂是第一個」）→梅鷟《尚书考异》→胡应麟《四部正伪》（「辨僞學到了此時才成爲一种學問」）→阎若璩、胡渭（阎「正式宣告僞古文的死刑」）→崔述《考信录》（「一件一件的審查，辨別哪個是真的，哪個是假的」）→刘逢禄、魏源→康有为→胡适、钱玄同。</p>
+<p>库内〈尚书古文疏证〉（1745）正是这条线上阎若璩那一站，本条是它的下一环。</p>
+<p><strong>书名两写并记</strong>：四库著录作《四部正譌》；梁启超同一卷里两名并用，本库逐处点得《四部正僞》三处、《四部證僞》七处，不取一名。</p>
+<p><strong>拆到根上的那份方法论比康有为早三百年，本库把它挂在这里。</strong>胡应麟《少室山房笔丛》卷十四〈四部正讹上〉开篇不辨某一本书，先给作伪分类：「凡贋書之作，情狀至繁，約而言之殆十數」——伪作于前代而世率知之者、伪作于近代而世反惑之者、掇古人之事而伪者、挟古人之文而伪者、传古人之名而伪者、蹈古书之名而伪者、「憚於自名而偽者」、「恥於自名而偽者」、袭取于人而伪者、假重于人而伪者、「惡其人偽以禍之者」、「惡其人偽以誣之者」，以下还有「本非偽人託之而偽者」「書本偽人補之而益偽者」，共十四款；此外另起数段又列「偽而非偽者」「非偽而實偽者」「當時知其偽而後世弗傳者」「當時記其偽而後人弗悟者」「本無撰人後人因近似而偽託者」「本有撰人後人因亡逸而偽題者」六款。</p>
+<p><strong>作伪不总是为了钱，也可以是为了不肯署名、羞于署名，或者干脆为了害人。</strong>卷十六〈四部正讹下〉的收梢是八条法：「凡覈偽書之道：覈之七略以觀其源，覈之羣志以觀其緒，覈之竝世之言以觀其稱，覈之異世之言以觀其述，覈之文以觀其體，覈之事以觀其時，覈之撰者以觀其託，覈之傳者以觀其人。覈茲八者，而古今贗籍亡隱情矣。」（维基文库《少室山房筆叢（四庫全書本）／卷14》《／卷16》action=raw，2026-09-10 实测；四库本无句读，标点为本库所加。</p>
+<p>卷十四该句录文作「約而言之殆十數卷有偽作於前代……」，「卷」字疑为录文之衍，本库断在「十數」后，不弥合。）</p>
+<p><strong>胡应麟自己先想到了「拆过头」这件事</strong>：「宋黄長睿辯閣帖偽者幾半於真，余讀秦漢諸古書，覈其偽幾十七焉……余為此辯，後世得無以罪長睿者罪予也」——他知道后人会拿罪黄伯思的话来罪他。《四部正讹》的成书之年本库未取到一手，故不另立条，这份方法论挂在本条名下。</p>
+<p><strong>拆过头之后，往回拆的人反倒认了他的账。</strong>1923 年 5 月 6 日，顾颉刚在《努力周报》副刊《读书杂志》发表《与钱玄同先生论古史书》，提出「層累地造成的中國古史」，三条之首是「時代愈後，傳說的古史期愈長」——周人心目中最古的人是禹，到孔子时有尧舜，到战国有黄帝神农，到秦有三皇，到汉以后才有盘古；而 1926 年《古史辨》自序里，他自列四个来源，第一是「自劉知幾至崔述的辨偽傳統」，第二是「康有為為代表的清代今文經學」（中文维基〈古史辨派〉action=raw，2026-09-10 实测，转引 1982 年上海古籍《古史辨》与顾颉刚《我与古史辨》；顾氏原文本库未取到，属转述层）。</p>
+<p>本库正文描述传说增长时惯用「层累」二字，却一直没有顾颉刚自己的一条——这处空缺照记在这里。</p>
+<p><strong>两造并记：这部书是考据还是穿凿，吵了一百年没完。</strong>驳的一面：1929 年钱穆作《刘向歆父子年谱》，列《新学伪经考》不可通者二十有八端；钱穆《中国近三百年学术史》下又称此书「亦非自创，而特剽窃之于川人廖平」，廖平本人亦自称《伪经考》祖述其《辟刘篇》，而康有为表示根本没见过《辟刘篇》。挺的一面：崔适 1911 年致钱玄同书称「《新学伪经考》字字精确，自汉以来未有能及之者」；钱玄同 1931 年为北平文化学社校点本作序，称「康氏这书，全用清儒的考证方法」，断然驳斥抄袭之说，同时也逐一指出书中考证的错误与问题。</p>
+<p>顾颉刚《五德终始说下的政治和历史》则把两件事分开算：「康有为为适应时代需要而提倡『孔教』，以为自己的『变法说』的护符，是一件事；他站在学术史的立场上打破新代出现的伪经传又是一件事。」以上皆据中文维基〈新学伪经考〉action=raw 所引（1956 年古籍出版社章锡琛点校本第 383—462 页等），本库未获原书，俱属转述层，两造并记不裁。</p>
+<p><strong>这部书后来进了必读圈。</strong>胡适 1923 年《一个最低限度的国学书目》著录「《新學僞經考》　（康有爲）光緒辛卯初印本；新刻本只增一序」——<strong>辛卯即光绪十七年，1891，本条的锚年在这里也得一证</strong>；胡适应清华同学之请再开「实在的最低限度的书目」时，加圈的那一份里仍有《新学伪经考》（维基文库《一個最低限度的國學書目》action=raw，2026-09-10 实测）。</p>
+<p><strong>落点与互见。</strong>主点广州市——初刻即光绪十七年广州万木草堂本（中文维基该条版本节首行，转述层）；此前两年他在西樵山北银塘乡写完的〈广艺舟双楫〉（库内条系 1888—1889，落点即西樵山）与本条同在广东，且两书的刻本同在光绪十七年问世。互见〈尚书古文疏证〉：那一条的末句已把本条点作下一环——阎若璩逐条比勘证伪古文尚书二十五篇，康有为把同一套办法用到了刘歆身上，只是这一次拆掉的不止一部书。</p>
+<p>互见〈公车上书〉（1895）：四年之后，写这部书的人在北京写那份呈文，署的还是「康祖詒」这个名字。</p>
+</details>
+</div></section>
+<section id="s15" class="tone"><div class="wrap">
+<div class="num">落点</div>
+<h2>为一张画开会</h2>
+<p>1997年，一张画寄藏进纽约大都会艺术博物馆。美国的中国画史家高居翰说：「此画是张大千最成功的欺世之作」。1999年12月11日，馆方为这一张画开了一天的国际研讨会。今天馆方接口上，作者一栏仍写 Dong Yuan，年代一栏仍写 Southern Tang dynasty。</p>
+<p><strong>画是《溪岸图》，本库那一条落在949年；这一站讲1997年，隔一千零四十八年。</strong>1938年徐悲鸿购得，张大千借去看，久未归还，1944年拿金农一幅画换了去；1968年转给王季迁；1997年大都会董事唐骝千「出资从王季迁手中买下了其所收藏的《溪岸图》等12件中国古代画作，并寄藏于大都会博物馆」，2017年正式捐赠。高居翰与李雪曼主张张大千伪作，方闻、班宗华、启功、徐邦达反对，何慕文拿X射线对着公认的张大千伪作比。会开了，论文集出了，书名《Issues of Authenticity in Chinese Painting》。争论没有结论。这张画是真是假，这里同〈传国玺〉一样，只记谁怎么判。</p>
+<p><strong>序问的第二句，再问一遍。</strong>前82年北阙下，公卿到齐，「並莫敢發言」，满朝没有一个人敢说他是假的。1999年，一张画在纽约开了一天的会，还是没有人能说它是假的。中间隔了两千零八十年，拆假的办法从一部《春秋》换到了X射线，问的还是同一句：你怎么知道它是真的？</p>
+<p><strong>十四站的买主并排读一遍。</strong>汉武帝的国库要面值；长安的几万人要一个回来的太子；隋文帝要新钱，也要古书；唐律要一个次序；开元的市井要好钱；米芾的买家要李成；唐仲友要会子；赵希鹄的读者要辨伪；大明宝钞要人信它；毕澗飞要高房山；张献忠的仇人要他可恨；乾隆要真迹；喀什的两个领事要古写本；康有为要一部能改的经。谁出钱，谁就是那一段假货的作者。</p>
+<p><strong>隔了多久，每站报过一次，这里排成一行。</strong>同年、九年、两年、同年、九十六年、十五年、二十二年、五百三十九年、二十二年、十二年、两百多年、一年、六年、三十六年，落点一千零四十八年。造假与被造的东西，隔得最远的是一部辨伪书与它自己的赝本。</p>
+<p><strong>拆假的人也并排。</strong>隽不疑一句《春秋》拆动了；关吏的样钱拆了三十年；宋璟拆掉了自己；朱熹拆了知州，拆不动纸；赵希鹄拆铜器拆琴，自己被人赝了名；乾隆一对一反；斯坦因拆了，又原谅了；胡应麟把拆变成方法，梁启超说自己拆得不够，又说康有为拆过了头。序里那句话，走完十四站还在：同一件假货被造了两千年，说明那样东西一直没被给足。传国玺还在等下一个买主。</p>
+<details class="app"><summary>考据</summary>
+<ul>
+<li><span class="tag t-new">维基层</span>1938 徐悲鸿购得、张大千借观未还、1944 以金农画换、1949 携出、1968 转王季迁、1997 唐骝千出资买下寄藏、2017 正式捐赠、高居翰「此画是张大千最成功的欺世之作」（引新浪 2012）、1999 年 12 月研讨会与论文集、正反两方名单、何慕文 X 射线检测皆中文维基「溪岸图」条（action=raw 亲抓，2026-09-10）；会期：合榜与派工书原作「开两天研讨会」，四卷皆无一手；主员 2026-09-10 查大都会出版页所载馆方引用格式逐字「International Symposium “Issues of Authenticity in Chinese Painting” Held on December 11, 1999, at the Metropolitan Museum of Art, New York」，新闻稿作「the December 11 symposium」——一天，正文改「12月11日……开了一天」。</li>
+<li><span class="tag t-new">馆方接口</span>大都会藏品接口 objectID 39542（2026-09-10 直取）：title「Riverbank」、artistDisplayName「Dong Yuan」、period「Southern Tang dynasty (937–76)」、creditLine「Ex coll.: C. C. Wang Family, Gift of Oscar L. Tang Family, in memory of Douglas Dillon, 2016」——馆方捐赠年记 2016，维基记 2017 正式捐赠，两说并存，正文只写维基一说，接口年记此。</li>
+<li><span class="tag t-new">库条</span>锚〈溪岸图〉y:949（u1:937，u2:962，cf:2；二级·真物）；「一千零四十八年」＝949→1997 直算；「两千零八十年」＝前82→1999（研讨会之年）直算（2080）；校对员 2026-09-10 改：原稿把研讨会系于 1997，与本段首句 1999 年 12 月自相打架。不裁真伪照〈传国玺〉口径。</li>
+<li><span class="tag t-new">回环</span>落点清单十四项各指回一站（错型五）：汉武帝国库→站1；长安几万人→站2；隋文帝→站3；唐律→站4；开元市井→站5；米芾买家→站6；唐仲友→站7；赵希鹄读者→站8；宝钞→站9；毕澗飞→站10；张献忠仇人→站11；乾隆→站12；五国领事→站13；康有为→站14。年数清单同序。</li>
+</ul>
+<div class="src">
+<a href="https://zh.wikipedia.org/w/index.php?title=%E6%BA%AA%E5%B2%B8%E5%9B%BE&amp;action=raw" target="_blank" rel="noopener">中文维基「溪岸图」，action=raw 直取，2026-09-10：</a>
+<a href="https://zh.wikisource.org/wiki/%E6%BC%A2%E6%9B%B8/%E5%8D%B7071?action=raw" target="_blank" rel="noopener">《汉书》卷七十一〈隽不疑传〉，维基文库 action=raw 直取，2026-09-10：</a>
+<a href="https://collectionapi.metmuseum.org/public/collection/v1/objects/39542" target="_blank" rel="noopener">大都会艺术博物馆藏品接口 objectID 39542（Riverbank），2026-09-10 直取：</a>
+<a href="https://www.metmuseum.org/met-publications/issues-of-authenticity-in-chinese-painting" target="_blank" rel="noopener">大都会艺术博物馆出版页「Issues of Authenticity in Chinese Painting」（1999，317 页；页末馆方引用格式含会期），浏览器直取，2026-09-10：</a>
+<a href="https://www.metmuseum.org/press-releases/the-artist-as-collector-masterpieces-from-the-c-c-wang-family-collection-1999-exhibitions" target="_blank" rel="noopener">大都会新闻稿「The Artist as Collector: Masterpieces from the C. C. Wang Family Collection」（1999 展），浏览器直取，2026-09-10：</a>
+</div>
+</details>
+</div></section>
+<footer><div class="wrap">
+本页由 <code>tools/mining/build_line_page.py</code> 从库内数据生成，不手改。长文出自纪录片叙事稿，考据随文写就；凡各源不一致的数字，做法是一个都不给。
+<div class="row">
+<a href="../timeline.html#line=zuojia">在图上走一遍 →</a>
+<a href="index.html">中国帝王寿命数据库</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-zuojia.md" target="_blank" rel="noopener">资料与出处 ↗</a>
+<a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%%E5%%8B%%98%%E8%%AF%%AF&amp;title=%%E5%%8B%%98%%E8%%AF%%AF%%EF%%BC%%9A" target="_blank" rel="noopener">报个错 ↗</a>
+</div></div></footer>
+<dialog id="lb"><button id="lbx" type="button" aria-label="关闭">✕</button><img id="lbi" alt=""><div id="lbc"></div></dialog>
+<script>
+// 深浅色切换：本页深色为本色，浅色是读者的选择；存 localStorage 'il-theme'（与主站共用）
+(function(){
+  var b=document.getElementById('theme-toggle'); if(!b) return;
+  var root=document.documentElement;
+  function label(){ b.textContent = root.getAttribute('data-theme')==='light' ? '🌙 深色' : '☀ 浅色'; }
+  label();
+  b.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme')==='light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    try{ localStorage.setItem('il-theme', next); }catch(e){}
+    label();
+  });
+})();
+// 进度条与导轨高亮。整页只有这一段脚本，无依赖、无外链。
+var bar=document.getElementById('bar'),links=[].slice.call(document.querySelectorAll('#rail a')),
+    secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+function tick(){
+  var h=document.documentElement,y=h.scrollTop||document.body.scrollTop,
+      m=(h.scrollHeight-h.clientHeight)||1;
+  bar.style.width=(100*y/m)+'%';
+  var at=0;
+  for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].getBoundingClientRect().top<h.clientHeight*0.42) at=i; }
+  for(var j=0;j<links.length;j++) links[j].className=(j===at?'on':'');
+}
+addEventListener('scroll',tick,{passive:true});addEventListener('resize',tick);tick();
+
+// 点开放大。图注与署名跟着进去——放大了更该说清这是谁的
+var lb=document.getElementById('lb'),lbi=document.getElementById('lbi'),lbc=document.getElementById('lbc');
+[].forEach.call(document.querySelectorAll('button.zoom'),function(b){
+  b.addEventListener('click',function(){
+    lbi.src=b.getAttribute('data-src'); lbi.alt=b.getAttribute('data-cap')||'';
+    var cap=b.getAttribute('data-cap')||'', who=b.getAttribute('data-who')||'',
+        full=b.getAttribute('data-full')||'';
+    lbc.innerHTML='';
+    var t=document.createElement('div'); t.textContent=cap+(cap&&who?'　':'')+who; lbc.appendChild(t);
+    if(full){var a=document.createElement('a'); a.href=full; a.target='_blank'; a.rel='noopener';
+      a.textContent='在 Commons 看原尺寸 ↗'; var d=document.createElement('div');
+      d.style.marginTop='.4rem'; d.appendChild(a); lbc.appendChild(d);}
+    if(lb.showModal) lb.showModal(); else lb.setAttribute('open','');
+  });
+});
+document.getElementById('lbx').addEventListener('click',function(){lb.close?lb.close():lb.removeAttribute('open')});
+lb.addEventListener('click',function(e){ if(e.target===lb) lb.close&&lb.close(); });
+</script>
+</body></html>
