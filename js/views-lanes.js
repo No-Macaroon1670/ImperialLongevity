@@ -25,8 +25,9 @@ import { eventLegend as chipRow } from './events-ui.js';
 // 色槽表原本写在这里，2026-09-09 迁进 palette.js：KM 与箱线也要这八槽，
 // 而那两张图不该为取个颜色去 import 泳道视图（视图之间不互相倒挂）。
 import { SLOT_VARS, OTHER_VAR, slotVar } from './palette.js';
-// 河流图与地方线页早已从本模块取 slotVar，原样转手，不为迁址改它们的引线
-export { slotVar };
+// 河流图与地方线页早已从本模块取 slotVar，原样转手，不为迁址改它们的引线。
+// OTHER_VAR 同此转手：灰河（合并的第三层）不在色槽表里，取的正是这个中性灰
+export { slotVar, OTHER_VAR };
 
 // ── 朝代取色：区间图着色 ──────────────────────────────────────────────────
 // 时间上重叠的两个政权必须异色；不重叠的可以安全复用同一槽位（唐与明同为槽 1 无妨）。
@@ -105,21 +106,28 @@ export function shortName(e) {
  * 之后算，故一处滤干净即可。
  *
  * **meta 带**（2026-09-09 库主裁「可以画」）：第三层的判据就是「君主记录不入表」，
- * 于是它们一位君主也没有、长不出常规的带。改由元数据起讫（d.s–d.e）出一条无君主段的
+ * 于是它们一位君主也没有、长不出常规的带。改由元数据起讫（d.s–d.e）出无君主段的
  * meta 带——竖河把它画成半透明淡带（与「政权缺皇帝的空白期」同一档，见 views-river 的
- * BED_OP），并把它算进河宽（当时并存的政权数）；承继丝（SUCCESSION／MERGED_INTO／
- * SPRANG_FROM）指向第三层的那些键因此有带可挂。泳道端一概滤掉（见 renderLaneTimeline
- * 的 filter）：三十六条带不进行分配，春秋十五列国与水西那一千三百年会把行数撑爆——
- * 这就是库主同日说的「泳道河道区别」。showMinor === false 时上面那道门仍先挡掉。
+ * BED_OP），并把它算进河宽（当时并存的政权数）。泳道端一概滤掉（见 renderLaneTimeline
+ * 的 filter）：带不进行分配，春秋列国与水西那一千三百年会把行数撑爆——这就是库主同日
+ * 说的「泳道河道区别」。showMinor === false 时上面那道门仍先挡掉。
+ *
+ * **合成一条**（2026-09-09 库主改令「考虑小政权合为一个灰色河流，上边写着其实合并了
+ * 多少个小政权」）：三十六条各画一条的代价是春秋段并存 21 股，375 宽每股 13px，
+ * 东周诸王的名字落了字。故不再各出一带，改按三十六个起讫的**并集**合成，有断即断
+ * （前208–前193、前107–60 两处真空档不连，那正是西汉一统的年份，不该凭空多出一股）：
+ * 每段一条带，河宽只加 1 股，带上另挂 minors（本段涉及的政权，按起年排）与
+ * changes（逐年并存数的变点，供竖河写「小政权 ×N」与出「该年在世」的卡）。
  */
 export function buildBands(list, opts = {}) {
   const bands = [];
+  const minors = [];
   for (const d of DYNASTIES) {
     if (opts.showMinor === false && d.tier === 3) continue;
     const emps = list.filter((e) => e.dynKey === d.key);
     if (!emps.length) {
-      // 讫年退让半年：李蜀、中天八国这类起讫同年的带，零长度画不出也排不进车道
-      if (d.tier === 3) bands.push({ d, s: d.s, e: Math.max(d.e, d.s + 0.5), segs: [], preRule: [], n: 0, meta: true });
+      // 讫年退让半年：李蜀、中天八国这类起讫同年的政权，零长度画不出也排不进车道
+      if (d.tier === 3) minors.push({ key: d.key, name: d.name, s: d.s, e: Math.max(d.e, d.s + 0.5), d });
       continue;
     }
     const segs = [];
@@ -156,8 +164,54 @@ export function buildBands(list, opts = {}) {
     const e2 = Math.max(...segs.map((g) => g.x));
     bands.push({ d, s, e: e2, segs, preRule, n: emps.length });
   }
+  for (const b of mergeMinors(minors)) bands.push(b);
   bands.sort((a, b) => a.s - b.s || a.e - b.e);
   return bands;
+}
+
+/** 灰河的键前缀。合成后可能不止一段（真空档处断开），故键带段号；
+ *  竖河一律按前缀认（isMinorBand），不认段号 */
+export const MINOR_BAND_KEY = '__minor__';
+export const MINOR_BAND_NAME = '小政权';
+export const isMinorBand = (k) => typeof k === 'string' && k.startsWith(MINOR_BAND_KEY);
+
+/**
+ * 三十六个第三层政权 → 一条灰河（按起讫并集断成几段）。
+ * 每段带上：
+ *   minors  本段涉及的政权（按起年排，带真实起讫）——悬停卡按年现筛；
+ *   changes 「并存数」的变点 [{t, n}]，首项即段首。写标签只在变点写（不逐年写），
+ *           计数用**闭区间**（起年、讫年当天都算在世），与卡里列的名单同一口径；
+ *   total   合并了多少家（图上要写出来的那个数，也是数据表那一行的括号数）。
+ */
+function mergeMinors(minors) {
+  if (!minors.length) return [];
+  const ms = minors.slice().sort((a, b) => a.s - b.s || a.e - b.e);
+  const spans = [];
+  for (const m of ms) {
+    const last = spans[spans.length - 1];
+    if (last && m.s <= last.e) { last.e = Math.max(last.e, m.e); last.ms.push(m); }
+    else spans.push({ s: m.s, e: m.e, ms: [m] });
+  }
+  return spans.map((sp, i) => {
+    // 变点取「立国之年」与「亡国次年」：闭区间计数下，黄国讫于前647 则前646 才少一家，
+    // 把变点记在讫年本身会让图上多写六年的旧数
+    // 计数一律按**元数据讫年**（m.d.e），不按上面兜半年的绘图讫年：李蜀 994–994
+    // 若按 994.5 算，变点会落在半年上，图上写出「995.5」这种年份
+    const cuts = [...new Set(sp.ms.flatMap((m) => [m.s, m.d.e + 1]))].sort((p, q) => p - q);
+    const changes = [];
+    for (const t of cuts) {
+      const n = sp.ms.filter((m) => m.s <= t && t <= m.d.e).length;
+      if (!n) continue;                       // 讫年之后那一刻（段末）不写
+      if (!changes.length || changes[changes.length - 1].n !== n) changes.push({ t, n });
+    }
+    const d = {
+      key: `${MINOR_BAND_KEY}${i + 1}`,
+      name: MINOR_BAND_NAME,
+      s: sp.s, e: sp.e, u: false, tier: 3,
+    };
+    return { d, s: sp.s, e: sp.e, segs: [], preRule: [], n: 0, meta: true,
+      minors: sp.ms, changes, total: minors.length };
+  });
 }
 
 /**

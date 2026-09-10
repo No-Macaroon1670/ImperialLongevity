@@ -35,11 +35,13 @@
 // notes 已撤：河流的「为什么这样画」整块搬去 README／about.html（2026-09-08 去 clutter 案 D5）
 import { el, h, linear, hoverable, tableView, fmtYearAxis, fmtSpan, fmt1, textWidth, glide } from './charts.js';
 import { DYN_STATS } from './data.js';
-import { ERAS, SUCCESSION, MERGED_INTO, SPRANG_FROM, ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS, eraAt } from './dynasties.js';
+import { ERAS, SUCCESSION as SUCCESSION_0, MERGED_INTO as MERGED_INTO_0, SPRANG_FROM as SPRANG_FROM_0,
+  ORDER_HINT, ORTHODOX, SECONDARY, DYN_MAP, TRANSITIONS, eraAt } from './dynasties.js';
 import { EVENTS, EVENT_KINDS, LEFT_BANK, evAnchor, evFlags, evRank, evVisible, fanOut } from './events.js';
 import { nianhaoSegs, nianhaoTip, nianhaoTitle } from './nianhao.js';
 import { fmtDate } from './schema.js';
-import { buildBands, dynastyColorSlots, slotVar, resolveInk, shortName, eventLegend, evMark } from './views-lanes.js';
+import { buildBands, dynastyColorSlots, slotVar, OTHER_VAR, isMinorBand, MINOR_BAND_NAME,
+  resolveInk, shortName, eventLegend, evMark } from './views-lanes.js';
 import { mountKnowledge, evSpec } from './knowledge.js';
 import { stampHash } from './search.js';
 
@@ -59,6 +61,43 @@ const EPS = 1e-6;
 const BED_OP = 0.16;
 /** 河道间的底色缝：随河宽自适应。窄屏 5px 已够分隔，宽屏同样的 5px 显得挤 */
 const gapFor = (w) => Math.max(5, Math.min(9, w * 0.008));
+
+// ── 法统三表：本模块用的是**改写过**的三份 ────────────────────────────────
+// 三十六个第三层政权在河上合成一条灰河（键 __minor__N）之后，dynasties.js 里
+// 指向它们的边就没有落点了：西夏承定难军、卫满亡入西汉、古蜀／巴亡入秦国……
+// 库主 2026-09-09 要「承继丝改挂到灰河上」，故渲染前按本次的灰河分段把三表改写一遍
+//（remapMinor），本文件此后所有 SUCCESSION／MERGED_INTO／SPRANG_FROM 的读取
+// 读到的都是改写版。灰河不在场时（小政权开关关掉）三表原样，一字不改。
+// 注意：改写只在键或值恰好是第三层时发生，其余条目逐条相同。
+let SUCCESSION = SUCCESSION_0, MERGED_INTO = MERGED_INTO_0, SPRANG_FROM = SPRANG_FROM_0;
+
+/**
+ * 按 minorOf（第三层键 → 它所属的灰河段键）改写三表。
+ *
+ * 一条边只有在**端点与灰河段的端点重合**时才留在表里：定难军亡于 1038 而灰河
+ * 到 1698 才断，那一刻灰河并不消失，表里留着「灰河亡入西夏」会让整条灰河在
+ * 1038 年凭空拐弯。故段中发生的承继改由 renderRiver 现合成一条穿流带（丝上仍
+ * 写各自政权名），留在表里的只有段末的亡入（卫满→西汉、水西→清）与段首的裂出。
+ */
+function remapMinor(minorOf, segAt) {
+  if (!minorOf.size) { SUCCESSION = SUCCESSION_0; MERGED_INTO = MERGED_INTO_0; SPRANG_FROM = SPRANG_FROM_0; return; }
+  const mk = (k) => minorOf.get(k) || k;
+  const build = (src, endpoint) => {
+    const out = Object.create(null);
+    for (const [k, v] of Object.entries(src)) {
+      const k2 = mk(k), v2 = mk(v);
+      if (k2 === v2) continue;                      // 两端同属一条灰河：这条边自己抵消了
+      if (k2 !== k && !endpoint(k, k2)) continue;   // 段中的承继：交给合成穿流带
+      out[k2] = v2;
+    }
+    return out;
+  };
+  const startsSeg = (k, k2) => Math.abs(DYN_MAP.get(k).s - segAt(k2).s) < EPS;
+  const endsSeg = (k, k2) => Math.abs(DYN_MAP.get(k).e - segAt(k2).eRaw) < EPS;
+  SUCCESSION = build(SUCCESSION_0, startsSeg);
+  MERGED_INTO = build(MERGED_INTO_0, endsSeg);
+  SPRANG_FROM = build(SPRANG_FROM_0, startsSeg);
+}
 
 /** 沿法统链上溯到源头，用于把同一支的政权排在一起 */
 function lineageRoot(key) {
@@ -746,6 +785,19 @@ export function renderRiver(host, list, opts) {
     return s2 > b.s ? { ...b, s: s2 } : b;
   });
   if (!bands.length) { host.appendChild(h('p', { class: 'muted', text: '当前筛选无数据。' })); return; }
+  // 灰河（第三层合并成的那条，可能断成几段）：先认出它，再把法统三表改挂过去，
+  // 此后 layoutChannels／buildTransitions 读到的就是改写版（见 remapMinor 的注）
+  const minorOf = new Map();      // 第三层键 → 所属灰河段的键
+  const minorSeg = new Map();     // 灰河段键 → 段（供合成穿流带按年落点）
+  for (const b of bands) {
+    if (!b.meta) continue;
+    minorSeg.set(b.d.key, b);
+    for (const m of b.minors) minorOf.set(m.key, b.d.key);
+  }
+  remapMinor(minorOf, (k) => {
+    const b = minorSeg.get(k);
+    return { s: b.s, eRaw: Math.max(...b.minors.map((m) => m.d.e)) };
+  });
 
   let pxYear = opts.riverPx || 7;
   // 双色「分合」档不进河流（库主 2026-08-28 裁撤）：河宽与分叉数本身就是分合，
@@ -812,6 +864,61 @@ export function renderRiver(host, list, opts) {
     return [Math.max(RX0, b0[0] + w), Math.min(RX1, b0[1] + w)];
   };
   const sample = (key, ta, tb) => sampleEdges((t) => edge(key, t), ta, tb, trans, pxYear);
+
+  // ── 灰河段中的承继丝 ────────────────────────────────────────────────────
+  // buildTransitions 只在河道**出现／消失**的那一刻挂丝，而合并之后古蜀亡于前315、
+  // 定难军亡于 1038 都落在灰河的中途——灰河那一刻并不消失，丝就没了挂处。库主
+  // 2026-09-09 要它们「端点落灰河、丝上仍写各自政权名」，故按同一套穿流带现合成：
+  // 一端取灰河当年的河岸，另一端取对方河道，画法与 flows 逐字相同（见下方绘制处）。
+  // 算不出河岸、或对方当年不在河上的，静默跳过——挂不上不抛错。
+  const addRib = (key, tgt, dir, c, text) => {
+    if (!bandBy.has(key) || !bandBy.has(tgt)) return;
+    const stem = edge(key, c);
+    if (!stem || !edge(tgt, c)) return;
+    // 不叫 list：renderRiver 的形参 list 是皇帝表，同名会把它遮在这一层之外
+    const fs = flowsBy.get(key) || [];
+    if (fs.some((f) => f.tgt === tgt && Math.abs(f.c - c) < 2)) return;   // 过渡窗已挂过
+    fs.push({ key, tgt, dir, c, h: tau, stem, text });
+    flowsBy.set(key, fs);
+  };
+  const nameOf = (k) => (bandBy.get(k) ? bandBy.get(k).d.name : k);
+  for (const b of bands) {
+    if (!b.meta) continue;
+    const segEnd = Math.max(...b.minors.map((m) => m.d.e));
+    // 同年同去向的先并成一条丝：古蜀与巴国同在前316–前315 亡入秦国，两条丝的
+    // 几何逐点相同，画两遍只是把半透明叠成一层深色，丝上的名字反而只剩一个
+    const group = new Map();
+    for (const m of b.minors) {
+      const to = MERGED_INTO_0[m.key];
+      // 段末那一家由过渡窗自己挂（卫满→西汉是汇流、水西→清是收束），这里只补段中的
+      if (to && Math.abs(m.d.e - segEnd) > EPS) {
+        const g = `merge|${to}|${Math.round(m.e)}`;
+        if (!group.has(g)) group.set(g, { dir: 'merge', tgt: to, c: m.e, yr: m.d.e, ns: [] });
+        group.get(g).ns.push(m.name);
+      }
+      const from = SPRANG_FROM_0[m.key];
+      if (from && Math.abs(m.s - b.s) > EPS) {
+        const g = `spring|${from}|${Math.round(m.s)}`;
+        if (!group.has(g)) group.set(g, { dir: 'spring', tgt: from, c: m.s, yr: m.s, ns: [] });
+        group.get(g).ns.push(m.name);
+      }
+    }
+    for (const g of group.values()) {
+      addRib(b.d.key, g.tgt, g.dir, g.c,
+        `${g.ns.join('、')}${g.dir === 'merge' ? '亡入' : '裂出自'}${nameOf(g.tgt)}（${fmtYearAxis(g.yr)}）`
+        + '——它并在这条灰河里（第三层合并），故以穿流带示意。');
+    }
+  }
+  // 承第三层法统的那些（西夏承定难军）：丝挂在承者身上，另一端落灰河。
+  // 过渡窗已给出承统窄颈的（灰河恰在那一刻断）就不再补
+  for (const b of bands) {
+    const pred = SUCCESSION_0[b.d.key];
+    if (!pred || !minorOf.has(pred)) continue;
+    const seg = minorOf.get(pred);
+    if (necks.some((n2) => n2.yk === b.d.key && n2.xk === seg)) continue;
+    addRib(b.d.key, seg, 'spring', b.s,
+      `${b.d.name}承${DYN_MAP.get(pred).name}（${fmtYearAxis(b.s)}）——前身并在这条灰河里（第三层合并），故以穿流带示意。`);
+  }
 
   const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, class: 'river-svg', role: 'img' });
   const defs = el('defs');                 // 河床渐变(首尾洇散 × 河口墨韵)
@@ -931,9 +1038,11 @@ export function renderRiver(host, list, opts) {
   // 否则「诛吕安刘」会正好压在「后 少 帝」的三个字上（用户实测截图）。
   const inkTaken = [];
   for (const b of ordered) {
-    const cvar = slotVar(slots.get(b.d.key));
+    // 灰河不在色槽表里（那张表按 DYNASTIES 逐条分槽）：它取中性灰——合并之后
+    // 这条河本来就不代表哪一家的身份，用「色相用尽」那一档正合语义
+    const cvar = b.meta ? OTHER_VAR : slotVar(slots.get(b.d.key));
     const col = `var(${cvar})`;
-    const st = DYN_STATS.get(b.d.key);
+    const st = DYN_STATS.get(b.d.key) || null;   // 灰河是合成的，统计表里没有这一键
 
     // 河床：淡色底。首尾各向外多要 tau——楔尖与合拢尾就长在这段延伸里，
     // 生前死后窗外的采样返回 null 自动裁掉，无须另算窗的实际半长
@@ -979,24 +1088,50 @@ export function renderRiver(host, list, opts) {
     }
     defs.appendChild(grad);
     const bed = el('path', { d: bedPath, fill: `url(#${gid})`, opacity: BED_OP, class: 'mark', 'data-dyn': b.d.key });
-    // 淡带的政权卡走的就是这一张（河床本来就挂着 hoverable：鼠标悬停出卡、
-    // 触屏轻点出卡，见 charts.hoverable 的两条路径），只是把「皇帝／DSI」两行
-    // 换成说清它为什么没有色块的一行——那两行对第三层恒为 0 与「—」
-    hoverable(bed, () => (b.meta ? [
-      { color: col, value: `${fmtYearAxis(b.d.s)}–${fmtYearAxis(b.d.e)}`, label: '国祚' },
-      { label: '历时', value: `${st.span} 年` },
-      { label: '小政权', value: '君主记录不入表' },
-      ...(b.d.bio ? [b.d.bio] : []),
-      ...(b.d.note ? [b.d.note] : []),
-      '第三层政权：河上只有这条淡带（取河道最细一档），没有君主色块；可在「设置 › 小政权」里关掉。',
-    ] : [
+    // 灰河的卡要列「**该年**在世的小政权」，而 hoverable 的取行回调拿不到事件
+    //（charts.hoverable 的签名是 getRows()）。故先在同一元素上挂一个只记指针
+    // 落在哪一年的监听：同元素的监听按注册顺序跑，这几行注册在 hoverable 之前，
+    // 卡弹出时 hoverY 已是新值。键盘 focus 没有指针，退回段首那一年。
+    let hoverT = null;
+    if (b.meta) {
+      const yearAt = (e2) => {
+        const r = svg.getBoundingClientRect();
+        return y.invert((e2.clientY - r.top) * (H / (r.height || H)));
+      };
+      const mark = (e2) => { hoverT = yearAt(e2); };
+      bed.addEventListener('pointerenter', mark);
+      bed.addEventListener('pointermove', mark);
+      bed.addEventListener('click', mark);
+    }
+    // 政权卡走的就是这一张（河床本来就挂着 hoverable：鼠标悬停出卡、触屏轻点
+    // 出卡，见 charts.hoverable 的两条路径）。灰河那一张换成「该年在世名单」：
+    // 「皇帝／DSI」两行对第三层恒为 0 与「—」，而合并之后单说一条灰河的起讫
+    // 也没有意义——读者真正要问的是「这一年里合着的是哪几家」
+    // 先取整到年再点名单：指针落在 −705.3 那种小数上时，卡头写的是「前706 年」
+    // 而名单按 −705.3 筛，正好把那年立国的曾国（s = −705）漏掉——卡上的数会与
+    // 同一年的「×N」标签差一家（复核实测）。取整之后再夹回本段，两处同一口径
+    const liveAt = () => {
+      const t2 = Math.min(Math.max(Math.round(hoverT === null ? b.s : hoverT), Math.ceil(b.s)), Math.floor(b.e));
+      return { t: t2, live: b.minors.filter((m) => m.s <= t2 && t2 <= m.d.e).sort((p, q) => p.s - q.s) };
+    };
+    hoverable(bed, () => (b.meta ? (() => {
+      const { t: t2, live } = liveAt();
+      const CAP = 16;                 // 并存峰值 14（春秋列国）——照现库一张卡列得完
+      return [
+        { color: col, value: `${fmtYearAxis(b.d.s)}–${fmtYearAxis(b.d.e)}`, label: '这一段' },
+        { label: `${fmtYearAxis(t2)} 年在世`, value: `${live.length} 家` },
+        ...live.slice(0, CAP).map((m) => ({ label: m.name, value: `${fmtYearAxis(m.d.s)}–${fmtYearAxis(m.d.e)}` })),
+        ...(live.length > CAP ? [`……另 ${live.length - CAP} 家（悬停别处可看其余年份）`] : []),
+        `第三层：君主记录不入表的 ${b.total} 个政权在河上合成这一条灰河（只占一条车道），故没有君主色块；可在「设置 › 小政权」里关掉。`,
+      ];
+    })() : [
       { color: col, value: `${fmtYearAxis(b.d.s)}–${fmtYearAxis(b.d.e)}`, label: '国祚' },
       { label: '历时', value: `${st.span} 年` },
       { label: '皇帝', value: `${st.n} 位（当前筛选 ${b.n} 位）` },
       { label: 'DSI', value: st.dsi === null ? '—' : `${fmt1(st.dsi)} 年/帝` },
       ...(b.d.bio ? [b.d.bio] : []),
       ...(b.d.note ? [b.d.note] : []),
-    ]), () => b.d.name);
+    ]), () => (b.meta ? `${b.d.name} ×${liveAt().live.length}（君主记录不入表，第三层）` : b.d.name));
     gBeds.appendChild(bed);
 
     // 穿流带：亡入（或分出）对象不相邻时的半透明细带。画在河床层，
@@ -1018,10 +1153,11 @@ export function renderRiver(host, list, opts) {
         + `L${(xb2 + STEM).toFixed(1)},${yb2.toFixed(1)}`
         + `C${(xb2 + STEM).toFixed(1)},${my.toFixed(1)} ${(xa + STEM).toFixed(1)},${my.toFixed(1)} ${(xa + STEM).toFixed(1)},${ya.toFixed(1)}Z`;
       const rib = el('path', { d, fill: col, opacity: .22, class: 'mark river-flow', 'data-dyn': b.d.key });
+      // f.text＝合成丝自带的说法（灰河段中的那些，丝上写的是各自政权名而非「小政权」）
       hoverable(rib, () => [
-        f.dir === 'merge'
+        f.text || (f.dir === 'merge'
           ? `${b.d.name}亡入${(bands.find((x) => x.d.key === f.tgt) || { d: { name: f.tgt } }).d.name}（${fmtYearAxis(f.c)}）——中间隔着别的河道，故以穿流带示意，点选可点亮。`
-          : `${b.d.name}裂出自${(bands.find((x) => x.d.key === f.tgt) || { d: { name: f.tgt } }).d.name}（${fmtYearAxis(f.c)}）——中间隔着别的河道，故以穿流带示意，点选可点亮。`,
+          : `${b.d.name}裂出自${(bands.find((x) => x.d.key === f.tgt) || { d: { name: f.tgt } }).d.name}（${fmtYearAxis(f.c)}）——中间隔着别的河道，故以穿流带示意，点选可点亮。`),
       ], () => (f.dir === 'merge' ? '亡入' : '分出'));
       gBeds.appendChild(rib);
     }
@@ -1126,6 +1262,46 @@ export function renderRiver(host, list, opts) {
       }
     }
 
+    // 灰河的名字：不是一个名字，是一路上的「小政权 ×N」。
+    // 库主 2026-09-09：「合为一个灰色河流，上边写着其实合并了多少个小政权」——
+    // 而这个数逐年在变（春秋一段从 1 涨到 14 再落回 1），故段首写全称、此后
+    // 只在**变点**写一次（不逐年写：三千年逐年写就是一条字带）。变点太密时
+    // （前721 一年立两国）按像素间距择要写（见下）。
+    // 也不进 labelNodes：吸顶游走的标签会把「×14」带到它根本不成立的年份上。
+    if (b.meta) {
+      // 先挑再画。15px＝11.5 号字的行高再多一线；挤不下时让位给**数大的**那一个
+      //（907 立赵、909 立北平只隔两年＝14px，若按先来后到就永远写不出五代那一段的
+      // 峰值 ×9）。每条标签仍写在它自己那一年上，只是密处少写几条；少写的数在
+      // 悬停卡里一年一年查得到。段首那一条不让位——它带着「小政权」三个字。
+      const picks = [];
+      for (const c of b.changes) {
+        const yy = y(c.t) + 10;
+        const last = picks[picks.length - 1];
+        if (last && yy - last.yy < 15) {
+          if (picks.length > 1 && c.n > last.n) picks[picks.length - 1] = { ...c, yy };
+          continue;
+        }
+        picks.push({ ...c, yy });
+      }
+      picks.forEach((c, i) => {
+        const box = edge(b.d.key, Math.min(b.e, c.t + tau / 2)) || edge(b.d.key, c.t);
+        if (!box) return;
+        const yy = c.yy;
+        const txt = i === 0 ? `${b.d.name} ×${c.n}` : `×${c.n}`;
+        const w2 = textWidth(txt, 11.5);
+        const lx2 = Math.max(GUTTER + 2, Math.min(W - w2 - 2, (box[0] + box[1]) / 2 - w2 / 2));
+        gLabels.appendChild(el('text', {
+          x: lx2, y: yy, 'font-size': 11.5, 'font-weight': 500,
+          fill: 'var(--muted)', 'pointer-events': 'none',
+          stroke: 'var(--page)', 'stroke-width': 3, 'paint-order': 'stroke',
+        }, txt));
+        inkTaken.push([lx2 - 3, lx2 + w2 + 3, yy - 12, yy + 3]);
+      });
+      const box1 = edge(b.d.key, Math.min(b.e, b.s + tau / 2)) || edge(b.d.key, b.s);
+      if (box1) gLabels.appendChild(el('circle', { cx: box1[0] + 5, cy: y(b.s) + 6, r: 3, fill: col }));
+      continue;
+    }
+
     // 朝代名：写在河道起点上方；滚动时吸附于视口上缘，但不越出自身区间
     const box0 = edge(b.d.key, Math.min(b.e, b.s + Math.min(tau, (b.e - b.s) / 2))) || edge(b.d.key, b.s);
     if (!box0) continue;
@@ -1184,7 +1360,10 @@ export function renderRiver(host, list, opts) {
     // 同名多处的（刘裕北伐既灭南燕又灭后秦、东汉统一战争两见）按年份就近取
     const transByW = new Map();
     for (const [pair, tr] of Object.entries(TRANSITIONS)) {
-      const [xk, yk] = pair.split('>');
+      // 第三层的键改读灰河（卫满>西汉 即 灰河>西汉）：合并之后河上没有那一条了。
+      // 落在灰河中途的（定难军>西夏）匹配不上任何一次改道，那条事件照旧退回
+      // 「无歧义／缝上」两级去落位——匹配不上不抛错
+      const [xk, yk] = pair.split('>').map((k) => minorOf.get(k) || k);
       for (const t of trans) {
         if (!t.from.has(xk) || !t.to.has(yk) || t.to.has(xk)) continue;
         const A = t.from.get(xk), B = t.to.get(yk);
@@ -1747,8 +1926,9 @@ export function renderRiver(host, list, opts) {
   const key = ['河宽＝当时并存的政权数，不表示疆域'];
   key.push(`最挤处 ${fmtYearAxis(peakSlice.a)} 年 ${peak} 股`);
   if (markViolent) key.push('右缘红痕＝非正常死亡');
-  key.push(bands.some((b) => b.meta)
-    ? '淡色河床＝称帝前、亡后与无君主在位的年份；整条淡带＝小政权（君主记录不入表）'
+  const metaBand = bands.find((b) => b.meta);
+  key.push(metaBand
+    ? `淡色河床＝称帝前、亡后与无君主在位的年份；那条灰河＝${metaBand.total} 个小政权合成一条，「×N」＝当年并存几家`
     : '淡色河床＝称帝前、亡后与无君主在位的年份');
   if (hasVY) key.push('斜纹半透明＝低置信年份（前841 以前按传统系年推算的坐标）');
   key.push('河道弯入谁家＝并入谁家');
@@ -1772,13 +1952,30 @@ export function renderRiver(host, list, opts) {
     h('a', { href: 'about.html#faq-timeline', text: '这条河为什么这样画 →' }),
   ]));
 
+  // 灰河在表里只占一行：它在图上可能断成几段（真空档处断开），但读者数的是
+  // 「河面上有几条河」，三行「小政权」只会让人以为合并出了三条
+  const rows = [];
+  let metaRow = false;
+  for (const b of ordered) {
+    if (b.meta) {
+      if (metaRow) continue;
+      metaRow = true;
+      const segs = ordered.filter((x) => x.meta);
+      rows.push([rows.length + 1, `${b.d.name}（${b.total}）`,
+        `${fmtYearAxis(Math.min(...segs.map((x) => x.d.s)))}–${fmtYearAxis(Math.max(...segs.map((x) => x.d.e)))}`,
+        Math.round(segs.reduce((a, x) => a + (x.e - x.s), 0)), null, null, '否']);
+      continue;
+    }
+    const st = DYN_STATS.get(b.d.key);
+    rows.push([rows.length + 1, b.d.name, `${fmtYearAxis(b.d.s)}–${fmtYearAxis(b.d.e)}`, st.span, b.n,
+      st.dsi === null ? null : st.dsi.toFixed(1), b.d.u ? '是' : '否']);
+  }
   host.appendChild(tableView(
-    ['次序', '朝代', '起讫', '历时(年)', '皇帝数', 'DSI', '大一统'],
-    ordered.map((b, i) => {
-      const st = DYN_STATS.get(b.d.key);
-      return [i + 1, b.d.name, `${fmtYearAxis(b.d.s)}–${fmtYearAxis(b.d.e)}`, st.span, b.n,
-        st.dsi === null ? null : st.dsi.toFixed(1), b.d.u ? '是' : '否'];
-    }),
+    ['次序', '朝代', '起讫',
+      { text: '历时(年)', title: '灰河那一行＝三十六家合并后河上真正有水的年数（两处真空档不计）' },
+      { text: '皇帝数', title: '灰河那一行为「—」：第三层的判据就是君主记录不入表' },
+      'DSI', '大一统'],
+    rows,
     { caption: '河道次序（左→右）与朝代一览' },
   ));
 }
