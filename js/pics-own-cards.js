@@ -16,6 +16,7 @@
 import { MUSEUM_PIC } from './pics-museum-cards.js';
 
 export const OWN_PIC = {
+  上海租界: { src: 'img/used/shanghai-waitan-yejing-2016.jpg', role: '主体', q: 3, cap: '外滩夜色，2016 年：海关大楼（1927）、沙逊大厦（1929）、中国银行大楼（1937）——租界存续期里长出来的一排；库主 2026-09-09 裁只挂租界，不挂开埠' },
   秘色瓷: 'img/used/famensi-mise-kuikou-pan.jpg',
   越王勾践剑: 'img/used/hubei-goujianjian.jpg',
   天坛: { src: 'img/used/tiantan-qiniandian-roof.jpg', role: '主体', q: 3, cap: '祈年殿三重檐与匾额' },   // 09-04 替换现图（判官）
