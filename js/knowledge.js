@@ -296,6 +296,9 @@ export function evSpec(ev) {
     baidu: ev.b, noBaidu: !!ev.nb, museum: ev.m, wsrc: ev.wsrc,
     // pics：自摄／馆方开放图按 cardPics() 的取图规则合成——main 一张，extra 至多一张（语境／细节）
     pics: cardPics(ev.n),
+    // wp（图页）：卡片缩略图改取这个维基页，正文仍取 w——用在 w 页无图或图不对题时
+    // （巴富尔到任开埠：w「上海开埠」的图是一张系列模板图，wp 指到「原英国驻上海总领事馆」；库主 2026-09-09）
+    picPage: ev.wp || null,
     q: ev.ya || ev.n, yt: true,
     // yc：库内自撰简注。无维基条目、或维基摘要抓取失败时，fillCard 拿它
     // 顶上摘要区——对 nb/无 w 判例族而言，这条注恰恰是全库考据最厚的地方
@@ -827,7 +830,13 @@ async function fillCard(card, spec) {
   if (s && s.extract && s.type !== 'disambiguation') {
     card.title.textContent = spec.display || s.title || spec.title;
     card.ext.textContent = s.extract;
-    if (!localPic && s.thumbnail && s.thumbnail.source) { card.img.src = s.thumbnail.source; pic(true); }
+    if (!localPic && spec.picPage) {
+      // 图页另抓一次摘要只为它的缩略图；抓不到退回 w 页自己的图
+      const sp = await fetchSummary(spec.picPage);
+      if (card.el.dataset.key !== spec.id) return;
+      const src = (sp && sp.thumbnail && sp.thumbnail.source) || (s.thumbnail && s.thumbnail.source);
+      if (src) { card.img.src = src; pic(true); }
+    } else if (!localPic && s.thumbnail && s.thumbnail.source) { card.img.src = s.thumbnail.source; pic(true); }
     if (s.content_urls && s.content_urls.desktop) {
       card.wiki.href = s.content_urls.desktop.page + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
     }
