@@ -90,7 +90,9 @@ def load_events():
     # 按行锚定：events.js 一行一条是硬约定。旧式 [^{}] 掐块会被 yl 里照录的
     # 维基文库 wikitext 花括号模板（{{*|…}}、{{SKchar|…}}）掐飞整条
     # ——2026-08-26 粽子/奉先两条实踩（简注与落点齐失），故改此式
-    for m in re.finditer(r'^  \{ (.*?y:\s*-?\d+.*) \},?\s*$', src, re.M):
+    # 行尾允许 `,   // 落库标签` 注释（land_wf_rows 落库自 2026-09 起皆带；2026-09-10 作假线建线实踩：
+    # 长物志／石渠宝笈初编／斯坦因等带注释的锚条整条落空，站头无简注）
+    for m in re.finditer(r'^  \{ (.*?y:\s*-?\d+.*) \},?\s*(?://.*)?$', src, re.M):
         b = m.group(1)
         def g(k):
             mm = re.search(FIELD % k, b)
