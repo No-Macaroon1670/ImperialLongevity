@@ -1,5 +1,9 @@
 // pics-own-cards.js — 条卡直挂自摄图的**手选表**（用户 2026-08-22 定）。
 // 准入即判断：内库照片质量够硬才进——主体清晰、糊块不碍观、说明牌不喧宾。
+// **说明牌／展板的照片不上卡**（库主 2026-09-09：画质差看不清，抛弃了图片的优势，牌上的话都能写进条文；
+// 牌照的用处只在识别那一步加信息）。例外：板上是地图、画作翻拍、书影、人像插图，而条目又无维基图可退的
+// （簪花、四般闲事、糖霜谱、蜀语、吉州窑），以及前景有真器物的展柜照（老官山、二里头）。09-09 依此撤了
+// 官窑、邛窑、广德寺三张文字板（各有维基图可退），文件退回 img/own。
 // 宁缺勿滥；这张表永远手工维护，不自动生成。卡片优先用这里的图，
 // 维基缩略图退居替补；无维基条目（绿松石龙一类）从此也能有脸。
 // 图注一律「图为本库自摄」，署名规矩照旧只记年月（见本地账册 docs/holding/pics-own.md）。
@@ -44,7 +48,6 @@ export const OWN_PIC = {
   建窑: 'img/used/suining-songci-heiyou-tuhaowen-chazhan.jpg',
   吉州窑: 'img/used/suining-songci-jianyao-jizhouyao-banban.jpg',
   磁州窑: { src: 'img/used/guobo-yuan-cizhouyao-yingxitu-guan.jpg', role: '主体', q: 3, cap: '磁州窑白釉黑花婴戏图罐，元，辽宁绥中出土，国博' },   // 09-04 替换现图（判官）
-  邛窑: 'img/used/suining-songci-qiongyao-banban.jpg',
   耀州窑: { src: 'img/used/guobo-yaozhouyao-qingyoukehua-laifuzun.jpg', role: '主体', q: 3, cap: '耀州窑青釉刻花莱菔尊，国博' },   // 09-04 替换现图（判官）
   金鱼村窖藏: 'img/used/suining-songci-qianyan-jinyucun-jiaocang.jpg',
   四般闲事: [
@@ -53,7 +56,6 @@ export const OWN_PIC = {
   ],
   簪花: 'img/used/suining-songci-zanhua-xisu-banban.jpg',
   糖霜谱: 'img/used/suining-songci-tangshuangpu-banban.jpg',
-  广德寺: 'img/used/suining-songci-guangdesi-banban.jpg',
   蜀语: 'img/used/suining-songci-lishi-fuzi-banban.jpg',
   大封天下城隍: [
     { src: 'img/used/shanghai-chenghuangmiao-shenkan.jpg', role: '主体', q: 0 },
@@ -82,7 +84,6 @@ export const OWN_PIC = {
     { src: 'img/used/suining-songci-longquanyao-qingyou-ping.jpg', role: '主体', q: 0 },
     { src: 'img/used/suining-songci-longquanyao-heye-gaiguan.jpg', role: '语境', q: 3, cap: '龙泉窑荷叶盖罐，元（晚于本条南宋窗口），遂宁宋瓷博物馆' },
   ],
-  官窑: 'img/used/suining-songci-mingyao-jingchu-banban.jpg',
   圆明园: [
     { src: 'img/used/yuanmingyuan-dashuifa.jpg', role: '主体', q: 0 },
     { src: 'img/used/yuanmingyuan-yuanyingguan.jpg', role: '语境', q: 3, cap: '圆明园远瀛观遗址石柱' },
