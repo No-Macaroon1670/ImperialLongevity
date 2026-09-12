@@ -1,6 +1,7 @@
 // 王朝全景页(timeline.html)的章节表：竖向河流与横向泳道。
 import { sel, seg, rng, tog, grp } from './shell.js';
 import { MINOR_TIP, writeMinor } from './pref-minor.js';
+import { LONG_LABEL, LONG_OPTIONS, LONG_TIP, writeLong } from './pref-long.js';
 import { renderLaneTimeline } from './views-lanes.js';
 import { renderRiver } from './views-river.js';
 
@@ -64,6 +65,16 @@ export const SECTIONS = [
         // 全＝各带常显、选＝点选朝代才显、无＝关。两个视图共用一档：
         // 泳道线贴带缘（并立期上半轨翻上缘）、河流线贴各股左缘
         seg('laneNianhao', '纪年', [['all', '全'], ['sel', '选'], ['off', '无']]),
+        // 知识卡正文两档（库主 2026-09-12 令「default 长文…词条就会显示库内 YL
+        // where available」，缘由是「现在我们大部分长文都被维基盖了」）：与时光舆图
+        // 「设置」里那颗共用 localStorage 'il.long'（js/pref-long.js），一处换档另一处
+        // 下次打开即生效。两个视图都摆——河流两翼、泳道角卡开的是同一种卡；
+        // 换档时本页已开着的卡当场重填（knowledge.js 听 il:longpref）
+        // norender：它管的是点开一条之后读到什么，图面与它无关；重画本节会把
+        // 读者正开着的那张卡一并推倒（复核 2026-09-12 实测：拨档后 evt: 卡直接没了），
+        // 故只落存值、发信号，重填交给 knowledge.js 的 il:longpref 监听
+        seg('longText', LONG_LABEL, LONG_OPTIONS, undefined,
+          { title: LONG_TIP, onSet: writeLong, norender: true }),
       ]),
     ],
     render: (host, l, o) => {

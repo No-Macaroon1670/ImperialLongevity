@@ -22,6 +22,8 @@ import { relOf, citeMeta } from './links-index.js';
 // 只取一个反查表（地名 → 地方线 key）。places.js 是叶子（除一个角色 Set 外无依赖），
 // 不把地方线那一套连带拖进每一张知识卡
 import { placeOfLoc } from './places.js';
+// 「卡片正文给哪一份」的存值与信号（库主令 2026-09-12「default 长文」，见 js/pref-long.js）
+import { readLong, LONG_EVENT } from './pref-long.js';
 
 /**
  * 值得自动弹卡的名君(姓名 → 权重 1–3):滚动经过时自动打开,权重高者优先。
@@ -303,6 +305,12 @@ export function evSpec(ev) {
     // yc：库内自撰简注。无维基条目、或维基摘要抓取失败时，fillCard 拿它
     // 顶上摘要区——对 nb/无 w 判例族而言，这条注恰恰是全库考据最厚的地方
     yc: ev.yl || ev.yc,  // 卡上取长文（yl），无长文退 yc——悬浮 tip 端仍直读 ev.yc（短）
+    // yl：库内长注**本身**，与上面那条 yc 分列（库主令 2026-09-12「default 长文」）。
+    // 为什么不复用 yc：yc 是「摘要顶不上时的替补」，凡有注即非空（长注没有就退短注）；
+    // 这里要判的是「这一条到底有没有长注」——有长注才压得过维基摘要，只有短注的
+    // （一句话那种）压不过，压了反而是拿一行字换掉一段导言。两者语义不同故不合并，
+    // 也免得悬浮 tip 端与人物卡／朝代卡那几支（它们只认 yc）跟着受牵连
+    yl: ev.yl || null,
     // lines：这件事在哪几条故事线上当过站（生成表 line-stops.js）——卡上打角标链去故事页
     lines: LINE_STOPS[ev.n] || [],
     // rel：边表里的节点 id（links.js 头注的体例）。fillCard 据此取「必然联系」栏，
@@ -366,6 +374,23 @@ function mountSolo(wideMq) {
   };
 }
 
+/** 本页造出来的所有卡（mkCard 是全库唯一的卡构造器，四种挂载都走它）。
+ *  只为一件事：「卡片正文」偏好一换，**已经开着的卡**要当场换过来——
+ *  不然读者得先关掉再点开才看得见，那比不做还费解。 */
+const LIVE_CARDS = new Set();
+addEventListener(LONG_EVENT, () => {
+  for (const c of LIVE_CARDS) {
+    if (!c.el.isConnected) { LIVE_CARDS.delete(c); continue; }   // 已被 destroy 掉的单卡
+    const sp = c._relSpec;
+    if (!sp || !c.el.dataset.key) continue;                      // 这张还没填过／已关
+    // fillCard 开头有「同 key 早退」，不清 key 重填不动；返回栈按原样递回去，
+    // 免得换一次偏好把读者从关系栏点进来的那一级「← 返回」抹掉
+    c._relNav = { prev: c._relPrev || null };
+    c.el.dataset.key = '';
+    fillCard(c, sp);
+  }
+});
+
 function mkCard(sideClass) {
   const img = h('img', { class: 'kp-thumb', alt: '' });
   // 图点开放大(2026-08-25 用户令,条卡与讲解卡同待遇):开关在 dataset.zoomcap——
@@ -421,7 +446,9 @@ function mkCard(sideClass) {
   const el = h('div', { class: `kp ${sideClass}` }, [
     close, img, img2, head, title, lines, ext, rel, h('div', { class: 'kp-links' }, [wiki, baidu, museum, wsrc, h('span', { class: 'kp-vids' }, [yt, bili])]), src,
   ]);
-  return { el, img, img2, head, title, lines, ext, rel, wiki, baidu, museum, wsrc, yt, bili, close, src, srcTxt, srcRel };
+  const card = { el, img, img2, head, title, lines, ext, rel, wiki, baidu, museum, wsrc, yt, bili, close, src, srcTxt, srcRel };
+  LIVE_CARDS.add(card);     // 偏好换档时按这张登记表重填（见 LIVE_CARDS 头注）
+  return card;
 }
 
 /** 皇帝卡的取数说明书。库内 387 位君主全有姓名,故标题恒为人名 */
@@ -807,6 +834,18 @@ async function fillCard(card, spec) {
   card.bili.href = `https://search.bilibili.com/all?keyword=${encodeURIComponent(spec.q)}`;
   card.yt.style.display = spec.yt ? '' : 'none';
   card.bili.style.display = spec.yt ? '' : 'none';
+  // 库内长注优先（库主令 2026-09-12：「default 长文…词条就会显示库内 YL where available」）。
+  // 判在 await 之前有两个好处：① 长注是本地的，不必陪着维基那一次跨洋往返干等——
+  // 与关系栏「点火即不管」同一个道理；② 下面「维基有摘要」那一支于是只需少写一行，
+  // 别的（标题、缩略图含 picPage、按 content_urls 改对的全文链）**一概照旧**——
+  // 摘要仍要抓，换的只是正文那一段。偏好为 wiki、或这一条没有长注时 longFirst 为假，
+  // 一切与从前分毫不差（含摘要抓不到退 spec.yc 的老路）。
+  const longFirst = readLong() === 'yl' && !!spec.yl;
+  if (longFirst) {
+    card.ext.innerHTML = ycParas(spec.yl);
+    card.el.classList.add('kp-yc-full');
+    card.srcTxt.textContent = localPic ? localPic.note + '；本库长注' : '本库长注';
+  }
   card.el.classList.add('on');
   // 关系栏与摘要各走各的（点火即不管）：边表是本地的（毫秒），维基摘要要过网
   // （半秒到几秒，且 fetchSummary 无超时）。读者不必为一次跨洋往返等着看本库
@@ -829,7 +868,7 @@ async function fillCard(card, spec) {
   }
   if (s && s.extract && s.type !== 'disambiguation') {
     card.title.textContent = spec.display || s.title || spec.title;
-    card.ext.textContent = s.extract;
+    if (!longFirst) card.ext.textContent = s.extract;   // longFirst 时正文已是库内长注（见上）
     if (!localPic && spec.picPage) {
       // 图页另抓一次摘要只为它的缩略图；抓不到退回 w 页自己的图
       const sp = await fetchSummary(spec.picPage);
@@ -840,6 +879,10 @@ async function fillCard(card, spec) {
     if (s.content_urls && s.content_urls.desktop) {
       card.wiki.href = s.content_urls.desktop.page + (spec.sec ? `#${encodeURIComponent(spec.sec)}` : '');
     }
+  } else if (longFirst) {
+    // 摘要这一次没抓到，而正文早已是库内长注（见上 longFirst 那一段），什么都不必补：
+    // 不重写正文（写的是同一段字）、也不把卡脚那句改成「本库自撰简注」。
+    // 缩略图与全文链此时确实没有——那是摘要没回来的旧病，与本档无关，行为与从前一致。
   } else if (spec.yc) {
     // 有词条标题,但这一次没能拉到摘要(网络、限流、条目本身缺摘要都可能):
     // 别空手,库内简注顶上——待遇与「无维基条目」分支相同(全文、kp-yc-full)

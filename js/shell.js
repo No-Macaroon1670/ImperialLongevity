@@ -3,6 +3,7 @@ import { h } from './charts.js';
 import { EMPERORS, DYNASTIES, DYN_STATS, GROUPINGS, COVARIATES, unifiedOf } from './data.js';
 import { ERAS } from './dynasties.js';
 import { readMinor } from './pref-minor.js';
+import { readLong } from './pref-long.js';
 import { describe, fmtP } from './stats.js';
 
 // 页首互链一行（2026-09-08 去 clutter 案 §一.1）。件在零依赖叶子 js/sib-nav.js——
@@ -36,6 +37,10 @@ const S = {
   // 小政权（第三层）显隐：默认显示，且**跨页记着**——同一颗开关也长在时光舆图上，
   // 两页共用 localStorage 'il.minor'（js/pref-minor.js）。初值从存值来，不是写死的 true
   showMinor: readMinor(),
+  // 知识卡正文给哪一份：'yl' 库内长注（有则用）／'wiki' 维基摘要。默认长注
+  //（库主 2026-09-12 令「default 长文」）。同一颗开关也长在时光舆图上，
+  // 两页共用 localStorage 'il.long'（js/pref-long.js）；初值从存值来
+  longText: readLong(),
   // 年号纪年线三档（2026-08-28 库主定）：全＝各带常显、选＝点选朝代才显、无＝关。
   // 默认「选」——点带即出，与承继丝同一手势；常显交给「全」档
   laneNianhao: 'sel',
@@ -232,8 +237,15 @@ const tog = (key, label, when, opts = {}) =>
 let themeBtnRef = null;   // 深色开关的活节点：谁建「设置」块谁把它接走（2026-08-22 统一令）
 // opts.short：{ 值 → 窄屏短字面 }（库主 2026-09-08：「竖向河流」→「竖」）；
 // opts.labelHidden：组名只留给读屏（去「视图」二字）。两项缺省皆无，行为不变
+// opts.title／opts.onSet：口径 tooltip 与「除改 S 外还要做的事」，与 sel／tog 同式
+//（2026-09-12 补：「卡片正文」两档要把偏好写进 localStorage，见 js/pref-long.js）
+// opts.norender：这一档不进图面，翻动后**不重画本节**，只就地换按钮的选中态
+//（2026-09-12 补，复核实测：「卡片正文」管的是点开一条之后读到什么，图面与它无关；
+//  而 render() 会把本节整个重建，读者正开着的那张知识卡连带被推倒——换一次偏好
+//  卡就没了，比不刷还难受。舆图那颗下拉本来就不 draw()，两页于是同一个脾气）
 const seg = (key, label, options, when, opts = {}) =>
-  ({ type: 'seg', key, label, options, when, short: opts.short, labelHidden: opts.labelHidden });
+  ({ type: 'seg', key, label, options, when, short: opts.short, labelHidden: opts.labelHidden,
+    title: opts.title, onSet: opts.onSet, norender: opts.norender });
 // 连续量用滑杆。时间缩放本来给的是三档预设，可「多宽算合适」取决于屏宽与
 // 你正在看哪一段，三档常常没有一档正好；滑杆让读者自己定，并且看得见量纲。
 const rng = (key, label, { min, max, step = 1, fmt }, when) =>
@@ -322,7 +334,23 @@ function buildControls(sec) {
         const b = h('button', {
           type: 'button', class: `seg${on ? ' on' : ''}`, role: 'radio', 'aria-checked': String(on),
           text: lab,
-          onclick: () => { S[c.key] = /^-?\d+$/.test(String(v)) ? +v : v; render(); },
+          onclick: (e) => {
+            const val = /^-?\d+$/.test(String(v)) ? +v : v;
+            S[c.key] = val;
+            if (c.onSet) c.onSet(val);      // 跨页偏好在这里落盘（眼下只有「卡片正文」）
+            // 不进图面的那种（norender）只换选中态就收手：重画本节会连带
+            // 推倒读者正开着的知识卡（见 seg() 的注）。按钮是 render() 建的，
+            // 不重画就得自己把 on／aria-checked 挪过来
+            if (c.norender) {
+              for (const sib of boxSeg.children) {
+                const on2 = sib === e.currentTarget;
+                sib.classList.toggle('on', on2);
+                sib.setAttribute('aria-checked', String(on2));
+              }
+              return;
+            }
+            render();
+          },
         });
         // 窄屏短字面（库主 2026-09-08：「竖向河流」→「竖」，触摸区不缩）。
         // 只写属性、显隐全交给 CSS 的 @media——JS 不该知道断点在哪儿，
@@ -338,6 +366,9 @@ function buildControls(sec) {
       // 不删 c.label——radiogroup 的 aria-label 还要用它报组名
       const segLab = h('label', { class: `seg-label${c.labelHidden ? ' lab-hidden' : ''}` },
         [h('span', { text: c.label }), boxSeg]);
+      // 口径 tooltip 与 sel／tog 同式（虚线把手由 .has-tip 给）；组名藏起来的那种
+      // 也照挂，读屏的组名已由 radiogroup 的 aria-label 报过
+      if (c.title) { segLab.title = c.title; segLab.classList.add('has-tip'); }
       wrap.appendChild(segLab);
     } else if (c.type === 'range') {
       const out = h('span', { class: 'rng-val', text: c.fmt(S[c.key]) });

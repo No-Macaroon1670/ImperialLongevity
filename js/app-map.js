@@ -49,6 +49,7 @@ import { LINES } from './lines.js';
 import { DYNASTIES } from './dynasties.js';
 // 小政权（第三层）开关的共用件：判据、字面与存值只有一份，王朝之河那颗开关吃的是同一个
 import { MINOR_KEYS, MINOR_TIP, readMinor, writeMinor } from './pref-minor.js';
+import { LONG_LABEL, LONG_OPTIONS, LONG_TIP, readLong, writeLong } from './pref-long.js';
 import { WORLDMAP, projectWorld } from './basemap-world.js';
 import { fmtYearAxis } from './year.js';
 import { mountSib } from './sib-nav.js';
@@ -2017,6 +2018,32 @@ function mountSettings() {
       writeMinor(cb.checked);
       syncAll();
     });
+  }
+  // 知识卡正文两档（库主 2026-09-12 令「default 长文」）：与王朝之河「设置」里那颗
+  // 共用 localStorage 'il.long'（js/pref-long.js）。同样**在 JS 里长出来**，理由与
+  // 上面那颗小政权一样（初态在存值里，写进 map.html 会先按默认画再被脚本改掉）。
+  // 这一颗是两选一而非开关，故用下拉：字面「库内长注（有则用）／维基摘要」两档
+  // 都得摆得出来，勾选框只说得出其中一头。翻动不必 draw()——图面与它无关，
+  // 阅读坞里开着的那张卡由 knowledge.js 听 il:longpref 自己重填
+  if (alive) {
+    const sl = document.createElement('select');
+    sl.id = 'pl-set-long';
+    for (const [v, lab] of LONG_OPTIONS) {
+      const o = document.createElement('option');
+      o.value = v; o.textContent = lab;
+      if (v === readLong()) o.selected = true;
+      sl.appendChild(o);
+    }
+    sl.setAttribute('aria-label', `${LONG_LABEL}：${LONG_TIP}`);
+    const txt = document.createElement('span');
+    txt.className = 'has-tip';
+    txt.title = LONG_TIP;
+    txt.textContent = `${LONG_LABEL}　`;
+    const lab2 = document.createElement('label');
+    lab2.append(txt, sl);
+    // 摆在「设置」块末尾：它管的是点开一条之后读到什么，不是图面画什么
+    alive.closest('details')?.appendChild(lab2);
+    sl.addEventListener('change', () => writeLong(sl.value));
   }
   wire('pl-set-low', 'showLow');
   wire('pl-set-auto', 'showAuto');

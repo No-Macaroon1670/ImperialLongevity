@@ -53,6 +53,7 @@ js/views-compare.js            箱线图、DSI 散点、H1–H5 假说面板、�
 js/events.js                   大事记：1770 条事件（战事/制度/民变/外患/文化/灾疫/治世/存续期/遗址/文物）
 js/search.js                   文本搜索跳转与深链（#y=755 / #e=李世民 / #d=tang / #ev=安史之乱）
 js/knowledge.js                知识卡：朝代＋皇帝两张（河流两翼／泳道三栏），实时维基摘要
+js/pref-long.js                「卡片正文」两档的共用件（localStorage `il.long`，默认 `yl`）：库主 2026-09-12 令「default 长文」——事件卡有库内长注（`yl`）就给长注、没有才退维基摘要；缩略图与维基全文链两档都照旧从摘要来。开关在王朝之河与时光舆图的「设置」各一颗，共用同一存值；换档时本页已开着的卡听 `il:longpref` 当场重填
 js/app.js / js/app-timeline.js 两页的入口（各自装配 shell + 自己的章节表）
 js/app-map.js                  地图页的入口（不走 shell：没有筛选、章节、渲染循环要它管）
 js/app-place.js                地方线页的入口（同样不走 shell）：归地、分段、分档、角标
