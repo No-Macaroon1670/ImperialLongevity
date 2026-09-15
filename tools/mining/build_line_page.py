@@ -687,10 +687,10 @@ def main():
       '长文出自纪录片叙事稿，考据随文写就；凡各源不一致的数字，做法是一个都不给。')
     A('<div class="row">')
     A('<a href="../timeline.html#line=%s">在图上走一遍 →</a>' % key)
-    A('<a href="index.html">中国帝王寿命数据库</a>')
+    A('<a href="../index.html">中国帝王寿命数据库</a>')   # story/ 子目录下须上一级（库主 2026-09-14 实测两链皆坏）
     A('<a href="https://github.com/No-Macaroon1670/ImperialLongevity/blob/main/docs/line-%s.md" '
       'target="_blank" rel="noopener">资料与出处 ↗</a>' % key)
-    A('<a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%%E5%%8B%%98%%E8%%AF%%AF&amp;title=%%E5%%8B%%98%%E8%%AF%%AF%%EF%%BC%%9A" '
+    A('<a href="https://github.com/No-Macaroon1670/ImperialLongevity/issues/new?labels=%E5%8B%98%E8%AF%AF&amp;title=%E5%8B%98%E8%AF%AF%EF%BC%9A" '
       'target="_blank" rel="noopener">报个错 ↗</a>')
     A('</div></div></footer>')
     A('<dialog id="lb"><button id="lbx" type="button" aria-label="关闭">✕</button>'
