@@ -168,7 +168,8 @@ function labelOf(VERBS, verb, out) {
   if (ROLE_BOTH.has(V.fam)) return V.role || verb;
   if (ROLE_IS_TARGET.has(V.fam)) return out ? (V.role || verb) : (V.inv || verb);
   if (!out) return V.role || verb;
-  return (V.fam === '血亲' || V.fam === '承继') ? (V.inv || verb) : verb;
+  // 故事线族与承继同式：从前站看后站挂 inv「后站」，从后站看前站挂 role「前站」（2026-09-18）
+  return (V.fam === '血亲' || V.fam === '承继' || V.fam === '故事线') ? (V.inv || verb) : verb;
 }
 
 /**

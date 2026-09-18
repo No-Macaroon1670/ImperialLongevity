@@ -205,6 +205,22 @@ def main():
                 ne += 1
     print("时段涵盖 %d" % ne)
 
+    # ── 故事线相邻站（2026-09-18）：js/lines.js 各线站表里前后相邻的两站出一条「前站」边。
+    # 序与落点不在站表数组里（LINES 里另拼），故只连正站；同一对在两条线里相邻只存一行（seen 去重）。
+    lj = io.open(os.path.join(ROOT, "js/lines.js"), encoding="utf-8").read()
+    arrays = {m.group(1): re.findall(r"\bev: '((?:[^'\\]|\\.)*)'", m.group(2))
+              for m in re.finditer(r"^const ([A-Z_]+) = \[(.*?)^\];", lj, re.S | re.M)}
+    lines_meta = re.findall(r"\n  ([a-z]+): \{\s*\n\s*key: '\1',\s*\n\s*name: '([^']*)'.*?\.\.\.([A-Z_]+)\.map", lj, re.S)
+    ns = 0
+    for key, name, ident in lines_meta:
+        evs = [e.replace("\\'", "'") for e in arrays.get(ident, [])]
+        for i in range(len(evs) - 1):
+            a, b = evs[i], evs[i + 1]
+            if a in names and b in names and a != b:
+                l("ev:" + a, "前站", "ev:" + b, "故事线〈%s〉第 %d→%d 站" % (name, i + 1, i + 2), 1, "机械边：同线相邻站")
+                ns += 1
+    print("故事线相邻站 %d（%d 线）" % (ns, len(lines_meta)))
+
     out = ("// 机械生成的边（生成物，勿手改）：由 tools/mining/links_gen.py 从 data/kinship.json、events.js 的 p 字段、\n"
            "// era 起讫与君主表在位推出。动词与 id 体例同 links.js；血亲 Wikidata 机读记 lv 2，人核记其 cf。\n"
            "export const LINKS_GEN = [];\n"

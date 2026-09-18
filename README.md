@@ -50,7 +50,7 @@ js/views-time.js               纵向双层时间轴、历史总散点、热力�
 js/views-lanes.js              横向泳道全景（朝代长带 + 皇帝分段 + 泳道回收 + 两条主线）
 js/views-survival.js           Kaplan–Meier、竞争风险、Cox 森林图
 js/views-compare.js            箱线图、DSI 散点、H1–H5 假说面板、数据库表
-js/events.js                   大事记：1770 条事件（战事/制度/民变/外患/文化/灾疫/治世/存续期/遗址/文物）
+js/events.js                   大事记：1839 条事件（战事/制度/民变/外患/文化/灾疫/治世/存续期/遗址/文物）
 js/search.js                   文本搜索跳转与深链（#y=755 / #e=李世民 / #d=tang / #ev=安史之乱）
 js/knowledge.js                知识卡：朝代＋皇帝两张（河流两翼／泳道三栏），实时维基摘要
 js/pref-long.js                「卡片正文」两档的共用件（localStorage `il.long`，默认 `yl`）：库主 2026-09-12 令「default 长文」——事件卡有库内长注（`yl`）就给长注、没有才退维基摘要；缩略图与维基全文链两档都照旧从摘要来。开关在王朝之河与时光舆图的「设置」各一颗，共用同一存值；换档时本页已开着的卡听 `il:longpref` 当场重填
@@ -63,12 +63,12 @@ js/counts.js                   data-il-count 回填的唯一实现（文案里�
 js/plate.js                    制图共享零件：糊开的海岸、halo 衬底、贪心标签排版器、经纬网、读数面板
 js/basemap.js                  底图（生成物）：Natural Earth 1:50m 海岸线 + 黄河长江，无国界
 js/geo.js                      各故事线的站点地理档（生成物）
-js/geo-events.js               库内条目的地点（生成物）：共 1477 条，手写 `p` 地名 1424 条 + 自动取维基主坐标 53 条
+js/geo-events.js               库内条目的地点（生成物）：共 1546 条，手写 `p` 地名 1493 条 + 自动取维基主坐标 53 条
 tools/validate_palette.js      配色六项检查（来自 dataviz 技能）
 tools/validate.html            在浏览器内跑该校验
 ```
 
-> 表内三处条数（政权 131、事件 1770、地点 1477）系 2026-09-09 用 `node` 现读实数校正——
+> 表内三处条数（政权 131、事件 1839、地点 1546）系 2026-09-18 用 `node` 现读实数校正——
 > 此前写的 67／634／11＋72 是创库期旧数，页面文案早已走 `data-il-count` 现数、只有这份目录
 > 停在原地。**再对不上时一律以模块现读为准，别信这三个数**
 > （`DYNASTIES.length`／`EVENTS.length`／`Object.keys(GEO_EVENTS).length`）。
